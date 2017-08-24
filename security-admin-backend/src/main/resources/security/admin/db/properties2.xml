@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!-- Название таблицы с привелегий -->
+    <property name="n2o.security.admin.permission.table" value="permission"/>
+    <!-- Название таблицы связи привелегий с ролями -->
+    <property name="n2o.security.admin.rolepermission.table" value="role_permission"/>
+    <!-- Название колонки, в которой хранится id роли в таблице связи пользователей с ролями-->
+    <property name="n2o.security.admin.rolepermission.column.role" value="role_id"/>
+    <!-- Название колонки, в которой хранится id привелегии в таблице связи пользователей с ролями-->
+    <property name="n2o.security.admin.rolepermission.column.permission" value="permission_id"/>
+    <!-- Название constraint для таблицы связи привелегий с ролями-->
+    <property name="n2o.security.admin.rolepermission.constraint.pk" value="role_permission_pk"/>
+    <!-- Название внешнего constraint для пользователя в таблице связи пользователей с ролями-->
+    <property name="n2o.security.admin.rolepermission.permission.constraint.fk" value="role_permission_permission_fk"/>
+    <!-- Название внешнего constraint для роли в таблице связи пользователей с ролями-->
+    <property name="n2o.security.admin.rolepermission.role.constraint.fk" value="role_permission_role_fk"/>
+
+    <include file="classpath:/security/admin/db/properties1.xml"/>
+
+</databaseChangeLog>
