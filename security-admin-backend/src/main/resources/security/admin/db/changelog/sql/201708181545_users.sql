@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS ${n2o.security.admin.schema}.${n2o.security.admin.user.table} (
-  id INTEGER PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   ${n2o.security.admin.user.login} VARCHAR(100) NOT NULL,
   surname VARCHAR(100) NOT NULL,
   name VARCHAR(100) NOT NULL,

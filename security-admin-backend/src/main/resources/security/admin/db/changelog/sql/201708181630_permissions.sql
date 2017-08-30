@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS ${n2o.security.admin.schema}.${n2o.security.admin.permission.table} (
-  id INTEGER PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
   code VARCHAR(100) NOT NULL
 );
@@ -9,8 +9,10 @@ CREATE TABLE IF NOT EXISTS ${n2o.security.admin.schema}.${n2o.security.admin.rol
   ${n2o.security.admin.rolepermission.column.permission} INTEGER NOT NULL,
   PRIMARY KEY (${n2o.security.admin.rolepermission.column.role}, ${n2o.security.admin.rolepermission.column.permission}),
   CONSTRAINT ${n2o.security.admin.rolepermission.constraint.pk} UNIQUE (${n2o.security.admin.rolepermission.column.role}, ${n2o.security.admin.rolepermission.column.permission}),
-   CONSTRAINT ${n2o.security.admin.rolepermission.permission.constraint.fk} FOREIGN KEY (${n2o.security.admin.rolepermission.column.permission}) REFERENCES ${n2o.security.admin.schema}.${n2o.security.admin.permission.table} (id),
-  CONSTRAINT ${n2o.security.admin.rolepermission.role.constraint.fk} FOREIGN KEY (${n2o.security.admin.rolepermission.column.role}) REFERENCES ${n2o.security.admin.schema}.${n2o.security.admin.role.table} (id)
+  CONSTRAINT ${n2o.security.admin.rolepermission.permission.constraint.fk} FOREIGN KEY (${n2o.security.admin.rolepermission.column.permission})
+  REFERENCES ${n2o.security.admin.schema}.${n2o.security.admin.permission.table} (id),
+  CONSTRAINT ${n2o.security.admin.rolepermission.role.constraint.fk} FOREIGN KEY (${n2o.security.admin.rolepermission.column.role})
+  REFERENCES ${n2o.security.admin.schema}.${n2o.security.admin.role.table} (id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
 

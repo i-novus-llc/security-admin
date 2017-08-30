@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS ${n2o.security.admin.schema}.${n2o.security.admin.role.table} (
-  id INTEGER PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
   code VARCHAR(100) NOT NULL,
   description VARCHAR(250)
@@ -10,8 +10,10 @@ CREATE TABLE IF NOT EXISTS ${n2o.security.admin.schema}.${n2o.security.admin.use
   ${n2o.security.admin.userrole.column.role} INTEGER NOT NULL,
   PRIMARY KEY (${n2o.security.admin.userrole.column.user}, ${n2o.security.admin.userrole.column.role}),
   CONSTRAINT ${n2o.security.admin.userrole.constraint.pk} UNIQUE (${n2o.security.admin.userrole.column.user}, ${n2o.security.admin.userrole.column.role}),
-  CONSTRAINT ${n2o.security.admin.userrole.user.constraint.fk} FOREIGN KEY (${n2o.security.admin.userrole.column.user}) REFERENCES ${n2o.security.admin.schema}.${n2o.security.admin.user.table} (id),
-  CONSTRAINT ${n2o.security.admin.userrole.role.constraint.fk} FOREIGN KEY (${n2o.security.admin.userrole.column.role}) REFERENCES ${n2o.security.admin.schema}.${n2o.security.admin.role.table} (id)
+  CONSTRAINT ${n2o.security.admin.userrole.user.constraint.fk} FOREIGN KEY (${n2o.security.admin.userrole.column.user})
+  REFERENCES ${n2o.security.admin.schema}.${n2o.security.admin.user.table} (id) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT ${n2o.security.admin.userrole.role.constraint.fk} FOREIGN KEY (${n2o.security.admin.userrole.column.role})
+  REFERENCES ${n2o.security.admin.schema}.${n2o.security.admin.role.table} (id)
 );
 
 
