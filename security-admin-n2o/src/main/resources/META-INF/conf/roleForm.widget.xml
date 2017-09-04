@@ -1,0 +1,19 @@
+<form xmlns="http://n2oapp.net/framework/config/schema/n2o-widget-3.0"
+      xmlns:ctrl="http://n2oapp.net/framework/config/schema/n2o-control-1.0"
+      xmlns:fs="http://n2oapp.net/framework/config/schema/fieldset-3.0">
+    <query-id>${role.query}</query-id>
+
+    <fs:field-set>
+        <ctrl:input-text id="name"/>
+        <ctrl:input-text id="code"/>
+        <ctrl:input-text id="description"/>
+       <!-- <ctrl:input-select id="permissions" label="Привелегии" type="multi" cache="off">
+            <ctrl:query query-id="permission" label-field-id="name" value-field-id="id"/>
+        </ctrl:input-select>-->
+        <ctrl:input-select-tree id="permissions" ajax="false" label="Привелегии" checkboxes="true">
+            <ctrl:inheritance-nodes parent-field-id="parentId" label-field-id="name" value-field-id="id"
+                                    query-id="${permission.query}" has-children-field-id="hasChildren" search-field-id="name">
+            </ctrl:inheritance-nodes>
+        </ctrl:input-select-tree>
+    </fs:field-set>
+</form>
