@@ -18,6 +18,8 @@
     <property name="n2o.security.admin.rolepermission.permission.constraint.fk" value="role_permission_permission_fk"/>
     <!-- Название внешнего constraint для роли в таблице связи пользователей с ролями-->
     <property name="n2o.security.admin.rolepermission.role.constraint.fk" value="role_permission_role_fk"/>
+    <!-- Название внешнего constraint для роли в таблице связи пользователей с ролями-->
+    <property name="n2o.security.admin.permission.parent.constraint.fk" value="permission_parent_fk"/>
 
     <include file="classpath:/security/admin/db/properties1.xml"/>
 

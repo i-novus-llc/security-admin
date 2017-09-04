@@ -16,7 +16,8 @@ public class PermissionEntity {
     @Column(name = "code", nullable = false)
     private String code;
 
-
+    @Column(name = "parent_id")
+    private Integer parentId;
 
     public Integer getId() {
         return id;
@@ -40,5 +41,13 @@ public class PermissionEntity {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public Integer getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
     }
 }

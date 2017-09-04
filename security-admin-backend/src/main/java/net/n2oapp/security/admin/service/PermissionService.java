@@ -41,6 +41,7 @@ public class PermissionService implements CollectionPageService<PermissionCriter
         permission.setId(entity.getId());
         permission.setName(entity.getName());
         permission.setCode(entity.getCode());
+        permission.setParentId(entity.getParentId());
         return permission;
     }
 }

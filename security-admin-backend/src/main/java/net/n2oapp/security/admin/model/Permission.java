@@ -4,6 +4,7 @@ public class Permission {
     private Integer id;
     private String name;
     private String code;
+    private Integer parentId;
 
     public Integer getId() {
         return id;
@@ -27,5 +28,13 @@ public class Permission {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public Integer getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
     }
 }

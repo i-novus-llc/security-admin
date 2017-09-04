@@ -1,7 +1,10 @@
 CREATE TABLE IF NOT EXISTS ${n2o.security.admin.schema}.${n2o.security.admin.permission.table} (
   id SERIAL PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
-  code VARCHAR(100) NOT NULL
+  code VARCHAR(100) NOT NULL,
+  parent_id INTEGER,
+  CONSTRAINT ${n2o.security.admin.permission.parent.constraint.fk} FOREIGN KEY ( parent_id )
+  REFERENCES ${n2o.security.admin.schema}.${n2o.security.admin.permission.table}( id )
 );
 
 CREATE TABLE IF NOT EXISTS ${n2o.security.admin.schema}.${n2o.security.admin.rolepermission.table} (
