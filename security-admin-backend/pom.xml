@@ -16,18 +16,18 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.plugin.version>3.5</maven.compiler.plugin.version>
-        <n2o.version>6.0.2</n2o.version>
         <hibernateVersion>5.1.0.Final</hibernateVersion>
         <spring.data.jpa.version>1.9.4.RELEASE</spring.data.jpa.version>
         <net.n2oapp.criteria>3.8</net.n2oapp.criteria>
+        <override.properties.version>1.5</override.properties.version>
     </properties>
 
     <dependencies>
-        <!-- n2o -->
+        <!-- Override properties -->
         <dependency>
-            <groupId>net.n2oapp.framework</groupId>
-            <artifactId>n2o-api</artifactId>
-            <version>${n2o.version}</version>
+            <groupId>net.n2oapp.properties</groupId>
+            <artifactId>override-properties</artifactId>
+            <version>${override.properties.version}</version>
         </dependency>
 
         <!-- N2O criteria -->
