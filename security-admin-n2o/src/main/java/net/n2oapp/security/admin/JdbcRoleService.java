@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 @Service
-public class RoleService {
+public class JdbcRoleService {
 
     private final static String INSERT_ROLE = "insert into sec.role(name, code, description) values(:name, :code, :description);";
     private final static String UPDATE_ROLE = "update sec.role set name = :name, code = :code, description = :description;";

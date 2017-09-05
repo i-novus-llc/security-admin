@@ -12,6 +12,7 @@
         <module>security-admin-impl</module>
         <module>security-admin-n2o</module>
         <module>security-admin-api</module>
+        <module>security-auth</module>
     </modules>
 
     <properties>

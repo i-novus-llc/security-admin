@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class PermissionService implements CollectionPageService<PermissionCriteria, Permission> {
+public class PermissionPageService implements CollectionPageService<PermissionCriteria, Permission> {
 
     @PersistenceContext
     private EntityManager entityManager;

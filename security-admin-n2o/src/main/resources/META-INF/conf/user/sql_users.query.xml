@@ -32,28 +32,36 @@
             <domain>string</domain>
             <display>username</display>
             <name>Имя пользователя</name>
-            <filters auto-generate="true"/>
+            <filters>
+                <filter type="eq" filter-field="username">username like '%'||:username||'%'</filter>
+            </filters>
         </field>
         <field>
             <id>surname</id>
             <domain>string</domain>
             <display>surname</display>
             <name>Фамилия</name>
-            <filters auto-generate="true"/>
+            <filters>
+                <filter type="eq" filter-field="surname">surname like '%'||:surname||'%'</filter>
+            </filters>
         </field>
         <field>
             <id>name</id>
             <domain>string</domain>
             <display>name</display>
             <name>Имя</name>
-            <filters auto-generate="true"/>
+            <filters>
+                <filter type="eq" filter-field="name">name like '%'||:name||'%'</filter>
+            </filters>
         </field>
         <field>
             <id>patronymic</id>
             <domain>string</domain>
             <display>patronymic</display>
             <name>Отчество</name>
-            <filters auto-generate="true"/>
+            <filters>
+                <filter type="eq" filter-field="patronymic">patronymic like '%'||:patronymic||'%'</filter>
+            </filters>
         </field>
         <field>
             <id>isActive.id</id>
@@ -61,7 +69,7 @@
             <display>is_active</display>
             <name>Активность</name>
             <filters>
-                <filter type="in" filter-field="isActive*.id">isActive</filter>
+                <filter type="in" filter-field="isActive*.id">((:isActive*.id) is null or is_active in (:isActive*.id))</filter>
             </filters>
         </field>
     </fields>

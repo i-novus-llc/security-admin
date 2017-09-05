@@ -14,7 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class UserService implements CollectionPageService<UserCriteria, User> {
+public class UserPageService implements CollectionPageService<UserCriteria, User> {
 
     @PersistenceContext
     private EntityManager entityManager;

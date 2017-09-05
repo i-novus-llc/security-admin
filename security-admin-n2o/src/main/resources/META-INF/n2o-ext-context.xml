@@ -4,6 +4,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="jdbcRoleService" class="net.n2oapp.security.admin.RoleService"/>
-    <bean id="jdbcUserService" class="net.n2oapp.security.admin.UserService"/>
+    <bean id="jdbcRoleService" class="net.n2oapp.security.admin.JdbcRoleService"/>
+    <bean id="jdbcUserService" class="net.n2oapp.security.admin.JdbcUserService"/>
 </beans>

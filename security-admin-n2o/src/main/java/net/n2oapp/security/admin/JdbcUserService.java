@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class UserService {
+public class JdbcUserService {
 
     private final static String INSERT_USER = "insert into sec.user(username, surname, name, patronymic, is_active) values(:username, :surname, :name, :patronymic, :isActive);";
     private final static String UPDATE_USER = "update sec.user set username = :username, surname = :surname, name = :name, patronymic = :patronymic, is_active = :isActive;";

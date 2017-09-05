@@ -17,7 +17,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class RoleService implements CollectionPageService<RoleCriteria, Role> {
+public class RolePageService implements CollectionPageService<RoleCriteria, Role> {
 
     @PersistenceContext
     private EntityManager entityManager;
