@@ -19,7 +19,123 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.plugin.version>3.5</maven.compiler.plugin.version>
+        <n2o.version>6.1</n2o.version>
+        <persistence.version>1.0.2</persistence.version>
+        <org.springframework.version>4.1.0.RELEASE</org.springframework.version>
+        <hibernateVersion>5.1.0.Final</hibernateVersion>
+        <spring.data.jpa.version>1.9.4.RELEASE</spring.data.jpa.version>
+        <net.n2oapp.criteria>3.8</net.n2oapp.criteria>
+        <override.properties.version>1.5</override.properties.version>
+        <javax.servlet.version>3.0.1</javax.servlet.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- n2o -->
+            <dependency>
+                <groupId>net.n2oapp.framework</groupId>
+                <artifactId>n2o-api</artifactId>
+                <version>${n2o.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.n2oapp.framework</groupId>
+                <artifactId>n2o-access</artifactId>
+                <version>${n2o.version}</version>
+            </dependency>
+
+            <!-- Override properties -->
+            <dependency>
+                <groupId>net.n2oapp.properties</groupId>
+                <artifactId>override-properties</artifactId>
+                <version>${override.properties.version}</version>
+            </dependency>
+
+            <!-- N2O criteria -->
+            <dependency>
+                <groupId>net.n2oapp.criteria</groupId>
+                <artifactId>criteria-api</artifactId>
+                <version>${net.n2oapp.criteria}</version>
+            </dependency>
+
+
+            <!-- spring -->
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-config</artifactId>
+                <version>${org.springframework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-web</artifactId>
+                <version>${org.springframework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-tx</artifactId>
+                <version>${org.springframework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jdbc</artifactId>
+                <version>${org.springframework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.data</groupId>
+                <artifactId>spring-data-jpa</artifactId>
+                <version>${spring.data.jpa.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-core</artifactId>
+                <version>${org.springframework.version}</version>
+            </dependency>
+
+            <!-- Hibernate -->
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-core</artifactId>
+                <version>${hibernateVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-entitymanager</artifactId>
+                <version>${hibernateVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate.javax.persistence</groupId>
+                <artifactId>hibernate-jpa-2.1-api</artifactId>
+                <version>1.0.0.Final</version>
+            </dependency>
+
+            <!-- liquibase -->
+            <dependency>
+                <groupId>ru.i-novus.common</groupId>
+                <artifactId>liquibase-extension</artifactId>
+                <version>1.1-SNAPSHOT</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-log4j12</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!-- servlet -->
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>${javax.servlet.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <!-- persistence api-->
+            <dependency>
+                <groupId>javax.persistence</groupId>
+                <artifactId>persistence-api</artifactId>
+                <version>${persistence.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>
