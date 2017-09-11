@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-public class AbstractUserEntity {
+public abstract class AbstractUserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -13,10 +13,14 @@ public class AbstractUserEntity {
     @Column(name = "username", nullable = false)
     private String username;
 
-    @Column(name = "surname", nullable = false)
+    @Column(name = "email")
+    private String email;
+
+
+    @Column(name = "surname")
     private String surname;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     private String name;
 
     @Column(name = "patronymic")
@@ -97,5 +101,13 @@ public class AbstractUserEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

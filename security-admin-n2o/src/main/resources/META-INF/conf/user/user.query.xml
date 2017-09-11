@@ -23,6 +23,13 @@
             <filters auto-generate="true"/>
         </field>
         <field>
+            <id>email</id>
+            <domain>string</domain>
+            <display>email</display>
+            <name>E-mail</name>
+            <filters auto-generate="true"/>
+        </field>
+        <field>
             <id>surname</id>
             <domain>string</domain>
             <display>surname</display>

@@ -13,8 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class JdbcUserService {
 
-    private final static String INSERT_USER = "insert into sec.user(username, surname, name, patronymic, is_active) values(:username, :surname, :name, :patronymic, :isActive);";
-    private final static String UPDATE_USER = "update sec.user set username = :username, surname = :surname, name = :name, patronymic = :patronymic, is_active = :isActive;";
+    private final static String INSERT_USER = "insert into sec.user(username, email, surname, name, patronymic, is_active) values(:username, :email, :surname, :name, :patronymic, :isActive);";
+    private final static String UPDATE_USER = "update sec.user set username = :username, email = :email, surname = :surname, name = :name, patronymic = :patronymic, is_active = :isActive where id=:id;";
     private final static String DELETE_USER = "delete from sec.user where id = :id;";
     private final static String INSERT_USER_ROLE = "insert into sec.user_role(user_id, role_id) values(:userId, :roleId);";
     private final static String DELETE_USER_ROLE = "delete from sec.user_role where user_id = :id;";
@@ -26,6 +26,7 @@ public class JdbcUserService {
     public User create(User model) {
         SqlParameterSource namedParameters =
                 new MapSqlParameterSource("username", model.getUsername())
+                        .addValue("email", model.getEmail())
                         .addValue("surname", model.getSurname())
                         .addValue("name", model.getName())
                         .addValue("patronymic", model.getPatronymic())
@@ -52,6 +53,7 @@ public class JdbcUserService {
     public User update(User model) {
         SqlParameterSource namedParameters =
                 new MapSqlParameterSource("id", model.getId())
+                        .addValue("email", model.getEmail())
                         .addValue("username", model.getUsername())
                         .addValue("surname", model.getSurname())
                         .addValue("name", model.getName())

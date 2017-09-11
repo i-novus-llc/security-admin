@@ -14,6 +14,7 @@
             </invocation>
             <in-parameters>
                 <param name="username" mapping="[0].username" domain="string" required="true"/>
+                <param name="email" mapping="[0].email" domain="string" required="true"/>
                 <param name="surname" mapping="[0].surname" domain="string" required="true"/>
                 <param name="name" mapping="[0].name" domain="string" required="true"/>
                 <param name="patronymic" mapping="[0].patronymic" domain="string"/>
@@ -37,6 +38,7 @@
             <in-parameters>
                 <param name="id" mapping="[0].id" domain="integer" required="true"/>
                 <param name="username" mapping="[0].username" domain="string" required="true"/>
+                <param name="email" mapping="[0].email" domain="string" required="true"/>
                 <param name="surname" mapping="[0].surname" domain="string" required="true"/>
                 <param name="name" mapping="[0].name" domain="string" required="true"/>
                 <param name="patronymic" mapping="[0].patronymic" domain="string"/>

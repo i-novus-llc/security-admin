@@ -5,12 +5,13 @@
 
     <fs:field-set>
         <ctrl:input-text id="username"/>
+        <ctrl:input-text id="email"/>
         <ctrl:input-text id="surname"/>
         <ctrl:input-text id="name"/>
         <ctrl:input-text id="patronymic"/>
         <ctrl:checkbox id="isActive.id"/>
         <ctrl:input-select id="roles" type="multi" label="Роли" cache="off">
-            <ctrl:query query-id="role" value-field-id="id" label-field-id="name"/>
+            <ctrl:query query-id="${roles.query}" value-field-id="id" label-field-id="name"/>
         </ctrl:input-select>
     </fs:field-set>
 </form>
