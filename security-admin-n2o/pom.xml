@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>security-admin-frontend</artifactId>
+    <artifactId>security-admin-n2o</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>

@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <query xmlns:n2o="http://n2oapp.net/framework/config/schema/n2o-query-executions-1.0"
        xmlns="http://n2oapp.net/framework/config/schema/query-3.0">
-    <object-id>${permission.object}</object-id>
+    <object-id>${sec.permission.object}</object-id>
     <name>Привелегия</name>
     <execution>
         <n2o:sql>

@@ -21,6 +21,6 @@
     <!-- Название внешнего constraint для роли в таблице связи пользователей с ролями-->
     <property name="n2o.security.admin.permission.parent.constraint.fk" value="permission_parent_fk"/>
 
-    <include file="classpath:/security/admin/db/properties1.xml"/>
+    <include file="classpath:/security/admin/db/base/properties.xml"/>
 
 </databaseChangeLog>
