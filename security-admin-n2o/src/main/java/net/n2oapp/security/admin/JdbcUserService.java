@@ -10,6 +10,9 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * crud пользователей с использованием jdbc
+ */
 @Service
 public class JdbcUserService {
 

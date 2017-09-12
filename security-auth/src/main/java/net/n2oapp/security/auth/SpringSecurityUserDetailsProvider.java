@@ -9,6 +9,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.*;
 
+/**
+ * Провайдер имени пользователя, контекста и идетификатора сессии
+ * предоставляет эти данные в контексте n2o
+ */
 public class SpringSecurityUserDetailsProvider implements RootContextProvider {
 
     public static final HashSet<String> PARAMS = new HashSet<>(Arrays.asList(UserContext.USERNAME, UserContext.CONTEXT, UserContext.SESSION));

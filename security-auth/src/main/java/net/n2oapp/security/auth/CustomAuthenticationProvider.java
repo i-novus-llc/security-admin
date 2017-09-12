@@ -15,6 +15,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Аутентификация пользователя
+ */
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 

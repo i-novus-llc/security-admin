@@ -8,8 +8,6 @@ import java.util.Objects;
 
 /**
  * Интерфейс для проверки прав и ролей пользователя с помощью Spring Security
- * @author dednakov
- * @since 28.12.2016
  */
 public class SecuritySimplePermissionApi implements PermissionApi {
 

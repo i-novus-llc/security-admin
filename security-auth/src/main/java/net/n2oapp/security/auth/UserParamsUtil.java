@@ -4,6 +4,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
+/**
+ * Утилитный класс для получения username и sessionId
+ */
 public class UserParamsUtil {
 
     /**

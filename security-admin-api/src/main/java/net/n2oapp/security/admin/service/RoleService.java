@@ -3,7 +3,7 @@ package net.n2oapp.security.admin.service;
 import net.n2oapp.security.admin.model.Role;
 
 /**
- *
+ *  Сервис управления ролями
  */
 public interface RoleService {
 

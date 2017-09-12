@@ -4,6 +4,9 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 
+/**
+ * Пользователь с расширенными атрибутами
+ */
 public class User extends org.springframework.security.core.userdetails.User {
     private String surname;
     private String name;

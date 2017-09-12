@@ -3,22 +3,41 @@ package net.n2oapp.security.admin.entity;
 import javax.persistence.*;
 import java.util.Set;
 
+/**
+ * Абстрактная сущность Роли
+ * Выделена для возможности переодпределять в прикладных приложениях
+ */
 @Entity
 public abstract class AbstractRoleEntity {
+    /**
+     * Идентификатор роли
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    /**
+     * Наименование роли
+     */
     @Column(name = "name", nullable = false)
     private String name;
 
+    /**
+     * Код роли
+     */
     @Column(name = "code", nullable = false)
     private String code;
 
+    /**
+     * Описание роли
+     */
     @Column(name = "description")
     private String description;
 
+    /**
+     * Привелегии роли
+     */
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "role_permission", schema = "sec",
             joinColumns = {@JoinColumn(name = "role_id")},

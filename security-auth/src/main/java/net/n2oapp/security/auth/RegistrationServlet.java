@@ -17,7 +17,7 @@ import java.util.Objects;
 import static net.n2oapp.properties.StaticProperties.getProperty;
 
 /**
- * Сервлет для создания юзера при регистрации
+ * Сервлет для создания пользователя при регистрации
  */
 public class RegistrationServlet extends HttpServlet {
 

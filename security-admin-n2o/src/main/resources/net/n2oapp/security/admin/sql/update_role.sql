@@ -1,1 +1,0 @@
-update sec.role set name = :name, code = :code, description = :description;

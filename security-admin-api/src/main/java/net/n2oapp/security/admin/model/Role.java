@@ -2,6 +2,9 @@ package net.n2oapp.security.admin.model;
 
 import java.util.Set;
 
+/**
+ * Роль
+ */
 public class Role {
     private Integer id;
     private String name;

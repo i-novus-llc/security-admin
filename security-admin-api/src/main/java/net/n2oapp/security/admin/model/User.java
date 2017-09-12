@@ -2,6 +2,9 @@ package net.n2oapp.security.admin.model;
 
 import java.util.Set;
 
+/**
+ * Пользователь
+ */
 public class User {
     private Integer id;
     private String username;

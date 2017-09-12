@@ -3,35 +3,66 @@ package net.n2oapp.security.admin.entity;
 import javax.persistence.*;
 import java.util.Set;
 
+/**
+ * Абстрактная сущность Пользователя
+ * Выделена для возможности переодпределять в прикладных приложениях
+ */
 @Entity
 public abstract class AbstractUserEntity {
+    /**
+     * Идентификатор пользователя
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    /**
+     * Логин пользователя
+     */
     @Column(name = "username", nullable = false)
     private String username;
 
+    /**
+     * Электронный адрес пользователя
+     */
     @Column(name = "email")
     private String email;
 
 
+    /**
+     * Фамилия
+     */
     @Column(name = "surname")
     private String surname;
 
+    /**
+     * Имя
+     */
     @Column(name = "name")
     private String name;
 
+    /**
+     * Отчество
+     */
     @Column(name = "patronymic")
     private String patronymic;
 
+    /**
+     * Пароль пользователя
+     */
     @Column(name = "password")
     private String password;
 
+    /**
+     * Активен ли пользователь
+     */
     @Column(name = "is_active")
     private boolean isActive;
 
+    /**
+     * Роли пользователя
+     */
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(schema = "sec", name = "user_role",
             joinColumns = {@JoinColumn(name = "user_id")},

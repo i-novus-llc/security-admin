@@ -15,6 +15,9 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import java.util.List;
 
+/**
+ * Обработка удаления сессии
+ */
 public class SessionDestroyedHandler implements ApplicationListener<SessionDestroyedEvent> {
 
     private N2oEventBus eventBus;

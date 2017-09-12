@@ -3,6 +3,9 @@ package net.n2oapp.security.auth.authority;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.util.Assert;
 
+/**
+ * Полномочие, основанное на привелегии
+ */
 public class PermissionGrantedAuthority implements GrantedAuthority {
 
     private final String permission;

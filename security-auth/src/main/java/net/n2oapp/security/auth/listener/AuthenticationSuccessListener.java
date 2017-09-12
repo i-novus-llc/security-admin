@@ -12,6 +12,10 @@ import org.springframework.security.authentication.event.AuthenticationSuccessEv
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
+/**
+ * Слушает успешную аутентиикацию, чтобы разослать LoginEvent
+ * необходим для корректной работы контекста, кэширования в n2o
+ */
 public class AuthenticationSuccessListener implements ApplicationListener<AuthenticationSuccessEvent> {
 
     private N2oEventBus eventBus;

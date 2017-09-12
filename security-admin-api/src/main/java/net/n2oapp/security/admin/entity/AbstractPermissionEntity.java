@@ -2,16 +2,29 @@ package net.n2oapp.security.admin.entity;
 
 import javax.persistence.*;
 
+/**
+ * Абстрактная сущность Привелегии
+ * Выделена для возможности переодпределять в прикладных приложениях
+ */
 @Entity
 public abstract class AbstractPermissionEntity {
+    /**
+     * Идентификатор привелегии
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    /**
+     * Наименование привелегии
+     */
     @Column(name = "name", nullable = false)
     private String name;
 
+    /**
+     * Код привелегии
+     */
     @Column(name = "code", nullable = false)
     private String code;
 
