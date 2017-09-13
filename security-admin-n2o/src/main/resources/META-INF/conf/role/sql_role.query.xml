@@ -35,13 +35,6 @@
             <filters auto-generate="true"/>
         </field>
         <field>
-            <id>code</id>
-            <domain>string</domain>
-            <display>code</display>
-            <name>Код</name>
-            <filters auto-generate="true"/>
-        </field>
-        <field>
             <id>description</id>
             <domain>string</domain>
             <display>description</display>
@@ -52,7 +45,7 @@
             <id>permissions*.id</id>
             <domain>integer[]</domain>
             <display>(select array_to_json(array(select rp.permission_id from sec.role_permission rp where rp.role_id=r.id)))</display>
-            <name>Привелегии</name>
+            <name>Права доступа</name>
         </field>
     </fields>
 </query>

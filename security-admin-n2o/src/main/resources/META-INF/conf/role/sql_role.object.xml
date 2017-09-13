@@ -14,7 +14,6 @@
             </invocation>
             <in-parameters>
                 <param name="name" mapping="[0].name" domain="string" required="true"/>
-                <param name="code" mapping="[0].code" domain="string" required="true"/>
                 <param name="description" mapping="[0].description" domain="string"/>
                 <param name="permissions*.id" mapping="[0].permissionIds" domain="integer[]"/>
             </in-parameters>
@@ -35,7 +34,6 @@
             <in-parameters>
                 <param name="id" mapping="[0].id" domain="integer" required="true"/>
                 <param name="name" mapping="[0].name" domain="string" required="true"/>
-                <param name="code" mapping="[0].code" domain="string" required="true"/>
                 <param name="description" mapping="[0].description" domain="string"/>
                 <param name="permissions*.id" mapping="[0].permissionIds" domain="integer[]"/>
             </in-parameters>

@@ -23,11 +23,6 @@
                 <div class="controls">
                     <input id="auth_password" name="password" type="password" class="input-block-level" placeholder="пароль" data-title-editable="1">
                 </div>
-                <div class="controls">
-                    <div class="checkbox">
-                        <label><input type="checkbox" id="rememberme" name="remember-me"> Запомнить меня</label>
-                    </div>
-                </div>
                 <div>
                     <button id="btnAuthUser" class="btn btn-large btn-primary" data-loading-text="подождите..." data-title-editable="1" type="submit">
                         Войти

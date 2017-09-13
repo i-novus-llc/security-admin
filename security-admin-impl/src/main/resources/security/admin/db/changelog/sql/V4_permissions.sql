@@ -20,10 +20,10 @@ CREATE TABLE IF NOT EXISTS ${n2o.security.admin.schema}.${n2o.security.admin.rol
 
 
 
-COMMENT ON TABLE ${n2o.security.admin.schema}.${n2o.security.admin.permission.table} IS 'Привелегии';
+COMMENT ON TABLE ${n2o.security.admin.schema}.${n2o.security.admin.permission.table} IS 'Права доступа';
 COMMENT ON COLUMN ${n2o.security.admin.schema}.${n2o.security.admin.permission.table}.name IS 'Название';
 COMMENT ON COLUMN ${n2o.security.admin.schema}.${n2o.security.admin.permission.table}.code IS 'Код';
 
-COMMENT ON TABLE ${n2o.security.admin.schema}.${n2o.security.admin.rolepermission.table} IS 'Таблица связи привелегий с ролями';
-COMMENT ON COLUMN ${n2o.security.admin.schema}.${n2o.security.admin.rolepermission.table}.${n2o.security.admin.rolepermission.column.permission} IS 'Идентификатор привелегии';
+COMMENT ON TABLE ${n2o.security.admin.schema}.${n2o.security.admin.rolepermission.table} IS 'Таблица связи прав доступа с ролями';
+COMMENT ON COLUMN ${n2o.security.admin.schema}.${n2o.security.admin.rolepermission.table}.${n2o.security.admin.rolepermission.column.permission} IS 'Идентификатор права доступа';
 COMMENT ON COLUMN ${n2o.security.admin.schema}.${n2o.security.admin.rolepermission.table}.${n2o.security.admin.rolepermission.column.role} IS 'Идентификатор роли';

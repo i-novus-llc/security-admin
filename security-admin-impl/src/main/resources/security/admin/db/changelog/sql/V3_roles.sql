@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS ${n2o.security.admin.schema}.${n2o.security.admin.role.table} (
   id SERIAL PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
-  code VARCHAR(100) NOT NULL,
+  code VARCHAR(100),
   description VARCHAR(250)
 );
 

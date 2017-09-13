@@ -4,7 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="userService" class="net.n2oapp.security.admin.service.UserPageService"/>
+   <!-- <bean id="userService" class="net.n2oapp.security.admin.service.UserPageService"/>
     <bean id="roleService" class="net.n2oapp.security.admin.service.RolePageService"/>
-    <bean id="permissionService" class="net.n2oapp.security.admin.service.PermissionPageService"/>
+    <bean id="permissionService" class="net.n2oapp.security.admin.service.PermissionPageService"/>-->
 </beans>

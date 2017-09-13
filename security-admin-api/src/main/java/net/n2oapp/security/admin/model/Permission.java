@@ -1,7 +1,7 @@
 package net.n2oapp.security.admin.model;
 
 /**
- * Привелегия
+ * Право доступа
  */
 public class Permission {
     private Integer id;

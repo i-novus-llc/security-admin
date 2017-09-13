@@ -36,7 +36,7 @@ public abstract class AbstractRoleEntity {
     private String description;
 
     /**
-     * Привелегии роли
+     * Права доступа роли
      */
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "role_permission", schema = "sec",

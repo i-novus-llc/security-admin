@@ -3,7 +3,7 @@ package net.n2oapp.security.admin.entity;
 import javax.persistence.*;
 
 /**
- * Сущность Привелегия
+ * Сущность Право доступа
  */
 @Entity
 @Table(name = "permission", schema = "sec")

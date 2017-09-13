@@ -40,7 +40,7 @@
             <id>permissions*.id</id>
             <domain>integer[]</domain>
             <display>permissionIds</display>
-            <name>Привелегии</name>
+            <name>Права доступа</name>
         </field>
     </fields>
 </query>

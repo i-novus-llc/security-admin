@@ -13,12 +13,10 @@
                     <wgt:query-id>${sec.roles.query}</wgt:query-id>
                     <wgt:columns>
                         <wgt:column column-field-id="name"/>
-                        <wgt:column column-field-id="code"/>
                         <wgt:column column-field-id="description"/>
                     </wgt:columns>
                     <wgt:filters opened="true">
                         <ctrl:input-text id="name"/>
-                        <ctrl:input-text id="code"/>
                         <ctrl:input-text id="description"/>
                     </wgt:filters>
                     <wgt:action-menu>

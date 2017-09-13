@@ -4,7 +4,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.util.Assert;
 
 /**
- * Полномочие, основанное на привелегии
+ * Полномочие, основанное на правах доступа
  */
 public class PermissionGrantedAuthority implements GrantedAuthority {
 

@@ -5,6 +5,6 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <include file="classpath:/security/admin/db/base/securityAdminBaseChangelog.xml"/>
-    <include file="classpath:/security/admin/db/changelog/201708221730_create_permissions.xml"/>
+    <include file="classpath:/security/admin/db/changelog/V4_create_permissions.xml"/>
 
 </databaseChangeLog>

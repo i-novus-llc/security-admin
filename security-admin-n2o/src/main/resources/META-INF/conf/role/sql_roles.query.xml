@@ -36,15 +36,6 @@
             </filters>
         </field>
         <field>
-            <id>code</id>
-            <domain>string</domain>
-            <display>code</display>
-            <name>Код</name>
-            <filters>
-                <filter type="eq" filter-field="code">code like '%'||:code||'%'</filter>
-            </filters>
-        </field>
-        <field>
             <id>description</id>
             <domain>string</domain>
             <display>description</display>

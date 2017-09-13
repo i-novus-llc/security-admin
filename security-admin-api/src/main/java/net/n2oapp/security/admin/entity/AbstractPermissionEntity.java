@@ -3,13 +3,13 @@ package net.n2oapp.security.admin.entity;
 import javax.persistence.*;
 
 /**
- * Абстрактная сущность Привелегии
+ * Абстрактная сущность Права доступа
  * Выделена для возможности переодпределять в прикладных приложениях
  */
 @Entity
 public abstract class AbstractPermissionEntity {
     /**
-     * Идентификатор привелегии
+     * Идентификатор права доступа
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,13 +17,13 @@ public abstract class AbstractPermissionEntity {
     private Integer id;
 
     /**
-     * Наименование привелегии
+     * Наименование права доступа
      */
     @Column(name = "name", nullable = false)
     private String name;
 
     /**
-     * Код привелегии
+     * Код права доступа
      */
     @Column(name = "code", nullable = false)
     private String code;
