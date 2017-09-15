@@ -18,13 +18,16 @@
         <c:if test="${param.error == 'loginAlreadyExists'}">
             <output id="errorText" title="errorText" style="color: red">Пользователь с таким логином уже существует!</output>
         </c:if>
-        <c:if test="${param.error == 'emptyLogin'}">
-            <output id="errorText" title="errorText" style="color: red">Пожалуйста, введите логин!</output>
+        <c:if test="${param.error == 'notCorrectLogin'}">
+            <output id="errorText" title="errorText" style="color: red">Неверный логин! Он должен содержать только латинские буквы и цифры.</output>
+        </c:if>
+        <c:if test="${param.error == 'notCorrectEmail'}">
+            <output id="errorText" title="errorText" style="color: red">Неверный e-mail!</output>
         </c:if>
         <form class="form-signin n2o-auth-form" name='registrationForm' action="registrationServlet" method='POST'>
             <div class="control-group">
                 <div class="controls">
-                    <input id="auth_username" name="username" type="text" class="input-block-level" placeholder="Логин" data-title-editable="1" required="required">
+                    <input id="auth_username" name="username" type="text" value="${username}" class="input-block-level" placeholder="Логин" data-title-editable="1" required="required">
                 </div>
                 <div class="controls">
                     <input id="auth_email" name="email" type="text" class="input-block-level" placeholder="E-mail" data-title-editable="1" required="required">

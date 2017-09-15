@@ -15,6 +15,10 @@
         <!-- n2o -->
         <dependency>
             <groupId>net.n2oapp.framework</groupId>
+            <artifactId>n2o-ui</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.n2oapp.framework</groupId>
             <artifactId>n2o-api</artifactId>
         </dependency>
         <dependency>

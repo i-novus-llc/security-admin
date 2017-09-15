@@ -28,6 +28,8 @@
         <property name="eventBus" ref="n2oEventBus"/>
     </bean>
 
+    <bean class="net.n2oapp.security.auth.RoleService"/>
+
     <!-- spring -->
     <bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 

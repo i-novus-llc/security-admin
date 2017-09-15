@@ -35,6 +35,13 @@
             <filters auto-generate="true"/>
         </field>
         <field>
+            <id>code</id>
+            <domain>string</domain>
+            <display>code</display>
+            <name>Код</name>
+            <filters auto-generate="true"/>
+        </field>
+        <field>
             <id>description</id>
             <domain>string</domain>
             <display>description</display>

@@ -66,4 +66,25 @@
             <success-text>Пользователь удален</success-text>
         </action>
     </actions>
+
+    <validations>
+        <condition id="username" level="error">
+            <message>Неверное имя</message>
+            <expression on="username">
+                (username == null || username == 'undefined' || username == '' || new RegExp('[a-zA-Z0-9]+').test(username));
+            </expression>
+        </condition>
+
+        <condition id="emailValidation" level="error">
+            <message>Неверный email</message>
+            <expression on="email">
+                <![CDATA[
+                if (typeof email != 'undefined' && email != null && email != '') {
+                    var regex = new RegExp('[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?');
+                    regex.test(email);
+                } else true;
+                ]]>
+            </expression>
+        </condition>
+    </validations>
 </object>

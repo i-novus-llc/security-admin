@@ -9,6 +9,8 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,6 +22,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,10 +40,11 @@ public class N2oJdbcUserDetailsManager implements UserDetailsManager {
     private final static String UPDATE_USER = "update sec.user set email = :email, password = :password, surname = :surname, name = :name, patronymic = :patronymic, is_active = :isActive where username = :username; ";
     private final static String UPDATE_PASSWORD = "update sec.user set password = :password where username = :username; ";
     private final static String DELETE_USER = "delete from sec.user where username = :username;";
+    private final static String INSERT_USER_ROLE = "insert into sec.user_role(user_id, role_id) values(:userId, :roleId);";
     public static final String USER_EXISTS = "select username from sec.user where username = :username;";
     private final static String GET_USER_BY_USERNAME = "select password, email, surname, name, patronymic, is_active from sec.user  where username = :username;";
-    private final static String GET_ROLES_BY_USERNAME = "select r.code from sec.user u join sec.user_role ur on ur.user_id=u.id join sec.role r on r.id=ur.role_id where u.username = :username;";
-    private final static String GET_PERMISSIONS_BY_ROLE_CODE = "select p.code from sec.role r join sec.role_permission rp on rp.role_id=r.id join sec.permission p on p.id=rp.permission_id where r.code = :code;";
+    private final static String GET_ROLES_BY_USERNAME = "select ur.role_id from sec.user u join sec.user_role ur on ur.user_id=u.id where u.username = :username;";
+    private final static String GET_PERMISSIONS_BY_ROLE_ID = "select p.code from sec.permission p join sec.role_permission rp on p.id=rp.permission_id where rp.role_id = :roleId;";
 
 //    private AuthenticationManager authenticationManager;
     @Autowired
@@ -48,6 +52,7 @@ public class N2oJdbcUserDetailsManager implements UserDetailsManager {
 
     private PasswordEncoder passwordEncoder;
 
+    @Transactional
     @Override
     public void createUser(UserDetails userDetails) {
         User user = (User) userDetails;
@@ -59,9 +64,20 @@ public class N2oJdbcUserDetailsManager implements UserDetailsManager {
                         .addValue("name", user.getName())
                         .addValue("patronymic", user.getPatronymic())
                         .addValue("isActive", true);
-        jdbcTemplate.update(INSERT_USER, namedParameters);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(INSERT_USER, namedParameters, keyHolder, new String[]{"id"});
+        Integer userId = (Integer) keyHolder.getKey();
+        if(user.getAuthorities() != null){
+            user.getAuthorities().stream().filter(a -> a instanceof RoleGrantedAuthority).forEach(a -> {
+                SqlParameterSource params =
+                        new MapSqlParameterSource("userId", userId)
+                                .addValue("roleId", Integer.parseInt(a.getAuthority()));
+                jdbcTemplate.update(INSERT_USER_ROLE, params);
+            });
+        }
     }
 
+    @Transactional
     @Override
     public void updateUser(UserDetails userDetails) {
         User user = (User) userDetails;
@@ -161,8 +177,8 @@ public class N2oJdbcUserDetailsManager implements UserDetailsManager {
         if (roleAuthorities == null) return null;
         roleAuthorities.forEach(r -> {
             Map<String, Object> roleParams = new HashMap<>();
-            roleParams.put("code", r.getAuthority());
-            authorities.addAll(jdbcTemplate.query(GET_PERMISSIONS_BY_ROLE_CODE, roleParams, (rs, i) -> {
+            roleParams.put("roleId", Integer.parseInt(r.getAuthority()));
+            authorities.addAll(jdbcTemplate.query(GET_PERMISSIONS_BY_ROLE_ID, roleParams, (rs, i) -> {
                 String permission = rs.getString(1);
                 return new PermissionGrantedAuthority(permission);
             }));

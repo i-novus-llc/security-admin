@@ -11,8 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static net.n2oapp.properties.StaticProperties.getProperty;
 
@@ -22,6 +24,8 @@ import static net.n2oapp.properties.StaticProperties.getProperty;
 public class RegistrationServlet extends HttpServlet {
 
     private UserDetailsManager userDetailsManager = StaticSpringContext.getBean(UserDetailsManager.class);
+
+    private RoleService roleService = StaticSpringContext.getBean(RoleService.class);
 
 
     /**
@@ -34,14 +38,12 @@ public class RegistrationServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (Objects.equals(checkErrorCode(request.getParameter("username"), "", "", userDetailsManager), "loginAlreadyExists"))
+        if (Objects.equals(checkErrorCode(request.getParameter("username"), "", "", "", userDetailsManager), "loginAlreadyExists"))
             response.sendRedirect("registration?error=loginAlreadyExists");
     }
 
     /**
      * Создание пользователя и редирект при ошибке (с заполненным параметром error и без нее
-     */
-    /**
      * Получение кода ошибки, и, если он имеется,
      * редирект с заполненным параметром error,
      * создание пользователя и редирект на страницу входа
@@ -60,7 +62,7 @@ public class RegistrationServlet extends HttpServlet {
         String surname = request.getParameter("surname");
         String name = request.getParameter("name");
         String patronymic= request.getParameter("patronymic");
-        String errorCode = checkErrorCode(username, password, repeatedPassword, userDetailsManager);
+        String errorCode = checkErrorCode(username, email, password, repeatedPassword, userDetailsManager);
         if(errorCode != null) {
             response.sendRedirect("registration?error=" + errorCode);
             return;
@@ -81,14 +83,21 @@ public class RegistrationServlet extends HttpServlet {
      * @throws ServletException
      * @throws IOException
      */
-    private String checkErrorCode(String username, String password, String repeatedPassword, UserDetailsManager userDetailsManager) throws ServletException, IOException {
+    private String checkErrorCode(String username, String email, String password, String repeatedPassword, UserDetailsManager userDetailsManager) throws ServletException, IOException {
+        Pattern pattern = Pattern.compile("[A-Za-z0-9]{1,}");
+        Matcher matcher = pattern.matcher(username);
+        if (!matcher.matches()) {
+            return "notCorrectLogin";
+        }
+        pattern = Pattern.compile("\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*\\.\\w{2,4}");
+        matcher = pattern.matcher(email);
+        if (!matcher.matches()) {
+            return "notCorrectEmail";
+        }
         if (userDetailsManager.userExists(username))
             return "loginAlreadyExists";
-        if (Objects.equals(username, ""))
-            return "emptyLogin";
         if (!Objects.equals(password, repeatedPassword))
             return "password";
-
         return null;
     }
 
@@ -100,8 +109,16 @@ public class RegistrationServlet extends HttpServlet {
      */
     private void createUser(String username, String password, String surname, String name, String patronymic,
                             String email, UserDetailsManager userDetailsManager) {
+        String authority = getProperty("n2o.auth.authority");
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        if(authority != null) {
+            Integer roleId = roleService.getRoleIdByCode(authority);
+            if (roleId != null) {
+                authorities.add(new RoleGrantedAuthority(roleId.toString()));
+            }
+        }
         User user = new User(username, password,
-                new ArrayList<GrantedAuthority>(Collections.singletonList(new RoleGrantedAuthority(getProperty("n2o.auth.authority")))),
+               authorities,
                 surname, name, patronymic, email);
         userDetailsManager.createUser(user);
     }
