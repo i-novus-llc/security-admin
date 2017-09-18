@@ -10,7 +10,8 @@ public class SpringConfigUtil {
     public static HttpSecurity cofigureHttp(HttpSecurity http) throws Exception {
         return http
                 .authorizeRequests()
-                .antMatchers("/registration/**", "/registrationServlet/**", "/#index/**","/dist/css/n2o/bootstrap.css", "/dist/css/n2o/n2o.css").permitAll()
+                .antMatchers("/registration/**", "/registrationServlet/**", "/#index/**","/dist/css/n2o/bootstrap.css",
+                        "/dist/css/n2o/n2o.css", "/net/n2oapp/security/auth/css/signin.css", "/favicon.ico").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
