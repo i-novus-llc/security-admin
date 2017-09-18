@@ -31,6 +31,7 @@ public class JdbcUserService {
 
     private final static String INSERT_USER = "insert into sec.user(username, email, surname, name, patronymic, is_active) values(:username, :email, :surname, :name, :patronymic, :isActive);";
     private final static String UPDATE_USER = "update sec.user set username = :username, email = :email, surname = :surname, name = :name, patronymic = :patronymic, is_active = :isActive where id=:id;";
+    private final static String UPDATE_USER_ACTIVE = "update sec.user set is_active = :isActive where id=:id;";
     private final static String DELETE_USER = "delete from sec.user where id = :id;";
     private final static String INSERT_USER_ROLE = "insert into sec.user_role(user_id, role_id) values(:userId, :roleId);";
     private final static String DELETE_USER_ROLE = "delete from sec.user_role where user_id = :id;";
@@ -110,6 +111,14 @@ public class JdbcUserService {
         SqlParameterSource namedParameters =
                 new MapSqlParameterSource("id", id);
         jdbcTemplate.update(DELETE_USER, namedParameters);
+    }
+
+    @Transactional
+    public void changeUserActive(Integer id, Boolean isActive) {
+        SqlParameterSource namedParameters =
+                new MapSqlParameterSource("id", id)
+                .addValue("isActive", isActive);
+        jdbcTemplate.update(UPDATE_USER_ACTIVE, namedParameters);
     }
 
     private void sendPassword(User user, String password) throws URISyntaxException, IOException {

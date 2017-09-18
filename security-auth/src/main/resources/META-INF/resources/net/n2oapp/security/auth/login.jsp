@@ -7,6 +7,7 @@
     <meta charset="UTF-8">
     <title>Авторизация</title>
     <link rel="stylesheet" href="dist/css/n2o/bootstrap.css"/>
+    <link rel="stylesheet" href="dist/css/n2o/n2o.css"/>
 </head>
 <body>
 <div id="menu_auth_modal" class="modal" tabindex="-1" role="dialog" aria-hidden="false" style="display: block; max-width: 360px">

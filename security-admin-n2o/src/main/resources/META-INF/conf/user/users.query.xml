@@ -52,5 +52,11 @@
                 <filter type="in" filter-field="isActive*.id">isActive</filter>
             </filters>
         </field>
+        <!-- todo возвращает список названий ролей этого пользователя-->
+        <field>
+            <id>roles*.name</id>
+            <domain>string[]</domain>
+            <display/>
+        </field>
     </fields>
 </query>

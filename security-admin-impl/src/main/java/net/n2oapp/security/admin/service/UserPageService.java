@@ -60,6 +60,10 @@ public class UserPageService implements CollectionPageService<UserCriteria, User
         entityManager.remove(entityManager.find(UserEntity.class, id));
     }
 
+    public void changeUserActive(Integer id, Boolean isActive) {
+       throw new UnsupportedOperationException();
+    }
+
     private String prepareForLike(String value) {
         if (value == null) return null;
         return "%" + value.toLowerCase().trim() + "%";

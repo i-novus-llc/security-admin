@@ -17,8 +17,14 @@
                         <wgt:column column-field-id="name"/>
                         <wgt:column column-field-id="patronymic"/>
                         <wgt:column column-field-id="isActive.id">
-                            <wgt:checkbox/>
+                            <wgt:checkbox>
+                                <wgt:invoke-action action-id="changeUserActive"/>
+                            </wgt:checkbox>
                         </wgt:column>
+                        <wgt:column column-field-id="roles">
+                            <wgt:list label-field-id="name"/>
+                        </wgt:column>
+
                     </wgt:columns>
                     <wgt:filters opened="true">
                         <ctrl:input-text id="username"/>
@@ -31,6 +37,9 @@
                                 <ctrl:option>{"id" : "false", "name" :"Нет"}</ctrl:option>
                             </ctrl:options>
                         </ctrl:checkbox-group>
+                        <ctrl:input-select id="roleFilter" type="multi" label="Роли" cache="off">
+                            <ctrl:query query-id="${sec.roles.query}" value-field-id="id" label-field-id="name"/>
+                        </ctrl:input-select>
                     </wgt:filters>
                     <wgt:action-menu>
                         <wgt:menu-item id="create" label="Создать" context="false">

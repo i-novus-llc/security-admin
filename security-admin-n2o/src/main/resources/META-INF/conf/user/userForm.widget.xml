@@ -4,13 +4,21 @@
     <query-id>${sec.user.query}</query-id>
 
     <fs:field-set>
-        <ctrl:input-text id="username"/>
-        <ctrl:input-text id="email"/>
-        <ctrl:input-text id="surname"/>
+        <ctrl:input-text id="username">
+            <ctrl:validations>
+                <ctrl:validation ref-id="usernameValidation"/>
+            </ctrl:validations>
+        </ctrl:input-text>
+        <ctrl:input-text id="email">
+            <ctrl:validations>
+                <ctrl:validation ref-id="emailValidation"/>
+            </ctrl:validations>
+        </ctrl:input-text>
+        <ctrl:input-text id="surname" depends-on="username" dependency-condition="gender.id == 1"/>
         <ctrl:input-text id="name"/>
         <ctrl:input-text id="patronymic"/>
-        <ctrl:checkbox id="isActive.id"/>
-        <ctrl:input-select id="roles" type="multi" label="Роли" cache="off">
+        <ctrl:checkbox id="isActive.id" default-value="true"/>
+        <ctrl:input-select id="roles" type="multi" label="Роли" cache="off" required="true">
             <ctrl:query query-id="${sec.roles.query}" value-field-id="id" label-field-id="name"/>
         </ctrl:input-select>
     </fs:field-set>

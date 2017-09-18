@@ -72,5 +72,28 @@
                 <filter type="in" filter-field="isActive*.id">((:isActive*.id) is null or is_active in (:isActive*.id))</filter>
             </filters>
         </field>
+
+        <field>
+            <id>roles</id>
+            <domain>object[]</domain>
+            <display>(select array_to_json(array_agg(row_to_json(row_js))) from (select r.id, r.name from sec.user_role ur join sec.role r on r.id=ur.role_id where ur.user_id=u.id) row_js)</display>
+            <name>Роли</name>
+
+        </field>
+
+        <field>
+            <id>roleFilter.id</id>
+            <domain>string</domain>
+            <filters>
+                <filter type="in" filter-field="roleFilter*.id">
+                    <![CDATA[
+                        u.id in (select us.id from sec.user us where
+                            (select string_to_array(btrim((:roleFilter*.id)::varchar, '()'), ',')::varchar[])
+                                <@ (select array(select (urr.role_id)::varchar FROM sec.user_role urr where urr.user_id = us.id)))
+
+                    ]]>
+                </filter>
+            </filters>
+        </field>
     </fields>
 </query>

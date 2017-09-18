@@ -19,7 +19,7 @@
                 <param name="name" mapping="[0].name" domain="string" required="true"/>
                 <param name="patronymic" mapping="[0].patronymic" domain="string"/>
                 <param name="isActive.id" mapping="[0].isActive" domain="boolean" value="false"/>
-                <param name="roles*.id" mapping="[0].roleIds" domain="integer[]" />
+                <param name="roles*.id" mapping="[0].roleIds" domain="integer[]" required="true"/>
             </in-parameters>
             <out-parameters>
                 <param name="id" mapping="id"/>
@@ -43,7 +43,7 @@
                 <param name="name" mapping="[0].name" domain="string" required="true"/>
                 <param name="patronymic" mapping="[0].patronymic" domain="string"/>
                 <param name="isActive.id" mapping="[0].isActive" domain="boolean" value="false"/>
-                <param name="roles*.id" mapping="[0].roleIds" domain="integer[]" />
+                <param name="roles*.id" mapping="[0].roleIds" domain="integer[]" required="true"/>
             </in-parameters>
             <out-parameters>
                 <param name="id" mapping="id"/>
@@ -65,5 +65,47 @@
             <confirmation-text>Вы уверены, что хотите удалить пользователя?</confirmation-text>
             <success-text>Пользователь удален</success-text>
         </action>
+
+        <action id="delete">
+            <invocation>
+                <n2o:java-method name="changeUserActive" bean="userService">
+                    <n2o:arguments>
+                        <n2o:argument name="id" class="java.lang.Integer" />
+                        <n2o:argument name="isActive" class="java.lang.Boolean" />
+                    </n2o:arguments>
+                </n2o:java-method>
+            </invocation>
+            <in-parameters>
+                <param name="id" mapping="[0]" domain="integer" required="true"/>
+                <param name="isActive.id" mapping="[1]" domain="boolean"/>
+            </in-parameters>
+        </action>
     </actions>
+
+    <validations>
+        <condition id="usernameValidation" level="error">
+            <message>Неверное имя</message>
+            <expression on="username">
+                <![CDATA[
+                    if (typeof username != 'undefined' && username != null && username != '') {
+                     var regex = new RegExp('[a-zA-Z0-9]+');
+                     regex.test(username);
+                     }else true;
+                ]]>
+
+            </expression>
+        </condition>
+
+        <condition id="emailValidation" level="error">
+            <message>Неверный email</message>
+            <expression on="email">
+                <![CDATA[
+                if (typeof email != 'undefined' && email != null && email != '') {
+                    var regex = new RegExp('[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?');
+                    regex.test(email);
+                } else true;
+                ]]>
+            </expression>
+        </condition>
+    </validations>
 </object>
