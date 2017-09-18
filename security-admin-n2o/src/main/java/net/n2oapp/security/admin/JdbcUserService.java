@@ -6,7 +6,6 @@ import net.n2oapp.security.admin.model.User;
 import net.n2oapp.security.admin.util.ApplicationMailer;
 import net.n2oapp.security.admin.util.PasswordGenerator;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.text.StrBuilder;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -132,7 +131,7 @@ public class JdbcUserService {
         data.put("system.url", StaticProperties.getProperty("n2o.ui.url"));
         String subjectTemplate = StaticProperties.getProperty("sec.password.mail.subject");
         String bodyPathProperty = StaticProperties.getProperty("sec.password.mail.body.path");
-        StrBuilder body = new StrBuilder();
+        StringBuilder body = new StringBuilder();
         try (InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(bodyPathProperty)){
             body.append(StrSubstitutor.replace(IOUtils.toString(inputStream, "UTF-8"), data));
         }

@@ -79,6 +79,7 @@
                 <param name="id" mapping="[0]" domain="integer" required="true"/>
                 <param name="isActive.id" mapping="[1]" domain="boolean"/>
             </in-parameters>
+            <success-text>Активность пользователя изменена!</success-text>
         </action>
     </actions>
 

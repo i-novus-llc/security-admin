@@ -21,12 +21,13 @@
         <maven.compiler.plugin.version>3.5</maven.compiler.plugin.version>
         <n2o.version>6.1.2</n2o.version>
         <persistence.version>1.0.2</persistence.version>
-        <org.springframework.version>4.1.0.RELEASE</org.springframework.version>
+        <org.springframework.security.version>4.1.0.RELEASE</org.springframework.security.version>
         <hibernateVersion>5.1.0.Final</hibernateVersion>
         <spring.data.jpa.version>1.9.4.RELEASE</spring.data.jpa.version>
         <net.n2oapp.criteria>3.8</net.n2oapp.criteria>
         <override.properties.version>1.5</override.properties.version>
         <javax.servlet.version>3.0.1</javax.servlet.version>
+        <org.springframework.version>4.3.10.RELEASE</org.springframework.version>
     </properties>
 
     <dependencyManagement>
@@ -52,6 +53,11 @@
                 <artifactId>n2o-context</artifactId>
                 <version>${n2o.version}</version>
             </dependency>
+            <dependency>
+                <groupId>net.n2oapp.framework</groupId>
+                <artifactId>n2o-engine</artifactId>
+                <version>${n2o.version}</version>
+            </dependency>
 
             <!-- Override properties -->
             <dependency>
@@ -72,22 +78,12 @@
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-config</artifactId>
-                <version>${org.springframework.version}</version>
+                <version>${org.springframework.security.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-web</artifactId>
-                <version>${org.springframework.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-tx</artifactId>
-                <version>${org.springframework.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-jdbc</artifactId>
-                <version>${org.springframework.version}</version>
+                <version>${org.springframework.security.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.data</groupId>
@@ -97,34 +93,18 @@
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-core</artifactId>
-                <version>${org.springframework.version}</version>
+                <version>${org.springframework.security.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-core</artifactId>
-                <version>${org.springframework.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-beans</artifactId>
-                <version>${org.springframework.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-context</artifactId>
-                <version>${org.springframework.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-context-support</artifactId>
-                <version>${org.springframework.version}</version>
-            </dependency>
+                <dependency>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-context-support</artifactId>
+                    <version>${org.springframework.version}</version>
+                </dependency>
             <dependency>
                 <groupId>commons-lang</groupId>
                 <artifactId>commons-lang</artifactId>
                 <version>2.2</version>
             </dependency>
-
 
 
             <!-- Hibernate -->
