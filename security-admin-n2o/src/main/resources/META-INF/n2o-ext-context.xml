@@ -8,15 +8,12 @@
 
     <context:annotation-config/>
 
-    <!--<tx:annotation-driven transaction-manager="txManager"/>
-
-    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSource"/>
-    </bean>-->
-
-    <bean id="jdbcRoleService" class="net.n2oapp.security.admin.JdbcRoleService"/>
+    <bean id="jdbcRoleService" class="net.n2oapp.security.admin.JdbcRoleService">
+        <constructor-arg name="transactionTemplate" ref="transactionTemplate"/>
+    </bean>
     <bean id="jdbcUserService" class="net.n2oapp.security.admin.JdbcUserService">
         <constructor-arg name="passwordGenerator" ref="passwordGenerator"/>
+        <constructor-arg name="transactionTemplate" ref="transactionTemplate"/>
     </bean>
 
     <bean id="passwordGenerator" class="net.n2oapp.security.admin.util.PasswordGenerator">

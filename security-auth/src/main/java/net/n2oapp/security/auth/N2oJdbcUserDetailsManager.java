@@ -22,7 +22,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,38 +49,47 @@ public class N2oJdbcUserDetailsManager implements UserDetailsManager {
     private final static String GET_ROLES_BY_USERNAME = "select ur.role_id from sec.user u join sec.user_role ur on ur.user_id=u.id where u.username = :username;";
     private final static String GET_PERMISSIONS_BY_ROLE_ID = "select p.code from sec.permission p join sec.role_permission rp on p.id=rp.permission_id where rp.role_id = :roleId;";
 
-//    private AuthenticationManager authenticationManager;
+    private TransactionTemplate transactionTemplate;
+
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     private PasswordEncoder passwordEncoder;
 
-    @Transactional
-    @Override
-    public void createUser(UserDetails userDetails) {
-        User user = (User) userDetails;
-        SqlParameterSource namedParameters =
-                new MapSqlParameterSource("username", user.getUsername())
-                        .addValue("password", passwordEncoder.encode(user.getPassword()))
-                        .addValue("email", user.getEmail())
-                        .addValue("surname", user.getSurname())
-                        .addValue("name", user.getName())
-                        .addValue("patronymic", user.getPatronymic())
-                        .addValue("isActive", true);
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(INSERT_USER, namedParameters, keyHolder, new String[]{"id"});
-        Integer userId = (Integer) keyHolder.getKey();
-        if(user.getAuthorities() != null){
-            user.getAuthorities().stream().filter(a -> a instanceof RoleGrantedAuthority).forEach(a -> {
-                SqlParameterSource params =
-                        new MapSqlParameterSource("userId", userId)
-                                .addValue("roleId", Integer.parseInt(a.getAuthority()));
-                jdbcTemplate.update(INSERT_USER_ROLE, params);
-            });
-        }
+    public void setTransactionTemplate(TransactionTemplate transactionTemplate) {
+        this.transactionTemplate = transactionTemplate;
     }
 
-    @Transactional
+    @Override
+    public void createUser(UserDetails userDetails) {
+        transactionTemplate.execute(new TransactionCallback() {
+            @Override
+            public Object doInTransaction(TransactionStatus transactionStatus) {
+                User user = (User) userDetails;
+                SqlParameterSource namedParameters =
+                        new MapSqlParameterSource("username", user.getUsername())
+                                .addValue("password", passwordEncoder.encode(user.getPassword()))
+                                .addValue("email", user.getEmail())
+                                .addValue("surname", user.getSurname())
+                                .addValue("name", user.getName())
+                                .addValue("patronymic", user.getPatronymic())
+                                .addValue("isActive", true);
+                KeyHolder keyHolder = new GeneratedKeyHolder();
+                jdbcTemplate.update(INSERT_USER, namedParameters, keyHolder, new String[]{"id"});
+                Integer userId = (Integer) keyHolder.getKey();
+                if (user.getAuthorities() != null) {
+                    user.getAuthorities().stream().filter(a -> a instanceof RoleGrantedAuthority).forEach(a -> {
+                        SqlParameterSource params =
+                                new MapSqlParameterSource("userId", userId)
+                                        .addValue("roleId", Integer.parseInt(a.getAuthority()));
+                        jdbcTemplate.update(INSERT_USER_ROLE, params);
+                    });
+                }
+                return user;
+            }
+        });
+    }
+
     @Override
     public void updateUser(UserDetails userDetails) {
         User user = (User) userDetails;
@@ -156,7 +168,7 @@ public class N2oJdbcUserDetailsManager implements UserDetailsManager {
         }
         User user = users.get(0); // contains no GrantedAuthority[]
         List<GrantedAuthority> authorities = loadAuthorities(username);
-        if (authorities ==  null || authorities.isEmpty())
+        if (authorities == null || authorities.isEmpty())
             return user;
         return new User(username, user.getPassword(), user.isEnabled(), user.isAccountNonExpired(), user.isCredentialsNonExpired(),
                 user.isAccountNonLocked(), authorities, user.getSurname(), user.getName(), user.getPatronymic(), user.getEmail());

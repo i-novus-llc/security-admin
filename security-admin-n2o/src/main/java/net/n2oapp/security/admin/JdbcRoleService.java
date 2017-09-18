@@ -7,8 +7,10 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
 
 /**
  * crud ролей с использованием jdbc
@@ -25,16 +27,27 @@ public class JdbcRoleService {
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
-    @Transactional
+    private TransactionTemplate transactionTemplate;
+
+    public JdbcRoleService(TransactionTemplate transactionTemplate) {
+        this.transactionTemplate = transactionTemplate;
+    }
+
     public Role create(Role model) {
-        SqlParameterSource namedParameters =
-                new MapSqlParameterSource("name", model.getName())
-                        .addValue("code", model.getCode())
-                        .addValue("description", model.getDescription());
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(INSERT_ROLE, namedParameters, keyHolder, new String[]{"id"});
-        model.setId((Integer) keyHolder.getKey());
-        savePermissions(model);
+        transactionTemplate.execute(new TransactionCallback() {
+            @Override
+            public Object doInTransaction(TransactionStatus transactionStatus) {
+                SqlParameterSource namedParameters =
+                        new MapSqlParameterSource("name", model.getName())
+                                .addValue("code", model.getCode())
+                                .addValue("description", model.getDescription());
+                KeyHolder keyHolder = new GeneratedKeyHolder();
+                jdbcTemplate.update(INSERT_ROLE, namedParameters, keyHolder, new String[]{"id"});
+                model.setId((Integer) keyHolder.getKey());
+                savePermissions(model);
+                return model;
+            }
+        });
         return model;
     }
 
@@ -49,20 +62,24 @@ public class JdbcRoleService {
         }
     }
 
-    @Transactional
     public Role update(Role model) {
-        SqlParameterSource namedParameters =
-                new MapSqlParameterSource("id", model.getId())
-                        .addValue("name", model.getName())
-                        .addValue("code", model.getCode())
-                        .addValue("description", model.getDescription());
-        jdbcTemplate.update(UPDATE_ROLE, namedParameters);
-        jdbcTemplate.update(DELETE_ROLE_PERMISSION, namedParameters);
-        savePermissions(model);
+        transactionTemplate.execute(new TransactionCallback() {
+            @Override
+            public Object doInTransaction(TransactionStatus transactionStatus) {
+                SqlParameterSource namedParameters =
+                        new MapSqlParameterSource("id", model.getId())
+                                .addValue("name", model.getName())
+                                .addValue("code", model.getCode())
+                                .addValue("description", model.getDescription());
+                jdbcTemplate.update(UPDATE_ROLE, namedParameters);
+                jdbcTemplate.update(DELETE_ROLE_PERMISSION, namedParameters);
+                savePermissions(model);
+                return model;
+            }
+        });
         return model;
     }
 
-    @Transactional
     public void delete(Integer id) {
         SqlParameterSource namedParameters =
                 new MapSqlParameterSource("id", id);

@@ -46,6 +46,7 @@
     <bean id="n2oJdbcUserDetailsManager" class="net.n2oapp.security.auth.N2oJdbcUserDetailsManager">
         <!--<property name="authenticationManager" ref="providerManager"/>-->
         <property name="passwordEncoder" ref="passwordEncoder"/>
+        <property name="transactionTemplate" ref="transactionTemplate"/>
     </bean>
 
     <bean id="authenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
