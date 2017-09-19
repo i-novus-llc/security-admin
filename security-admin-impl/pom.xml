@@ -16,30 +16,28 @@
         <dependency>
             <groupId>net.n2oapp.security</groupId>
             <artifactId>security-admin-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 
-        <!-- Override properties -->
         <dependency>
-            <groupId>net.n2oapp.properties</groupId>
-            <artifactId>override-properties</artifactId>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
         </dependency>
 
         <!-- N2O criteria -->
         <dependency>
             <groupId>net.n2oapp.criteria</groupId>
             <artifactId>criteria-api</artifactId>
+            <version>3.9</version>
         </dependency>
 
         <dependency>
             <groupId>org.hibernate.javax.persistence</groupId>
             <artifactId>hibernate-jpa-2.1-api</artifactId>
-        </dependency>
-
-        <!-- spring -->
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-jpa</artifactId>
         </dependency>
 
         <!-- liquibase -->

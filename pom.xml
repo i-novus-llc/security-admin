@@ -22,17 +22,10 @@
     </modules>
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <maven.compiler.plugin.version>3.5</maven.compiler.plugin.version>
-        <n2o.version>6.1.2</n2o.version>
-        <org.springframework.security.version>4.1.0.RELEASE</org.springframework.security.version>
-        <hibernateVersion>5.1.0.Final</hibernateVersion>
-        <spring.data.jpa.version>1.9.4.RELEASE</spring.data.jpa.version>
-        <net.n2oapp.criteria>3.8</net.n2oapp.criteria>
-        <override.properties.version>1.5</override.properties.version>
-        <javax.servlet.version>3.0.1</javax.servlet.version>
-        <org.springframework.version>4.3.10.RELEASE</org.springframework.version>
+        <n2o.version>6.1.4</n2o.version>
+        <spring.boot.version>1.5.2.RELEASE</spring.boot.version>
+        <spring.security.version>4.2.3.RELEASE</spring.security.version>
+        <spring.version>4.3.10.RELEASE</spring.version>
     </properties>
 
     <dependencyManagement>
@@ -64,100 +57,56 @@
                 <version>${n2o.version}</version>
             </dependency>
 
-            <!-- Override properties -->
-            <dependency>
-                <groupId>net.n2oapp.properties</groupId>
-                <artifactId>override-properties</artifactId>
-                <version>${override.properties.version}</version>
-            </dependency>
-
-            <!-- N2O criteria -->
-            <dependency>
-                <groupId>net.n2oapp.criteria</groupId>
-                <artifactId>criteria-api</artifactId>
-                <version>${net.n2oapp.criteria}</version>
-            </dependency>
-
-
-            <!-- spring -->
+            <!-- spring security -->
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-config</artifactId>
-                <version>${org.springframework.security.version}</version>
+                <version>${spring.security.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-web</artifactId>
-                <version>${org.springframework.security.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.data</groupId>
-                <artifactId>spring-data-jpa</artifactId>
-                <version>${spring.data.jpa.version}</version>
+                <version>${spring.security.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-core</artifactId>
-                <version>${org.springframework.security.version}</version>
-            </dependency>
-                <dependency>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-context-support</artifactId>
-                    <version>${org.springframework.version}</version>
-                </dependency>
-            <dependency>
-                <groupId>commons-lang</groupId>
-                <artifactId>commons-lang</artifactId>
-                <version>2.2</version>
+                <version>${spring.security.version}</version>
             </dependency>
 
-
-            <!-- Hibernate -->
-            <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-core</artifactId>
-                <version>${hibernateVersion}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-entitymanager</artifactId>
-                <version>${hibernateVersion}</version>
-            </dependency>
+            <!-- persistence api-->
             <dependency>
                 <groupId>org.hibernate.javax.persistence</groupId>
                 <artifactId>hibernate-jpa-2.1-api</artifactId>
                 <version>1.0.0.Final</version>
             </dependency>
 
-            <!-- liquibase -->
-            <dependency>
-                <groupId>org.liquibase</groupId>
-                <artifactId>liquibase-core</artifactId>
-                <version>3.5.3</version>
-            </dependency>
 
             <!-- servlet -->
             <dependency>
                 <groupId>javax.servlet</groupId>
                 <artifactId>javax.servlet-api</artifactId>
-                <version>${javax.servlet.version}</version>
+                <version>3.1.0</version>
                 <scope>provided</scope>
             </dependency>
+
+            <!-- common -->
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>2.2</version>
+            </dependency>
+
+            <!-- spring boot -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
-
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-                <version>${maven.compiler.plugin.version}</version>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

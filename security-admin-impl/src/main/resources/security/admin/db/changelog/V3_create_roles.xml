@@ -7,5 +7,8 @@
     <changeSet id="create_roles" author="rgalina" dbms="postgresql">
         <sqlFile path="security/admin/db/changelog/sql/V3_roles.sql"/>
     </changeSet>
+    <changeSet id="create_roles" author="rgalina" dbms="h2">
+        <sqlFile path="security/admin/db/changelog/sql/V3_roles.sql"/>
+    </changeSet>
 
 </databaseChangeLog>

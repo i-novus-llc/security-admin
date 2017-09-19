@@ -7,5 +7,8 @@
     <changeSet id="create_users" author="rgalina" dbms="postgresql">
         <sqlFile path="security/admin/db/changelog/sql/V2_users.sql"/>
     </changeSet>
+    <changeSet id="create_users" author="rgalina" dbms="h2">
+        <sqlFile path="security/admin/db/changelog/sql/V2_users.sql"/>
+    </changeSet>
 
 </databaseChangeLog>
