@@ -8,6 +8,10 @@
 
     <context:annotation-config/>
 
+    <bean id="sqlConfigScanner" class="net.n2oapp.framework.config.register.scanner.XmlInfoScanner">
+        <property name="pattern" value="classpath:net/n2oapp/security/admin/n2o/sql/*.*.xml"/>
+    </bean>
+
     <bean id="jdbcRoleService" class="net.n2oapp.security.admin.n2o.JdbcRoleService">
         <constructor-arg name="transactionTemplate" ref="transactionTemplate"/>
     </bean>
