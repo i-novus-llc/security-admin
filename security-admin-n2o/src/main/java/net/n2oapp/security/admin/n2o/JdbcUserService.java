@@ -30,7 +30,7 @@ import java.util.Map;
 @Service
 public class JdbcUserService {
 
-    private final static String INSERT_USER = "insert into sec.user(username, email, surname, name, patronymic, is_active) values(:username, :email, :surname, :name, :patronymic, :isActive);";
+    private final static String INSERT_USER = "insert into sec.user(username, password, email, surname, name, patronymic, is_active) values(:username, :password, :email, :surname, :name, :patronymic, :isActive);";
     private final static String UPDATE_USER = "update sec.user set username = :username, email = :email, surname = :surname, name = :name, patronymic = :patronymic, is_active = :isActive where id=:id;";
     private final static String UPDATE_USER_ACTIVE = "update sec.user set is_active = :isActive where id=:id;";
     private final static String DELETE_USER = "delete from sec.user where id = :id;";
@@ -38,6 +38,7 @@ public class JdbcUserService {
     private final static String DELETE_USER_ROLE = "delete from sec.user_role where user_id = :id;";
 
     private TransactionTemplate transactionTemplate;
+    private NamedParameterJdbcTemplate jdbcTemplate;
 
     private boolean generate;
     private PasswordGenerator passwordGenerator;
@@ -47,11 +48,10 @@ public class JdbcUserService {
     private String mailSubject;
     private Resource mailBody;
 
-    @Autowired
-    private NamedParameterJdbcTemplate jdbcTemplate;
 
-    public JdbcUserService(TransactionTemplate transactionTemplate) {
+    public JdbcUserService(TransactionTemplate transactionTemplate, NamedParameterJdbcTemplate jdbcTemplate) {
         this.transactionTemplate = transactionTemplate;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public User create(User model) {
@@ -63,13 +63,14 @@ public class JdbcUserService {
                             .addValue("name", model.getName())
                             .addValue("patronymic", model.getPatronymic())
                             .addValue("isActive", model.getIsActive());
-            String password = "";
+            String password = null;
+            String encodedPassword = null;
             if (generate) {
                 password = passwordGenerator.generate();
-                String encodedPassword = passwordEncoder.encode(password);
-                ((MapSqlParameterSource) namedParameters).addValue("password", encodedPassword);
-                model.setPassword(encodedPassword);
+                encodedPassword = passwordEncoder.encode(password);
             }
+            ((MapSqlParameterSource) namedParameters).addValue("password", encodedPassword);
+            model.setPassword(encodedPassword);
             KeyHolder keyHolder = new GeneratedKeyHolder();
             jdbcTemplate.update(INSERT_USER, namedParameters, keyHolder, new String[]{"id"});
             model.setId((Integer) keyHolder.getKey());
