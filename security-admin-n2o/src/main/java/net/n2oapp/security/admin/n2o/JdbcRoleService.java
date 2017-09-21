@@ -19,7 +19,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 public class JdbcRoleService {
 
     private final static String INSERT_ROLE = "insert into sec.role(name, code, description) values(:name, :code, :description);";
-    private final static String UPDATE_ROLE = "update sec.role set name = :name, code = :code, description = :description;";
+    private final static String UPDATE_ROLE = "update sec.role set name = :name, code = :code, description = :description where id = :id;";
     private final static String DELETE_ROLE = "delete from sec.role where id = :id;";
     private final static String INSERT_ROLE_PERMISSION = "insert into sec.role_permission(role_id, permission_id) values(:roleId, :permissionId);";
     private final static String DELETE_ROLE_PERMISSION = "delete from sec.role_permission where role_id = :id;";

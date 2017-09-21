@@ -31,7 +31,7 @@
                         <ctrl:input-text id="surname"/>
                         <ctrl:input-text id="name"/>
                         <ctrl:input-text id="patronymic"/>
-                        <ctrl:checkbox-group id="isActive" label="Активность" inline="true">
+                        <ctrl:checkbox-group id="isActive" label="Активность" inline="true" css-class="n2o-control-4">
                             <ctrl:options>
                                 <ctrl:option>{"id" : "true", "name" :"Да"}</ctrl:option>
                                 <ctrl:option>{"id" : "false", "name" :"Нет"}</ctrl:option>

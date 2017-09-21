@@ -10,8 +10,7 @@ public class SpringConfigUtil {
     public static HttpSecurity cofigureHttp(HttpSecurity http) throws Exception {
         return http
                 .authorizeRequests()
-                .antMatchers("/registration/**", "/registrationServlet/**", "/#index/**","/dist/css/n2o/bootstrap.css",
-                        "/dist/css/n2o/n2o.css", "/net/n2oapp/security/auth/css/signin.css", "/favicon.ico").permitAll()
+                .antMatchers("/registration/**", "/registrationServlet/**", "/dist/**", "/favicon.ico").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -20,11 +19,11 @@ public class SpringConfigUtil {
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .failureUrl("/login?error=true")
-                .defaultSuccessUrl("/#index")
+                .defaultSuccessUrl("/")
                 .and()
                 .logout()
                 .logoutUrl("/logout").permitAll()
-                .logoutSuccessUrl("/#index")
+                .logoutSuccessUrl("/login")
                 .deleteCookies("JSESSIONID")
                 .and()
                 .headers().contentTypeOptions().disable()
