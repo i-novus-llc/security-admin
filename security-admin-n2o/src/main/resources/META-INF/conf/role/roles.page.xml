@@ -10,7 +10,7 @@
             <container id="main">
                 <wgt:table>
                     <wgt:name>Роли</wgt:name>
-                    <wgt:query-id>${sec.admin.roles.query.id}</wgt:query-id>
+                    <wgt:query-id>${sec.admin.role.query.id}</wgt:query-id>
                     <wgt:columns>
                         <wgt:column column-field-id="name"/>
                         <wgt:column column-field-id="description"/>

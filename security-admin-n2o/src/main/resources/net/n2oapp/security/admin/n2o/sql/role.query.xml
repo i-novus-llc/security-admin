@@ -19,7 +19,6 @@
         </n2o:sql>
     </execution>
 
-
     <fields>
         <field>
             <id>id</id>
@@ -32,7 +31,9 @@
             <domain>string</domain>
             <display>name</display>
             <name>Название</name>
-            <filters auto-generate="true"/>
+            <filters>
+                <filter type="eq" filter-field="name">name like '%'||:name||'%'</filter>
+            </filters>
         </field>
         <field>
             <id>code</id>
@@ -46,7 +47,9 @@
             <domain>string</domain>
             <display>description</display>
             <name>Описание</name>
-            <filters auto-generate="true"/>
+            <filters>
+                <filter type="eq" filter-field="description">description like '%'||:description||'%'</filter>
+            </filters>
         </field>
         <field>
             <id>permissions*.id</id>

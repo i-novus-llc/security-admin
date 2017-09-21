@@ -10,7 +10,7 @@
             <container id="main">
                 <wgt:table>
                     <wgt:name>Пользователи</wgt:name>
-                    <wgt:query-id>${sec.admin.users.query.id}</wgt:query-id>
+                    <wgt:query-id>${sec.admin.user.query.id}</wgt:query-id>
                     <wgt:columns>
                         <wgt:column column-field-id="username"/>
                         <wgt:column column-field-id="surname"/>
@@ -38,7 +38,7 @@
                             </ctrl:options>
                         </ctrl:checkbox-group>
                         <ctrl:input-select id="roleFilter" type="multi" label="Роли" cache="off">
-                            <ctrl:query query-id="${sec.admin.roles.query.id}" value-field-id="id" label-field-id="name"/>
+                            <ctrl:query query-id="${sec.admin.role.query.id}" value-field-id="id" label-field-id="name"/>
                         </ctrl:input-select>
                     </wgt:filters>
                     <wgt:action-menu>
