@@ -7,5 +7,6 @@
     <include file="security/admin/db/changelog/V1_create_schemasec.xml"/>
     <include file="security/admin/db/changelog/V2_create_user.xml"/>
     <include file="security/admin/db/changelog/V3_create_roles.xml"/>
+    <include file="security/admin/db/changelog/V5_create_user_role_index.xml"/>
 
 </databaseChangeLog>

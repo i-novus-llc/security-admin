@@ -11,6 +11,8 @@
     <property name="n2o.security.admin.user.table" value="user"/>
     <!-- Название колонки в таблице пользователей, в которой хранится логин -->
     <property name="n2o.security.admin.user.login" value="username"/>
+    <!-- Название индекса для поля c логином-->
+    <property name="n2o.security.admin.user.username.index" value="user_username_idx_uniq"/>
 
     <!-- Название таблицы с ролями -->
     <property name="n2o.security.admin.role.table" value="role"/>
@@ -26,5 +28,9 @@
     <property name="n2o.security.admin.userrole.user.constraint.fk" value="user_role_user_fk"/>
     <!-- Название внешнего constraint для роли в таблице связи пользователей с ролями-->
     <property name="n2o.security.admin.userrole.role.constraint.fk" value="user_role_role_fk"/>
+    <!-- Название индекса для пользователя в таблице связи пользователей с ролями-->
+    <property name="n2o.security.admin.userrole.user.index" value="user_role_user_idx"/>
+    <!-- Название индекса для роли в таблице связи пользователей с ролями-->
+    <property name="n2o.security.admin.userrole.role.index" value="user_role_role_idx"/>
 
 </databaseChangeLog>

@@ -20,6 +20,12 @@
     <property name="n2o.security.admin.rolepermission.role.constraint.fk" value="role_permission_role_fk"/>
     <!-- Название внешнего constraint для роли в таблице связи прав доступа с ролями-->
     <property name="n2o.security.admin.permission.parent.constraint.fk" value="permission_parent_fk"/>
+    <!-- Название индекса для права доступа в таблице связи прав доступа с ролями-->
+    <property name="n2o.security.admin.rolepermission.permission.index" value="role_permission_permission_idx"/>
+    <!-- Название индекса для права доступа в таблице связи прав доступа с ролями-->
+    <property name="n2o.security.admin.rolepermission.role.index" value="role_permission_role_idx"/>
+    <!-- Название индекса для роли в таблице связи прав доступа с ролями-->
+    <property name="n2o.security.admin.permission.parent.index" value="permission_parent_idx"/>
 
     <include file="classpath:/security/admin/db/base/properties.xml"/>
 
