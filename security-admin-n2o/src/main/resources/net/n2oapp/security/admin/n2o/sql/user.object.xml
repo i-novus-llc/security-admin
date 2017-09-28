@@ -96,7 +96,7 @@
                 </n2o:sql>
             </invocation>
             <in-parameters>
-                <param name="username" mapping="['username']"/>
+                <param name="username" mapping="['username']" domain="string"/>
             </in-parameters>
             <result expression="[0][0][0] == 0"/>
         </constraint>
@@ -106,7 +106,7 @@
             <expression on="username">
                 <![CDATA[
                     if (typeof username != 'undefined' && username != null && username != '') {
-                     var regex = new RegExp('[a-zA-Z0-9]+');
+                     var regex = new RegExp('^[a-zA-Z][a-zA-Z0-9]+$');
                      regex.test(username);
                      }else true;
                 ]]>
