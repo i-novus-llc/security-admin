@@ -32,7 +32,7 @@
             <display>name</display>
             <name>Название</name>
             <filters>
-                <filter type="eq" filter-field="name">name like '%'||:name||'%'</filter>
+                <filter type="eq" filter-field="name">trim(lower(name)) like '%'||trim(lower(:name))||'%'</filter>
             </filters>
         </field>
         <field>
@@ -48,7 +48,7 @@
             <display>description</display>
             <name>Описание</name>
             <filters>
-                <filter type="eq" filter-field="description">description like '%'||:description||'%'</filter>
+                <filter type="eq" filter-field="description">trim(lower(description)) like '%'||trim(lower(:description))||'%'</filter>
             </filters>
         </field>
         <field>

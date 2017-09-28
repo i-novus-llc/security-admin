@@ -33,7 +33,7 @@
             <display>username</display>
             <name>Имя пользователя</name>
             <filters>
-                <filter type="eq" filter-field="username">username like '%'||:username||'%'</filter>
+                <filter type="eq" filter-field="username">trim(lower(username)) like '%'||trim(lower(:username))||'%'</filter>
             </filters>
         </field>
         <field>
@@ -48,7 +48,7 @@
             <display>surname</display>
             <name>Фамилия</name>
             <filters>
-                <filter type="eq" filter-field="surname">surname like '%'||:surname||'%'</filter>
+                <filter type="eq" filter-field="surname">trim(lower(surname)) like '%'||trim(lower(:surname))||'%'</filter>
             </filters>
         </field>
         <field>
@@ -57,7 +57,7 @@
             <display>name</display>
             <name>Имя</name>
             <filters>
-                <filter type="eq" filter-field="name">name like '%'||:name||'%'</filter>
+                <filter type="eq" filter-field="name">trim(lower(name)) like '%'||trim(lower(:name))||'%'</filter>
             </filters>
         </field>
         <field>
@@ -66,7 +66,7 @@
             <display>patronymic</display>
             <name>Отчество</name>
             <filters>
-                <filter type="eq" filter-field="patronymic">patronymic like '%'||:patronymic||'%'</filter>
+                <filter type="eq" filter-field="patronymic">trim(lower(patronymic)) like '%'||trim(lower(:patronymic))||'%'</filter>
             </filters>
         </field>
         <field>
