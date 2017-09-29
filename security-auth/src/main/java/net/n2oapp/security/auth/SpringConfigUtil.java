@@ -1,6 +1,8 @@
 package net.n2oapp.security.auth;
 
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 
 /**
  * Утилита для конфигурации аутентификации spring security
@@ -31,5 +33,14 @@ public class SpringConfigUtil {
                 .and().csrf().disable();
 
     }
+
+    public static WebSecurity configureWebSecurity(WebSecurity webSecurity) {
+        DefaultWebSecurityExpressionHandler handler = new DefaultWebSecurityExpressionHandler();
+        handler.setDefaultRolePrefix("");
+        handler.setPermissionEvaluator(new N2oSecurityPermissionEvaluator());
+        webSecurity.expressionHandler(handler);
+        return webSecurity;
+    }
+
 }
 

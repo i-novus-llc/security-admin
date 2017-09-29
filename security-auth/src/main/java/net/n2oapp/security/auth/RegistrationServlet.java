@@ -112,14 +112,9 @@ public class RegistrationServlet extends HttpServlet {
         String authority = getProperty("n2o.auth.authority");
         List<GrantedAuthority> authorities = new ArrayList<>();
         if(authority != null) {
-            Integer roleId = roleService.getRoleIdByCode(authority);
-            if (roleId != null) {
-                authorities.add(new RoleGrantedAuthority(roleId.toString()));
-            }
+            authorities.add(new RoleGrantedAuthority(authority));
         }
-        User user = new User(username, password,
-               authorities,
-                surname, name, patronymic, email);
+        User user = new User(username, password, authorities, surname, name, patronymic, email);
         userDetailsManager.createUser(user);
     }
 }
