@@ -11,6 +11,8 @@ public class SpringConfigUtil {
 
     public static HttpSecurity cofigureHttp(HttpSecurity http) throws Exception {
         return http
+                .exceptionHandling().authenticationEntryPoint(new AjaxAwareLoginUrlAuthenticationEntryPoint("/login"))
+                .and()
                 .authorizeRequests()
                 .antMatchers("/registration/**", "/registrationServlet/**", "/dist/**", "/favicon.ico").permitAll()
                 .anyRequest().authenticated()
@@ -31,7 +33,6 @@ public class SpringConfigUtil {
                 .headers().contentTypeOptions().disable()
                 .and().rememberMe().key("uniqueKey")
                 .and().csrf().disable();
-
     }
 
     public static WebSecurity configureWebSecurity(WebSecurity webSecurity) {
