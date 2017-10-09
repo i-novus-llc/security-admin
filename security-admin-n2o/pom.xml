@@ -44,7 +44,7 @@
         <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
-            <version>1.4</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>

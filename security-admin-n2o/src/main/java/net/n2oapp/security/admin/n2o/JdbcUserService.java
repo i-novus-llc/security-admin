@@ -1,23 +1,30 @@
 package net.n2oapp.security.admin.n2o;
 
 import net.n2oapp.framework.api.exception.N2oException;
+import net.n2oapp.properties.StaticProperties;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.n2o.util.PasswordGenerator;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.text.StrSubstitutor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.mail.MailSender;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -43,7 +50,6 @@ public class JdbcUserService {
     private boolean generate;
     private PasswordGenerator passwordGenerator;
     private PasswordEncoder passwordEncoder;
-    private MailSender mailSender;
     private String mailApp;
     private String mailSubject;
     private Resource mailBody;
@@ -145,11 +151,21 @@ public class JdbcUserService {
             body = StrSubstitutor.replace(IOUtils.toString(inputStream, "UTF-8"), data);
         }
         String subject = StrSubstitutor.replace(subjectTemplate, data);
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(user.getEmail());
-        message.setSubject(subject);
-        message.setText(body);
-        mailSender.send(message);
+        try {
+            Context initCtx = new InitialContext();
+            Context envCtx = (Context) initCtx.lookup("java:comp/env");
+            Session session = (Session) envCtx.lookup(StaticProperties.getProperty("sec.password.mail.server"));
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(session.getProperty("mail.smtp.user")));
+            InternetAddress to[] = new InternetAddress[1];
+            to[0] = new InternetAddress(user.getEmail());
+            message.setRecipients(Message.RecipientType.TO, to);
+            message.setSubject(subject);
+            message.setContent(body, "text/plain; charset=UTF-8");
+            Transport.send(message);
+        } catch (MessagingException | NamingException e) {
+            throw new N2oException(e.getMessage(), e);
+        }
     }
 
     public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
@@ -176,7 +192,4 @@ public class JdbcUserService {
         this.mailApp = mailApp;
     }
 
-    public void setMailSender(MailSender mailSender) {
-        this.mailSender = mailSender;
-    }
 }
