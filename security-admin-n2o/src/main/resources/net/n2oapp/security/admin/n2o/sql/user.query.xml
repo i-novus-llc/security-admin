@@ -33,7 +33,8 @@
             <display>username</display>
             <name>Имя пользователя</name>
             <filters>
-                <filter type="eq" filter-field="username">trim(lower(username)) like '%'||trim(lower(:username))||'%'</filter>
+                <filter type="eq" filter-field="username">trim(lower(username)) like '%'||trim(lower(:username))||'%'
+                </filter>
             </filters>
         </field>
         <field>
@@ -42,47 +43,25 @@
             <display>email</display>
             <name>E-mail</name>
         </field>
-        <field>
-            <id>surname</id>
-            <domain>string</domain>
-            <display>surname</display>
-            <name>Фамилия</name>
-            <filters>
-                <filter type="eq" filter-field="surname">trim(lower(surname)) like '%'||trim(lower(:surname))||'%'</filter>
-            </filters>
-        </field>
-        <field>
-            <id>name</id>
-            <domain>string</domain>
-            <display>name</display>
-            <name>Имя</name>
-            <filters>
-                <filter type="eq" filter-field="name">trim(lower(name)) like '%'||trim(lower(:name))||'%'</filter>
-            </filters>
-        </field>
-        <field>
-            <id>patronymic</id>
-            <domain>string</domain>
-            <display>patronymic</display>
-            <name>Отчество</name>
-            <filters>
-                <filter type="eq" filter-field="patronymic">trim(lower(patronymic)) like '%'||trim(lower(:patronymic))||'%'</filter>
-            </filters>
-        </field>
+
         <field>
             <id>isActive.id</id>
             <domain>boolean</domain>
             <display>is_active</display>
             <name>Активность</name>
             <filters>
-                <filter type="in" filter-field="isActive*.id">((:isActive*.id) is null or is_active in (:isActive*.id))</filter>
+                <filter type="in" filter-field="isActive*.id">((:isActive*.id) is null or is_active in
+                    (:isActive*.id))
+                </filter>
             </filters>
         </field>
 
         <field>
             <id>roles</id>
             <domain>object[]</domain>
-            <display>(select array_to_json(array_agg(row_to_json(row_js))) from (select r.id, r.name from sec.user_role ur join sec.role r on r.id=ur.role_id where ur.user_id=u.id) row_js)</display>
+            <display>(select array_to_json(array_agg(row_to_json(row_js))) from (select r.id, r.name from sec.user_role
+                ur join sec.role r on r.id=ur.role_id where ur.user_id=u.id) row_js)
+            </display>
             <name>Роли</name>
 
         </field>
@@ -98,6 +77,20 @@
                                 <@ (select array(select (urr.role_id)::varchar FROM sec.user_role urr where urr.user_id = us.id)))
 
                     ]]>
+                </filter>
+            </filters>
+        </field>
+
+        <field>
+            <id>fio</id>
+            <domain>string</domain>
+            <display>(u.surname||' '||u.name||' '||u.patronymic)</display>
+            <name>ФИО</name>
+            <filters>
+                <filter type="eq" filter-field="fio">(trim(lower(u.surname)) like '%'||trim(lower(:fio))||'%'
+                    )or(trim(lower(u.name)) like '%'||trim(lower(:fio))||'%' )or(trim(lower(u.patronymic)) like
+                    '%'||trim(lower(:fio))||'%') or (trim(lower((u.surname||' '||u.name||' '||u.patronymic))) like
+                    '%'||trim(lower(:fio))||'%')
                 </filter>
             </filters>
         </field>
