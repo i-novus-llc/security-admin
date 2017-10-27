@@ -37,6 +37,7 @@
                 </filter>
             </filters>
         </field>
+
         <field>
             <id>email</id>
             <domain>string</domain>
