@@ -59,9 +59,7 @@
             <display>(select array_to_json(array_agg(row_to_json(row_js))) from (select p.id, p.name from sec.role_permission
                 rp join sec.permission p on p.id=rp.permission_id where rp.role_id=r.id) row_js) </display>
             <name>Права доступа</name>
-            <filters>
-            <filter type="eq" filter-field="permissions" ></filter>
-            </filters>
+
         </field>
 
         <field>
