@@ -13,7 +13,7 @@
                     <wgt:query-id>${sec.admin.user.query.id}</wgt:query-id>
                     <wgt:columns>
                         <wgt:column column-field-id="username"/>
-                        <wgt:column column-field-id="fio"/>
+                        <wgt:column column-field-id="fio" />
                          <wgt:column column-field-id="isActive.id">
                              <wgt:checkbox>
                                  <wgt:invoke-action action-id="changeUserActive"/>
@@ -26,7 +26,7 @@
                      </wgt:columns>
                      <wgt:filters opened="true">
                          <ctrl:input-text id="username"/>
-                         <ctrl:input-text id="fio"/>
+                         <ctrl:input-text id="fio" css-class="n2o-control-10"/>
                             <ctrl:checkbox-group id="isActive" label="Активность" inline="true" css-class="n2o-control-4">
                                 <ctrl:options>
                                     <ctrl:option>{"id" : "true", "name" :"Да"}</ctrl:option>
