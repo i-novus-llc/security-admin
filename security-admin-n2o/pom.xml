@@ -12,6 +12,10 @@
     <artifactId>security-admin-n2o</artifactId>
     <packaging>jar</packaging>
 
+    <properties>
+        <javax-mail.version>1.5.6</javax-mail.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>net.n2oapp.framework.security</groupId>
@@ -43,9 +47,10 @@
         <!-- for mail -->
         <dependency>
             <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
-            <scope>provided</scope>
+            <artifactId>javax.mail-api</artifactId>
+            <version>${javax-mail.version}</version>
         </dependency>
+
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>

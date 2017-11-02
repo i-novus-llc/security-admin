@@ -1,4 +1,4 @@
-package net.n2oapp.security.admin.api.entity;
+package net.n2oapp.security.admin.impl.entity;
 
 import javax.persistence.*;
 import java.util.Set;

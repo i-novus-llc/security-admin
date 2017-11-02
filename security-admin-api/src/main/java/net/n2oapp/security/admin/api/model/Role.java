@@ -12,6 +12,7 @@ public class Role {
     private String description;
     private Set<Integer> permissionIds;
 
+
     public Integer getId() {
         return id;
     }

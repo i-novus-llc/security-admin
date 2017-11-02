@@ -19,17 +19,31 @@
         <module>security-admin-n2o</module>
         <module>security-admin-api</module>
         <module>security-auth</module>
+        <module>security-rest</module>
     </modules>
 
     <properties>
         <n2o.version>6.1.4</n2o.version>
         <spring.boot.version>1.5.2.RELEASE</spring.boot.version>
+        <spring.data.version>1.3.0.RELEASE</spring.data.version>
         <spring.security.version>4.2.3.RELEASE</spring.security.version>
         <spring.version>4.3.10.RELEASE</spring.version>
+        <cxf.version>3.1.11</cxf.version>
+        <jackson.version>2.8.6</jackson.version>
+        <criteria.version>3.9</criteria.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <!-- spring boot -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
             <!-- n2o -->
             <dependency>
                 <groupId>net.n2oapp.framework</groupId>
@@ -57,35 +71,27 @@
                 <version>${n2o.version}</version>
             </dependency>
 
-            <!-- spring security -->
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-config</artifactId>
-                <version>${spring.security.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-web</artifactId>
-                <version>${spring.security.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-core</artifactId>
-                <version>${spring.security.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-taglibs</artifactId>
-                <version>${spring.security.version}</version>
-            </dependency>
-
-            <!-- persistence api-->
-            <dependency>
-                <groupId>org.hibernate.javax.persistence</groupId>
-                <artifactId>hibernate-jpa-2.1-api</artifactId>
-                <version>1.0.0.Final</version>
-            </dependency>
-
+            <!--&lt;!&ndash; spring security &ndash;&gt;-->
+            <!--<dependency>-->
+                <!--<groupId>org.springframework.security</groupId>-->
+                <!--<artifactId>spring-security-config</artifactId>-->
+                <!--<version>${spring.security.version}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>org.springframework.security</groupId>-->
+                <!--<artifactId>spring-security-web</artifactId>-->
+                <!--<version>${spring.security.version}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>org.springframework.security</groupId>-->
+                <!--<artifactId>spring-security-core</artifactId>-->
+                <!--<version>${spring.security.version}</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>org.springframework.security</groupId>-->
+                <!--<artifactId>spring-security-taglibs</artifactId>-->
+                <!--<version>${spring.security.version}</version>-->
+            <!--</dependency>-->
 
             <!-- servlet -->
             <dependency>
@@ -102,21 +108,59 @@
                 <version>2.2</version>
             </dependency>
 
-            <!-- spring boot -->
+            <!-- CXF -->
             <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring.boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-transports-http</artifactId>
+                <version>${cxf.version}</version>
             </dependency>
-
-            <!-- mail -->
             <dependency>
-                <groupId>javax.mail</groupId>
-                <artifactId>mail</artifactId>
-                <version>1.4.7</version>
-                <scope>provided</scope>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-frontend-jaxrs</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-frontend-jaxws</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-spring-boot-starter-jaxws</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-spring-boot-starter-jaxrs</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-rs-service-description</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-rs-service-description-swagger</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>swagger-ui</artifactId>
+                <version>3.0.17</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.jaxrs</groupId>
+                <artifactId>jackson-jaxrs-json-provider</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <!-- /CXF -->
+
+            <!-- N2O criteria -->
+            <dependency>
+                <groupId>net.n2oapp.criteria</groupId>
+                <artifactId>criteria-api</artifactId>
+                <version>${criteria.version}</version>
             </dependency>
 
         </dependencies>
