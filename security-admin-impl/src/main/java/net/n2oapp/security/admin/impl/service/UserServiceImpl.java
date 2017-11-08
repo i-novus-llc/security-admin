@@ -1,18 +1,20 @@
 package net.n2oapp.security.admin.impl.service;
 
-import net.n2oapp.security.admin.api.criteria.Criteria;
-import net.n2oapp.security.admin.api.model.Role;
+import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.service.UserService;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
+import net.n2oapp.security.admin.impl.service.specification.UserSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.modelmapper.ModelMapper;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
@@ -20,11 +22,14 @@ import java.util.stream.Collectors;
  * Created by otihonova on 31.10.2017.
  */
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private ModelMapper modelMapper;
+
+    private final Function<UserEntity, User> funcEntityToModel = this::convertToUser;
 
     @Override
     public Integer create(User user) {
@@ -48,24 +53,15 @@ public class UserServiceImpl implements UserService {
         return convertToUser(userEntity);
     }
 
-  //  @Override
- //   public Page<User> findAll(Criteria criteria) {
-        //criteria-> Spe
-        //return userRepository.findAll(criteria).map(userEntity, User.class);
-
-   // }
+    @Override
+    public Page<User> findAll(UserCriteria criteria) {
+        final Specification<UserEntity> specification = new UserSpecifications(criteria);
+        final Page<UserEntity> all = userRepository.findAll(specification, criteria);
+        return all.map(this::convertToUser);
+    }
 
     private UserEntity convertToUserEntity(User user){
-        /*UserEntity userEntity = new UserEntity();
-        userEntity.setId(user.getId());
-        userEntity.setName(user.getName());
-        userEntity.setSurname(user.getSurname());
-        userEntity.setPatronymic(user.getPatronymic());
-        userEntity.setEmail(user.getEmail());
-        userEntity.setPassword(user.getPassword());
-        userEntity.setIsActive(user.getIsActive());
-        userEntity.setRoleSet(user.getRoleIds().stream().map(RoleEntity::new).collect(Collectors.toSet()));*/
-        UserEntity userEntity =modelMapper.map(user,UserEntity.class); //TODO:возникнет проблема с ролями
+        UserEntity userEntity = modelMapper.map(user,UserEntity.class); //TODO:возникнет проблема с ролями
         userEntity.setRoleSet(user.getRoleIds().stream().map(RoleEntity::new).collect(Collectors.toSet()));
         return userEntity;
     }

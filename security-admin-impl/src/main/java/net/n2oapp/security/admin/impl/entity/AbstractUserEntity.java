@@ -9,7 +9,7 @@ import java.util.Set;
  * Выделена для возможности переодпределять в прикладных приложениях
  */
 
-@Entity
+@MappedSuperclass
 public abstract class AbstractUserEntity implements Serializable {
     /**
      * Идентификатор пользователя

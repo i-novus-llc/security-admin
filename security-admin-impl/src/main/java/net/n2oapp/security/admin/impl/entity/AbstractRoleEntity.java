@@ -7,7 +7,7 @@ import java.util.Set;
  * Абстрактная сущность Роли
  * Выделена для возможности переодпределять в прикладных приложениях
  */
-@Entity
+@MappedSuperclass
 public abstract class AbstractRoleEntity {
     /**
      * Идентификатор роли

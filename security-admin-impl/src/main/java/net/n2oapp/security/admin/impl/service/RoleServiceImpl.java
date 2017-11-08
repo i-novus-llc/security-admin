@@ -1,15 +1,17 @@
 package net.n2oapp.security.admin.impl.service;
 
+import net.n2oapp.security.admin.api.criteria.RoleCriteria;
 import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.service.RoleService;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
-import net.n2oapp.security.admin.impl.entity.UserEntity;
-import net.n2oapp.security.admin.impl.repository.RoleRepository;
-import net.n2oapp.security.admin.impl.repository.UserRepository;
+import net.n2oapp.security.admin.impl.repository.RoleRepository;;
+import net.n2oapp.security.admin.impl.service.specification.RoleSpecifications;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.stream.Collectors;
 
@@ -45,14 +47,14 @@ public class RoleServiceImpl implements RoleService {
         return convertToRole(roleEntity);
     }
 
+    @Override
+    public Page<Role> findAll(RoleCriteria criteria) {
+        final Specification<RoleEntity> specification = new RoleSpecifications(criteria);
+        final Page<RoleEntity> all = roleRepository.findAll(specification, criteria);
+        return all.map(this::convertToRole);
+    }
+
     private RoleEntity convertToRoleEntity(Role role){
-        /*  RoleEntity roleEntity = new RoleEntity();
-        roleEntity.setId(role.getId());
-        roleEntity.setName(role.getName());
-        roleEntity.setCode(role.getCode());
-        roleEntity.setDescription(role.getDescription());
-       // roleEntity.setPermissionSet();
-        roleEntity.setPermissionSet(role.getPermissionIds().stream().map(PermissionEntity::new).collect(Collectors.toSet()));*/
         RoleEntity roleEntity =modelMapper.map(role,RoleEntity.class); //TODO:возникнет проблема с представлением полей
         roleEntity.setPermissionSet(role.getPermissionIds().stream().map(PermissionEntity::new).collect(Collectors.toSet()));
         return roleEntity;

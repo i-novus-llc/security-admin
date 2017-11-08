@@ -1,13 +1,15 @@
 package net.n2oapp.security.admin.api.service;
 
-import net.n2oapp.security.admin.api.criteria.Criteria;
+import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import net.n2oapp.security.admin.api.model.User;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 /**
  * Сервис управления пользователями
  */
-
+@Service
 public interface UserService {
 
     Integer create(User user);
@@ -18,7 +20,7 @@ public interface UserService {
 
     User getById (Integer id);
 
-  //  Page<User> findAll (Criteria criteria);
+    Page<User> findAll (UserCriteria criteria);
 
 
 }

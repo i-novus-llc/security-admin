@@ -24,12 +24,7 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public Integer update(Permission permission) {
-        PermissionEntity permissionEntity = new PermissionEntity();
-        permissionEntity.setId(permission.getId());
-        permissionEntity.setCode(permission.getCode());
-        permissionEntity.setName(permission.getName());
-        permissionEntity.setParentId(permission.getParentId());
-        return permissionRepository.save(permissionEntity).getId();
+        return permissionRepository.save(convertToPermissionEntity(permission)).getId();
     }
 
     @Override
@@ -59,4 +54,5 @@ public class PermissionServiceImpl implements PermissionService {
         return permission;
 
     }
+
 }

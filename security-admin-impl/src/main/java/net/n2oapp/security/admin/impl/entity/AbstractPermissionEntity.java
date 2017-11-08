@@ -6,7 +6,7 @@ import javax.persistence.*;
  * Абстрактная сущность Права доступа
  * Выделена для возможности переодпределять в прикладных приложениях
  */
-@Entity
+@MappedSuperclass
 public abstract class AbstractPermissionEntity {
     /**
      * Идентификатор права доступа
