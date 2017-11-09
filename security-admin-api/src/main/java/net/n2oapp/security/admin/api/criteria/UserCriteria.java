@@ -15,7 +15,7 @@ public class UserCriteria  extends PageRequest {
     private String surname;
     private String name;
     private String patronymic;
-    private boolean isActive;
+    private Set<Boolean> isActive;
     private Set<Integer> roleIds;
 
     public UserCriteria(int page, int size) {
@@ -58,11 +58,11 @@ public class UserCriteria  extends PageRequest {
         this.patronymic = patronymic;
     }
 
-    public boolean isActive() {
+    public Set<Boolean>  isActive() {
         return isActive;
     }
 
-    public void setIsActive(boolean isActive) {
+    public void setIsActive(Set<Boolean> isActive) {
         this.isActive = isActive;
     }
 

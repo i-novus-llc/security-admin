@@ -19,6 +19,7 @@ public class UserRestServiceImpl implements UserRestService {
 
     @Override
     public Page<User> search(UserCriteria criteria) {
+
       return   service.findAll(criteria);
     }
 }

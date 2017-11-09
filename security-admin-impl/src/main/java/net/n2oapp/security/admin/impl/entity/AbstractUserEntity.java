@@ -60,7 +60,7 @@ public abstract class AbstractUserEntity implements Serializable {
      * Активен ли пользователь
      */
     @Column(name = "is_active")
-    private boolean isActive;
+    private Boolean isActive;
 
     /**
      * Роли пользователя
@@ -80,11 +80,11 @@ public abstract class AbstractUserEntity implements Serializable {
         this.roleSet = roleSet;
     }
 
-    public boolean getIsActive() {
+    public Boolean getIsActive() {
         return isActive;
     }
 
-    public void setIsActive(boolean isActive) {
+    public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
     }
 

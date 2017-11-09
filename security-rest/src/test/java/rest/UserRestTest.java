@@ -74,7 +74,7 @@ public class UserRestTest {
         User user1 = new User();
         user1.setUsername("user2");
         user1.setName("userName2");
-        user1.setSurname("userSurname2");
+        user1.setSurname("userSurname");
         user1.setPatronymic("userPatronymic");
         user1.setEmail("UserEmail");
         user1.setPassword("userPassword");
@@ -153,17 +153,29 @@ public class UserRestTest {
         Role role = new Role();
         role.setId(1);
         Set<Integer> roles = new HashSet<Integer>();
-        roles.add(role.getId());
+        Set<Boolean> active = new HashSet<Boolean>();
+        active.add(true);
+        active.add(false);
 
+
+
+        roles.add(role.getId());
         UserCriteria userCriteria = new UserCriteria(2, 4);
+
+        Page<User> user = service.findAll(userCriteria);
+        assertEquals(4, user.getTotalElements());
+
         userCriteria.setUsername("user2");
         userCriteria.setName("userName2");
+        userCriteria.setIsActive(active);
+       // userCriteria.setRoleIds(roles);
+        user = service.findAll(userCriteria);
+        assertEquals(2, user.getTotalElements());
+
         userCriteria.setSurname("userSurname2");
         userCriteria.setPatronymic("userPatronymic");
-        userCriteria.setIsActive(true);
-       // userCriteria.setRoleIds(roles);
-        Page<User> user = service.findAll(userCriteria);
-        assertEquals(2, user.getTotalElements());
+        user = service.findAll(userCriteria);
+        assertEquals(1, user.getTotalElements());
 
 
     }

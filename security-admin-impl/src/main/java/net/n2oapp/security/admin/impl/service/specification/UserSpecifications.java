@@ -33,9 +33,13 @@ public class UserSpecifications implements Specification<UserEntity> {
             predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.surname), criteria.getSurname()));
         if (criteria.getPatronymic() != null)
             predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.patronymic), criteria.getPatronymic()));
-       if (!criteria.isActive())
-           predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.isActive), criteria.isActive()));
-//
+        if (criteria.isActive()!= null) {
+            for (Boolean active : criteria.isActive()) {
+                if ((UserEntity_.isActive.equals(active)))
+                predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.isActive), active));
+            }
+        }
+
         return predicate;
 
     }

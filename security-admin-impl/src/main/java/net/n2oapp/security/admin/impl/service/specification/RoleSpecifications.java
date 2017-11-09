@@ -24,11 +24,32 @@ public class RoleSpecifications implements Specification<RoleEntity> {
     @Override
     public Predicate toPredicate(Root<RoleEntity> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder builder) {
         Predicate predicate = builder.and();
-        Map<String, Object> optional = new HashMap<>();
-        optional.put(RoleEntity_.name.getName(),criteria.getName());
-        optional.put(RoleEntity_.description.getName(), criteria.getDescription());
-        optional.put(RoleEntity_.permissionSet.getName(),criteria.getPermissionIds());
-        optional.entrySet().stream().filter((e)-> e.getValue() != null).forEach(e -> builder.and(predicate, builder.equal(root.get(e.getKey()), e.getValue())));
+        if (criteria.getName() != null)
+            predicate = builder.and(predicate, builder.equal(root.get(RoleEntity_.name), criteria.getName()));
+        if (criteria.getDescription() != null)
+            predicate = builder.and(predicate, builder.equal(root.get(RoleEntity_.description), criteria.getDescription()));
+
         return predicate;
+
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
