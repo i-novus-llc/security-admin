@@ -9,6 +9,7 @@
                 select :select
                 from sec.user u
                 where :where
+                order by (u.id)
             </n2o:items-query>
             <n2o:count-query>
                 select count(u.id)

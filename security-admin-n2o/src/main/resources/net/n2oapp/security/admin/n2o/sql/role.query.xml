@@ -2,13 +2,14 @@
 <query xmlns:n2o="http://n2oapp.net/framework/config/schema/n2o-query-executions-1.0"
        xmlns="http://n2oapp.net/framework/config/schema/query-3.0">
     <object-id>${sec.admin.role.object.id}</object-id>
-    <name>Роль</name>
+    <name>Роли</name>
     <execution>
         <n2o:sql>
             <n2o:items-query>
                 select :select
                 from sec.role r
                 where :where
+                order by (r.id)
             </n2o:items-query>
             <n2o:count-query>
                 select count(id)
