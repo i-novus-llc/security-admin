@@ -13,12 +13,12 @@ import javax.ws.rs.core.MediaType;
 import org.springframework.data.domain.Page;
 
 /**
-        * REST сервис регистрации участников оборота семян
+        * REST сервис управления пользоватлями
         */
 @Path("/users")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@Api("REST сервис регистрации участников оборота семян")
+@Api("REST сервис регистрации пользователей")
 public interface UserRestService {
 
     @GET
@@ -26,4 +26,25 @@ public interface UserRestService {
     @ApiOperation("Фильтрация юзеров")
     @ApiResponse(code = 200, message = "Юзеры")
     Page <User> search(UserCriteria criteria);
+
+    @POST
+    @Path("/users.main.create")
+    @ApiOperation("Создание юзеров")
+    @ApiResponse(code = 200, message = "Юзеры")
+    void create(User user);
+
+    @PUT
+    @Path("/users.main.update")
+    @ApiOperation("Изменение юзеров")
+    @ApiResponse(code = 200, message = "Юзеры")
+    void update(Integer id);
+
+    @DELETE
+    @Path("/users.main.delete")
+    @ApiOperation("Удаление юзеров")
+    @ApiResponse(code = 200, message = "Юзеры")
+    void  delete(Integer id);
+
+
+
 }

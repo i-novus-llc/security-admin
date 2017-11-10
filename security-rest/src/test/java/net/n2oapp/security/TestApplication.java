@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 /**
- * Created by otihonova on 03.11.2017.
+ * Стартовая точка запуска Spring Boot
  */
 @SpringBootApplication
 public class TestApplication {

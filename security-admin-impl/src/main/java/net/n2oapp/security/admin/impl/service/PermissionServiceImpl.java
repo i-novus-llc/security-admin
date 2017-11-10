@@ -6,10 +6,14 @@ import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.repository.PermissionRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by otihonova on 31.10.2017.
  */
+@Service
+@Transactional
 public class PermissionServiceImpl implements PermissionService {
     @Autowired
     private PermissionRepository permissionRepository;

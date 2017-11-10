@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 
 /**
- * Created by otihonova on 31.10.2017.
+ * Реализация сервиса управления пользователями
  */
 @Service
 @Transactional

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 
 /**
- * Created by otihonova on 31.10.2017.
+ * Репозиторий пользователей
  */
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Integer>, JpaSpecificationExecutor<UserEntity> {

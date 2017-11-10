@@ -6,7 +6,7 @@ import org.springframework.data.domain.Sort;
 import java.util.Set;
 
 /**
- * Created by otihonova on 02.11.2017.
+ * Критерий фильтрации ролей
  */
 public class RoleCriteria extends PageRequest {
     private String name;

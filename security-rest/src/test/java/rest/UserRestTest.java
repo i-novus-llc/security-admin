@@ -4,14 +4,10 @@ import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
-import net.n2oapp.security.admin.api.service.RoleService;
 import net.n2oapp.security.admin.api.service.UserService;
-import net.n2oapp.security.admin.impl.entity.RoleEntity;
-import net.n2oapp.security.admin.impl.entity.UserEntity;
+import net.n2oapp.security.rest.UserRestService;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import net.n2oapp.security.TestApplication;
-import net.n2oapp.security.rest.UserRestService;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,12 +16,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
@@ -37,7 +31,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Created by otihonova on 03.11.2017.
+ *Тест Rest сервиса управления пользователями
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -143,7 +137,7 @@ public class UserRestTest {
         service.update(user);
         assertEquals("userName1Update", service.getById(id).getName());
         service.delete(id);
-        /// assertNull(service.getById(id));
+        //assertNull(service.getById(id));
     }
 
     @Test
@@ -156,7 +150,6 @@ public class UserRestTest {
         Set<Boolean> active = new HashSet<Boolean>();
         active.add(true);
         active.add(false);
-
 
 
         roles.add(role.getId());

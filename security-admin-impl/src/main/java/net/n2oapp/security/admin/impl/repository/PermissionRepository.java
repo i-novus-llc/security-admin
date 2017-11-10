@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 
 /**
- * Created by otihonova on 31.10.2017.
+ * Репозиторий прав доступа
  */
 @Repository
 public interface PermissionRepository  extends JpaRepository<PermissionEntity, Integer>,JpaSpecificationExecutor<PermissionEntity> {

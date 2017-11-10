@@ -7,7 +7,7 @@ import org.springframework.data.domain.Sort;
 import java.util.Set;
 
 /**
- * Created by otihonova on 01.11.2017.
+ * Критерий фильтрации пользователей
  */
 
 public class UserCriteria  extends PageRequest {

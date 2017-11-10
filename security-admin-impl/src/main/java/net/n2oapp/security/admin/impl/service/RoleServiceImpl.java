@@ -12,12 +12,17 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Collectors;
 
 /**
- * Created by otihonova on 31.10.2017.
+ * Реализация сервиса управления ролями
  */
+
+@Service
+@Transactional
 public class RoleServiceImpl implements RoleService {
     @Autowired
     private RoleRepository roleRepository;
@@ -32,7 +37,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Integer update(Role role) {
-        return roleRepository.save(convertToRoleEntity(role)).getId(); //TODO:проверить
+        return roleRepository.save(convertToRoleEntity(role)).getId();
     }
 
     @Override
@@ -55,12 +60,12 @@ public class RoleServiceImpl implements RoleService {
     }
 
     private RoleEntity convertToRoleEntity(Role role){
-        RoleEntity roleEntity =modelMapper.map(role,RoleEntity.class); //TODO:возникнет проблема с представлением полей
+        RoleEntity roleEntity =modelMapper.map(role,RoleEntity.class);
         roleEntity.setPermissionSet(role.getPermissionIds().stream().map(PermissionEntity::new).collect(Collectors.toSet()));
         return roleEntity;
     }
     private Role convertToRole (RoleEntity roleEntity){
-        Role role = modelMapper.map(roleEntity, Role.class); //TODO:возникнет проблема с представлением полей
+        Role role = modelMapper.map(roleEntity, Role.class);
         role.setPermissionIds(roleEntity.getPermissionSet().stream().map(PermissionEntity::getId).collect(Collectors.toSet()));
         return role;
 

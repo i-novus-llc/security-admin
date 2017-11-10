@@ -9,7 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 
 /**
- * Created by otihonova on 03.11.2017.
+ *Реализация сервиса управления пользоватлями
  */
 @Controller
 public class UserRestServiceImpl implements UserRestService {
@@ -21,5 +21,21 @@ public class UserRestServiceImpl implements UserRestService {
     public Page<User> search(UserCriteria criteria) {
 
       return   service.findAll(criteria);
+    }
+
+    @Override
+    public void create(User user) {
+        service.create(user);
+    }
+
+    @Override
+    public void update(Integer id) {
+        //service.update(id);
+    }
+
+    @Override
+    public void delete(Integer id) {
+        service.delete(id);
+
     }
 }
