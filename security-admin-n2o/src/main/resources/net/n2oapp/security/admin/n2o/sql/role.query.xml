@@ -9,7 +9,7 @@
                 select :select
                 from sec.role r
                 where :where
-                order by (r.id)
+                order by :order, id
             </n2o:items-query>
             <n2o:count-query>
                 select count(id)
@@ -25,6 +25,7 @@
             <id>id</id>
             <domain>integer</domain>
             <display/>
+            <sorting/>
             <filters auto-generate="true"/>
         </field>
         <field>
@@ -32,6 +33,7 @@
             <domain>string</domain>
             <display>name</display>
             <name>Название</name>
+            <sorting>name</sorting>
             <filters>
                 <filter type="eq" filter-field="name">trim(lower(name)) like '%'||trim(lower(:name))||'%'</filter>
             </filters>
@@ -48,6 +50,7 @@
             <domain>string</domain>
             <display>description</display>
             <name>Описание</name>
+            <sorting>description</sorting>
             <filters>
                 <filter type="eq" filter-field="description">trim(lower(description)) like '%'||trim(lower(:description))||'%'</filter>
             </filters>
