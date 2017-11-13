@@ -179,42 +179,23 @@ public class N2oJdbcUserDetailsManager implements UserDetailsManager {
     }
 
     private List<GrantedAuthority> loadAuthorities(String username) {
-        class TempRole {
-            private Integer id;
-            private String code;
-
-            public TempRole(Integer id, String code) {
-                this.id = id;
-                this.code = code;
-            }
-
-            public Integer getId() {
-                return id;
-            }
-
-            public String getCode() {
-                return code;
-            }
-        }
         List<GrantedAuthority> authorities = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
         params.put("username", username);
-        List<TempRole> tempRoleAuthorities = jdbcTemplate.query(GET_ROLES_BY_USERNAME, params, (rs, i) -> {
-            Integer id = rs.getInt(1);
-            String code = rs.getString(2);
-            return new TempRole(id, code);
+        List<Integer> tempRoleAuthorities = jdbcTemplate.query(GET_ROLES_BY_USERNAME, params, (rs, i) -> {
+            return rs.getInt(1);
         });
         if (tempRoleAuthorities == null) return null;
         tempRoleAuthorities.forEach(r -> {
             Map<String, Object> roleParams = new HashMap<>();
-            roleParams.put("roleId", r.getId());
+            roleParams.put("roleId", r);
             authorities.addAll(jdbcTemplate.query(GET_PERMISSIONS_BY_ROLE_ID, roleParams, (rs, i) -> {
                 String permission = rs.getString(1);
                 return new PermissionGrantedAuthority(permission);
             }));
         });
         List<RoleGrantedAuthority> roleAuthorities = tempRoleAuthorities.stream()
-                .map(r -> new RoleGrantedAuthority(r.getId().toString())).collect(Collectors.toList());
+                .map(r -> new RoleGrantedAuthority(r.toString())).collect(Collectors.toList());
         authorities.addAll(roleAuthorities);
         return authorities;
     }
