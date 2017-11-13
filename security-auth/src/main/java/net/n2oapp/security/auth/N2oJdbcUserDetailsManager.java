@@ -23,7 +23,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -206,7 +205,6 @@ public class N2oJdbcUserDetailsManager implements UserDetailsManager {
             return new TempRole(id, code);
         });
         if (tempRoleAuthorities == null) return null;
-        tempRoleAuthorities = tempRoleAuthorities.stream().filter(r -> r.getCode() != null).collect(Collectors.toList());
         tempRoleAuthorities.forEach(r -> {
             Map<String, Object> roleParams = new HashMap<>();
             roleParams.put("roleId", r.getId());
