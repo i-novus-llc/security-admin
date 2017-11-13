@@ -65,6 +65,7 @@ public class RoleServiceImpl implements RoleService {
         return roleEntity;
     }
     private Role convertToRole (RoleEntity roleEntity){
+        if (roleEntity == null) return null;
         Role role = modelMapper.map(roleEntity, Role.class);
         role.setPermissionIds(roleEntity.getPermissionSet().stream().map(PermissionEntity::getId).collect(Collectors.toSet()));
         return role;

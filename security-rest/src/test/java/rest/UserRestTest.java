@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- *Тест Rest сервиса управления пользователями
+ * Тест Rest сервиса управления пользователями
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -49,8 +49,7 @@ public class UserRestTest {
     @Autowired
     private UserService service;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+
 
 
     @Autowired
@@ -63,57 +62,12 @@ public class UserRestTest {
         client = JAXRSClientFactory.create("http://localhost:" + port + "/" + cxf,
                 UserRestService.class,
                 providers);
-        jdbcTemplate.execute("INSERT INTO sec.role(id, name, code) VALUES (1, 'test','test')");
 
-        User user1 = new User();
-        user1.setUsername("user2");
-        user1.setName("userName2");
-        user1.setSurname("userSurname");
-        user1.setPatronymic("userPatronymic");
-        user1.setEmail("UserEmail");
-        user1.setPassword("userPassword");
-        user1.setIsActive(true);
-        Role role = new Role();
-        role.setId(1);
-        Set<Integer> roles = new HashSet<Integer>();
-        roles.add(role.getId());
-        user1.setRoleIds(roles);
-        User user2 = new User();
-        user2.setUsername("user2");
-        user2.setName("userName2");
-        user2.setSurname("userSurname2");
-        user2.setPatronymic("userPatronymic");
-        user2.setEmail("UserEmail");
-        user2.setPassword("userPassword");
-        user2.setIsActive(true);
-        user2.setRoleIds(roles);
-        User user3 = new User();
-        user3.setUsername("user3");
-        user3.setName("userName3");
-        user3.setSurname("userSurname3");
-        user3.setPatronymic("userPatronymic");
-        user3.setEmail("UserEmail");
-        user3.setPassword("userPassword");
-        user3.setIsActive(true);
-        user3.setRoleIds(roles);
-        User user4 = new User();
-        user4.setUsername("user4");
-        user4.setName("userName3");
-        user4.setSurname("userSurname3");
-        user4.setPatronymic("userPatronymic");
-        user4.setEmail("UserEmail");
-        user4.setPassword("userPassword");
-        user4.setIsActive(true);
-        user4.setRoleIds(roles);
-        service.create(user1);
-        service.create(user2);
-        service.create(user3);
-        service.create(user4);
     }
 
 
-    @Test
-    public void crudOperations() throws Exception {
+
+    public User newUser() {
         User user1 = new User();
         user1.setUsername("user1");
         user1.setName("userName1");
@@ -122,51 +76,79 @@ public class UserRestTest {
         user1.setEmail("UserEmail");
         user1.setPassword("userPassword");
         user1.setIsActive(true);
-
         Role role = new Role();
         role.setId(1);
         Set<Integer> roles = new HashSet<Integer>();
         roles.add(role.getId());
         user1.setRoleIds(roles);
-        Integer id = service.create(user1);
+
+        return user1;
+    }
+
+    @Test
+    public void crud() {
+        Integer id = create();
+        update(id);
+        delete(id);
+    }
+
+
+    public Integer create() {
+
+        Integer id = service.create(newUser());
         User user = service.getById(id);
         assertNotNull(user);
         assertEquals(1, user.getRoleIds().size());
         assertEquals((Integer) 1, user.getRoleIds().iterator().next());
+        return id;
+
+
+    }
+
+    public void update(Integer id) {
+
+        User user = service.getById(id);
         user.setName("userName1Update");
         service.update(user);
         assertEquals("userName1Update", service.getById(id).getName());
+
+    }
+
+    public void delete(Integer id) {
         service.delete(id);
-        //assertNull(service.getById(id));
+        User user = service.getById(id);
+        assertNull(user);
     }
 
     @Test
-    public void test() throws Exception {
+    public void search() throws Exception {
 
 
         Role role = new Role();
         role.setId(1);
         Set<Integer> roles = new HashSet<Integer>();
-        Set<Boolean> active = new HashSet<Boolean>();
-        active.add(true);
-        active.add(false);
-
-
         roles.add(role.getId());
+
         UserCriteria userCriteria = new UserCriteria(2, 4);
 
         Page<User> user = service.findAll(userCriteria);
         assertEquals(4, user.getTotalElements());
-
+        userCriteria.setIsActive(true);
+        user = service.findAll(userCriteria);
+        assertEquals(3, user.getTotalElements());
         userCriteria.setUsername("user2");
-        userCriteria.setName("userName2");
-        userCriteria.setIsActive(active);
-       // userCriteria.setRoleIds(roles);
         user = service.findAll(userCriteria);
         assertEquals(2, user.getTotalElements());
-
+        userCriteria.setName("userName2");
+        user = service.findAll(userCriteria);
+        assertEquals(2, user.getTotalElements());
+        userCriteria.setRoleIds(roles);
+        user = service.findAll(userCriteria);
+        assertEquals(2, user.getTotalElements());
         userCriteria.setSurname("userSurname2");
-        userCriteria.setPatronymic("userPatronymic");
+        user = service.findAll(userCriteria);
+        assertEquals(1, user.getTotalElements());
+        userCriteria.setPatronymic("userPatronymic2");
         user = service.findAll(userCriteria);
         assertEquals(1, user.getTotalElements());
 

@@ -67,6 +67,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private User convertToUser (UserEntity userEntity){
+        if (userEntity == null) return null;
         User user = modelMapper.map(userEntity, User.class); //TODO:возникнет проблема с ролями
         user.setRoleIds(userEntity.getRoleSet().stream().map(RoleEntity::getId).collect(Collectors.toSet()));
         return user;

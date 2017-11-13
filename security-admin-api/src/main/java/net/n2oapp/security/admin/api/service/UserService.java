@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 /**
  * Сервис управления пользователями
  */
-@Service
+
 public interface UserService {
 
     Integer create(User user);

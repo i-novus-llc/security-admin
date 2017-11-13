@@ -13,8 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
  * Created by otihonova on 31.10.2017.
  */
 @Service
-@Transactional
+
 public class PermissionServiceImpl implements PermissionService {
+
     @Autowired
     private PermissionRepository permissionRepository;
 
@@ -39,24 +40,18 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public Permission getById(Integer id) {
-        PermissionEntity permissionEntity=permissionRepository.findOne(id);
+        PermissionEntity permissionEntity = permissionRepository.findOne(id);
         return convertToPermission(permissionEntity);
     }
-    private PermissionEntity convertToPermissionEntity (Permission permission) {
-        /* PermissionEntity permissionEntity = new PermissionEntity();
-        permissionEntity.setId(permission.getId());
-        permissionEntity.setCode(permission.getCode());
-        permissionEntity.setName(permission.getName());
-        permissionEntity.setParentId(permission.getParentId());
-        */
+
+    private PermissionEntity convertToPermissionEntity(Permission permission) {
         PermissionEntity permissionEntity = modelMapper.map(permission, PermissionEntity.class);
         return permissionEntity;
     }
 
-    private Permission convertToPermission (PermissionEntity permissionEntity){
+    private Permission convertToPermission(PermissionEntity permissionEntity) {
         Permission permission = modelMapper.map(permissionEntity, Permission.class);
         return permission;
 
     }
-
 }

@@ -49,9 +49,6 @@ public class RoleRestTest {
     @Autowired
     private RoleService service;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
     private RoleRestService client;
 
     @Before
@@ -61,73 +58,78 @@ public class RoleRestTest {
         client = JAXRSClientFactory.create("http://localhost:" + port + "/" + cxf,
                 RoleRestService.class,
                 providers);
-        jdbcTemplate.execute("INSERT INTO sec.permission (id, name, code)VALUES (1, 'test','test')");
-        Role user = new Role();
+    }
+
+    public Role newRole(){
+        Role role = new Role();
+        role.setName("user");
+        role.setCode("code1");
+        role.setDescription("description1");
         Permission permission = new Permission();
         permission.setId(1);
         Set<Integer> permissions = new HashSet<Integer>();
         permissions.add(permission.getId());
-
-        user.setName("user");
-        user.setCode("code1");
-        user.setDescription("description1");
-        user.setPermissionIds(permissions);
-        service.create(user);
-
-        Role admin = new Role();
-        admin.setName("admin");
-        admin.setCode("code2");
-        user.setDescription("description1");
-        admin.setPermissionIds(permissions);
-        service.create(admin);
+        role.setPermissionIds(permissions);
+        return role;
 
     }
 
-
     @Test
-    public void crudOperations() throws Exception {
-        Role user = new Role();
-        user.setName("user");
-        user.setCode("code1");
-        user.setDescription("description1");
-        Permission permission = new Permission();
-        permission.setId(1);
-        Set<Integer> permissions = new HashSet<Integer>();
+    public void crud() {
+        Integer id = create();
+        update(id);
+        delete(id);
+    }
 
-        permissions.add(permission.getId());
-        user.setPermissionIds(permissions);
+    public Integer create() {
 
-        Integer id = service.create(user);
+        Integer id = service.create(newRole());
         Role role = service.getById(id);
         assertNotNull(role);
         assertEquals(1, role.getPermissionIds().size());
         assertEquals((Integer) 1, role.getPermissionIds().iterator().next());
+        return id;
+    }
+
+    public void update(Integer id) {
+
+        Role role = service.getById(id);
         role.setName("userUpdate");
         service.update(role);
         assertEquals("userUpdate", service.getById(id).getName());
+
+    }
+
+    public void delete(Integer id){
         service.delete(id);
-        //assertNull(service.getById(id));
+        Role role = service.getById(id);
+        assertNull(role);
 
 
     }
 
+
     @Test
-    public void test() throws Exception {
+    public void search() throws Exception {
         Permission permission = new Permission();
         permission.setId(1);
         Set<Integer> permissions = new HashSet<Integer>();
 
         RoleCriteria roleCriteria = new RoleCriteria(2, 4);
+
         Page<Role> role = service.findAll(roleCriteria);
         assertEquals(2, role.getTotalElements());
+
         roleCriteria.setName("user");
         role = service.findAll(roleCriteria);
         assertEquals(1, role.getTotalElements());
+
         roleCriteria.setDescription("description1");
         roleCriteria.setPermissionIds(permissions);
         role = service.findAll(roleCriteria);
         assertEquals(1, role.getTotalElements());
     }
+
 
 
 }

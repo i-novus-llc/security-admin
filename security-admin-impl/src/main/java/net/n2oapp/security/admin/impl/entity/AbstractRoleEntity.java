@@ -26,7 +26,7 @@ public abstract class AbstractRoleEntity {
     /**
      * Код роли
      */
-    @Column(name = "code", nullable = false)
+    @Column(name = "code")
     private String code;
 
     /**

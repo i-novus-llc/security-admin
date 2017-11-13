@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
  *  Сервис управления ролями
  */
 
-@Service
+
 public interface RoleService {
 
     Integer create(Role role);
