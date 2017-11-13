@@ -214,7 +214,7 @@ public class N2oJdbcUserDetailsManager implements UserDetailsManager {
             }));
         });
         List<RoleGrantedAuthority> roleAuthorities = tempRoleAuthorities.stream()
-                .map(r -> new RoleGrantedAuthority(r.getCode())).collect(Collectors.toList());
+                .map(r -> new RoleGrantedAuthority(r.getId().toString())).collect(Collectors.toList());
         authorities.addAll(roleAuthorities);
         return authorities;
     }
