@@ -42,6 +42,25 @@
         </field>
 
         <field>
+            <id>surname</id>
+            <domain>string</domain>
+            <display>surname</display>
+            <name>Фамилия</name>
+        </field>
+        <field>
+            <id>name</id>
+            <domain>string</domain>
+            <display>name</display>
+            <name>Имя</name>
+        </field>
+        <field>
+            <id>patronymic</id>
+            <domain>string</domain>
+            <display>patronymic</display>
+            <name>Отчество</name>
+        </field>
+
+        <field>
             <id>email</id>
             <domain>string</domain>
             <display>email</display>
