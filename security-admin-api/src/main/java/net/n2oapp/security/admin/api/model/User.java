@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.api.model;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -14,7 +15,9 @@ public class User {
     private String patronymic;
     private String password;
     private Boolean isActive;
-    private Set<Integer> roleIds;
+    private List<Integer> roleIds;
+    private List<String> roleNames;
+
 
     public Integer getId() {
         return id;
@@ -80,11 +83,19 @@ public class User {
         this.isActive = isActive;
     }
 
-    public Set<Integer> getRoleIds() {
+    public List<Integer> getRoleIds() {
         return roleIds;
     }
 
-    public void setRoleIds(Set<Integer> roleIds) {
+    public void setRoleIds(List<Integer> roleIds) {
         this.roleIds = roleIds;
+    }
+
+    public List<String> getRoleNames() {
+        return roleNames;
+    }
+
+    public void setRoleNames(List<String> roleNames) {
+        this.roleNames = roleNames;
     }
 }

@@ -32,13 +32,13 @@ public class UserServiceImpl implements UserService {
     private final Function<UserEntity, User> funcEntityToModel = this::convertToUser;
 
     @Override
-    public Integer create(User user) {
-        return userRepository.save(convertToUserEntity(user)).getId();
+    public User create(User user) {
+        return convertToUser(userRepository.save(convertToUserEntity(user)));
     }
 
     @Override
-    public Integer update(User user) {
-        return userRepository.save(convertToUserEntity(user)).getId();
+    public User  update(User user) {
+        return convertToUser(userRepository.save(convertToUserEntity(user)));
     }
 
     @Override
@@ -61,15 +61,16 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserEntity convertToUserEntity(User user){
-        UserEntity userEntity = modelMapper.map(user,UserEntity.class); //TODO:возникнет проблема с ролями
+        UserEntity userEntity = modelMapper.map(user,UserEntity.class);
         userEntity.setRoleSet(user.getRoleIds().stream().map(RoleEntity::new).collect(Collectors.toSet()));
         return userEntity;
     }
 
     private User convertToUser (UserEntity userEntity){
         if (userEntity == null) return null;
-        User user = modelMapper.map(userEntity, User.class); //TODO:возникнет проблема с ролями
-        user.setRoleIds(userEntity.getRoleSet().stream().map(RoleEntity::getId).collect(Collectors.toSet()));
+        User user = modelMapper.map(userEntity, User.class);
+        user.setRoleIds(userEntity.getRoleSet().stream().map(RoleEntity::getId).collect(Collectors.toList()));
+        user.setRoleNames(userEntity.getRoleSet().stream().map(RoleEntity::getName).collect(Collectors.toList()));
         return user;
 
     }

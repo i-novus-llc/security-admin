@@ -83,12 +83,11 @@ public class RoleRestTest {
 
     public Integer create() {
 
-        Integer id = service.create(newRole());
-        Role role = service.getById(id);
+        Role role = service.create(newRole());
         assertNotNull(role);
         assertEquals(1, role.getPermissionIds().size());
         assertEquals((Integer) 1, role.getPermissionIds().iterator().next());
-        return id;
+        return role.getId();
     }
 
     public void update(Integer id) {
@@ -111,23 +110,26 @@ public class RoleRestTest {
 
     @Test
     public void search() throws Exception {
+
         Permission permission = new Permission();
         permission.setId(1);
         Set<Integer> permissions = new HashSet<Integer>();
+        permissions.add(permission.getId());
 
-        RoleCriteria roleCriteria = new RoleCriteria(2, 4);
-
-        Page<Role> role = service.findAll(roleCriteria);
+        Page<Role> role =  client.search(2,4,"user","description1");
         assertEquals(2, role.getTotalElements());
 
-        roleCriteria.setName("user");
-        role = service.findAll(roleCriteria);
-        assertEquals(1, role.getTotalElements());
-
-        roleCriteria.setDescription("description1");
-        roleCriteria.setPermissionIds(permissions);
-        role = service.findAll(roleCriteria);
-        assertEquals(1, role.getTotalElements());
+//        Page<Role> role = service.findAll(roleCriteria);
+//        assertEquals(2, role.getTotalElements());
+//
+//        roleCriteria.setName("user");
+//        role = service.findAll(roleCriteria);
+//        assertEquals(1, role.getTotalElements());
+//
+//        roleCriteria.setDescription("description1");
+//        roleCriteria.setPermissionIds(permissions);
+//        role = service.findAll(roleCriteria);
+//        assertEquals(1, role.getTotalElements());
     }
 
 

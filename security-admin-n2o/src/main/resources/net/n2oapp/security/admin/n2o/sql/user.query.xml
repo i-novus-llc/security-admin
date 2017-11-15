@@ -74,14 +74,12 @@
             </filters>
         </field>
         <field>
-            <id>isActive.id</id>
+            <id>isActive</id>
             <domain>boolean</domain>
             <display>is_active</display>
             <name>Активность</name>
             <filters>
-                <filter type="in" filter-field="isActive*.id">((:isActive*.id) is null or is_active in
-                    (:isActive*.id))
-                </filter>
+                <filter type="eq" filter-field="isActive">is_active=:isActive</filter>
             </filters>
         </field>
 

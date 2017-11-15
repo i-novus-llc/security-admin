@@ -31,13 +31,13 @@ public class RoleServiceImpl implements RoleService {
     private ModelMapper modelMapper;
 
     @Override
-    public Integer create(Role role) {
-        return roleRepository.save(convertToRoleEntity(role)).getId();
+    public Role create(Role role) {
+        return convertToRole(roleRepository.save(convertToRoleEntity(role)));
     }
 
     @Override
-    public Integer update(Role role) {
-        return roleRepository.save(convertToRoleEntity(role)).getId();
+    public Role update(Role role) {
+        return convertToRole(roleRepository.save(convertToRoleEntity(role)));
     }
 
     @Override

@@ -12,9 +12,9 @@ import org.springframework.stereotype.Service;
 
 public interface UserService {
 
-    Integer create(User user);
+    User create(User user);
 
-    Integer update(User user);
+    User update(User user);
 
     void delete(Integer id);
 

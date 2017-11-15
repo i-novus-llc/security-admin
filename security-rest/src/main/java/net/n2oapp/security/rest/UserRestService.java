@@ -25,26 +25,33 @@ public interface UserRestService {
     @Path("/")
     @ApiOperation("Фильтрация юзеров")
     @ApiResponse(code = 200, message = "Юзеры")
-    Page <User> search(UserCriteria criteria);
+    Page <User> search(@QueryParam("page") @DefaultValue("1") Integer page, @QueryParam("size")  @DefaultValue("10") Integer size,
+                       @QueryParam("username") String username,@QueryParam("name") String name,
+                       @QueryParam("surname") String surname,@QueryParam("patronymic") String patronymic,
+                       @QueryParam("isActive") Boolean isActive);
+    @GET
+    @Path("/{id}")
+    @ApiOperation("Получение юзеров")
+    @ApiResponse(code = 200, message = "Юзеры")
+    User getById(@PathParam("id") Integer id);
+
 
     @POST
-    @Path("/users.main.create")
+    @Path("/create")
     @ApiOperation("Создание юзеров")
     @ApiResponse(code = 200, message = "Юзеры")
-    void create(User user);
+    User create(User user);
 
     @PUT
-    @Path("/users.main.update")
+    @Path("/update")
     @ApiOperation("Изменение юзеров")
     @ApiResponse(code = 200, message = "Юзеры")
-    void update(Integer id);
+    User update(User user);
 
     @DELETE
-    @Path("/users.main.delete")
+    @Path("/delete/{id}")
     @ApiOperation("Удаление юзеров")
     @ApiResponse(code = 200, message = "Юзеры")
-    void  delete(Integer id);
-
-
+    void  delete(@PathParam("id") Integer id);
 
 }

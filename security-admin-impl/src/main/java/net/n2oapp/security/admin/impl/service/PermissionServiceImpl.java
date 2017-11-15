@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Created by otihonova on 31.10.2017.
+ * Сервис прав доступа
  */
 @Service
 
@@ -23,13 +23,13 @@ public class PermissionServiceImpl implements PermissionService {
     private ModelMapper modelMapper;
 
     @Override
-    public Integer create(Permission permission) {
-        return permissionRepository.save(convertToPermissionEntity(permission)).getId();
+    public Permission create(Permission permission) {
+        return convertToPermission(permissionRepository.save(convertToPermissionEntity(permission)));
     }
 
     @Override
-    public Integer update(Permission permission) {
-        return permissionRepository.save(convertToPermissionEntity(permission)).getId();
+    public Permission update(Permission permission) {
+        return convertToPermission(permissionRepository.save(convertToPermissionEntity(permission)));
     }
 
     @Override

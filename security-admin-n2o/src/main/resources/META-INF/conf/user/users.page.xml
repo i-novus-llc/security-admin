@@ -16,12 +16,12 @@
                         <wgt:column column-field-id="surname"/>
                         <wgt:column column-field-id="name"/>
                         <wgt:column column-field-id="patronymic"/>
-                        <wgt:column column-field-id="isActive.id">
+                        <wgt:column column-field-id="isActive">
                             <wgt:checkbox>
                                 <wgt:invoke-action action-id="changeUserActive"/>
                             </wgt:checkbox>
                         </wgt:column>
-                        <wgt:column column-field-id="roles">
+                        <wgt:column column-field-id="roles" name="Роли">
                             <wgt:list label-field-id="name"/>
                         </wgt:column>
 
@@ -31,12 +31,23 @@
                         <ctrl:input-text id="surname"/>
                         <ctrl:input-text id="name"/>
                         <ctrl:input-text id="patronymic"/>
-                        <ctrl:checkbox-group id="isActive" label="Активность" inline="true" css-class="n2o-control-4">
+                        <ctrl:checkbox-group id="activeList" label="Активность" inline="true" css-class="n2o-control-4">
                             <ctrl:options>
                                 <ctrl:option>{"id" : "true", "name" :"Да"}</ctrl:option>
                                 <ctrl:option>{"id" : "false", "name" :"Нет"}</ctrl:option>
                             </ctrl:options>
                         </ctrl:checkbox-group>
+                        <ctrl:hidden id="isActive">
+                            <ctrl:set-value-expression on="activeList">
+                                if ((typeof activeList == 'undefined') || (activeList == null) || (activeList.length ==0))
+                                    null;
+                                else if  (activeList.length ==2)
+                                    null;
+                                else if (activeList[0].id == 'true')
+                                    true;
+                                else false;
+                            </ctrl:set-value-expression>
+                        </ctrl:hidden>
                         <ctrl:input-select id="roleFilter" type="multi" label="Роли" cache="off">
                             <ctrl:query query-id="${sec.admin.role.query.id}" value-field-id="id" label-field-id="name"/>
                         </ctrl:input-select>

@@ -23,26 +23,32 @@ public interface RoleRestService {
     @Path("/")
     @ApiOperation("Фильтрация ролей")
     @ApiResponse(code = 200, message = "Роли")
-    Page<Role> search(RoleCriteria criteria);
+    Page<Role> search(@QueryParam("page")@DefaultValue("1") Integer page, @QueryParam("size") @DefaultValue("10") Integer size,
+                      @QueryParam("name") String name,@QueryParam("description") String description);
+    @GET
+    @Path("/{id}")
+    @ApiOperation("Получение ролей")
+    @ApiResponse(code = 200, message = "Роли")
+    Role getById(@PathParam("id") Integer id);
 
 
     @POST
-    @Path("/roles.main.create")
+    @Path("/create")
     @ApiOperation("Создание ролей")
     @ApiResponse(code = 200, message = "Роли")
-    void create(Role role);
+    Role create(Role role);
 
     @PUT
-    @Path("/roles.main.update")
+    @Path("/update")
     @ApiOperation("Изменение ролей")
     @ApiResponse(code = 200, message = "Роли")
-    void update(Integer id);
+    Role update(Role role);
 
     @DELETE
-    @Path("/roles.main.delete")
+    @Path("/delete/{id}")
     @ApiOperation("Удаление ролей")
     @ApiResponse(code = 200, message = "Роли")
-    void  delete(Integer id);
+    void  delete(@PathParam("id") Integer id);
 
 }
 

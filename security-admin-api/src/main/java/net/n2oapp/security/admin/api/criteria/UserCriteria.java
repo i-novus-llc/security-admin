@@ -10,13 +10,15 @@ import java.util.Set;
  * Критерий фильтрации пользователей
  */
 
-public class UserCriteria  extends PageRequest {
+public class UserCriteria extends PageRequest {
     private String username;
     private String surname;
     private String name;
     private String patronymic;
     private Boolean isActive;
     private Set<Integer> roleIds;
+
+
 
     public UserCriteria(int page, int size) {
         super(page, size);

@@ -12,9 +12,9 @@ import org.springframework.stereotype.Service;
 
 public interface RoleService {
 
-    Integer create(Role role);
+    Role create(Role role);
 
-    Integer update(Role role);
+    Role update(Role role);
 
     void delete(Integer id);
 

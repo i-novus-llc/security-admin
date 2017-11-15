@@ -17,7 +17,7 @@
         <ctrl:input-text id="surname"/>
         <ctrl:input-text id="name"/>
         <ctrl:input-text id="patronymic"/>
-        <ctrl:checkbox id="isActive.id" default-value="true"/>
+        <ctrl:checkbox id="isActive" default-value="true"/>
         <ctrl:input-select id="roles" type="multi" label="Роли" cache="off" required="true">
             <ctrl:query query-id="${sec.admin.role.query.id}" value-field-id="id" label-field-id="name"/>
         </ctrl:input-select>

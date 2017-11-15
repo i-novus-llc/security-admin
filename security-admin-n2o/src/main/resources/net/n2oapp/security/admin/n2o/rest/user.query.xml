@@ -2,6 +2,7 @@
 <query xmlns:n2o="http://n2oapp.net/framework/config/schema/n2o-query-executions-1.0"
        xmlns="http://n2oapp.net/framework/config/schema/query-3.0">
     <object-id>${sec.admin.user.object.id}</object-id>
+
     <name>Пользователи</name>
     <execution>
         <n2o:rest>
@@ -19,7 +20,9 @@
             <id>id</id>
             <domain>integer</domain>
             <display/>
-            <filters auto-generate="true"/>
+            <filters>
+                <filter type="eq" filter-field="id">:id</filter>
+            </filters>
         </field>
         <field>
             <id>username</id>
@@ -27,7 +30,7 @@
             <display>username</display>
             <name>Имя пользователя</name>
             <filters>
-                <filter type="eq" filter-field="username">username=:username</filter>
+                <filter type="like" filter-field="username">username=:username</filter>
             </filters>
         </field>
         <field>
@@ -42,7 +45,7 @@
             <display>surname</display>
             <name>Фамилия</name>
             <filters>
-                <filter type="eq" filter-field="surname">surname=:surname</filter>
+                <filter type="like" filter-field="surname">surname=:surname</filter>
             </filters>
         </field>
         <field>
@@ -64,28 +67,35 @@
             </filters>
         </field>
         <field>
-            <id>isActive.id</id>
+            <id>isActive</id>
             <domain>boolean</domain>
-            <display>is_active</display>
+            <display>isActive</display>
             <name>Активность</name>
             <filters>
-                <filter type="in" filter-field="isActive*.id">isActive*.id=:isActive*.id</filter>
+                <filter type="eq" filter-field="isActive">isActive=:isActive</filter>
             </filters>
         </field>
 
         <field>
-            <id>roles</id>
-            <domain>object[]</domain>
-            <display/>
+            <id>roles*.id</id>
+            <domain>integer[]</domain>
+            <display>roleIds</display>
+            <name>Роли</name>
+
+        </field>
+        <field>
+            <id>roles*.name</id>
+            <domain>string[]</domain>
+            <display>roleNames</display>
             <name>Роли</name>
 
         </field>
 
         <field>
-            <id>roleFilter.id</id>
+            <id>roleFilter</id>
             <domain>string</domain>
             <filters>
-                <filter type="in" filter-field="roleFilter*.id"> roleFilter*.id:=roleFilter </filter>
+                <filter type="in" filter-field="roleFilter"> roleFilter:=roleFilter </filter>
             </filters>
         </field>
     </fields>

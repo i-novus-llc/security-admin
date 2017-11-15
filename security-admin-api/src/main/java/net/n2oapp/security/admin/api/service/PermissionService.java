@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
  */
 
 public interface PermissionService {
-    Integer create(Permission permission);
+    Permission create(Permission permission);
 
-    Integer update(Permission permission);
+    Permission update(Permission permission);
 
     void delete(Integer id);
 
