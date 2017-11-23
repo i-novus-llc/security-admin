@@ -24,7 +24,7 @@ public class SpringSecurityUserDetailsProvider implements RootContextProvider {
         if (context == null)
             return map;
         Authentication authentication = context.getAuthentication();
-        if (authentication == null)
+        if (authentication == null || authentication.getPrincipal().equals("anonymousUser"))
             return map;
         String sessionId = UserParamsUtil.getSessionId(authentication);
         map.put(UserContext.SESSION, sessionId);
