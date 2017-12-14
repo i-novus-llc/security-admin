@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -53,6 +54,9 @@ public class N2oJdbcUserDetailsManager implements UserDetailsManager {
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
+
+    @Autowired
+    AuthenticationProvider authenticationProvider;
 
     private PasswordEncoder passwordEncoder;
 
@@ -113,8 +117,7 @@ public class N2oJdbcUserDetailsManager implements UserDetailsManager {
 
     @Override
     public void changePassword(String oldPassword, String newPassword) {
-        Authentication currentUser = SecurityContextHolder.getContext()
-                .getAuthentication();
+        Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
 
         if (currentUser == null) {
             // This would indicate bad coding somewhere
@@ -124,15 +127,15 @@ public class N2oJdbcUserDetailsManager implements UserDetailsManager {
         }
 
         String username = currentUser.getName();
-        // If an authentication manager has been set, re-authenticate the user with the
-        // supplied password.
-       /* if (authenticationManager != null) {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                    username, oldPassword));
-        }*/
         SqlParameterSource namedParameters = new MapSqlParameterSource("username", username)
                 .addValue("password", passwordEncoder.encode(newPassword));
         jdbcTemplate.update(UPDATE_PASSWORD, namedParameters);
+        // If an authentication manager has been set, re-authenticate the user with the
+        // supplied password.
+        if (authenticationProvider != null) {
+            authenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(
+                    username, newPassword));
+        }
         SecurityContextHolder.getContext().setAuthentication(createNewAuthentication(currentUser, newPassword));
     }
 

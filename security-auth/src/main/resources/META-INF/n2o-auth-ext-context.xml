@@ -54,4 +54,6 @@
         <property name="passwordEncoder" ref="passwordEncoder"/>
     </bean>
 
+    <bean id="updatePasswordService" class="net.n2oapp.security.auth.UpdatePasswordService"/>
+
 </beans>
