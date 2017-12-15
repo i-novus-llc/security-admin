@@ -9,6 +9,10 @@
         <property name="permissionApi" ref="securitySimplePermissionApi"/>
     </bean>
 
+    <bean id="advancedAuthorizationApi" class="net.n2oapp.security.auth.access.AdvancedAuthorizationApi">
+        <property name="permissionApi" ref="securitySimplePermissionApi"/>
+    </bean>
+
     <bean id="securitySimplePermissionApi" class="net.n2oapp.security.auth.SecuritySimplePermissionApi"/>
 
     <bean id="logoutHandler"
@@ -53,6 +57,8 @@
         <property name="userDetailsService" ref="n2oJdbcUserDetailsManager"/>
         <property name="passwordEncoder" ref="passwordEncoder"/>
     </bean>
+
+    <bean id="accessSchemaValidatorOverrided" class="net.n2oapp.security.auth.access.SimpleAccessSchemaValidatorOverrided"/>
 
     <bean id="updatePasswordService" class="net.n2oapp.security.auth.UpdatePasswordService"/>
 
