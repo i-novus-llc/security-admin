@@ -6,12 +6,14 @@ import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.n2o.util.PasswordGenerator;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.text.StrSubstitutor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -43,6 +45,7 @@ public class JdbcUserService {
     private final static String DELETE_USER = "delete from sec.user where id = :id;";
     private final static String INSERT_USER_ROLE = "insert into sec.user_role(user_id, role_id) values(:userId, :roleId);";
     private final static String DELETE_USER_ROLE = "delete from sec.user_role where user_id = :id;";
+    private final static String UPDATE_PASSWORD = "update sec.user set password = :password where id=:id;";
 
     private TransactionTemplate transactionTemplate;
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -133,6 +136,16 @@ public class JdbcUserService {
                 new MapSqlParameterSource("id", id)
                         .addValue("isActive", isActive);
         jdbcTemplate.update(UPDATE_USER_ACTIVE, namedParameters);
+    }
+
+    public void updatePassword(User model) {
+        transactionTemplate.execute(transactionStatus -> {
+            SqlParameterSource namedParameters =
+                    new MapSqlParameterSource("id", model.getId())
+                            .addValue("password", passwordEncoder.encode(model.getPassword()));
+            jdbcTemplate.update(UPDATE_PASSWORD, namedParameters);
+            return model;
+        });
     }
 
     private void sendPassword(User user, String password) throws URISyntaxException, IOException {
