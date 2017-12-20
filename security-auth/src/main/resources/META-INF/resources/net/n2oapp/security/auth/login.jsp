@@ -29,8 +29,8 @@
         <button class="btn btn-lg btn-primary btn-block" type="submit">Войти</button>
         <br/>
         <c:if test='${n2o:property("n2o.auth.registration.enabled")}'>
-        <div>или <a href="/registration">Зарегистрироваться</a></div>
-    </c:if>
+        <div>или <a href="registration">Зарегистрироваться</a></div>
+        </c:if>
     </form>
 
 </div>
