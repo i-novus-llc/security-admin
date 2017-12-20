@@ -9,12 +9,12 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import java.util.Objects;
 
 /**
- * Изменение пароля
+ * Изменение пароля текущего пользователя
  *
  * @author igafurov
  * @since 13.12.2017
  */
-public class UpdatePasswordService {
+public class CurrentUserUpdatePasswordService {
 
     private UserDetailsManager userDetailsManager = StaticSpringContext.getBean(UserDetailsManager.class);
     @Autowired
@@ -31,8 +31,6 @@ public class UpdatePasswordService {
     private String checkErrorCode(String oldPassword, String newPassword, String newPasswordConfirm, String username) {
         if (!isPasswordValid(oldPassword, username))
             throw new RuntimeException("Old password is incorrect");
-        if (newPassword.length() < 7 || newPasswordConfirm.length() < 7)
-            throw new RuntimeException("Password should be at least 7 symbols");
         if (!Objects.equals(newPassword, newPasswordConfirm))
             throw new RuntimeException("Passwords doesn't match");
         return null;

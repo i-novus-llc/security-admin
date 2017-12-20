@@ -51,17 +51,18 @@ public class N2oJdbcUserDetailsManager implements UserDetailsManager {
     private final static String GET_PERMISSIONS_BY_ROLE_ID = "select p.code from sec.permission p join sec.role_permission rp on p.id=rp.permission_id where rp.role_id = :roleId;";
 
     private TransactionTemplate transactionTemplate;
+    private AuthenticationProvider authenticationProvider;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
-    @Autowired
-    AuthenticationProvider authenticationProvider;
-
-    private PasswordEncoder passwordEncoder;
-
     public void setTransactionTemplate(TransactionTemplate transactionTemplate) {
         this.transactionTemplate = transactionTemplate;
+    }
+
+    public void setAuthenticationProvider(AuthenticationProvider authenticationProvider) {
+        this.authenticationProvider = authenticationProvider;
     }
 
     @Override

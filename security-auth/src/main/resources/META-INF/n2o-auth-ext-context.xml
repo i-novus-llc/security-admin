@@ -51,6 +51,7 @@
         <!--<property name="authenticationManager" ref="providerManager"/>-->
         <property name="passwordEncoder" ref="passwordEncoder"/>
         <property name="transactionTemplate" ref="transactionTemplate"/>
+        <property name="authenticationProvider" ref="authenticationProvider"/>
     </bean>
 
     <bean id="authenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
@@ -60,6 +61,6 @@
 
     <bean id="accessSchemaValidatorOverrided" class="net.n2oapp.security.auth.access.SimpleAccessSchemaValidatorOverrided"/>
 
-    <bean id="updatePasswordService" class="net.n2oapp.security.auth.UpdatePasswordService"/>
+    <bean id="currentUserUpdatePasswordService" class="net.n2oapp.security.auth.CurrentUserUpdatePasswordService"/>
 
 </beans>
