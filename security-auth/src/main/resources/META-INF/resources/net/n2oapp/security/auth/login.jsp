@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="favicon.ico">
-    <title>Авторизация</title>
+    <title>${n2o:property('security.admin.login.title')}</title>
     <link href="dist/css/n2o/bootstrap.css" rel="stylesheet">
     <link href="dist/css/n2o/n2o.css" rel="stylesheet">
     <link href="dist/signin.css" rel="stylesheet">
@@ -18,7 +18,7 @@
 
 <div class="container">
     <form class="form-signin" action="login" method='POST'>
-        <h2 class="form-signin-heading">Авторизация</h2>
+        <h2 class="form-signin-heading">${n2o:property('security.admin.login.title')}</h2>
         <c:if test="${param.error == 'true'}">
             <output id="errorText" title="errorText" style="color: red">Введены неправильные данные!</output>
         </c:if>
