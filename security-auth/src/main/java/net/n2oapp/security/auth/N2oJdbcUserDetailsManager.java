@@ -44,7 +44,7 @@ public class N2oJdbcUserDetailsManager implements UserDetailsManager {
     private final static String UPDATE_USER = "update sec.user set email = :email, password = :password, surname = :surname, name = :name, patronymic = :patronymic, is_active = :isActive where username = :username; ";
     private final static String UPDATE_PASSWORD = "update sec.user set password = :password where username = :username; ";
     private final static String DELETE_USER = "delete from sec.user where username = :username;";
-    private final static String INSERT_USER_ROLE = "insert into sec.user_role(user_id, role_id) values(:userId, :roleId);";
+    private final static String INSERT_USER_ROLE = "insert into sec.user_role(user_id, role_id) select :userId, r.id from sec.role r where r.code = :roleCode;";
     public static final String USER_EXISTS = "select username from sec.user where username = :username;";
     private final static String GET_USER_BY_USERNAME = "select password, email, surname, name, patronymic, is_active from sec.user  where username = :username;";
     private final static String GET_ROLES_BY_USERNAME = "select r.id, r.code from sec.user u join sec.user_role ur on ur.user_id=u.id join sec.role r on r.id=ur.role_id where u.username = :username;";
@@ -86,7 +86,7 @@ public class N2oJdbcUserDetailsManager implements UserDetailsManager {
                     user.getAuthorities().stream().filter(a -> a instanceof RoleGrantedAuthority).forEach(a -> {
                         SqlParameterSource params =
                                 new MapSqlParameterSource("userId", userId)
-                                        .addValue("roleId", Integer.parseInt(a.getAuthority()));
+                                        .addValue("roleCode", a.getAuthority());
                         jdbcTemplate.update(INSERT_USER_ROLE, params);
                     });
                 }
