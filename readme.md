@@ -23,12 +23,12 @@
     и реализовать
         - net.n2oapp.framework.access.simple.PermissionApi,
         - net.n2oapp.framework.context.smart.impl.api.ContextProvider для пареметров
-            net.n2oapp.framework.api.user.UserContext.USERNAME
-            net.n2oapp.framework.api.user.UserContext.CONTEXT
-            net.n2oapp.framework.api.user.UserContext.SESSION
+        - net.n2oapp.framework.api.user.UserContext.USERNAME
+        - net.n2oapp.framework.api.user.UserContext.CONTEXT
+        - net.n2oapp.framework.api.user.UserContext.SESSION
 
 3. Необходима аутентификация пользователей и админка прав.
-    Подключаем модуль наката скриптов, модуль администрирования пользователей и модуль аутентификации.
+    - Подключаем модуль наката скриптов, модуль администрирования пользователей и модуль аутентификации.
 
 ### Базовые шаги по подключению.
 4. Подключение liquibase-скриптов
