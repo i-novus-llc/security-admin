@@ -29,10 +29,7 @@ public class UserParamsUtil {
     public static String getUsername(Object principal) {
         String username = "";
         if(principal instanceof String) {
-            if (principal.equals("anonymousUser"))
-                return "";
-            else
-                username = (String) principal;
+            username = (String) principal;
         } else if (principal instanceof org.springframework.security.core.userdetails.User) {
             org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) principal;
             username = userDetails.getUsername();
