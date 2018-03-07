@@ -1,4 +1,4 @@
-package net.n2oapp.security.admin.api.entity;
+package net.n2oapp.security.admin.impl.entity;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -7,7 +7,7 @@ import java.util.Set;
  * Абстрактная сущность Роли
  * Выделена для возможности переодпределять в прикладных приложениях
  */
-@Entity
+@MappedSuperclass
 public abstract class AbstractRoleEntity {
     /**
      * Идентификатор роли
@@ -26,7 +26,7 @@ public abstract class AbstractRoleEntity {
     /**
      * Код роли
      */
-    @Column(name = "code", nullable = false)
+    @Column(name = "code")
     private String code;
 
     /**

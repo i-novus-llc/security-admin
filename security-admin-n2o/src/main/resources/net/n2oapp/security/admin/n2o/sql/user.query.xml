@@ -3,6 +3,7 @@
        xmlns="http://n2oapp.net/framework/config/schema/query-3.0">
     <object-id>${sec.admin.user.object.id}</object-id>
     <name>Пользователи</name>
+
     <execution>
         <n2o:sql>
             <n2o:items-query>
@@ -19,7 +20,6 @@
             <n2o:alias>u</n2o:alias>
         </n2o:sql>
     </execution>
-
 
     <fields>
         <field>
@@ -46,6 +46,9 @@
             <domain>string</domain>
             <display>surname</display>
             <name>Фамилия</name>
+            <filters>
+                <filter type="eq" filter-field="surname">trim(lower(surname)) like '%'||trim(lower(:surname))||'%'</filter>
+            </filters>
         </field>
         <field>
             <id>name</id>
@@ -58,6 +61,11 @@
             <domain>string</domain>
             <display>patronymic</display>
             <name>Отчество</name>
+            <filters>
+                <filter type="eq" filter-field="patronymic">trim(lower(patronymic)) like
+                    '%'||trim(lower(:patronymic))||'%'
+                </filter>
+            </filters>
         </field>
 
         <field>
@@ -68,15 +76,13 @@
         </field>
 
         <field>
-            <id>isActive.id</id>
+            <id>isActive</id>
             <domain>boolean</domain>
             <display>is_active</display>
             <name>Активность</name>
             <sorting>is_active</sorting>
             <filters>
-                <filter type="in" filter-field="isActive*.id">((:isActive*.id) is null or is_active in
-                    (:isActive*.id))
-                </filter>
+                <filter type="eq" filter-field="isActive">is_active=:isActive</filter>
             </filters>
         </field>
 

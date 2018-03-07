@@ -1,30 +1,31 @@
-package net.n2oapp.security.admin.api.model;
+package net.n2oapp.security.admin.api.criteria;
 
-import java.util.List;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
 import java.util.Set;
 
 /**
- * Пользователь
+ * Критерий фильтрации пользователей
  */
-public class User {
-    private Integer id;
+
+public class UserCriteria extends PageRequest {
     private String username;
-    private String email;
     private String surname;
     private String name;
     private String patronymic;
-    private String password;
     private Boolean isActive;
-    private List<Integer> roleIds;
-    private List<String> roleNames;
+    private Set<Integer> roleIds;
 
 
-    public Integer getId() {
-        return id;
+
+    public UserCriteria(int page, int size) {
+        super(page, size);
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public UserCriteria(int page, int size, Sort.Direction direction, String property) {
+        super(page, size, direction, property);
     }
 
     public String getUsername() {
@@ -33,14 +34,6 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getSurname() {
@@ -67,14 +60,6 @@ public class User {
         this.patronymic = patronymic;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public Boolean getIsActive() {
         return isActive;
     }
@@ -83,19 +68,11 @@ public class User {
         this.isActive = isActive;
     }
 
-    public List<Integer> getRoleIds() {
+    public Set<Integer> getRoleIds() {
         return roleIds;
     }
 
-    public void setRoleIds(List<Integer> roleIds) {
+    public void setRoleIds(Set<Integer> roleIds) {
         this.roleIds = roleIds;
-    }
-
-    public List<String> getRoleNames() {
-        return roleNames;
-    }
-
-    public void setRoleNames(List<String> roleNames) {
-        this.roleNames = roleNames;
     }
 }

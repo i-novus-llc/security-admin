@@ -1,24 +1,24 @@
-package net.n2oapp.security.admin.api.model;
+package net.n2oapp.security.admin.api.criteria;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.util.Set;
 
 /**
- * Роль
+ * Критерий фильтрации ролей
  */
-public class Role {
-    private Integer id;
+public class RoleCriteria extends PageRequest {
     private String name;
-    private String code;
     private String description;
     private Set<Integer> permissionIds;
 
-
-    public Integer getId() {
-        return id;
+    public RoleCriteria(int page, int size) {
+        super(page, size);
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public RoleCriteria(int page, int size, Sort.Direction direction, String property) {
+        super(page, size, direction, property);
     }
 
     public String getName() {
@@ -27,14 +27,6 @@ public class Role {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
     }
 
     public String getDescription() {

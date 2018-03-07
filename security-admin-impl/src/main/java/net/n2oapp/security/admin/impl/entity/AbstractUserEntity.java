@@ -1,14 +1,17 @@
-package net.n2oapp.security.admin.api.entity;
+package net.n2oapp.security.admin.impl.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 /**
  * Абстрактная сущность Пользователя
  * Выделена для возможности переодпределять в прикладных приложениях
  */
-@Entity
-public abstract class AbstractUserEntity {
+
+@MappedSuperclass
+public abstract class AbstractUserEntity implements Serializable {
     /**
      * Идентификатор пользователя
      */
@@ -58,7 +61,7 @@ public abstract class AbstractUserEntity {
      * Активен ли пользователь
      */
     @Column(name = "is_active")
-    private boolean isActive;
+    private Boolean isActive;
 
     /**
      * Роли пользователя
@@ -78,11 +81,11 @@ public abstract class AbstractUserEntity {
         this.roleSet = roleSet;
     }
 
-    public boolean getIsActive() {
+    public Boolean getIsActive() {
         return isActive;
     }
 
-    public void setIsActive(boolean isActive) {
+    public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
     }
 

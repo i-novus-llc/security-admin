@@ -1,4 +1,4 @@
-package net.n2oapp.security.admin.api.entity;
+package net.n2oapp.security.admin.impl.entity;
 
 import javax.persistence.*;
 
@@ -9,4 +9,9 @@ import javax.persistence.*;
 @Table(name = "permission", schema = "sec")
 public class PermissionEntity extends AbstractPermissionEntity {
 
+    public PermissionEntity() {
+    }
+    public PermissionEntity(Integer id) {
+        setId(id);
+    }
 }
