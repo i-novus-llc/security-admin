@@ -10,7 +10,7 @@
     </parent>
 
     <packaging>war</packaging>
-    <artifactId>frontend</artifactId>
+    <artifactId>security-admin-frontend</artifactId>
 
     <build>
         <finalName>ROOT</finalName>

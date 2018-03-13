@@ -10,7 +10,7 @@
     </parent>
 
     <packaging>war</packaging>
-    <artifactId>backend</artifactId>
+    <artifactId>security-admin-backend</artifactId>
 
     <build>
         <finalName>backend</finalName>
