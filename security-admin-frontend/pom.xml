@@ -20,7 +20,7 @@
         <!-- DOMAIN -->
         <dependency>
             <groupId>net.n2oapp.framework.security</groupId>
-            <artifactId>security-admin-n2o</artifactId>
+            <artifactId>security-admin-web</artifactId>
             <version>${project.version}</version>
         </dependency>
         <!-- /DOMAIN -->
