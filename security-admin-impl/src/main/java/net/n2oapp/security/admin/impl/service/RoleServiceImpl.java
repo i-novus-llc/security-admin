@@ -1,7 +1,6 @@
 package net.n2oapp.security.admin.impl.service;
 
 import net.n2oapp.security.admin.api.criteria.RoleCriteria;
-import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.service.RoleService;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
@@ -20,7 +19,6 @@ import java.util.stream.Collectors;
 /**
  * Реализация сервиса управления ролями
  */
-
 @Service
 @Transactional
 public class RoleServiceImpl implements RoleService {
@@ -32,43 +30,44 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role create(Role role) {
-        return convertToRole(roleRepository.save(convertToRoleEntity(role)));
+        return model(roleRepository.save(entity(role)));
     }
 
     @Override
     public Role update(Role role) {
-        return convertToRole(roleRepository.save(convertToRoleEntity(role)));
+        return model(roleRepository.save(entity(role)));
     }
 
     @Override
     public void delete(Integer id) {
         roleRepository.delete(id);
-
     }
 
     @Override
     public Role getById(Integer id) {
-        RoleEntity roleEntity=roleRepository.findOne(id);
-        return convertToRole(roleEntity);
+        RoleEntity roleEntity = roleRepository.findOne(id);
+        return model(roleEntity);
     }
 
     @Override
     public Page<Role> findAll(RoleCriteria criteria) {
-        final Specification<RoleEntity> specification = new RoleSpecifications(criteria);
-        final Page<RoleEntity> all = roleRepository.findAll(specification, criteria);
-        return all.map(this::convertToRole);
+        Specification<RoleEntity> specification = new RoleSpecifications(criteria);
+        Page<RoleEntity> all = roleRepository.findAll(specification, criteria);
+        return all.map(this::model);
     }
 
-    private RoleEntity convertToRoleEntity(Role role){
-        RoleEntity roleEntity =modelMapper.map(role,RoleEntity.class);
-        roleEntity.setPermissionSet(role.getPermissionIds().stream().map(PermissionEntity::new).collect(Collectors.toSet()));
-        return roleEntity;
+    private RoleEntity entity(Role model) {
+        if (model == null) return null;
+        RoleEntity entity = modelMapper.map(model, RoleEntity.class);
+        entity.setPermissionSet(model.getPermissionIds().stream().map(PermissionEntity::new).collect(Collectors.toSet()));
+        return entity;
     }
-    private Role convertToRole (RoleEntity roleEntity){
-        if (roleEntity == null) return null;
-        Role role = modelMapper.map(roleEntity, Role.class);
-        role.setPermissionIds(roleEntity.getPermissionSet().stream().map(PermissionEntity::getId).collect(Collectors.toSet()));
-        return role;
+
+    private Role model(RoleEntity entity) {
+        if (entity == null) return null;
+        Role model = modelMapper.map(entity, Role.class);
+        model.setPermissionIds(entity.getPermissionSet().stream().map(PermissionEntity::getId).collect(Collectors.toSet()));
+        return model;
 
     }
 }

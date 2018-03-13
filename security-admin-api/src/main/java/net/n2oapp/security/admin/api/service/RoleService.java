@@ -3,22 +3,43 @@ package net.n2oapp.security.admin.api.service;
 import net.n2oapp.security.admin.api.criteria.RoleCriteria;
 import net.n2oapp.security.admin.api.model.Role;
 import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Service;
 
 /**
- *  Сервис управления ролями
+ * Сервис управления ролями
  */
-
-
 public interface RoleService {
 
+    /**
+     * Создать роль
+     * @param role Модель роли для создания
+     * @return Созданная роль
+     */
     Role create(Role role);
 
+    /**
+     * Изменить роль
+     * @param role Модель роли для изменения
+     * @return Измененная роль
+     */
     Role update(Role role);
 
+    /**
+     * Удалить роль
+     * @param id Идентификатор роли
+     */
     void delete(Integer id);
 
-    Role  getById (Integer id);
+    /**
+     * Получить роль по идентификатору
+     * @param id Идентификатор роли
+     * @return Модель роли
+     */
+    Role getById(Integer id);
 
-    Page<Role> findAll (RoleCriteria criteria);
+    /**
+     * Найти все роли по критериям поиска
+     * @param criteria Критерии поиска
+     * @return Страница найденных ролей
+     */
+    Page<Role> findAll(RoleCriteria criteria);
 }

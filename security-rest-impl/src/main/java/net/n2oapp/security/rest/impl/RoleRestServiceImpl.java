@@ -21,17 +21,11 @@ public class RoleRestServiceImpl implements RoleRestService {
     private RoleService service;
 
     @Override
-    public Page<Role> search( Integer page, Integer size,String name,String description) {
-        RoleCriteria criteria = new RoleCriteria(page-1, size);
-
+    public Page<Role> search(Integer page, Integer size, String name, String description) {
+        RoleCriteria criteria = new RoleCriteria(page - 1, size);
         criteria.setName(name);
         criteria.setDescription(description);
-        Permission permission = new Permission();
-        permission.setId(1);
-        Set<Integer> permissions = new HashSet<Integer>();
-        permissions.add(permission.getId());
-        //criteria.setPermissionIds(permissions);
-        return   service.findAll(criteria);
+        return service.findAll(criteria);
     }
 
     @Override
@@ -41,11 +35,11 @@ public class RoleRestServiceImpl implements RoleRestService {
 
     @Override
     public Role create(Role role) {
-        return  service.create(role);
+        return service.create(role);
     }
 
     @Override
-    public Role update( Role role) {
+    public Role update(Role role) {
         return service.update(role);
 
     }

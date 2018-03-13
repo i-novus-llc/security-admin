@@ -43,8 +43,6 @@ public class RoleRestTest {
     private String cxf;
     @Autowired
     private JacksonJsonProvider jsonProvider;
-    @Autowired
-    private RoleService service;
 
     private RoleRestService client;
 
@@ -57,18 +55,11 @@ public class RoleRestTest {
                 providers);
     }
 
-    public Role newRole(){
-        Role role = new Role();
-        role.setName("user");
-        role.setCode("code1");
-        role.setDescription("description1");
-        Permission permission = new Permission();
-        permission.setId(1);
-        Set<Integer> permissions = new HashSet<Integer>();
-        permissions.add(permission.getId());
-        role.setPermissionIds(permissions);
-        return role;
+    @Test
+    public void search() throws Exception {
 
+        Page<Role> role = client.search(1, 4, "user", "description1");
+        assertEquals(1, role.getTotalElements());
     }
 
     @Test
@@ -79,8 +70,7 @@ public class RoleRestTest {
     }
 
     public Integer create() {
-
-        Role role = service.create(newRole());
+        Role role = client.create(newRole());
         assertNotNull(role);
         assertEquals(1, role.getPermissionIds().size());
         assertEquals((Integer) 1, role.getPermissionIds().iterator().next());
@@ -88,47 +78,30 @@ public class RoleRestTest {
     }
 
     public void update(Integer id) {
-
-        Role role = service.getById(id);
+        Role role = client.getById(id);
         role.setName("userUpdate");
-        service.update(role);
-        assertEquals("userUpdate", service.getById(id).getName());
+        client.update(role);
+        assertEquals("userUpdate", client.getById(id).getName());
 
     }
 
-    public void delete(Integer id){
-        service.delete(id);
-        Role role = service.getById(id);
+    public void delete(Integer id) {
+        client.delete(id);
+        Role role = client.getById(id);
         assertNull(role);
-
-
     }
 
 
-    @Test
-    public void search() throws Exception {
-
+    private static Role newRole() {
+        Role role = new Role();
+        role.setName("user");
+        role.setCode("code1");
+        role.setDescription("description1");
         Permission permission = new Permission();
         permission.setId(1);
         Set<Integer> permissions = new HashSet<Integer>();
         permissions.add(permission.getId());
-
-        Page<Role> role =  client.search(2,4,"user","description1");
-        assertEquals(2, role.getTotalElements());
-
-//        Page<Role> role = service.findAll(roleCriteria);
-//        assertEquals(2, role.getTotalElements());
-//
-//        roleCriteria.setName("user");
-//        role = service.findAll(roleCriteria);
-//        assertEquals(1, role.getTotalElements());
-//
-//        roleCriteria.setDescription("description1");
-//        roleCriteria.setPermissionIds(permissions);
-//        role = service.findAll(roleCriteria);
-//        assertEquals(1, role.getTotalElements());
+        role.setPermissionIds(permissions);
+        return role;
     }
-
-
-
 }

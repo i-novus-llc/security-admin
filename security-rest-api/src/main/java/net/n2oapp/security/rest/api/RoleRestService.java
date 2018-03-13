@@ -23,8 +23,11 @@ public interface RoleRestService {
     @Path("/")
     @ApiOperation("Фильтрация ролей")
     @ApiResponse(code = 200, message = "Роли")
-    Page<Role> search(@QueryParam("page")@DefaultValue("1") Integer page, @QueryParam("size") @DefaultValue("10") Integer size,
-                      @QueryParam("name") String name,@QueryParam("description") String description);
+    Page<Role> search(@QueryParam("page") @DefaultValue("1") Integer page,
+                      @QueryParam("size") @DefaultValue("10") Integer size,
+                      @QueryParam("name") String name,
+                      @QueryParam("description") String description);
+
     @GET
     @Path("/{id}")
     @ApiOperation("Получение ролей")
@@ -48,7 +51,7 @@ public interface RoleRestService {
     @Path("/delete/{id}")
     @ApiOperation("Удаление ролей")
     @ApiResponse(code = 200, message = "Роли")
-    void  delete(@PathParam("id") Integer id);
+    void delete(@PathParam("id") Integer id);
 
 }
 
