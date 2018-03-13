@@ -45,8 +45,6 @@ public class UserRestTest {
     @Autowired
     private JacksonJsonProvider jsonProvider;
     @Autowired
-    private UserService service;
-    @Autowired
     private UserRestService client;
 
     @Before
@@ -56,12 +54,50 @@ public class UserRestTest {
         client = JAXRSClientFactory.create("http://localhost:" + port + "/" + cxf,
                 UserRestService.class,
                 providers);
+    }
 
+    @Test
+    public void search() throws Exception {
+        Role role = new Role();
+        role.setId(1);
+        Set<Integer> roles = new HashSet<Integer>();
+        roles.add(role.getId());
+
+        Page<User> user = client.search(1, 4, "test", "name1", "surname1", "patronymic1", true);
+        assertEquals(1, user.getTotalElements());
+    }
+
+    @Test
+    public void crud() {
+        User user = create();
+        update(user);
+        delete(user.getId());
+    }
+
+    private User create() {
+        User user = client.create(newUser());
+        assertNotNull(user);
+        assertEquals(1, user.getRoleIds().size());
+        assertEquals((Integer) 1, user.getRoleIds().iterator().next());
+        return user;
+    }
+
+    private User update(User user) {
+        user.setName("userName1Update");
+        User updateUser = client.update(user);
+        assertEquals("userName1Update", updateUser.getName());
+        return updateUser;
+    }
+
+    private void delete(Integer id) {
+        client.delete(id);
+        User user = client.getById(id);
+        assertNull(user);
     }
 
 
 
-    public User newUser() {
+    private static User newUser() {
         User user1 = new User();
         user1.setUsername("user1");
         user1.setName("userName1");
@@ -70,82 +106,9 @@ public class UserRestTest {
         user1.setEmail("UserEmail");
         user1.setPassword("userPassword");
         user1.setIsActive(true);
-        Role role = new Role();
-        role.setId(1);
-        Set<Integer> roles = new HashSet<Integer>();
-        roles.add(role.getId());
-      //  user1.setRoleIds(roles);
-
+        List<Integer> roles = new ArrayList<>();
+        roles.add(1);
+        user1.setRoleIds(roles);
         return user1;
     }
-
-    @Test
-    public void crud() {
-        User user= create();
-        update(user);
-        delete(user.getId());
-    }
-
-
-    public User create() {
-
-        User user = service.create(newUser());
-        assertNotNull(user);
-        assertEquals(1, user.getRoleIds().size());
-        assertEquals((Integer) 1, user.getRoleIds().iterator().next());
-        return user;
-
-
-    }
-
-    public User update(User user) {
-        user.setName("userName1Update");
-        User updateUser= service.update(user);
-        assertEquals("userName1Update", updateUser.getName());
-        return updateUser;
-
-    }
-
-    public void delete(Integer id) {
-        service.delete(id);
-        User user = service.getById(id);
-        assertNull(user);
-    }
-
-    @Test
-    public void search() throws Exception {
-
-
-        Role role = new Role();
-        role.setId(1);
-        Set<Integer> roles = new HashSet<Integer>();
-        roles.add(role.getId());
-
-        ///UserCriteria userCriteria = new UserCriteria(2, 4);
-
-        Page<User> user = client.search(2,4,"user2","userName2","usersurName2","userPatronymic2",true);
-        assertEquals(4, user.getTotalElements());
-//        userCriteria.setIsActive(true);
-//        user = client.search(userCriteria);
-//        assertEquals(3, user.getTotalElements());
-//        userCriteria.setUsername("user2");
-//        user = client.search(userCriteria);
-//        assertEquals(2, user.getTotalElements());
-//        userCriteria.setName("userName2");
-//        user = client.search(userCriteria);
-//        assertEquals(2, user.getTotalElements());
-//        userCriteria.setRoleIds(roles);
-//        user = client.search(userCriteria);
-//        assertEquals(2, user.getTotalElements());
-//        userCriteria.setSurname("userSurname2");
-//        user = client.search(userCriteria);
-//        assertEquals(1, user.getTotalElements());
-//        userCriteria.setPatronymic("userPatronymic2");
-//        user = client.search(userCriteria);
-//        assertEquals(1, user.getTotalElements());
-
-
-    }
-
-
 }

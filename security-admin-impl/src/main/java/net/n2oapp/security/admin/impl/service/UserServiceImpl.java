@@ -14,9 +14,7 @@ import org.springframework.stereotype.Service;
 import org.modelmapper.ModelMapper;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.function.Function;
 import java.util.stream.Collectors;
-
 
 /**
  * Реализация сервиса управления пользователями
@@ -29,16 +27,14 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private ModelMapper modelMapper;
 
-    private final Function<UserEntity, User> funcEntityToModel = this::convertToUser;
-
     @Override
     public User create(User user) {
-        return convertToUser(userRepository.save(convertToUserEntity(user)));
+        return model(userRepository.save(entity(user)));
     }
 
     @Override
-    public User  update(User user) {
-        return convertToUser(userRepository.save(convertToUserEntity(user)));
+    public User update(User user) {
+        return model(userRepository.save(entity(user)));
     }
 
     @Override
@@ -49,29 +45,31 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getById(Integer id) {
-        UserEntity userEntity=userRepository.findOne(id);
-        return convertToUser(userEntity);
+        UserEntity entity = userRepository.findOne(id);
+        return model(entity);
     }
 
     @Override
     public Page<User> findAll(UserCriteria criteria) {
         final Specification<UserEntity> specification = new UserSpecifications(criteria);
         final Page<UserEntity> all = userRepository.findAll(specification, criteria);
-        return all.map(this::convertToUser);
+        return all.map(this::model);
     }
 
-    private UserEntity convertToUserEntity(User user){
-        UserEntity userEntity = modelMapper.map(user,UserEntity.class);
-        userEntity.setRoleSet(user.getRoleIds().stream().map(RoleEntity::new).collect(Collectors.toSet()));
-        return userEntity;
+    private UserEntity entity(User model) {
+        UserEntity entity = modelMapper.map(model, UserEntity.class);
+        if (model.getRoleIds() != null)
+            entity.setRoleSet(model.getRoleIds().stream().map(RoleEntity::new).collect(Collectors.toSet()));
+        return entity;
     }
 
-    private User convertToUser (UserEntity userEntity){
-        if (userEntity == null) return null;
-        User user = modelMapper.map(userEntity, User.class);
-        user.setRoleIds(userEntity.getRoleSet().stream().map(RoleEntity::getId).collect(Collectors.toList()));
-        user.setRoleNames(userEntity.getRoleSet().stream().map(RoleEntity::getName).collect(Collectors.toList()));
-        return user;
-
+    private User model(UserEntity entity) {
+        if (entity == null) return null;
+        User model = modelMapper.map(entity, User.class);
+        if (entity.getRoleSet() != null) {
+            model.setRoleIds(entity.getRoleSet().stream().map(RoleEntity::getId).collect(Collectors.toList()));
+            model.setRoleNames(entity.getRoleSet().stream().map(RoleEntity::getName).collect(Collectors.toList()));
+        }
+        return model;
     }
 }

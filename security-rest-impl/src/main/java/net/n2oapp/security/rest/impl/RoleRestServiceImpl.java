@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Реализация сервиса управления ролями пользоватлями
+ * Реализация REST сервиса управления ролями пользоватлями
  */
 @Controller
 public class RoleRestServiceImpl implements RoleRestService {

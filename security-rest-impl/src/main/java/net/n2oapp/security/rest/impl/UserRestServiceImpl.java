@@ -9,7 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 
 /**
- *Реализация сервиса управления пользоватлями
+ * Реализация REST сервиса управления пользоватлями
  */
 @Controller
 public class UserRestServiceImpl implements UserRestService {
@@ -27,8 +27,8 @@ public class UserRestServiceImpl implements UserRestService {
         criteria.setUsername(username);
         criteria.setPatronymic(patronymic);
         criteria.setIsActive(isActive);
-       // criteria.setRoleIds();
-      return   service.findAll(criteria);
+        // criteria.setRoleIds();
+        return service.findAll(criteria);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class UserRestServiceImpl implements UserRestService {
     }
 
     @Override
-    public User update(User user ) {
+    public User update(User user) {
         return service.update(user);
     }
 
