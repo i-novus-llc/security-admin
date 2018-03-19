@@ -1,4 +1,4 @@
-package net.n2oapp.security.auth;
+package net.n2oapp.security.auth.simple;
 
 import net.n2oapp.framework.api.exception.N2oException;
 import org.springframework.beans.factory.annotation.Autowired;

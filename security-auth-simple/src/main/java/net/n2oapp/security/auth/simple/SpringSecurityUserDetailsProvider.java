@@ -1,4 +1,4 @@
-package net.n2oapp.security.auth;
+package net.n2oapp.security.auth.simple;
 
 import net.n2oapp.framework.api.context.Context;
 import net.n2oapp.framework.api.user.UserContext;

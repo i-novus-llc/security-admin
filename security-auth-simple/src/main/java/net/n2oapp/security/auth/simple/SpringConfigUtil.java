@@ -1,5 +1,6 @@
-package net.n2oapp.security.auth;
+package net.n2oapp.security.auth.simple;
 
+import net.n2oapp.security.auth.N2oSecurityPermissionEvaluator;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;

@@ -1,6 +1,7 @@
-package net.n2oapp.security.auth;
+package net.n2oapp.security.auth.simple;
 
 import net.n2oapp.context.StaticSpringContext;
+import net.n2oapp.properties.StaticProperties;
 import net.n2oapp.security.auth.authority.RoleGrantedAuthority;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.provisioning.UserDetailsManager;
@@ -15,8 +16,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static net.n2oapp.properties.StaticProperties.getProperty;
 
 /**
  * Сервлет для создания пользователя при регистрации
@@ -109,7 +108,7 @@ public class RegistrationServlet extends HttpServlet {
      */
     private void createUser(String username, String password, String surname, String name, String patronymic,
                             String email, UserDetailsManager userDetailsManager) {
-        String authority = getProperty("n2o.auth.authority");
+        String authority = StaticProperties.getProperty("n2o.auth.authority");
         List<GrantedAuthority> authorities = new ArrayList<>();
         if(authority != null) {
             authorities.add(new RoleGrantedAuthority(authority));

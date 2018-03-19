@@ -11,7 +11,7 @@
     <title>${n2o:property('security.admin.login.title')}</title>
     <link href="dist/css/n2o/bootstrap.css" rel="stylesheet">
     <link href="dist/css/n2o/n2o.css" rel="stylesheet">
-    <link href="dist/signin.css" rel="stylesheet">
+    <link href="../../../../dist/signin.css" rel="stylesheet">
 </head>
 
 <body>

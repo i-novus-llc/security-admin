@@ -32,35 +32,6 @@
         <property name="eventBus" ref="n2oEventBus"/>
     </bean>
 
-    <bean class="net.n2oapp.security.auth.RoleService"/>
-
-    <!-- spring -->
-    <bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
-
-    <bean class="net.n2oapp.security.auth.SpringSecurityUserDetailsProvider"/>
-
-    <bean id="providerManager" class="org.springframework.security.authentication.ProviderManager">
-        <constructor-arg name="providers">
-            <list>
-                <ref bean="authenticationProvider"/>
-            </list>
-        </constructor-arg>
-    </bean>
-
-    <bean id="n2oJdbcUserDetailsManager" class="net.n2oapp.security.auth.N2oJdbcUserDetailsManager">
-        <!--<property name="authenticationManager" ref="providerManager"/>-->
-        <property name="passwordEncoder" ref="passwordEncoder"/>
-        <property name="transactionTemplate" ref="transactionTemplate"/>
-        <property name="authenticationProvider" ref="authenticationProvider"/>
-    </bean>
-
-    <bean id="authenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
-        <property name="userDetailsService" ref="n2oJdbcUserDetailsManager"/>
-        <property name="passwordEncoder" ref="passwordEncoder"/>
-    </bean>
-
     <bean id="accessSchemaValidatorOverrided" class="net.n2oapp.security.auth.access.SimpleAccessSchemaValidatorOverrided"/>
-
-    <bean id="currentUserUpdatePasswordService" class="net.n2oapp.security.auth.CurrentUserUpdatePasswordService"/>
 
 </beans>

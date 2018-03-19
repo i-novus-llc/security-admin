@@ -39,7 +39,7 @@
 
     <servlet>
         <servlet-name>SecuritySimpleRegistrationServlet</servlet-name>
-        <servlet-class>net.n2oapp.security.auth.RegistrationServlet</servlet-class>
+        <servlet-class>net.n2oapp.security.auth.simple.RegistrationServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>

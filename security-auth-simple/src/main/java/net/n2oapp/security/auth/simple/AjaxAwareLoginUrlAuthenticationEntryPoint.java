@@ -1,4 +1,4 @@
-package net.n2oapp.security.auth;
+package net.n2oapp.security.auth.simple;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;

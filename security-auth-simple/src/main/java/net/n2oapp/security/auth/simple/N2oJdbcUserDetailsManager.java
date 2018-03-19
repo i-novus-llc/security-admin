@@ -1,4 +1,4 @@
-package net.n2oapp.security.auth;
+package net.n2oapp.security.auth.simple;
 
 import net.n2oapp.security.auth.authority.PermissionGrantedAuthority;
 import net.n2oapp.security.auth.authority.RoleGrantedAuthority;
