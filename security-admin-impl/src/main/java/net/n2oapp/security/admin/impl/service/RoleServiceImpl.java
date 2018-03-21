@@ -5,9 +5,11 @@ import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.service.RoleService;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
-import net.n2oapp.security.admin.impl.repository.RoleRepository;;
+import net.n2oapp.security.admin.impl.repository.RoleRepository;
+import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.RoleSpecifications;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
@@ -24,23 +26,38 @@ import java.util.stream.Collectors;
 public class RoleServiceImpl implements RoleService {
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private ModelMapper modelMapper;
 
+
     @Override
     public Role create(Role role) {
-        return model(roleRepository.save(entity(role)));
+        if (checkUniqRole(role.getName())) {
+            return model(roleRepository.save(entity(role)));
+        } else {
+            throw new IllegalArgumentException("Роль с таким названием уже существует");
+        }
     }
 
     @Override
     public Role update(Role role) {
-        return model(roleRepository.save(entity(role)));
+        if (checkUniqRoleForUpdate(role.getId(), role.getName())) {
+            return model(roleRepository.save(entity(role)));
+        } else {
+            throw new IllegalArgumentException("Пользователь с таким именем уже существует");
+        }
     }
 
     @Override
     public void delete(Integer id) {
-        roleRepository.delete(id);
+        if (!checkRoleExist(id)) {
+            roleRepository.delete(id);
+        } else {
+            throw new IllegalAccessError("Удаление невозможно, так как имеются пользователи с такой ролью");
+        }
     }
 
     @Override
@@ -57,17 +74,42 @@ public class RoleServiceImpl implements RoleService {
     }
 
     private RoleEntity entity(Role model) {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         if (model == null) return null;
         RoleEntity entity = modelMapper.map(model, RoleEntity.class);
-        entity.setPermissionSet(model.getPermissionIds().stream().map(PermissionEntity::new).collect(Collectors.toSet()));
+        entity.setPermissionList(model.getPermissionIds().stream().map(PermissionEntity::new).collect(Collectors.toList()));
         return entity;
     }
 
     private Role model(RoleEntity entity) {
         if (entity == null) return null;
         Role model = modelMapper.map(entity, Role.class);
-        model.setPermissionIds(entity.getPermissionSet().stream().map(PermissionEntity::getId).collect(Collectors.toSet()));
+        model.setPermissionIds(entity.getPermissionList().stream().map(PermissionEntity::getId).collect(Collectors.toList()));
+        model.setPermissionNames(entity.getPermissionList().stream().map(PermissionEntity::getName).collect(Collectors.toList()));
         return model;
 
+    }
+
+    /**
+     * Валидация на уникальность названия роли при добавлении
+     */
+    private Boolean checkUniqRole(String name) {
+        return roleRepository.findOneByName(name) == null;
+    }
+
+    /**
+     * Валидация на уникальность названия роли при изменении
+     */
+    private Boolean checkUniqRoleForUpdate(Integer id, String name) {
+        RoleEntity roleEntity = roleRepository.findOneByName(name);
+        return ((roleEntity == null) || (roleEntity.getId().equals(id)));
+    }
+
+    /**
+     * Валидация на удаление ролей
+     * Запрещено удалять роль, если существует пользователь с такой ролью
+     */
+    private boolean checkRoleExist(Integer roleId) {
+        return userRepository.countUsersWithRoleId(roleId) == 0;
     }
 }

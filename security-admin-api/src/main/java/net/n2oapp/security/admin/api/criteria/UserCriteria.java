@@ -1,10 +1,9 @@
 package net.n2oapp.security.admin.api.criteria;
 
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Критерий фильтрации пользователей
@@ -12,11 +11,9 @@ import java.util.Set;
 
 public class UserCriteria extends PageRequest {
     private String username;
-    private String surname;
-    private String name;
-    private String patronymic;
+    private String fio;
     private Boolean isActive;
-    private Set<Integer> roleIds;
+    private List<Integer> roleIds;
 
 
 
@@ -36,28 +33,12 @@ public class UserCriteria extends PageRequest {
         this.username = username;
     }
 
-    public String getSurname() {
-        return surname;
+    public String getFio() {
+        return fio;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPatronymic() {
-        return patronymic;
-    }
-
-    public void setPatronymic(String patronymic) {
-        this.patronymic = patronymic;
+    public void setFio(String fio) {
+        this.fio = fio;
     }
 
     public Boolean getIsActive() {
@@ -68,11 +49,11 @@ public class UserCriteria extends PageRequest {
         this.isActive = isActive;
     }
 
-    public Set<Integer> getRoleIds() {
+    public List<Integer> getRoleIds() {
         return roleIds;
     }
 
-    public void setRoleIds(Set<Integer> roleIds) {
+    public void setRoleIds(List<Integer> roleIds) {
         this.roleIds = roleIds;
     }
 }

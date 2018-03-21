@@ -39,31 +39,14 @@
             <display>email</display>
             <name>E-mail</name>
         </field>
+
         <field>
-            <id>surname</id>
+            <id>fio</id>
             <domain>string</domain>
-            <display>surname</display>
-            <name>Фамилия</name>
+            <display>fio</display>
+            <name>ФИО</name>
             <filters>
-                <filter type="like" filter-field="surname">surname=:surname</filter>
-            </filters>
-        </field>
-        <field>
-            <id>name</id>
-            <domain>string</domain>
-            <display>name</display>
-            <name>Имя</name>
-            <filters>
-                <filter type="eq" filter-field="name">name=:name</filter>
-            </filters>
-        </field>
-        <field>
-            <id>patronymic</id>
-            <domain>string</domain>
-            <display>patronymic</display>
-            <name>Отчество</name>
-            <filters>
-                <filter type="eq" filter-field="patronymic">patronymic=:patronymic</filter>
+                <filter type="eq" filter-field="fio">fio=:fio</filter>
             </filters>
         </field>
         <field>

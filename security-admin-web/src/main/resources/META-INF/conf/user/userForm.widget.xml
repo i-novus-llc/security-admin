@@ -14,6 +14,23 @@
                 <ctrl:validation ref-id="emailValidation"/>
             </ctrl:validations>
         </ctrl:input-text>
+        <fs:field-set>
+            <ctrl:password id="password" label="Пароль"/>
+            <ctrl:validations>
+                <ctrl:validation ref-id="passwordLengthValidation" side="server"/>
+                <ctrl:validation ref-id="passwordValidation" side="server"/>
+            </ctrl:validations>
+            <ctrl:password id="passwordCheck" label="Подтвердить пароль">
+                <ctrl:validations>
+                    <ctrl:validation ref-id="passwordCheckValidation" side="server"/>
+                </ctrl:validations>
+                <ctrl:dependencies>
+                    <ctrl:enabling-condition>
+                        password != null;
+                    </ctrl:enabling-condition>
+                </ctrl:dependencies>
+            </ctrl:password>
+        </fs:field-set>
         <ctrl:input-text id="surname"/>
         <ctrl:input-text id="name"/>
         <ctrl:input-text id="patronymic"/>

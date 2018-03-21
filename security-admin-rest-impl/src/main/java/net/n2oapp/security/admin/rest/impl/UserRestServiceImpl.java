@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 
+import java.util.List;
+
+
 /**
  * Реализация REST сервиса управления пользоватлями
  */
@@ -19,15 +22,12 @@ public class UserRestServiceImpl implements UserRestService {
 
     @Override
     public Page<User> search(Integer page, Integer size,
-                             String username, String name, String surname, String patronymic, Boolean isActive) {
+                             String username, String fio, Boolean isActive, List<Integer> roleIds) {
         UserCriteria criteria = new UserCriteria(page - 1, size);
         criteria.setUsername(username);
-        criteria.setName(name);
-        criteria.setSurname(surname);
-        criteria.setUsername(username);
-        criteria.setPatronymic(patronymic);
+        criteria.setFio(fio);
         criteria.setIsActive(isActive);
-        // criteria.setRoleIds();
+        criteria.setRoleIds(roleIds);
         return service.findAll(criteria);
     }
 

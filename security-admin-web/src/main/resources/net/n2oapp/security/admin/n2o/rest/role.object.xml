@@ -68,18 +68,4 @@
 
     </actions>
 
-    <!--<validations>-->
-        <!--<constraint id="usedRole" level="error">-->
-            <!--<message>Удаление невозможно, так как имеются пользователи с такой ролью!</message>-->
-            <!--<invocation>-->
-                <!--<n2o:sql>-->
-                    <!--<![CDATA[ select count(user_id) from sec.user_role where role_id = :id]]>-->
-                <!--</n2o:sql>-->
-            <!--</invocation>-->
-            <!--<in-parameters>-->
-                <!--<param name="id" mapping="['id']"/>-->
-            <!--</in-parameters>-->
-            <!--<result expression="[0][0][0] == 0"/>-->
-        <!--</constraint>-->
-    <!--</validations>-->
 </object>

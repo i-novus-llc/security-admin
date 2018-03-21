@@ -1,18 +1,16 @@
 package net.n2oapp.security.admin.impl.service.specification;
 
 import net.n2oapp.security.admin.api.criteria.RoleCriteria;
+import net.n2oapp.security.admin.impl.entity.PermissionEntity;
+import net.n2oapp.security.admin.impl.entity.PermissionEntity_;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.RoleEntity_;
 import org.springframework.data.jpa.domain.Specification;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import java.util.HashMap;
-import java.util.Map;
+
+import javax.persistence.criteria.*;
 
 /**
- * Created by otihonova on 07.11.2017.
+ * Реализация фитров для ролей пользователя
  */
 public class RoleSpecifications implements Specification<RoleEntity> {
     private RoleCriteria criteria;
@@ -28,6 +26,15 @@ public class RoleSpecifications implements Specification<RoleEntity> {
             predicate = builder.and(predicate, builder.like(root.get(RoleEntity_.name), criteria.getName() + "%"));
         if (criteria.getDescription() != null)
             predicate = builder.and(predicate, builder.like(root.get(RoleEntity_.description), criteria.getDescription() + "%"));
+        if (criteria.getPermissionIds() != null) {
+            Subquery sub = criteriaQuery.subquery(Integer.class);
+            Root subRoot = sub.from(PermissionEntity.class);
+            ListJoin<PermissionEntity, RoleEntity> subRoles = subRoot.join(PermissionEntity_.roleList);
+            sub.select(subRoot.get(PermissionEntity_.id));
+            sub.where(builder.and(builder.equal(root.get(RoleEntity_.id), subRoles.get(RoleEntity_.id)),
+                    subRoot.get(PermissionEntity_.id).in(criteria.getPermissionIds())));
+            predicate = builder.and(predicate, builder.exists(sub));
+        }
         return predicate;
     }
 }

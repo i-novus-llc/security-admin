@@ -1,6 +1,6 @@
 package net.n2oapp.security.admin.api.model;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Роль
@@ -10,7 +10,8 @@ public class Role {
     private String name;
     private String code;
     private String description;
-    private Set<Integer> permissionIds;
+    private List<Integer> permissionIds;
+    private List<String> permissionNames;
 
 
     public Integer getId() {
@@ -45,11 +46,19 @@ public class Role {
         this.description = description;
     }
 
-    public Set<Integer> getPermissionIds() {
+    public List<String> getPermissionNames() {
+        return permissionNames;
+    }
+
+    public void setPermissionNames(List<String> permissionNames) {
+        this.permissionNames = permissionNames;
+    }
+
+    public List<Integer> getPermissionIds() {
         return permissionIds;
     }
 
-    public void setPermissionIds(Set<Integer> permissionIds) {
+    public void setPermissionIds(List<Integer> permissionIds) {
         this.permissionIds = permissionIds;
     }
 }

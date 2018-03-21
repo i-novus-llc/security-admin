@@ -2,14 +2,16 @@ package net.n2oapp.security.admin.impl.entity;
 
 
 import javax.persistence.*;
-import java.util.Set;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * Сущность Пользователь
  */
 @Entity
 @Table(name = "user", schema = "sec")
-public class UserEntity extends AbstractUserEntity {
+public class UserEntity {
+
     /**
      * Идентификатор пользователя
      */
@@ -21,12 +23,14 @@ public class UserEntity extends AbstractUserEntity {
     /**
      * Логин пользователя
      */
+    @NotNull
     @Column(name = "username", nullable = false)
     private String username;
 
     /**
      * Электронный адрес пользователя
      */
+    @NotNull
     @Column(name = "email")
     private String email;
 
@@ -34,12 +38,15 @@ public class UserEntity extends AbstractUserEntity {
     /**
      * Фамилия
      */
+    @NotNull
     @Column(name = "surname")
     private String surname;
 
     /**
      * Имя
      */
+
+    @NotNull
     @Column(name = "name")
     private String name;
 
@@ -52,6 +59,9 @@ public class UserEntity extends AbstractUserEntity {
     /**
      * Пароль пользователя
      */
+
+    @NotNull
+
     @Column(name = "password")
     private String password;
 
@@ -64,19 +74,22 @@ public class UserEntity extends AbstractUserEntity {
     /**
      * Роли пользователя
      */
+
+    @NotNull
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(schema = "sec", name = "user_role",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")}
     )
-    private Set<RoleEntity> roleSet;
+    private List<RoleEntity> roleList;
 
-    public Set<RoleEntity> getRoleSet() {
-        return roleSet;
+    public List<RoleEntity> getRoleList() {
+        return roleList;
     }
 
-    public void setRoleSet(Set<RoleEntity> roleSet) {
-        this.roleSet = roleSet;
+    public void setRoleList(List<RoleEntity> roleList) {
+        this.roleList = roleList;
+
     }
 
     public Boolean getIsActive() {

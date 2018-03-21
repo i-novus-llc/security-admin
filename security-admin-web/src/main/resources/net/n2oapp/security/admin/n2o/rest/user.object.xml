@@ -89,18 +89,6 @@
     </actions>
 
     <validations>
-        <!--<constraint id="uniqUsername" level="error">-->
-            <!--<message>Пользователь с таким именем уже существует</message>-->
-            <!--<invocation>-->
-                <!--<n2o:sql>-->
-                    <!--<![CDATA[ select count(id) from sec.user where username = :username]]>-->
-                <!--</n2o:sql>-->
-            <!--</invocation>-->
-            <!--<in-parameters>-->
-                <!--<param name="username" mapping="['username']" domain="string"/>-->
-            <!--</in-parameters>-->
-            <!--<result expression="[0][0][0] == 0"/>-->
-        <!--</constraint>-->
 
         <condition id="usernameValidation" level="error">
             <message>Неверное имя</message>
@@ -126,5 +114,41 @@
                 ]]>
             </expression>
         </condition>
+
+        <condition id="passwordValidation" level="error">
+            <message>Неверный формат пароля</message>
+            <expression on="password">
+                <![CDATA[
+                    if (typeof password != 'undefined' && password != null && password != '') {
+                        var regex = new RegExp(${sec.admin.user.password.regexp.validation});
+                        regex.test(password);
+                     }else true;
+                ]]>
+            </expression>
+        </condition>
+
+        <condition id="passwordLengthValidation" level="error">
+            <message>Минимум 7 символов</message>
+            <expression on="password">
+                <![CDATA[
+                    if (typeof password != 'undefined' && password != null && password != '') {
+                        password.length >= ${sec.admin.user.password.length.validation}
+                     }else true;
+                ]]>
+            </expression>
+        </condition>
+
+        <condition id="passwordCheckValidation" level="error">
+            <message>Введённые пароли не совпадают</message>
+            <expression on="passwordCheck,password">
+                <![CDATA[
+                    if (typeof passwordCheck != 'undefined' && passwordCheck != null && passwordCheck != '') {
+                        passwordCheck === password;
+                     }else true;
+                ]]>
+            </expression>
+        </condition>
+
+
     </validations>
 </object>
