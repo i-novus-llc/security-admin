@@ -5,7 +5,9 @@ import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity_;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
 
 import javax.persistence.criteria.*;
 import java.util.*;
@@ -36,9 +38,7 @@ public class UserSpecifications implements Specification<UserEntity> {
         if (criteria.getIsActive() != null) {
                 predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.isActive), criteria.getIsActive()));
         }
-
         return predicate;
-
     }
 }
 
