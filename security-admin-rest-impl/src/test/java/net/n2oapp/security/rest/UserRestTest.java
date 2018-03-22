@@ -59,7 +59,7 @@ public class UserRestTest {
         role.setId(1);
         List<Integer> roles = new ArrayList<>();
         roles.add(role.getId());
-        Page<User> user = client.search(1, 4, "test", "name surname1 patronymic1", true, roles);
+        Page<User> user = client.search(1, 4, "test", " surname1 name1  patronymic1", true, roles);
         assertEquals(1, user.getTotalElements());
     }
 

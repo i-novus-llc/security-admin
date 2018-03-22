@@ -35,29 +35,21 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role create(Role role) {
-        if (checkUniqRole(role.getName())) {
-            return model(roleRepository.save(entity(role)));
-        } else {
-            throw new IllegalArgumentException("Роль с таким названием уже существует");
-        }
+        checkRoleUniq(role.getId(), role.getName());
+        return model(roleRepository.save(entity(role)));
+
     }
 
     @Override
     public Role update(Role role) {
-        if (checkUniqRoleForUpdate(role.getId(), role.getName())) {
-            return model(roleRepository.save(entity(role)));
-        } else {
-            throw new IllegalArgumentException("Пользователь с таким именем уже существует");
-        }
+        checkRoleUniq(role.getId(), role.getName());
+        return model(roleRepository.save(entity(role)));
     }
 
     @Override
     public void delete(Integer id) {
-        if (!checkRoleExist(id)) {
-            roleRepository.delete(id);
-        } else {
-            throw new IllegalAccessError("Удаление невозможно, так как имеются пользователи с такой ролью");
-        }
+        checkRoleExist(id);
+        roleRepository.delete(id);
     }
 
     @Override
@@ -91,18 +83,16 @@ public class RoleServiceImpl implements RoleService {
     }
 
     /**
-     * Валидация на уникальность названия роли при добавлении
-     */
-    private Boolean checkUniqRole(String name) {
-        return roleRepository.findOneByName(name) == null;
-    }
-
-    /**
      * Валидация на уникальность названия роли при изменении
      */
-    private Boolean checkUniqRoleForUpdate(Integer id, String name) {
+    private Boolean checkRoleUniq(Integer id, String name) {
         RoleEntity roleEntity = roleRepository.findOneByName(name);
-        return ((roleEntity == null) || (roleEntity.getId().equals(id)));
+        Boolean result = id == null ? roleEntity == null : ((roleEntity == null) || (roleEntity.getId().equals(id)));
+        if (result) {
+            return true;
+        } else {
+            throw new IllegalArgumentException("Role with such name already exists");
+        }
     }
 
     /**
@@ -110,6 +100,9 @@ public class RoleServiceImpl implements RoleService {
      * Запрещено удалять роль, если существует пользователь с такой ролью
      */
     private boolean checkRoleExist(Integer roleId) {
-        return userRepository.countUsersWithRoleId(roleId) == 0;
+        if (userRepository.countUsersWithRoleId(roleId) == 0)
+            return true;
+        else
+            throw new IllegalAccessError("Deleting is not possible, since there are users with such role");
     }
 }

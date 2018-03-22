@@ -95,7 +95,7 @@ public class RoleRestTest {
 
     private static Role newRole() {
         Role role = new Role();
-        role.setName("user");
+        role.setName("user1");
         role.setCode("code1");
         role.setDescription("description1");
         Permission permission = new Permission();

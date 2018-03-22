@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
         checkUsernameUniq(user.getId(), user.getUsername());
         checkUsername(user.getUsername());
         checkEmail(user.getEmail());
-        checkPassword(user.getPassword(), user.getCheckPassword());
+        checkPassword(user.getPassword(), user.getCheckPassword(), user.getId());
         return model(userRepository.save(entity(user)));
     }
 
@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
         checkUsernameUniq(user.getId(), user.getUsername());
         checkUsername(user.getUsername());
         checkEmail(user.getEmail());
-        checkPassword(user.getPassword(), user.getCheckPassword());
+        checkPassword(user.getPassword(), user.getCheckPassword(), user.getId());
         return model(userRepository.save(entity(user)));
 
     }
@@ -110,23 +110,24 @@ public class UserServiceImpl implements UserService {
      */
     public boolean checkUsernameUniq(Integer id, String username) {
         UserEntity userEntity = userRepository.findOneByUsername(username);
-        Boolean result = id != null ? userEntity == null : ((userEntity == null) || (userEntity.getId().equals(id)));
+        Boolean result = id == null ? userEntity == null : ((userEntity == null) || (userEntity.getId().equals(id)));
         if (result) {
             return true;
         } else
-            throw new IllegalArgumentException(" Пользователь с таким именем существует");
+            throw new IllegalArgumentException("User with such username already exists");
     }
 
     /**
      * Валидация на  ввод юзернейма согласно формату
      */
     private boolean checkUsername(String username) {
-        if (!validationUsername) return true;
-        String regexp = "^[a-zA-Z][a-zA-Z0-9]+$";
-        Pattern pattern = Pattern.compile(regexp);
-        Matcher matcher = pattern.matcher(username);
-        if (!matcher.matches())
-            throw new IllegalArgumentException("Неверный логин");
+        if (validationUsername) {
+            String regexp = "^[a-zA-Z][a-zA-Z0-9]+$";
+            Pattern pattern = Pattern.compile(regexp);
+            Matcher matcher = pattern.matcher(username);
+            if (!matcher.matches())
+                throw new IllegalArgumentException("Wrong username format");
+        }
         return true;
     }
 
@@ -139,18 +140,16 @@ public class UserServiceImpl implements UserService {
         Pattern pattern = Pattern.compile(regexp);
         Matcher matcher = pattern.matcher(email);
         if (!matcher.matches())
-            throw new IllegalArgumentException("Неверный email");
+            throw new IllegalArgumentException("Wrong email");
         return true;
     }
 
     /**
      * Валидация на  ввод пароля согласно формату
      */
-    public boolean checkPassword(String password, String passwordCheck) {
+    public boolean checkPassword(String password, String passwordCheck, Integer id) {
         if (password.length() < validationPasswordLength)
-            throw new IllegalArgumentException("Пароль должен быть минимум " + validationPasswordLength + " символов");
-        if (!password.equals(passwordCheck))
-            throw new IllegalArgumentException("Введённые пароли не совпадат");
+            throw new IllegalArgumentException("Wrong password length");
         String regexp;
         Pattern pattern;
         Matcher matcher;
@@ -159,28 +158,31 @@ public class UserServiceImpl implements UserService {
             pattern = Pattern.compile(regexp);
             matcher = pattern.matcher(password);
             if (!matcher.matches())
-                throw new IllegalArgumentException("Неверный формат пароля. Пароль должен содержать как минимум одну заглавную букву");
+                throw new IllegalArgumentException("Wrong password format. Password must contain at least one uppercase letter");
         }
         if (validationPasswordLowerCaseLetters) {
             regexp = "^(?=.*[a-z])(?=\\S+$).*$";
             pattern = Pattern.compile(regexp);
             matcher = pattern.matcher(password);
             if (!matcher.matches())
-                throw new IllegalArgumentException("Неверный формат пароля. Пароль должен содержать как минимум одну строчную букву");
+                throw new IllegalArgumentException("Wrong password format. Password must contain at least one lowercase letter");
         }
         if (validationPasswordNumbers) {
             regexp = "^(?=.*[0-9])(?=\\S+$).*$";
             pattern = Pattern.compile(regexp);
             matcher = pattern.matcher(password);
             if (!matcher.matches())
-                throw new IllegalArgumentException("Неверный формат пароля. Пароль должен содержать как минимум одну цифру");
+                throw new IllegalArgumentException("Wrong password format. Password must contain at least one number");
         }
         if (validationPasswordSpecialSymbols) {
             regexp = "(?=.*[@#$%^&+=])(?=\\S+$).*$";
             pattern = Pattern.compile(regexp);
             matcher = pattern.matcher(password);
             if (!matcher.matches())
-                throw new IllegalArgumentException("Неверный формат пароля. Пароль должен содержать как минимум один специальный символ");
+                throw new IllegalArgumentException("Wrong password format. Password must contain at least one special symbol");
+        }
+        if (((id == null) || (passwordCheck != null)) && (!password.equals(passwordCheck))) {
+            throw new IllegalArgumentException("The password and confirm password fields do not match.");
         }
         return true;
     }
