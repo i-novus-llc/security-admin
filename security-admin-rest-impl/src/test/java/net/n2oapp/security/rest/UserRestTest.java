@@ -79,9 +79,9 @@ public class UserRestTest {
     }
 
     private User update(User user) {
-        user.setName("userName1Update");
+        user.setUsername("userName1Update");
         User updateUser = client.update(user);
-        assertEquals("userName1Update", updateUser.getName());
+        assertEquals("userName1Update", updateUser.getUsername());
         return updateUser;
     }
 
@@ -94,8 +94,8 @@ public class UserRestTest {
 
     private static User newUser() {
         User user1 = new User();
-        user1.setUsername("user1");
-        user1.setName("userName1");
+        user1.setUsername("userName2");
+        user1.setName("user1");
         user1.setSurname("userSurname");
         user1.setPatronymic("userPatronymic");
         user1.setEmail("UserEmail@gmail.com");
