@@ -24,6 +24,8 @@
     	<module>security-admin-rest-impl</module>
     	<module>security-admin-backend</module>
     	<module>security-admin-frontend</module>
+        <module>security-admin-web-sql</module>
+        <module>security-admin-web-rest</module>
     </modules>
 
     <properties>
@@ -32,6 +34,7 @@
         <criteria.version>3.9</criteria.version>
         <cxf.version>3.1.11</cxf.version>
         <n2o.version>6.1.13</n2o.version>
+        <commons.version>2.6</commons.version>
     </properties>
 
     <dependencyManagement>
@@ -76,6 +79,12 @@
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-rt-frontend-jaxrs</artifactId>
                 <version>${cxf.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>swagger-ui</artifactId>
+                <version>3.0.17</version>
             </dependency>
 
             <dependency>
@@ -172,7 +181,13 @@
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>2.6</version>
+                <version>${commons.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>${commons.version}</version>
             </dependency>
 
         </dependencies>

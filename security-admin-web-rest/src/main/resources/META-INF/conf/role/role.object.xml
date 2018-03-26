@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<object xmlns="http://n2oapp.net/framework/config/schema/object-1.0"
+        xmlns:n2o="http://n2oapp.net/framework/config/schema/action-rest-2.0">
+    <name>Роли</name>
+
+    <actions>
+        <action id="create">
+            <invocation>
+                <n2o:rest method="POST">
+                    <n2o:query>${sec.admin.rest.url}/roles/create</n2o:query>
+                    <n2o:error-mapping>
+                        <n2o:message param-name=""/>
+                        <n2o:detailed-message param-name=""/>
+                        <n2o:stack-trace param-name=""/>
+                    </n2o:error-mapping>
+                </n2o:rest>
+            </invocation>
+            <in-parameters>
+                <param name="name" mapping="['name']" domain="string" required="true"/>
+                <param name="code" mapping="['code']" domain="string"/>
+                <param name="description" mapping="['description']" domain="string"/>
+                <param name="permissions*.id" mapping="['permissionIds']" domain="integer[]"/>
+            </in-parameters>
+            <out-parameters>
+                <param name="id" mapping="['id']"/>
+            </out-parameters>
+            <success-text>Роль сохранена</success-text>
+            <validations activate="nothing"/>
+        </action>
+
+        <action id="update">
+            <invocation>
+                <n2o:rest method="PUT">
+                    <n2o:query>${sec.admin.rest.url}/roles/update</n2o:query>
+                </n2o:rest>
+            </invocation>
+            <in-parameters>
+                <param name="id" mapping="['id']" domain="integer" required="true"/>
+                <param name="name" mapping="['name']" domain="string" required="true"/>
+                <param name="code" mapping="['code']" domain="string"/>
+                <param name="description" mapping="['description']" domain="string"/>
+                <param name="permissions*.id" mapping="['permissionIds']" domain="integer[]"/>
+            </in-parameters>
+            <out-parameters>
+                <param name="id" mapping="['id']"/>
+            </out-parameters>
+            <success-text>Роль сохранена</success-text>
+            <validations activate="nothing"/>
+        </action>
+
+        <action id="delete">
+            <invocation>
+                <n2o:rest method="DELETE">
+                    <n2o:query>${sec.admin.rest.url}/roles/delete/{id}</n2o:query>
+                </n2o:rest>
+            </invocation>
+            <in-parameters>
+                <param name="id" mapping="['id']" domain="integer" required="true"/>
+            </in-parameters>
+            <confirmation-text>Вы уверены, что хотите удалить роль?</confirmation-text>
+            <success-text>Роль удалена</success-text>
+            <!--<validations activate="whiteList">-->
+            <!--<validation ref-id="usedRole"/>-->
+            <!--</validations>-->
+        </action>
+
+
+    </actions>
+
+</object>
