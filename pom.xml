@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>net.n2oapp.parent</groupId>
+        <groupId>net.n2oapp.platform</groupId>
         <artifactId>parent</artifactId>
-        <version>1.1</version>
+        <version>1.0-SNAPSHOT</version>
     </parent>
 
     <groupId>net.n2oapp.framework.security</groupId>
@@ -41,76 +41,12 @@
         <dependencies>
 
             <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring.boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-            <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
                 <version>Edgware.RELEASE</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
-            <!-- CXF -->
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-spring-boot-starter-jaxrs</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-rs-service-description</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-rs-service-description-swagger</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-frontend-jaxrs</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.webjars</groupId>
-                <artifactId>swagger-ui</artifactId>
-                <version>3.0.17</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.fasterxml.jackson.jaxrs</groupId>
-                <artifactId>jackson-jaxrs-json-provider</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-transports-http</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-frontend-jaxws</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-rs-client</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-            <!-- /CXF -->
 
             <!-- N2O -->
             <dependency>
