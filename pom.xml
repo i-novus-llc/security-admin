@@ -24,6 +24,7 @@
     	<module>security-admin-rest-impl</module>
     	<module>security-admin-backend</module>
     	<module>security-admin-frontend</module>
+        <module>security-auth-oauth2</module>
     </modules>
 
     <properties>
