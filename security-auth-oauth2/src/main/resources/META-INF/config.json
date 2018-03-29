@@ -1,0 +1,10 @@
+{
+  "modules": {
+    "AuthRedirect": {
+      "src": "net/n2oapp/security/auth/authRedirect.js",
+      "options": {
+        "pathToRedirect": "${n2o.ui.url}"
+      }
+    }
+  }
+}
