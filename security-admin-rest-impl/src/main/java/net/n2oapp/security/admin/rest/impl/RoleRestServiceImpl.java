@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 
+import java.util.List;
+
+
 /**
  * Реализация REST сервиса управления ролями пользоватлями
  */
@@ -17,10 +20,11 @@ public class RoleRestServiceImpl implements RoleRestService {
     private RoleService service;
 
     @Override
-    public Page<Role> search(Integer page, Integer size, String name, String description) {
+    public Page<Role> search(Integer page, Integer size, String name, String description, List<Integer> permissionIds) {
         RoleCriteria criteria = new RoleCriteria(page - 1, size);
         criteria.setName(name);
         criteria.setDescription(description);
+        criteria.setPermissionIds(permissionIds);
         return service.findAll(criteria);
     }
 

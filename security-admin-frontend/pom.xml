@@ -20,7 +20,7 @@
         <!-- DOMAIN -->
         <dependency>
             <groupId>net.n2oapp.framework.security</groupId>
-            <artifactId>security-admin-web</artifactId>
+            <artifactId>security-admin-web-rest</artifactId>
             <version>${project.version}</version>
         </dependency>
         <!-- /DOMAIN -->
@@ -32,8 +32,13 @@
         </dependency>
         <dependency>
             <groupId>net.n2oapp.framework</groupId>
-            <artifactId>n2o-context</artifactId>
+            <artifactId>n2o-header</artifactId>
         </dependency>
+
+        <!--<dependency>-->
+        <!--<groupId>net.n2oapp.framework</groupId>-->
+        <!--<artifactId>n2o-context</artifactId>-->
+        <!--</dependency>-->
         <!-- /N2O -->
 
         <!-- AUTH -->

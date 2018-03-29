@@ -42,6 +42,7 @@
                                 <ctrl:option>{"id" : "false", "name" :"Нет"}</ctrl:option>
                             </ctrl:options>
                         </ctrl:checkbox-group>
+
                         <ctrl:hidden id="isActive">
                             <ctrl:set-value-expression on="activeList">
                                 if ((typeof activeList == 'undefined') || (activeList == null) || (activeList.length ==0))
@@ -53,6 +54,7 @@
                                 else false;
                             </ctrl:set-value-expression>
                         </ctrl:hidden>
+
                         <ctrl:input-select id="roleFilter" type="multi" label="Роли" cache="off">
                             <ctrl:query query-id="${sec.admin.role.query.id}" value-field-id="id" label-field-id="name"/>
                         </ctrl:input-select>

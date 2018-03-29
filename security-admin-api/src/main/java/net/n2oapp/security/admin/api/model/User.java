@@ -1,7 +1,6 @@
 package net.n2oapp.security.admin.api.model;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Пользователь
@@ -14,6 +13,7 @@ public class User {
     private String name;
     private String patronymic;
     private String password;
+    private String checkPassword;
     private Boolean isActive;
     private List<Integer> roleIds;
     private List<String> roleNames;
@@ -73,6 +73,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getCheckPassword() {
+        return checkPassword;
+    }
+
+    public void setCheckPassword(String checkPassword) {
+        this.checkPassword = checkPassword;
     }
 
     public Boolean getIsActive() {

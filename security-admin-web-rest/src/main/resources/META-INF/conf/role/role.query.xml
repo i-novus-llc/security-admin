@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<query xmlns:n2o="http://n2oapp.net/framework/config/schema/n2o-query-executions-1.0"
+       xmlns="http://n2oapp.net/framework/config/schema/query-3.0">
+    <object-id>${sec.admin.role.object.id}</object-id>
+    <name>Роли</name>
+    <execution>
+        <n2o:rest>
+            <n2o:query>${sec.admin.rest.url}/roles</n2o:query>
+            <n2o:query-by-id>${sec.admin.rest.url}/roles/{id}</n2o:query-by-id>
+            <n2o:response-mapping collection="content" count="totalElements"/>
+            <n2o:size param-name="size"/>
+            <n2o:page param-name="page"/>
+        </n2o:rest>
+    </execution>
+
+    <fields>
+        <field>
+            <id>id</id>
+            <domain>integer</domain>
+            <display/>
+            <filters>
+                <filter type="eq" filter-field="id">:id</filter>
+            </filters>
+        </field>
+        <field>
+            <id>name</id>
+            <domain>string</domain>
+            <display>name</display>
+            <name>Название</name>
+            <filters>
+                <filter type="eq" filter-field="name">name=:name</filter>
+            </filters>
+        </field>
+        <field>
+            <id>code</id>
+            <domain>string</domain>
+            <display>code</display>
+            <name>Код</name>
+            <filters auto-generate="true"/>
+        </field>
+        <field>
+            <id>description</id>
+            <domain>string</domain>
+            <display>description</display>
+            <name>Описание</name>
+            <filters>
+                <filter type="like" filter-field="description">description=:description</filter>
+            </filters>
+        </field>
+        <!--<field>-->
+        <!--<id>permissions*.id</id>-->
+        <!--<domain>integer[]</domain>-->
+        <!--<display>(select array_to_json(array(select rp.permission_id from sec.role_permission rp where rp.role_id=r.id)))</display>-->
+        <!--<name>Права доступа</name>-->
+        <!--</field>-->
+    </fields>
+</query>

@@ -1,0 +1,154 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<object xmlns="http://n2oapp.net/framework/config/schema/object-1.0"
+        xmlns:n2o="http://n2oapp.net/framework/config/schema/action-invocation-1.0">
+    <name>Пользователи</name>
+
+    <actions>
+        <action id="create">
+            <invocation>
+                <n2o:rest method="POST">
+                    <n2o:query>${sec.admin.rest.url}/users/create</n2o:query>
+                    <n2o:error-mapping>
+                        <n2o:message param-name=""/>
+                        <n2o:detailed-message param-name=""/>
+                        <n2o:stack-trace param-name=""/>
+                    </n2o:error-mapping>
+                </n2o:rest>
+            </invocation>
+            <in-parameters>
+                <param name="username" mapping="['username']" domain="string" required="true"/>
+                <param name="email" mapping="['email']" domain="string" required="true"/>
+                <param name="surname" mapping="['surname']" domain="string" required="true"/>
+                <param name="name" mapping="['name']" domain="string" required="true"/>
+                <param name="patronymic" mapping="['patronymic']" domain="string"/>
+                <param name="isActive" mapping="['isActive']" domain="boolean" value="false"/>
+                <param name="roles*.id" mapping="['roleIds']" domain="integer[]" required="true"/>
+                <param name="roles*.name" mapping="['roleNames']" domain="string[]" required="true"/>
+            </in-parameters>
+            <out-parameters>
+                <param name="id" mapping="['id']" domain="integer"/>
+            </out-parameters>
+            <success-text>Пользователь сохранен</success-text>
+            <validations activate="all"/>
+        </action>
+
+        <action id="update">
+            <invocation>
+                <n2o:rest method="PUT">
+                    <n2o:query>${sec.admin.rest.url}/users/update</n2o:query>
+                </n2o:rest>
+            </invocation>
+            <in-parameters>
+                <param name="id" mapping="['id']" domain="integer" required="true"/>
+                <param name="username" mapping="['username']" domain="string" required="true"/>
+                <param name="email" mapping="['email']" domain="string" required="true"/>
+                <param name="surname" mapping="['surname']" domain="string" required="true"/>
+                <param name="name" mapping="['name']" domain="string" required="true"/>
+                <param name="patronymic" mapping="['patronymic']" domain="string"/>
+                <param name="isActive" mapping="['isActive']" domain="boolean" value="false"/>
+                <param name="roles*.id" mapping="['roleIds']" domain="integer[]" required="true"/>
+                <param name="roles*.name" mapping="['roleNames']" domain="string[]" required="true"/>
+            </in-parameters>
+            <out-parameters>
+                <param name="id" mapping="['id']"/>
+            </out-parameters>
+            <success-text>Пользователь сохранен</success-text>
+            <validations activate="blackList">
+                <validation ref-id="uniqUsername"/>
+            </validations>
+        </action>
+
+        <action id="delete">
+            <invocation>
+                <n2o:rest method="DELETE">
+                    <n2o:query>${sec.admin.rest.url}/users/delete/{id}</n2o:query>
+                </n2o:rest>
+            </invocation>
+            <in-parameters>
+                <param name="id" mapping="['id']" domain="integer" required="true"/>
+            </in-parameters>
+            <confirmation-text>Вы уверены, что хотите удалить пользователя?</confirmation-text>
+            <success-text>Пользователь удален</success-text>
+        </action>
+
+        <!--<action id="changeUserActive">-->
+        <!--<invocation>-->
+        <!--<n2o:java-method name="changeUserActive" bean="jdbcUserService">-->
+        <!--<n2o:arguments>-->
+        <!--<n2o:argument name="id" class="java.lang.Integer" />-->
+        <!--<n2o:argument name="isActive" class="java.lang.Boolean" />-->
+        <!--</n2o:arguments>-->
+        <!--</n2o:java-method>-->
+        <!--</invocation>-->
+        <!--<in-parameters>-->
+        <!--<param name="id" mapping="[0]" domain="integer" required="true"/>-->
+        <!--<param name="isActive.id" mapping="[1]" domain="boolean"/>-->
+        <!--</in-parameters>-->
+        <!--<success-text>Активность пользователя изменена!</success-text>-->
+        <!--</action>-->
+    </actions>
+
+    <validations>
+
+        <condition id="usernameValidation" level="error">
+            <message>Неверное имя</message>
+            <expression on="username">
+                <![CDATA[
+                    if (typeof username != 'undefined' && username != null && username != '') {
+                     var regex = new RegExp('^[a-zA-Z][a-zA-Z0-9]+$');
+                     regex.test(username);
+                     }else true;
+                ]]>
+
+            </expression>
+        </condition>
+
+        <condition id="emailValidation" level="error">
+            <message>Неверный email</message>
+            <expression on="email">
+                <![CDATA[
+                if (typeof email != 'undefined' && email != null && email != '') {
+                    var regex = new RegExp('[A-Za-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[A-Za-z0-9!#$%&\'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\\.)+[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?');
+                    regex.test(email);
+                } else true;
+                ]]>
+            </expression>
+        </condition>
+
+        <condition id="passwordValidation" level="error">
+            <message>Неверный формат пароля</message>
+            <expression on="password">
+                <![CDATA[
+                    if (typeof password != 'undefined' && password != null && password != '') {
+                        var regex = new RegExp(${sec.admin.user.password.regexp.validation});
+                        regex.test(password);
+                     }else true;
+                ]]>
+            </expression>
+        </condition>
+
+        <condition id="passwordLengthValidation" level="error">
+            <message>Минимум 7 символов</message>
+            <expression on="password">
+                <![CDATA[
+                    if (typeof password != 'undefined' && password != null && password != '') {
+                        password.length >= ${sec.admin.user.password.length.validation}
+                     }else true;
+                ]]>
+            </expression>
+        </condition>
+
+        <condition id="passwordCheckValidation" level="error">
+            <message>Введённые пароли не совпадают</message>
+            <expression on="passwordCheck,password">
+                <![CDATA[
+                    if (typeof passwordCheck != 'undefined' && passwordCheck != null && passwordCheck != '') {
+                        passwordCheck === password;
+                     }else true;
+                ]]>
+            </expression>
+        </condition>
+
+
+    </validations>
+</object>

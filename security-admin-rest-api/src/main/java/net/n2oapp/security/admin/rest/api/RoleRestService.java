@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 /**
  * REST сервис управления ролями  пользователей
@@ -24,7 +25,9 @@ public interface RoleRestService {
     Page<Role> search(@QueryParam("page") @DefaultValue("1") Integer page,
                       @QueryParam("size") @DefaultValue("10") Integer size,
                       @QueryParam("name") String name,
-                      @QueryParam("description") String description);
+                      @QueryParam("description") String description,
+                      @QueryParam("permissions") List<Integer> permissionIds
+    );
 
     @GET
     @Path("/{id}")

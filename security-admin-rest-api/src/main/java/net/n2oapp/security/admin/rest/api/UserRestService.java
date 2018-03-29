@@ -5,11 +5,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import net.n2oapp.security.admin.api.model.User;
+import org.springframework.data.domain.Page;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-
-import org.springframework.data.domain.Page;
+import java.util.List;
 
 /**
  * REST сервис управления пользоватлями
@@ -26,9 +26,8 @@ public interface UserRestService {
     @ApiResponse(code = 200, message = "Страница пользователей")
     Page<User> search(@QueryParam("page") @DefaultValue("1") Integer page,
                       @QueryParam("size") @DefaultValue("10") Integer size,
-                      @QueryParam("username") String username, @QueryParam("name") String name,
-                      @QueryParam("surname") String surname, @QueryParam("patronymic") String patronymic,
-                      @QueryParam("isActive") Boolean isActive);
+                      @QueryParam("username") String username, @QueryParam("fio") String fio,
+                      @QueryParam("isActive") Boolean isActive, @QueryParam("roles") List<Integer> roleIds);
 
     @GET
     @Path("/{id}")

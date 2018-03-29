@@ -3,7 +3,7 @@ package net.n2oapp.security.admin.api.criteria;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Критерий фильтрации ролей
@@ -11,7 +11,7 @@ import java.util.Set;
 public class RoleCriteria extends PageRequest {
     private String name;
     private String description;
-    private Set<Integer> permissionIds;
+    private List<Integer> permissionIds;
 
     public RoleCriteria(int page, int size) {
         super(page, size);
@@ -37,11 +37,11 @@ public class RoleCriteria extends PageRequest {
         this.description = description;
     }
 
-    public Set<Integer> getPermissionIds() {
+    public List<Integer> getPermissionIds() {
         return permissionIds;
     }
 
-    public void setPermissionIds(Set<Integer> permissionIds) {
+    public void setPermissionIds(List<Integer> permissionIds) {
         this.permissionIds = permissionIds;
     }
 }

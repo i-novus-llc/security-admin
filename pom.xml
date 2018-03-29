@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>net.n2oapp.parent</groupId>
+        <groupId>net.n2oapp.platform</groupId>
         <artifactId>parent</artifactId>
-        <version>1.1</version>
+        <version>1.0-SNAPSHOT</version>
     </parent>
 
     <groupId>net.n2oapp.framework.security</groupId>
@@ -17,6 +17,7 @@
     <modules>
         <module>security-auth</module>
         <module>security-auth-simple</module>
+        <module>security-auth-oauth2</module>
         <module>security-admin-api</module>
         <module>security-admin-impl</module>
         <module>security-admin-web</module>
@@ -24,7 +25,8 @@
     	<module>security-admin-rest-impl</module>
     	<module>security-admin-backend</module>
     	<module>security-admin-frontend</module>
-        <module>security-auth-oauth2</module>
+        <module>security-admin-web-sql</module>
+        <module>security-admin-web-rest</module>
     </modules>
 
     <properties>
@@ -33,18 +35,11 @@
         <criteria.version>3.9</criteria.version>
         <cxf.version>3.1.11</cxf.version>
         <n2o.version>6.1.13</n2o.version>
+        <commons.version>2.6</commons.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring.boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
 
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
@@ -53,56 +48,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
-            <!-- CXF -->
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-spring-boot-starter-jaxrs</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-rs-service-description</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-rs-service-description-swagger</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-frontend-jaxrs</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.fasterxml.jackson.jaxrs</groupId>
-                <artifactId>jackson-jaxrs-json-provider</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-transports-http</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-frontend-jaxws</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-rs-client</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-            <!-- /CXF -->
 
             <!-- N2O -->
             <dependency>
@@ -173,7 +118,13 @@
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>2.6</version>
+                <version>${commons.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>${commons.version}</version>
             </dependency>
 
         </dependencies>
