@@ -27,6 +27,7 @@
     	<module>security-admin-frontend</module>
         <module>security-admin-web-sql</module>
         <module>security-admin-web-rest</module>
+        <module>keycloak-theme</module>
     </modules>
 
     <properties>
