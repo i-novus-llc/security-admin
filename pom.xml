@@ -17,6 +17,7 @@
     <modules>
         <module>security-auth</module>
         <module>security-auth-simple</module>
+        <module>security-auth-oauth2</module>
         <module>security-admin-api</module>
         <module>security-admin-impl</module>
         <module>security-admin-web</module>
@@ -26,6 +27,7 @@
     	<module>security-admin-frontend</module>
         <module>security-admin-web-sql</module>
         <module>security-admin-web-rest</module>
+        <module>keycloak-theme</module>
     </modules>
 
     <properties>

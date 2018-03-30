@@ -1,8 +1,13 @@
 package net.n2oapp.security.auth;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
+
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * Утилитный класс для получения username и sessionId
@@ -14,11 +19,25 @@ public class UserParamsUtil {
      * @return пустую строку или, если имеется, id сессии
      */
     public static String getSessionId(Authentication authentication) {
-        WebAuthenticationDetails sessionDetails = (WebAuthenticationDetails)authentication.getDetails();
-        if (sessionDetails == null)
-            return "";
-
-        return sessionDetails.getSessionId();
+        String sessionId = "";
+        if (authentication == null)
+            return sessionId;
+        if (authentication.getDetails() instanceof WebAuthenticationDetails) {
+            WebAuthenticationDetails sessionDetails = (WebAuthenticationDetails)authentication.getDetails();
+            return sessionDetails.getSessionId();
+        } else {
+            PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(authentication.getClass(), "sessionId");
+            if (propertyDescriptor == null)
+                return sessionId;
+            Method readMethod = propertyDescriptor.getReadMethod();
+            if (readMethod == null)
+                return sessionId;
+            try {
+                return (String) readMethod.invoke(authentication);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new IllegalStateException(e);
+            }
+        }
     }
 
     /**
@@ -30,9 +49,6 @@ public class UserParamsUtil {
         String username = "";
         if(principal instanceof String) {
             username = (String) principal;
-        } else if (principal instanceof org.springframework.security.core.userdetails.User) {
-            org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) principal;
-            username = userDetails.getUsername();
         } else if(principal instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) principal;
             username = userDetails.getUsername();
