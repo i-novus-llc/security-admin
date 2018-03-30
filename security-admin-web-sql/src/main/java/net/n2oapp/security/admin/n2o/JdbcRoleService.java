@@ -52,7 +52,7 @@ public class JdbcRoleService {
     }
 
     private void savePermissions(Role model) {
-        if (!model.getPermissions().isEmpty()) {
+        if (model.getPermissions() != null) {
             model.getPermissions().forEach(permission -> {
                 SqlParameterSource params =
                         new MapSqlParameterSource("roleId", model.getId())

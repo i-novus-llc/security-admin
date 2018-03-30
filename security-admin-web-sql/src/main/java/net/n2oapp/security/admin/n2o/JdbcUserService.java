@@ -95,7 +95,7 @@ public class JdbcUserService {
     }
 
     private void saveRoles(User model) {
-        if (!model.getRoles().isEmpty()) {
+        if (model.getRoles() != null) {
             model.getRoles().forEach(role -> {
                 SqlParameterSource params =
                         new MapSqlParameterSource("userId", model.getId())

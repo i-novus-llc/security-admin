@@ -38,19 +38,19 @@ public interface UserRestService {
 
 
     @POST
-    @Path("/create")
+    @Path("/")
     @ApiOperation("Создать пользователя")
     @ApiResponse(code = 200, message = "Созданный пользователь")
     User create(UserForm user);
 
     @PUT
-    @Path("/update")
+    @Path("/")
     @ApiOperation("Изменить пользователя")
     @ApiResponse(code = 200, message = "Измененный пользователь")
     User update(UserForm user);
 
     @DELETE
-    @Path("/delete/{id}")
+    @Path("/{id}")
     @ApiOperation("Удалить пользователя")
     @ApiResponse(code = 200, message = "Пользователь удален")
     void delete(@PathParam("id") Integer id);

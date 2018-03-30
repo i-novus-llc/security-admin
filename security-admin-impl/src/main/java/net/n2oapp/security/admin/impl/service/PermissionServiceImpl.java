@@ -4,7 +4,6 @@ import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.service.PermissionService;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.repository.PermissionRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,8 +20,6 @@ public class PermissionServiceImpl implements PermissionService {
     @Autowired
     private PermissionRepository permissionRepository;
 
-    @Autowired
-    private ModelMapper modelMapper;
 
     @Override
     public Permission create(Permission permission) {
@@ -53,14 +50,22 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     private PermissionEntity entity(Permission model) {
-        PermissionEntity entity = modelMapper.map(model, PermissionEntity.class);
+        if (model == null) return null;
+        PermissionEntity entity = new PermissionEntity();
+        entity.getId();
+        entity.setName(model.getName());
+        entity.setCode(model.getCode());
+        entity.setParentId(model.getParentId());
         return entity;
     }
 
     private Permission model(PermissionEntity entity) {
-        Permission model = modelMapper.map(entity, Permission.class);
-        model.setHasChildren(false);
+        if (entity == null) return null;
+        Permission model = new Permission();
+        model.setId(entity.getId());
+        model.setName(entity.getName());
+        model.setCode(entity.getCode());
+        model.setParentId(entity.getParentId());
         return model;
-
     }
 }

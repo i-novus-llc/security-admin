@@ -38,19 +38,19 @@ public interface RoleRestService {
 
 
     @POST
-    @Path("/create")
+    @Path("/")
     @ApiOperation("Создать роль")
     @ApiResponse(code = 200, message = "Созданная роль")
     Role create(RoleForm role);
 
     @PUT
-    @Path("/update")
+    @Path("/")
     @ApiOperation("Изменить роль")
     @ApiResponse(code = 200, message = "Измененная роль")
     Role update(RoleForm role);
 
     @DELETE
-    @Path("/delete/{id}")
+    @Path("/{id}")
     @ApiOperation("Удалить роль")
     @ApiResponse(code = 200, message = "Роль удалена")
     void delete(@PathParam("id") Integer id);
