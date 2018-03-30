@@ -1,5 +1,8 @@
 package net.n2oapp.security.admin.impl.entity;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -8,6 +11,8 @@ import java.util.List;
  * Сущность Роль
  */
 @Entity
+@Data
+@NoArgsConstructor
 @Table(name = "role", schema = "sec")
 public class RoleEntity {
     /**
@@ -51,59 +56,11 @@ public class RoleEntity {
     @ManyToMany(mappedBy = "roleList")
     private List<UserEntity> userList;
 
-    public List<UserEntity> getUserList() {
-        return userList;
-    }
-
-    public void setUserList(List<UserEntity> userList) {
-        this.userList = userList;
-    }
-
-    public RoleEntity() {
-    }
 
     public RoleEntity(Integer id) {
         setId(id);
     }
 
-    public List<PermissionEntity> getPermissionList() {
-        return permissionList;
-    }
 
-    public void setPermissionList(List<PermissionEntity> permissionList) {
-        this.permissionList = permissionList;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }
 

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import net.n2oapp.security.TestApplication;
 import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.model.Role;
+import net.n2oapp.security.admin.api.model.RoleForm;
 import net.n2oapp.security.admin.rest.api.RoleRestService;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.junit.Before;
@@ -20,6 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -55,10 +57,8 @@ public class RoleRestTest {
 
     @Test
     public void search() throws Exception {
-        Permission permission = new Permission();
-        permission.setId(1);
         List<Integer> permissions = new ArrayList<>();
-        permissions.add(permission.getId());
+        permissions.add(1);
         Page<Role> role = client.search(1, 4, "user", "description1", permissions);
         assertEquals(1, role.getTotalElements());
     }
@@ -73,15 +73,15 @@ public class RoleRestTest {
     public Integer create() {
         Role role = client.create(newRole());
         assertNotNull(role);
-        assertEquals(1, role.getPermissionIds().size());
-        assertEquals((Integer) 1, role.getPermissionIds().iterator().next());
+        assertEquals(1, role.getPermissions().size());
+        assertEquals((Integer) 1, role.getPermissions().iterator().next().getId());
         return role.getId();
     }
 
     public void update(Integer id) {
         Role role = client.getById(id);
         role.setName("userUpdate");
-        client.update(role);
+        client.update(form(role));
         assertEquals("userUpdate", client.getById(id).getName());
 
     }
@@ -93,16 +93,26 @@ public class RoleRestTest {
     }
 
 
-    private static Role newRole() {
-        Role role = new Role();
+    private static RoleForm newRole() {
+        RoleForm role = new RoleForm();
         role.setName("user1");
         role.setCode("code1");
         role.setDescription("description1");
-        Permission permission = new Permission();
-        permission.setId(1);
         List<Integer> permissions = new ArrayList<>();
-        permissions.add(permission.getId());
-        role.setPermissionIds(permissions);
+        permissions.add(1);
+        role.setPermissions(permissions);
         return role;
     }
+
+    private RoleForm form(Role role) {
+        RoleForm form = new RoleForm();
+        form.setId(role.getId());
+        form.setName(role.getName());
+        form.setCode(role.getCode());
+        form.setDescription(role.getDescription());
+        form.setPermissions(role.getPermissions().stream().map(Permission::getId).collect(Collectors.toList()));
+        return form;
+    }
+
+
 }

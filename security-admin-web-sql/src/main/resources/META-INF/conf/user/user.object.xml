@@ -19,7 +19,7 @@
                 <param name="name" mapping="[0].name" domain="string" required="true"/>
                 <param name="patronymic" mapping="[0].patronymic" domain="string"/>
                 <param name="isActive.id" mapping="[0].isActive" domain="boolean" value="false"/>
-                <param name="roles*.id" mapping="[0].roleIds" domain="integer[]" required="true"/>
+                <param name="roles" mapping="[0].roles" domain="object[]" required="true"/>
             </in-parameters>
             <out-parameters>
                 <param name="id" mapping="id"/>
@@ -44,7 +44,7 @@
                 <param name="name" mapping="[0].name" domain="string" required="true"/>
                 <param name="patronymic" mapping="[0].patronymic" domain="string"/>
                 <param name="isActive.id" mapping="[0].isActive" domain="boolean" value="false"/>
-                <param name="roles*.id" mapping="[0].roleIds" domain="integer[]" required="true"/>
+                <param name="roles" mapping="[0].roles" domain="object[]" required="true"/>
             </in-parameters>
             <out-parameters>
                 <param name="id" mapping="id"/>

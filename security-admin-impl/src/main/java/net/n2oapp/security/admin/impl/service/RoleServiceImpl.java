@@ -1,15 +1,15 @@
 package net.n2oapp.security.admin.impl.service;
 
 import net.n2oapp.security.admin.api.criteria.RoleCriteria;
+import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.model.Role;
+import net.n2oapp.security.admin.api.model.RoleForm;
 import net.n2oapp.security.admin.api.service.RoleService;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.RoleSpecifications;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
@@ -29,19 +29,16 @@ public class RoleServiceImpl implements RoleService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private ModelMapper modelMapper;
-
 
     @Override
-    public Role create(Role role) {
+    public Role create(RoleForm role) {
         checkRoleUniq(role.getId(), role.getName());
         return model(roleRepository.save(entity(role)));
 
     }
 
     @Override
-    public Role update(Role role) {
+    public Role update(RoleForm role) {
         checkRoleUniq(role.getId(), role.getName());
         return model(roleRepository.save(entity(role)));
     }
@@ -65,22 +62,42 @@ public class RoleServiceImpl implements RoleService {
         return all.map(this::model);
     }
 
-    private RoleEntity entity(Role model) {
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+    private RoleEntity entity(RoleForm model) {
         if (model == null) return null;
-        RoleEntity entity = modelMapper.map(model, RoleEntity.class);
-        entity.setPermissionList(model.getPermissionIds().stream().map(PermissionEntity::new).collect(Collectors.toList()));
+        RoleEntity entity = new RoleEntity();
+        entity.setId(model.getId());
+        entity.setName(model.getName());
+        entity.setCode(model.getCode());
+        entity.setDescription(model.getDescription());
+        if (!model.getPermissions().isEmpty()) {
+            entity.setPermissionList(model.getPermissions().stream().map(PermissionEntity::new).collect(Collectors.toList()));
+        }
         return entity;
     }
 
     private Role model(RoleEntity entity) {
         if (entity == null) return null;
-        Role model = modelMapper.map(entity, Role.class);
-        model.setPermissionIds(entity.getPermissionList().stream().map(PermissionEntity::getId).collect(Collectors.toList()));
-        model.setPermissionNames(entity.getPermissionList().stream().map(PermissionEntity::getName).collect(Collectors.toList()));
+        Role model = new Role();
+        model.setId(entity.getId());
+        model.setName(entity.getName());
+        model.setCode(entity.getCode());
+        model.setDescription(entity.getDescription());
+        if (entity.getPermissionList() != null) {
+            model.setPermissions(entity.getPermissionList().stream().map(this::model).collect(Collectors.toList()));
+
+        }
         return model;
 
     }
+
+    private Permission model(PermissionEntity entity) {
+        if (entity == null) return null;
+        Permission model = new Permission();
+        model.setId(entity.getId());
+        model.setName(entity.getName());
+        return model;
+    }
+
 
     /**
      * Валидация на уникальность названия роли при изменении

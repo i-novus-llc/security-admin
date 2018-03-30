@@ -1,14 +1,14 @@
 package net.n2oapp.security.admin.impl.service;
 
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
+import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
+import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.api.service.UserService;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.UserSpecifications;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -28,8 +28,6 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private ModelMapper modelMapper;
 
     @Value("${n2o.security.validation.username:true}")
     private Boolean validationUsername;
@@ -50,21 +48,21 @@ public class UserServiceImpl implements UserService {
     private Boolean validationPasswordSpecialSymbols;
 
     @Override
-    public User create(User user) {
+    public User create(UserForm user) {
         checkUsernameUniq(user.getId(), user.getUsername());
         checkUsername(user.getUsername());
         checkEmail(user.getEmail());
-        checkPassword(user.getPassword(), user.getCheckPassword(), user.getId());
-        return model(userRepository.save(entity(user)));
+        checkPassword(user.getPassword(), user.getPasswordCheck(), user.getId());
+        return model(userRepository.save(entityForm(user)));
     }
 
     @Override
-    public User update(User user) {
+    public User update(UserForm user) {
         checkUsernameUniq(user.getId(), user.getUsername());
         checkUsername(user.getUsername());
         checkEmail(user.getEmail());
-        checkPassword(user.getPassword(), user.getCheckPassword(), user.getId());
-        return model(userRepository.save(entity(user)));
+        checkPassword(user.getPassword(), user.getPasswordCheck(), user.getId());
+        return model(userRepository.save(entityForm(user)));
 
     }
 
@@ -87,21 +85,63 @@ public class UserServiceImpl implements UserService {
         return all.map(this::model);
     }
 
-    private UserEntity entity(User model) {
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        UserEntity entity = modelMapper.map(model, UserEntity.class);
-        if (model.getRoleIds() != null)
-            entity.setRoleList(model.getRoleIds().stream().map(RoleEntity::new).collect(Collectors.toList()));
+    @Override
+    public User changeActive(Integer id) {
+        UserEntity userEntity = userRepository.findOne(id);
+        userEntity.setIsActive(!userEntity.getIsActive());
+        return model(userRepository.save(userEntity));
+
+    }
+
+    private UserEntity entityForm(UserForm model) {
+        UserEntity entity = new UserEntity();
+        entity.setId(model.getId());
+        entity.setUsername(model.getUsername());
+        entity.setName(model.getName());
+        entity.setSurname(model.getSurname());
+        entity.setPatronymic(model.getPatronymic());
+        entity.setIsActive(model.getIsActive());
+        entity.setPassword(model.getPassword());
+        entity.setEmail(model.getEmail());
+        if (!model.getRoles().isEmpty())
+            entity.setRoleList(model.getRoles().stream().map(RoleEntity::new).collect(Collectors.toList()));
         return entity;
     }
 
     private User model(UserEntity entity) {
         if (entity == null) return null;
-        User model = modelMapper.map(entity, User.class);
-        if (entity.getRoleList() != null) {
-            model.setRoleIds(entity.getRoleList().stream().map(RoleEntity::getId).collect(Collectors.toList()));
-            model.setRoleNames(entity.getRoleList().stream().map(RoleEntity::getName).collect(Collectors.toList()));
+        User model = new User();
+        model.setId(entity.getId());
+        model.setUsername(entity.getUsername());
+        model.setName(entity.getName());
+        model.setSurname(entity.getSurname());
+        model.setPatronymic(entity.getPatronymic());
+        model.setIsActive(entity.getIsActive());
+        model.setPassword(entity.getPassword());
+        model.setEmail(entity.getEmail());
+        StringBuilder builder = new StringBuilder();
+        if (entity.getSurname() != null) {
+            builder.append(entity.getSurname()).append(" ");
         }
+        if (entity.getName() != null) {
+            builder.append(entity.getName()).append(" ");
+        }
+        if (entity.getPatronymic() != null) {
+            builder.append(entity.getPatronymic());
+        }
+        model.setFio(builder.toString());
+        if (!entity.getRoleList().isEmpty()) {
+            model.setRoles(entity.getRoleList().stream().map(this::model).collect(Collectors.toList()));
+        }
+        return model;
+    }
+
+    private Role model(RoleEntity entity) {
+        if (entity == null) return null;
+        Role model = new Role();
+        model.setId(entity.getId());
+        model.setName(entity.getName());
+        model.setDescription(entity.getDescription());
         return model;
     }
 

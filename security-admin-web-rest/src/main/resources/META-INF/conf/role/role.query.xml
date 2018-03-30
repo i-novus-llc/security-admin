@@ -47,11 +47,18 @@
                 <filter type="like" filter-field="description">description=:description</filter>
             </filters>
         </field>
-        <!--<field>-->
-        <!--<id>permissions*.id</id>-->
-        <!--<domain>integer[]</domain>-->
-        <!--<display>(select array_to_json(array(select rp.permission_id from sec.role_permission rp where rp.role_id=r.id)))</display>-->
-        <!--<name>Права доступа</name>-->
-        <!--</field>-->
+
+        <field>
+            <id>permissions</id>
+            <domain>object[]</domain>
+            <display>permissions</display>
+            <filters>
+                <filter type="in" filter-field="permissionFilter*.id" domain="integer[]">
+                    permissions=:permissionFilter*.id
+                </filter>
+            </filters>
+            <name>Права доступа</name>
+        </field>
+
     </fields>
 </query>

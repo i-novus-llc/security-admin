@@ -6,31 +6,30 @@
     <fs:field-set>
         <ctrl:input-text id="username">
             <ctrl:validations>
-                <ctrl:validation ref-id="usernameValidation" side="client,server"/>
+                <ctrl:validation ref-id="usernameValidation" side="client"/>
             </ctrl:validations>
         </ctrl:input-text>
-        <ctrl:input-text id="email">
+        <ctrl:input-text id="email" label="Email">
             <ctrl:validations>
-                <ctrl:validation ref-id="emailValidation"/>
+                <ctrl:validation ref-id="emailValidation" side="client"/>
             </ctrl:validations>
         </ctrl:input-text>
-        <fs:field-set>
-            <ctrl:password id="password" label="Пароль"/>
+        <ctrl:password id="password">
             <ctrl:validations>
                 <ctrl:validation ref-id="passwordLengthValidation" side="server"/>
-                <ctrl:validation ref-id="passwordValidation" side="server"/>
+                <ctrl:validation ref-id="passwordValidation" side="client"/>
             </ctrl:validations>
-            <ctrl:password id="passwordCheck" label="Подтвердить пароль">
-                <ctrl:validations>
-                    <ctrl:validation ref-id="passwordCheckValidation" side="server"/>
-                </ctrl:validations>
-                <ctrl:dependencies>
-                    <ctrl:enabling-condition>
-                        password != null;
-                    </ctrl:enabling-condition>
-                </ctrl:dependencies>
-            </ctrl:password>
-        </fs:field-set>
+        </ctrl:password>
+        <ctrl:password id="passwordCheck" label="Подтвердить пароль">
+            <ctrl:validations>
+                <ctrl:validation ref-id="passwordCheckValidation" side="server"/>
+            </ctrl:validations>
+            <ctrl:dependencies>
+                <ctrl:enabling-condition>
+                    password != null;
+                </ctrl:enabling-condition>
+            </ctrl:dependencies>
+        </ctrl:password>
         <ctrl:input-text id="surname"/>
         <ctrl:input-text id="name"/>
         <ctrl:input-text id="patronymic"/>

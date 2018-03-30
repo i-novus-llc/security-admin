@@ -2,6 +2,7 @@ package net.n2oapp.security.admin.api.service;
 
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import net.n2oapp.security.admin.api.model.User;
+import net.n2oapp.security.admin.api.model.UserForm;
 import org.springframework.data.domain.Page;
 
 /**
@@ -14,14 +15,14 @@ public interface UserService {
      * @param user Модель пользователя
      * @return Созданный пользователь
      */
-    User create(User user);
+    User create(UserForm user);
 
     /**
      * Изменить пользователя
      * @param user Модель пользователя
      * @return Измененный пользователь
      */
-    User update(User user);
+    User update(UserForm user);
 
     /**
      * Удалить пользователя
@@ -43,5 +44,11 @@ public interface UserService {
      */
     Page<User> findAll (UserCriteria criteria);
 
-
+    /**
+     * Изменить статус пользователя
+     *
+     * @param id Идентификатор
+     * @return Модель пользователя
+     */
+    User changeActive(Integer id);
 }

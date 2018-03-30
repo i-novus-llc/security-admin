@@ -5,13 +5,12 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * Модель пользователя для показа на UI
+ * Модель пользователя для actions
  */
 @Data
-public class User {
+public class UserForm {
     private Integer id;
     private String username;
-    private String fio;
     private String email;
     private String surname;
     private String name;
@@ -19,5 +18,5 @@ public class User {
     private String password;
     private String passwordCheck;
     private Boolean isActive;
-    private List<Role> roles;
+    private List<Integer> roles;
 }

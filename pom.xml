@@ -35,6 +35,7 @@
         <cxf.version>3.1.11</cxf.version>
         <n2o.version>6.1.13</n2o.version>
         <commons.version>2.6</commons.version>
+        <n2o.platform.version>1.0-SNAPSHOT</n2o.platform.version>
     </properties>
 
     <dependencyManagement>
@@ -97,6 +98,21 @@
                 <scope>runtime</scope>
             </dependency>
             <!-- /N2O -->
+
+
+            <!-- PLATFORM -->
+            <dependency>
+                <groupId>net.n2oapp.platform</groupId>
+                <artifactId>n2o-platform-starter-jaxrs</artifactId>
+                <version>${n2o.platform.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>net.n2oapp.platform</groupId>
+                <artifactId>n2o-platform-i18n</artifactId>
+                <version>${n2o.platform.version}</version>
+            </dependency>
+            <!-- /PLATFORM -->
 
             <dependency>
                 <groupId>javax.servlet</groupId>

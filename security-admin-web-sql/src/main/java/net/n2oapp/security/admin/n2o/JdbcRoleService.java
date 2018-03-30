@@ -52,11 +52,11 @@ public class JdbcRoleService {
     }
 
     private void savePermissions(Role model) {
-        if (model.getPermissionIds() != null) {
-            model.getPermissionIds().forEach(permId -> {
+        if (!model.getPermissions().isEmpty()) {
+            model.getPermissions().forEach(permission -> {
                 SqlParameterSource params =
                         new MapSqlParameterSource("roleId", model.getId())
-                                .addValue("permissionId", permId);
+                                .addValue("permissionId", permission.getId());
                 jdbcTemplate.update(INSERT_ROLE_PERMISSION, params);
             });
         }

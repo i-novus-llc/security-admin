@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.api.criteria;
 
+import lombok.Data;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
@@ -8,6 +9,7 @@ import java.util.List;
 /**
  * Критерий фильтрации ролей
  */
+@Data
 public class RoleCriteria extends PageRequest {
     private String name;
     private String description;
@@ -21,27 +23,4 @@ public class RoleCriteria extends PageRequest {
         super(page, size, direction, property);
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public List<Integer> getPermissionIds() {
-        return permissionIds;
-    }
-
-    public void setPermissionIds(List<Integer> permissionIds) {
-        this.permissionIds = permissionIds;
-    }
 }

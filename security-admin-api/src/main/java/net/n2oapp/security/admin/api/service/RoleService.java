@@ -2,6 +2,7 @@ package net.n2oapp.security.admin.api.service;
 
 import net.n2oapp.security.admin.api.criteria.RoleCriteria;
 import net.n2oapp.security.admin.api.model.Role;
+import net.n2oapp.security.admin.api.model.RoleForm;
 import org.springframework.data.domain.Page;
 
 /**
@@ -14,14 +15,14 @@ public interface RoleService {
      * @param role Модель роли для создания
      * @return Созданная роль
      */
-    Role create(Role role);
+    Role create(RoleForm role);
 
     /**
      * Изменить роль
      * @param role Модель роли для изменения
      * @return Измененная роль
      */
-    Role update(Role role);
+    Role update(RoleForm role);
 
     /**
      * Удалить роль

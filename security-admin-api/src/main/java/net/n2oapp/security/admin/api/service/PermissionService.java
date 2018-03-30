@@ -1,18 +1,47 @@
 package net.n2oapp.security.admin.api.service;
 
 import net.n2oapp.security.admin.api.model.Permission;
-import net.n2oapp.security.admin.api.model.Role;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
- * Created by otihonova on 31.10.2017.
+ *  Сервис управления правами доступа
  */
-
 public interface PermissionService {
+
+    /**
+     * Создать право доступа
+     *
+     * @param permission Модель права доступа
+     * @return Созданное право доступа
+     */
     Permission create(Permission permission);
 
+    /**
+     * Изменить право доступа
+     * @param permission Модель права доступа
+     * @return Измененное право доступа
+     */
     Permission update(Permission permission);
 
+    /**
+     * Удалить право доступа
+     * @param id Идентификатор права доступа
+     */
     void delete(Integer id);
 
+    /**
+     * Получить право доступа по идентификатору
+     * @param id Идентификатор
+     * @return Модель прав доступа
+     */
     Permission getById(Integer id);
+
+    /**
+     * Найти все права доступа
+     *
+     * @return Страница найденных пользователей
+     */
+    Page<Permission> getAll(Pageable pageable);
+
 }

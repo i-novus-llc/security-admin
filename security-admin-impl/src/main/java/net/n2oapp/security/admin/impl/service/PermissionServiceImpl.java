@@ -6,6 +6,8 @@ import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.repository.PermissionRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Сервис прав доступа
  */
 @Service
-
+@Transactional
 public class PermissionServiceImpl implements PermissionService {
 
     @Autowired
@@ -24,12 +26,12 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public Permission create(Permission permission) {
-        return convertToPermission(permissionRepository.save(convertToPermissionEntity(permission)));
+        return model(permissionRepository.save(entity(permission)));
     }
 
     @Override
     public Permission update(Permission permission) {
-        return convertToPermission(permissionRepository.save(convertToPermissionEntity(permission)));
+        return model(permissionRepository.save(entity(permission)));
     }
 
     @Override
@@ -41,17 +43,24 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     public Permission getById(Integer id) {
         PermissionEntity permissionEntity = permissionRepository.findOne(id);
-        return convertToPermission(permissionEntity);
+        return model(permissionEntity);
     }
 
-    private PermissionEntity convertToPermissionEntity(Permission permission) {
-        PermissionEntity permissionEntity = modelMapper.map(permission, PermissionEntity.class);
-        return permissionEntity;
+    @Override
+    public Page<Permission> getAll(Pageable pageable) {
+        Page<PermissionEntity> all = permissionRepository.findAll(pageable);
+        return all.map(this::model);
     }
 
-    private Permission convertToPermission(PermissionEntity permissionEntity) {
-        Permission permission = modelMapper.map(permissionEntity, Permission.class);
-        return permission;
+    private PermissionEntity entity(Permission model) {
+        PermissionEntity entity = modelMapper.map(model, PermissionEntity.class);
+        return entity;
+    }
+
+    private Permission model(PermissionEntity entity) {
+        Permission model = modelMapper.map(entity, Permission.class);
+        model.setHasChildren(false);
+        return model;
 
     }
 }

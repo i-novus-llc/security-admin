@@ -18,7 +18,7 @@
         <field>
             <id>id</id>
             <domain>integer</domain>
-            <display>p.id</display>
+            <display>id</display>
             <filters>
                 <filter type="eq" filter-field="id">:id</filter>
             </filters>
@@ -26,30 +26,32 @@
         <field>
             <id>name</id>
             <domain>string</domain>
-            <display>p.name</display>
+            <display>name</display>
             <name>Название</name>
-            <filters auto-generate="true"/>
+            <filters>
+                <filter type="eq" filter-field="name">name=:name</filter>
+            </filters>
         </field>
         <field>
             <id>code</id>
             <domain>string</domain>
-            <display>p.code</display>
+            <display>code</display>
             <name>Код</name>
-            <filters auto-generate="true"/>
+            <filters>
+                <filter type="eq" filter-field="code">code=:code</filter>
+            </filters>
         </field>
+
         <field>
             <id>parentId</id>
             <domain>integer</domain>
-            <display>p.parent_id</display>
+            <display>parentId</display>
         </field>
-        <!--<field>-->
-        <!--<id>hasChildren</id>-->
-        <!--<domain>boolean</domain>-->
-        <!--<display/>-->
-        <!--<display>-->
-        <!--coalesce((select true from sec.permission as rp where rp.parent_id = p.id limit 1),-->
-        <!--false) as has_children-->
-        <!--</display>-->
-        <!--</field>-->
+
+        <field>
+            <id>hasChildren</id>
+            <domain>boolean</domain>
+            <display>hasChildren</display>
+        </field>
     </fields>
 </query>

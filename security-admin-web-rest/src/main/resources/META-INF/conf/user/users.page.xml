@@ -22,15 +22,6 @@
                         <wgt:column column-field-id="roles" name="Роли">
                             <wgt:list label-field-id="name"/>
                         </wgt:column>
-                        <wgt:column column-field-id="fio"/>
-                        <wgt:column column-field-id="isActive.id">
-                            <wgt:checkbox>
-                                <wgt:invoke-action action-id="changeUserActive"/>
-                            </wgt:checkbox>
-                        </wgt:column>
-                        <wgt:column column-field-id="roles">
-                            <wgt:list label-field-id="name"/>
-                        </wgt:column>
 
                     </wgt:columns>
                     <wgt:filters opened="true">
@@ -45,8 +36,8 @@
 
                         <ctrl:hidden id="isActive">
                             <ctrl:set-value-expression on="activeList">
-                                if ((typeof activeList == 'undefined') || (activeList == null) || (activeList.length
-                                ==0))
+                                if ((typeof activeList == 'undefined') || (activeList == null) ||
+                                (activeList.length==0))
                                 null;
                                 else if (activeList.length ==2)
                                 null;

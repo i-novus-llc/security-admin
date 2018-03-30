@@ -13,7 +13,7 @@
                     <wgt:query-id>${sec.admin.user.query.id}</wgt:query-id>
                     <wgt:columns>
                         <wgt:column column-field-id="username"/>
-                        <wgt:column column-field-id="fio" />
+                        <wgt:column column-field-id="fio"/>
                         <wgt:column column-field-id="isActive">
                             <wgt:checkbox>
                                 <wgt:invoke-action action-id="changeUserActive"/>
@@ -22,15 +22,6 @@
                         <wgt:column column-field-id="roles" name="Роли">
                             <wgt:list label-field-id="name"/>
                         </wgt:column>
-                        <wgt:column column-field-id="fio" />
-                         <wgt:column column-field-id="isActive.id">
-                             <wgt:checkbox>
-                                 <wgt:invoke-action action-id="changeUserActive"/>
-                             </wgt:checkbox>
-                         </wgt:column>
-                         <wgt:column column-field-id="roles">
-                             <wgt:list label-field-id="name"/>
-                         </wgt:column>
 
                     </wgt:columns>
                     <wgt:filters opened="true">
@@ -45,18 +36,20 @@
 
                         <ctrl:hidden id="isActive">
                             <ctrl:set-value-expression on="activeList">
-                                if ((typeof activeList == 'undefined') || (activeList == null) || (activeList.length ==0))
-                                    null;
-                                else if  (activeList.length ==2)
-                                    null;
+                                if ((typeof activeList == 'undefined') || (activeList == null) ||
+                                (activeList.length==0))
+                                null;
+                                else if (activeList.length ==2)
+                                null;
                                 else if (activeList[0].id == 'true')
-                                    true;
+                                true;
                                 else false;
                             </ctrl:set-value-expression>
                         </ctrl:hidden>
 
                         <ctrl:input-select id="roleFilter" type="multi" label="Роли" cache="off">
-                            <ctrl:query query-id="${sec.admin.role.query.id}" value-field-id="id" label-field-id="name"/>
+                            <ctrl:query query-id="${sec.admin.role.query.id}" value-field-id="id"
+                                        label-field-id="name"/>
                         </ctrl:input-select>
                     </wgt:filters>
                     <wgt:action-menu>
@@ -89,4 +82,4 @@
         </region>
     </regions>
 
-    </page>
+</page>

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import net.n2oapp.security.TestApplication;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
+import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.rest.api.UserRestService;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.junit.Before;
@@ -20,6 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -55,10 +57,8 @@ public class UserRestTest {
 
     @Test
     public void search() throws Exception {
-        Role role = new Role();
-        role.setId(1);
         List<Integer> roles = new ArrayList<>();
-        roles.add(role.getId());
+        roles.add(1);
         Page<User> user = client.search(1, 4, "test", " surname1 name1  patronymic1", true, roles);
         assertEquals(1, user.getTotalElements());
     }
@@ -66,19 +66,19 @@ public class UserRestTest {
     @Test
     public void crud() {
         User user = create();
-        update(user);
+        update(form(user));
         delete(user.getId());
     }
 
     private User create() {
         User user = client.create(newUser());
         assertNotNull(user);
-        assertEquals(1, user.getRoleIds().size());
-        assertEquals((Integer) 1, user.getRoleIds().iterator().next());
+        assertEquals(1, user.getRoles().size());
+        assertEquals((Integer) 1, user.getRoles().iterator().next().getId());
         return user;
     }
 
-    private User update(User user) {
+    private User update(UserForm user) {
         user.setUsername("userName1Update");
         User updateUser = client.update(user);
         assertEquals("userName1Update", updateUser.getUsername());
@@ -92,19 +92,33 @@ public class UserRestTest {
     }
 
 
-    private static User newUser() {
-        User user1 = new User();
-        user1.setUsername("userName2");
-        user1.setName("user1");
-        user1.setSurname("userSurname");
-        user1.setPatronymic("userPatronymic");
-        user1.setEmail("UserEmail@gmail.com");
-        user1.setPassword("userPassword1$");
-        user1.setCheckPassword("userPassword1$");
-        user1.setIsActive(true);
+    private static UserForm newUser() {
+        UserForm user = new UserForm();
+        user.setUsername("userName2");
+        user.setName("user1");
+        user.setSurname("userSurname");
+        user.setPatronymic("userPatronymic");
+        user.setEmail("UserEmail@gmail.com");
+        user.setPassword("userPassword1$");
+        user.setPasswordCheck("userPassword1$");
+        user.setIsActive(true);
         List<Integer> roles = new ArrayList<>();
         roles.add(1);
-        user1.setRoleIds(roles);
-        return user1;
+        user.setRoles(roles);
+        return user;
+    }
+
+    private UserForm form(User user) {
+        UserForm form = new UserForm();
+        form.setId(user.getId());
+        form.setUsername(user.getUsername());
+        form.setName(user.getName());
+        form.setSurname(user.getSurname());
+        form.setPatronymic(user.getPatronymic());
+        form.setEmail(user.getEmail());
+        form.setPassword(user.getPassword());
+        form.setIsActive(true);
+        form.setRoles(user.getRoles().stream().map(Role::getId).collect(Collectors.toList()));
+        return form;
     }
 }

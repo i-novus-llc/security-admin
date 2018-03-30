@@ -1,6 +1,9 @@
 package net.n2oapp.security.admin.impl.entity;
 
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -9,6 +12,8 @@ import java.util.List;
  * Сущность Пользователь
  */
 @Entity
+@Data
+@NoArgsConstructor
 @Table(name = "user", schema = "sec")
 public class UserEntity {
 
@@ -61,7 +66,6 @@ public class UserEntity {
      */
 
     @NotNull
-
     @Column(name = "password")
     private String password;
 
@@ -83,77 +87,8 @@ public class UserEntity {
     )
     private List<RoleEntity> roleList;
 
-    public List<RoleEntity> getRoleList() {
-        return roleList;
-    }
 
-    public void setRoleList(List<RoleEntity> roleList) {
-        this.roleList = roleList;
 
-    }
 
-    public Boolean getIsActive() {
-        return isActive;
-    }
-
-    public void setIsActive(Boolean isActive) {
-        this.isActive = isActive;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPatronymic() {
-        return patronymic;
-    }
-
-    public void setPatronymic(String patronymic) {
-        this.patronymic = patronymic;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 }
 

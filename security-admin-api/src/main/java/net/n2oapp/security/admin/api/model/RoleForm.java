@@ -10,12 +10,12 @@ import java.util.List;
  */
 @Data
 @NoArgsConstructor
-public class Role {
+public class RoleForm {
     private Integer id;
     private String name;
     private String code;
     private String description;
-    private List<Permission> permissions;
+    private List<Integer> permissions;
 
 
 }

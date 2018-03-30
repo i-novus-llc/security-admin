@@ -41,6 +41,13 @@
         </field>
 
         <field>
+            <id>password</id>
+            <domain>string</domain>
+            <display>password</display>
+            <name>Пароль</name>
+        </field>
+
+        <field>
             <id>fio</id>
             <domain>string</domain>
             <display>fio</display>
@@ -49,6 +56,32 @@
                 <filter type="eq" filter-field="fio">fio=:fio</filter>
             </filters>
         </field>
+
+        <field>
+            <id>name</id>
+            <domain>string</domain>
+            <display>name</display>
+            <name>Имя</name>
+            <filters/>
+        </field>
+
+        <field>
+            <id>surname</id>
+            <domain>string</domain>
+            <display>surname</display>
+            <name>Фамилия</name>
+            <filters/>
+        </field>
+
+        <field>
+            <id>patronymic</id>
+            <domain>string</domain>
+            <display>patronymic</display>
+            <name>Отчество</name>
+            <filters/>
+        </field>
+
+
         <field>
             <id>isActive</id>
             <domain>boolean</domain>
@@ -60,26 +93,13 @@
         </field>
 
         <field>
-            <id>roles*.id</id>
-            <domain>integer[]</domain>
-            <display>roleIds</display>
-            <name>Роли</name>
-
-        </field>
-        <field>
-            <id>roles*.name</id>
-            <domain>string[]</domain>
-            <display>roleNames</display>
-            <name>Роли</name>
-
-        </field>
-
-        <field>
-            <id>roleFilter</id>
-            <domain>string</domain>
+            <id>roles</id>
+            <domain>object[]</domain>
+            <display>roles</display>
             <filters>
-                <filter type="in" filter-field="roleFilter">roleFilter:=roleFilter</filter>
+                <filter type="in" filter-field="roleFilter*.id" domain="integer[]">roles=:roleFilter*.id</filter>
             </filters>
+            <name>Роли</name>
         </field>
     </fields>
 </query>

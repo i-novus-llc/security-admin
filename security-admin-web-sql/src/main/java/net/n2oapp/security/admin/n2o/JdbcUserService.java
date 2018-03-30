@@ -95,11 +95,11 @@ public class JdbcUserService {
     }
 
     private void saveRoles(User model) {
-        if (model.getRoleIds() != null) {
-            model.getRoleIds().forEach(roleId -> {
+        if (!model.getRoles().isEmpty()) {
+            model.getRoles().forEach(role -> {
                 SqlParameterSource params =
                         new MapSqlParameterSource("userId", model.getId())
-                                .addValue("roleId", roleId);
+                                .addValue("roleId", role.getId());
                 jdbcTemplate.update(INSERT_USER_ROLE, params);
             });
         }

@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import net.n2oapp.security.admin.api.model.Role;
+import net.n2oapp.security.admin.api.model.RoleForm;
 import org.springframework.data.domain.Page;
 
 import javax.ws.rs.*;
@@ -26,7 +27,7 @@ public interface RoleRestService {
                       @QueryParam("size") @DefaultValue("10") Integer size,
                       @QueryParam("name") String name,
                       @QueryParam("description") String description,
-                      @QueryParam("permissions") List<Integer> permissionIds
+                      @QueryParam("permissions") List<Integer> permissions
     );
 
     @GET
@@ -40,13 +41,13 @@ public interface RoleRestService {
     @Path("/create")
     @ApiOperation("Создать роль")
     @ApiResponse(code = 200, message = "Созданная роль")
-    Role create(Role role);
+    Role create(RoleForm role);
 
     @PUT
     @Path("/update")
     @ApiOperation("Изменить роль")
     @ApiResponse(code = 200, message = "Измененная роль")
-    Role update(Role role);
+    Role update(RoleForm role);
 
     @DELETE
     @Path("/delete/{id}")
