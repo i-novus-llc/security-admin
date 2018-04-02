@@ -1,6 +1,6 @@
-package net.n2oapp.security.service;
+package net.n2oapp.security.admin.service;
 
-import net.n2oapp.security.TestApplication;
+import net.n2oapp.security.admin.TestApplication;
 import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.RoleForm;

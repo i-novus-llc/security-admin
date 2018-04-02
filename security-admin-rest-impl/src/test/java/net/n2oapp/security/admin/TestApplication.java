@@ -30,49 +30,6 @@ public class TestApplication {
         return new ModelMapper();
     }
 
-    @Configuration
-    public static class RoleRestProxyClient extends JaxRsProxyClientConfiguration {
-
-        @Override
-        @Bean("roleRestProxyClient")
-        protected Client jaxRsProxyClient() {
-            return super.jaxRsProxyClient();
-        }
-
-        @Override
-        protected Class<?> getServiceClass() {
-            return RoleRestService.class;
-        }
-    }
-
-    @Configuration
-    static class UserRestProxyClient extends JaxRsProxyClientConfiguration {
-        @Override
-        @Bean("userRestProxyClient")
-        protected Client jaxRsProxyClient() {
-            return super.jaxRsProxyClient();
-        }
-        @Override
-        protected Class<?> getServiceClass() {
-            return UserRestService.class;
-        }
-    }
-
-    @Configuration
-    static class PermissionRestProxyClient extends JaxRsProxyClientConfiguration {
-
-        @Override
-        @Bean("permissionRestProxyClient")
-        protected Client jaxRsProxyClient() {
-            return super.jaxRsProxyClient();
-        }
-
-        @Override
-        protected Class<?> getServiceClass() {
-            return PermissionRestService.class;
-        }
-    }
-
 
 }
 
