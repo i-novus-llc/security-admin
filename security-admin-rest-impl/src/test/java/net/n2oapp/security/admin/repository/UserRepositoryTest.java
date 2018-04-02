@@ -1,4 +1,4 @@
-package net.n2oapp.security.repository;
+package net.n2oapp.security.admin.repository;
 
 import net.n2oapp.security.admin.TestApplication;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
