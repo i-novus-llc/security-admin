@@ -1,6 +1,6 @@
 package net.n2oapp.security.repository;
 
-import net.n2oapp.security.TestApplication;
+import net.n2oapp.security.admin.TestApplication;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import org.junit.Assert;
 import org.junit.Test;

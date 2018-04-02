@@ -1,18 +1,15 @@
-package net.n2oapp.security.rest;
+package net.n2oapp.security.admin.rest;
 
-import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
-import net.n2oapp.security.TestApplication;
+import net.n2oapp.security.admin.TestApplication;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.rest.api.UserRestService;
-import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
-import org.junit.Before;
+import org.apache.cxf.jaxrs.client.JAXRSClientFactoryBean;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.embedded.LocalServerPort;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
@@ -31,29 +28,16 @@ import static org.junit.Assert.assertNull;
  * Тест Rest сервиса управления пользователями
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = TestApplication.class,
+        webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
+        properties = "server.port=8290")
 @TestPropertySource("classpath:test.properties")
 @AutoConfigureTestDatabase
 public class UserRestTest {
 
-    @LocalServerPort
-    private int port;
-
-    @Value("${cxf.path}")
-    private String cxf;
     @Autowired
-    private JacksonJsonProvider jsonProvider;
-    @Autowired
+    @Qualifier("userRestProxyClient")
     private UserRestService client;
-
-    @Before
-    public void setUp() throws Exception {
-        List<Object> providers = new ArrayList<>();
-        providers.add(jsonProvider);
-        client = JAXRSClientFactory.create("http://localhost:" + port + "/" + cxf,
-                UserRestService.class,
-                providers);
-    }
 
     @Test
     public void search() throws Exception {
