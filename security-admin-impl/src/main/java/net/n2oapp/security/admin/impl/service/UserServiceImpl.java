@@ -103,7 +103,7 @@ public class UserServiceImpl implements UserService {
         entity.setIsActive(model.getIsActive());
         entity.setPassword(model.getPassword());
         entity.setEmail(model.getEmail());
-        if (!model.getRoles().isEmpty())
+        if (model.getRoles() != null)
             entity.setRoleList(model.getRoles().stream().map(RoleEntity::new).collect(Collectors.toList()));
         return entity;
     }
@@ -130,7 +130,7 @@ public class UserServiceImpl implements UserService {
             builder.append(entity.getPatronymic());
         }
         model.setFio(builder.toString());
-        if (!entity.getRoleList().isEmpty()) {
+        if (entity.getRoleList() != null) {
             model.setRoles(entity.getRoleList().stream().map(this::model).collect(Collectors.toList()));
         }
         return model;

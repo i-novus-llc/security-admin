@@ -7,7 +7,7 @@
         <action id="create">
             <invocation>
                 <n2o:rest method="POST">
-                    <n2o:query>${sec.admin.rest.url}/users/create</n2o:query>
+                    <n2o:query>${sec.admin.rest.url}/users/</n2o:query>
                     <n2o:error-mapping>
                         <n2o:message param-name=""/>
                         <n2o:detailed-message param-name=""/>
@@ -36,7 +36,7 @@
         <action id="update">
             <invocation>
                 <n2o:rest method="PUT">
-                    <n2o:query>${sec.admin.rest.url}/users/update</n2o:query>
+                    <n2o:query>${sec.admin.rest.url}/users/</n2o:query>
                 </n2o:rest>
             </invocation>
             <in-parameters>
@@ -63,7 +63,7 @@
         <action id="delete">
             <invocation>
                 <n2o:rest method="DELETE">
-                    <n2o:query>${sec.admin.rest.url}/users/delete/{id}</n2o:query>
+                    <n2o:query>${sec.admin.rest.url}/users/{id}</n2o:query>
                 </n2o:rest>
             </invocation>
             <in-parameters>

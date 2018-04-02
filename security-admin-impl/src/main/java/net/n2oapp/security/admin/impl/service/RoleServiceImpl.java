@@ -69,7 +69,7 @@ public class RoleServiceImpl implements RoleService {
         entity.setName(model.getName());
         entity.setCode(model.getCode());
         entity.setDescription(model.getDescription());
-        if (!model.getPermissions().isEmpty()) {
+        if (model.getPermissions() != null) {
             entity.setPermissionList(model.getPermissions().stream().map(PermissionEntity::new).collect(Collectors.toList()));
         }
         return entity;
