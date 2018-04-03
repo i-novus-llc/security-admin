@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.impl.service;
 
+import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.criteria.RoleCriteria;
 import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.model.Role;
@@ -108,7 +109,7 @@ public class RoleServiceImpl implements RoleService {
         if (result) {
             return true;
         } else {
-            throw new IllegalArgumentException("Role with such name already exists");
+            throw new UserException("exception.uniqueRole");
         }
     }
 
@@ -120,6 +121,6 @@ public class RoleServiceImpl implements RoleService {
         if (userRepository.countUsersWithRoleId(roleId) == 0)
             return true;
         else
-            throw new IllegalAccessError("Deleting is not possible, since there are users with such role");
+            throw new UserException("exception.usernameWithSuchRoleExists");
     }
 }

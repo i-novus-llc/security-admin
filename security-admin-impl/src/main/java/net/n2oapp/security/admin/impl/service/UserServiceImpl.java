@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.impl.service;
 
+import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
@@ -154,7 +155,7 @@ public class UserServiceImpl implements UserService {
         if (result) {
             return true;
         } else
-            throw new IllegalArgumentException("User with such username already exists");
+            throw new UserException("exception.uniqueUsername");
     }
 
     /**
@@ -166,7 +167,7 @@ public class UserServiceImpl implements UserService {
             Pattern pattern = Pattern.compile(regexp);
             Matcher matcher = pattern.matcher(username);
             if (!matcher.matches())
-                throw new IllegalArgumentException("Wrong username format");
+                throw new UserException("exception.wrongUsername");
         }
         return true;
     }
@@ -180,7 +181,7 @@ public class UserServiceImpl implements UserService {
         Pattern pattern = Pattern.compile(regexp);
         Matcher matcher = pattern.matcher(email);
         if (!matcher.matches())
-            throw new IllegalArgumentException("Wrong email");
+            throw new UserException("exception.wrongEmail");
         return true;
     }
 
@@ -189,7 +190,7 @@ public class UserServiceImpl implements UserService {
      */
     public boolean checkPassword(String password, String passwordCheck, Integer id) {
         if (password.length() < validationPasswordLength)
-            throw new IllegalArgumentException("Wrong password length");
+            throw new UserException("exception.passwordLength");
         String regexp;
         Pattern pattern;
         Matcher matcher;
@@ -198,31 +199,31 @@ public class UserServiceImpl implements UserService {
             pattern = Pattern.compile(regexp);
             matcher = pattern.matcher(password);
             if (!matcher.matches())
-                throw new IllegalArgumentException("Wrong password format. Password must contain at least one uppercase letter");
+                throw new UserException("exception.uppercaseLetters");
         }
         if (validationPasswordLowerCaseLetters) {
             regexp = "^(?=.*[a-z])(?=\\S+$).*$";
             pattern = Pattern.compile(regexp);
             matcher = pattern.matcher(password);
             if (!matcher.matches())
-                throw new IllegalArgumentException("Wrong password format. Password must contain at least one lowercase letter");
+                throw new UserException("exception.lowercaseLetters");
         }
         if (validationPasswordNumbers) {
             regexp = "^(?=.*[0-9])(?=\\S+$).*$";
             pattern = Pattern.compile(regexp);
             matcher = pattern.matcher(password);
             if (!matcher.matches())
-                throw new IllegalArgumentException("Wrong password format. Password must contain at least one number");
+                throw new UserException("exception.numbers");
         }
         if (validationPasswordSpecialSymbols) {
             regexp = "(?=.*[@#$%^&+=])(?=\\S+$).*$";
             pattern = Pattern.compile(regexp);
             matcher = pattern.matcher(password);
             if (!matcher.matches())
-                throw new IllegalArgumentException("Wrong password format. Password must contain at least one special symbol");
+                throw new UserException("exception.specialSymbols");
         }
         if (((id == null) || (passwordCheck != null)) && (!password.equals(passwordCheck))) {
-            throw new IllegalArgumentException("The password and confirm password fields do not match.");
+            throw new UserException("exception.passwordsMatch");
         }
         return true;
     }
