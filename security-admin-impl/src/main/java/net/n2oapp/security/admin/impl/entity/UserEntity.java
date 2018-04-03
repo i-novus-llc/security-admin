@@ -26,6 +26,13 @@ public class UserEntity {
     private Integer id;
 
     /**
+     * Идентификатор пользователя в сторонних системах
+     */
+    @Column(name = "guid")
+    private String guid;
+
+
+    /**
      * Логин пользователя
      */
     @NotNull

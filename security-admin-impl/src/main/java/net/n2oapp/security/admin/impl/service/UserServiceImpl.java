@@ -4,6 +4,7 @@ import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
+import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.UserService;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
@@ -28,6 +29,8 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private SsoUserRoleProvider provider;
 
     @Value("${n2o.security.validation.username:true}")
     private Boolean validationUsername;
@@ -53,7 +56,11 @@ public class UserServiceImpl implements UserService {
         checkUsername(user.getUsername());
         checkEmail(user.getEmail());
         checkPassword(user.getPassword(), user.getPasswordCheck(), user.getId());
-        return model(userRepository.save(entityForm(user)));
+        UserEntity savedUser = userRepository.save(entityForm(user));
+        User result = model(savedUser);
+        String guid = provider.createUser(result);
+        savedUser.setGuid(guid);
+        return result;
     }
 
     @Override
@@ -68,8 +75,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(Integer id) {
+        UserEntity user = userRepository.findOne(id);
         userRepository.delete(id);
-
+        provider.deleteUser(user.getGuid());
     }
 
     @Override

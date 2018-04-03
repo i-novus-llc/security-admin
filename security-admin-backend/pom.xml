@@ -12,6 +12,10 @@
     <packaging>war</packaging>
     <artifactId>security-admin-backend</artifactId>
 
+    <properties>
+        <n2o.platform.version>1.0-SNAPSHOT</n2o.platform.version>
+    </properties>
+
     <build>
         <finalName>backend</finalName>
     </build>
@@ -28,6 +32,11 @@
             <artifactId>security-admin-rest-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>net.n2oapp.framework.security</groupId>
+            <artifactId>security-admin-sso-keycloak</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!-- /APP -->
 
         <!-- PLATFORM -->
@@ -39,6 +48,7 @@
         <dependency>
             <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-i18n</artifactId>
+            <version>${n2o.platform.version}</version>
         </dependency>
         <!-- /PLATFORM -->
 

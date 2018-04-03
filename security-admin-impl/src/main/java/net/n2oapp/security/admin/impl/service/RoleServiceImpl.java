@@ -4,6 +4,7 @@ import net.n2oapp.security.admin.api.criteria.RoleCriteria;
 import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.RoleForm;
+import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.RoleService;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
@@ -28,13 +29,15 @@ public class RoleServiceImpl implements RoleService {
     private RoleRepository roleRepository;
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
+    private SsoUserRoleProvider provider;
 
     @Override
     public Role create(RoleForm role) {
         checkRoleUniq(role.getId(), role.getName());
-        return model(roleRepository.save(entity(role)));
-
+        Role result = model(roleRepository.save(entity(role)));
+        provider.createRole(result);
+        return result;
     }
 
     @Override
@@ -46,7 +49,9 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public void delete(Integer id) {
         checkRoleExist(id);
+        RoleEntity roleEntity = roleRepository.findOne(id);
         roleRepository.delete(id);
+        provider.deleteRole(roleEntity.getCode());
     }
 
     @Override
