@@ -59,8 +59,8 @@ public abstract class OpenIdSecurityConfigurerAdapter extends WebSecurityConfigu
     protected void configure(HttpSecurity http) throws Exception {
         configureSsoFilter(http);
         authorize(beforeAuthorize(http));
-        configureExceptions(http);
-        configureLogout(http);
+        configureExceptionHandling(http.exceptionHandling());
+        configureLogout(http.logout());
     }
 
     @Bean
@@ -121,14 +121,9 @@ public abstract class OpenIdSecurityConfigurerAdapter extends WebSecurityConfigu
         return http.apply(new OAuth2ClientAuthenticationConfigurer(oauth2SsoFilter));
     }
 
-    protected void configureExceptions(HttpSecurity http)
+    protected void configureExceptionHandling(ExceptionHandlingConfigurer<HttpSecurity> exceptions)
             throws Exception {
-        ExceptionHandlingConfigurer<HttpSecurity> exceptions = http.exceptionHandling();
-        ContentNegotiationStrategy contentNegotiationStrategy = http
-                .getSharedObject(ContentNegotiationStrategy.class);
-        if (contentNegotiationStrategy == null) {
-            contentNegotiationStrategy = new HeaderContentNegotiationStrategy();
-        }
+        ContentNegotiationStrategy contentNegotiationStrategy = new HeaderContentNegotiationStrategy();
         MediaTypeRequestMatcher preferredMatcher = new MediaTypeRequestMatcher(
                 contentNegotiationStrategy, MediaType.APPLICATION_XHTML_XML,
                 new MediaType("image", "*"), MediaType.TEXT_HTML, MediaType.TEXT_PLAIN);
@@ -142,8 +137,8 @@ public abstract class OpenIdSecurityConfigurerAdapter extends WebSecurityConfigu
                 new RequestHeaderRequestMatcher("X-Requested-With", "XMLHttpRequest"));
     }
 
-    protected LogoutConfigurer<HttpSecurity> configureLogout(HttpSecurity http) throws Exception {
-        return http.logout().logoutRequestMatcher(new AntPathRequestMatcher(properties.getLogoutEndpoint()))
+    protected LogoutConfigurer<HttpSecurity> configureLogout(LogoutConfigurer<HttpSecurity> logout) throws Exception {
+        return logout.logoutRequestMatcher(new AntPathRequestMatcher(properties.getLogoutEndpoint()))
                 .logoutSuccessUrl(properties.getLogoutUrl());
     }
 
