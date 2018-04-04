@@ -61,8 +61,11 @@ public class UserServiceImpl implements UserService {
         checkPassword(user.getPassword(), user.getPasswordCheck(), user.getId());
         UserEntity savedUser = userRepository.save(entityForm(user));
         User result = model(savedUser);
-        result = provider.createUser(result);
-        userRepository.save(entity(result));
+        User providerResult = provider.createUser(result);
+        if (providerResult != null) {
+            result = providerResult;
+            userRepository.save(entity(providerResult));
+        }
         return result;
     }
 

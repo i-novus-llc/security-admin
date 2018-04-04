@@ -12,7 +12,7 @@ public class SimpleSsoUserRoleProvider implements SsoUserRoleProvider {
 
     @Override
     public User createUser(User user) {
-        return null;
+        return user;
     }
 
     @Override
@@ -27,7 +27,7 @@ public class SimpleSsoUserRoleProvider implements SsoUserRoleProvider {
 
     @Override
     public Role createRole(Role role) {
-        return null;
+        return role;
     }
 
     @Override

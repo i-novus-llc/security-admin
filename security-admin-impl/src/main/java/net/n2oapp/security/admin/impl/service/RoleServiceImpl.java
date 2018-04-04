@@ -36,14 +36,20 @@ public class RoleServiceImpl implements RoleService {
     public Role create(RoleForm role) {
         checkRoleUniq(role.getId(), role.getName());
         Role result = model(roleRepository.save(entity(role)));
-        provider.createRole(result);
+        Role providerResult = provider.createRole(result);
+        if (providerResult != null) {
+            result = providerResult;
+            roleRepository.save(entity(result));
+        }
         return result;
     }
 
     @Override
     public Role update(RoleForm role) {
         checkRoleUniq(role.getId(), role.getName());
-        return model(roleRepository.save(entity(role)));
+        Role result = model(roleRepository.save(entity(role)));
+        provider.updateRole(result);
+        return result;
     }
 
     @Override
@@ -80,6 +86,19 @@ public class RoleServiceImpl implements RoleService {
         return entity;
     }
 
+    private RoleEntity entity(Role model) {
+        if (model == null) return null;
+        RoleEntity entity = new RoleEntity();
+        entity.setId(model.getId());
+        entity.setName(model.getName());
+        entity.setCode(model.getCode());
+        entity.setDescription(model.getDescription());
+        if (model.getPermissions() != null) {
+            entity.setPermissionList(model.getPermissions().stream().map(p -> entity(p)).collect(Collectors.toList()));
+        }
+        return entity;
+    }
+
     private Role model(RoleEntity entity) {
         if (entity == null) return null;
         Role model = new Role();
@@ -89,7 +108,6 @@ public class RoleServiceImpl implements RoleService {
         model.setDescription(entity.getDescription());
         if (entity.getPermissionList() != null) {
             model.setPermissions(entity.getPermissionList().stream().map(this::model).collect(Collectors.toList()));
-
         }
         return model;
 
@@ -98,6 +116,14 @@ public class RoleServiceImpl implements RoleService {
     private Permission model(PermissionEntity entity) {
         if (entity == null) return null;
         Permission model = new Permission();
+        model.setId(entity.getId());
+        model.setName(entity.getName());
+        return model;
+    }
+
+    private PermissionEntity entity(Permission entity) {
+        if (entity == null) return null;
+        PermissionEntity model = new PermissionEntity();
         model.setId(entity.getId());
         model.setName(entity.getName());
         return model;
