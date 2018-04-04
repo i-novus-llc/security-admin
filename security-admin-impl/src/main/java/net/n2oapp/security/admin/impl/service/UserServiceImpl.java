@@ -8,6 +8,7 @@ import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.UserService;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
+import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.UserSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,8 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private RoleRepository roleRepository;
     @Autowired
     private SsoUserRoleProvider provider;
 
@@ -58,8 +61,8 @@ public class UserServiceImpl implements UserService {
         checkPassword(user.getPassword(), user.getPasswordCheck(), user.getId());
         UserEntity savedUser = userRepository.save(entityForm(user));
         User result = model(savedUser);
-        String guid = provider.createUser(result);
-        savedUser.setGuid(guid);
+        result = provider.createUser(result);
+        userRepository.save(entity(result));
         return result;
     }
 
@@ -69,7 +72,9 @@ public class UserServiceImpl implements UserService {
         checkUsername(user.getUsername());
         checkEmail(user.getEmail());
         checkPassword(user.getPassword(), user.getPasswordCheck(), user.getId());
-        return model(userRepository.save(entityForm(user)));
+        User result = model(userRepository.save(entityForm(user)));
+        provider.updateUser(result);
+        return result;
 
     }
 
@@ -77,7 +82,7 @@ public class UserServiceImpl implements UserService {
     public void delete(Integer id) {
         UserEntity user = userRepository.findOne(id);
         userRepository.delete(id);
-        provider.deleteUser(user.getGuid());
+        provider.deleteUser(model(user));
     }
 
     @Override
@@ -104,6 +109,7 @@ public class UserServiceImpl implements UserService {
     private UserEntity entityForm(UserForm model) {
         UserEntity entity = new UserEntity();
         entity.setId(model.getId());
+        entity.setGuid(model.getGuid());
         entity.setUsername(model.getUsername());
         entity.setName(model.getName());
         entity.setSurname(model.getSurname());
@@ -116,10 +122,27 @@ public class UserServiceImpl implements UserService {
         return entity;
     }
 
+    private UserEntity entity(User model) {
+        UserEntity entity = new UserEntity();
+        entity.setId(model.getId());
+        entity.setGuid(model.getGuid());
+        entity.setUsername(model.getUsername());
+        entity.setName(model.getName());
+        entity.setSurname(model.getSurname());
+        entity.setPatronymic(model.getPatronymic());
+        entity.setIsActive(model.getIsActive());
+        entity.setPassword(model.getPassword());
+        entity.setEmail(model.getEmail());
+        if (model.getRoles() != null)
+            entity.setRoleList(model.getRoles().stream().map(r -> new RoleEntity(r.getId())).collect(Collectors.toList()));
+        return entity;
+    }
+
     private User model(UserEntity entity) {
         if (entity == null) return null;
         User model = new User();
         model.setId(entity.getId());
+        model.setGuid(entity.getGuid());
         model.setUsername(entity.getUsername());
         model.setName(entity.getName());
         model.setSurname(entity.getSurname());
@@ -139,7 +162,10 @@ public class UserServiceImpl implements UserService {
         }
         model.setFio(builder.toString());
         if (entity.getRoleList() != null) {
-            model.setRoles(entity.getRoleList().stream().map(this::model).collect(Collectors.toList()));
+            model.setRoles(entity.getRoleList().stream().map(e -> {
+                RoleEntity re = roleRepository.findOne(e.getId());
+                return model(re);
+            }).collect(Collectors.toList()));
         }
         return model;
     }
@@ -148,6 +174,7 @@ public class UserServiceImpl implements UserService {
         if (entity == null) return null;
         Role model = new Role();
         model.setId(entity.getId());
+        model.setCode(entity.getCode());
         model.setName(entity.getName());
         model.setDescription(entity.getDescription());
         return model;

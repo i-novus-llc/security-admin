@@ -25,6 +25,11 @@
             </filters>
         </field>
         <field>
+            <id>guid</id>
+            <domain>string</domain>
+            <display/>
+        </field>
+        <field>
             <id>username</id>
             <domain>string</domain>
             <display>username</display>

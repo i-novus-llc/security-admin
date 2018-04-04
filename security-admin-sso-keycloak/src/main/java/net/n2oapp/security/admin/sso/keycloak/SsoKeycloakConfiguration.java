@@ -3,6 +3,7 @@ package net.n2oapp.security.admin.sso.keycloak;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 /**
  * Конфигурация модуля взаимодействия с keycloak
@@ -12,8 +13,9 @@ import org.springframework.context.annotation.Configuration;
 public class SsoKeycloakConfiguration {
 
     @Bean
-    SsoUserRoleProviderImpl keycloakUtil(SsoKeycloakProperties properties) {
-        return new SsoUserRoleProviderImpl(properties);
+    @Primary
+    KeycloakSsoUserRoleProvider keycloakSsoUserRoleProvider(SsoKeycloakProperties properties) {
+        return new KeycloakSsoUserRoleProvider(properties);
     }
 
 

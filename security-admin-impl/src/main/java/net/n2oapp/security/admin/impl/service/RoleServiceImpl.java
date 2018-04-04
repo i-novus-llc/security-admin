@@ -51,7 +51,7 @@ public class RoleServiceImpl implements RoleService {
         checkRoleExist(id);
         RoleEntity roleEntity = roleRepository.findOne(id);
         roleRepository.delete(id);
-        provider.deleteRole(roleEntity.getCode());
+        provider.deleteRole(model(roleEntity));
     }
 
     @Override

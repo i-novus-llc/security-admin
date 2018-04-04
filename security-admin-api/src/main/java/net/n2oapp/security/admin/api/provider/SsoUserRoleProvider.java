@@ -10,29 +10,41 @@ public interface SsoUserRoleProvider {
 
     /**
      * Создание пользователя
-     * @param user
-     * @return
+     * @param user  пользователь для создания
+     * @return  пользователь с обновленными данными
      */
-    String createUser(User user);
+    User createUser(User user);
+
+    /**
+     * Изменение пользователя
+     * @param user  пользователь
+     */
+    void updateUser(User user);
 
     /**
      * Удаление пользователя
-     * @param userGuid
+     * @param user
      */
-    void deleteUser(String userGuid);
+    void deleteUser(User user);
 
 
     /**
      * Создание роли
-     * @param role
-     * @return
+     * @param role  Роль для создания
+     * @return  роль с обновленными данными
      */
-    void createRole(Role role);
+    Role createRole(Role role);
+
+    /**
+     * Редактирование роли
+     * @param role  роль
+     */
+    void updateRole(Role role);
 
     /**
      * Удаление роли
-     * @param roleGuid
+     * @param role
      */
-    void deleteRole(String roleGuid);
+    void deleteRole(Role role);
 
 }

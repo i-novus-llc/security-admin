@@ -38,6 +38,7 @@
             </invocation>
             <in-parameters>
                 <param name="id" mapping="[0].id" domain="integer" required="true"/>
+                <param name="guid" mapping="[0].guid" domain="string"/>
                 <param name="username" mapping="[0].username" domain="string" required="true"/>
                 <param name="email" mapping="[0].email" domain="string" required="true"/>
                 <param name="surname" mapping="[0].surname" domain="string" required="true"/>
