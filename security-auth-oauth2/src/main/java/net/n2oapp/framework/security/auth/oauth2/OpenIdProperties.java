@@ -8,19 +8,19 @@ import org.springframework.beans.factory.annotation.Value;
 public class OpenIdProperties {
     @Value("${n2o.security.oauth2.auth-server-uri}")
     private String authServerUrl;
-    @Value("${n2o.security.oauth2.access-token-uri}")
+    @Value("${n2o.security.oauth2.access-token-uri:/token}")
     private String accessTokenUrl;
-    @Value("${n2o.security.oauth2.user-authorization-uri}")
+    @Value("${n2o.security.oauth2.user-authorization-uri:/auth}")
     private String userAuthorizationUrl;
-    @Value("${n2o.security.oauth2.user-info-uri}")
+    @Value("${n2o.security.oauth2.user-info-uri:/userinfo}")
     private String userInfoUrl;
-    @Value("${n2o.security.oauth2.logout-uri}")
+    @Value("${n2o.security.oauth2.logout-uri:/logout}")
     private String logoutUrl;
     @Value("${n2o.security.oauth2.client-id}")
     private String clientId;
     @Value("${n2o.security.oauth2.client-secret}")
     private String clientSecret;
-    @Value("${n2o.security.oauth2.scopes}")
+    @Value("${n2o.security.oauth2.scopes:}")
     private String[] scopes;
 
     private String loginEndpoint = "/login";

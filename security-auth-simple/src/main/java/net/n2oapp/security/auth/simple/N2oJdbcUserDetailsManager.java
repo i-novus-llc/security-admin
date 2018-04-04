@@ -1,5 +1,6 @@
 package net.n2oapp.security.auth.simple;
 
+import net.n2oapp.security.auth.User;
 import net.n2oapp.security.auth.authority.PermissionGrantedAuthority;
 import net.n2oapp.security.auth.authority.RoleGrantedAuthority;
 import org.slf4j.Logger;

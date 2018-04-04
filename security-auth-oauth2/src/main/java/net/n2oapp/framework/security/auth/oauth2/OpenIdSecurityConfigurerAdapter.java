@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.ExceptionHandlingConfigurer;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
@@ -47,12 +48,22 @@ public abstract class OpenIdSecurityConfigurerAdapter extends WebSecurityConfigu
     @Autowired
     private OpenIdProperties properties;
 
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        ignore(web.ignoring());
+    }
+
+    protected void ignore(WebSecurity.IgnoredRequestConfigurer ignore) {
+        ignore.antMatchers("/dist/**", "/lib/**", "/n2o/**", "/build/**", "/bundle/**"
+                , "/public/**", "/resources/**", "/static/**");
+    }
+
     protected abstract void authorize(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry url)
             throws Exception;
 
     protected ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry beforeAuthorize(HttpSecurity http)
             throws Exception {
-        return http.antMatcher("/**").authorizeRequests().antMatchers(properties.getLoginEndpoint()).permitAll();
+        return http.authorizeRequests().antMatchers(properties.getLoginEndpoint()).permitAll();
     }
 
     @Override

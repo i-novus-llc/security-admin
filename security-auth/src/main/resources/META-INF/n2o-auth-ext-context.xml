@@ -29,4 +29,5 @@
 
     <bean id="accessSchemaValidatorOverrided" class="net.n2oapp.security.auth.access.SimpleAccessSchemaValidatorOverrided"/>
 
+    <bean id="n2oContext" class="net.n2oapp.security.auth.context.SpringSecurityUserContext" primary="true"/>
 </beans>
