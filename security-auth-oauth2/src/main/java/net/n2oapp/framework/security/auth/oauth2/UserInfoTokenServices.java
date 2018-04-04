@@ -1,7 +1,9 @@
 package net.n2oapp.framework.security.auth.oauth2;
 
+import net.n2oapp.security.auth.authority.RoleGrantedAuthority;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.OAuth2RestOperations;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
@@ -82,13 +84,13 @@ public class UserInfoTokenServices implements ResourceServerTokenServices {
 		return new OAuth2Authentication(request, token);
 	}
 
-	private List<SimpleGrantedAuthority> getAuthorities(Map<String, Object> map) {
+	private List<GrantedAuthority> getAuthorities(Map<String, Object> map) {
 		Object roles = map.get("roles");
 		if (roles instanceof Collection) {
 			Collection<String> roleList = (Collection<String>) roles;
-			return roleList.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+			return roleList.stream().map(RoleGrantedAuthority::new).collect(Collectors.toList());
 		}
-		return Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+		return Collections.singletonList(new RoleGrantedAuthority("ROLE_USER"));
 	}
 
 	/**

@@ -19,11 +19,6 @@
           class="net.n2oapp.security.auth.listener.AuthenticationLogoutHandler">
     </bean>
 
-    <bean id="authenticationSuccessHandler"
-          class="net.n2oapp.security.auth.listener.AuthenticationSuccessHandler">
-        <property name="successUrl" value="${n2o.auth.cas.return.url}/auth/success"/>
-    </bean>
-
     <bean id="authenticationSuccessListener" class="net.n2oapp.security.auth.listener.AuthenticationSuccessListener">
         <property name="eventBus" ref="n2oEventBus"/>
     </bean>
