@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.service;
 
+import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.TestApplication;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
@@ -56,26 +57,26 @@ public class UserServiceTest {
             user.setEmail("test.mail.ru");
             service.update(form(user));
         });
-        assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
-        assertEquals("Wrong email", thrown.getMessage());
+        assertThat(thrown).isInstanceOf(UserException.class);
+        assertEquals("exception.wrongEmail", thrown.getMessage());
         thrown = catchThrowable(() -> {
             user.setEmail("test.mail@");
             service.update(form(user));
         });
-        assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
-        assertEquals("Wrong email", thrown.getMessage());
+        assertThat(thrown).isInstanceOf(UserException.class);
+        assertEquals("exception.wrongEmail", thrown.getMessage());
         thrown = catchThrowable(() -> {
             user.setEmail("test.mail@ru");
             service.update(form(user));
         });
-        assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
-        assertEquals("Wrong email", thrown.getMessage());
+        assertThat(thrown).isInstanceOf(UserException.class);
+        assertEquals("exception.wrongEmail", thrown.getMessage());
         thrown = catchThrowable(() -> {
             user.setEmail("@mail.ru");
             service.update(form(user));
         });
-        assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
-        assertEquals("Wrong email", thrown.getMessage());
+        assertThat(thrown).isInstanceOf(UserException.class);
+        assertEquals("exception.wrongEmail", thrown.getMessage());
         user.setEmail("UserEmail@gmail.com");
     }
 
@@ -85,39 +86,39 @@ public class UserServiceTest {
             user.setPassword("pass");
             service.update(form(user));
         });
-        assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
-        assertEquals("Wrong password length", thrown.getMessage());
+        assertThat(thrown).isInstanceOf(UserException.class);
+        assertEquals("exception.passwordLength", thrown.getMessage());
         thrown = catchThrowable(() -> {
             user.setPassword("userpassword");
             service.update(form(user));
         });
-        assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
-        assertEquals("Wrong password format. Password must contain at least one uppercase letter", thrown.getMessage());
+        assertThat(thrown).isInstanceOf(UserException.class);
+        assertEquals("exception.uppercaseLetters", thrown.getMessage());
         thrown = catchThrowable(() -> {
             user.setPassword("USERPASSWORD");
             service.update(form(user));
         });
-        assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
-        assertEquals("Wrong password format. Password must contain at least one lowercase letter", thrown.getMessage());
+        assertThat(thrown).isInstanceOf(UserException.class);
+        assertEquals("exception.lowercaseLetters", thrown.getMessage());
         thrown = catchThrowable(() -> {
             user.setPassword("userPassword");
             service.update(form(user));
         });
-        assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
-        assertEquals("Wrong password format. Password must contain at least one number", thrown.getMessage());
+        assertThat(thrown).isInstanceOf(UserException.class);
+        assertEquals("exception.numbers", thrown.getMessage());
         thrown = catchThrowable(() -> {
             user.setPassword("userPassword1");
             service.update(form(user));
         });
-        assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
-        assertEquals("Wrong password format. Password must contain at least one special symbol", thrown.getMessage());
+        assertThat(thrown).isInstanceOf(UserException.class);
+        assertEquals("exception.specialSymbols", thrown.getMessage());
         thrown = catchThrowable(() -> {
             user.setPassword("userPassword2$");
             user.setPasswordCheck("userPassword1$");
             service.update(form(user));
         });
-        assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
-        assertEquals("The password and confirm password fields do not match.", thrown.getMessage());
+        assertThat(thrown).isInstanceOf(UserException.class);
+        assertEquals("exception.passwordsMatch", thrown.getMessage());
         user.setPassword("userPassword1$");
     }
 
@@ -126,19 +127,19 @@ public class UserServiceTest {
             user.setUsername("$pass");
             service.update(form(user));
         });
-        assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
-        assertEquals("Wrong username format", thrown.getMessage());
+        assertThat(thrown).isInstanceOf(UserException.class);
+        assertEquals("exception.wrongUsername", thrown.getMessage());
         thrown = catchThrowable(() -> {
             service.create(newUser());
         });
-        assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
-        assertEquals("User with such username already exists", thrown.getMessage());
+        assertThat(thrown).isInstanceOf(UserException.class);
+        assertEquals("exception.uniqueUsername", thrown.getMessage());
         thrown = catchThrowable(() -> {
             user.setUsername("test");
             service.update(form(user));
         });
-        assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
-        assertEquals("User with such username already exists", thrown.getMessage());
+        assertThat(thrown).isInstanceOf(UserException.class);
+        assertEquals("exception.uniqueUsername", thrown.getMessage());
         user.setUsername("userName4");
     }
 

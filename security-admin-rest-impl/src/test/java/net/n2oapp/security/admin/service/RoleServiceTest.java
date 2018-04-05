@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.service;
 
+import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.TestApplication;
 import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.model.Role;
@@ -52,14 +53,14 @@ public class RoleServiceTest {
         Throwable thrown = catchThrowable(() -> {
             service.create(newRole());
         });
-        assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
-        assertEquals("Role with such name already exists", thrown.getMessage());
+        assertThat(thrown).isInstanceOf(UserException.class);
+        assertEquals("exception.uniqueRole", thrown.getMessage());
         thrown = catchThrowable(() -> {
             role.setName("user");
             service.update(form(role));
         });
-        assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
-        assertEquals("Role with such name already exists", thrown.getMessage());
+        assertThat(thrown).isInstanceOf(UserException.class);
+        assertEquals("exception.uniqueRole", thrown.getMessage());
         role.setName("adminAdmin");
     }
 
@@ -67,8 +68,8 @@ public class RoleServiceTest {
         Throwable thrown = catchThrowable(() -> {
             service.delete(id);
         });
-        assertThat(thrown).isInstanceOf(IllegalAccessError.class);
-        assertEquals("Deleting is not possible, since there are users with such role", thrown.getMessage());
+        assertThat(thrown).isInstanceOf(UserException.class);
+        assertEquals("exception.usernameWithSuchRoleExists", thrown.getMessage());
     }
 
     private static RoleForm newRole() {
