@@ -2,7 +2,9 @@ package net.n2oapp.security.admin.rest.impl;
 
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import net.n2oapp.security.admin.api.model.User;
+import net.n2oapp.security.admin.api.model.UserDetailsToken;
 import net.n2oapp.security.admin.api.model.UserForm;
+import net.n2oapp.security.admin.api.service.UserDetailsService;
 import net.n2oapp.security.admin.api.service.UserService;
 import net.n2oapp.security.admin.rest.api.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,8 @@ import java.util.List;
 public class UserRestServiceImpl implements UserRestService {
     @Autowired
     private UserService service;
-
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @Override
     public Page<User> search(Integer page, Integer size,
@@ -57,5 +60,13 @@ public class UserRestServiceImpl implements UserRestService {
     @Override
     public User changeActive(Integer id) {
         return service.changeActive(id);
+    }
+
+    @Override
+    public User loadDetails(String username, List<String> roleNames) {
+        UserDetailsToken token = new UserDetailsToken();
+        token.setUsername(username);
+        token.setRoleNames(roleNames);
+        return userDetailsService.loadUserDetails(token);
     }
 }

@@ -17,6 +17,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,6 +53,24 @@ public class UserRestTest {
         User user = create();
         update(form(user));
         delete(user.getId());
+    }
+
+    @Test
+    public void testUserDetails() throws Exception {
+        User user = client.loadDetails("test", Arrays.asList("code1", "code2"));
+        assert user.getUsername().equals("test");
+        assert user.getRoles().size() == 2;
+        assert user.getRoles().get(0).getPermissions().size() == 1;
+        // проверяем удаление роли
+        user = client.loadDetails("test", Arrays.asList("code1"));
+        assert user.getUsername().equals("test");
+        assert user.getRoles().size() == 1;
+        assert user.getRoles().get(0).getPermissions().size() == 1;
+        // проверяем добавление новой роли
+        user = client.loadDetails("test", Arrays.asList("code1", "code3"));
+        assert user.getUsername().equals("test");
+        assert user.getRoles().size() == 2;
+        assert user.getRoles().get(0).getPermissions().size() == 1;
     }
 
     private User create() {
