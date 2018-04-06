@@ -1,10 +1,7 @@
 package net.n2oapp.security.admin.api.service;
 
-import com.sun.istack.internal.Nullable;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserDetailsToken;
-
-import java.util.List;
 
 /**
  * Загрузка данных пользователя с его ролями и правами доступа

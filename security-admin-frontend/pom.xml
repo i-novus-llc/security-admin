@@ -12,6 +12,11 @@
     <packaging>war</packaging>
     <artifactId>security-admin-frontend</artifactId>
 
+    <properties>
+        <n2o.version>6.1.18</n2o.version>
+        <security.admin.version>2.0-SNAPSHOT</security.admin.version>
+    </properties>
+
     <build>
         <finalName>ROOT</finalName>
     </build>
@@ -42,6 +47,11 @@
         <!-- /N2O -->
 
         <!-- AUTH -->
+        <dependency>
+            <groupId>net.n2oapp.framework.security</groupId>
+            <artifactId>security-auth-oauth2</artifactId>
+            <version>${security.admin.version}</version>
+        </dependency>
 
         <!-- /AUTH -->
 
