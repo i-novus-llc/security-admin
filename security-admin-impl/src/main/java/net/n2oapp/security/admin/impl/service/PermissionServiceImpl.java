@@ -1,12 +1,12 @@
 package net.n2oapp.security.admin.impl.service;
 
+import net.n2oapp.security.admin.api.criteria.BaseCriteria;
 import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.service.PermissionService;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.repository.PermissionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,8 +44,8 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public Page<Permission> getAll(Pageable pageable) {
-        Page<PermissionEntity> all = permissionRepository.findAll(pageable);
+    public Page<Permission> findAll(BaseCriteria criteria) {
+        Page<PermissionEntity> all = permissionRepository.findAll(criteria);
         return all.map(this::model);
     }
 

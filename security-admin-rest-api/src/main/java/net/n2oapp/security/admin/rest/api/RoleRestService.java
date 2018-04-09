@@ -3,8 +3,11 @@ package net.n2oapp.security.admin.rest.api;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
+import net.n2oapp.security.admin.api.criteria.RoleCriteria;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.RoleForm;
+import net.n2oapp.security.admin.api.service.RoleService;
+import net.n2oapp.security.admin.rest.api.criteria.RestRoleCriteria;
 import org.springframework.data.domain.Page;
 
 import javax.ws.rs.*;
@@ -18,24 +21,19 @@ import java.util.List;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Api("REST сервис регистрации ролей  пользователей")
-public interface RoleRestService {
+public interface RoleRestService extends RoleService<RestRoleCriteria> {
+
     @GET
     @Path("/")
     @ApiOperation("Найти роли по критериям поиска")
     @ApiResponse(code = 200, message = "Страница ролей")
-    Page<Role> search(@QueryParam("page") @DefaultValue("1") Integer page,
-                      @QueryParam("size") @DefaultValue("10") Integer size,
-                      @QueryParam("name") String name,
-                      @QueryParam("description") String description,
-                      @QueryParam("permissions") List<Integer> permissions
-    );
+    Page<Role> findAll(@BeanParam RestRoleCriteria criteria);
 
     @GET
     @Path("/{id}")
     @ApiOperation("Получить роль по идентификатору")
     @ApiResponse(code = 200, message = "Роли")
     Role getById(@PathParam("id") Integer id);
-
 
     @POST
     @Path("/")

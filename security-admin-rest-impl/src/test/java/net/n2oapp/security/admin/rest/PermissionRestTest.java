@@ -3,6 +3,7 @@ package net.n2oapp.security.admin.rest;
 import net.n2oapp.security.admin.TestApplication;
 import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.rest.api.PermissionRestService;
+import net.n2oapp.security.admin.rest.api.criteria.RestBaseCriteria;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,10 @@ public class PermissionRestTest {
 
     @Test
     public void getAll() throws Exception {
-        Page<Permission> permissions = client.getAll(1, 4);
+        RestBaseCriteria criteria = new RestBaseCriteria();
+        criteria.setPage(1);
+        criteria.setSize(4);
+        Page<Permission> permissions = client.findAll(criteria);
         assertEquals(1, permissions.getTotalElements());
     }
 

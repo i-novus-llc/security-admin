@@ -1,15 +1,14 @@
 package net.n2oapp.security.admin.rest.impl;
 
-import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserDetailsToken;
 import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.api.service.UserDetailsService;
 import net.n2oapp.security.admin.api.service.UserService;
 import net.n2oapp.security.admin.rest.api.UserRestService;
+import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
@@ -26,13 +25,7 @@ public class UserRestServiceImpl implements UserRestService {
     private UserDetailsService userDetailsService;
 
     @Override
-    public Page<User> search(Integer page, Integer size,
-                             String username, String fio, Boolean isActive, List<Integer> roles) {
-        UserCriteria criteria = new UserCriteria(page - 1, size, Sort.Direction.DESC, "id");
-        criteria.setUsername(username);
-        criteria.setFio(fio);
-        criteria.setIsActive(isActive);
-        criteria.setRoleIds(roles);
+    public Page<User> findAll(RestUserCriteria criteria) {
         return service.findAll(criteria);
     }
 

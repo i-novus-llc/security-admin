@@ -1,13 +1,13 @@
 package net.n2oapp.security.admin.api.service;
 
+import net.n2oapp.security.admin.api.criteria.BaseCriteria;
 import net.n2oapp.security.admin.api.model.Permission;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 /**
  *  Сервис управления правами доступа
  */
-public interface PermissionService {
+public interface PermissionService<T extends BaseCriteria> {
 
     /**
      * Создать право доступа
@@ -42,6 +42,6 @@ public interface PermissionService {
      *
      * @return Страница найденных пользователей
      */
-    Page<Permission> getAll(Pageable pageable);
+    Page<Permission> findAll(T criteria);
 
 }

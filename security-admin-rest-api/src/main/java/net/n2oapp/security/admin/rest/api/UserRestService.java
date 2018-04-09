@@ -6,6 +6,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
+import net.n2oapp.security.admin.api.service.UserService;
+import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
 import org.springframework.data.domain.Page;
 
 import javax.ws.rs.*;
@@ -19,16 +21,13 @@ import java.util.List;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Api("REST сервис регистрации пользователей")
-public interface UserRestService {
+public interface UserRestService extends UserService<RestUserCriteria> {
 
     @GET
     @Path("/")
     @ApiOperation("Найти всех пользователей")
     @ApiResponse(code = 200, message = "Страница пользователей")
-    Page<User> search(@QueryParam("page") @DefaultValue("1") Integer page,
-                      @QueryParam("size") @DefaultValue("10") Integer size,
-                      @QueryParam("username") String username, @QueryParam("fio") String fio,
-                      @QueryParam("isActive") Boolean isActive, @QueryParam("roles") List<Integer> roles);
+    Page<User> findAll(@BeanParam RestUserCriteria criteria);
 
     @GET
     @Path("/{id}")

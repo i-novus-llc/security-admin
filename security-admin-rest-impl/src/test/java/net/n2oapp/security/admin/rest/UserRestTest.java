@@ -5,6 +5,7 @@ import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.rest.api.UserRestService;
+import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactoryBean;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,7 +45,14 @@ public class UserRestTest {
     public void search() throws Exception {
         List<Integer> roles = new ArrayList<>();
         roles.add(1);
-        Page<User> user = client.search(1, 4, "test", " surname1 name1  patronymic1", true, roles);
+        RestUserCriteria criteria = new RestUserCriteria();
+        criteria.setPage(1);
+        criteria.setSize(4);
+        criteria.setUsername("test");
+        criteria.setFio(" surname1 name1  patronymic1");
+        criteria.setIsActive(true);
+        criteria.setRoleIds(roles);
+        Page<User> user = client.findAll(criteria);
         assertEquals(1, user.getTotalElements());
     }
 

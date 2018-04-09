@@ -5,6 +5,8 @@ import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.RoleForm;
 import net.n2oapp.security.admin.rest.api.RoleRestService;
+import net.n2oapp.security.admin.rest.api.criteria.RestRoleCriteria;
+import org.apache.cxf.jaxrs.client.spring.EnableJaxRsProxyClient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +44,13 @@ public class RoleRestTest {
     public void search() throws Exception {
         List<Integer> permissions = new ArrayList<>();
         permissions.add(1);
-        Page<Role> role = client.search(1, 4, "user", "description1", permissions);
+        RestRoleCriteria criteria = new RestRoleCriteria();
+        criteria.setPage(1);
+        criteria.setSize(4);
+        criteria.setName("user");
+        criteria.setDescription("description1");
+        criteria.setPermissionIds(permissions);
+        Page<Role> role = client.findAll(criteria);
         assertEquals(1, role.getTotalElements());
     }
 

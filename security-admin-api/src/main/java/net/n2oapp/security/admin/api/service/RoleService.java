@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 /**
  * Сервис управления ролями
  */
-public interface RoleService {
+public interface RoleService<T extends RoleCriteria> {
 
     /**
      * Создать роль
@@ -42,5 +42,5 @@ public interface RoleService {
      * @param criteria Критерии поиска
      * @return Страница найденных ролей
      */
-    Page<Role> findAll(RoleCriteria criteria);
+    Page<Role> findAll(T criteria);
 }
