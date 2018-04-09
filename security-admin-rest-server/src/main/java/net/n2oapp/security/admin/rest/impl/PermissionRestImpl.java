@@ -22,6 +22,21 @@ public class PermissionRestImpl implements PermissionRestService {
     }
 
     @Override
+    public Permission create(Permission permission) {
+        return service.create(permission);
+    }
+
+    @Override
+    public Permission update(Permission permission) {
+        return service.update(permission);
+    }
+
+    @Override
+    public void delete(Integer id) {
+        service.delete(id);
+    }
+
+    @Override
     public Permission getById(Integer id) {
         return service.getById(id);
     }

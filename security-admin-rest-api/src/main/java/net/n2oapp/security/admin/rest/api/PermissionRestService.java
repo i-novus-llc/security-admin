@@ -4,7 +4,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import net.n2oapp.security.admin.api.model.Permission;
-import net.n2oapp.security.admin.api.service.PermissionService;
 import net.n2oapp.security.admin.rest.api.criteria.RestBaseCriteria;
 import org.springframework.data.domain.Page;
 
@@ -18,7 +17,7 @@ import javax.ws.rs.core.MediaType;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Api("REST сервис регистрации прав доступа")
-public interface PermissionRestService extends PermissionService<RestBaseCriteria> {
+public interface PermissionRestService {
 
     @GET
     @Path("/")
@@ -26,20 +25,23 @@ public interface PermissionRestService extends PermissionService<RestBaseCriteri
     @ApiResponse(code = 200, message = "Страница прав доступа")
     Page<Permission> findAll(@BeanParam RestBaseCriteria criteria);
 
-    @Override
-    default Permission create(Permission permission) {
-        throw new UnsupportedOperationException();
-    }
+    @POST
+    @Path("/")
+    @ApiOperation("Создать право доступа")
+    @ApiResponse(code = 200, message = "Созданное право доступа")
+    Permission create(Permission permission);
 
-    @Override
-    default Permission update(Permission permission) {
-        throw new UnsupportedOperationException();
-    }
+    @PUT
+    @Path("/")
+    @ApiOperation("Изменить право доступа")
+    @ApiResponse(code = 200, message = "Измененное право доступа")
+    Permission update(Permission permission);
 
-    @Override
-    default void delete(Integer id) {
-        throw new UnsupportedOperationException();
-    }
+    @DELETE
+    @Path("/{id}")
+    @ApiOperation("Удалить право доступа")
+    @ApiResponse(code = 200, message = "Право доступа удалено")
+    void delete(Integer id);
 
     @GET
     @Path("/{id}")

@@ -21,7 +21,7 @@ import java.util.List;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Api("REST сервис регистрации ролей  пользователей")
-public interface RoleRestService extends RoleService<RestRoleCriteria> {
+public interface RoleRestService {
 
     @GET
     @Path("/")

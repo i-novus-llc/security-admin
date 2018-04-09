@@ -7,7 +7,7 @@ import org.springframework.data.domain.Page;
 /**
  *  Сервис управления правами доступа
  */
-public interface PermissionService<T extends BaseCriteria> {
+public interface PermissionService {
 
     /**
      * Создать право доступа
@@ -42,6 +42,6 @@ public interface PermissionService<T extends BaseCriteria> {
      *
      * @return Страница найденных пользователей
      */
-    Page<Permission> findAll(T criteria);
+    Page<Permission> findAll(BaseCriteria criteria);
 
 }

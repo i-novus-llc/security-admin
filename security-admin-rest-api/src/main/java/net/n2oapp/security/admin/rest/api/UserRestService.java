@@ -21,7 +21,7 @@ import java.util.List;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Api("REST сервис регистрации пользователей")
-public interface UserRestService extends UserService<RestUserCriteria> {
+public interface UserRestService {
 
     @GET
     @Path("/")

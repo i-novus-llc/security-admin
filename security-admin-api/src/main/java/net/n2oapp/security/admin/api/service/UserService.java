@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 /**
  * Сервис управления пользователями
  */
-public interface UserService<T extends UserCriteria> {
+public interface UserService {
 
     /**
      * Создать пользователя
@@ -42,7 +42,7 @@ public interface UserService<T extends UserCriteria> {
      * @param criteria Критерии поиска
      * @return Страница найденных пользователей
      */
-    Page<User> findAll (T criteria);
+    Page<User> findAll (UserCriteria criteria);
 
     /**
      * Изменить статус пользователя
