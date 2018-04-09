@@ -13,7 +13,7 @@ public class SecurityConfig extends OpenIdSecurityConfigurerAdapter {
     @Override
     protected void authorize(ExpressionUrlAuthorizationConfigurer<HttpSecurity>
                                      .ExpressionInterceptUrlRegistry url) throws Exception {
-        url.antMatchers("/*").permitAll();
+        url.anyRequest().authenticated();
     }
 
 }
