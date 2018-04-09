@@ -22,7 +22,7 @@
         <module>security-admin-impl</module>
         <module>security-admin-web</module>
         <module>security-admin-rest-api</module>
-    	<module>security-admin-rest-impl</module>
+    	<module>security-admin-rest-server</module>
     	<module>security-admin-backend</module>
     	<module>security-admin-frontend</module>
         <module>security-admin-web-sql</module>

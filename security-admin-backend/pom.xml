@@ -29,7 +29,7 @@
         </dependency>
         <dependency>
             <groupId>net.n2oapp.framework.security</groupId>
-            <artifactId>security-admin-rest-impl</artifactId>
+            <artifactId>security-admin-rest-server</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
