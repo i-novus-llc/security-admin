@@ -63,7 +63,7 @@ public abstract class OpenIdSecurityConfigurerAdapter extends WebSecurityConfigu
 
     protected ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry beforeAuthorize(HttpSecurity http)
             throws Exception {
-        return http.authorizeRequests().antMatchers(properties.getLoginEndpoint()).permitAll();
+        return http.authorizeRequests();
     }
 
     @Override
@@ -114,8 +114,9 @@ public abstract class OpenIdSecurityConfigurerAdapter extends WebSecurityConfigu
     protected OAuth2ClientAuthenticationProcessingFilter oauth2SsoFilter(ApplicationContext applicationContext,
                                                                          ResourceServerTokenServices tokenServices,
                                                                          OAuth2RestTemplate restTemplate,
-                                                                         AuthenticationDetailsSource<HttpServletRequest, ?> authenticationDetailsSource) {
-        OAuth2ClientAuthenticationProcessingFilter filter = new OAuth2ClientAuthenticationProcessingFilter("/login");
+                                                                         AuthenticationDetailsSource<HttpServletRequest, ?> authenticationDetailsSource,
+                                                                         OpenIdProperties properties) {
+        OAuth2ClientAuthenticationProcessingFilter filter = new OAuth2ClientAuthenticationProcessingFilter(properties.getLoginEndpoint());
         filter.setRestTemplate(restTemplate);
         filter.setTokenServices(tokenServices);
         filter.setAuthenticationDetailsSource(authenticationDetailsSource);

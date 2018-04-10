@@ -33,17 +33,16 @@
         <!-- N2O -->
         <dependency>
             <groupId>net.n2oapp.framework</groupId>
+            <artifactId>n2o-ui</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.n2oapp.framework</groupId>
             <artifactId>n2o-access</artifactId>
         </dependency>
         <dependency>
             <groupId>net.n2oapp.framework</groupId>
             <artifactId>n2o-header</artifactId>
         </dependency>
-
-        <!--<dependency>-->
-        <!--<groupId>net.n2oapp.framework</groupId>-->
-        <!--<artifactId>n2o-context</artifactId>-->
-        <!--</dependency>-->
         <!-- /N2O -->
 
         <!-- AUTH -->
