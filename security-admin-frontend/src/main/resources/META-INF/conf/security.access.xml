@@ -1,0 +1,42 @@
+<access xmlns="http://n2oapp.net/framework/config/schema/access-schema-1.0">
+
+    <guest-access>
+        <object-access object-id="blank"/>
+    </guest-access>
+
+
+    <role id="user_role">
+        <object-access object-id="user" actions="*"/>
+        <object-access object-id="role" actions="*"/>
+    </role>
+
+
+    <role id="user.read">
+        <object-access object-id="${sec.admin.user.object.id}"/>
+    </role>
+
+    <role id="role.read">
+        <object-access object-id="${sec.admin.role.object.id}"/>
+    </role>
+
+    <role id="user.edit">
+        <object-access object-id="${sec.admin.user.object.id}"/>
+        <object-access object-id="${sec.admin.user.object.id}" actions="create,update,delete,changeUserActive"/>
+    </role>
+
+    <role id="role.edit">
+        <object-access object-id="${sec.admin.role.object.id}"/>
+        <object-access object-id="${sec.admin.role.object.id}" actions="create,update,delete"/>
+    </role>
+
+    <!-- Проверка прав доступа к динамическим объектам-->
+    <role id="one.dynamic.object">
+        <object-access object-id="object\$.*">
+            <filter field-id="id" type="eq" value="1"/>
+        </object-access>
+    </role>
+
+    <role id="all.dynamic.object">
+        <object-access object-id="object\$.*"/>
+    </role>
+</access>

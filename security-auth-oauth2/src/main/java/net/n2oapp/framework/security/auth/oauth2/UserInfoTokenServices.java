@@ -23,8 +23,10 @@ import java.util.stream.Collectors;
  *
  */
 public class UserInfoTokenServices implements ResourceServerTokenServices {
-	private static final String[] PRINCIPAL_KEYS = new String[] {"user", "username",
-			"userid", "user_id", "login", "id", "name", "sub"};
+	private static final String[] PRINCIPAL_KEYS = new String[] {"user", "username", "preferred_username",
+			"login", "userid", "user_id", "id", "name", "sub"};
+
+	private static final String[] AUTHORITIES_KEYS = new String[] {"roles", "authorities"};
 
 	private final String userInfoEndpointUrl;
 
@@ -85,7 +87,7 @@ public class UserInfoTokenServices implements ResourceServerTokenServices {
 	}
 
 	private List<GrantedAuthority> getAuthorities(Map<String, Object> map) {
-		Object roles = map.get("roles");
+		Object roles = extractAuthorities(map);
 		if (roles instanceof Collection) {
 			Collection<String> roleList = (Collection<String>) roles;
 			return roleList.stream().map(RoleGrantedAuthority::new).collect(Collectors.toList());
@@ -105,6 +107,15 @@ public class UserInfoTokenServices implements ResourceServerTokenServices {
 
 	public Object extractPrincipal(Map<String, Object> map) {
 		for (String key : PRINCIPAL_KEYS) {
+			if (map.containsKey(key)) {
+				return map.get(key);
+			}
+		}
+		return null;
+	}
+
+	public Object extractAuthorities(Map<String, Object> map) {
+		for (String key : AUTHORITIES_KEYS) {
 			if (map.containsKey(key)) {
 				return map.get(key);
 			}
