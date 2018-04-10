@@ -1,4 +1,4 @@
-package net.n2oapp.security.admin.rest.api;
+package net.n2oapp.security.admin.rest.client;
 
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -11,6 +11,7 @@ import java.util.List;
 /**
  * Преобразоваине типа для Jackson
  */
+@Deprecated
 public class RestPage<T> extends PageImpl<T>{
 
     private long totalElements;

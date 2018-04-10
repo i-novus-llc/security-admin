@@ -9,4 +9,6 @@
     <context:annotation-config/>
     <context:component-scan base-package="net.n2oapp.security.admin.frontend"/>
 
+    <bean class="net.n2oapp.security.admin.rest.client.RestClientConfiguration"/>
+
 </beans>

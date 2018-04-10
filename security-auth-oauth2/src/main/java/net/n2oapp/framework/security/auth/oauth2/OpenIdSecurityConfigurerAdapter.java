@@ -1,8 +1,10 @@
 package net.n2oapp.framework.security.auth.oauth2;
 
+import net.n2oapp.security.admin.api.service.UserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
@@ -81,9 +83,11 @@ public abstract class OpenIdSecurityConfigurerAdapter extends WebSecurityConfigu
 
     @Bean
     protected ResourceServerTokenServices userInfoServices(OpenIdProperties properties,
-                                                           OAuth2RestTemplate oauth2RestTemplate) {
+                                                           OAuth2RestTemplate oauth2RestTemplate,
+                                                           UserDetailsService userDetailsService) {
         UserInfoTokenServices userInfoTokenServices = new UserInfoTokenServices(properties.getUserInfoUrl(), properties.getClientId());
         userInfoTokenServices.setRestTemplate(oauth2RestTemplate);
+        userInfoTokenServices.setUserDetailsService(userDetailsService);
         return userInfoTokenServices;
     }
 

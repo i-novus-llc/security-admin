@@ -42,7 +42,6 @@ public class UserEntity {
     /**
      * Электронный адрес пользователя
      */
-    @NotNull
     @Column(name = "email")
     private String email;
 
@@ -50,15 +49,12 @@ public class UserEntity {
     /**
      * Фамилия
      */
-    @NotNull
     @Column(name = "surname")
     private String surname;
 
     /**
      * Имя
      */
-
-    @NotNull
     @Column(name = "name")
     private String name;
 
@@ -71,8 +67,6 @@ public class UserEntity {
     /**
      * Пароль пользователя
      */
-
-    @NotNull
     @Column(name = "password")
     private String password;
 
@@ -85,8 +79,6 @@ public class UserEntity {
     /**
      * Роли пользователя
      */
-
-    @NotNull
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(schema = "sec", name = "user_role",
             joinColumns = {@JoinColumn(name = "user_id")},

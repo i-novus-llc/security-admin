@@ -1,10 +1,15 @@
 package net.n2oapp.framework.security.auth.oauth2;
 
+import net.n2oapp.security.admin.api.model.UserDetailsToken;
+import net.n2oapp.security.admin.api.service.UserDetailsService;
+import net.n2oapp.security.auth.User;
+import net.n2oapp.security.auth.authority.PermissionGrantedAuthority;
 import net.n2oapp.security.auth.authority.RoleGrantedAuthority;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.client.OAuth2RestOperations;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.BaseOAuth2ProtectedResourceDetails;
@@ -28,11 +33,21 @@ public class UserInfoTokenServices implements ResourceServerTokenServices {
 
 	private static final String[] AUTHORITIES_KEYS = new String[] {"roles", "authorities"};
 
+	private static final String[] SURNAME_KEYS = new String[] {"surname", "secondname"};
+
+	private static final String[] NAME_KEYS = new String[] {"name", "firstname"};
+
+	private static final String[] PATRONYMIC_KEYS = new String[] {"patronymic"};
+
+	private static final String[] EMAIL_KEYS = new String[] {"email", "e-mail"};
+
 	private final String userInfoEndpointUrl;
 
 	private final String clientId;
 
 	private OAuth2RestOperations restTemplate;
+
+	private UserDetailsService userDetailsService;
 
 	private String tokenType = DefaultOAuth2AccessToken.BEARER_TYPE;
 
@@ -44,6 +59,10 @@ public class UserInfoTokenServices implements ResourceServerTokenServices {
 	public UserInfoTokenServices(String userInfoEndpointUrl, String clientId) {
 		this.userInfoEndpointUrl = userInfoEndpointUrl;
 		this.clientId = clientId;
+	}
+
+	public void setUserDetailsService(UserDetailsService userDetailsService) {
+		this.userDetailsService = userDetailsService;
 	}
 
 	public void setTokenType(String tokenType) {
@@ -63,8 +82,7 @@ public class UserInfoTokenServices implements ResourceServerTokenServices {
 	//		Assert.notNull(principalExtractor, "PrincipalExtractor must not be null");
 //	public void setPrincipalExtractor(PrincipalExtractor principalExtractor) {
 
-//	@Override
-
+	@Override
 	public OAuth2Authentication loadAuthentication(String accessToken)
 			throws AuthenticationException, InvalidTokenException {
 		Map<String, Object> map = getMap(this.userInfoEndpointUrl, accessToken);
@@ -75,24 +93,19 @@ public class UserInfoTokenServices implements ResourceServerTokenServices {
 	}
 
 	private OAuth2Authentication extractAuthentication(Map<String, Object> map) {
-		Object principal = getPrincipal(map);
+		Object result = getPrincipal(map);
+		if (result == null) {
+			throw new UsernameNotFoundException("Can't find user! There are not username!");
+		}
+		UserDetails principal = (UserDetails) result;
 //		List<GrantedAuthority> authorities = this.authoritiesExtractor
 //				.extractAuthorities(map);
 		OAuth2Request request = new OAuth2Request(null, this.clientId, null, true, null,
 				null, null, null, null);
 		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-				principal, "N/A", getAuthorities(map));
+				principal, "N/A", principal.getAuthorities());
 		token.setDetails(map);
 		return new OAuth2Authentication(request, token);
-	}
-
-	private List<GrantedAuthority> getAuthorities(Map<String, Object> map) {
-		Object roles = extractAuthorities(map);
-		if (roles instanceof Collection) {
-			Collection<String> roleList = (Collection<String>) roles;
-			return roleList.stream().map(RoleGrantedAuthority::new).collect(Collectors.toList());
-		}
-		return Collections.singletonList(new RoleGrantedAuthority("ROLE_USER"));
 	}
 
 	/**
@@ -101,21 +114,39 @@ public class UserInfoTokenServices implements ResourceServerTokenServices {
 	 * @return the principal or {@literal "unknown"}
 	 */
 	protected Object getPrincipal(Map<String, Object> map) {
-		Object principal = extractPrincipal(map);
-		return (principal == null ? "unknown" : principal);
+		return extractPrincipal(map);
 	}
 
 	public Object extractPrincipal(Map<String, Object> map) {
 		for (String key : PRINCIPAL_KEYS) {
 			if (map.containsKey(key)) {
-				return map.get(key);
+				List<String> roleList = new ArrayList<>((Collection<String>)extractFromMap(AUTHORITIES_KEYS, map));
+				String username = (String) map.get(key);
+				UserDetailsToken token = new UserDetailsToken();
+				token.setUsername(username);
+				token.setRoleNames(roleList);
+				net.n2oapp.security.admin.api.model.User user = userDetailsService.loadUserDetails(token);
+				List<GrantedAuthority> authorities = new ArrayList<>();
+				if (user.getRoles() != null) {
+					authorities.addAll(user.getRoles().stream().map(r -> new RoleGrantedAuthority(r.getCode())).collect(Collectors.toList()));
+					authorities.addAll(user.getRoles().stream().filter(r -> r.getPermissions() != null).flatMap(r -> r.getPermissions().stream())
+							.map(p -> new PermissionGrantedAuthority(p.getCode())).collect(Collectors.toList()));
+				}
+				Object surname = extractFromMap(SURNAME_KEYS, map);
+				Object name = extractFromMap(NAME_KEYS, map);
+				Object patronymic = extractFromMap(PATRONYMIC_KEYS, map);
+				Object email = extractFromMap(EMAIL_KEYS, map);
+				UserDetails userDetails = new User(username, "N/A", authorities, surname == null ? null : (String) surname,
+						name == null ? null : (String) name, patronymic == null ? null : (String) patronymic,
+						email == null ? null : (String) email);
+				return userDetails;
 			}
 		}
 		return null;
 	}
 
-	public Object extractAuthorities(Map<String, Object> map) {
-		for (String key : AUTHORITIES_KEYS) {
+	public Object extractFromMap(String[] keys, Map<String, Object> map) {
+		for (String key : keys) {
 			if (map.containsKey(key)) {
 				return map.get(key);
 			}
