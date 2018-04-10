@@ -37,7 +37,8 @@ public class RestUserCriteria extends UserCriteria {
     @QueryParam("page")
     @Override
     public void setPage(int page) {
-        super.setPage(page);
+        //todo  у n2o отсчет начинается с 1
+        super.setPage(page - 1);
     }
 
     @QueryParam("size")
