@@ -1,17 +1,15 @@
 package net.n2oapp.security.admin.rest.impl;
 
 import net.n2oapp.security.admin.api.model.User;
-import net.n2oapp.security.admin.api.model.UserDetailsToken;
 import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.api.service.UserDetailsService;
 import net.n2oapp.security.admin.api.service.UserService;
 import net.n2oapp.security.admin.rest.api.UserRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
+import net.n2oapp.security.admin.rest.api.criteria.RestUserDetailsToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
-
-import java.util.List;
 
 
 /**
@@ -56,10 +54,7 @@ public class UserRestServiceImpl implements UserRestService {
     }
 
     @Override
-    public User loadDetails(String username, List<String> roleNames) {
-        UserDetailsToken token = new UserDetailsToken();
-        token.setUsername(username);
-        token.setRoleNames(roleNames);
+    public User loadDetails(RestUserDetailsToken token) {
         return userDetailsService.loadUserDetails(token);
     }
 }
