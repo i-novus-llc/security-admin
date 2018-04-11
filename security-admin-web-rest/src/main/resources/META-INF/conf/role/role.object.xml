@@ -9,9 +9,8 @@
                 <n2o:rest method="POST">
                     <n2o:query>${sec.admin.rest.url}/roles/</n2o:query>
                     <n2o:error-mapping>
-                        <n2o:message param-name=""/>
-                        <n2o:detailed-message param-name=""/>
-                        <n2o:stack-trace param-name=""/>
+                        <n2o:message param-name="message"/>
+                        <n2o:stack-trace param-name="staktrace"/>
                     </n2o:error-mapping>
                 </n2o:rest>
             </invocation>
@@ -32,6 +31,10 @@
             <invocation>
                 <n2o:rest method="PUT">
                     <n2o:query>${sec.admin.rest.url}/roles/</n2o:query>
+                    <n2o:error-mapping>
+                        <n2o:message param-name="message"/>
+                        <n2o:stack-trace param-name="stacktrace"/>
+                    </n2o:error-mapping>
                 </n2o:rest>
             </invocation>
             <in-parameters>
@@ -52,6 +55,10 @@
             <invocation>
                 <n2o:rest method="DELETE">
                     <n2o:query>${sec.admin.rest.url}/roles/{id}</n2o:query>
+                    <n2o:error-mapping>
+                        <n2o:message param-name="message"/>
+                        <n2o:stack-trace param-name="stacktrace"/>
+                    </n2o:error-mapping>
                 </n2o:rest>
             </invocation>
             <in-parameters>
