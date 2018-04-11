@@ -53,9 +53,7 @@
             <domain>object[]</domain>
             <display>permissions</display>
             <filters>
-                <filter type="in" filter-field="permissionFilter*.id" domain="integer[]">
-                    permissions=:permissionFilter*.id
-                </filter>
+                <filter type="in" filter-field="permissionFilter*.id" domain="integer[]">permissions=:permissionFilter*.id</filter>
             </filters>
             <name>Права доступа</name>
         </field>
