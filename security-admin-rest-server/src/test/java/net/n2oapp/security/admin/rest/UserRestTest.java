@@ -6,6 +6,8 @@ import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.rest.api.UserRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
+import net.n2oapp.security.admin.rest.api.criteria.RestUserDetailsToken;
+import org.apache.cxf.jaxrs.client.JAXRSClientFactoryBean;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,17 +66,26 @@ public class UserRestTest {
 
     @Test
     public void testUserDetails() throws Exception {
-        User user = client.loadDetails("test", Arrays.asList("code1", "code2"));
+        RestUserDetailsToken token = new RestUserDetailsToken();
+        token.setUsername("test");
+        token.setRoleNames(Arrays.asList("code1", "code2"));
+        User user = client.loadDetails(token);
         assert user.getUsername().equals("test");
         assert user.getRoles().size() == 2;
         assert user.getRoles().get(0).getPermissions().size() == 1;
         // проверяем удаление роли
-        user = client.loadDetails("test", Arrays.asList("code1"));
+        token = new RestUserDetailsToken();
+        token.setUsername("test");
+        token.setRoleNames(Arrays.asList("code1"));
+        user = client.loadDetails(token);
         assert user.getUsername().equals("test");
         assert user.getRoles().size() == 1;
         assert user.getRoles().get(0).getPermissions().size() == 1;
         // проверяем добавление новой роли
-        user = client.loadDetails("test", Arrays.asList("code1", "code3"));
+        token = new RestUserDetailsToken();
+        token.setUsername("test");
+        token.setRoleNames(Arrays.asList("code1", "code3"));
+        user = client.loadDetails(token);
         assert user.getUsername().equals("test");
         assert user.getRoles().size() == 2;
         assert user.getRoles().get(0).getPermissions().size() == 1;

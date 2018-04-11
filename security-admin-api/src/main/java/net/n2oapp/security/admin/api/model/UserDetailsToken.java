@@ -9,6 +9,7 @@ import java.util.List;
  */
 @Data
 public class UserDetailsToken {
+    private String guid;
     private String username;
     private String name;
     private String surname;

@@ -33,11 +33,28 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (userEntity == null) {
             userEntity = new UserEntity();
             userEntity.setUsername(userDetails.getUsername());
+            userEntity.setGuid(userDetails.getGuid());
+            userEntity.setEmail(userDetails.getEmail());
+            userEntity.setSurname(userDetails.getSurname());
+            userEntity.setName(userDetails.getName());
+            userEntity.setIsActive(true);
             if (userDetails.getRoleNames() != null){
                 userEntity.setRoleList(userDetails.getRoleNames().stream().map(name -> getOrCreateRole(name)).collect(Collectors.toList()));
             }
             userRepository.save(userEntity);
         } else {
+            if (userDetails.getGuid() != null) {
+                userEntity.setGuid(userDetails.getGuid());
+            }
+            if (userDetails.getEmail() != null) {
+                userEntity.setEmail(userDetails.getEmail());
+            }
+            if (userDetails.getSurname() != null) {
+                userEntity.setSurname(userDetails.getSurname());
+            }
+            if (userDetails.getName() != null) {
+                userEntity.setName(userDetails.getName());
+            }
             if (userDetails.getRoleNames() == null) {
                 userEntity.getRoleList().clear();
             } else {

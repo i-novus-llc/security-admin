@@ -37,9 +37,9 @@ public class UserInfoTokenServices implements ResourceServerTokenServices {
 
 	private static final String[] NAME_KEYS = new String[] {"name", "firstname"};
 
-	private static final String[] PATRONYMIC_KEYS = new String[] {"patronymic"};
-
 	private static final String[] EMAIL_KEYS = new String[] {"email", "e-mail"};
+
+	private static final String[] GUID_KEYS = new String[] {"sub"};
 
 	private final String userInfoEndpointUrl;
 
@@ -122,9 +122,18 @@ public class UserInfoTokenServices implements ResourceServerTokenServices {
 			if (map.containsKey(key)) {
 				List<String> roleList = new ArrayList<>((Collection<String>)extractFromMap(AUTHORITIES_KEYS, map));
 				String username = (String) map.get(key);
+				String surname = extractFromMap(SURNAME_KEYS, map) == null ? null : (String) extractFromMap(SURNAME_KEYS, map) ;
+				String name = extractFromMap(NAME_KEYS, map) == null ? null : (String) extractFromMap(NAME_KEYS, map);
+				String email = extractFromMap(EMAIL_KEYS, map) == null ? null : (String) extractFromMap(EMAIL_KEYS, map);
+
 				UserDetailsToken token = new UserDetailsToken();
 				token.setUsername(username);
 				token.setRoleNames(roleList);
+				token.setGuid((String) extractFromMap(GUID_KEYS, map));
+				token.setSurname(surname);
+				token.setName(name);
+				token.setEmail(email);
+
 				net.n2oapp.security.admin.api.model.User user = userDetailsService.loadUserDetails(token);
 				List<GrantedAuthority> authorities = new ArrayList<>();
 				if (user.getRoles() != null) {
@@ -132,13 +141,8 @@ public class UserInfoTokenServices implements ResourceServerTokenServices {
 					authorities.addAll(user.getRoles().stream().filter(r -> r.getPermissions() != null).flatMap(r -> r.getPermissions().stream())
 							.map(p -> new PermissionGrantedAuthority(p.getCode())).collect(Collectors.toList()));
 				}
-				Object surname = extractFromMap(SURNAME_KEYS, map);
-				Object name = extractFromMap(NAME_KEYS, map);
-				Object patronymic = extractFromMap(PATRONYMIC_KEYS, map);
-				Object email = extractFromMap(EMAIL_KEYS, map);
-				UserDetails userDetails = new User(username, "N/A", authorities, surname == null ? null : (String) surname,
-						name == null ? null : (String) name, patronymic == null ? null : (String) patronymic,
-						email == null ? null : (String) email);
+				UserDetails userDetails = new User(username, "N/A", authorities, surname,
+						name, null, email);
 				return userDetails;
 			}
 		}
