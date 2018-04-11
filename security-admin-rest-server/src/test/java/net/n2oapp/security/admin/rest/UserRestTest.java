@@ -72,7 +72,7 @@ public class UserRestTest {
         User user = client.loadDetails(token);
         assert user.getUsername().equals("test");
         assert user.getRoles().size() == 2;
-        assert user.getRoles().get(0).getPermissions().size() == 1;
+        assert user.getRoles().get(0).getPermissions().size() == 2;
         // проверяем удаление роли
         token = new RestUserDetailsToken();
         token.setUsername("test");
@@ -80,7 +80,7 @@ public class UserRestTest {
         user = client.loadDetails(token);
         assert user.getUsername().equals("test");
         assert user.getRoles().size() == 1;
-        assert user.getRoles().get(0).getPermissions().size() == 1;
+        assert user.getRoles().get(0).getPermissions().size() == 2;
         // проверяем добавление новой роли
         token = new RestUserDetailsToken();
         token.setUsername("test");
@@ -88,7 +88,7 @@ public class UserRestTest {
         user = client.loadDetails(token);
         assert user.getUsername().equals("test");
         assert user.getRoles().size() == 2;
-        assert user.getRoles().get(0).getPermissions().size() == 1;
+        assert user.getRoles().get(0).getPermissions().size() == 2;
     }
 
     private User create() {
