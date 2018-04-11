@@ -7,6 +7,6 @@
     </menu>
     <user-menu login-url="login" logout-url="logout"
                registration-url="registration"
-               profile-page-id="#profile"
+               profile-page-id="profile"
                username-context="username"/>
 </header>
