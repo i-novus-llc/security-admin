@@ -5,6 +5,7 @@
 
     <fs:field-set>
         <ctrl:input-text id="name"/>
+        <ctrl:input-text id="code"/>
         <ctrl:input-text id="description"/>
         <ctrl:input-select id="permissionFilter" type="multi" label="Права доступа" cache="off">
             <ctrl:query query-id="${sec.admin.permission.query.id}" value-field-id="id"

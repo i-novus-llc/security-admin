@@ -10,6 +10,7 @@ import org.keycloak.admin.client.resource.RolesResource;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +82,13 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
 
     @Override
     public void updateRole(Role role) {
-
+        RolesResource resource = keycloak().realm(properties.getRealm()).roles();
+        try {
+            resource.get(role.getCode()).toRepresentation();
+        } catch (NotFoundException e) {
+            RoleRepresentation roleRepresentation = map(role);
+            resource.create(roleRepresentation);
+        }
     }
 
     @Override
