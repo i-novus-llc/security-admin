@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,7 +34,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (userEntity == null) {
             userEntity = new UserEntity();
             userEntity.setUsername(userDetails.getUsername());
-            userEntity.setGuid(userDetails.getGuid());
+            userEntity.setGuid(userDetails.getGuid() == null ? null : UUID.fromString(userDetails.getGuid()));
             userEntity.setEmail(userDetails.getEmail());
             userEntity.setSurname(userDetails.getSurname());
             userEntity.setName(userDetails.getName());
@@ -44,7 +45,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             userRepository.save(userEntity);
         } else {
             if (userDetails.getGuid() != null) {
-                userEntity.setGuid(userDetails.getGuid());
+                userEntity.setGuid(userDetails.getGuid() == null ? null : UUID.fromString(userDetails.getGuid()));
             }
             if (userDetails.getEmail() != null) {
                 userEntity.setEmail(userDetails.getEmail());
@@ -84,7 +85,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     private RoleEntity getOrCreateRole(String name) {
-        RoleEntity roleEntity = roleRepository.findOneByName(name);
+        RoleEntity roleEntity = roleRepository.findOneByCode(name);
         if (roleEntity == null) {
             roleEntity = new RoleEntity();
             roleEntity.setName(name);
@@ -98,7 +99,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (entity == null) return null;
         User model = new User();
         model.setId(entity.getId());
-        model.setGuid(entity.getGuid());
+        model.setGuid(entity.getGuid() == null ? null : entity.getGuid().toString());
         model.setUsername(entity.getUsername());
         model.setName(entity.getName());
         model.setSurname(entity.getSurname());

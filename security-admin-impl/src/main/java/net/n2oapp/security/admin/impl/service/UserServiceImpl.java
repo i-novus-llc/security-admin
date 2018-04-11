@@ -19,6 +19,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -113,7 +114,7 @@ public class UserServiceImpl implements UserService {
     private UserEntity entityForm(UserForm model) {
         UserEntity entity = new UserEntity();
         entity.setId(model.getId());
-        entity.setGuid(model.getGuid());
+        entity.setGuid(model.getGuid() == null ? null : UUID.fromString(model.getGuid()));
         entity.setUsername(model.getUsername());
         entity.setName(model.getName());
         entity.setSurname(model.getSurname());
@@ -129,7 +130,7 @@ public class UserServiceImpl implements UserService {
     private UserEntity entity(User model) {
         UserEntity entity = new UserEntity();
         entity.setId(model.getId());
-        entity.setGuid(model.getGuid());
+        entity.setGuid(model.getGuid() == null ? null : UUID.fromString(model.getGuid()));
         entity.setUsername(model.getUsername());
         entity.setName(model.getName());
         entity.setSurname(model.getSurname());
@@ -146,7 +147,7 @@ public class UserServiceImpl implements UserService {
         if (entity == null) return null;
         User model = new User();
         model.setId(entity.getId());
-        model.setGuid(entity.getGuid());
+        model.setGuid(entity.getGuid() == null ? null : entity.getGuid().toString());
         model.setUsername(entity.getUsername());
         model.setName(entity.getName());
         model.setSurname(entity.getSurname());

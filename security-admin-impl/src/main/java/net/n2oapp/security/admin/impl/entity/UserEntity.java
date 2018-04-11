@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Сущность Пользователь
@@ -29,7 +30,7 @@ public class UserEntity {
      * Идентификатор пользователя в сторонних системах
      */
     @Column(name = "guid")
-    private String guid;
+    private UUID guid;
 
 
     /**
