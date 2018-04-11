@@ -3,16 +3,13 @@ package net.n2oapp.security.admin.rest.api;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
-import net.n2oapp.security.admin.api.criteria.RoleCriteria;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.RoleForm;
-import net.n2oapp.security.admin.api.service.RoleService;
 import net.n2oapp.security.admin.rest.api.criteria.RestRoleCriteria;
 import org.springframework.data.domain.Page;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.util.List;
 
 /**
  * REST сервис управления ролями  пользователей

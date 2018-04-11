@@ -1,11 +1,10 @@
 package net.n2oapp.security.admin.rest.client;
 
-import net.n2oapp.security.admin.api.criteria.BaseCriteria;
 import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.service.PermissionService;
 import net.n2oapp.security.admin.rest.api.PermissionRestService;
-import net.n2oapp.security.admin.rest.api.criteria.RestBaseCriteria;
-import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 /**
  * Прокси реализация сервиса управления правами доступа, для вызова rest
@@ -39,11 +38,17 @@ public class PermissionServiceRestClient implements PermissionService {
     }
 
     @Override
-    public Page<Permission> findAll(BaseCriteria criteria) {
-        RestBaseCriteria baseCriteria = new RestBaseCriteria();
-        baseCriteria.setPage(criteria.getPageNumber());
-        baseCriteria.setSize(criteria.getPageSize());
-        baseCriteria.setOrders(criteria.getOrders());
-        return client.findAll(baseCriteria);
+    public List<Permission> getAll() {
+        return client.getAll(null, null).getContent();
+    }
+
+    @Override
+    public List<Permission> getAllByParentId(Integer parentId) {
+        return client.getAll(parentId, null).getContent();
+    }
+
+    @Override
+    public List<Permission> getAllByParentIdIsNull() {
+        return client.getAll(null, true).getContent();
     }
 }

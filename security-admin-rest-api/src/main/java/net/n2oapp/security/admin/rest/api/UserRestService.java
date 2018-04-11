@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
-import net.n2oapp.security.admin.api.service.UserService;
 import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
 import org.springframework.data.domain.Page;
 

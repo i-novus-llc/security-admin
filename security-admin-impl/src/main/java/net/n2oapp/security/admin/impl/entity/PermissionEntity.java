@@ -2,6 +2,7 @@ package net.n2oapp.security.admin.impl.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.util.List;
@@ -36,6 +37,9 @@ public class PermissionEntity {
 
     @Column(name = "parent_id")
     private Integer parentId;
+
+    @Formula("(SELECT count(*) != 0 from sec.permission c where c.parent_id = id)")
+    private Boolean hasChildren;
 
 
     @ManyToMany(mappedBy = "permissionList")

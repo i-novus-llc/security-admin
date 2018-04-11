@@ -23,7 +23,7 @@ public class BaseCriteria implements Pageable {
         this(page, size);
         this.orders = StreamSupport.stream(
                 Spliterators.spliteratorUnknownSize(sort.iterator(),
-                        Spliterator.ORDERED), false).collect(Collectors.<Sort.Order> toList());
+                        Spliterator.ORDERED), false).collect(Collectors.<Sort.Order>toList());
     }
 
     public BaseCriteria(int page, int size) {
@@ -56,8 +56,7 @@ public class BaseCriteria implements Pageable {
     public Sort getSort() {
         if (orders != null && !orders.isEmpty()) {
             return new Sort(orders);
-        }
-        else
+        } else
             return null;
     }
 

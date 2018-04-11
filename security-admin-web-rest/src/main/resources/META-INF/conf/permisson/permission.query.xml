@@ -46,6 +46,10 @@
             <id>parentId</id>
             <domain>integer</domain>
             <display>parentId</display>
+            <filters>
+                <filter type="eq" filter-field="parentId">parentId=:parentId</filter>
+                <filter type="isNull" filter-field="parentIdIsNull">parentIdIsNull=true</filter>
+            </filters>
         </field>
 
         <field>

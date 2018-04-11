@@ -23,15 +23,13 @@
                     <wgt:filters opened="true">
                         <ctrl:input-text id="name"/>
                         <ctrl:input-text id="description"/>
-                        <ctrl:input-select id="permissionFilter" type="multi" label="Права доступа" cache="off">
-                            <ctrl:query query-id="${sec.admin.permission.query.id}" value-field-id="id"
-                                        label-field-id="name"/>
-                        </ctrl:input-select>
-                        <!--<ctrl:input-select-tree id="permissionFilter" ajax="false" label="Права доступа" checkboxes="true" >-->
-                        <!--<ctrl:inheritance-nodes parent-field-id="parentId" label-field-id="name" value-field-id="id"-->
-                        <!--query-id="${sec.admin.permission.query.id}" has-children-field-id="hasChildren" search-field-id="name">-->
-                        <!--</ctrl:inheritance-nodes>-->
-                        <!--</ctrl:input-select-tree>-->
+                        <ctrl:input-select-tree id="permissionFilter" ajax="false" label="Права доступа"
+                                                checkboxes="true">
+                            <ctrl:inheritance-nodes parent-field-id="parentId" label-field-id="name" value-field-id="id"
+                                                    query-id="${sec.admin.permission.query.id}"
+                                                    has-children-field-id="hasChildren" search-field-id="name">
+                            </ctrl:inheritance-nodes>
+                        </ctrl:input-select-tree>
                     </wgt:filters>
                     <wgt:action-menu>
                         <wgt:menu-item id="create" label="Создать" context="false">

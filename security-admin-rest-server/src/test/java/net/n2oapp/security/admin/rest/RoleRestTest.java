@@ -6,7 +6,6 @@ import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.RoleForm;
 import net.n2oapp.security.admin.rest.api.RoleRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestRoleCriteria;
-import org.apache.cxf.jaxrs.client.spring.EnableJaxRsProxyClient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

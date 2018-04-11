@@ -1,14 +1,15 @@
 package net.n2oapp.security.admin.impl.service;
 
-import net.n2oapp.security.admin.api.criteria.BaseCriteria;
 import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.service.PermissionService;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.repository.PermissionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Сервис прав доступа
@@ -44,10 +45,20 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public Page<Permission> findAll(BaseCriteria criteria) {
-        Page<PermissionEntity> all = permissionRepository.findAll(criteria);
-        return all.map(this::model);
+    public List<Permission> getAll() {
+        return permissionRepository.findAll().stream().map(this::model).collect(Collectors.toList());
     }
+
+    @Override
+    public List<Permission> getAllByParentId(Integer parentId) {
+        return permissionRepository.findByParentId(parentId).stream().map(this::model).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Permission> getAllByParentIdIsNull() {
+        return permissionRepository.findByParentIdIsNull().stream().map(this::model).collect(Collectors.toList());
+    }
+
 
     private PermissionEntity entity(Permission model) {
         if (model == null) return null;
@@ -66,6 +77,7 @@ public class PermissionServiceImpl implements PermissionService {
         model.setName(entity.getName());
         model.setCode(entity.getCode());
         model.setParentId(entity.getParentId());
+        model.setHasChildren(entity.getHasChildren());
         return model;
     }
 }

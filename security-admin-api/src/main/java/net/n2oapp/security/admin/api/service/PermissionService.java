@@ -1,8 +1,8 @@
 package net.n2oapp.security.admin.api.service;
 
-import net.n2oapp.security.admin.api.criteria.BaseCriteria;
 import net.n2oapp.security.admin.api.model.Permission;
-import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 /**
  *  Сервис управления правами доступа
@@ -38,10 +38,23 @@ public interface PermissionService {
     Permission getById(Integer id);
 
     /**
-     * Найти все права доступа
-     *
-     * @return Страница найденных пользователей
+     * Найти все права доступаии поиска
+     * @return Страница найденных всех прав доступа
      */
-    Page<Permission> findAll(BaseCriteria criteria);
+    List<Permission> getAll();
 
+    /**
+     * Найти все права доступаии поиска по идентификатору родительского элемента
+     *
+     * @param parentId Идентификатор
+     * @return Страница найденных дочерних прав доступа
+     */
+    List<Permission> getAllByParentId(Integer parentId);
+
+    /**
+     * Найти все права доступаии поиска по идентификатору родительского элемента
+     *
+     * @return Страница найденных корневых прав доступа
+     */
+    List<Permission> getAllByParentIdIsNull();
 }
