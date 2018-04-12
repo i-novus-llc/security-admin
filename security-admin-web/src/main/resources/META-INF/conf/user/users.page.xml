@@ -64,7 +64,7 @@
                         </wgt:menu-item>
                         <wgt:menu-item id="update" context="true" label="Изменить">
                             <wgt:event>
-                                <wgt:show-modal-form form-id="userForm">
+                                <wgt:show-modal-form form-id="userUpdateForm">
                                     <wgt:edit>
                                         <wgt:invoke-action action-id="update"/>
                                     </wgt:edit>

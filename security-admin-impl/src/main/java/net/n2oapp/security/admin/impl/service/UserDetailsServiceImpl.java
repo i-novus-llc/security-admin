@@ -44,6 +44,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             }
             userRepository.save(userEntity);
         } else {
+            userEntity.setIsActive(true);
             if (userDetails.getGuid() != null) {
                 userEntity.setGuid(userDetails.getGuid() == null ? null : UUID.fromString(userDetails.getGuid()));
             }

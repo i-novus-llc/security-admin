@@ -16,6 +16,7 @@ public class UserForm {
     private String surname;
     private String name;
     private String patronymic;
+    private String newPassword;
     private String password;
     private String passwordCheck;
     private Boolean isActive;

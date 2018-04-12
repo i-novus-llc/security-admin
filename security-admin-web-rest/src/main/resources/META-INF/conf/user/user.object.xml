@@ -20,7 +20,7 @@
                 <param name="surname" mapping="['surname']" domain="string" required="true"/>
                 <param name="name" mapping="['name']" domain="string" required="true"/>
                 <param name="patronymic" mapping="['patronymic']" domain="string"/>
-                <param name="password" mapping="['password']" domain="string"/>
+                <param name="password" mapping="['password']" domain="string" required="true"/>
                 <param name="passwordCheck" mapping="['passwordCheck']" domain="string"/>
                 <param name="isActive" mapping="['isActive']" domain="boolean" value="false"/>
                 <param name="roles*.id" mapping="['roles']" domain="integer[]" required="false"/>
@@ -29,7 +29,9 @@
                 <param name="id" mapping="['id']" domain="integer"/>
             </out-parameters>
             <success-text>Пользователь сохранен</success-text>
-            <validations activate="all"/>
+            <validations activate="blackList">
+                <validation ref-id="newPasswordCheckValidation"/>
+            </validations>
         </action>
 
         <action id="update">
@@ -50,7 +52,7 @@
                 <param name="surname" mapping="['surname']" domain="string" required="true"/>
                 <param name="name" mapping="['name']" domain="string" required="true"/>
                 <param name="patronymic" mapping="['patronymic']" domain="string"/>
-                <param name="password" mapping="['password']" domain="string" required="true"/>
+                <param name="newPassword" mapping="['newPassword']" domain="string"/>
                 <param name="passwordCheck" mapping="['passwordCheck']" domain="string"/>
                 <param name="isActive" mapping="['isActive']" domain="boolean" value="false"/>
                 <param name="roles*.id" mapping="['roles']" domain="integer[]" required="false"/>
@@ -60,6 +62,7 @@
             </out-parameters>
             <success-text>Пользователь сохранен</success-text>
             <validations activate="blackList">
+                <validation ref-id="passwordCheckValidation"/>
                 <validation ref-id="uniqUsername"/>
             </validations>
         </action>
@@ -157,6 +160,17 @@
                 <![CDATA[
                     if (typeof passwordCheck != 'undefined' && passwordCheck != null && passwordCheck != '') {
                         passwordCheck === password;
+                     }else true;
+                ]]>
+            </expression>
+        </condition>
+
+        <condition id="newPasswordCheckValidation" level="error">
+            <message>Введённые пароли не совпадают</message>
+            <expression on="passwordCheck,newPassword">
+                <![CDATA[
+                    if (typeof passwordCheck != 'undefined' && passwordCheck != null && passwordCheck != '') {
+                        passwordCheck === newPassword;
                      }else true;
                 ]]>
             </expression>

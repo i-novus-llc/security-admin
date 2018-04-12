@@ -61,7 +61,8 @@ public class UserServiceImpl implements UserService {
         checkUsername(user.getUsername());
         checkEmail(user.getEmail());
         checkPassword(user.getPassword(), user.getPasswordCheck(), user.getId());
-        UserEntity savedUser = userRepository.save(entityForm(user));
+        UserEntity entity = new UserEntity();
+        UserEntity savedUser = userRepository.save(entityForm(entity, user));
         User result = model(savedUser);
         User providerResult = provider.createUser(result);
         if (providerResult != null) {
@@ -76,11 +77,16 @@ public class UserServiceImpl implements UserService {
         checkUsernameUniq(user.getId(), user.getUsername());
         checkUsername(user.getUsername());
         checkEmail(user.getEmail());
-        checkPassword(user.getPassword(), user.getPasswordCheck(), user.getId());
-        User result = model(userRepository.save(entityForm(user)));
+        if (user.getNewPassword() != null) {
+            checkPassword(user.getNewPassword(), user.getPasswordCheck(), user.getId());
+        }
+        UserEntity entity = userRepository.getOne(user.getId());
+        User result = model(userRepository.save(entityForm(entity,user)));
+        if (user.getNewPassword() == null) {
+            result.setPassword(null);
+        }
         provider.updateUser(result);
         return result;
-
     }
 
     @Override
@@ -111,16 +117,17 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    private UserEntity entityForm(UserForm model) {
-        UserEntity entity = new UserEntity();
-        entity.setId(model.getId());
+    private UserEntity entityForm(UserEntity entity, UserForm model) {
         entity.setGuid(model.getGuid() == null ? null : UUID.fromString(model.getGuid()));
         entity.setUsername(model.getUsername());
         entity.setName(model.getName());
         entity.setSurname(model.getSurname());
+        entity.setPassword(model.getPassword());
         entity.setPatronymic(model.getPatronymic());
         entity.setIsActive(model.getIsActive());
-        entity.setPassword(model.getPassword());
+        if (model.getNewPassword() != null) {
+            entity.setPassword(model.getNewPassword());
+        }
         entity.setEmail(model.getEmail());
         if (model.getRoles() != null)
             entity.setRoleList(model.getRoles().stream().map(RoleEntity::new).collect(Collectors.toList()));
