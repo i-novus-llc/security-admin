@@ -10,7 +10,7 @@
                     <n2o:query>${sec.admin.rest.url}/users/</n2o:query>
                     <n2o:error-mapping>
                         <n2o:message param-name="message"/>
-                        <n2o:stack-trace param-name="stacktrace"/>
+                        <n2o:stack-trace param-name="stackTrace"/>
                     </n2o:error-mapping>
                 </n2o:rest>
             </invocation>
@@ -38,7 +38,7 @@
                     <n2o:query>${sec.admin.rest.url}/users/</n2o:query>
                     <n2o:error-mapping>
                         <n2o:message param-name="message"/>
-                        <n2o:stack-trace param-name="stacktrace"/>
+                        <n2o:stack-trace param-name="stackTrace"/>
                     </n2o:error-mapping>
                 </n2o:rest>
             </invocation>
@@ -70,7 +70,7 @@
                     <n2o:query>${sec.admin.rest.url}/users/{id}</n2o:query>
                     <n2o:error-mapping>
                         <n2o:message param-name="message"/>
-                        <n2o:stack-trace param-name="stacktrace"/>
+                        <n2o:stack-trace param-name="stackTrace"/>
                     </n2o:error-mapping>
                 </n2o:rest>
             </invocation>
@@ -87,7 +87,7 @@
                     <n2o:query>${sec.admin.rest.url}/users/changeActive/{id}</n2o:query>
                     <n2o:error-mapping>
                         <n2o:message param-name="message"/>
-                        <n2o:stack-trace param-name="stacktrace"/>
+                        <n2o:stack-trace param-name="stackTrace"/>
                     </n2o:error-mapping>
                 </n2o:rest>
             </invocation>

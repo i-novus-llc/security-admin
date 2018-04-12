@@ -6,7 +6,6 @@
         <page page-id="roles" label="Роли"/>
     </menu>
     <user-menu login-url="login" logout-url="logout"
-               registration-url="registration"
                profile-page-id="profile"
                username-context="username"/>
 </header>
