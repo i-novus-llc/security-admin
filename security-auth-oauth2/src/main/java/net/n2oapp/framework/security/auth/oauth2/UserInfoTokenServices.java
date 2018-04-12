@@ -33,9 +33,9 @@ public class UserInfoTokenServices implements ResourceServerTokenServices {
 
 	private static final String[] AUTHORITIES_KEYS = new String[] {"roles", "authorities"};
 
-	private static final String[] SURNAME_KEYS = new String[] {"surname", "secondname"};
+	private static final String[] SURNAME_KEYS = new String[] {"surname", "secondname", "second_name", "family_name"};
 
-	private static final String[] NAME_KEYS = new String[] {"name", "firstname"};
+	private static final String[] NAME_KEYS = new String[] {"firstname", "given_name", "name"};
 
 	private static final String[] EMAIL_KEYS = new String[] {"email", "e-mail"};
 

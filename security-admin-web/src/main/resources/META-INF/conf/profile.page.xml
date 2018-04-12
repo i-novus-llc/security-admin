@@ -12,6 +12,10 @@
                 <wgt:object-id>blank</wgt:object-id>
                 <fs:field-set>
                     <ctrl:output-text id="username" label="Логин" default-value="#{username?}"/>
+                    <ctrl:output-text id="surname" label="Фамилия" default-value="#{surname?}"/>
+                    <ctrl:output-text id="name" label="Имя" default-value="#{name?}"/>
+                    <ctrl:output-text id="patronymic" label="Отчество" default-value="#{patronymic?}"/>
+                    <ctrl:output-text id="email" label="Электронная почта" default-value="#{email?}"/>
                 </fs:field-set>
             </wgt:edit-form>
         </container>
