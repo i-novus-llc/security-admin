@@ -113,7 +113,9 @@ public class UserServiceImpl implements UserService {
     public User changeActive(Integer id) {
         UserEntity userEntity = userRepository.findOne(id);
         userEntity.setIsActive(!userEntity.getIsActive());
-        return model(userRepository.save(userEntity));
+        User result = model(userRepository.save(userEntity));
+        provider.changeActivity(result);
+        return result;
 
     }
 

@@ -91,6 +91,13 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
     }
 
     @Override
+    public void changeActivity(User user) {
+        UserRepresentation userRepresentation = map(user);
+        userRepresentation.setEnabled(user.getIsActive());
+        keycloak().realm(properties.getRealm()).users().get(user.getGuid()).update(userRepresentation);
+    }
+
+    @Override
     public Role createRole(Role role) {
         RolesResource resource = keycloak().realm(properties.getRealm()).roles();
         RoleRepresentation roleRepresentation = map(role);

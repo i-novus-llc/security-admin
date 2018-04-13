@@ -26,6 +26,11 @@ public class SimpleSsoUserRoleProvider implements SsoUserRoleProvider {
     }
 
     @Override
+    public void changeActivity(User user) {
+
+    }
+
+    @Override
     public Role createRole(Role role) {
         return role;
     }

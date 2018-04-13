@@ -27,6 +27,11 @@ public interface SsoUserRoleProvider {
      */
     void deleteUser(User user);
 
+    /**
+     * Изменение активности пользователя
+     * @param user
+     */
+    void changeActivity(User user);
 
     /**
      * Создание роли
