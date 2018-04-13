@@ -15,6 +15,8 @@ import net.n2oapp.security.admin.impl.service.specification.UserSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -99,7 +101,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<User> findAll(UserCriteria criteria) {
         final Specification<UserEntity> specification = new UserSpecifications(criteria);
-        final Page<UserEntity> all = userRepository.findAll(specification, criteria);
+        if (criteria.getOrders().stream().filter(o -> o.getProperty().equals("fio")).findAny().isPresent()) {
+            Sort.Direction orderFio = criteria.getOrders().stream().filter(o -> o.getProperty().equals("fio")).findAny().get().getDirection();
+            criteria.getOrders().add(new Sort.Order(orderFio, "surname"));
+            criteria.getOrders().add(new Sort.Order(orderFio, "name"));
+            criteria.getOrders().add(new Sort.Order(orderFio, "patronymic"));
+            criteria.getOrders().removeIf(s -> s.getProperty().equals("fio"));
+        }
+        if (!criteria.getOrders().stream().filter(o -> o.getProperty().equals("id")).findAny().isPresent()) {
+            criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "id"));
+        }
+        final Page<UserEntity> all = new PageImpl<>(userRepository.findAll(specification, criteria.getSort()));
         return all.map(this::model);
     }
 

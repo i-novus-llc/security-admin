@@ -14,6 +14,8 @@ import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.RoleSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,7 +72,10 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Page<Role> findAll(RoleCriteria criteria) {
         Specification<RoleEntity> specification = new RoleSpecifications(criteria);
-        Page<RoleEntity> all = roleRepository.findAll(specification, criteria);
+        if (!criteria.getOrders().stream().filter(o -> o.getProperty().equals("id")).findAny().isPresent()) {
+            criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "id"));
+        }
+        Page<RoleEntity> all = new PageImpl<>(roleRepository.findAll(specification, criteria.getSort()));
         return all.map(this::model);
     }
 

@@ -17,9 +17,8 @@
                         <wgt:column column-field-id="permissions" name="Права доступа">
                             <wgt:list label-field-id="name"/>
                         </wgt:column>
-
-
                     </wgt:columns>
+                    <wgt:sortings type="single"/>
                     <wgt:filters opened="true">
                         <ctrl:input-text id="name"/>
                         <ctrl:input-text id="description"/>
