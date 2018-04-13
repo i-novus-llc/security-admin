@@ -26,7 +26,7 @@
             </ctrl:validations>
             <ctrl:dependencies>
                 <ctrl:enabling-condition>
-                    password != null;
+                    newPassword != null;
                 </ctrl:enabling-condition>
             </ctrl:dependencies>
         </ctrl:password>
