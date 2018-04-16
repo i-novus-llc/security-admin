@@ -57,6 +57,7 @@ public abstract class OpenIdSecurityConfigurerAdapter extends N2oSecurityConfigu
         authorize(beforeAuthorize(http));
         configureExceptionHandling(http.exceptionHandling());
         configureLogout(http.logout());
+        http.csrf().disable();
     }
 
     @Bean
