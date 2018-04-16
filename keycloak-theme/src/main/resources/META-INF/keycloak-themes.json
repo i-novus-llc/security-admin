@@ -1,0 +1,6 @@
+{
+    "themes": [{
+        "name" : "n2o",
+        "types": [ "account", "admin", "email", "login", "welcome" ]
+    }]
+}

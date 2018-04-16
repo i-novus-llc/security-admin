@@ -1,0 +1,136 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<query xmlns:n2o="http://n2oapp.net/framework/config/schema/n2o-query-executions-1.0"
+       xmlns="http://n2oapp.net/framework/config/schema/query-3.0">
+    <object-id>${sec.admin.user.object.id}</object-id>
+    <name>Пользователи</name>
+
+    <execution>
+        <n2o:sql>
+            <n2o:items-query>
+                select :select
+                from sec.user u
+                where :where
+                order by :order, id
+            </n2o:items-query>
+            <n2o:count-query>
+                select count(u.id)
+                from sec.user u
+                where :where
+            </n2o:count-query>
+            <n2o:alias>u</n2o:alias>
+        </n2o:sql>
+    </execution>
+
+    <fields>
+        <field>
+            <id>id</id>
+            <domain>integer</domain>
+            <display/>
+            <sorting/>
+            <filters auto-generate="true"/>
+        </field>
+        <field>
+            <id>guid</id>
+            <domain>string</domain>
+            <display/>
+        </field>
+        <field>
+            <id>username</id>
+            <domain>string</domain>
+            <display>username</display>
+            <name>Имя пользователя</name>
+            <sorting>username</sorting>
+            <filters>
+                <filter type="eq" filter-field="username">trim(lower(username)) like '%'||trim(lower(:username))||'%'
+                </filter>
+            </filters>
+        </field>
+
+        <field>
+            <id>surname</id>
+            <domain>string</domain>
+            <display>surname</display>
+            <name>Фамилия</name>
+            <filters>
+                <filter type="eq" filter-field="surname">trim(lower(surname)) like '%'||trim(lower(:surname))||'%'
+                </filter>
+            </filters>
+        </field>
+        <field>
+            <id>name</id>
+            <domain>string</domain>
+            <display>name</display>
+            <name>Имя</name>
+        </field>
+        <field>
+            <id>patronymic</id>
+            <domain>string</domain>
+            <display>patronymic</display>
+            <name>Отчество</name>
+            <filters>
+                <filter type="eq" filter-field="patronymic">trim(lower(patronymic)) like
+                    '%'||trim(lower(:patronymic))||'%'
+                </filter>
+            </filters>
+        </field>
+
+        <field>
+            <id>email</id>
+            <domain>string</domain>
+            <display>email</display>
+            <name>E-mail</name>
+        </field>
+
+        <field>
+            <id>isActive</id>
+            <domain>boolean</domain>
+            <display>is_active</display>
+            <name>Активность</name>
+            <sorting>is_active</sorting>
+            <filters>
+                <filter type="eq" filter-field="isActive">is_active=:isActive</filter>
+            </filters>
+        </field>
+
+        <field>
+            <id>roles</id>
+            <domain>object[]</domain>
+            <display>(select array_to_json(array_agg(row_to_json(row_js))) from (select r.id, r.name from sec.user_role
+                ur join sec.role r on r.id=ur.role_id where ur.user_id=u.id) row_js)
+            </display>
+            <name>Роли</name>
+
+        </field>
+
+        <field>
+            <id>roleFilter.id</id>
+            <domain>string</domain>
+            <filters>
+                <filter type="in" filter-field="roleFilter*.id">
+                    <![CDATA[
+                        u.id in (select us.id from sec.user us where
+                            (select string_to_array(btrim((:roleFilter*.id)::varchar, '()'), ',')::varchar[])
+                                <@ (select array(select (urr.role_id)::varchar FROM sec.user_role urr where urr.user_id = us.id)))
+
+                    ]]>
+                </filter>
+            </filters>
+        </field>
+
+        <field>
+            <id>fio</id>
+            <domain>string</domain>
+            <display>(coalesce(u.surname,'')||' '||coalesce(u.name,'')||' '||coalesce(u.patronymic,''))</display>
+            <name>ФИО</name>
+            <sorting>(coalesce(u.surname,'')||' '||coalesce(u.name,'')||' '||coalesce(u.patronymic,''))</sorting>
+            <filters>
+                <filter type="eq" filter-field="fio">(trim(lower(u.surname)) like '%'||trim(lower(:fio))||'%'
+                    )or(trim(lower(u.name)) like '%'||trim(lower(:fio))||'%' )or(trim(lower(u.patronymic)) like
+                    '%'||trim(lower(:fio))||'%') or (trim(lower((coalesce(u.surname,'')||' '||coalesce(u.name,'')||'
+                    '||coalesce(u.patronymic,'')))) like
+                    '%'||trim(lower(:fio))||'%')
+                </filter>
+            </filters>
+        </field>
+    </fields>
+</query>

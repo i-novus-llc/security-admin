@@ -1,17 +1,24 @@
 package net.n2oapp.security.auth;
 
+import net.n2oapp.security.auth.authority.RoleGrantedAuthority;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Пользователь с расширенными атрибутами
  */
 public class User extends org.springframework.security.core.userdetails.User {
+    public static final String DEFAULT_ROLE = "ROLE_USER";
     private String surname;
     private String name;
     private String patronymic;
     private String email;
+
+    public User(String username) {
+        super(username, "", Collections.singleton(new RoleGrantedAuthority(DEFAULT_ROLE)));
+    }
 
     public User(String username, String password, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);

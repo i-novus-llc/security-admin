@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<object xmlns="http://n2oapp.net/framework/config/schema/object-1.0"
+        xmlns:n2o="http://n2oapp.net/framework/config/schema/action-invocation-1.0">
+    <name>Пользователи</name>
+
+    <actions>
+        <action id="create">
+            <invocation>
+                <n2o:java-method name="create" bean="jdbcUserService">
+                    <n2o:arguments>
+                        <n2o:argument name="userEntity" class="net.n2oapp.security.admin.api.model.User"/>
+                    </n2o:arguments>
+                </n2o:java-method>
+            </invocation>
+            <in-parameters>
+                <param name="username" mapping="[0].username" domain="string" required="true"/>
+                <param name="email" mapping="[0].email" domain="string" required="true"/>
+                <param name="surname" mapping="[0].surname" domain="string" required="true"/>
+                <param name="name" mapping="[0].name" domain="string" required="true"/>
+                <param name="patronymic" mapping="[0].patronymic" domain="string"/>
+                <param name="isActive" mapping="[0].isActive" domain="boolean" value="false"/>
+                <param name="roles" mapping="[0].roles" domain="object[]" required="true"/>
+            </in-parameters>
+            <out-parameters>
+                <param name="id" mapping="id"/>
+            </out-parameters>
+            <success-text>Пользователь сохранен</success-text>
+            <validations activate="all"/>
+        </action>
+
+        <action id="update">
+            <invocation>
+                <n2o:java-method name="update" bean="jdbcUserService">
+                    <n2o:arguments>
+                        <n2o:argument name="userEntity" class="net.n2oapp.security.admin.api.model.User"/>
+                    </n2o:arguments>
+                </n2o:java-method>
+            </invocation>
+            <in-parameters>
+                <param name="id" mapping="[0].id" domain="integer" required="true"/>
+                <param name="guid" mapping="[0].guid" domain="string"/>
+                <param name="username" mapping="[0].username" domain="string" required="true"/>
+                <param name="email" mapping="[0].email" domain="string" required="true"/>
+                <param name="surname" mapping="[0].surname" domain="string" required="true"/>
+                <param name="name" mapping="[0].name" domain="string" required="true"/>
+                <param name="patronymic" mapping="[0].patronymic" domain="string"/>
+                <param name="isActive" mapping="[0].isActive" domain="boolean" value="false"/>
+                <param name="roles" mapping="[0].roles" domain="object[]" required="true"/>
+            </in-parameters>
+            <out-parameters>
+                <param name="id" mapping="id"/>
+            </out-parameters>
+            <success-text>Пользователь сохранен</success-text>
+            <validations activate="blackList">
+                <validation ref-id="uniqUsername"/>
+            </validations>
+        </action>
+
+        <action id="delete">
+            <invocation>
+                <n2o:java-method name="delete" bean="jdbcUserService">
+                    <n2o:arguments>
+                        <n2o:argument name="id" class="java.lang.Integer"/>
+                    </n2o:arguments>
+                </n2o:java-method>
+            </invocation>
+            <in-parameters>
+                <param name="id" mapping="[0]" domain="integer" required="true"/>
+            </in-parameters>
+            <confirmation-text>Вы уверены, что хотите удалить пользователя?</confirmation-text>
+            <success-text>Пользователь удален</success-text>
+        </action>
+
+        <action id="changeUserActive">
+            <invocation>
+                <n2o:java-method name="changeUserActive" bean="jdbcUserService">
+                    <n2o:arguments>
+                        <n2o:argument name="id" class="java.lang.Integer"/>
+                        <n2o:argument name="isActive" class="java.lang.Boolean"/>
+                    </n2o:arguments>
+                </n2o:java-method>
+            </invocation>
+            <in-parameters>
+                <param name="id" mapping="[0]" domain="integer" required="true"/>
+                <param name="isActive" mapping="[1]" domain="boolean"/>
+            </in-parameters>
+            <success-text>Активность пользователя изменена!</success-text>
+        </action>
+    </actions>
+
+    <validations>
+        <constraint id="uniqUsername" level="error">
+            <message>Пользователь с таким именем уже существует</message>
+            <invocation>
+                <n2o:sql>
+                    <![CDATA[ select count(id) from sec.user where username = :username]]>
+                </n2o:sql>
+            </invocation>
+            <in-parameters>
+                <param name="username" mapping="['username']" domain="string"/>
+            </in-parameters>
+            <result expression="[0][0][0] == 0"/>
+        </constraint>
+
+        <condition id="usernameValidation" level="error">
+            <message>Неверное имя</message>
+            <expression on="username">
+                <![CDATA[
+                    if (typeof username != 'undefined' && username != null && username != '') {
+                        var regex = new RegExp('^[-_\\.a-zA-Z][-_\\.a-zA-Z0-9]+$');
+                        regex.test(username);
+                     }else true;
+                ]]>
+
+            </expression>
+        </condition>
+
+        <condition id="emailValidation" level="error">
+            <message>Неверный email</message>
+            <expression on="email">
+                <![CDATA[
+                if (typeof email != 'undefined' && email != null && email != '') {
+                    var regex = new RegExp('[A-Za-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[A-Za-z0-9!#$%&\'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\\.)+[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?');
+                    regex.test(email);
+                } else true;
+                ]]>
+            </expression>
+        </condition>
+    </validations>
+</object>
