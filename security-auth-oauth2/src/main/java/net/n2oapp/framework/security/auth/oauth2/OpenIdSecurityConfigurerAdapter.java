@@ -1,6 +1,7 @@
 package net.n2oapp.framework.security.auth.oauth2;
 
 import net.n2oapp.security.admin.api.service.UserDetailsService;
+import net.n2oapp.security.auth.N2oSecurityConfigurerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -43,30 +44,12 @@ import java.util.Collections;
  * Адаптер для настройки SSO аутентификации по протоколу OAuth2 OpenId Connect
  */
 @EnableOAuth2Client
-public abstract class OpenIdSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
+public abstract class OpenIdSecurityConfigurerAdapter extends N2oSecurityConfigurerAdapter {
 
     @Autowired
     private OAuth2ClientAuthenticationProcessingFilter oauth2SsoFilter;
     @Autowired
     private OpenIdProperties properties;
-
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        ignore(web.ignoring());
-    }
-
-    protected void ignore(WebSecurity.IgnoredRequestConfigurer ignore) {
-        ignore.antMatchers("/dist/**", "/lib/**", "/n2o/**", "/build/**", "/bundle/**"
-                , "/public/**", "/resources/**", "/static/**");
-    }
-
-    protected abstract void authorize(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry url)
-            throws Exception;
-
-    protected ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry beforeAuthorize(HttpSecurity http)
-            throws Exception {
-        return http.authorizeRequests();
-    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

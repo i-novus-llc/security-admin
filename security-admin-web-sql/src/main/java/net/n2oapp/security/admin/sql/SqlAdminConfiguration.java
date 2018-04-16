@@ -1,8 +1,5 @@
-package net.n2oapp.security.admin.web;
+package net.n2oapp.security.admin.sql;
 
-import net.n2oapp.security.admin.n2o.JdbcRoleService;
-import net.n2oapp.security.admin.n2o.JdbcUserService;
-import net.n2oapp.security.admin.n2o.util.PasswordGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -18,8 +15,8 @@ import org.springframework.transaction.support.TransactionTemplate;
  * Конфигурация web-sql
  */
 @Configuration
-@PropertySource("classpath:META-INF/conf/n2o.properties")
-public class WebConfiguration {
+@PropertySource("classpath:META-INF/n2o.properties")
+public class SqlAdminConfiguration {
 
     @Value("${sec.password.generate.length}")
     private Integer passwordGeneratorLength;

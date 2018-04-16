@@ -1,4 +1,4 @@
-package net.n2oapp.security.admin.n2o.util;
+package net.n2oapp.security.admin.sql;
 
 import java.security.SecureRandom;
 import java.util.Random;

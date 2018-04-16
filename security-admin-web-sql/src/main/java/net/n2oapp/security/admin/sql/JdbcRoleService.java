@@ -1,4 +1,4 @@
-package net.n2oapp.security.admin.n2o;
+package net.n2oapp.security.admin.sql;
 
 import net.n2oapp.security.admin.api.model.Role;
 import org.springframework.beans.factory.annotation.Autowired;

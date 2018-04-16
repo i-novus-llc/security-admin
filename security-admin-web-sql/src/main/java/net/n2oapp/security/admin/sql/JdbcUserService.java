@@ -1,9 +1,8 @@
-package net.n2oapp.security.admin.n2o;
+package net.n2oapp.security.admin.sql;
 
 import net.n2oapp.framework.api.exception.N2oException;
 import net.n2oapp.properties.StaticProperties;
 import net.n2oapp.security.admin.api.model.User;
-import net.n2oapp.security.admin.n2o.util.PasswordGenerator;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.springframework.core.io.Resource;
