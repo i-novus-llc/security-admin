@@ -4,8 +4,10 @@
 :toc-title: Содержание
 
 == Введение
-=== Описание
 Эта документация предназначена для установки, настройки и разворачивания универсального администрирования прав доступа, а так же подключение сервиса аутентификации и авторизации.
+
+=== Описание
+Универсальное администрирование доступа - это набор java библиотек для разворачивания системы аутентификации, авторизации и администрирования доступа в Вашем приложении.
 
 === Функциональность
 - Различные схемы развертывания (Embedded, Standalone)
@@ -133,6 +135,7 @@ image::images\readme-f04f6.png[]
 +
 image::images\readme-5a80d.png[]
 +
+. На вкладке "Credentials" задайте системному пользователю пароль (Credentials > New Password)
 . Добавьте ему все права администрирования (Role Mappings > Client Roles > realm-management > [select all] > Add selected > Save)
 +
 image::images\readme-e90b4.png[]
@@ -149,6 +152,23 @@ image::images\readme-ffb7e.png[]
 . На вкладке "Role Mappings" добавьте роль "admin"
 +
 image::images\readme-8d0ae.png[]
++
+. Теперь Keycloak настроен! Осталось добавить настройки синхронизации с сервисами администрирования.
+В файле `[USER_HOME]/.n2o/placeholders.properties` задать следующие настройки:
++
+[source,python]
+----
+#Сервер Keycloak
+keycloak.serverUrl=http://localhost:8888/auth
+#Realm
+keycloak.realm=security-admin
+#ClientId
+keycloak.clientId=admin-cli
+#Пользователь с правами администрирования
+keycloak.username=restclient
+#Пароль пользователя с правами администрирования
+keycloak.password=
+----
 
 
 === Auth Gateway
@@ -300,11 +320,11 @@ image::images\readme-2565b.png[]
 
 *Установка*
 
-. Скачайте war файл `security-admin-frontend` по link:http://[ссылке]
+. Скачайте war файл `security-admin-frontend` по link:http://https://ci.i-novus.ru/view/n2o/job/security-admin.develop.build/ws/security-admin-frontend/target/ROOT.war[ссылке]
 . Задайте настройки OAuth2 OpenId Connect аутентификации в файле `placeholders.properties` в папке `/[USER_HOME]/.n2o`
 . Скопируйте war файл в `/[TOMCAT_HOME]/webapps`
 . Запустите Tomcat командой `/bin/startup`
-. Проверьте, что в браузере доступен адрес: http://localhost:8080/admin
+. Проверьте, что в браузере доступен адрес: http://localhost:8080/
 
 
 === Standalone REST Server
@@ -337,7 +357,7 @@ image::images\readme-75921.png[]
 CREATE DATABASE security ENCODING = 'UTF8';
 ----
 +
-. Скачайте war файл `security-admin-backend` по link:http://[ссылке]
+. Скачайте war файл `security-admin-backend` по link:http://https://ci.i-novus.ru/view/n2o/job/security-admin.develop.build/ws/security-admin-backend/target/backend.war[ссылке]
 . Скопируйте war файл в `/[TOMCAT_HOME]/webapps`
 . Запустите Tomcat командой `/bin/startup`
 . Проверьте, что в браузере доступен адрес: http://localhost:8080/backend/api/info

@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>security-admin-doc</artifactId>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <parent>
         <artifactId>security-admin</artifactId>
@@ -37,7 +37,6 @@
                         </goals>
                         <configuration>
                             <sourceDirectory>src</sourceDirectory>
-                            <outputDirectory>target</outputDirectory>
                             <backend>html5</backend>
                             <doctype>book</doctype>
                             <attributes>
