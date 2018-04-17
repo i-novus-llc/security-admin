@@ -19,7 +19,8 @@
 == Аутентификация
 
 === Basic Auth
-Для подключения встроенной аутентификации (Basic Auth) необходимо добавить зависимость:
+. Для подключения встроенной аутентификации (Basic Auth) необходимо добавить зависимость:
++
 [source,xml]
 ----
 <dependency>
@@ -28,8 +29,9 @@
     <version>${security.admin.version}</version>
 </dependency>
 ----
-
-Создать и подключить конфигурационный бин:
++
+. Создать и подключить конфигурационный бин:
++
 [source,java]
 ----
 @Configuration
@@ -49,7 +51,9 @@ public class SecurityConfig extends SimpleSecurityConfigurerAdapter {
 ----
 
 === OAuth2 OpenId Connect
-Для подключения OAuth2 OpenId Connect аутентификации необходимо добавить зависимость:
+
+. Для подключения OAuth2 OpenId Connect аутентификации необходимо добавить зависимость:
++
 [source,xml]
 ----
 <dependency>
@@ -58,8 +62,9 @@ public class SecurityConfig extends SimpleSecurityConfigurerAdapter {
     <version>${security.admin.version}</version>
 </dependency>
 ----
-
-Создать и подключить конфигурационный бин:
++
+. Создать и подключить конфигурационный бин:
++
 [source,java]
 ----
 @Configuration
@@ -73,8 +78,9 @@ public class SecurityConfig extends OpenIdSecurityConfigurerAdapter {
     }
 }
 ----
-
-Необходимо задать следующие настройки в файле `META-INF/n2o-build.properties` или `[USER_HOME]/.n2o/placeholder.properties`:
++
+. Задать следующие настройки в файле `META-INF/n2o-build.properties` или `[USER_HOME]/.n2o/placeholders.properties`:
++
 [source,python]
 ----
 #Базовый адрес сервиса аутентификации
@@ -154,7 +160,7 @@ image::images\readme-ffb7e.png[]
 image::images\readme-8d0ae.png[]
 +
 . Теперь Keycloak настроен! Осталось добавить настройки синхронизации с сервисами администрирования.
-В файле `[USER_HOME]/.n2o/placeholders.properties` задать следующие настройки:
+В файле `[USER_HOME]/.n2o/placeholders.properties` задайте следующие настройки:
 +
 [source,python]
 ----
@@ -196,6 +202,7 @@ image::images\readme-05d0a.png[]
 . Запустите сервер, выполнив команду `java -jar ssoserver.jar`
 
 == Администрирование доступа
+В этом разделе рассказывается об установке сервера администрирования доступа в зависимости от выбранной Вами схемы развертывания.
 
 === Embedded UI + SQL
 Эта схема предусматривает установку пользовательского интерфейса администрирования внутри Вашего прикладного приложения с SQL доступом к Базе Данных.
@@ -302,7 +309,7 @@ image::images\readme-eadda.png[]
 </dependency>
 ----
 +
-. В ресурсах проекта в файле `META-INF/n2o-build.properties` или `[USER_HOME]/.n2o/placeholder.properties` задайте адрес backend сервисов:
+. В ресурсах проекта в файле `META-INF/n2o-build.properties` или `[USER_HOME]/.n2o/placeholders.properties` задайте адрес backend сервисов:
 +
 [source,shell]
 ----
@@ -366,7 +373,6 @@ CREATE DATABASE security ENCODING = 'UTF8';
 == Авторизация
 В этом разделе рассказывается как настроить доступ к функциям Вашего приложения и к функциям администрирования.
 
-
 === Гранулярность доступа
 В зависимости от масштаба системы доступ к её функциям можно разрешать по ролям, правам доступа, группам и т.д.
 
@@ -393,9 +399,9 @@ CREATE DATABASE security ENCODING = 'UTF8';
 
 |===
 
-Гранулярность доступа задётся настройкой `n2o.sec.granularity` в файле `META-INF/n2o-build.properties` или `[USER_HOME]/.n2o/placeholder.properties`:
+Гранулярность доступа задётся настройкой `n2o.sec.granularity` в файле `META-INF/n2o-build.properties` или `[USER_HOME]/.n2o/placeholders.properties`:
 
-[source,shell]
+[source,python]
 ----
 #Вид гранулярности доступа
 n2o.sec.granularity=urp
@@ -494,6 +500,11 @@ insert into sec.permission(name, code) values('Право доступа к мо
   ...
 </access>
 ----
+
+=== Контекст пользователя
+При включении аутентификации N2O контекст пользователя подключается автоматически.
+Он рефлексивно получает все поля объекта `UserDetails` через плейсхолдер: `#{param}`.
+
 
 == Кастомизация
 В этом разделе рассказывается как настроить внешний вид страниц администрирования и аутентификации под стиль Вашей системы.
