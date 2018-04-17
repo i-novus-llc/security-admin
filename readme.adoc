@@ -1,5 +1,5 @@
-## Предназначение
-Универсальное администрирование прав доступа.
+## Описание
+Эта документация предназначена для установки, настройки и разворачивания универсального администрирования прав доступа, а так же подключение сервиса аутентификации и авторизации.
 
 ## Функциональность
 - Различные схемы развертывания (Embedded, Standalone)
@@ -8,31 +8,170 @@
 - Настраиваемый пользовательский интерфейс на N2O фреймворке
 - Расширение свойств пользовательского контекста
 
-## Подключение аутентификации
+## Аутентификация
 
 ### Basic Auth
+Для подключения встроенной аутентификации (Basic Auth) необходимо добавить зависимость:
+[source,xml]
+----
+<dependency>
+    <groupId>net.n2oapp.framework.security</groupId>
+    <artifactId>security-auth-simple</artifactId>
+    <version>${security.admin.version}</version>
+</dependency>
+----
+
+Создать и подключить конфигурационный бин:
+[source,java]
+----
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig extends SimpleSecurityConfigurerAdapter {
+
+    public SecurityConfig(DaoAuthenticationProvider daoAuthenticationProvider) {
+        super(daoAuthenticationProvider);
+    }
+
+    @Override
+    protected void authorize(ExpressionUrlAuthorizationConfigurer<HttpSecurity>
+                                        .ExpressionInterceptUrlRegistry url) throws Exception {
+        url.anyRequest().authenticated();//все запросы авторизованы
+    }
+}
+----
 
 ### OAuth2 OpenId Connect
+Для подключения OAuth2 OpenId Connect аутентификации необходимо добавить зависимость:
+[source,xml]
+----
+<dependency>
+    <groupId>net.n2oapp.framework.security</groupId>
+    <artifactId>security-auth-oauth2</artifactId>
+    <version>${security.admin.version}</version>
+</dependency>
+----
 
-## Подключение SSO
+Создать и подключить конфигурационный бин:
+[source,java]
+----
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig extends OpenIdSecurityConfigurerAdapter {
+
+    @Override
+    protected void authorize(ExpressionUrlAuthorizationConfigurer<HttpSecurity>
+                                         .ExpressionInterceptUrlRegistry url) throws Exception {
+        url.anyRequest().authenticated();//все запросы авторизованы
+    }
+}
+----
+
+Необходимо задать следующие настройки в файле `META-INF/n2o-build.properties` или `[USER_HOME]/.n2o/placeholder.properties`:
+[source,shell]
+----
+#Базовый адрес сервиса аутентификации
+n2o.security.oauth2.auth-server-uri=http://localhost:8888/auth
+#Адрес сервиса получения токена аутентификации
+n2o.security.oauth2.access-token-uri=/token
+#Адрес сервиса авторизации
+n2o.security.oauth2.user-authorization-uri=/auth
+#Адрес сервиса получения информации о пользователе
+n2o.security.oauth2.user-info-uri=/userinfo
+#Адрес сервиса единого выхода
+n2o.security.oauth2.logout-uri=/logout?redirect_uri=http://localhost:8080/
+#Идентификатор клиента OAuth2 OpenId Connect
+n2o.security.oauth2.client-id=myapp
+#Секретное слово клиента OAuth2 OpenId Connect
+n2o.security.oauth2.client-secret=mysecret
+----
+
+## SSO
 
 [NOTE]
 Подключение технологии единого входа (Single Sign-On) возможно только при использовании OAuth2 OpenId Connect типа аутентификации.
 
 ### Keycloak
-Keycloak - открытый сервер аутентификации, разворачиваемый на базе сервера Wildfly.
+В этом разделе рассказывается про установку сервера Keycloak.
+Это открытый сервер SSO аутентификации, разворачиваемый на базе Wildfly.
+
+*Схема SSO аутентификации*
 
 image::images\readme-b6af3.png[]
 
+1. Запросы не авторизованных пользователей перенаправляют на Keycloak сервер
+1. Keycloak показывает пользователю страницу аутентификации
+1. После успешной аутентификации Keycloak перенаправляет запрос обратно на сервер приложений с токеном в параметрах
+1. Приложение делает авторизованный запрос на Keycloak сервер на адрес `/userinfo` для получения информации о пользователе (username, ФИО, email, роли)
+1. Приложение дополняет информацию о пользователе (получает права доступа), делая запрос `/details` на REST сервер администрирования
+
+*Установка*
+
+- Запустить команду `/bin/standalone` (сервер поднимется по порту 8080, желательно link:https://www.keycloak.org/docs/2.5/server_installation/topics/network/ports.html[изменить этот порт] на какой-либо другой, например, 8888)
+- Создать супер пользователя `/bin/add-user-keycloak`
+- Войти в консоль администрирования `http://localhost:8888/auth`
+- Создайте домен системы (Add realm). Эта область хранения пользователей и ролей вашей системы.
+
+image::images\readme-b2fb3.png[]
+- Создайте клиента (Clients > Create). Клиент - это приложение, которое будет аутентифицироваться в системе.
+В поле "Client ID" задаётся идентификатор клиента. Скопируйте и используйте его в настройках OAuth2 аутентификации.
+
+image::images\readme-28fc6.png[]
+
+- Нажмите "Save", откроется форма редактирования клиента, где в поле "Access Type" выберите "confidential" и снова нажмите "Save"
+- На вкладке "Credentials" будет информация о секрете (поле "Secret"). Скопируйте его и используйте в настройках OAuth2 аутентификации.
+
+image::images\readme-f04f6.png[]
+
+- Создайте системного пользователя для синхронизации с сервисами администрирования (Users > Add user)
+
+image::images\readme-5a80d.png[]
+
+- Добавьте ему все права администрирования (Role Mappings > Client Roles > realm-management > [select all] > Add selected > Save)
+
+image::images\readme-e90b4.png[]
+
+- Создайте роль администрирования системы (Roles > Add role)
+
+image::images\readme-93e62.png[]
+
+- Создайте пользователя "admin", под которым Вы будете входить в модуль администрирования доступа
+- На вкладке "Credentials" дважды введите пароль пользователя
+
+image::images\readme-ffb7e.png[]
+
+- На вкладке "Role Mappings" добавьте роль "admin"
+
+image::images\readme-8d0ae.png[]
+
+
 ### Auth Gateway
-Шлюзовой сервер аутентификации, интегрируемый с любыми другими серверами аутентификации по протоколу OAuth2 OpenId Connect.
+В этом разделе рассказывается про установку шлюзового сервера аутентификации.
+Это SSO сервер, построенный на базе Spring Cloud Security, интегрируемый с любыми другими серверами аутентификации по протоколу OAuth2 OpenId Connect, например, с Keycloak.
+
+*Схема SSO аутентификации*
 
 image::images\readme-05d0a.png[]
 
-## Разворачивание администрирования
+
+1. Запросы не авторизованных пользователей перенаправляют на шлюз авторизации с захешированным секретом от шлюза
+1. Шлюз перенаправляет запросы не авторизованных пользователей на сервер аутентификации, заданный в настройках шлюза, например, Keycloak, с захешированным секретом от сервера
+1. Сервер аутентификации показывает пользователю страницу аутентификации
+1. После успешной аутентификации сервер перенаправляет запрос обратно на шлюз, а шлюз на сервер приложений с токеном в параметрах
+1. Приложение делает авторизованный запрос на шлюз на адрес `/userinfo` для получения информации о пользователе (username, ФИО, email, роли)
+1. Шлюз повторяет авторизованный запрос на адрес `/userinfo` к серверу аутентификации
+1. После получения информации о пользователе от сервера аутентификации шлюз дополняет её информацией от сервиса администрирования (например, правами доступа)
+
+*Установка*
+
+- Скачайте запускаемый jar файл SSO сервера по link:http://[ссылке] в отдельную папку
+- Создайте файл настроек `application.properties`
+- Задайте настройки
+- Запустите сервер, выполнив команду `java -jar ssoserver.jar`
+
+## Администрирование доступа
 
 ### Embedded UI + SQL
-Эта схема предусматривает установку пользовательского интерфейса внутри Вашего прикладного приложения с SQL доступом к Базе Данных.
+Эта схема предусматривает установку пользовательского интерфейса администрирования внутри Вашего прикладного приложения с SQL доступом к Базе Данных.
 
 image::images\readme-e72a1.png[]
 
@@ -40,7 +179,9 @@ image::images\readme-e72a1.png[]
 - N2O 6.1+
 - Spring 4.3+
 
-Подключение UI к приложению::
+*Установка*
+
+- Добавьте зависимость от реализации интерфейса `security-admin-web-sql`:
 
 [source,xml]
 ----
@@ -51,8 +192,57 @@ image::images\readme-e72a1.png[]
 </dependency>
 ----
 
+- Добавьте зависимость от реализации сервисов `security-admin-sql`:
+
+[source,xml]
+----
+<dependency>
+    <groupId>net.n2oapp.framework.security</groupId>
+    <artifactId>security-admin-sql</artifactId>
+    <version>${security.admin.version}</version>
+</dependency>
+----
+
+- Добавьте скрипты наката БД в changelog файл liquibase:
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog>
+    <include file="classpath:/security/admin/db/[granularity]/changelog.xml"/>
+    ...
+</databaseChangeLog>
+----
+Где, `[granularity]` вид link:#_гранулярность_доступа[гранулярности доступа].
+
+- На сервере Tomcat создайте jdbc ресурс с именем `jdbc/security`, например, так:
+
+[source,xml]
+----
+<Resource name="jdbc/security"
+          auth="Container"
+          type="javax.sql.DataSource"
+          username="postgres"
+          password="postgres"
+          driverClassName="org.postgresql.Driver"
+          url="jdbc:postgresql://localhost:5432/security"
+          maxActive="20"
+          maxIdle="10"
+          validationQuery="select 1"/>
+----
+
+- Создайте базу данных `security`:
+
+[source,sql]
+----
+CREATE DATABASE security ENCODING = 'UTF8';
+----
+
+
+
+
 ### Embedded UI + REST Client
-Эта схема предусматривает установку пользовательского интерфейса внутри Вашего прикладного приложения с удаленными вызовами REST сервисов к отдельно стоящему REST серверу администрирования.
+Эта схема предусматривает установку пользовательского интерфейса администрирования внутри Вашего прикладного приложения с удаленными вызовами REST сервисов к отдельно стоящему REST серверу администрирования.
 
 image::images\readme-eadda.png[]
 
@@ -60,7 +250,9 @@ image::images\readme-eadda.png[]
 - N2O 6.1+
 - Spring 4.3+
 
-Подключение UI к приложению::
+*Установка*
+
+- Добавьте зависимость от реализации интерфейса `security-admin-web-rest`:
 
 [source,xml]
 ----
@@ -71,18 +263,217 @@ image::images\readme-eadda.png[]
 </dependency>
 ----
 
-### Standalone UI + REST Client
-Эта схема предусматривает разворачивание фронтенд сервера пользовательского интерфейса с удаленными вызовами REST сервисов к отдельно стоящему REST серверу администрирования.
+- Добавьте зависимость от реализации сервисов `security-admin-rest-client`:
+
+[source,xml]
+----
+<dependency>
+    <groupId>net.n2oapp.framework.security</groupId>
+    <artifactId>security-admin-rest-client</artifactId>
+    <version>${security.admin.version}</version>
+</dependency>
+----
+
+
+- В ресурсах проекта в файле `META-INF/n2o-build.properties` или `[USER_HOME]/.n2o/placeholder.properties` задайте адрес backend сервисов:
+
+[source,shell]
+----
+#Адрес REST сервисов администрирования
+sec.admin.rest.url=http://localhost:8080/backend/api
+----
+
+- Запустите Ваше приложение
+
+
+### Standalone UI Server + REST Client
+Эта схема предусматривает разворачивание фронтенд сервера пользовательского интерфейса администрирования с удаленными вызовами REST сервисов к отдельно стоящему REST серверу администрирования.
 
 image::images\readme-2565b.png[]
 
-Установка::
-Развернуть security-admin-frontend в Tomcat.
+*Установка*
+
+- Скачайте war файл `security-admin-frontend` по link:http://[ссылке]
+- Задайте настройки OAuth2 OpenId Connect аутентификации в файле `placeholders.properties` в папке `/[USER_HOME]/.n2o`
+
+- Скопируйте war файл в `/[TOMCAT_HOME]/webapps`
+- Запустите Tomcat командой `/bin/startup`
+- Проверьте, что в браузере доступен адрес: http://localhost:8080/admin
+
 
 ### Standalone REST Server
 Эта схема предусматривает разворачивание REST сервера администрирования доступа.
 
 image::images\readme-75921.png[]
 
-Установка::
-Развернуть security-admin-backend в Tomcat.
+*Установка*
+
+- На сервере Tomcat создайте jdbc ресурс с именем `jdbc/security`, например, так:
+
+[source,xml]
+----
+<Resource name="jdbc/security"
+          auth="Container"
+          type="javax.sql.DataSource"
+          username="postgres"
+          password="postgres"
+          driverClassName="org.postgresql.Driver"
+          url="jdbc:postgresql://localhost:5432/security"
+          maxActive="20"
+          maxIdle="10"
+          validationQuery="select 1"/>
+----
+
+- Создайте базу данных `security`:
+
+[source,sql]
+----
+CREATE DATABASE security ENCODING = 'UTF8';
+----
+
+- Скачайте war файл `security-admin-backend` по link:http://[ссылке]
+- Скопируйте war файл в `/[TOMCAT_HOME]/webapps`
+- Запустите Tomcat командой `/bin/startup`
+- Проверьте, что в браузере доступен адрес: http://localhost:8080/backend/api/info
+
+
+## Авторизация
+В этом разделе рассказывается как настроить доступ к функциям Вашего приложения и к функциям администрирования.
+
+
+### Гранулярность доступа
+В зависимости от масштаба системы доступ к её функциям можно разрешать по ролям, правам доступа, группам и т.д.
+
+.Виды гранулярности доступа
+[cols="1,2,4"]
+|===
+|Вид|Описание|Таблицы БД
+
+|ur
+|user-role
+|sec.user, sec.role, sec.user_role
+
+|urp
+|user-role-permission
+|sec.user, sec.role, sec.permission, sec.user_role, sec.role_permission
+
+|ugr
+|user-group-role
+|sec.user, sec.group, sec.role, sec.user_group, sec.group_role, sec.user_role
+
+|ugrp
+|user-group-role-permission
+|sec.user, sec.group, sec.role, sec.permission, sec.user_group, sec.group_role, sec.user_role, sec.role_permission
+
+|===
+
+Гранулярность доступа задётся настройкой `n2o.sec.granularity` в файле `META-INF/n2o-build.properties` или `[USER_HOME]/.n2o/placeholder.properties`:
+
+[source,shell]
+----
+#Вид гранулярности доступа
+n2o.sec.granularity=urp
+----
+
+От выбранной гранулярности зависит структура БД, интерфейс и сервисы администрирования.
+По умолчанию `urp`.
+
+### Авторизация функций приложения
+
+- Создайте права доступа к Вашему приложению через liquibase скрипты:
+
+[source,sql]
+----
+insert into sec.role(name, code, description) values('Моя роль', 'someRole', 'Роль для доступа к моему модулю');
+insert into sec.permission(name, code) values('Право доступа к моему модулю', 'someModule.somePermission');
+----
+
+- Доступ к функциям приложения задаётся через N2O файл `[app].access.xml`, согласно созданным на предыдущем шаге правам доступа:
+
+[source,xml]
+----
+<access>
+  <permission id="someModule.somePermission">
+      <!--Право на чтение N2O объекта-->
+      <object-access object-id="someObject"/>
+      <!--Право на все действия N2O объекта-->
+      <object-access object-id="someObject" actions="*"/>
+  </permission>
+  ...
+</access>
+----
+
+### Авторизация функций администрирования
+
+##### Embedded UI
+
+- В N2O файле `[app].header.xml` Вашего приложения добавьте страницы администрирования:
+
+[source,xml]
+----
+<header>
+    <menu>
+        ...
+        <page page-id="users" label="Пользователи"/>
+        <page page-id="roles" label="Роли"/>
+    </menu>
+</header>
+----
+
+- В N2O файле `[app].access.xml` Вашего приложения задайте права доступа к функциям администрирования:
+
+[source,xml]
+----
+<access>
+  <permission id="user.read">
+      <object-access object-id="${sec.admin.user.object.id}"/>
+  </permission>
+  <permission id="role.read">
+      <object-access object-id="${sec.admin.role.object.id}"/>
+  </permission>
+  <permission id="user.edit">
+      <object-access object-id="${sec.admin.user.object.id}"/>
+      <object-access object-id="${sec.admin.user.object.id}" actions="create,update,delete,changeUserActive"/>
+  </permission>
+  <permission id="role.edit">
+      <object-access object-id="${sec.admin.role.object.id}"/>
+      <object-access object-id="${sec.admin.role.object.id}" actions="create,update,delete"/>
+  </permission>
+  ...
+</access>
+----
+
+##### Standalone UI Server
+
+- В N2O файле `[app].header.xml` Вашего приложения добавьте переход на сервер администрирования:
+
+[source,xml]
+----
+<header>
+    <menu>
+        ...
+        <a href="/admin" label="Администрирование"/>
+    </menu>
+</header>
+----
+
+- В N2O файле `[app].access.xml` Вашего приложения задайте права доступа к переходу на сервер администрирования:
+
+[source,xml]
+----
+<access>
+  <role id="admin">
+      <url-access pattern="/admin"/>
+  </role>
+  ...
+</access>
+----
+
+## Кастомизация
+В этом разделе рассказывается как настроить внешний вид страниц администрирования и аутентификации под стиль Вашей системы.
+
+### Тема Keycloak
+### Тема UI администрирования
+
+## Расширение профиля пользователя
+В этом разделе рассказывается как расширить профиль пользователя новыми атрибутами, как встроить их в интерфейс и использовать в контексте приложения.
