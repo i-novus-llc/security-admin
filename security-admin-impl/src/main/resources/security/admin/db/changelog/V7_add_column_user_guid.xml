@@ -8,4 +8,8 @@
         <sqlFile path="security/admin/db/changelog/sql/V7_add_column_user_guid.sql"/>
     </changeSet>
 
+    <changeSet id="add_user_guid" author="otihova" dbms="h2">
+        <sqlFile path="security/admin/db/changelog/sql/V7_add_column_user_guid.sql"/>
+    </changeSet>
+
 </databaseChangeLog>
