@@ -17,9 +17,12 @@
 - Расширение свойств пользовательского контекста
 
 == Аутентификация
+В этом разделе рассказывается как подключить аутентификацию и пользовательский контекст к Вашему приложению.
+Аутентификация может быть осуществлена разными протоколами: Basic или OAuth2 OpenId Connect.
 
 === Basic Auth
-. Для подключения встроенной аутентификации (Basic Auth) необходимо добавить зависимость:
+
+. Для подключения basic аутентификации необходимо добавить зависимость:
 +
 [source,xml]
 ----
@@ -504,13 +507,58 @@ insert into sec.permission(name, code) values('Право доступа к мо
 === Контекст пользователя
 При включении аутентификации N2O контекст пользователя подключается автоматически.
 Он рефлексивно получает все поля объекта `UserDetails` через плейсхолдер: `#{param}`.
+По умолчанию доступны следующие параметры:
+[source,xml]
+----
+<ctrl:output-text id="username" default-value="#{username?}"/>
+<ctrl:output-text id="name" default-value="#{name?}"/>
+<ctrl:output-text id="surname" default-value="#{surname?}"/>
+<ctrl:output-text id="patronymic" default-value="#{patronymic?}"/>
+<ctrl:output-text id="email" default-value="#{email?}"/>
+<ctrl:output-text id="enabled" default-value="#{enabled?}"/>
+----
 
 
 == Кастомизация
 В этом разделе рассказывается как настроить внешний вид страниц администрирования и аутентификации под стиль Вашей системы.
 
 === Тема Keycloak
+В keycloak стиль страниц аутентификации, регистрации, восстановления пароля и др. можно настраивать с помощью темы.
+
+Чтобы добавить новую тему нужно:
+
+. Выполните команду
++
+[source,shell]
+----
+$KEYCLOAK_HOME/bin/jboss-cli.sh --command="module add --name=net.n2oapp.security.theme.keycloak --resources=target/keycloak-n2o-theme.jar"
+----
++
+. В файле `$KEYCLOAK_HOME/standalone/configuration/standalone.xml` добавьте:
++
+[source,xml]
+----
+<theme>
+  ...
+  <modules>
+      <module>net.n2oapp.security.theme.keycloak</module>
+  </modules>
+</theme>
+----
++
+. Выберите тему "n2o" в Realm настройках консоли администрирования Keycloak:
++
+image::images\index-0c310.png[]
+
 === Тема UI администрирования
+
+Тема интерфейса администрирования доступа задаётся через настройку `n2o.ui.theme`:
+
+[source,python]
+----
+#Стилевая тема N2O (dist/css/default, dist/css/n2o, ...)
+n2o.ui.theme=dist/css/n2o
+----
 
 == Расширение профиля пользователя
 В этом разделе рассказывается как расширить профиль пользователя новыми атрибутами, как встроить их в интерфейс и использовать в контексте приложения.
