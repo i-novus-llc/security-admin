@@ -332,6 +332,14 @@ image::images\readme-2565b.png[]
 
 . Скачайте war файл `security-admin-frontend` по link:http://https://ci.i-novus.ru/view/n2o/job/security-admin.develop.build/ws/security-admin-frontend/target/ROOT.war[ссылке]
 . Задайте настройки OAuth2 OpenId Connect аутентификации в файле `placeholders.properties` в папке `/[USER_HOME]/.n2o`
+. Задайте настройку адреса REST сервисов администрирования `sec.admin.rest.url`
++
+[source,python]
+----
+#Адрес REST сервисов администрирования
+sec.admin.rest.url=http://localhost:8080/backend/api
+----
++
 . Скопируйте war файл в `/[TOMCAT_HOME]/webapps`
 . Запустите Tomcat командой `/bin/startup`
 . Проверьте, что в браузере доступен адрес: http://localhost:8080/
