@@ -20,7 +20,7 @@
                 <param name="surname" mapping="['surname']" domain="string" required="true"/>
                 <param name="name" mapping="['name']" domain="string" required="true"/>
                 <param name="patronymic" mapping="['patronymic']" domain="string"/>
-                <param name="password" mapping="['password']" domain="string" required="true"/>
+                <param name="password" mapping="['password']" domain="string"/>
                 <param name="passwordCheck" mapping="['passwordCheck']" domain="string"/>
                 <param name="isActive" mapping="['isActive']" domain="boolean" value="false"/>
                 <param name="roles*.id" mapping="['roles']" domain="integer[]" required="false"/>

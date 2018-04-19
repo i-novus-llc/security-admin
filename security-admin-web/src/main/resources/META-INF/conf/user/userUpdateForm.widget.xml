@@ -14,13 +14,13 @@
                 <ctrl:validation ref-id="emailValidation" side="client"/>
             </ctrl:validations>
         </ctrl:input-text>
-        <ctrl:password id="newPassword" label="Изменить пароль">
+        <ctrl:password id="newPassword" label="Изменить пароль" visible="${n2o.security.admin.user.password.editable}">
             <ctrl:validations>
                 <ctrl:validation ref-id="passwordLengthValidation" side="server"/>
                 <ctrl:validation ref-id="passwordValidation" side="client"/>
             </ctrl:validations>
         </ctrl:password>
-        <ctrl:password id="passwordCheck" label="Подтвердить пароль">
+        <ctrl:password id="passwordCheck" label="Подтвердить пароль" visible="${n2o.security.admin.user.password.editable}">
             <ctrl:validations>
                 <ctrl:validation ref-id="newPasswordCheckValidation" side="server"/>
             </ctrl:validations>

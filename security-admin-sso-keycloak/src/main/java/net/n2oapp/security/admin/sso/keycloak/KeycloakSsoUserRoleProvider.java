@@ -49,6 +49,9 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
                 });
                 realmResource.users().get(userId).roles().realmLevel().add(roles);
             }
+            if (properties.getSendVerifyEmail()) {
+                realmResource.users().get(userId).executeActionsEmail(properties.getClientId(), properties.getRedirectUrl(), Arrays.asList("UPDATE_PASSWORD", "VERIFY_EMAIL"));
+            }
             return user;
         } else {
             throw new IllegalArgumentException("Can't create user in keycloak!");
@@ -125,7 +128,7 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
         return KeycloakBuilder.builder()
                 .serverUrl(properties.getServerUrl())
                 .realm(properties.getRealm())
-                .clientId(properties.getClientId())
+                .clientId(properties.getAdminClientId())
                 .username(properties.getUsername())
                 .password(properties.getPassword())
                 .build();
