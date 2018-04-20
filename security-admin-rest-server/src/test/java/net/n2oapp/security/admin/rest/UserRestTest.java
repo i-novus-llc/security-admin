@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -49,12 +50,19 @@ public class UserRestTest {
         RestUserCriteria criteria = new RestUserCriteria();
         criteria.setPage(1);
         criteria.setSize(4);
+        List<Sort.Order> orders = new ArrayList<>();
+        orders.add(new Sort.Order(Sort.Direction.DESC,"fio"));
+        criteria.setOrders(orders);
+        Page<User> user = client.findAll(criteria);
+        assertEquals(user.getContent().get(0).getSurname(),"surname3");
+        assertEquals(user.getContent().get(2).getSurname(),"surname1");
         criteria.setUsername("test");
         criteria.setFio(" surname1 name1  patronymic1");
         criteria.setIsActive(true);
         criteria.setRoleIds(roles);
-        Page<User> user = client.findAll(criteria);
+        user = client.findAll(criteria);
         assertEquals(1, user.getTotalElements());
+
     }
 
     @Test

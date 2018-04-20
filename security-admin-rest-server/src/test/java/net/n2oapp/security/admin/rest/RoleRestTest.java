@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -46,6 +47,12 @@ public class RoleRestTest {
         RestRoleCriteria criteria = new RestRoleCriteria();
         criteria.setPage(1);
         criteria.setSize(4);
+        List<Sort.Order> orders = new ArrayList<>();
+        orders.add(new Sort.Order(Sort.Direction.DESC,"id"));
+        criteria.setOrders(orders);
+        Page<Role> user = client.findAll(criteria);
+        assertEquals(user.getContent().get(0).getId(),(Integer)2);
+        assertEquals(user.getContent().get(1).getId(), (Integer)1);
         criteria.setName("user");
         criteria.setDescription("description1");
         criteria.setPermissionIds(permissions);

@@ -14,7 +14,6 @@ import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.RoleSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -75,7 +74,7 @@ public class RoleServiceImpl implements RoleService {
         if (!criteria.getOrders().stream().filter(o -> o.getProperty().equals("id")).findAny().isPresent()) {
             criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "id"));
         }
-        Page<RoleEntity> all = new PageImpl<>(roleRepository.findAll(specification, criteria.getSort()));
+        Page<RoleEntity> all = (roleRepository.findAll(specification, criteria));
         return all.map(this::model);
     }
 

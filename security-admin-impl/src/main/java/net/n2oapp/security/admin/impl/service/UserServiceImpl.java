@@ -15,7 +15,6 @@ import net.n2oapp.security.admin.impl.service.specification.UserSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -111,7 +110,7 @@ public class UserServiceImpl implements UserService {
         if (!criteria.getOrders().stream().filter(o -> o.getProperty().equals("id")).findAny().isPresent()) {
             criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "id"));
         }
-        final Page<UserEntity> all = new PageImpl<>(userRepository.findAll(specification, criteria.getSort()));
+        final Page<UserEntity> all = (userRepository.findAll(specification, criteria));
         return all.map(this::model);
     }
 
