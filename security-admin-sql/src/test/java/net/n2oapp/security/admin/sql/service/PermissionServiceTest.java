@@ -72,6 +72,7 @@ public class PermissionServiceTest {
         List<Permission> permissions = service.getAllByParentId(1);
         assertEquals(1,permissions.size());
         assertEquals((Integer)2,permissions.get(0).getId());
+        assertEquals(false,permissions.get(0).getHasChildren());
     }
 
     @Test
@@ -79,6 +80,7 @@ public class PermissionServiceTest {
         List<Permission> permissions = service.getAllByParentIdIsNull();
         assertEquals(1,permissions.size());
         assertEquals((Integer)1,permissions.get(0).getId());
+        assertEquals(true,permissions.get(0).getHasChildren());
     }
 
     private static Permission newPermission() {

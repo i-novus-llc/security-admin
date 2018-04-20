@@ -29,6 +29,7 @@ public class PermissionServiceImplSql implements PermissionService{
     private final static String SELECT_ALL_BY_PARENT_ID = "sql/permission/select_all_by_parent_id.sql";
     private final static String GET_PERMISSION_BY_ID = "sql/permission/get_permission_by_id.sql";
     private final static String SELECT_ALL_BY_PARENT_ID_IS_NULL = "sql/permission/select_all_by_parent_id_is_null.sql";
+    private final static String HAS_CHILDREN = "sql/permission/has_children.sql";
 
     @Autowired
     private TransactionTemplate transactionTemplate;
@@ -106,6 +107,7 @@ public class PermissionServiceImplSql implements PermissionService{
         permission.setName((String) map.get("NAME"));
         permission.setCode((String) map.get("CODE"));
         permission.setParentId((Integer) map.get("PARENT_ID"));
+        permission.setHasChildren(jdbcTemplate.queryForObject(SqlUtil.readFileSql(HAS_CHILDREN), new MapSqlParameterSource("id", permission.getId()), Boolean.class));
         return permission;
     }
 
