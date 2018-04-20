@@ -30,6 +30,7 @@
         <module>keycloak-theme</module>
         <module>security-admin-sso-keycloak</module>
         <module>security-admin-rest-client</module>
+        <module>security-admin-sql</module>
     </modules>
 
     <properties>

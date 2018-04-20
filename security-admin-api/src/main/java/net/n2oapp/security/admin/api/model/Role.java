@@ -18,4 +18,7 @@ public class Role {
     private List<Permission> permissions;
 
 
+    public Role(Integer id) {
+        this.id = id;
+    }
 }

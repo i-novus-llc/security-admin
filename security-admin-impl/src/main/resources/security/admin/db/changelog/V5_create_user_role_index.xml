@@ -8,7 +8,7 @@
         <sqlFile path="security/admin/db/changelog/sql/V5_user_role_index.sql"/>
     </changeSet>
     <changeSet id="create_user_role_index" author="rgalina" dbms="h2">
-        <sqlFile path="security/admin/db/changelog/sql/V5_user_role_index.sql"/>
+        <sqlFile path="security/admin/db/changelog/h2/V5_user_role_index.sql"/>
     </changeSet>
 
 </databaseChangeLog>
