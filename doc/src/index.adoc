@@ -251,7 +251,7 @@ image::images\readme-e72a1.png[]
 </databaseChangeLog>
 ----
 +
-Где, `[granularity]` вид link:#_гранулярность_доступа[гранулярности доступа].
+Где, `[granularity]` вид link:#_Гранулярность_доступа[гранулярности доступа].
 +
 . На сервере Tomcat создайте jdbc ресурс с именем `jdbc/security`, например, так:
 +
