@@ -7,6 +7,7 @@ import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.UserServiceImpl;
 import net.n2oapp.security.admin.impl.util.PasswordGenerator;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-@PropertySource("classpath:META-INF/n2o-build.properties")
+@PropertySource("classpath:security.properties")
 public class AdminImplConfiguration {
 
     @Value("${sec.password.generate.length}")
@@ -42,5 +43,10 @@ public class AdminImplConfiguration {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public ModelMapper modelMapper(){
+        return new ModelMapper();
     }
 }

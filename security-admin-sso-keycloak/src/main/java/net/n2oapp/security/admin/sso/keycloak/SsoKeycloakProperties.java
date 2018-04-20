@@ -6,80 +6,52 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 /**
  * Настройки для модуля взаимодействия с keycloak
  */
-//@Data
+@Data
 @ConfigurationProperties("keycloak")
 public class SsoKeycloakProperties {
 
+    /**
+     * Адрес возврата после аутентификации
+     */
     private String redirectUrl = "http://localhost:8085/admin";
+
+    /**
+     * Адрес сервера keycloak
+     */
     private String serverUrl = "http://127.0.0.1:8080/auth";
+
+    /**
+     * Название домена
+     */
     private String realm = "security-admin";
+
+    /**
+     * Идентификатор клиента
+     */
     private String clientId = "security-admin-sso";
+
+    /**
+     * Идентификатор клиента администрирования пользователей и ролей в keycloak
+     */
     private String adminClientId = "admin-cli";
+
+    /**
+     * Имя пользователя с правами на создание, реадктирование и удаление ролей и пользователей в keycloak
+     */
     private String username = "restadmin";
+
+    /**
+     * Пароль пользователя с правами на создание, реадктирование и удаление ролей и пользователей в keycloak
+     */
     private String password;
+
+    /**
+     * Отправлять ли подтверждение email при создании пользователя
+     */
     private Boolean sendVerifyEmail = true;
 
-    public String getRedirectUrl() {
-        return redirectUrl;
-    }
-
-    public void setRedirectUrl(String redirectUrl) {
-        this.redirectUrl = redirectUrl;
-    }
-
-    public String getServerUrl() {
-        return serverUrl;
-    }
-
-    public void setServerUrl(String serverUrl) {
-        this.serverUrl = serverUrl;
-    }
-
-    public String getRealm() {
-        return realm;
-    }
-
-    public void setRealm(String realm) {
-        this.realm = realm;
-    }
-
-    public String getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
-    }
-
-    public String getAdminClientId() {
-        return adminClientId;
-    }
-
-    public void setAdminClientId(String adminClientId) {
-        this.adminClientId = adminClientId;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Boolean getSendVerifyEmail() {
-        return sendVerifyEmail;
-    }
-
-    public void setSendVerifyEmail(Boolean sendVerifyEmail) {
-        this.sendVerifyEmail = sendVerifyEmail;
-    }
+    /**
+     * Отправлять ли ссылку на смену пароля при создании пользователя
+     */
+    private Boolean sendChangePassword = true;
 }

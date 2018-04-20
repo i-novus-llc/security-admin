@@ -49,8 +49,15 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
                 });
                 realmResource.users().get(userId).roles().realmLevel().add(roles);
             }
-            if (properties.getSendVerifyEmail()) {
-                realmResource.users().get(userId).executeActionsEmail(properties.getClientId(), properties.getRedirectUrl(), Arrays.asList("UPDATE_PASSWORD", "VERIFY_EMAIL"));
+            if (properties.getSendVerifyEmail() || properties.getSendChangePassword()) {
+                List<String> actions = new ArrayList<>();
+                if (properties.getSendVerifyEmail()) {
+                    actions.add("VERIFY_EMAIL");
+                }
+                if (properties.getSendChangePassword()) {
+                    actions.add("UPDATE_PASSWORD");
+                }
+                realmResource.users().get(userId).executeActionsEmail(properties.getClientId(), properties.getRedirectUrl(), actions);
             }
             return user;
         } else {
