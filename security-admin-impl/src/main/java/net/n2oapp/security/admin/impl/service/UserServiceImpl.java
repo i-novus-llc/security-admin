@@ -100,14 +100,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<User> findAll(UserCriteria criteria) {
         final Specification<UserEntity> specification = new UserSpecifications(criteria);
-        if (criteria.getOrders().stream().filter(o -> o.getProperty().equals("fio")).findAny().isPresent()) {
+        if (criteria.getOrders().stream().map(Sort.Order::getProperty).anyMatch("fio"::equals)) {
             Sort.Direction orderFio = criteria.getOrders().stream().filter(o -> o.getProperty().equals("fio")).findAny().get().getDirection();
             criteria.getOrders().add(new Sort.Order(orderFio, "surname"));
             criteria.getOrders().add(new Sort.Order(orderFio, "name"));
             criteria.getOrders().add(new Sort.Order(orderFio, "patronymic"));
             criteria.getOrders().removeIf(s -> s.getProperty().equals("fio"));
         }
-        if (!criteria.getOrders().stream().filter(o -> o.getProperty().equals("id")).findAny().isPresent()) {
+        if (!criteria.getOrders().stream().map(Sort.Order::getProperty).anyMatch("id"::equals)) {
             criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "id"));
         }
         final Page<UserEntity> all = (userRepository.findAll(specification, criteria));

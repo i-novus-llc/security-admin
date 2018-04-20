@@ -71,10 +71,10 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Page<Role> findAll(RoleCriteria criteria) {
         Specification<RoleEntity> specification = new RoleSpecifications(criteria);
-        if (!criteria.getOrders().stream().filter(o -> o.getProperty().equals("id")).findAny().isPresent()) {
+        if (!criteria.getOrders().stream().map(Sort.Order::getProperty).anyMatch("id"::equals)) {
             criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "id"));
         }
-        Page<RoleEntity> all = (roleRepository.findAll(specification, criteria));
+        Page<RoleEntity> all = roleRepository.findAll(specification, criteria);
         return all.map(this::model);
     }
 
@@ -99,7 +99,7 @@ public class RoleServiceImpl implements RoleService {
         entity.setCode(model.getCode());
         entity.setDescription(model.getDescription());
         if (model.getPermissions() != null) {
-            entity.setPermissionList(model.getPermissions().stream().map(p -> entity(p)).collect(Collectors.toList()));
+            entity.setPermissionList(model.getPermissions().stream().map(this::entity).collect(Collectors.toList()));
         }
         return entity;
     }
