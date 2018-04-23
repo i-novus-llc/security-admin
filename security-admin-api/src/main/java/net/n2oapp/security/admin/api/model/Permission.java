@@ -15,7 +15,4 @@ public class Permission {
     private Integer parentId;
     private Boolean hasChildren;
 
-    public Permission(Integer id) {
-        this.id = id;
-    }
 }

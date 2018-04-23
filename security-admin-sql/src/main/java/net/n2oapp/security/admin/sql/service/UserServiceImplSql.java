@@ -1,9 +1,9 @@
 package net.n2oapp.security.admin.sql.service;
 
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
-import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
+import net.n2oapp.security.admin.api.service.RoleService;
 import net.n2oapp.security.admin.api.service.UserService;
 import net.n2oapp.security.admin.sql.util.MailServiceImpl;
 import net.n2oapp.security.admin.sql.util.PasswordGenerator;
@@ -56,6 +56,9 @@ public class UserServiceImplSql implements UserService {
 
     @Autowired
     private MailServiceImpl mailService;
+
+    @Autowired
+    private RoleService service;
 
     @Override
     public User create(UserForm user) {
@@ -140,7 +143,7 @@ public class UserServiceImplSql implements UserService {
             User user = mapQueryResult(all.get(0));
             try {
                 user.setRoles(jdbcTemplate.queryForList(SqlUtil.readFileSql(GET_ROLE_BY_USER_ID), new MapSqlParameterSource("user_id", id), Integer.class)
-                        .stream().map(Role::new).collect(Collectors.toList()));
+                        .stream().map(service::getById).collect(Collectors.toList()));
             } catch (EmptyResultDataAccessException e) {
                 user.setRoles(null);
                 return user;
@@ -203,7 +206,7 @@ public class UserServiceImplSql implements UserService {
         user.setEmail(form.getEmail());
         user.setPassword(form.getPassword());
         user.setIsActive(form.getIsActive());
-        user.setRoles(form.getRoles().stream().map(Role::new).collect(Collectors.toList()));
+        user.setRoles(form.getRoles().stream().map(service::getById).collect(Collectors.toList()));
         return user;
     }
 

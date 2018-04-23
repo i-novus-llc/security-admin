@@ -2,9 +2,9 @@ package net.n2oapp.security.admin.sql.service;
 
 
 import net.n2oapp.security.admin.api.criteria.RoleCriteria;
-import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.RoleForm;
+import net.n2oapp.security.admin.api.service.PermissionService;
 import net.n2oapp.security.admin.api.service.RoleService;
 import net.n2oapp.security.admin.sql.util.SqlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +19,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -46,6 +45,9 @@ public class RoleServiceImplSql implements RoleService {
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private PermissionService service;
 
     @Override
     public Role create(RoleForm role) {
@@ -106,7 +108,7 @@ public class RoleServiceImplSql implements RoleService {
             Role role = mapQueryResult(all.get(0));
             try {
                 role.setPermissions(jdbcTemplate.queryForList(SqlUtil.readFileSql(GET_PERMISSION_BY_ROLE_ID), new MapSqlParameterSource("role_id", id), Integer.class)
-                        .stream().map(Permission::new).collect(Collectors.toList()));
+                        .stream().map(service::getById).collect(Collectors.toList()));
             } catch (EmptyResultDataAccessException e) {
                 role.setPermissions(null);
                 return role;
@@ -147,7 +149,7 @@ public class RoleServiceImplSql implements RoleService {
         role.setCode(form.getCode());
         role.setName(form.getName());
         role.setDescription(form.getDescription());
-        role.setPermissions(form.getPermissions().stream().map(Permission::new).collect(Collectors.toList()));
+        role.setPermissions(form.getPermissions().stream().map(service::getById).collect(Collectors.toList()));
         return role;
     }
 
