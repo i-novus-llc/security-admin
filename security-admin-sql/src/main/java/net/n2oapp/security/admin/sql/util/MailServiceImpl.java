@@ -5,13 +5,14 @@ import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.service.MailService;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.text.StrSubstitutor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -29,6 +30,7 @@ import java.util.Map;
 @Service
 public class MailServiceImpl implements MailService {
 
+    protected static final Logger log = LoggerFactory.getLogger(MailServiceImpl.class);
 
     @Autowired
     private JavaMailSender emailSender;
@@ -54,7 +56,7 @@ public class MailServiceImpl implements MailService {
         try (InputStream inputStream = welcomeUserMail.getInputStream()) {
             body = StrSubstitutor.replace(IOUtils.toString(inputStream, "UTF-8"), data);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Resource " + welcomeUserMail + "doesn't close ", e);
         }
         String subject = StrSubstitutor.replace(subjectTemplate, data);
         MimeMessageHelper helper = null;
@@ -65,9 +67,9 @@ public class MailServiceImpl implements MailService {
             helper.setText(body,true);
             emailSender.send(message);
         } catch (MailException exception) {
-            exception.printStackTrace();
+            log.warn("Exception while sending mail notification to "  + user.getUsername(), exception);
         } catch (MessagingException e) {
-            e.printStackTrace();
+            log.warn("Exception while sending mail notification to "  + user.getUsername(), e);
         }
 
     }

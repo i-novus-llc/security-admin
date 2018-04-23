@@ -1,12 +1,22 @@
 package net.n2oapp.security.admin.sql.util;
 
-import java.io.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
 
 /**
  * Сервис считывания sql-запросов из файлов
  */
 
 public class SqlUtil {
+
+    protected static final Logger log = LoggerFactory.getLogger(SqlUtil.class);
 
     public static String readFileSql(String pathToFile) {
         StringBuilder sb = null;
@@ -22,9 +32,9 @@ public class SqlUtil {
                 line = br.readLine();
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            log.error("Cannot find file "+ pathToFile + " ", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Resource " + pathToFile + "don't close", e);
         }
         return sb.toString();
     }
