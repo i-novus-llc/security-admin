@@ -15,6 +15,7 @@
     <packaging>pom</packaging>
     <version>2.0-SNAPSHOT</version>
     <modules>
+        <module>doc</module>
         <module>security-auth</module>
         <module>security-auth-simple</module>
         <module>security-auth-oauth2</module>
