@@ -4,18 +4,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>net.n2oapp.platform</groupId>
-        <artifactId>parent</artifactId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
-
     <groupId>net.n2oapp.framework.security</groupId>
     <artifactId>security-admin</artifactId>
     <packaging>pom</packaging>
     <version>2.0-SNAPSHOT</version>
+
+    <parent>
+        <groupId>net.n2oapp.platform</groupId>
+        <artifactId>n2o-platform-bom</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath/>
+    </parent>
+
     <modules>
-        <module>doc</module>
         <module>security-auth</module>
         <module>security-auth-simple</module>
         <module>security-auth-oauth2</module>
@@ -28,145 +29,10 @@
     	<module>security-admin-frontend</module>
         <module>security-admin-web-sql</module>
         <module>security-admin-web-rest</module>
-        <module>keycloak-theme</module>
         <module>security-admin-sso-keycloak</module>
         <module>security-admin-rest-client</module>
+        <module>keycloak-theme</module>
+        <module>doc</module>
     </modules>
-
-    <properties>
-        <spring.boot.version>1.5.10.RELEASE</spring.boot.version>
-        <jackson.version>2.8.6</jackson.version>
-        <criteria.version>3.9</criteria.version>
-        <cxf.version>3.1.11</cxf.version>
-        <n2o.version>6.1.18</n2o.version>
-        <commons.version>2.6</commons.version>
-        <n2o.platform.version>1.0-SNAPSHOT</n2o.platform.version>
-    </properties>
-
-    <dependencyManagement>
-        <dependencies>
-
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>Edgware.RELEASE</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-            <!-- N2O -->
-            <dependency>
-                <groupId>net.n2oapp.framework</groupId>
-                <artifactId>n2o-api</artifactId>
-                <version>${n2o.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.n2oapp.framework</groupId>
-                <artifactId>n2o-engine</artifactId>
-                <version>${n2o.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.n2oapp.framework</groupId>
-                <artifactId>n2o-config</artifactId>
-                <version>${n2o.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.n2oapp.framework</groupId>
-                <artifactId>n2o-engine-rest</artifactId>
-                <version>${n2o.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.n2oapp.framework</groupId>
-                <artifactId>n2o-header</artifactId>
-                <version>${n2o.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.n2oapp.framework</groupId>
-                <artifactId>n2o-access</artifactId>
-                <version>${n2o.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.n2oapp.framework</groupId>
-                <artifactId>n2o-context</artifactId>
-                <version>${n2o.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.n2oapp.framework</groupId>
-                <artifactId>n2o-ui</artifactId>
-                <version>${n2o.version}</version>
-                <scope>runtime</scope>
-            </dependency>
-            <dependency>
-                <groupId>net.n2oapp.framework</groupId>
-                <artifactId>n2o-config-ehcache</artifactId>
-                <version>${n2o.version}</version>
-                <scope>runtime</scope>
-            </dependency>
-            <!-- /N2O -->
-
-
-            <!-- PLATFORM -->
-            <dependency>
-                <groupId>net.n2oapp.platform</groupId>
-                <artifactId>n2o-platform-starter-jaxrs</artifactId>
-                <version>${n2o.platform.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.n2oapp.platform</groupId>
-                <artifactId>n2o-platform-i18n</artifactId>
-                <version>${n2o.platform.version}</version>
-            </dependency>
-            <!-- /PLATFORM -->
-
-            <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>javax.servlet-api</artifactId>
-                <version>3.1.0</version>
-                <scope>provided</scope>
-            </dependency>
-            <!-- /spring -->
-
-
-            <!--Model Mapper-->
-            <dependency>
-                <groupId>org.modelmapper.extensions</groupId>
-                <artifactId>modelmapper-spring</artifactId>
-                <version>1.1.0</version>
-            </dependency>
-
-            <dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>${commons.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>commons-lang</groupId>
-                <artifactId>commons-lang</artifactId>
-                <version>${commons.version}</version>
-            </dependency>
-
-        </dependencies>
-    </dependencyManagement>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.25</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.1.11</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>log4j-over-slf4j</artifactId>
-            <version>1.7.25</version>
-        </dependency>
-    </dependencies>
-
 
 </project>
