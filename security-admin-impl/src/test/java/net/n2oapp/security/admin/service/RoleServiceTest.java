@@ -1,7 +1,6 @@
 package net.n2oapp.security.admin.service;
 
 import net.n2oapp.platform.i18n.UserException;
-import net.n2oapp.security.admin.TestApplication;
 import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.RoleForm;
@@ -27,7 +26,7 @@ import static org.junit.Assert.assertNotNull;
  * Тест сервиса управления ролями пользователя
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @TestPropertySource("classpath:test.properties")
 @AutoConfigureTestDatabase
 public class RoleServiceTest {
