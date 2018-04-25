@@ -45,7 +45,7 @@ public class PermissionServiceImplSql implements PermissionService{
                             .addValue("code", permission.getCode())
                             .addValue("parentId", permission.getParentId());
             KeyHolder keyHolder = new GeneratedKeyHolder();
-            jdbcTemplate.update(SqlUtil.readFileSql(INSERT_PERMISSION), namedParameters, keyHolder, new String[]{"id"});
+            jdbcTemplate.update(SqlUtil.getResourceFileAsString(INSERT_PERMISSION), namedParameters, keyHolder, new String[]{"id"});
             permission.setId((Integer) keyHolder.getKey());
             return permission;
         });
@@ -60,7 +60,7 @@ public class PermissionServiceImplSql implements PermissionService{
                             .addValue("name", permission.getName())
                             .addValue("code", permission.getCode())
                             .addValue("parentId", permission.getParentId());
-            jdbcTemplate.update(SqlUtil.readFileSql(UPDATE_PERMISSION), namedParameters);
+            jdbcTemplate.update(SqlUtil.getResourceFileAsString(UPDATE_PERMISSION), namedParameters);
             return permission;
         });
         return permission;
@@ -70,13 +70,13 @@ public class PermissionServiceImplSql implements PermissionService{
     public void delete(Integer id) {
         SqlParameterSource namedParameters =
                 new MapSqlParameterSource("id", id);
-        jdbcTemplate.update(SqlUtil.readFileSql(DELETE_PERMISSION), namedParameters);
+        jdbcTemplate.update(SqlUtil.getResourceFileAsString(DELETE_PERMISSION), namedParameters);
     }
 
     @Override
     public Permission getById(Integer id) {
         try {
-            return mapQueryResult(jdbcTemplate.queryForList(SqlUtil.readFileSql(GET_PERMISSION_BY_ID), new MapSqlParameterSource("id", id)).get(0));
+            return mapQueryResult(jdbcTemplate.queryForList(SqlUtil.getResourceFileAsString(GET_PERMISSION_BY_ID), new MapSqlParameterSource("id", id)).get(0));
         }catch(IndexOutOfBoundsException e){
             return null;
         }
@@ -85,19 +85,19 @@ public class PermissionServiceImplSql implements PermissionService{
 
     @Override
     public List<Permission> getAll() {
-        return jdbcTemplate.queryForList(SqlUtil.readFileSql(SELECT_ALL), new MapSqlParameterSource()).stream().map(this::mapQueryResult).collect(Collectors.toList());
+        return jdbcTemplate.queryForList(SqlUtil.getResourceFileAsString(SELECT_ALL), new MapSqlParameterSource()).stream().map(this::mapQueryResult).collect(Collectors.toList());
     }
 
     @Override
     public List<Permission> getAllByParentId(Integer parentId) {
-        return jdbcTemplate.queryForList(SqlUtil.readFileSql(SELECT_ALL_BY_PARENT_ID), new MapSqlParameterSource("parentId", parentId))
+        return jdbcTemplate.queryForList(SqlUtil.getResourceFileAsString(SELECT_ALL_BY_PARENT_ID), new MapSqlParameterSource("parentId", parentId))
                 .stream().map(this::mapQueryResult).collect(Collectors.toList());
 
     }
 
     @Override
     public List<Permission> getAllByParentIdIsNull() {
-        return jdbcTemplate.queryForList(SqlUtil.readFileSql(SELECT_ALL_BY_PARENT_ID_IS_NULL),  new MapSqlParameterSource())
+        return jdbcTemplate.queryForList(SqlUtil.getResourceFileAsString(SELECT_ALL_BY_PARENT_ID_IS_NULL),  new MapSqlParameterSource())
                 .stream().map(this::mapQueryResult).collect(Collectors.toList());
     }
 
@@ -107,7 +107,7 @@ public class PermissionServiceImplSql implements PermissionService{
         permission.setName((String) map.get("NAME"));
         permission.setCode((String) map.get("CODE"));
         permission.setParentId((Integer) map.get("PARENT_ID"));
-        permission.setHasChildren(jdbcTemplate.queryForObject(SqlUtil.readFileSql(HAS_CHILDREN), new MapSqlParameterSource("id", permission.getId()), Boolean.class));
+        permission.setHasChildren(jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(HAS_CHILDREN), new MapSqlParameterSource("id", permission.getId()), Boolean.class));
         return permission;
     }
 

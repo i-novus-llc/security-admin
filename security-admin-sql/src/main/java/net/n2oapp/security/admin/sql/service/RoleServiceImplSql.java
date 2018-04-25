@@ -36,9 +36,10 @@ public class RoleServiceImplSql implements RoleService {
     private final static String INSERT_ROLE_PERMISSION = "sql/role/insert_role_permission.sql";
     private final static String DELETE_ROLE_PERMISSION = "sql/role/delete_role_permission.sql";
     private final static String GET_ROLE_BY_ID = "sql/role/get_role_by_id.sql";
-    private static final String GET_PERMISSION_BY_ROLE_ID = "sql/role/get_permission_by_role_id.sql";
+    private final static String GET_PERMISSION_BY_ROLE_ID = "sql/role/get_permission_by_role_id.sql";
     private final static String SELECT_ALL = "sql/role/select_all.sql";
     private final static String SELECT_ALL_PERMISSIONS = "sql/role/select_all_permissions.sql";
+    private final static String SELECT_ALL_PERMISSIONS_BY_CRITERIA = "sql/role/select_all_permissions_by_criteria.sql";
 
     @Autowired
     private TransactionTemplate transactionTemplate;
@@ -57,7 +58,7 @@ public class RoleServiceImplSql implements RoleService {
                             .addValue("code", role.getCode())
                             .addValue("description", role.getDescription());
             KeyHolder keyHolder = new GeneratedKeyHolder();
-            jdbcTemplate.update(SqlUtil.readFileSql(INSERT_ROLE), namedParameters, keyHolder, new String[]{"id"});
+            jdbcTemplate.update(SqlUtil.getResourceFileAsString(INSERT_ROLE), namedParameters, keyHolder, new String[]{"id"});
             role.setId((Integer) keyHolder.getKey());
             savePermissions(role);
             return map(role);
@@ -71,7 +72,7 @@ public class RoleServiceImplSql implements RoleService {
                 SqlParameterSource params =
                         new MapSqlParameterSource("roleId", role.getId())
                                 .addValue("permissionId", permission);
-                jdbcTemplate.update(SqlUtil.readFileSql(INSERT_ROLE_PERMISSION), params);
+                jdbcTemplate.update(SqlUtil.getResourceFileAsString(INSERT_ROLE_PERMISSION), params);
             });
         }
     }
@@ -84,8 +85,8 @@ public class RoleServiceImplSql implements RoleService {
                             .addValue("name", role.getName())
                             .addValue("code", role.getCode())
                             .addValue("description", role.getDescription());
-            jdbcTemplate.update(SqlUtil.readFileSql(UPDATE_ROLE), namedParameters);
-            jdbcTemplate.update(SqlUtil.readFileSql(DELETE_ROLE_PERMISSION), namedParameters);
+            jdbcTemplate.update(SqlUtil.getResourceFileAsString(UPDATE_ROLE), namedParameters);
+            jdbcTemplate.update(SqlUtil.getResourceFileAsString(DELETE_ROLE_PERMISSION), namedParameters);
             savePermissions(role);
             return map(role);
         });
@@ -96,18 +97,18 @@ public class RoleServiceImplSql implements RoleService {
     public void delete(Integer id) {
         SqlParameterSource namedParameters =
                 new MapSqlParameterSource("id", id);
-        jdbcTemplate.update(SqlUtil.readFileSql(DELETE_ROLE), namedParameters);
+        jdbcTemplate.update(SqlUtil.getResourceFileAsString(DELETE_ROLE), namedParameters);
     }
 
     @Override
     public Role getById(Integer id) {
-        List<Map<String, Object>> all = jdbcTemplate.queryForList(SqlUtil.readFileSql(GET_ROLE_BY_ID), new MapSqlParameterSource("id", id));
+        List<Map<String, Object>> all = jdbcTemplate.queryForList(SqlUtil.getResourceFileAsString(GET_ROLE_BY_ID), new MapSqlParameterSource("id", id));
         if (all.isEmpty()) {
             return null;
         } else {
             Role role = mapQueryResult(all.get(0));
             try {
-                role.setPermissions(jdbcTemplate.queryForList(SqlUtil.readFileSql(GET_PERMISSION_BY_ROLE_ID), new MapSqlParameterSource("role_id", id), Integer.class)
+                role.setPermissions(jdbcTemplate.queryForList(SqlUtil.getResourceFileAsString(GET_PERMISSION_BY_ROLE_ID), new MapSqlParameterSource("role_id", id), Integer.class)
                         .stream().map(service::getById).collect(Collectors.toList()));
             } catch (EmptyResultDataAccessException e) {
                 role.setPermissions(null);
@@ -122,9 +123,11 @@ public class RoleServiceImplSql implements RoleService {
         SqlParameterSource namedParameters =
                 new MapSqlParameterSource("name", criteria.getName())
                         .addValue("description", criteria.getDescription());
-        List<Role> roles = jdbcTemplate.queryForList(SqlUtil.readFileSql(SELECT_ALL), namedParameters).stream().map(this::mapQueryResult).collect(Collectors.toList());
+        List<Role> roles = jdbcTemplate.queryForList(SqlUtil.getResourceFileAsString(SELECT_ALL), namedParameters).stream().map(this::mapQueryResult).collect(Collectors.toList());
+        roles.stream().forEach(role -> role.setPermissions(jdbcTemplate.queryForList(SqlUtil.getResourceFileAsString(SELECT_ALL_PERMISSIONS),
+                new MapSqlParameterSource().addValue("id", role.getId()), Integer.class).stream().map(service::getById).collect(Collectors.toList())));
         if (criteria.getPermissionIds() != null) {
-            return new PageImpl<>(roles.stream().filter(role -> !jdbcTemplate.queryForObject(SqlUtil.readFileSql(SELECT_ALL_PERMISSIONS),
+            return new PageImpl<>(roles.stream().filter(role -> !jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(SELECT_ALL_PERMISSIONS_BY_CRITERIA),
                     new MapSqlParameterSource()
                             .addValue("id", role.getId())
                             .addValue("permissionIds", criteria.getPermissionIds()), Integer.class).equals(0))
@@ -149,7 +152,9 @@ public class RoleServiceImplSql implements RoleService {
         role.setCode(form.getCode());
         role.setName(form.getName());
         role.setDescription(form.getDescription());
-        role.setPermissions(form.getPermissions().stream().map(service::getById).collect(Collectors.toList()));
+        if(form.getPermissions() != null) {
+            role.setPermissions(form.getPermissions().stream().map(service::getById).collect(Collectors.toList()));
+        }
         return role;
     }
 

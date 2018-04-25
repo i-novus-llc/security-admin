@@ -1,6 +1,6 @@
 package net.n2oapp.security.admin.api.service;
 
-import com.sun.xml.internal.messaging.saaj.packaging.mime.MessagingException;
+
 import net.n2oapp.security.admin.api.model.User;
 
 /**

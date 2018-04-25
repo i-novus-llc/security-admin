@@ -7,4 +7,8 @@
     <include file="classpath*:/security/admin/db/normal/properties.xml"/>
     <include file="classpath*:/security/admin/db/normal/securityAdminBaseChangelog.xml"/>
 
+    <changeSet id="data_for_search" author="otihonova" dbms="h2">
+        <sqlFile path="data.sql"/>
+    </changeSet>
+
 </databaseChangeLog>

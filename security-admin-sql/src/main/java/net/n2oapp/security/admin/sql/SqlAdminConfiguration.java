@@ -3,6 +3,7 @@ package net.n2oapp.security.admin.sql;
 import net.n2oapp.security.admin.sql.util.PasswordGenerator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.Resource;
@@ -10,7 +11,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean;
 
 import java.util.Properties;
 
@@ -18,7 +18,8 @@ import java.util.Properties;
  * Конфигурация security-admin-sql
  */
 @Configuration
-@PropertySource("classpath:META-INF/n2o.properties")
+@PropertySource("classpath:mail.properties")
+@ComponentScan("net.n2oapp.security.admin.sql")
 public class SqlAdminConfiguration {
 
     @Value("${sec.password.generate.length}")
@@ -68,7 +69,7 @@ public class SqlAdminConfiguration {
 
 
     @Bean
-    public JavaMailSender getJavaMailSender() {
+    public JavaMailSender javaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost(mailHost);
         mailSender.setPort(mailPort);

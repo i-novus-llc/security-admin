@@ -1,3 +1,3 @@
-select count(*)
+select permission_id
 from sec.role_permission
-where role_id = :id and permission_id in (:permissionIds);
+where role_id = :id;

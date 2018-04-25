@@ -6,9 +6,9 @@
     <actions>
         <action id="create">
             <invocation>
-                <n2o:java-method name="create" bean="jdbcUserService">
+                <n2o:java-method name="create" bean="userServiceImplSql">
                     <n2o:arguments>
-                        <n2o:argument name="userEntity" class="net.n2oapp.security.admin.api.model.User"/>
+                        <n2o:argument name="userEntity" class="net.n2oapp.security.admin.api.model.UserForm"/>
                     </n2o:arguments>
                 </n2o:java-method>
             </invocation>
@@ -18,8 +18,10 @@
                 <param name="surname" mapping="[0].surname" domain="string" required="true"/>
                 <param name="name" mapping="[0].name" domain="string" required="true"/>
                 <param name="patronymic" mapping="[0].patronymic" domain="string"/>
+                <param name="password" mapping="[0].password" domain="string" required="true"/>
+                <param name="passwordCheck" mapping="[0].passwordCheck" domain="string"/>
                 <param name="isActive" mapping="[0].isActive" domain="boolean" value="false"/>
-                <param name="roles" mapping="[0].roles" domain="object[]" required="true"/>
+                <param name="roles*.id" mapping="[0].roles" domain="integer[]" required="true"/>
             </in-parameters>
             <out-parameters>
                 <param name="id" mapping="id"/>
@@ -30,9 +32,9 @@
 
         <action id="update">
             <invocation>
-                <n2o:java-method name="update" bean="jdbcUserService">
+                <n2o:java-method name="update" bean="userServiceImplSql">
                     <n2o:arguments>
-                        <n2o:argument name="userEntity" class="net.n2oapp.security.admin.api.model.User"/>
+                        <n2o:argument name="userEntity" class="net.n2oapp.security.admin.api.model.UserForm"/>
                     </n2o:arguments>
                 </n2o:java-method>
             </invocation>
@@ -44,8 +46,10 @@
                 <param name="surname" mapping="[0].surname" domain="string" required="true"/>
                 <param name="name" mapping="[0].name" domain="string" required="true"/>
                 <param name="patronymic" mapping="[0].patronymic" domain="string"/>
+                <param name="newPassword" mapping="[0].newPassword" domain="string"/>
+                <param name="passwordCheck" mapping="[0].passwordCheck" domain="string"/>
                 <param name="isActive" mapping="[0].isActive" domain="boolean" value="false"/>
-                <param name="roles" mapping="[0].roles" domain="object[]" required="true"/>
+                <param name="roles*.id" mapping="[0].roles" domain="integer[]" required="true"/>
             </in-parameters>
             <out-parameters>
                 <param name="id" mapping="id"/>
@@ -58,7 +62,7 @@
 
         <action id="delete">
             <invocation>
-                <n2o:java-method name="delete" bean="jdbcUserService">
+                <n2o:java-method name="delete" bean="userServiceImplSql">
                     <n2o:arguments>
                         <n2o:argument name="id" class="java.lang.Integer"/>
                     </n2o:arguments>
@@ -73,16 +77,14 @@
 
         <action id="changeUserActive">
             <invocation>
-                <n2o:java-method name="changeUserActive" bean="jdbcUserService">
+                <n2o:java-method name="changeActive" bean="userServiceImplSql">
                     <n2o:arguments>
                         <n2o:argument name="id" class="java.lang.Integer"/>
-                        <n2o:argument name="isActive" class="java.lang.Boolean"/>
                     </n2o:arguments>
                 </n2o:java-method>
             </invocation>
             <in-parameters>
                 <param name="id" mapping="[0]" domain="integer" required="true"/>
-                <param name="isActive" mapping="[1]" domain="boolean"/>
             </in-parameters>
             <success-text>Активность пользователя изменена!</success-text>
         </action>
@@ -111,7 +113,6 @@
                         regex.test(username);
                      }else true;
                 ]]>
-
             </expression>
         </condition>
 
@@ -126,5 +127,55 @@
                 ]]>
             </expression>
         </condition>
+
+        <condition id="passwordValidation" level="error">
+            <message>Неверный формат пароля</message>
+            <expression on="password">
+                <![CDATA[
+                    if (typeof password != 'undefined' && password != null && password != '') {
+                        var regex = new RegExp('[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?');
+                        regex.test(password);
+                     }else true;
+                ]]>
+            </expression>
+        </condition>
+
+        <condition id="passwordLengthValidation" level="error">
+            <message>Некорректная длина пароля</message>
+            <expression on="password">
+                <![CDATA[
+                    if (typeof password != 'undefined' && password != null && password != '') {
+                        password.length >= ${sec.admin.user.password.length.validation}
+                     }else true;
+                ]]>
+            </expression>
+        </condition>
+
+        <condition id="passwordCheckValidation" level="error">
+            <message>Введённые пароли не совпадают</message>
+            <expression on="passwordCheck,password">
+                <![CDATA[
+                    if (typeof passwordCheck != 'undefined' && passwordCheck != null && passwordCheck != '') {
+                        passwordCheck === password;
+                     }else true;
+                ]]>
+            </expression>
+        </condition>
+
+        <condition id="newPasswordCheckValidation" level="error">
+            <message>Введённые пароли не совпадают</message>
+            <expression on="passwordCheck,newPassword">
+                <![CDATA[
+                    if (typeof passwordCheck != 'undefined' && passwordCheck != null && passwordCheck != '') {
+                        passwordCheck === newPassword;
+                     }else true;
+                ]]>
+            </expression>
+        </condition>
     </validations>
 </object>
+
+
+
+
+

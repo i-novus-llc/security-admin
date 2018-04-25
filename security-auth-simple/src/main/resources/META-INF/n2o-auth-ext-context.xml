@@ -4,7 +4,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 
-
+    <!-- spring -->
+    <bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 
     <bean id="providerManager" class="org.springframework.security.authentication.ProviderManager">
         <constructor-arg name="providers">
@@ -21,8 +22,14 @@
 
     <bean id="authenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
         <property name="userDetailsService" ref="n2oSimpleDetailManager"/>
+        <property name="passwordEncoder" ref="passwordEncoder"/>
     </bean>
 
     <bean id="currentUserUpdatePasswordService" class="net.n2oapp.security.auth.simple.CurrentUserUpdatePasswordService"/>
+
+
+
+
+
 
 </beans>

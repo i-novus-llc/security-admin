@@ -168,7 +168,7 @@ public class UserServiceTest {
         form.setSurname(user.getSurname());
         form.setPatronymic(user.getPatronymic());
         form.setEmail(user.getEmail());
-        form.setPassword(user.getPassword());
+        form.setNewPassword(user.getPassword());
         form.setPasswordCheck(user.getPasswordCheck());
         form.setIsActive(true);
         form.setRoles(user.getRoles().stream().map(Role::getId).collect(Collectors.toList()));

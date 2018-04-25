@@ -40,6 +40,7 @@ public class UserServiceImplSql implements UserService {
     private final static String UPDATE_USER_ACTIVE = "sql/user/update_user_active.sql";
     private final static String DELETE_USER_ROLE = "sql/user/delete_user_role.sql";
     private final static String SELECT_ALL = "sql/user/select_all.sql";
+    private final static String SELECT_ALL_ROLES_BY_CRITERIA = "sql/user/select_all_roles_by_criteria.sql";
     private final static String SELECT_ALL_ROLES = "sql/user/select_all_roles.sql";
 
     @Autowired
@@ -83,7 +84,7 @@ public class UserServiceImplSql implements UserService {
                 ((MapSqlParameterSource) namedParameters).addValue("password", user.getPassword());
             }
             KeyHolder keyHolder = new GeneratedKeyHolder();
-            jdbcTemplate.update(SqlUtil.readFileSql(INSERT_USER), namedParameters, keyHolder, new String[]{"id"});
+            jdbcTemplate.update(SqlUtil.getResourceFileAsString(INSERT_USER), namedParameters, keyHolder, new String[]{"id"});
             user.setId((Integer) keyHolder.getKey());
             saveRoles(user);
             if (generate) {
@@ -101,7 +102,7 @@ public class UserServiceImplSql implements UserService {
                 SqlParameterSource params =
                         new MapSqlParameterSource("userId", user.getId())
                                 .addValue("roleId", role);
-                jdbcTemplate.update(SqlUtil.readFileSql(INSERT_USER_ROLE), params);
+                jdbcTemplate.update(SqlUtil.getResourceFileAsString(INSERT_USER_ROLE), params);
             });
         }
     }
@@ -119,8 +120,8 @@ public class UserServiceImplSql implements UserService {
                             .addValue("patronymic", user.getPatronymic())
                             .addValue("isActive", true)
                             .addValue("guid", user.getGuid());
-            jdbcTemplate.update(SqlUtil.readFileSql(UPDATE_USER), namedParameters);
-            jdbcTemplate.update(SqlUtil.readFileSql(DELETE_USER_ROLE), namedParameters);
+            jdbcTemplate.update(SqlUtil.getResourceFileAsString(UPDATE_USER), namedParameters);
+            jdbcTemplate.update(SqlUtil.getResourceFileAsString(DELETE_USER_ROLE), namedParameters);
             saveRoles(user);
             return map(user);
         });
@@ -131,18 +132,18 @@ public class UserServiceImplSql implements UserService {
     public void delete(Integer id) {
         SqlParameterSource namedParameters =
                 new MapSqlParameterSource("id", id);
-        jdbcTemplate.update(SqlUtil.readFileSql(DELETE_USER), namedParameters);
+        jdbcTemplate.update(SqlUtil.getResourceFileAsString(DELETE_USER), namedParameters);
     }
 
     @Override
     public User getById(Integer id) {
-        List<Map<String, Object>> all = jdbcTemplate.queryForList(SqlUtil.readFileSql(GET_USER_BY_ID), new MapSqlParameterSource("id", id));
+        List<Map<String, Object>> all = jdbcTemplate.queryForList(SqlUtil.getResourceFileAsString(GET_USER_BY_ID), new MapSqlParameterSource("id", id));
         if (all.isEmpty()) {
             return null;
         } else {
             User user = mapQueryResult(all.get(0));
             try {
-                user.setRoles(jdbcTemplate.queryForList(SqlUtil.readFileSql(GET_ROLE_BY_USER_ID), new MapSqlParameterSource("user_id", id), Integer.class)
+                user.setRoles(jdbcTemplate.queryForList(SqlUtil.getResourceFileAsString(GET_ROLE_BY_USER_ID), new MapSqlParameterSource("user_id", id), Integer.class)
                         .stream().map(service::getById).collect(Collectors.toList()));
             } catch (EmptyResultDataAccessException e) {
                 user.setRoles(null);
@@ -159,9 +160,11 @@ public class UserServiceImplSql implements UserService {
                         .addValue("isActive", criteria.getIsActive())
                         .addValue("fio", criteria.getFio())
                         .addValue("password", criteria.getPassword());
-        List<User> users = jdbcTemplate.queryForList(SqlUtil.readFileSql(SELECT_ALL), namedParameters).stream().map(this::mapQueryResult).collect(Collectors.toList());
+        List<User> users = jdbcTemplate.queryForList(SqlUtil.getResourceFileAsString(SELECT_ALL), namedParameters).stream().map(this::mapQueryResult).collect(Collectors.toList());
+        users.stream().forEach(user -> user.setRoles(jdbcTemplate.queryForList(SqlUtil.getResourceFileAsString(SELECT_ALL_ROLES),
+                new MapSqlParameterSource().addValue("id", user.getId()), Integer.class).stream().map(service::getById).collect(Collectors.toList())));
         if (criteria.getRoleIds() != null) {
-            return new PageImpl<>(users.stream().filter(user -> !jdbcTemplate.queryForObject(SqlUtil.readFileSql(SELECT_ALL_ROLES),
+            return new PageImpl<>(users.stream().filter(user -> !jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(SELECT_ALL_ROLES_BY_CRITERIA),
                     new MapSqlParameterSource()
                             .addValue("id", user.getId())
                             .addValue("roleIds", criteria.getRoleIds()), Integer.class).equals(0))
@@ -174,8 +177,8 @@ public class UserServiceImplSql implements UserService {
     public User changeActive(Integer id) {
         SqlParameterSource namedParameters =
                 new MapSqlParameterSource("id", id)
-                        .addValue("isActive", getById(id).getIsActive());
-        jdbcTemplate.update(SqlUtil.readFileSql(UPDATE_USER_ACTIVE), namedParameters);
+                        .addValue("isActive", !getById(id).getIsActive());
+        jdbcTemplate.update(SqlUtil.getResourceFileAsString(UPDATE_USER_ACTIVE), namedParameters);
         return getById(id);
     }
 
@@ -206,7 +209,9 @@ public class UserServiceImplSql implements UserService {
         user.setEmail(form.getEmail());
         user.setPassword(form.getPassword());
         user.setIsActive(form.getIsActive());
-        user.setRoles(form.getRoles().stream().map(service::getById).collect(Collectors.toList()));
+        if(form.getRoles() != null) {
+            user.setRoles(form.getRoles().stream().map(service::getById).collect(Collectors.toList()));
+        }
         return user;
     }
 
@@ -223,8 +228,6 @@ public class UserServiceImplSql implements UserService {
         }
         return builder.toString();
     }
-
-
 
 
 }

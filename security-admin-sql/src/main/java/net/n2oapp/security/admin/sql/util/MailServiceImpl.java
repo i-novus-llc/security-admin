@@ -35,7 +35,7 @@ public class MailServiceImpl implements MailService {
     @Autowired
     private JavaMailSender emailSender;
     @Value("mail/welcomeUser.html")
-    private Resource welcomeUserMail;
+    private String welcomeUserMail;
     @Value("${sec.password.mail.subject}")
     private String mailSubject;
 
@@ -53,10 +53,10 @@ public class MailServiceImpl implements MailService {
         String subjectTemplate = mailSubject;
         MimeMessage message = emailSender.createMimeMessage();
         String body = null;
-        try (InputStream inputStream = welcomeUserMail.getInputStream()) {
+        try (InputStream inputStream = MailServiceImpl.class.getClassLoader().getResourceAsStream(welcomeUserMail);) {
             body = StrSubstitutor.replace(IOUtils.toString(inputStream, "UTF-8"), data);
         } catch (IOException e) {
-            log.error("Resource " + welcomeUserMail + "doesn't close ", e);
+            throw new IllegalStateException("Exception while opening resource " + welcomeUserMail , e);
         }
         String subject = StrSubstitutor.replace(subjectTemplate, data);
         MimeMessageHelper helper = null;
@@ -67,9 +67,9 @@ public class MailServiceImpl implements MailService {
             helper.setText(body,true);
             emailSender.send(message);
         } catch (MailException exception) {
-            log.warn("Exception while sending mail notification to "  + user.getUsername(), exception);
+            throw new IllegalStateException("Exception while sending mail notification to "  + user.getUsername() + "\n",exception);
         } catch (MessagingException e) {
-            log.warn("Exception while sending mail notification to "  + user.getUsername(), e);
+            throw new IllegalStateException("Exception while sending mail notification to "  + user.getUsername() + "\n", e);
         }
 
     }

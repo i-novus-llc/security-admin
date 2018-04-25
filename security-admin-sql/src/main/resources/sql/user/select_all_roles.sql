@@ -1,3 +1,3 @@
-select count(*)
+select role_id
 from sec.user_role
-where user_id = :id and role_id in (:roleIds);
+where user_id = :id;
