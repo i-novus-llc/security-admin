@@ -18,13 +18,13 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 /**
- * Тест сервиса управления правами доступа
+ * Тест SQL реализации сервиса управления правами доступа
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, properties = "")
 @TestPropertySource("classpath:test.properties")
 @AutoConfigureTestDatabase
-public class PermissionServiceTest {
+public class PermissionServiceSqlTest {
 
     @Autowired
     private PermissionService service;
@@ -42,6 +42,7 @@ public class PermissionServiceTest {
         update(permission);
         delete(permission.getId());
     }
+
     private Permission create() {
         Permission permission = service.create(newPermission());
         assertNotNull(service.getById(permission.getId()));
@@ -51,7 +52,7 @@ public class PermissionServiceTest {
     private Permission update(Permission permission) {
         permission.setName("userName1Update");
         Permission updatePermission = service.update(permission);
-        assertEquals("userName1Update", service.getById(permission.getId()).getName() );
+        assertEquals("userName1Update", service.getById(permission.getId()).getName());
         return updatePermission;
     }
 
@@ -64,23 +65,23 @@ public class PermissionServiceTest {
     @Test
     public void getAll() throws Exception {
         List<Permission> permissions = service.getAll();
-        assertEquals(2,permissions.size());
+        assertEquals(2, permissions.size());
     }
 
     @Test
     public void getAllgetAllByParentId() throws Exception {
         List<Permission> permissions = service.getAllByParentId(1);
-        assertEquals(1,permissions.size());
-        assertEquals((Integer)2,permissions.get(0).getId());
-        assertEquals(false,permissions.get(0).getHasChildren());
+        assertEquals(1, permissions.size());
+        assertEquals((Integer) 2, permissions.get(0).getId());
+        assertEquals(false, permissions.get(0).getHasChildren());
     }
 
     @Test
     public void getAllByParentIdIsNull() throws Exception {
         List<Permission> permissions = service.getAllByParentIdIsNull();
-        assertEquals(1,permissions.size());
-        assertEquals((Integer)1,permissions.get(0).getId());
-        assertEquals(true,permissions.get(0).getHasChildren());
+        assertEquals(1, permissions.size());
+        assertEquals((Integer) 1, permissions.get(0).getId());
+        assertEquals(true, permissions.get(0).getHasChildren());
     }
 
     private static Permission newPermission() {

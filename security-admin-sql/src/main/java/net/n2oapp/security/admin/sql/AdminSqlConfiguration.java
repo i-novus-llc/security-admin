@@ -20,7 +20,7 @@ import java.util.Properties;
 @Configuration
 @PropertySource("classpath:mail.properties")
 @ComponentScan("net.n2oapp.security.admin.sql")
-public class SqlAdminConfiguration {
+public class AdminSqlConfiguration {
 
     @Value("${sec.password.generate.length}")
     private Integer passwordGeneratorLength;

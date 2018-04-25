@@ -33,13 +33,13 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Тест сервиса управления пользователями
+ * Тест SQL реализации сервиса управления пользователями
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, properties = "")
 @TestPropertySource("classpath:test.properties")
 @AutoConfigureTestDatabase
-public class UserServiceTest {
+public class UserServiceSqlTest {
 
     @Rule
     public final GreenMailRule greenMail = new GreenMailRule(new ServerSetup(2525, null, "smtp"));

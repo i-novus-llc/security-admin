@@ -19,6 +19,7 @@
             <version>${project.version}</version>
         </dependency>
 
+        <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
@@ -33,24 +34,21 @@
             <artifactId>spring-security-taglibs</artifactId>
         </dependency>
 
-
-        <!-- n2o -->
-        <dependency>
-            <groupId>net.n2oapp.framework</groupId>
-            <artifactId>n2o-api</artifactId>
-        </dependency>
-
         <!-- for mail -->
         <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>javax.mail-api</artifactId>
-            <version>${javax-mail.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
         </dependency>
 
         <!-- TEST -->
@@ -72,16 +70,12 @@
             <version>1.5.6</version>
             <scope>test</scope>
         </dependency>
-        <!-- TEST -->
 
-        <!-- liquibase -->
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
             <scope>test</scope>
         </dependency>
-
-
         <!-- /TEST -->
 
     </dependencies>

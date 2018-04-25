@@ -22,13 +22,13 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 /**
- * Тест сервиса управления ролями
+ * Тест SQL реализации сервиса управления ролями
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, properties = "")
 @TestPropertySource("classpath:test.properties")
 @AutoConfigureTestDatabase
-public class RoleServiceTest {
+public class RoleServiceSqlTest {
 
     @Autowired
     private RoleService service;
