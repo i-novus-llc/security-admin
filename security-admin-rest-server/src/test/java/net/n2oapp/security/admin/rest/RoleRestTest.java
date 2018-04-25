@@ -36,7 +36,7 @@ import static org.junit.Assert.assertNull;
 @AutoConfigureTestDatabase
 public class RoleRestTest {
     @Autowired
-    @Qualifier("roleRestProxyClient")
+    @Qualifier("roleRestServiceJaxRsProxyClient")
     private RoleRestService client;
 
     @Test
