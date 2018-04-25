@@ -26,7 +26,7 @@
         </dependency>
         <dependency>
             <groupId>net.n2oapp.framework.security</groupId>
-            <artifactId>security-admin-rest-server</artifactId>
+            <artifactId>security-admin-sql</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

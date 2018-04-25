@@ -13,4 +13,5 @@ public class UserCriteria extends BaseCriteria {
     private String fio;
     private Boolean isActive;
     private List<Integer> roleIds;
+    private String password;
 }

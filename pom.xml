@@ -31,6 +31,7 @@
         <module>security-admin-web-rest</module>
         <module>security-admin-sso-keycloak</module>
         <module>security-admin-rest-client</module>
+        <module>security-admin-sql</module>
         <module>keycloak-theme</module>
         <module>doc</module>
     </modules>

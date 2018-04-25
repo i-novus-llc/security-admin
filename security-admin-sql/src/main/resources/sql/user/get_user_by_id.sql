@@ -1,0 +1,1 @@
+select * from sec.user where id = :id;

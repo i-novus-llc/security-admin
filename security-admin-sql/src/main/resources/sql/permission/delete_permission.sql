@@ -1,0 +1,1 @@
+delete from sec.permission where id = :id;
