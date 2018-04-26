@@ -39,7 +39,7 @@ import static org.junit.Assert.assertNull;
 public class UserRestTest {
 
     @Autowired
-    @Qualifier("userRestProxyClient")
+    @Qualifier("userRestServiceJaxRsProxyClient")
     private UserRestService client;
 
     @Test

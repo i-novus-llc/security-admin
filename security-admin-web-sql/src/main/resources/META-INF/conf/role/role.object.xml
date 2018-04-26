@@ -6,9 +6,9 @@
     <actions>
         <action id="create">
             <invocation>
-                <n2o:java-method name="create" bean="jdbcRoleService">
+                <n2o:java-method name="create" bean="roleServiceImplSql">
                     <n2o:arguments>
-                        <n2o:argument name="role" class="net.n2oapp.security.admin.api.model.Role"/>
+                        <n2o:argument name="role" class="net.n2oapp.security.admin.api.model.RoleForm"/>
                     </n2o:arguments>
                 </n2o:java-method>
             </invocation>
@@ -16,7 +16,7 @@
                 <param name="name" mapping="[0].name" domain="string" required="true"/>
                 <param name="code" mapping="[0].code" domain="string" required="true"/>
                 <param name="description" mapping="[0].description" domain="string"/>
-                <param name="permissions*.id" mapping="[0].permissionIds" domain="integer[]"/>
+                <param name="permissions*.id" mapping="[0].permissions" domain="integer[]"/>
             </in-parameters>
             <out-parameters>
                 <param name="id" mapping="id"/>
@@ -27,9 +27,9 @@
 
         <action id="update">
             <invocation>
-                <n2o:java-method name="update" bean="jdbcRoleService">
+                <n2o:java-method name="update" bean="roleServiceImplSql">
                     <n2o:arguments>
-                        <n2o:argument name="role" class="net.n2oapp.security.admin.api.model.Role"/>
+                        <n2o:argument name="role" class="net.n2oapp.security.admin.api.model.RoleForm"/>
                     </n2o:arguments>
                 </n2o:java-method>
             </invocation>
@@ -38,7 +38,7 @@
                 <param name="name" mapping="[0].name" domain="string" required="true"/>
                 <param name="code" mapping="[0].code" domain="string" required="true"/>
                 <param name="description" mapping="[0].description" domain="string"/>
-                <param name="permissions*.id" mapping="[0].permissionIds" domain="integer[]"/>
+                <param name="permissions*.id" mapping="[0].permissions" domain="integer[]"/>
             </in-parameters>
             <out-parameters>
                 <param name="id" mapping="id"/>
@@ -49,7 +49,7 @@
 
         <action id="delete">
             <invocation>
-                <n2o:java-method name="delete" bean="jdbcRoleService">
+                <n2o:java-method name="delete" bean="roleServiceImplSql">
                     <n2o:arguments>
                         <n2o:argument name="id" class="java.lang.Integer"/>
                     </n2o:arguments>

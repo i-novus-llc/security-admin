@@ -1,0 +1,1 @@
+insert into sec.user_role(user_id, role_id) values(:userId, :roleId);

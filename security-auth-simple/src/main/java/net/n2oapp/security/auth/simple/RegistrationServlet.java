@@ -2,6 +2,7 @@ package net.n2oapp.security.auth.simple;
 
 import net.n2oapp.context.StaticSpringContext;
 import net.n2oapp.properties.StaticProperties;
+import net.n2oapp.security.admin.api.service.RoleService;
 import net.n2oapp.security.auth.User;
 import net.n2oapp.security.auth.authority.RoleGrantedAuthority;
 import org.springframework.security.core.GrantedAuthority;

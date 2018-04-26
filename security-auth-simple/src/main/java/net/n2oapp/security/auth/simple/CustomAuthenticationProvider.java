@@ -1,6 +1,10 @@
 package net.n2oapp.security.auth.simple;
 
+import net.n2oapp.security.admin.api.criteria.UserCriteria;
+import net.n2oapp.security.admin.api.model.User;
+import net.n2oapp.security.admin.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -21,11 +25,9 @@ import java.util.Map;
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
-    private final static String GET_USER_BY_USERNAME = "select id from sec.user  where username = :username and is_active";
-    private final static String GET_USER_BY_USERNAME_AND_PASSWORD = "select u.id from sec.user u where u.username = :username and u.password = :password and is_active";
-
     @Autowired
-    private NamedParameterJdbcTemplate jdbcTemplate;
+    private UserService userService;
+
 
 
     @Override
@@ -47,20 +49,16 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
                 UsernamePasswordAuthenticationToken.class);
     }
 
-    private boolean isAuthenticate(String name, String password) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("username", name);
-        List<Integer> userId = jdbcTemplate.query(GET_USER_BY_USERNAME, params, (resultSet, i) -> {
-            return resultSet.getInt("id");
-        });
-        if (userId == null || userId.size() != 1) {
-            throw new UsernameNotFoundException(String.format("User with username %s not found!", name));
+    private boolean isAuthenticate(String username, String password) {
+        UserCriteria criteria = new UserCriteria();
+        criteria.setUsername(username);
+        Page<User> users = userService.findAll(criteria);
+        if (users == null || users.getTotalElements() != 1) {
+            throw new UsernameNotFoundException(String.format("User with username %s not found!", username));
         }
-        params.put("password", password);
-        userId = jdbcTemplate.query(GET_USER_BY_USERNAME_AND_PASSWORD, params, (resultSet, i) -> {
-            return resultSet.getInt("id");
-        });
-        if (userId == null || userId.size() != 1) {
+        criteria.setPassword(password);
+        users = userService.findAll(criteria);
+        if (users == null || users.getTotalElements() != 1) {
             return false;
         }
         return true;

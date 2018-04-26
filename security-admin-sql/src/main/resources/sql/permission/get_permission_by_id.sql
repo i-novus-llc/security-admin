@@ -1,0 +1,1 @@
+select * from sec.permission where id = :id;

@@ -3,8 +3,6 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <!-- n2o -->
-    <bean class="net.n2oapp.security.auth.simple.RoleService"/>
 
     <!-- spring -->
     <bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
@@ -17,18 +15,21 @@
         </constructor-arg>
     </bean>
 
-    <bean id="n2oJdbcUserDetailsManager" class="net.n2oapp.security.auth.simple.N2oJdbcUserDetailsManager">
+    <bean id="n2oSimpleDetailManager" class="net.n2oapp.security.auth.simple.N2oSimpleDetailManager">
         <!--<property name="authenticationManager" ref="providerManager"/>-->
-        <property name="passwordEncoder" ref="passwordEncoder"/>
-        <property name="transactionTemplate" ref="transactionTemplate"/>
         <property name="authenticationProvider" ref="authenticationProvider"/>
     </bean>
 
     <bean id="authenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
-        <property name="userDetailsService" ref="n2oJdbcUserDetailsManager"/>
+        <property name="userDetailsService" ref="n2oSimpleDetailManager"/>
         <property name="passwordEncoder" ref="passwordEncoder"/>
     </bean>
 
     <bean id="currentUserUpdatePasswordService" class="net.n2oapp.security.auth.simple.CurrentUserUpdatePasswordService"/>
+
+
+
+
+
 
 </beans>

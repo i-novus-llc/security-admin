@@ -4,20 +4,20 @@
         <object-access object-id="blank"/>
     </guest-access>
 
-    <permission id="user.read">
+    <permission id="sec.admin.user.read">
         <object-access object-id="${sec.admin.user.object.id}"/>
     </permission>
 
-    <permission id="role.read">
+    <permission id="sec.admin.role.read">
         <object-access object-id="${sec.admin.role.object.id}"/>
     </permission>
 
-    <permission id="user.edit">
+    <permission id="sec.admin.user.edit">
         <object-access object-id="${sec.admin.user.object.id}"/>
         <object-access object-id="${sec.admin.user.object.id}" actions="create,update,delete,changeUserActive"/>
     </permission>
 
-    <permission id="role.edit">
+    <permission id="sec.admin.role.edit">
         <object-access object-id="${sec.admin.role.object.id}"/>
         <object-access object-id="${sec.admin.role.object.id}" actions="create,update,delete"/>
     </permission>

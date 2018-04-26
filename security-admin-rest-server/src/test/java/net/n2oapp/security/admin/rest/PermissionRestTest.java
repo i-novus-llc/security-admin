@@ -28,7 +28,7 @@ import static org.junit.Assert.assertEquals;
 public class PermissionRestTest {
 
     @Autowired
-    @Qualifier("permissionRestProxyClient")
+    @Qualifier("permissionRestServiceJaxRsProxyClient")
     private PermissionRestService client;
 
     @Test

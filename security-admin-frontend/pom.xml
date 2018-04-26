@@ -3,18 +3,18 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <artifactId>security-admin-frontend</artifactId>
+    <packaging>war</packaging>
+
     <parent>
         <artifactId>security-admin</artifactId>
         <groupId>net.n2oapp.framework.security</groupId>
         <version>2.0-SNAPSHOT</version>
+        <relativePath>..</relativePath>
     </parent>
 
-    <packaging>war</packaging>
-    <artifactId>security-admin-frontend</artifactId>
-
     <properties>
-        <n2o.version>6.1.18</n2o.version>
-        <security.admin.version>2.0-SNAPSHOT</security.admin.version>
+        <n2o.version>6.1.21</n2o.version>
     </properties>
 
     <build>
@@ -54,7 +54,7 @@
         <dependency>
             <groupId>net.n2oapp.framework.security</groupId>
             <artifactId>security-auth-oauth2</artifactId>
-            <version>${security.admin.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- /AUTH -->
@@ -63,7 +63,6 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
-            <version>3.0.1</version>
             <scope>provided</scope>
         </dependency>
 

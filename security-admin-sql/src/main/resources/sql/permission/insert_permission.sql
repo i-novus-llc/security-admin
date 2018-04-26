@@ -1,0 +1,1 @@
+insert into sec.permission(name, code, parent_id) values(:name, :code, :parentId);

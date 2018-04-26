@@ -58,31 +58,32 @@
             </filters>
         </field>
 
-
         <field>
-            <id>permissions</id>
-            <domain>object[]</domain>
-            <display>(select array_to_json(array_agg(row_to_json(row_js))) from (select p.id, p.name from
-                sec.role_permission
-                rp join sec.permission p on p.id=rp.permission_id where rp.role_id=r.id) row_js)
-            </display>
-            <name>Права доступа</name>
-
-        </field>
-
-        <field>
-            <id>permissionsFilter.id</id>
-            <domain>string</domain>
+            <id>permissions*.id</id>
+            <domain>integer[]</domain>
             <filters>
-                <filter type="in" filter-field="permissionsFilter*.id">
+                <filter type="in" filter-field="permissionFilter*.id">
                     <![CDATA[
-                        r.id in (select rol.id from sec.role rol where
-                            (select string_to_array(btrim((:permissionsFilter*.id)::varchar, '()'), ',')::varchar[])
-                                <@ (select array(select (rolp.permission_id)::varchar FROM sec.role_permission rolp where rolp.role_id = rol.id)))
-
+                        exists (select ur1.permission_id
+                        from sec.role_permission ur1
+                        where role_id = r.id and permission_id in (:permissionFilter*.id))
                     ]]>
                 </filter>
             </filters>
+            <name>Роли</name>
+        </field>
+
+        <field>
+            <id>permissions*.name</id>
+            <domain>string[]</domain>
+            <display>
+                <![CDATA[
+                  (select ARRAY_AGG(p.name)
+                from sec.role_permission
+                rp join sec.permission p on p.id=rp.permission_id where rp.role_id=r.id)
+                 ]]>
+            </display>
+            <name>Роли</name>
         </field>
 
     </fields>

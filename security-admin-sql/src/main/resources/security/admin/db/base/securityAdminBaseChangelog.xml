@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <include file="security/admin/db/changelog/V1_create_schemasec.xml"/>
+    <include file="security/admin/db/changelog/V2_create_user.xml"/>
+    <include file="security/admin/db/changelog/V3_create_roles.xml"/>
+    <include file="security/admin/db/changelog/V5_create_user_role_index.xml"/>
+    <include file="security/admin/db/changelog/V7_add_column_user_guid.xml"/>
+
+</databaseChangeLog>

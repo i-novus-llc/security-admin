@@ -12,10 +12,12 @@ import net.n2oapp.security.admin.impl.entity.UserEntity;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.UserSpecifications;
+import net.n2oapp.security.admin.impl.util.PasswordGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,15 +29,13 @@ import java.util.stream.Collectors;
 /**
  * Реализация сервиса управления пользователями
  */
-@Service
 @Transactional
 public class UserServiceImpl implements UserService {
-    @Autowired
     private UserRepository userRepository;
-    @Autowired
     private RoleRepository roleRepository;
-    @Autowired
     private SsoUserRoleProvider provider;
+    private PasswordGenerator passwordGenerator;
+    private PasswordEncoder passwordEncoder;
 
     @Value("${n2o.security.validation.username:true}")
     private Boolean validationUsername;
@@ -55,21 +55,41 @@ public class UserServiceImpl implements UserService {
     @Value("${n2o.security.validation.password.special.symbols}")
     private Boolean validationPasswordSpecialSymbols;
 
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, SsoUserRoleProvider provider, PasswordGenerator passwordGenerator, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.provider = provider;
+        this.passwordGenerator = passwordGenerator;
+        this.passwordEncoder = passwordEncoder;
+    }
+
     @Override
     public User create(UserForm user) {
         checkUsernameUniq(user.getId(), user.getUsername());
         checkUsername(user.getUsername());
         checkEmail(user.getEmail());
-        checkPassword(user.getPassword(), user.getPasswordCheck(), user.getId());
-        UserEntity entity = new UserEntity();
-        UserEntity savedUser = userRepository.save(entityForm(entity, user));
+        if (user.getPassword() != null) {
+            checkPassword(user.getPassword(), user.getPasswordCheck(), user.getId());
+        }
+        UserEntity entity = entityForm(new UserEntity(), user);
+        if (entity.getPassword() == null) {
+            entity.setPassword(passwordGenerator.generate());
+        }
+        //сохраняем пароль в закодированном виде
+        String password = entity.getPassword();
+        String encodedPassword = passwordEncoder.encode(password);
+        entity.setPassword(encodedPassword);
+        UserEntity savedUser = userRepository.save(entity);
+        // получаем модель для сохранения провайдером, ему надо передать незакодированный пароль
         User result = model(savedUser);
+        result.setPassword(password);
         User providerResult = provider.createUser(result);
         if (providerResult != null) {
-            result = providerResult;
-            userRepository.save(entity(providerResult));
+            providerResult.setPassword(encodedPassword);
+            savedUser = userRepository.save(entity(providerResult));
         }
-        return result;
+
+        return model(savedUser);
     }
 
     @Override
@@ -81,12 +101,22 @@ public class UserServiceImpl implements UserService {
             checkPassword(user.getNewPassword(), user.getPasswordCheck(), user.getId());
         }
         UserEntity entity = userRepository.getOne(user.getId());
-        User result = model(userRepository.save(entityForm(entity,user)));
+        UserEntity ent = entityForm(entity, user);
+        // кодируем пароль перед сохранением в бд если он изменился
+        if (user.getNewPassword() != null) {
+            ent.setPassword(passwordEncoder.encode(ent.getPassword()));
+        }
+        UserEntity resultEntity = userRepository.save(ent);
+        //в провайдер отправляем незакодированный пароль, если он изменился. и отправляем null если не изменялся пароль
+        User result = model(resultEntity);
         if (user.getNewPassword() == null) {
             result.setPassword(null);
+        } else {
+            result.setPassword(user.getPassword());
         }
         provider.updateUser(result);
-        return result;
+
+        return model(resultEntity);
     }
 
     @Override

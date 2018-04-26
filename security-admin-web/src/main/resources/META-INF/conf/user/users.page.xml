@@ -47,7 +47,7 @@
                             </ctrl:set-value-expression>
                         </ctrl:hidden>
 
-                        <ctrl:input-select id="roleFilter" type="multi" label="Роли" cache="off">
+                        <ctrl:input-select id="roleFilter" type="multi" label="Роли" cache="off" >
                             <ctrl:query query-id="${sec.admin.role.query.id}" value-field-id="id"
                                         label-field-id="name"/>
                         </ctrl:input-select>
