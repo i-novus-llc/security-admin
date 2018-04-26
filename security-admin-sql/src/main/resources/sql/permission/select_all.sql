@@ -1,1 +1,0 @@
-select * from sec.permission;

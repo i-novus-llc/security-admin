@@ -70,7 +70,7 @@ public class RoleServiceTest {
         List<Integer> permissions = new ArrayList<>();
         permissions.add(1);
         RoleCriteria criteria = new RoleCriteria();
-        criteria.setPage(1);
+        criteria.setPage(0);
         criteria.setSize(4);
         criteria.setName("user");
         criteria.setDescription("description1");
