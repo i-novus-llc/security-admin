@@ -10,6 +10,7 @@ import net.n2oapp.security.admin.impl.util.PasswordGenerator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -21,6 +22,7 @@ import java.util.Properties;
 
 @Configuration
 @PropertySource("classpath:security.properties")
+@ComponentScan({"net.n2oapp.security.admin.impl", "net.n2oapp.security.admin.api"})
 public class AdminImplConfiguration {
 
     @Value("${sec.password.generate.length}")

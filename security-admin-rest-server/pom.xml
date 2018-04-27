@@ -16,11 +16,6 @@
     <dependencies>
 
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-contract-wiremock</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>net.n2oapp.framework.security</groupId>
             <artifactId>security-admin-rest-api</artifactId>
             <version>${project.version}</version>
@@ -61,7 +56,6 @@
             <artifactId>n2o-platform-starter-jaxrs-client</artifactId>
             <scope>test</scope>
         </dependency>
-
 
         <!-- /TEST -->
     </dependencies>

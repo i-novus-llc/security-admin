@@ -97,17 +97,6 @@ public class UserServiceImplSql implements UserService {
     }
 
 
-    private void saveRoles(UserForm user) {
-        if (user.getRoles() != null) {
-            user.getRoles().forEach(role -> {
-                SqlParameterSource params =
-                        new MapSqlParameterSource("userId", user.getId())
-                                .addValue("roleId", role);
-                jdbcTemplate.update(SqlUtil.getResourceFileAsString(INSERT_USER_ROLE), params);
-            });
-        }
-    }
-
     @Override
     public User update(UserForm user) {
         transactionTemplate.execute(transactionStatus -> {
@@ -171,6 +160,18 @@ public class UserServiceImplSql implements UserService {
                         .addValue("isActive", !getById(id).getIsActive());
         jdbcTemplate.update(SqlUtil.getResourceFileAsString(UPDATE_USER_ACTIVE), namedParameters);
         return getById(id);
+    }
+
+
+    private void saveRoles(UserForm user) {
+        if (user.getRoles() != null) {
+            user.getRoles().forEach(role -> {
+                SqlParameterSource params =
+                        new MapSqlParameterSource("userId", user.getId())
+                                .addValue("roleId", role);
+                jdbcTemplate.update(SqlUtil.getResourceFileAsString(INSERT_USER_ROLE), params);
+            });
+        }
     }
 
 

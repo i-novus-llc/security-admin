@@ -12,7 +12,7 @@
     <parent>
         <groupId>net.n2oapp.platform</groupId>
         <artifactId>n2o-platform-bom</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>0.4</version>
         <relativePath/>
     </parent>
 
@@ -34,6 +34,7 @@
         <module>security-admin-sql</module>
         <module>keycloak-theme</module>
         <module>doc</module>
+        <module>security-admin-db</module>
     </modules>
 
 </project>
