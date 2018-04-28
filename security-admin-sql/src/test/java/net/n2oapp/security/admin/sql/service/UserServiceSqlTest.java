@@ -87,7 +87,7 @@ public class UserServiceSqlTest {
         List<Integer> roles = new ArrayList<>();
         roles.add(1);
         UserCriteria criteria = new UserCriteria();
-        criteria.setPage(1);
+        criteria.setPage(0);
         criteria.setSize(4);
         criteria.setUsername("test");
         criteria.setFio("surname1 name1 patronymic1");

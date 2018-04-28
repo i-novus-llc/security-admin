@@ -1,6 +1,7 @@
 package net.n2oapp.security.admin.sql.service;
 
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
+import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.api.service.RoleService;
@@ -21,8 +22,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -36,12 +39,10 @@ public class UserServiceImplSql implements UserService {
     private final static String DELETE_USER = "sql/user/delete_user.sql";
     private final static String INSERT_USER_ROLE = "sql/user/insert_user_role.sql";
     private final static String GET_USER_BY_ID = "sql/user/get_user_by_id.sql";
-    private final static String GET_ROLE_BY_USER_ID = "sql/user/get_role_by_user_id.sql";
     private final static String UPDATE_USER_ACTIVE = "sql/user/update_user_active.sql";
     private final static String DELETE_USER_ROLE = "sql/user/delete_user_role.sql";
-    private final static String SELECT_ALL = "sql/user/select_all.sql";
-    private final static String SELECT_ALL_ROLES_BY_CRITERIA = "sql/user/select_all_roles_by_criteria.sql";
-    private final static String SELECT_ALL_ROLES = "sql/user/select_all_roles.sql";
+    private final static String FIND_ALL = "sql/user/find_all.sql";
+    private final static String FIND_ALL_COUNT = "sql/user/find_all_count.sql";
 
     @Autowired
     private TransactionTemplate transactionTemplate;
@@ -88,11 +89,11 @@ public class UserServiceImplSql implements UserService {
             user.setId((Integer) keyHolder.getKey());
             saveRoles(user);
             if (generate) {
-                mailService.sendWelcomeMail(map(user));
+                mailService.sendWelcomeMail(model(user));
             }
-            return map(user);
+            return model(user);
         });
-        return map(user);
+        return model(user);
     }
 
 
@@ -112,9 +113,9 @@ public class UserServiceImplSql implements UserService {
             jdbcTemplate.update(SqlUtil.getResourceFileAsString(UPDATE_USER), namedParameters);
             jdbcTemplate.update(SqlUtil.getResourceFileAsString(DELETE_USER_ROLE), namedParameters);
             saveRoles(user);
-            return map(user);
+            return model(user);
         });
-        return map(user);
+        return model(user);
     }
 
     @Override
@@ -126,20 +127,13 @@ public class UserServiceImplSql implements UserService {
 
     @Override
     public User getById(Integer id) {
-        List<Map<String, Object>> all = jdbcTemplate.queryForList(SqlUtil.getResourceFileAsString(GET_USER_BY_ID), new MapSqlParameterSource("id", id));
-        if (all.isEmpty()) {
-            return null;
-        } else {
-            User user = mapQueryResult(all.get(0));
             try {
-                user.setRoles(jdbcTemplate.queryForList(SqlUtil.getResourceFileAsString(GET_ROLE_BY_USER_ID), new MapSqlParameterSource("user_id", id), Integer.class)
-                        .stream().map(service::getById).collect(Collectors.toList()));
+                return jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(GET_USER_BY_ID), new MapSqlParameterSource("id", id),(resultSet, i) -> {
+                    return model(resultSet);
+                });
             } catch (EmptyResultDataAccessException e) {
-                user.setRoles(null);
-                return user;
+              return  null;
             }
-            return user;
-        }
     }
 
     @Override
@@ -148,18 +142,15 @@ public class UserServiceImplSql implements UserService {
                 new MapSqlParameterSource("username", criteria.getUsername())
                         .addValue("isActive", criteria.getIsActive())
                         .addValue("fio", criteria.getFio())
-                        .addValue("password", criteria.getPassword());
-        List<User> users = jdbcTemplate.queryForList(SqlUtil.getResourceFileAsString(SELECT_ALL), namedParameters).stream().map(this::mapQueryResult).collect(Collectors.toList());
-        users.forEach(user -> user.setRoles(jdbcTemplate.queryForList(SqlUtil.getResourceFileAsString(SELECT_ALL_ROLES),
-                new MapSqlParameterSource().addValue("id", user.getId()), Integer.class).stream().map(service::getById).collect(Collectors.toList())));
-        if (criteria.getRoleIds() != null) {
-            return new PageImpl<>(users.stream().filter(user -> !jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(SELECT_ALL_ROLES_BY_CRITERIA),
-                    new MapSqlParameterSource()
-                            .addValue("id", user.getId())
-                            .addValue("roleIds", criteria.getRoleIds()), Integer.class).equals(0))
-                    .collect(Collectors.toList()));
-        }
-        return new PageImpl<>(users);
+                        .addValue("password", criteria.getPassword())
+                        .addValue("roleIds", criteria.getRoleIds())
+                        .addValue("limit", criteria.getPageSize())
+                        .addValue("offset", criteria.getOffset());
+        List<User> users = jdbcTemplate.query(SqlUtil.getResourceFileAsString(FIND_ALL), namedParameters, (resultSet, i) -> {
+            return model(resultSet);
+        });
+        Integer count = jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(FIND_ALL_COUNT), namedParameters,Integer.class);
+        return new PageImpl<>(users,criteria,count);
     }
 
     @Override
@@ -170,6 +161,7 @@ public class UserServiceImplSql implements UserService {
         jdbcTemplate.update(SqlUtil.getResourceFileAsString(UPDATE_USER_ACTIVE), namedParameters);
         return getById(id);
     }
+
 
     private void saveRoles(UserForm user) {
         if (user.getRoles() != null) {
@@ -182,22 +174,9 @@ public class UserServiceImplSql implements UserService {
         }
     }
 
-    private User mapQueryResult(Map map) {
-        User user = new User();
-        user.setId((Integer) map.get("ID"));
-        user.setGuid(map.get("GUID") == null ? null : map.get("GUID").toString());
-        user.setUsername((String) map.get("USERNAME"));
-        user.setName((String) map.get("NAME"));
-        user.setSurname((String) map.get("SURNAME"));
-        user.setPatronymic((String) map.get("PATRONYMIC"));
-        user.setFio(getFio(user.getSurname(), user.getName(), user.getPatronymic()));
-        user.setEmail((String) map.get("EMAIL"));
-        user.setPassword((String) map.get("PASSWORD"));
-        user.setIsActive((Boolean) map.get("IS_ACTIVE"));
-        return user;
-    }
 
-    private User map(UserForm form) {
+    private User model(UserForm form) {
+        if (form == null) return null;
         User user = new User();
         user.setId(form.getId());
         user.setGuid(form.getGuid());
@@ -209,8 +188,36 @@ public class UserServiceImplSql implements UserService {
         user.setEmail(form.getEmail());
         user.setPassword(form.getPassword());
         user.setIsActive(form.getIsActive());
-        if(form.getRoles() != null) {
+        if (form.getRoles() != null) {
             user.setRoles(form.getRoles().stream().map(service::getById).collect(Collectors.toList()));
+        }
+        return user;
+    }
+
+    private User model (ResultSet resultSet) throws SQLException {
+        if (resultSet == null) return null;
+        User user = new User();
+        user.setId(resultSet.getInt("id"));
+        user.setGuid(resultSet.getString("guid"));
+        user.setUsername(resultSet.getString("username"));
+        user.setName(resultSet.getString("name"));
+        user.setSurname(resultSet.getString("surname"));
+        user.setPatronymic(resultSet.getString("patronymic"));
+        user.setFio(getFio(user.getSurname(), user.getName(), user.getPatronymic()));
+        user.setEmail(resultSet.getString("email"));
+        user.setPassword(resultSet.getString("password"));
+        user.setIsActive(resultSet.getBoolean("is_active"));
+        if (resultSet.getObject("ids") != null && resultSet.getObject("names") != null) {
+            Object[]  ids = (Object[]) resultSet.getObject("ids");
+            Object[] names = (Object[]) resultSet.getObject("names");
+            List<Role> roles = new ArrayList<>();
+            for (int i = 0; i < ids.length && i < names.length ; i++) {
+                Role role = new Role();
+                role.setId((Integer)((Object[]) ids[i])[0]);
+                role.setName((String)((Object[])names[i])[0]);
+                roles.add(role);
+            }
+            user.setRoles(roles);
         }
         return user;
     }
@@ -228,6 +235,8 @@ public class UserServiceImplSql implements UserService {
         }
         return builder.toString();
     }
+
+
 
 
 }

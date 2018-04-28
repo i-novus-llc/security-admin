@@ -34,6 +34,7 @@
         <module>security-admin-sql</module>
         <module>keycloak-theme</module>
         <module>doc</module>
+        <module>security-admin-db</module>
     </modules>
 
 </project>

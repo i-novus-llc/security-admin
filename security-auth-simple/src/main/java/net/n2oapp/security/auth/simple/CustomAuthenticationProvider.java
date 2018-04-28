@@ -28,8 +28,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Autowired
     private UserService userService;
 
-
-
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         if(authentication.getPrincipal() == null) {

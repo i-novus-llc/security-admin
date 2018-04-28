@@ -63,6 +63,7 @@ public class N2oSimpleDetailManager implements UserDetailsManager {
         Integer id = null;
         UserCriteria criteria = new UserCriteria();
         criteria.setUsername(user.getUsername());
+        criteria.setSize(1);
         Page<net.n2oapp.security.admin.api.model.User> users = userService.findAll(criteria);
         if (users.getTotalElements() == 1) {
            id =  users.getContent().get(0).getId();
@@ -79,6 +80,7 @@ public class N2oSimpleDetailManager implements UserDetailsManager {
     public void deleteUser(String username) {
         UserCriteria criteria = new UserCriteria();
         criteria.setUsername(username);
+        criteria.setSize(1);
         Page<net.n2oapp.security.admin.api.model.User> all = userService.findAll(criteria);
         if (all.getTotalElements() == 1)
             all.getContent().get(0).getId();
@@ -114,6 +116,7 @@ public class N2oSimpleDetailManager implements UserDetailsManager {
     public boolean userExists(String username) {
         UserCriteria criteria = new UserCriteria();
         criteria.setUsername(username);
+        criteria.setSize(1);
         Page<net.n2oapp.security.admin.api.model.User> users = userService.findAll(criteria);
         if (users.getTotalElements() > 1) {
             throw new IncorrectResultSizeDataAccessException(
@@ -126,6 +129,7 @@ public class N2oSimpleDetailManager implements UserDetailsManager {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserCriteria criteria = new UserCriteria();
         criteria.setUsername(username);
+        criteria.setSize(1);
         Page<net.n2oapp.security.admin.api.model.User> users = userService.findAll(criteria);
         if (users.getTotalElements() == 0) {
             log.debug("Query returned no results for user '" + username + "'");
@@ -171,6 +175,7 @@ public class N2oSimpleDetailManager implements UserDetailsManager {
         List<Integer> tempRoleAuthorities = new ArrayList<>();
         UserCriteria criteria = new UserCriteria();
         criteria.setUsername(username);
+        criteria.setSize(1);
         Page<net.n2oapp.security.admin.api.model.User> users = userService.findAll(criteria);
         if (users.getTotalElements() > 1) {
             throw new IncorrectResultSizeDataAccessException(

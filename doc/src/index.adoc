@@ -254,6 +254,7 @@ image::images\readme-e72a1.png[]
 ----
 <?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog>
+  <include file="classpath:/security/admin/db/[granularity]/properties.xml"/>
     <include file="classpath:/security/admin/db/[granularity]/changelog.xml"/>
     ...
 </databaseChangeLog>

@@ -18,7 +18,12 @@
             <artifactId>security-admin-api</artifactId>
             <version>${project.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>net.n2oapp.framework.security</groupId>
+            <artifactId>security-admin-db</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -56,11 +61,18 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.h2database</groupId>
+                    <artifactId>h2</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
+            <version>1.4.197</version>
             <scope>test</scope>
         </dependency>
 
