@@ -13,11 +13,6 @@
         <relativePath>..</relativePath>
     </parent>
 
-    <properties>
-        <javax-mail.version>1.5.6</javax-mail.version>
-    </properties>
-
-
     <dependencies>
 
         <dependency>

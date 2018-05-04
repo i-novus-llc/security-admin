@@ -71,9 +71,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Page<Role> findAll(RoleCriteria criteria) {
         Specification<RoleEntity> specification = new RoleSpecifications(criteria);
-        if (!criteria.getOrders().stream().map(Sort.Order::getProperty).anyMatch("id"::equals)) {
-            criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "id"));
-        }
+        criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "id"));
         Page<RoleEntity> all = roleRepository.findAll(specification, criteria);
         return all.map(this::model);
     }

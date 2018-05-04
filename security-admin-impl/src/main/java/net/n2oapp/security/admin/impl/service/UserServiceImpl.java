@@ -143,10 +143,8 @@ public class UserServiceImpl implements UserService {
             criteria.getOrders().add(new Sort.Order(orderFio, "patronymic"));
             criteria.getOrders().removeIf(s -> s.getProperty().equals("fio"));
         }
-        if (!criteria.getOrders().stream().map(Sort.Order::getProperty).anyMatch("id"::equals)) {
-            criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "id"));
-        }
-        final Page<UserEntity> all = (userRepository.findAll(specification, criteria));
+        criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "id"));
+        final Page<UserEntity> all = userRepository.findAll(specification, criteria);
         return all.map(this::model);
     }
 
@@ -277,7 +275,7 @@ public class UserServiceImpl implements UserService {
     /**
      * Валидация на  ввод пароля согласно формату
      */
-    public boolean checkPassword(String password, String passwordCheck, Integer id) {
+    private boolean checkPassword(String password, String passwordCheck, Integer id) {
         if (password.length() < validationPasswordLength)
             throw new UserException("exception.passwordLength");
         String regexp;
