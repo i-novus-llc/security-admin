@@ -24,6 +24,7 @@
                         </wgt:column>
 
                     </wgt:columns>
+                    <wgt:sortings type="single"/>
                     <wgt:filters opened="true">
                         <ctrl:input-text id="username"/>
                         <ctrl:input-text id="fio" css-class="n2o-control-10"/>

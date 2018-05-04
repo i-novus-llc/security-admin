@@ -11,6 +11,8 @@
             <n2o:response-mapping collection="content" count="totalElements"/>
             <n2o:size param-name="size"/>
             <n2o:page param-name="page"/>
+            <n2o:sorting param-name="sort" separator="&amp;"/>
+            <n2o:sorting-direction asc="ASC" desc="DESC"/>
         </n2o:rest>
     </execution>
 
@@ -37,6 +39,7 @@
             <filters>
                 <filter type="like" filter-field="username">username=:username</filter>
             </filters>
+            <sorting>username,:direction</sorting>
         </field>
         <field>
             <id>email</id>
@@ -60,6 +63,7 @@
             <filters>
                 <filter type="eq" filter-field="fio">fio=:fio</filter>
             </filters>
+            <sorting>fio,:direction</sorting>
         </field>
 
         <field>

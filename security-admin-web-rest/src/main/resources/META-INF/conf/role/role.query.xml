@@ -10,6 +10,8 @@
             <n2o:response-mapping collection="content" count="totalElements"/>
             <n2o:size param-name="size"/>
             <n2o:page param-name="page"/>
+            <n2o:sorting param-name="sort" separator="&amp;"/>
+            <n2o:sorting-direction asc="ASC" desc="DESC"/>
         </n2o:rest>
     </execution>
 
@@ -30,6 +32,7 @@
             <filters>
                 <filter type="eq" filter-field="name">name=:name</filter>
             </filters>
+            <sorting>name,:direction</sorting>
         </field>
         <field>
             <id>code</id>

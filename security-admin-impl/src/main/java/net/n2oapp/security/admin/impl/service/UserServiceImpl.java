@@ -16,6 +16,7 @@ import net.n2oapp.security.admin.impl.util.PasswordGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -135,7 +136,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<User> findAll(UserCriteria criteria) {
         final Specification<UserEntity> specification = new UserSpecifications(criteria);
-        final Page<UserEntity> all = userRepository.findAll(specification, criteria);
+        if (criteria.getOrders().stream().map(Sort.Order::getProperty).anyMatch("fio"::equals)) {
+            Sort.Direction orderFio = criteria.getOrders().stream().filter(o -> o.getProperty().equals("fio")).findAny().get().getDirection();
+            criteria.getOrders().add(new Sort.Order(orderFio, "surname"));
+            criteria.getOrders().add(new Sort.Order(orderFio, "name"));
+            criteria.getOrders().add(new Sort.Order(orderFio, "patronymic"));
+            criteria.getOrders().removeIf(s -> s.getProperty().equals("fio"));
+        }
+        if (!criteria.getOrders().stream().map(Sort.Order::getProperty).anyMatch("id"::equals)) {
+            criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "id"));
+        }
+        final Page<UserEntity> all = (userRepository.findAll(specification, criteria));
         return all.map(this::model);
     }
 
