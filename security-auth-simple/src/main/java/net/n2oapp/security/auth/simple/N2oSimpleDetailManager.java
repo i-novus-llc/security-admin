@@ -158,7 +158,7 @@ public class N2oSimpleDetailManager implements UserDetailsManager {
     }
 
     private User map(net.n2oapp.security.admin.api.model.User user) {
-        String password = user.getPassword();
+        String password = user.getPasswordHash();
         String email = user.getEmail();
         String surname = user.getSurname();
         String name = user.getName();

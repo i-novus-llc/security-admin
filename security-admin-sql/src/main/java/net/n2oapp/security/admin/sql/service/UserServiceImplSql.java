@@ -83,7 +83,6 @@ public class UserServiceImplSql implements UserService {
                 password = passwordGenerator.generate();
                 encodedPassword = passwordEncoder.encode(password);
                 ((MapSqlParameterSource) namedParameters).addValue("password", encodedPassword);
-                user.setPassword(password);
             } else {
                 ((MapSqlParameterSource) namedParameters).addValue("password", user.getPassword());
             }
@@ -197,7 +196,7 @@ public class UserServiceImplSql implements UserService {
         user.setPatronymic(form.getPatronymic());
         user.setFio(getFio(user.getSurname(), user.getName(), user.getPatronymic()));
         user.setEmail(form.getEmail());
-        user.setPassword(form.getPassword());
+        user.setPasswordHash(form.getPassword());
         user.setIsActive(form.getIsActive());
         if (form.getRoles() != null) {
             user.setRoles(form.getRoles().stream().map(service::getById).collect(Collectors.toList()));
@@ -216,7 +215,7 @@ public class UserServiceImplSql implements UserService {
         user.setPatronymic(resultSet.getString("patronymic"));
         user.setFio(getFio(user.getSurname(), user.getName(), user.getPatronymic()));
         user.setEmail(resultSet.getString("email"));
-        user.setPassword(resultSet.getString("password"));
+        user.setPasswordHash(resultSet.getString("password"));
         user.setIsActive(resultSet.getBoolean("is_active"));
         if (resultSet.getObject("ids") != null && resultSet.getObject("names") != null) {
             Array a = resultSet.getArray("ids");

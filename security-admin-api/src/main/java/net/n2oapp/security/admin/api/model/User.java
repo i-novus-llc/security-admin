@@ -18,6 +18,7 @@ public class User {
     private String name;
     private String patronymic;
     private String password;
+    private String passwordHash;
     private String passwordCheck;
     private Boolean isActive;
     private List<Role> roles;

@@ -81,13 +81,6 @@
             <name>E-mail</name>
         </field>
 
-        <field>
-            <id>password</id>
-            <domain>string</domain>
-            <display>password</display>
-            <name>Пароль</name>
-        </field>
-
 
         <field>
             <id>isActive</id>

@@ -14,7 +14,7 @@
                 <ctrl:validation ref-id="emailValidation" side="client"/>
             </ctrl:validations>
         </ctrl:input-text>
-        <ctrl:password id="password" visible="${n2o.security.admin.user.password.input}" required="${n2o.security.admin.user.password.input}">
+        <ctrl:password id="password" visible="${n2o.security.admin.user.password.input}" required="${n2o.security.admin.user.password.input}" label="Пароль">
             <ctrl:validations>
                 <ctrl:validation ref-id="passwordLengthValidation" side="server"/>
                 <ctrl:validation ref-id="passwordValidation" side="client"/>
