@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
 
+import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -136,15 +137,19 @@ public class RoleServiceImplSql implements RoleService {
         role.setCode(resultSet.getString("code"));
         role.setDescription(resultSet.getString("description"));
         if (resultSet.getObject("ids") != null && resultSet.getObject("names") != null) {
-            Object[]  ids = (Object[]) resultSet.getObject("ids");
-            Object[] names = (Object[]) resultSet.getObject("names");
-            Object[] codes = (Object[]) resultSet.getObject("codes");
+            Array a = resultSet.getArray("ids");
+            Integer[] ids = (Integer[]) a.getArray();
+            a = resultSet.getArray("names");
+            String[] names = (String[]) a.getArray();
+            a = resultSet.getArray("codes");
+            String[] codes = (String[]) a.getArray();
+//            Object[] codes = (Object[]) resultSet.getObject("codes");
             List<Permission> permissions = new ArrayList<>();
             for (int i = 0; i < ids.length && i < names.length && i < codes.length ; i++) {
                 Permission permission = new Permission();
-                permission.setId((Integer)((Object[]) ids[i])[0]);
-                permission.setName((String)((Object[])names[i])[0]);
-                permission.setCode((String)((Object[])codes[i])[0]);
+                permission.setId(ids[i]);
+                permission.setName(names[i]);
+                permission.setCode(codes[i]);
                 permissions.add(permission);
             }
             role.setPermissions(permissions);

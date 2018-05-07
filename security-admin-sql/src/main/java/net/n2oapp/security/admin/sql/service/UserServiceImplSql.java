@@ -22,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -218,13 +219,17 @@ public class UserServiceImplSql implements UserService {
         user.setPassword(resultSet.getString("password"));
         user.setIsActive(resultSet.getBoolean("is_active"));
         if (resultSet.getObject("ids") != null && resultSet.getObject("names") != null) {
-            Object[]  ids = (Object[]) resultSet.getObject("ids");
-            Object[] names = (Object[]) resultSet.getObject("names");
+            Array a = resultSet.getArray("ids");
+            Integer[] ids = (Integer[]) a.getArray();
+//            Object[]  ids = (Object[]) resultSet.getObject("ids");
+            a = resultSet.getArray("names");
+            String[] names = (String[]) a.getArray();
+//            Object[] names = (Object[]) resultSet.getObject("names");
             List<Role> roles = new ArrayList<>();
             for (int i = 0; i < ids.length && i < names.length ; i++) {
                 Role role = new Role();
-                role.setId((Integer)((Object[]) ids[i])[0]);
-                role.setName((String)((Object[])names[i])[0]);
+                role.setId(ids[i]);
+                role.setName(names[i]);
                 roles.add(role);
             }
             user.setRoles(roles);
