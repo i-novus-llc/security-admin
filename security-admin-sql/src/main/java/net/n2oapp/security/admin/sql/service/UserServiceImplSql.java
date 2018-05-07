@@ -42,7 +42,9 @@ public class UserServiceImplSql implements UserService {
     private final static String UPDATE_USER_ACTIVE = "sql/user/update_user_active.sql";
     private final static String DELETE_USER_ROLE = "sql/user/delete_user_role.sql";
     private final static String FIND_ALL = "sql/user/find_all.sql";
+    private final static String FIND_ALL_WITHOUT_ROLE_CONDITION = "sql/user/find_all_without_role_condition.sql";
     private final static String FIND_ALL_COUNT = "sql/user/find_all_count.sql";
+    private final static String FIND_ALL_COUNT_WITHOUT_ROLE_CONDITION = "sql/user/find_all_count_without_role_condition.sql";
 
     @Autowired
     private TransactionTemplate transactionTemplate;
@@ -138,19 +140,27 @@ public class UserServiceImplSql implements UserService {
 
     @Override
     public Page<User> findAll(UserCriteria criteria) {
-        SqlParameterSource namedParameters =
+        MapSqlParameterSource namedParameters =
                 new MapSqlParameterSource("username", criteria.getUsername())
                         .addValue("isActive", criteria.getIsActive())
                         .addValue("fio", criteria.getFio())
                         .addValue("password", criteria.getPassword())
-                        .addValue("roleIds", criteria.getRoleIds())
                         .addValue("limit", criteria.getPageSize())
                         .addValue("offset", criteria.getOffset());
-        List<User> users = jdbcTemplate.query(SqlUtil.getResourceFileAsString(FIND_ALL), namedParameters, (resultSet, i) -> {
-            return model(resultSet);
-        });
-        Integer count = jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(FIND_ALL_COUNT), namedParameters,Integer.class);
-        return new PageImpl<>(users,criteria,count);
+        if (criteria.getRoleIds() == null) {
+            List<User> users = jdbcTemplate.query(SqlUtil.getResourceFileAsString(FIND_ALL_WITHOUT_ROLE_CONDITION), namedParameters, (resultSet, i) -> {
+                return model(resultSet);
+            });
+            Integer count = jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(FIND_ALL_COUNT_WITHOUT_ROLE_CONDITION), namedParameters, Integer.class);
+            return new PageImpl<>(users, criteria, count);
+        } else {
+            namedParameters.addValue("roleIds", criteria.getRoleIds());
+            List<User> users = jdbcTemplate.query(SqlUtil.getResourceFileAsString(FIND_ALL), namedParameters, (resultSet, i) -> {
+                return model(resultSet);
+            });
+            Integer count = jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(FIND_ALL_COUNT), namedParameters, Integer.class);
+            return new PageImpl<>(users, criteria, count);
+        }
     }
 
     @Override
