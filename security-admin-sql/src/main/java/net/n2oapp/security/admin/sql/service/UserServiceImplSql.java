@@ -37,6 +37,7 @@ public class UserServiceImplSql implements UserService {
 
     private final static String INSERT_USER = "sql/user/insert_user.sql";
     private final static String UPDATE_USER = "sql/user/update_user.sql";
+    private final static String UPDATE_USER_WITHOUT_PASS = "sql/user/update_user_without_password.sql";
     private final static String DELETE_USER = "sql/user/delete_user.sql";
     private final static String INSERT_USER_ROLE = "sql/user/insert_user_role.sql";
     private final static String GET_USER_BY_ID = "sql/user/get_user_by_id.sql";
@@ -84,7 +85,7 @@ public class UserServiceImplSql implements UserService {
                 encodedPassword = passwordEncoder.encode(password);
                 ((MapSqlParameterSource) namedParameters).addValue("password", encodedPassword);
             } else {
-                ((MapSqlParameterSource) namedParameters).addValue("password", user.getPassword());
+                ((MapSqlParameterSource) namedParameters).addValue("password", passwordEncoder.encode(user.getPassword()));
             }
             KeyHolder keyHolder = new GeneratedKeyHolder();
             jdbcTemplate.update(SqlUtil.getResourceFileAsString(INSERT_USER), namedParameters, keyHolder, new String[]{"id"});
@@ -102,17 +103,21 @@ public class UserServiceImplSql implements UserService {
     @Override
     public User update(UserForm user) {
         transactionTemplate.execute(transactionStatus -> {
-            SqlParameterSource namedParameters =
+            MapSqlParameterSource namedParameters =
                     new MapSqlParameterSource("id", user.getId())
                             .addValue("username", user.getUsername())
-                            .addValue("password", user.getPassword())
                             .addValue("email", user.getEmail())
                             .addValue("surname", user.getSurname())
                             .addValue("name", user.getName())
                             .addValue("patronymic", user.getPatronymic())
                             .addValue("isActive", true)
                             .addValue("guid", user.getGuid());
-            jdbcTemplate.update(SqlUtil.getResourceFileAsString(UPDATE_USER), namedParameters);
+            if (user.getPassword() == null) {
+                jdbcTemplate.update(SqlUtil.getResourceFileAsString(UPDATE_USER_WITHOUT_PASS), namedParameters);
+            } else {
+                namedParameters.addValue("password", user.getPassword());
+                jdbcTemplate.update(SqlUtil.getResourceFileAsString(UPDATE_USER), namedParameters);
+            }
             jdbcTemplate.update(SqlUtil.getResourceFileAsString(DELETE_USER_ROLE), namedParameters);
             saveRoles(user);
             return model(user);
