@@ -112,6 +112,13 @@
         <field>
             <id>roles*.id</id>
             <domain>integer[]</domain>
+            <display>
+                <![CDATA[
+                   (select ARRAY_AGG(r.id)
+                 from sec.user_role
+                ur join sec.role r on r.id=ur.role_id where ur.user_id=u.id)
+                 ]]>
+            </display>
             <filters>
                 <filter type="in" filter-field="roleFilter*.id">
                     <![CDATA[
