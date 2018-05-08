@@ -16,6 +16,12 @@
         <relativePath/>
     </parent>
 
+    <scm>
+        <connection>scm:git:https://git.i-novus.ru/framework/security-admin.git</connection>
+        <url>https://git.i-novus.ru/framework/security-admin</url>
+        <developerConnection>scm:git:https://git.i-novus.ru/framework/security-admin.git</developerConnection>
+    </scm>
+
     <modules>
         <module>security-auth</module>
         <module>security-auth-simple</module>
