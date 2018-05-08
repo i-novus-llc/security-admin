@@ -10,7 +10,6 @@ import net.n2oapp.security.auth.UserParamsUtil;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 /**
  * Слушает успешную аутентиикацию, чтобы разослать LoginEvent
@@ -24,13 +23,14 @@ public class AuthenticationSuccessListener implements ApplicationListener<Authen
     public void onApplicationEvent(AuthenticationSuccessEvent event) {
         if (event.getAuthentication() == null) return;
         Authentication authentication = event.getAuthentication();
-        String sessionId = ((WebAuthenticationDetails)authentication.getDetails()).getSessionId();
-        eventBus.publish(createEvent(sessionId, authentication.getPrincipal()));
+        eventBus.publish(createEvent(authentication));
     }
 
-    private LoginEvent createEvent(String sessionId, Object principal) {
-        ContextEngine contextEngine = StaticSpringContext.getBean(StaticProperties.getProperty("n2o.context.impl"), ContextEngine.class);
-        return new LoginEvent(sessionId, UserParamsUtil.getUsername(principal), (String) contextEngine.get(UserContext.CONTEXT));
+    private LoginEvent createEvent(Authentication authentication) {
+        ContextEngine contextEngine = StaticSpringContext.getBean(ContextEngine.class);
+        return new LoginEvent(UserParamsUtil.getSessionId(authentication),
+                UserParamsUtil.getUsername(authentication.getPrincipal()),
+                (String) contextEngine.get(UserContext.CONTEXT));
     }
 
     public void setEventBus(N2oEventBus eventBus) {

@@ -1,0 +1,1 @@
+update sec.permission set name = :name, code = :code, parent_id = :parentId where id = :id;

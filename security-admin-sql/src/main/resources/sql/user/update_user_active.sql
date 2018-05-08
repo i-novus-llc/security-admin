@@ -1,0 +1,1 @@
+update sec.user set is_active = :isActive where id=:id;

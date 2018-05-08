@@ -4,122 +4,45 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>net.n2oapp.parent</groupId>
-        <artifactId>parent</artifactId>
-        <version>1.1</version>
-    </parent>
-
     <groupId>net.n2oapp.framework.security</groupId>
     <artifactId>security-admin</artifactId>
     <packaging>pom</packaging>
-    <version>1.0</version>
+    <version>2.0-SNAPSHOT</version>
+
+    <parent>
+        <groupId>net.n2oapp.platform</groupId>
+        <artifactId>n2o-platform-bom</artifactId>
+        <version>0.5</version>
+        <relativePath/>
+    </parent>
+
+    <scm>
+        <connection>scm:git:https://git.i-novus.ru/framework/security-admin.git</connection>
+        <url>https://git.i-novus.ru/framework/security-admin</url>
+        <developerConnection>scm:git:https://git.i-novus.ru/framework/security-admin.git</developerConnection>
+    </scm>
+
     <modules>
-        <module>security-admin-impl</module>
-        <module>security-admin-n2o</module>
-        <module>security-admin-api</module>
         <module>security-auth</module>
+        <module>security-auth-simple</module>
+        <module>security-auth-oauth2</module>
+        <module>security-admin-api</module>
+        <module>security-admin-impl</module>
+        <module>security-admin-web</module>
+        <module>security-admin-rest-api</module>
+    	<module>security-admin-rest-server</module>
+        <module>security-admin-web-sql</module>
+        <module>security-admin-web-rest</module>
+        <module>security-admin-sso-keycloak</module>
+        <module>security-admin-rest-client</module>
+        <module>security-admin-sql</module>
+        <module>security-admin-db</module>
+        <module>security-admin-backend</module>
+        <module>security-admin-frontend</module>
+        <module>keycloak-theme</module>
+        <module>security-admin-db</module>
+        <module>security-admin-commons</module>
+        <module>doc</module>
     </modules>
-
-    <properties>
-        <n2o.version>6.1.18</n2o.version>
-        <spring.boot.version>1.5.2.RELEASE</spring.boot.version>
-        <spring.security.version>4.2.3.RELEASE</spring.security.version>
-        <spring.version>4.3.10.RELEASE</spring.version>
-    </properties>
-
-    <dependencyManagement>
-        <dependencies>
-            <!-- n2o -->
-            <dependency>
-                <groupId>net.n2oapp.framework</groupId>
-                <artifactId>n2o-ui</artifactId>
-                <version>${n2o.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.n2oapp.framework</groupId>
-                <artifactId>n2o-api</artifactId>
-                <version>${n2o.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.n2oapp.framework</groupId>
-                <artifactId>n2o-access</artifactId>
-                <version>${n2o.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.n2oapp.framework</groupId>
-                <artifactId>n2o-context</artifactId>
-                <version>${n2o.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.n2oapp.framework</groupId>
-                <artifactId>n2o-engine</artifactId>
-                <version>${n2o.version}</version>
-            </dependency>
-
-            <!-- spring security -->
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-config</artifactId>
-                <version>${spring.security.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-web</artifactId>
-                <version>${spring.security.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-core</artifactId>
-                <version>${spring.security.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-taglibs</artifactId>
-                <version>${spring.security.version}</version>
-            </dependency>
-
-            <!-- persistence api-->
-            <dependency>
-                <groupId>org.hibernate.javax.persistence</groupId>
-                <artifactId>hibernate-jpa-2.1-api</artifactId>
-                <version>1.0.0.Final</version>
-            </dependency>
-
-
-            <!-- servlet -->
-            <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>javax.servlet-api</artifactId>
-                <version>3.1.0</version>
-                <scope>provided</scope>
-            </dependency>
-
-            <!-- common -->
-            <dependency>
-                <groupId>commons-lang</groupId>
-                <artifactId>commons-lang</artifactId>
-                <version>2.2</version>
-            </dependency>
-
-            <!-- spring boot -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring.boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-            <!-- mail -->
-            <dependency>
-                <groupId>javax.mail</groupId>
-                <artifactId>mail</artifactId>
-                <version>1.4.7</version>
-                <scope>provided</scope>
-            </dependency>
-
-        </dependencies>
-    </dependencyManagement>
 
 </project>

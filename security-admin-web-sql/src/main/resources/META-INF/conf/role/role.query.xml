@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<query xmlns:n2o="http://n2oapp.net/framework/config/schema/n2o-query-executions-1.0"
+       xmlns="http://n2oapp.net/framework/config/schema/query-3.0">
+    <object-id>${sec.admin.role.object.id}</object-id>
+    <name>Роли</name>
+    <execution>
+        <n2o:sql>
+            <n2o:items-query>
+                select :select
+                from sec.role r
+                where :where
+                order by :order, id
+            </n2o:items-query>
+            <n2o:count-query>
+                select count(id)
+                from sec.role r
+                where :where
+            </n2o:count-query>
+            <n2o:alias>r</n2o:alias>
+        </n2o:sql>
+    </execution>
+
+    <fields>
+        <field>
+            <id>id</id>
+            <domain>integer</domain>
+            <display/>
+            <sorting/>
+            <filters auto-generate="true"/>
+        </field>
+        <field>
+            <id>name</id>
+            <domain>string</domain>
+            <display>name</display>
+            <name>Название</name>
+            <sorting>name</sorting>
+            <filters>
+                <filter type="eq" filter-field="name">trim(lower(name)) like '%'||trim(lower(:name))||'%'</filter>
+            </filters>
+        </field>
+        <field>
+            <id>code</id>
+            <domain>string</domain>
+            <display>code</display>
+            <name>Код</name>
+            <filters auto-generate="true"/>
+        </field>
+        <field>
+            <id>description</id>
+            <domain>string</domain>
+            <display>description</display>
+            <name>Описание</name>
+            <sorting>description</sorting>
+            <filters>
+                <filter type="eq" filter-field="description">trim(lower(description)) like
+                    '%'||trim(lower(:description))||'%'
+                </filter>
+            </filters>
+        </field>
+
+        <field>
+            <id>permissions*.id</id>
+            <domain>integer[]</domain>
+            <display>
+                <![CDATA[
+                  (select ARRAY_AGG(p.id)
+                from sec.role_permission
+                rp join sec.permission p on p.id=rp.permission_id where rp.role_id=r.id)
+                 ]]>
+            </display>
+            <filters>
+                <filter type="in" filter-field="permissionFilter*.id">
+                    <![CDATA[
+                        exists (select ur1.permission_id
+                        from sec.role_permission ur1
+                        where role_id = r.id and permission_id in (:permissionFilter*.id))
+                    ]]>
+                </filter>
+            </filters>
+            <name>Роли</name>
+        </field>
+
+        <field>
+            <id>permissions*.name</id>
+            <domain>string[]</domain>
+            <display>
+                <![CDATA[
+                  (select ARRAY_AGG(p.name)
+                from sec.role_permission
+                rp join sec.permission p on p.id=rp.permission_id where rp.role_id=r.id)
+                 ]]>
+            </display>
+            <name>Роли</name>
+        </field>
+
+    </fields>
+</query>
