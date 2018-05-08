@@ -15,6 +15,7 @@ Thumbs.db
 target
 report
 *.versionsBackup
+*.releaseBackup
 
 # Intellij Idea
 .idea

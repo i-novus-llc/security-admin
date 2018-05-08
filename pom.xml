@@ -12,9 +12,15 @@
     <parent>
         <groupId>net.n2oapp.platform</groupId>
         <artifactId>n2o-platform-bom</artifactId>
-        <version>0.4</version>
+        <version>0.5</version>
         <relativePath/>
     </parent>
+
+    <scm>
+        <connection>scm:git:https://git.i-novus.ru/framework/security-admin.git</connection>
+        <url>https://git.i-novus.ru/framework/security-admin</url>
+        <developerConnection>scm:git:https://git.i-novus.ru/framework/security-admin.git</developerConnection>
+    </scm>
 
     <modules>
         <module>security-auth</module>
@@ -34,8 +40,9 @@
         <module>security-admin-backend</module>
         <module>security-admin-frontend</module>
         <module>keycloak-theme</module>
-        <module>doc</module>
+        <module>security-admin-db</module>
         <module>security-admin-commons</module>
+        <module>doc</module>
     </modules>
 
 </project>
