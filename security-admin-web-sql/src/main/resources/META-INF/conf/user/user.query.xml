@@ -100,9 +100,9 @@
             <name>ФИО</name>
             <sorting>(coalesce(u.surname,'')||' '||coalesce(u.name,'')||' '||coalesce(u.patronymic,''))</sorting>
             <filters>
-                <filter type="eq" filter-field="fio">(trim(lower(u.surname)) like '%'||trim(lower(:fio))||'%')
+                <filter type="eq" filter-field="fio">((trim(lower(u.surname)) like '%'||trim(lower(:fio))||'%')
                     or(trim(lower(u.name)) like '%'||trim(lower(:fio))||'%' )or(trim(lower(u.patronymic)) like '%'||trim(lower(:fio))||'%') or
-                    (trim(lower((coalesce(u.surname,'')||' '||coalesce(u.name,'')||' '||coalesce(u.patronymic,'')))) like '%'||trim(lower(:fio))||'%')
+                    (trim(lower((coalesce(u.surname,'')||' '||coalesce(u.name,'')||' '||coalesce(u.patronymic,'')))) like '%'||trim(lower(:fio))||'%'))
                 </filter>
             </filters>
         </field>
