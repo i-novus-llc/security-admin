@@ -91,9 +91,7 @@ public class UserServiceImplSql implements UserService {
             jdbcTemplate.update(SqlUtil.getResourceFileAsString(INSERT_USER), namedParameters, keyHolder, new String[]{"id"});
             user.setId((Integer) keyHolder.getKey());
             saveRoles(user);
-            if (generate) {
-                mailService.sendWelcomeMail(model(user));
-            }
+            mailService.sendWelcomeMail(user);
             return model(user);
         });
         return model(user);

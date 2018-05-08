@@ -1,7 +1,7 @@
 package net.n2oapp.security.admin.api.service;
 
 
-import net.n2oapp.security.admin.api.model.User;
+import net.n2oapp.security.admin.api.model.UserForm;
 
 /**
  * Сервис отправки писем
@@ -14,6 +14,6 @@ public interface MailService {
      * @param user Пользователь
      */
 
-    void sendWelcomeMail(User user);
+    void sendWelcomeMail(UserForm user);
 }
 
