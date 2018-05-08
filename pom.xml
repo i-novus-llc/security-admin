@@ -39,9 +39,9 @@
         <module>security-admin-rest-client</module>
         <module>security-admin-sql</module>
         <module>keycloak-theme</module>
-        <module>doc</module>
         <module>security-admin-db</module>
         <module>security-admin-commons</module>
+        <module>doc</module>
     </modules>
 
 </project>
