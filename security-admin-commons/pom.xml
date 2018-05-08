@@ -30,7 +30,6 @@
         <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>javax.mail-api</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
