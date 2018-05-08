@@ -1,4 +1,4 @@
-package net.n2oapp.security.admin.impl.util;
+package net.n2oapp.security.admin.commons.util;
 
 import java.security.SecureRandom;
 import java.util.Random;

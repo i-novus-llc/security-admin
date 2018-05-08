@@ -81,13 +81,6 @@
             <name>E-mail</name>
         </field>
 
-        <field>
-            <id>password</id>
-            <domain>string</domain>
-            <display>password</display>
-            <name>Пароль</name>
-        </field>
-
 
         <field>
             <id>isActive</id>
@@ -107,9 +100,9 @@
             <name>ФИО</name>
             <sorting>(coalesce(u.surname,'')||' '||coalesce(u.name,'')||' '||coalesce(u.patronymic,''))</sorting>
             <filters>
-                <filter type="eq" filter-field="fio">(trim(lower(u.surname)) like '%'||trim(lower(:fio))||'%')
+                <filter type="eq" filter-field="fio">((trim(lower(u.surname)) like '%'||trim(lower(:fio))||'%')
                     or(trim(lower(u.name)) like '%'||trim(lower(:fio))||'%' )or(trim(lower(u.patronymic)) like '%'||trim(lower(:fio))||'%') or
-                    (trim(lower((coalesce(u.surname,'')||' '||coalesce(u.name,'')||' '||coalesce(u.patronymic,'')))) like '%'||trim(lower(:fio))||'%')
+                    (trim(lower((coalesce(u.surname,'')||' '||coalesce(u.name,'')||' '||coalesce(u.patronymic,'')))) like '%'||trim(lower(:fio))||'%'))
                 </filter>
             </filters>
         </field>
@@ -119,6 +112,13 @@
         <field>
             <id>roles*.id</id>
             <domain>integer[]</domain>
+            <display>
+                <![CDATA[
+                   (select ARRAY_AGG(r.id)
+                 from sec.user_role
+                ur join sec.role r on r.id=ur.role_id where ur.user_id=u.id)
+                 ]]>
+            </display>
             <filters>
                 <filter type="in" filter-field="roleFilter*.id">
                     <![CDATA[

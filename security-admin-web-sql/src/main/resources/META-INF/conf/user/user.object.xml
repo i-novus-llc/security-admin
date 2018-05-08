@@ -136,7 +136,7 @@
                         var regex = new RegExp('[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?');
                         regex.test(password);
                      }else true;
-                ]]
+                ]]>
             </expression>
         </condition>
 
@@ -166,7 +166,7 @@
             <message>Введённые пароли не совпадают</message>
             <expression on="passwordCheck,newPassword">
                 <![CDATA[
-                    if (typeof passwordCheck != 'undefined' && passwordCheck != null && passwordCheck != '') {
+                    if (typeof newPassword != 'undefined' && newPassword != null && newPassword != '') {
                         passwordCheck === newPassword;
                      }else true;
                 ]]>

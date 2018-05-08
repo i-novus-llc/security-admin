@@ -158,7 +158,7 @@ public class N2oSimpleDetailManager implements UserDetailsManager {
     }
 
     private User map(net.n2oapp.security.admin.api.model.User user) {
-        String password = user.getPassword();
+        String password = user.getPasswordHash();
         String email = user.getEmail();
         String surname = user.getSurname();
         String name = user.getName();
@@ -187,7 +187,9 @@ public class N2oSimpleDetailManager implements UserDetailsManager {
         if (tempRoleAuthorities == null) return null;
         tempRoleAuthorities.forEach(r -> {
             Role role = roleService.getById(r);
-            authorities.addAll(role.getPermissions().stream().map(p -> new PermissionGrantedAuthority(p.getCode())).collect(Collectors.toList()));
+            if (role.getPermissions() != null) {
+                authorities.addAll(role.getPermissions().stream().map(p -> new PermissionGrantedAuthority(p.getCode())).collect(Collectors.toList()));
+            }
         });
 
         List<RoleGrantedAuthority> roleAuthorities = tempRoleAuthorities.stream()

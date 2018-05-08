@@ -1,0 +1,1 @@
+update sec.user set email = :email, surname = :surname, name = :name, patronymic = :patronymic, is_active = :isActive, guid = :guid where id = :id;

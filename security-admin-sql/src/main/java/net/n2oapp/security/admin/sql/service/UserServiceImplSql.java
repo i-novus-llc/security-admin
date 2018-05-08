@@ -6,8 +6,8 @@ import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.api.service.RoleService;
 import net.n2oapp.security.admin.api.service.UserService;
-import net.n2oapp.security.admin.sql.util.MailServiceImpl;
-import net.n2oapp.security.admin.sql.util.PasswordGenerator;
+import net.n2oapp.security.admin.commons.util.MailServiceImpl;
+import net.n2oapp.security.admin.commons.util.PasswordGenerator;
 import net.n2oapp.security.admin.sql.util.SqlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -22,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -36,13 +37,16 @@ public class UserServiceImplSql implements UserService {
 
     private final static String INSERT_USER = "sql/user/insert_user.sql";
     private final static String UPDATE_USER = "sql/user/update_user.sql";
+    private final static String UPDATE_USER_WITHOUT_PASS = "sql/user/update_user_without_password.sql";
     private final static String DELETE_USER = "sql/user/delete_user.sql";
     private final static String INSERT_USER_ROLE = "sql/user/insert_user_role.sql";
     private final static String GET_USER_BY_ID = "sql/user/get_user_by_id.sql";
     private final static String UPDATE_USER_ACTIVE = "sql/user/update_user_active.sql";
     private final static String DELETE_USER_ROLE = "sql/user/delete_user_role.sql";
     private final static String FIND_ALL = "sql/user/find_all.sql";
+    private final static String FIND_ALL_WITHOUT_ROLE_CONDITION = "sql/user/find_all_without_role_condition.sql";
     private final static String FIND_ALL_COUNT = "sql/user/find_all_count.sql";
+    private final static String FIND_ALL_COUNT_WITHOUT_ROLE_CONDITION = "sql/user/find_all_count_without_role_condition.sql";
 
     @Autowired
     private TransactionTemplate transactionTemplate;
@@ -80,17 +84,14 @@ public class UserServiceImplSql implements UserService {
                 password = passwordGenerator.generate();
                 encodedPassword = passwordEncoder.encode(password);
                 ((MapSqlParameterSource) namedParameters).addValue("password", encodedPassword);
-                user.setPassword(password);
             } else {
-                ((MapSqlParameterSource) namedParameters).addValue("password", user.getPassword());
+                ((MapSqlParameterSource) namedParameters).addValue("password", passwordEncoder.encode(user.getPassword()));
             }
             KeyHolder keyHolder = new GeneratedKeyHolder();
             jdbcTemplate.update(SqlUtil.getResourceFileAsString(INSERT_USER), namedParameters, keyHolder, new String[]{"id"});
             user.setId((Integer) keyHolder.getKey());
             saveRoles(user);
-            if (generate) {
-                mailService.sendWelcomeMail(model(user));
-            }
+            mailService.sendWelcomeMail(user);
             return model(user);
         });
         return model(user);
@@ -100,17 +101,21 @@ public class UserServiceImplSql implements UserService {
     @Override
     public User update(UserForm user) {
         transactionTemplate.execute(transactionStatus -> {
-            SqlParameterSource namedParameters =
+            MapSqlParameterSource namedParameters =
                     new MapSqlParameterSource("id", user.getId())
                             .addValue("username", user.getUsername())
-                            .addValue("password", user.getPassword())
                             .addValue("email", user.getEmail())
                             .addValue("surname", user.getSurname())
                             .addValue("name", user.getName())
                             .addValue("patronymic", user.getPatronymic())
                             .addValue("isActive", true)
                             .addValue("guid", user.getGuid());
-            jdbcTemplate.update(SqlUtil.getResourceFileAsString(UPDATE_USER), namedParameters);
+            if (user.getPassword() == null) {
+                jdbcTemplate.update(SqlUtil.getResourceFileAsString(UPDATE_USER_WITHOUT_PASS), namedParameters);
+            } else {
+                namedParameters.addValue("password", user.getPassword());
+                jdbcTemplate.update(SqlUtil.getResourceFileAsString(UPDATE_USER), namedParameters);
+            }
             jdbcTemplate.update(SqlUtil.getResourceFileAsString(DELETE_USER_ROLE), namedParameters);
             saveRoles(user);
             return model(user);
@@ -138,19 +143,27 @@ public class UserServiceImplSql implements UserService {
 
     @Override
     public Page<User> findAll(UserCriteria criteria) {
-        SqlParameterSource namedParameters =
+        MapSqlParameterSource namedParameters =
                 new MapSqlParameterSource("username", criteria.getUsername())
                         .addValue("isActive", criteria.getIsActive())
                         .addValue("fio", criteria.getFio())
                         .addValue("password", criteria.getPassword())
-                        .addValue("roleIds", criteria.getRoleIds())
                         .addValue("limit", criteria.getPageSize())
                         .addValue("offset", criteria.getOffset());
-        List<User> users = jdbcTemplate.query(SqlUtil.getResourceFileAsString(FIND_ALL), namedParameters, (resultSet, i) -> {
-            return model(resultSet);
-        });
-        Integer count = jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(FIND_ALL_COUNT), namedParameters,Integer.class);
-        return new PageImpl<>(users,criteria,count);
+        if (criteria.getRoleIds() == null) {
+            List<User> users = jdbcTemplate.query(SqlUtil.getResourceFileAsString(FIND_ALL_WITHOUT_ROLE_CONDITION), namedParameters, (resultSet, i) -> {
+                return model(resultSet);
+            });
+            Integer count = jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(FIND_ALL_COUNT_WITHOUT_ROLE_CONDITION), namedParameters, Integer.class);
+            return new PageImpl<>(users, criteria, count);
+        } else {
+            namedParameters.addValue("roleIds", criteria.getRoleIds());
+            List<User> users = jdbcTemplate.query(SqlUtil.getResourceFileAsString(FIND_ALL), namedParameters, (resultSet, i) -> {
+                return model(resultSet);
+            });
+            Integer count = jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(FIND_ALL_COUNT), namedParameters, Integer.class);
+            return new PageImpl<>(users, criteria, count);
+        }
     }
 
     @Override
@@ -186,7 +199,7 @@ public class UserServiceImplSql implements UserService {
         user.setPatronymic(form.getPatronymic());
         user.setFio(getFio(user.getSurname(), user.getName(), user.getPatronymic()));
         user.setEmail(form.getEmail());
-        user.setPassword(form.getPassword());
+        user.setPasswordHash(form.getPassword());
         user.setIsActive(form.getIsActive());
         if (form.getRoles() != null) {
             user.setRoles(form.getRoles().stream().map(service::getById).collect(Collectors.toList()));
@@ -205,17 +218,37 @@ public class UserServiceImplSql implements UserService {
         user.setPatronymic(resultSet.getString("patronymic"));
         user.setFio(getFio(user.getSurname(), user.getName(), user.getPatronymic()));
         user.setEmail(resultSet.getString("email"));
-        user.setPassword(resultSet.getString("password"));
+        user.setPasswordHash(resultSet.getString("password"));
         user.setIsActive(resultSet.getBoolean("is_active"));
         if (resultSet.getObject("ids") != null && resultSet.getObject("names") != null) {
-            Object[]  ids = (Object[]) resultSet.getObject("ids");
-            Object[] names = (Object[]) resultSet.getObject("names");
+            Array a = resultSet.getArray("ids");
+            Object idsObject = a.getArray();
             List<Role> roles = new ArrayList<>();
-            for (int i = 0; i < ids.length && i < names.length ; i++) {
-                Role role = new Role();
-                role.setId((Integer)((Object[]) ids[i])[0]);
-                role.setName((String)((Object[])names[i])[0]);
-                roles.add(role);
+            Integer[] ids;
+            String[] names;
+            // эта проверка нужна для поддержки различных реализаций для h2 и postrgesql
+            // они возвращают разные объекты когда в запросе используется функция array_agg
+            if (idsObject instanceof Integer[]) {
+                ids = (Integer[]) a.getArray();
+                a = resultSet.getArray("names");
+                names = (String[]) a.getArray();
+            } else {
+                Object[]  idsObj = (Object[]) resultSet.getObject("ids");
+                Object[] namesObj = (Object[]) resultSet.getObject("names");
+                ids = new Integer[idsObj.length];
+                names = new String[idsObj.length];
+                for (int i = 0; i < idsObj.length; i++) {
+                    ids[i] = (Integer)((Object[]) idsObj[i])[0];
+                    names[i] = (String)((Object[])namesObj[i])[0];
+                }
+            }
+            if (ids != null && names != null) {
+                for (int i = 0; i < ids.length && i < names.length; i++) {
+                    Role role = new Role();
+                    role.setId(ids[i]);
+                    role.setName(names[i]);
+                    roles.add(role);
+                }
             }
             user.setRoles(roles);
         }

@@ -61,6 +61,13 @@
         <field>
             <id>permissions*.id</id>
             <domain>integer[]</domain>
+            <display>
+                <![CDATA[
+                  (select ARRAY_AGG(p.id)
+                from sec.role_permission
+                rp join sec.permission p on p.id=rp.permission_id where rp.role_id=r.id)
+                 ]]>
+            </display>
             <filters>
                 <filter type="in" filter-field="permissionFilter*.id">
                     <![CDATA[

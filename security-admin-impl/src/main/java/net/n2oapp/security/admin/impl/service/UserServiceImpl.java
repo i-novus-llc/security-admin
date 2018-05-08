@@ -7,18 +7,18 @@ import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.UserService;
+import net.n2oapp.security.admin.commons.util.PasswordGenerator;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.UserSpecifications;
-import net.n2oapp.security.admin.impl.util.PasswordGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
@@ -34,7 +34,11 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private SsoUserRoleProvider provider;
+
+    @Autowired
     private PasswordGenerator passwordGenerator;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Value("${n2o.security.validation.username:true}")
@@ -55,12 +59,10 @@ public class UserServiceImpl implements UserService {
     @Value("${n2o.security.validation.password.special.symbols}")
     private Boolean validationPasswordSpecialSymbols;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, SsoUserRoleProvider provider, PasswordGenerator passwordGenerator, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, SsoUserRoleProvider provider) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.provider = provider;
-        this.passwordGenerator = passwordGenerator;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -135,6 +137,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<User> findAll(UserCriteria criteria) {
         final Specification<UserEntity> specification = new UserSpecifications(criteria);
+        if (criteria.getOrders().stream().map(Sort.Order::getProperty).anyMatch("fio"::equals)) {
+            Sort.Direction orderFio = criteria.getOrders().stream().filter(o -> o.getProperty().equals("fio")).findAny().get().getDirection();
+            criteria.getOrders().add(new Sort.Order(orderFio, "surname"));
+            criteria.getOrders().add(new Sort.Order(orderFio, "name"));
+            criteria.getOrders().add(new Sort.Order(orderFio, "patronymic"));
+            criteria.getOrders().removeIf(s -> s.getProperty().equals("fio"));
+        }
+        criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "id"));
         final Page<UserEntity> all = userRepository.findAll(specification, criteria);
         return all.map(this::model);
     }
@@ -266,7 +276,7 @@ public class UserServiceImpl implements UserService {
     /**
      * Валидация на  ввод пароля согласно формату
      */
-    public boolean checkPassword(String password, String passwordCheck, Integer id) {
+    private boolean checkPassword(String password, String passwordCheck, Integer id) {
         if (password.length() < validationPasswordLength)
             throw new UserException("exception.passwordLength");
         String regexp;
