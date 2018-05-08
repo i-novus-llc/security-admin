@@ -1,15 +1,12 @@
-package net.n2oapp.security.admin.sql.util;
+package net.n2oapp.security.admin.commons.util;
 
 
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.service.MailService;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.text.StrSubstitutor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -30,7 +27,6 @@ import java.util.Map;
 @Service
 public class MailServiceImpl implements MailService {
 
-    protected static final Logger log = LoggerFactory.getLogger(MailServiceImpl.class);
 
     @Autowired
     private JavaMailSender emailSender;

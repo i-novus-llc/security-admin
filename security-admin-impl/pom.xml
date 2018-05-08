@@ -24,6 +24,11 @@
             <artifactId>security-admin-db</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>net.n2oapp.framework.security</groupId>
+            <artifactId>security-admin-commons</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>net.n2oapp.platform</groupId>

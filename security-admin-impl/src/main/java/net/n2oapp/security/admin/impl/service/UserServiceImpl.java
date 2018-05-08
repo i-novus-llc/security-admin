@@ -7,19 +7,18 @@ import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.UserService;
+import net.n2oapp.security.admin.commons.util.PasswordGenerator;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.UserSpecifications;
-import net.n2oapp.security.admin.impl.util.PasswordGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
@@ -35,7 +34,11 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private SsoUserRoleProvider provider;
+
+    @Autowired
     private PasswordGenerator passwordGenerator;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Value("${n2o.security.validation.username:true}")
@@ -56,12 +59,10 @@ public class UserServiceImpl implements UserService {
     @Value("${n2o.security.validation.password.special.symbols}")
     private Boolean validationPasswordSpecialSymbols;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, SsoUserRoleProvider provider, PasswordGenerator passwordGenerator, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, SsoUserRoleProvider provider) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.provider = provider;
-        this.passwordGenerator = passwordGenerator;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
