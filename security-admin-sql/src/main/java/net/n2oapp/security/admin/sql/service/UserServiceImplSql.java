@@ -225,32 +225,34 @@ public class UserServiceImplSql implements UserService {
         if (resultSet.getObject("ids") != null && resultSet.getObject("names") != null) {
             Array a = resultSet.getArray("ids");
             Object idsObject = a.getArray();
+            List<Role> roles = new ArrayList<>();
+            Integer[] ids;
+            String[] names;
             // эта проверка нужна для поддержки различных реализаций для h2 и postrgesql
             // они возвращают разные объекты когда в запросе используется функция array_agg
             if (idsObject instanceof Integer[]) {
-                Integer[] ids = (Integer[]) a.getArray();
+                ids = (Integer[]) a.getArray();
                 a = resultSet.getArray("names");
-                String[] names = (String[]) a.getArray();
-                List<Role> roles = new ArrayList<>();
-                for (int i = 0; i < ids.length && i < names.length ; i++) {
+                names = (String[]) a.getArray();
+            } else {
+                Object[]  idsObj = (Object[]) resultSet.getObject("ids");
+                Object[] namesObj = (Object[]) resultSet.getObject("names");
+                ids = new Integer[idsObj.length];
+                names = new String[idsObj.length];
+                for (int i = 0; i < idsObj.length; i++) {
+                    ids[i] = (Integer)((Object[]) idsObj[i])[0];
+                    names[i] = (String)((Object[])namesObj[i])[0];
+                }
+            }
+            if (ids != null && names != null) {
+                for (int i = 0; i < ids.length && i < names.length; i++) {
                     Role role = new Role();
                     role.setId(ids[i]);
                     role.setName(names[i]);
                     roles.add(role);
                 }
-                user.setRoles(roles);
-            } else {
-                Object[]  ids = (Object[]) resultSet.getObject("ids");
-                Object[] names = (Object[]) resultSet.getObject("names");
-                List<Role> roles = new ArrayList<>();
-                for (int i = 0; i < ids.length && i < names.length ; i++) {
-                    Role role = new Role();
-                    role.setId((Integer)((Object[]) ids[i])[0]);
-                    role.setName((String)((Object[])names[i])[0]);
-                    roles.add(role);
-                }
-                user.setRoles(roles);
             }
+            user.setRoles(roles);
         }
         return user;
     }

@@ -137,39 +137,42 @@ public class RoleServiceImplSql implements RoleService {
         role.setCode(resultSet.getString("code"));
         role.setDescription(resultSet.getString("description"));
         if (resultSet.getObject("ids") != null && resultSet.getObject("names") != null) {
+            List<Permission> permissions = new ArrayList<>();
             Array a = resultSet.getArray("ids");
             Object idsObject = a.getArray();
+            Integer[] ids;
+            String[] names;
+            String[] codes;
             // эта проверка нужна для поддержки различных реализаций для h2 и postrgesql
             // они возвращают разные объекты когда в запросе используется функция array_agg
             if (idsObject instanceof Integer[]) {
-                Integer[] ids = (Integer[]) a.getArray();
+                ids = (Integer[]) a.getArray();
                 a = resultSet.getArray("names");
-                String[] names = (String[]) a.getArray();
+                names = (String[]) a.getArray();
                 a = resultSet.getArray("codes");
-                String[] codes = (String[]) a.getArray();
-                List<Permission> permissions = new ArrayList<>();
-                for (int i = 0; i < ids.length && i < names.length && i < codes.length; i++) {
-                    Permission permission = new Permission();
-                    permission.setId(ids[i]);
-                    permission.setName(names[i]);
-                    permission.setCode(codes[i]);
-                    permissions.add(permission);
-                }
-                role.setPermissions(permissions);
+                codes = (String[]) a.getArray();
             } else {
-                Object[]  ids = (Object[]) resultSet.getObject("ids");
-                Object[] names = (Object[]) resultSet.getObject("names");
-                Object[] codes = (Object[]) resultSet.getObject("codes");
-                List<Permission> permissions = new ArrayList<>();
-                for (int i = 0; i < ids.length && i < names.length && i < codes.length ; i++) {
-                    Permission permission = new Permission();
-                    permission.setId((Integer)((Object[]) ids[i])[0]);
-                    permission.setName((String)((Object[])names[i])[0]);
-                    permission.setCode((String)((Object[])codes[i])[0]);
-                    permissions.add(permission);
+                Object[]  idsObj = (Object[]) resultSet.getObject("ids");
+                Object[] namesObj = (Object[]) resultSet.getObject("names");
+                Object[] codesObj = (Object[]) resultSet.getObject("codes");
+                ids = new Integer[idsObj.length];
+                names = new String[namesObj.length];
+                codes = new String[codesObj.length];
+                for (int i = 0; i < idsObj.length; i++) {
+                    ids[i] = (Integer)((Object[]) idsObj[i])[0];
+                    names[i] = (String)((Object[])namesObj[i])[0];
+                    codes[i] = (String)((Object[])codesObj[i])[0];
                 }
-                role.setPermissions(permissions);
             }
+            for (int i = 0; i < ids.length && i < names.length && i < codes.length; i++) {
+                Permission permission = new Permission();
+                permission.setId(ids[i]);
+                permission.setName(names[i]);
+                permission.setCode(codes[i]);
+                permissions.add(permission);
+            }
+
+            role.setPermissions(permissions);
         }
         return role;
     }
