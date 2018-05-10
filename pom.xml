@@ -31,16 +31,16 @@
         <module>security-admin-web</module>
         <module>security-admin-rest-api</module>
     	<module>security-admin-rest-server</module>
-    	<module>security-admin-backend</module>
-    	<module>security-admin-frontend</module>
         <module>security-admin-web-sql</module>
         <module>security-admin-web-rest</module>
         <module>security-admin-sso-keycloak</module>
         <module>security-admin-rest-client</module>
-        <module>security-admin-sql</module>
-        <module>keycloak-theme</module>
-        <module>security-admin-db</module>
         <module>security-admin-commons</module>
+        <module>security-admin-sql</module>
+        <module>security-admin-db</module>
+        <module>security-admin-backend</module>
+        <module>security-admin-frontend</module>
+        <module>keycloak-theme</module>
         <module>doc</module>
     </modules>
 

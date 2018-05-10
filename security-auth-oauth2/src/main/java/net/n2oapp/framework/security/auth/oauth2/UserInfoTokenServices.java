@@ -121,7 +121,10 @@ public class UserInfoTokenServices implements ResourceServerTokenServices {
         Object usernameObj = extractFromMap(PRINCIPAL_KEYS, map);
         if (usernameObj == null)
             return null;
-        List<String> roleList = new ArrayList<>((Collection<String>) extractFromMap(AUTHORITIES_KEYS, map));
+        Object roles = extractFromMap(AUTHORITIES_KEYS, map);
+        List<String> roleList = new ArrayList<>();
+        if (roles instanceof Collection)
+            roleList = new ArrayList<>((Collection<String>) roles);
         String username = (String) usernameObj;
         String surname = extractFromMap(SURNAME_KEYS, map) == null ? null : (String) extractFromMap(SURNAME_KEYS, map);
         String name = extractFromMap(NAME_KEYS, map) == null ? null : (String) extractFromMap(NAME_KEYS, map);
