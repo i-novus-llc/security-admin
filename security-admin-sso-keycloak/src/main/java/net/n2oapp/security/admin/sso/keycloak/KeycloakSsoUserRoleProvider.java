@@ -1,5 +1,7 @@
 package net.n2oapp.security.admin.sso.keycloak;
 
+import net.n2oapp.platform.i18n.Messages;
+import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
@@ -10,6 +12,7 @@ import org.keycloak.admin.client.resource.RolesResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
@@ -20,6 +23,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
+
+    @Autowired
+    private Messages messages;
 
     private SsoKeycloakProperties properties;
 
@@ -44,8 +50,14 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
             user.setGuid(userId);
             if (user.getRoles() != null) {
                 List<RoleRepresentation> roles = new ArrayList<>();
+                List<RoleRepresentation> roleRepresentationList = realmResource.roles().list();
                 user.getRoles().forEach(r -> {
-                    roles.add(realmResource.roles().get(r.getCode()).toRepresentation());
+                    Optional<RoleRepresentation> roleRep = roleRepresentationList.stream().filter(rp -> rp.getName().equals(r.getCode())).findAny();
+                    if (roleRep.isPresent()){
+                        roles.add(roleRep.get());
+                    } else {
+                        throw new UserException(messages.getMessage("exception.ssoRoleNotFound", r.getCode()));
+                    }
                 });
                 realmResource.users().get(userId).roles().realmLevel().add(roles);
             }
