@@ -1,6 +1,5 @@
 package net.n2oapp.security.admin.sso.keycloak;
 
-import net.n2oapp.platform.i18n.Messages;
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
@@ -12,20 +11,13 @@ import org.keycloak.admin.client.resource.RolesResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
-
-    @Autowired
-    private Messages messages;
 
     private SsoKeycloakProperties properties;
 
@@ -56,7 +48,7 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
                     if (roleRep.isPresent()){
                         roles.add(roleRep.get());
                     } else {
-                        throw new UserException(messages.getMessage("exception.ssoRoleNotFound", r.getCode()));
+                        throw new UserException("exception.ssoRoleNotFound").set(r.getCode());
                     }
                 });
                 realmResource.users().get(userId).roles().realmLevel().add(roles);
