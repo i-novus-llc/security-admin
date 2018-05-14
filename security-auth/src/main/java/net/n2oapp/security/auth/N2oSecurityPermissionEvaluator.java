@@ -8,7 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import java.io.Serializable;
 
 /**
- * Реализация метода проверки наличия права доступа в тегах <sec:authorize access="hasPermission(#this,'read')">
+ * Реализация метода проверки наличия права доступа в тегах {@code <sec:authorize access="hasPermission(#this,'read')">}
  */
 public class N2oSecurityPermissionEvaluator implements PermissionEvaluator {
     @Override
