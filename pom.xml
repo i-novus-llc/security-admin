@@ -14,6 +14,10 @@
         <relativePath />
     </parent>
 
+    <properties>
+        <n2o.version>6.1.23</n2o.version>
+    </properties>
+
     <scm>
         <connection>scm:git:https://git.i-novus.ru/framework/security-admin.git</connection>
         <url>https://git.i-novus.ru/framework/security-admin</url>

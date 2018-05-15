@@ -12,10 +12,6 @@
         <relativePath>..</relativePath>
     </parent>
 
-    <properties>
-        <n2o.version>6.1.21</n2o.version>
-    </properties>
-
     <build>
         <finalName>ROOT</finalName>
     </build>
