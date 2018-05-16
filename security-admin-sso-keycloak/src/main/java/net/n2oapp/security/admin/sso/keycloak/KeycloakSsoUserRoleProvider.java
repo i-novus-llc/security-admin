@@ -40,7 +40,7 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
         Response response = null;
         try {
             response = realmResource.users().create(userRepresentation);
-            if (response.getStatus() == 200 || response.getStatus() == 201) {
+            if (response.getStatus() == 200 && response.getStatus() < 300) {
                 String userId = response.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
                 user.setGuid(userId);
                 if (user.getRoles() != null) {
