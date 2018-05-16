@@ -9,6 +9,7 @@ import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.RolesResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
+import org.keycloak.representations.idm.ErrorRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 
@@ -36,36 +37,43 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
             userRepresentation.setCredentials(Arrays.asList(passwordCred));
         }
         RealmResource realmResource = keycloak().realm(properties.getRealm());
-        Response response = realmResource.users().create(userRepresentation);
-        if (response.getStatus() == 200 || response.getStatus() == 201) {
-            String userId = response.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
-            user.setGuid(userId);
-            if (user.getRoles() != null) {
-                List<RoleRepresentation> roles = new ArrayList<>();
-                List<RoleRepresentation> roleRepresentationList = realmResource.roles().list();
-                user.getRoles().forEach(r -> {
-                    Optional<RoleRepresentation> roleRep = roleRepresentationList.stream().filter(rp -> rp.getName().equals(r.getCode())).findAny();
-                    if (roleRep.isPresent()){
-                        roles.add(roleRep.get());
-                    } else {
-                        throw new UserException("exception.ssoRoleNotFound").set(r.getCode());
+        Response response = null;
+        try {
+            response = realmResource.users().create(userRepresentation);
+            if (response.getStatus() == 200 || response.getStatus() == 201) {
+                String userId = response.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
+                user.setGuid(userId);
+                if (user.getRoles() != null) {
+                    List<RoleRepresentation> roles = new ArrayList<>();
+                    List<RoleRepresentation> roleRepresentationList = realmResource.roles().list();
+                    user.getRoles().forEach(r -> {
+                        Optional<RoleRepresentation> roleRep = roleRepresentationList.stream().filter(rp -> rp.getName().equals(r.getCode())).findAny();
+                        if (roleRep.isPresent()) {
+                            roles.add(roleRep.get());
+                        } else {
+                            throw new UserException("exception.ssoRoleNotFound").set(r.getCode());
+                        }
+                    });
+                    realmResource.users().get(userId).roles().realmLevel().add(roles);
+                }
+                if (properties.getSendVerifyEmail() || properties.getSendChangePassword()) {
+                    List<String> actions = new ArrayList<>();
+                    if (properties.getSendVerifyEmail()) {
+                        actions.add("VERIFY_EMAIL");
                     }
-                });
-                realmResource.users().get(userId).roles().realmLevel().add(roles);
-            }
-            if (properties.getSendVerifyEmail() || properties.getSendChangePassword()) {
-                List<String> actions = new ArrayList<>();
-                if (properties.getSendVerifyEmail()) {
-                    actions.add("VERIFY_EMAIL");
+                    if (properties.getSendChangePassword()) {
+                        actions.add("UPDATE_PASSWORD");
+                    }
+                    realmResource.users().get(userId).executeActionsEmail(properties.getClientId(), properties.getRedirectUrl(), actions);
                 }
-                if (properties.getSendChangePassword()) {
-                    actions.add("UPDATE_PASSWORD");
-                }
-                realmResource.users().get(userId).executeActionsEmail(properties.getClientId(), properties.getRedirectUrl(), actions);
+                return user;
+            } else {
+                throw new IllegalArgumentException(response.readEntity(ErrorRepresentation.class).getErrorMessage());
             }
-            return user;
-        } else {
-            throw new IllegalArgumentException("Can't create user in keycloak!");
+        } finally {
+            if (response != null) {
+                response.close();
+            }
         }
     }
 
@@ -80,7 +88,7 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
         } else {
             Set<String> roleNames = user.getRoles().stream().map(Role::getCode).collect(Collectors.toSet());
             List<RoleRepresentation> effective = realmResource.users().get(user.getGuid()).roles().realmLevel().listEffective();
-            if (effective != null || !effective.isEmpty()) {
+            if (effective != null) {
                 forRemove = effective.stream().filter(e -> !roleNames.contains(e.getName())).collect(Collectors.toList());
             }
             List<RoleRepresentation> roles = new ArrayList<>();
