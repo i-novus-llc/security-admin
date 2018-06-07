@@ -153,6 +153,7 @@ public class N2oSimpleDetailManager implements UserDetailsManager {
         userForm.setSurname(user.getSurname());
         userForm.setName(user.getName());
         userForm.setPatronymic(user.getPatronymic());
+        userForm.setEmail(user.getEmail());
         userForm.setIsActive(true);
         return userForm;
     }
