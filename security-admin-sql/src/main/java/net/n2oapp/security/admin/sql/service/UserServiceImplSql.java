@@ -108,12 +108,12 @@ public class UserServiceImplSql implements UserService {
                             .addValue("surname", user.getSurname())
                             .addValue("name", user.getName())
                             .addValue("patronymic", user.getPatronymic())
-                            .addValue("isActive", true)
+                            .addValue("isActive", user.getIsActive())
                             .addValue("guid", user.getGuid());
-            if (user.getPassword() == null) {
+            if (user.getNewPassword() == null) {
                 jdbcTemplate.update(SqlUtil.getResourceFileAsString(UPDATE_USER_WITHOUT_PASS), namedParameters);
             } else {
-                namedParameters.addValue("password", user.getPassword());
+                namedParameters.addValue("password",passwordEncoder.encode(user.getNewPassword()));
                 jdbcTemplate.update(SqlUtil.getResourceFileAsString(UPDATE_USER), namedParameters);
             }
             jdbcTemplate.update(SqlUtil.getResourceFileAsString(DELETE_USER_ROLE), namedParameters);
