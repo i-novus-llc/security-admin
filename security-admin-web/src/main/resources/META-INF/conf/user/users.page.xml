@@ -63,16 +63,16 @@
                                 </wgt:show-modal-form>
                             </wgt:event>
                         </wgt:menu-item>
-                        <wgt:menu-item id="update" context="true" label="Изменить">
+                        <wgt:menu-item id="update" context="true" label="Изменить" >
                             <wgt:event>
-                                <wgt:show-modal-form form-id="userUpdateForm">
+                                <wgt:show-modal-form form-id="userUpdateForm" refresh-on-close="true">
                                     <wgt:edit>
                                         <wgt:invoke-action action-id="update"/>
                                     </wgt:edit>
                                 </wgt:show-modal-form>
                             </wgt:event>
                         </wgt:menu-item>
-                        <wgt:menu-item id="delete" label="Удалить">
+                        <wgt:menu-item id="delete" label="Удалить" >
                             <wgt:event>
                                 <wgt:invoke-action action-id="delete"/>
                             </wgt:event>
