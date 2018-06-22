@@ -4,7 +4,7 @@
     <query-id>${sec.admin.user.query.id}</query-id>
 
     <fs:field-set>
-        <ctrl:input-text id="username">
+        <ctrl:input-text id="username" readonly="true">
             <ctrl:validations>
                 <ctrl:validation ref-id="usernameValidation" side="client"/>
             </ctrl:validations>
