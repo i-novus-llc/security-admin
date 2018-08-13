@@ -15,7 +15,7 @@
     </parent>
 
     <properties>
-        <n2o.version>6.1.23</n2o.version>
+        <n2o.version>7.0-SNAPSHOT</n2o.version>
     </properties>
 
     <scm>

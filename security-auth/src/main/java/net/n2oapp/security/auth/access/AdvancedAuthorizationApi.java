@@ -21,8 +21,15 @@ import java.util.stream.Collectors;
 public class AdvancedAuthorizationApi extends SimpleAuthorizationApi {
 
     private PermissionApi permissionApi;
+    private AdminService adminService;
 
     private final static String defaultObjectAccess = "n2o.access.N2oObjectAccessPoint.default";
+
+    public AdvancedAuthorizationApi(PermissionApi permissionApi, AdminService adminService) {
+        super(permissionApi, adminService);
+        this.permissionApi = permissionApi;
+        this.adminService = adminService;
+    }
 
 
     @Override
@@ -38,12 +45,6 @@ public class AdvancedAuthorizationApi extends SimpleAuthorizationApi {
         return permission;
     }
 
-    @Override
-    public void setPermissionApi(PermissionApi permissionApi) {
-        super.setPermissionApi(permissionApi);
-        this.permissionApi = permissionApi;
-    }
-
     /**
      * Сборка фильтров по объекту и действию
      * @param user пользователь
@@ -52,7 +53,7 @@ public class AdvancedAuthorizationApi extends SimpleAuthorizationApi {
      * @param actionId действие
      */
     private void collectFilters(UserContext user, ObjectPermission permission, String objectId, String actionId) {
-        if (AdminService.getInstance().isAdmin(user.getUsername())) {
+        if (adminService.isAdmin(user.getUsername())) {
             return;
         }
         List<N2oAccessFilter> filters = AdvancedPermissionAndRoleCollector.collectFilters(r -> permissionApi.hasRole(user, r.getId()),
@@ -68,19 +69,20 @@ public class AdvancedAuthorizationApi extends SimpleAuthorizationApi {
      * @return фильтры с разрешенным контекстом
      */
     private List<N2oAccessFilter> resolveContext(UserContext user, List<N2oAccessFilter> filters) {
+        ContextProcessor contextProcessor = new ContextProcessor(user);
         return filters.stream().map(filter -> {
             switch (filter.getType().arity) {
                 case nullary:
                     filter.setValue(String.valueOf(true));
                     break;
                 case unary: {
-                    Object resolve = ContextProcessor.resolve(filter.getValue(), user);
+                    Object resolve = contextProcessor.resolve(filter.getValue());
                     filter.setValue(resolve != null ? resolve.toString() : null);
                 }
                 break;
                 case n_ary: {
                     if (filter.getValue() != null) {
-                        Object resolve = ContextProcessor.resolve(filter.getValue(), user);
+                        Object resolve = contextProcessor.resolve(filter.getValue());
                         if (resolve != null) {
                             if (!(resolve instanceof Collection))
                                 throw new IllegalStateException("Context value [" + filter.getValue() + "] must be Collection");
@@ -94,7 +96,7 @@ public class AdvancedAuthorizationApi extends SimpleAuthorizationApi {
                     } else {
                         List<String> resolves = new ArrayList<>();
                         for (String value : filter.getValues()) {
-                            Object resolve = ContextProcessor.resolve(value, user);
+                            Object resolve = contextProcessor.resolve(value);
                             if (resolve != null)
                                 resolves.add(resolve.toString());
                         }

@@ -2,16 +2,14 @@ package net.n2oapp.security.auth.access;
 
 import net.n2oapp.criteria.filters.FilterType;
 import net.n2oapp.engine.factory.integration.spring.OverrideBean;
+import net.n2oapp.framework.access.functions.StreamUtil;
 import net.n2oapp.framework.access.metadata.accesspoint.AccessPoint;
 import net.n2oapp.framework.access.metadata.accesspoint.model.N2oObjectAccessPoint;
 import net.n2oapp.framework.access.metadata.schema.simple.N2oSimpleAccessSchema;
 import net.n2oapp.framework.api.metadata.global.dao.object.N2oObject;
-import net.n2oapp.framework.api.metadata.validation.Level;
 import net.n2oapp.framework.api.metadata.validation.TypedMetadataValidator;
 import net.n2oapp.framework.api.metadata.validation.exception.N2oMetadataValidationException;
-import net.n2oapp.framework.config.validation.ValidationUtil;
-import net.n2oapp.function.extensions.stream.StreamUtil;
-import net.n2oapp.i18n.bundle.LocalizationHolder;
+import net.n2oapp.framework.config.metadata.validation.ValidationUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,13 +46,13 @@ public class SimpleAccessSchemaValidatorOverrided extends TypedMetadataValidator
 
     private void checkObjectAccess(N2oObjectAccessPoint accessPoint) {
         if (accessPoint.getObjectId() == null)
-            throw new N2oMetadataValidationException(LocalizationHolder.getMessage("n2o.idNotSpecified"));
+            throw new N2oMetadataValidationException("n2o.idNotSpecified");
         if (accessPoint.getObjectId().contains("*")) {
             return;
         }
         N2oObject n2oObject = ValidationUtil.getOrNull(accessPoint.getObjectId(), N2oObject.class);
         if (n2oObject == null) {
-            throw new N2oMetadataValidationException(LocalizationHolder.getMessage("n2o.objectNotExists", accessPoint.getObjectId()));
+            throw new N2oMetadataValidationException("n2o.objectNotExists").addData(accessPoint.getObjectId());
         }
         if (accessPoint.getAction() == null || accessPoint.getAction().isEmpty()) {
             return;
@@ -65,7 +63,7 @@ public class SimpleAccessSchemaValidatorOverrided extends TypedMetadataValidator
             for (String action : actions) {
                 if (!action.trim().equals(N2oObjectAccessPoint.SPEC_CHARACTER_FOR_ALL_ACTION) && !action.trim().equals("read")) {
                     if (!objectActionsIds.contains(action.trim())) {
-                        throw new N2oMetadataValidationException(LocalizationHolder.getMessage("n2o.actionNotSpecified", n2oObject.getName(), n2oObject.getId(), action));
+                        throw new N2oMetadataValidationException("n2o.actionNotSpecified").addData(n2oObject.getName(), n2oObject.getId(), action);
                     }
                 }
             }
@@ -73,9 +71,9 @@ public class SimpleAccessSchemaValidatorOverrided extends TypedMetadataValidator
         if (accessPoint.getAccessFilters() != null)
             accessPoint.getAccessFilters().forEach(f -> {
                 if (f.getFieldId() == null)
-                    throw new N2oMetadataValidationException(LocalizationHolder.getMessage("n2o.fieldIdNotSpecified", accessPoint.getObjectId()));
+                    throw new N2oMetadataValidationException("n2o.fieldIdNotSpecified").addData(accessPoint.getObjectId());
                 if ((f.getType() == null || !f.getType().arity.equals(FilterType.Arity.nullary)) && f.getValue() == null && (f.getValues() == null || f.getValues().isEmpty()))
-                    throw new N2oMetadataValidationException(LocalizationHolder.getMessage("n2o.filterValueNotSpecified", accessPoint.getObjectId()));
+                    throw new N2oMetadataValidationException("n2o.filterValueNotSpecified").addData(accessPoint.getObjectId());
             });
     }
 
@@ -87,10 +85,5 @@ public class SimpleAccessSchemaValidatorOverrided extends TypedMetadataValidator
             }
         }
         return ids;
-    }
-
-    @Override
-    public Level getLevel() {
-        return Level.first;
     }
 }
