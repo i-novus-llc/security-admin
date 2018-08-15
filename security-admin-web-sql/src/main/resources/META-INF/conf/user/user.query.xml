@@ -109,7 +109,7 @@
 
 
 
-        <field>
+       <!-- <field>
             <id>roles*.id</id>
             <domain>integer[]</domain>
             <display>
@@ -142,6 +142,6 @@
                  ]]>
             </display>
             <name>Роли</name>
-        </field>
+        </field>-->
     </fields>
 </query>

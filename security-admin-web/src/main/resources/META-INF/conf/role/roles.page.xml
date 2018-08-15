@@ -14,9 +14,9 @@
                     <wgt:columns>
                         <wgt:column column-field-id="name"/>
                         <wgt:column column-field-id="description"/>
-                        <wgt:column column-field-id="permissions" name="Права доступа">
+                       <!-- <wgt:column column-field-id="permissions" name="Права доступа">
                             <wgt:list label-field-id="name"/>
-                        </wgt:column>
+                        </wgt:column>-->
                     </wgt:columns>
                     <wgt:sortings type="single"/>
                     <wgt:filters opened="true">
@@ -33,20 +33,12 @@
                     <wgt:action-menu>
                         <wgt:menu-item id="create" label="Создать" context="false">
                             <wgt:event>
-                                <wgt:show-modal-form form-id="roleForm">
-                                    <wgt:edit>
-                                        <wgt:invoke-action action-id="create"/>
-                                    </wgt:edit>
-                                </wgt:show-modal-form>
+                                <wgt:show-modal page-id="roleForm" action-id="create"/>
                             </wgt:event>
                         </wgt:menu-item>
                         <wgt:menu-item id="update" context="true" label="Изменить">
                             <wgt:event>
-                                <wgt:show-modal-form form-id="roleForm">
-                                    <wgt:edit>
-                                        <wgt:invoke-action action-id="update"/>
-                                    </wgt:edit>
-                                </wgt:show-modal-form>
+                                <wgt:show-modal page-id="roleForm" action-id="update"/>
                             </wgt:event>
                         </wgt:menu-item>
                         <wgt:menu-item id="delete" label="Удалить">

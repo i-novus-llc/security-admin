@@ -58,7 +58,7 @@
             </filters>
         </field>
 
-        <field>
+        <!--<field>
             <id>permissions*.id</id>
             <domain>integer[]</domain>
             <display>
@@ -91,7 +91,7 @@
                  ]]>
             </display>
             <name>Роли</name>
-        </field>
+        </field>-->
 
     </fields>
 </query>
