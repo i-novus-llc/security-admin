@@ -4,6 +4,18 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>security-auth</artifactId>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <parent>
         <artifactId>security-admin</artifactId>
@@ -17,6 +29,7 @@
         <dependency>
             <groupId>net.n2oapp.framework</groupId>
             <artifactId>n2o-access</artifactId>
+            <version>${n2o.version}</version>
         </dependency>
 
         <!-- spring security -->

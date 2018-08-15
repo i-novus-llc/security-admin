@@ -33,7 +33,7 @@
         <!-- N2O -->
         <dependency>
             <groupId>net.n2oapp.framework</groupId>
-            <artifactId>n2o-ui</artifactId>
+            <artifactId>n2o-web</artifactId>
         </dependency>
         <dependency>
             <groupId>net.n2oapp.framework</groupId>

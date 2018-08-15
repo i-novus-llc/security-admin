@@ -3,6 +3,18 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>security-admin-rest-server</artifactId>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <parent>
         <artifactId>security-admin</artifactId>
@@ -46,12 +58,6 @@
         <dependency>
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>net.n2oapp.platform</groupId>
-            <artifactId>n2o-platform-starter-jaxrs-client</artifactId>
             <scope>test</scope>
         </dependency>
 
