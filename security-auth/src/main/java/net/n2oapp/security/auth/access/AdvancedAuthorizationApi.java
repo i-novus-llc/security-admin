@@ -5,14 +5,18 @@ import net.n2oapp.framework.access.api.model.ObjectPermission;
 import net.n2oapp.framework.access.api.model.filter.N2oAccessFilter;
 import net.n2oapp.framework.access.metadata.accesspoint.model.N2oObjectAccessPoint;
 import net.n2oapp.framework.access.metadata.accesspoint.util.FilterMerger;
+import net.n2oapp.framework.access.simple.PermissionAndRoleCollector;
 import net.n2oapp.framework.access.simple.PermissionApi;
 import net.n2oapp.framework.access.simple.SimpleAuthorizationApi;
 import net.n2oapp.framework.api.context.ContextProcessor;
+import net.n2oapp.framework.api.metadata.pipeline.ReadCompileBindTerminalPipeline;
 import net.n2oapp.framework.api.user.UserContext;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -22,15 +26,18 @@ public class AdvancedAuthorizationApi extends SimpleAuthorizationApi {
 
     private PermissionApi permissionApi;
     private AdminService adminService;
+    private Boolean defaultObjectAccess;
 
-    private final static String defaultObjectAccess = "n2o.access.N2oObjectAccessPoint.default";
-
-    public AdvancedAuthorizationApi(PermissionApi permissionApi, AdminService adminService) {
-        super(permissionApi, adminService);
+    public AdvancedAuthorizationApi(PermissionApi permissionApi, AdminService adminService, ReadCompileBindTerminalPipeline pipeline,
+                                    String accessSchemaId, Boolean defaultObjectAccess, Boolean defaultReferenceAccess,
+                                    Boolean defaultPageAccess, Boolean defaultUrlAccess, Boolean defaultColumnAccess,
+                                    Boolean defaultFilterAccess) {
+        super(permissionApi, adminService, pipeline, accessSchemaId, defaultObjectAccess, defaultReferenceAccess,
+                defaultPageAccess, defaultUrlAccess, defaultColumnAccess, defaultFilterAccess);
         this.permissionApi = permissionApi;
         this.adminService = adminService;
+        this.defaultObjectAccess = defaultObjectAccess;
     }
-
 
     @Override
     public ObjectPermission getPermissionForObject(UserContext user, String objectId, String action) {
@@ -57,7 +64,7 @@ public class AdvancedAuthorizationApi extends SimpleAuthorizationApi {
             return;
         }
         List<N2oAccessFilter> filters = AdvancedPermissionAndRoleCollector.collectFilters(r -> permissionApi.hasRole(user, r.getId()),
-                p -> permissionApi.hasPermission(user, p.getId()), u -> permissionApi.hasUsername(user, u.getName()), objectId, actionId);
+                p -> permissionApi.hasPermission(user, p.getId()), u -> permissionApi.hasUsername(user, u.getName()), objectId, actionId, getSchema());
         permission.setAccessFilters(FilterMerger.merge(resolveContext(user, filters)));
     }
 

@@ -1,147 +1,106 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<query xmlns:n2o="http://n2oapp.net/framework/config/schema/n2o-query-executions-1.0"
-       xmlns="http://n2oapp.net/framework/config/schema/query-3.0">
-    <object-id>${sec.admin.user.object.id}</object-id>
-    <name>Пользователи</name>
-
-    <execution>
-        <n2o:sql>
-            <n2o:items-query>
-                select :select
-                from sec.user u
-                where :where
-                order by :order, id
-            </n2o:items-query>
-            <n2o:count-query>
-                select count(u.id)
-                from sec.user u
-                where :where
-            </n2o:count-query>
-            <n2o:alias>u</n2o:alias>
-        </n2o:sql>
-    </execution>
+<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0" object-id="${sec.admin.user.object.id}"
+       name="Пользователи">
+    <list>
+        <sql>
+            select :select
+            from sec.user u
+            where :filters
+            order by :sorting, id
+        </sql>
+    </list>
+    <count>
+        <sql>
+            select count(u.id)
+            from sec.user u
+            where :where
+        </sql>
+    </count>
 
     <fields>
-        <field>
-            <id>id</id>
-            <domain>integer</domain>
-            <display/>
+        <field id="id" domain="integer">
+            <select/>
             <sorting/>
-            <filters auto-generate="true"/>
-        </field>
-        <field>
-            <id>guid</id>
-            <domain>string</domain>
-            <display/>
-        </field>
-        <field>
-            <id>username</id>
-            <domain>string</domain>
-            <display>username</display>
-            <name>Имя пользователя</name>
-            <sorting>username</sorting>
             <filters>
-                <filter type="eq" filter-field="username">trim(lower(username)) like '%'||trim(lower(:username))||'%'
-                </filter>
+                <eq filter-id="id"/>
             </filters>
         </field>
-
-        <field>
-            <id>surname</id>
-            <domain>string</domain>
-            <display>surname</display>
-            <name>Фамилия</name>
+        <field id="guid" domain="string">
+            <select/>
+        </field>
+        <field id="username" domain="string" name="Имя пользователя">
+            <select/>
+            <sorting>username :usernameDirection</sorting>
             <filters>
-                <filter type="eq" filter-field="surname">trim(lower(surname)) like '%'||trim(lower(:surname))||'%'
-                </filter>
+                <eq filter-id="username">trim(lower(username)) like '%'||trim(lower(:username))||'%'</eq>
             </filters>
         </field>
-        <field>
-            <id>name</id>
-            <domain>string</domain>
-            <display>name</display>
-            <name>Имя</name>
-        </field>
-        <field>
-            <id>patronymic</id>
-            <domain>string</domain>
-            <display>patronymic</display>
-            <name>Отчество</name>
+        <field id="surname" domain="string" name="Фамилия">
+            <select/>
             <filters>
-                <filter type="eq" filter-field="patronymic">trim(lower(patronymic)) like
-                    '%'||trim(lower(:patronymic))||'%'
-                </filter>
+                <eq filter-id="surname">trim(lower(surname)) like '%'||trim(lower(:surname))||'%'</eq>
             </filters>
         </field>
-
-        <field>
-            <id>email</id>
-            <domain>string</domain>
-            <display>email</display>
-            <name>E-mail</name>
-        </field>
-
-
-        <field>
-            <id>isActive</id>
-            <domain>boolean</domain>
-            <display>is_active</display>
-            <name>Активность</name>
-            <sorting>is_active</sorting>
+        <field id="name" domain="string" name="Имя">
+            <select/>
             <filters>
-                <filter type="eq" filter-field="isActive">is_active=:isActive</filter>
+                <eq filter-id="name">trim(lower(name)) like '%'||trim(lower(:name))||'%'</eq>
             </filters>
         </field>
-
-        <field>
-            <id>fio</id>
-            <domain>string</domain>
-            <display>(coalesce(u.surname,'')||' '||coalesce(u.name,'')||' '||coalesce(u.patronymic,''))</display>
-            <name>ФИО</name>
-            <sorting>(coalesce(u.surname,'')||' '||coalesce(u.name,'')||' '||coalesce(u.patronymic,''))</sorting>
+        <field id="patronymic" domain="string" name="Отчество">
+            <select/>
             <filters>
-                <filter type="eq" filter-field="fio">((trim(lower(u.surname)) like '%'||trim(lower(:fio))||'%')
+                <eq filter-id="patronymic">trim(lower(patronymic)) like '%'||trim(lower(:patronymic))||'%'</eq>
+            </filters>
+        </field>
+        <field id="email" domain="string" name="E-mail">
+            <select/>
+        </field>
+        META-INF/conf/role/role.query.xml
+        <field id="isActive" domain="boolean" name="Активность">
+            <select>is_active</select>
+            <sorting>is_active :isActiveDirection</sorting>
+            <filters>
+                <eq filter-id="isActive">is_active=:isActive</eq>
+            </filters>
+        </field>
+        <field id="fio" domain="string" name="ФИО">
+            <select mapping="['fio']">(coalesce(u.surname,'')||' '||coalesce(u.name,'')||' '||coalesce(u.patronymic,'')) as fio</select>
+            <sorting>(coalesce(u.surname,'')||' '||coalesce(u.name,'')||' '||coalesce(u.patronymic,'')) :fioDirection</sorting>
+            <filters>
+                <eq filter-id="fio">((trim(lower(u.surname)) like '%'||trim(lower(:fio))||'%')
                     or(trim(lower(u.name)) like '%'||trim(lower(:fio))||'%' )or(trim(lower(u.patronymic)) like '%'||trim(lower(:fio))||'%') or
                     (trim(lower((coalesce(u.surname,'')||' '||coalesce(u.name,'')||' '||coalesce(u.patronymic,'')))) like '%'||trim(lower(:fio))||'%'))
-                </filter>
+                </eq>
             </filters>
         </field>
-
-
-
-       <!-- <field>
-            <id>roles*.id</id>
-            <domain>integer[]</domain>
-            <display>
+        <!--<field id="roles*.id" domain="integer[]" name="Роли">
+            <select mapping="['roleIds']">
                 <![CDATA[
                    (select ARRAY_AGG(r.id)
                  from sec.user_role
-                ur join sec.role r on r.id=ur.role_id where ur.user_id=u.id)
+                ur join sec.role r on r.id=ur.role_id where ur.user_id=u.id) as roleIds
                  ]]>
-            </display>
+            </select>
             <filters>
-                <filter type="in" filter-field="roleFilter*.id">
+                <in filter-id="roleFilter*.id">
                     <![CDATA[
                         exists (select ur1.role_id
                         from sec.user_role ur1
                         where user_id = u.id and role_id in (:roleFilter*.id))
                     ]]>
-                </filter>
+                </in>
             </filters>
-            <name>Роли</name>
         </field>
 
-        <field>
-            <id>roles*.name</id>
-            <domain>string[]</domain>
-            <display>
+        <field id="roles*.name" domain="string[]" name="Роли">
+            <select mapping="['roleNames']">
                 <![CDATA[
                    (select ARRAY_AGG(r.name)
                  from sec.user_role
-                ur join sec.role r on r.id=ur.role_id where ur.user_id=u.id)
+                ur join sec.role r on r.id=ur.role_id where ur.user_id=u.id) as roleNames
                  ]]>
-            </display>
-            <name>Роли</name>
+            </select>
         </field>-->
     </fields>
 </query>

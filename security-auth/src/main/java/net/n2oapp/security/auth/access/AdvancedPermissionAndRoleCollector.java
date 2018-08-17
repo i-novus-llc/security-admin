@@ -5,6 +5,7 @@ import net.n2oapp.framework.access.metadata.accesspoint.AccessPoint;
 import net.n2oapp.framework.access.metadata.accesspoint.model.N2oObjectAccessPoint;
 import net.n2oapp.framework.access.metadata.schema.permission.N2oPermission;
 import net.n2oapp.framework.access.metadata.schema.role.N2oRole;
+import net.n2oapp.framework.access.metadata.schema.simple.SimpleCompiledAccessSchema;
 import net.n2oapp.framework.access.metadata.schema.user.N2oUserAccess;
 import net.n2oapp.framework.access.simple.PermissionAndRoleCollector;
 
@@ -35,13 +36,13 @@ public class AdvancedPermissionAndRoleCollector {
      * @return фильтры доступа
      */
     public static List<N2oAccessFilter> collectFilters(Predicate<N2oRole> rolePredicate, Predicate<N2oPermission> permissionPredicate, Predicate<N2oUserAccess> userPredicate,
-                                                       String objectId, String actionId) {
-        List<N2oRole> roles = PermissionAndRoleCollector.collectRoles(N2oObjectAccessPoint.class, OBJECT_ACCESS.apply(objectId, actionId))
+                                                       String objectId, String actionId, SimpleCompiledAccessSchema schema) {
+        List<N2oRole> roles = PermissionAndRoleCollector.collectRoles(N2oObjectAccessPoint.class, OBJECT_ACCESS.apply(objectId, actionId), schema)
                 .stream().filter(rolePredicate).collect(Collectors.toList());
         List<N2oPermission> permissions = PermissionAndRoleCollector.collectPermission(N2oObjectAccessPoint.class,
-                OBJECT_ACCESS.apply(objectId, actionId))
+                OBJECT_ACCESS.apply(objectId, actionId), schema)
                 .stream().filter(permissionPredicate).collect(Collectors.toList());
-        List<N2oUserAccess> users = PermissionAndRoleCollector.collectUsers(N2oObjectAccessPoint.class, OBJECT_ACCESS.apply(objectId, actionId))
+        List<N2oUserAccess> users = PermissionAndRoleCollector.collectUsers(N2oObjectAccessPoint.class, OBJECT_ACCESS.apply(objectId, actionId), schema)
                 .stream().filter(userPredicate).collect(Collectors.toList());
         List<N2oAccessFilter> filters = new ArrayList<>();
         filters.addAll(collectFilters(roles, N2oRole::getAccessPoints, objectId, actionId));

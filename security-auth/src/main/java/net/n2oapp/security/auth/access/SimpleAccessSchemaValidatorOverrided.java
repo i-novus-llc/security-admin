@@ -33,7 +33,7 @@ public class SimpleAccessSchemaValidatorOverrided extends TypedMetadataValidator
     public void check(N2oSimpleAccessSchema metadata) {
         StreamUtil.safeStreamOf(metadata.getN2oPermissions()).flatMap(p -> StreamUtil.safeStreamOf(p.getAccessPoints())).forEach(this::validate);
         StreamUtil.safeStreamOf(metadata.getN2oRoles()).flatMap(p -> StreamUtil.safeStreamOf(p.getAccessPoints())).forEach(this::validate);
-        StreamUtil.safeStreamOf(metadata.getN2OUserAccesses()).flatMap(p -> StreamUtil.safeStreamOf(p.getAccessPoints())).forEach(this::validate);
+        StreamUtil.safeStreamOf(metadata.getN2oUserAccesses()).flatMap(p -> StreamUtil.safeStreamOf(p.getAccessPoints())).forEach(this::validate);
         StreamUtil.safeStreamOf(metadata.getGuestPoints()).forEach(this::validate);
         StreamUtil.safeStreamOf(metadata.getAuthenticatedPoints()).forEach(this::validate);
     }
