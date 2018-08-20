@@ -32,6 +32,12 @@
             <version>${n2o.version}</version>
         </dependency>
 
+        <!-- logger -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
         <!-- spring security -->
         <dependency>
             <groupId>org.springframework.security</groupId>
