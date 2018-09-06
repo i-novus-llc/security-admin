@@ -58,8 +58,8 @@ public class SimpleAccessSchemaValidatorOverrided extends TypedMetadataValidator
             return;
         }
         String[] actions = accessPoint.getAction().split(",");
-        if (n2oObject.getActions() != null) {
-            List<String> objectActionsIds = getActionsIds(Arrays.asList(n2oObject.getActions()));
+        if (n2oObject.getOperations() != null) {
+            List<String> objectActionsIds = getActionsIds(Arrays.asList(n2oObject.getOperations()));
             for (String action : actions) {
                 if (!action.trim().equals(N2oObjectAccessPoint.SPEC_CHARACTER_FOR_ALL_ACTION) && !action.trim().equals("read")) {
                     if (!objectActionsIds.contains(action.trim())) {
@@ -77,11 +77,11 @@ public class SimpleAccessSchemaValidatorOverrided extends TypedMetadataValidator
             });
     }
 
-    private List<String> getActionsIds(List<N2oObject.Action> actions) {
+    private List<String> getActionsIds(List<N2oObject.Operation> operations) {
         List<String> ids = new ArrayList<>();
-        if (actions != null) {
-            for (N2oObject.Action action : actions) {
-                ids.add(action.getId());
+        if (operations != null) {
+            for (N2oObject.Operation operation : operations) {
+                ids.add(operation.getId());
             }
         }
         return ids;

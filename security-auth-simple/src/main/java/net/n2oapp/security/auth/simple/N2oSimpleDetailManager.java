@@ -36,8 +36,8 @@ import java.util.stream.Collectors;
 public class N2oSimpleDetailManager implements UserDetailsManager {
     private static final Logger log = LoggerFactory.getLogger(N2oSimpleDetailManager.class);
 
-/*    @Autowired
-    private AuthenticationProvider authenticationProvider;*/
+
+    private AuthenticationProvider authenticationProvider;
 
     @Autowired
     private UserService userService;
@@ -46,9 +46,9 @@ public class N2oSimpleDetailManager implements UserDetailsManager {
     private RoleService roleService;
 
 
-    /*public void setAuthenticationProvider(AuthenticationProvider authenticationProvider) {
+    public void setAuthenticationProvider(AuthenticationProvider authenticationProvider) {
         this.authenticationProvider = authenticationProvider;
-    }*/
+    }
 
 
     @Override
@@ -105,10 +105,10 @@ public class N2oSimpleDetailManager implements UserDetailsManager {
 
         // If an authentication manager has been set, re-authenticate the user with the
         // supplied password.
-       /* if (authenticationProvider != null) {
+        if (authenticationProvider != null) {
             authenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(
                     username, newPassword));
-        }*/
+        }
         SecurityContextHolder.getContext().setAuthentication(createNewAuthentication(currentUser, newPassword));
     }
 
