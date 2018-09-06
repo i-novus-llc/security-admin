@@ -25,6 +25,13 @@
     </parent>
 
     <dependencies>
+
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.2</version>
+        </dependency>
+
         <!-- n2o -->
         <dependency>
             <groupId>net.n2oapp.framework</groupId>
