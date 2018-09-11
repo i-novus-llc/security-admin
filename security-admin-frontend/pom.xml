@@ -3,7 +3,45 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>security-admin-frontend</artifactId>
-    <packaging>war</packaging>
+    <packaging>${packaging.type}</packaging>
+
+    <profiles>
+        <profile>
+            <id>standalone</id>
+            <properties>
+                <packaging.type>jar</packaging.type>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                    <scope>compile</scope>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>repackage</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <executable>true</executable>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <properties>
+        <packaging.type>war</packaging.type>
+    </properties>
 
     <parent>
         <artifactId>security-admin</artifactId>
@@ -42,6 +80,10 @@
         <dependency>
             <groupId>net.n2oapp.framework</groupId>
             <artifactId>n2o-header</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.n2oapp.framework</groupId>
+            <artifactId>n2o-spring-boot-starter</artifactId>
         </dependency>
         <!-- /N2O -->
 
