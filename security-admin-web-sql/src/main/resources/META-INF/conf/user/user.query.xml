@@ -22,7 +22,7 @@
             <select/>
             <sorting/>
             <filters>
-                <eq filter-id="id"/>
+                <eq filter-id="id">id = :id</eq>
             </filters>
         </field>
         <field id="guid" domain="string">

@@ -55,7 +55,7 @@
                         <show-modal page-id="userUpdateForm"  submit-operation-id="update"/>
                     </button>
                     <button id="delete" label="Удалить">
-                        <invoke action-id="delete"/>
+                        <invoke operation-id="delete"/>
                     </button>
 
                 </toolbar>
