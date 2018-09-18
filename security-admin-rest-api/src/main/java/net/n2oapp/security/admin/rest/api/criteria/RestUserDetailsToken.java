@@ -22,7 +22,7 @@ public class RestUserDetailsToken extends UserDetailsToken {
         setRoleNames(userDetails.getRoleNames());
     }
 
-    @QueryParam("giud")
+    @QueryParam("guid")
     @Override
     public void setGuid(String guid) {
         super.setGuid(guid);

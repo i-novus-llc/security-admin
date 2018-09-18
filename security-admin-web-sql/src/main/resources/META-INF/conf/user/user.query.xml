@@ -74,7 +74,7 @@
                 </eq>
             </filters>
         </field>
-        <!--<field id="roles*.id" domain="integer[]" name="Роли">
+        <field id="roles*.id" domain="integer[]" name="Роли">
             <select mapping="['roleIds']">
                 <![CDATA[
                    (select ARRAY_AGG(r.id)
@@ -101,6 +101,6 @@
                 ur join sec.role r on r.id=ur.role_id where ur.user_id=u.id) as roleNames
                  ]]>
             </select>
-        </field>-->
+        </field>
     </fields>
 </query>

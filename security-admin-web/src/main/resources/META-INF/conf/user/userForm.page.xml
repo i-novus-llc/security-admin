@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-2.0">
+<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-2.0" name="Создание пользователя">
     <form query-id="${sec.admin.user.query.id}">
         <fields>
-            <input-text id="username">
+            <input-text id="username" label="Имя пользователя">
                 <validations>
-                    <validation ref-id="usernameValidation" side="client"/>
+                    <validation ref-id="usernameValidation" side="client" target="field"/>
                 </validations>
             </input-text>
             <input-text id="email" label="Email">
@@ -30,9 +30,9 @@
                     </enabling-condition>
                 </dependencies>
             </password>
-            <input-text id="surname"/>
-            <input-text id="name"/>
-            <input-text id="patronymic"/>
+            <input-text id="surname" label="Фамилия"/>
+            <input-text id="name" label="Имя"/>
+            <input-text id="patronymic" label="Отчество"/>
             <checkbox id="isActive" default-value="true"/>
             <input-select id="roles" type="multi" label="Роли" cache="off" required="true">
                 <query query-id="${sec.admin.role.query.id}" value-field-id="id" label-field-id="name"/>
