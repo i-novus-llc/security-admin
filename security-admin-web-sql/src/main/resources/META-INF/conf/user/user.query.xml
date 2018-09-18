@@ -58,7 +58,7 @@
         </field>
         META-INF/conf/role/role.query.xml
         <field id="isActive" domain="boolean" name="Активность">
-            <select>is_active</select>
+            <select mapping="['isActive']">u.is_active as isActive</select>
             <sorting>is_active :isActiveDirection</sorting>
             <filters>
                 <eq filter-id="isActive">is_active=:isActive</eq>
