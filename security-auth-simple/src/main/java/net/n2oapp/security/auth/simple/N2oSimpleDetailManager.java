@@ -191,11 +191,8 @@ public class N2oSimpleDetailManager implements UserDetailsManager {
             if (role.getPermissions() != null) {
                 authorities.addAll(role.getPermissions().stream().map(p -> new PermissionGrantedAuthority(p.getCode())).collect(Collectors.toList()));
             }
+            authorities.add(new RoleGrantedAuthority(role.getCode() != null ? role.getCode() : role.getId().toString()));
         });
-
-        List<RoleGrantedAuthority> roleAuthorities = tempRoleAuthorities.stream()
-                .map(r -> new RoleGrantedAuthority(r.toString())).collect(Collectors.toList());
-        authorities.addAll(roleAuthorities);
         return authorities;
     }
 
