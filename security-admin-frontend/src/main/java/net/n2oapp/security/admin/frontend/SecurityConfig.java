@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.configurers.Expression
 import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 
-@Configuration
 @EnableWebSecurity
 public class SecurityConfig extends OpenIdSecurityConfigurerAdapter {
 
