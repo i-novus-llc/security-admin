@@ -16,7 +16,6 @@ public class SecurityConfig extends OpenIdSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable();
         super.configure(http);
     }
 
@@ -34,7 +33,6 @@ public class SecurityConfig extends OpenIdSecurityConfigurerAdapter {
         registration.setOrder(-100);
         return registration;
     }
-
 
     @Bean
     public HttpSessionEventPublisher httpSessionEventPublisher() {

@@ -19,18 +19,18 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!--Data models-->
+        <!--spring-->
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-commons</artifactId>
         </dependency>
 
-        <!-- CXF -->
+        <!-- platform -->
         <dependency>
             <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-starter-jaxrs-server</artifactId>
         </dependency>
-        <!-- /CXF-->
+        <!-- /platform-->
 
     </dependencies>
 

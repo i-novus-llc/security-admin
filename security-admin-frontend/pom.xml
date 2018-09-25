@@ -5,6 +5,71 @@
     <artifactId>security-admin-frontend</artifactId>
     <packaging>${packaging.type}</packaging>
 
+    <parent>
+        <artifactId>security-admin</artifactId>
+        <groupId>net.n2oapp.framework.security</groupId>
+        <version>3.0-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>
+
+    <properties>
+        <packaging.type>war</packaging.type>
+    </properties>
+
+    <build>
+        <finalName>ROOT</finalName>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>net.n2oapp.framework.security</groupId>
+            <artifactId>security-admin-rest-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.n2oapp.framework.security</groupId>
+            <artifactId>security-admin-web-rest</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>net.n2oapp.framework.security</groupId>-->
+            <!--<artifactId>security-auth-simple</artifactId>-->
+            <!--<version>${project.version}</version>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>net.n2oapp.framework.security</groupId>
+            <artifactId>security-auth-oauth2</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- N2O -->
+        <dependency>
+            <groupId>net.n2oapp.framework</groupId>
+            <artifactId>n2o-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.n2oapp.framework</groupId>
+            <artifactId>n2o-web</artifactId>
+        </dependency>
+        <!-- /N2O -->
+
+        <!--spring-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <!--/spring-->
+
+        <!-- servlet -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+    </dependencies>
+
     <profiles>
         <profile>
             <id>standalone</id>
@@ -38,71 +103,5 @@
             </build>
         </profile>
     </profiles>
-
-    <properties>
-        <packaging.type>war</packaging.type>
-    </properties>
-
-    <parent>
-        <artifactId>security-admin</artifactId>
-        <groupId>net.n2oapp.framework.security</groupId>
-        <version>3.0-SNAPSHOT</version>
-        <relativePath>..</relativePath>
-    </parent>
-
-    <build>
-        <finalName>ROOT</finalName>
-    </build>
-
-    <dependencies>
-        <!-- DOMAIN -->
-        <dependency>
-            <groupId>net.n2oapp.framework.security</groupId>
-            <artifactId>security-admin-rest-client</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.n2oapp.framework.security</groupId>
-            <artifactId>security-admin-web-rest</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <!-- /DOMAIN -->
-
-        <!-- N2O -->
-        <dependency>
-            <groupId>net.n2oapp.framework</groupId>
-            <artifactId>n2o-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.n2oapp.framework</groupId>
-            <artifactId>n2o-access</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.n2oapp.framework</groupId>
-            <artifactId>n2o-header</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.n2oapp.framework</groupId>
-            <artifactId>n2o-spring-boot-starter</artifactId>
-        </dependency>
-        <!-- /N2O -->
-
-        <!-- AUTH -->
-        <dependency>
-            <groupId>net.n2oapp.framework.security</groupId>
-            <artifactId>security-auth-oauth2</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <!-- /AUTH -->
-
-        <!-- servlet -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-    </dependencies>
 
 </project>

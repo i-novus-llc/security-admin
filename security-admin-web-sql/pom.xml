@@ -14,17 +14,6 @@
     <dependencies>
 
         <dependency>
-            <groupId>net.n2oapp.framework</groupId>
-            <artifactId>n2o-engine-sql</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>net.n2oapp.framework.security</groupId>
-            <artifactId>security-admin-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>net.n2oapp.framework.security</groupId>
             <artifactId>security-admin-web</artifactId>
             <version>${project.version}</version>
@@ -38,7 +27,7 @@
 
         <dependency>
             <groupId>net.n2oapp.framework</groupId>
-            <artifactId>n2o-engine</artifactId>
+            <artifactId>n2o-engine-sql</artifactId>
         </dependency>
 
 
