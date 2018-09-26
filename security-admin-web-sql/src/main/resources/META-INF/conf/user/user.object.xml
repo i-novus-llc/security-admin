@@ -6,7 +6,7 @@
     <actions>
         <action id="create">
             <invocation>
-                <n2o:java method="create" class="net.n2oapp.security.admin.sql.service.UserServiceImplSql">
+                <n2o:java method="create" class="net.n2oapp.security.admin.sql.service.UserServiceSql">
                     <n2o:spring bean="userService"/>
                     <n2o:arguments>
                         <n2o:argument name="userEntity" class="net.n2oapp.security.admin.api.model.UserForm"/>
@@ -33,7 +33,7 @@
 
         <action id="update">
             <invocation>
-                <n2o:java  method="update" class="net.n2oapp.security.admin.sql.service.UserServiceImplSql">
+                <n2o:java  method="update" class="net.n2oapp.security.admin.sql.service.UserServiceSql">
                     <n2o:spring bean="userService"/>
                     <n2o:arguments>
                         <n2o:argument name="userEntity" class="net.n2oapp.security.admin.api.model.UserForm"/>
@@ -64,7 +64,7 @@
 
         <action id="delete">
             <invocation>
-                <n2o:java method="delete" class="net.n2oapp.security.admin.sql.service.UserServiceImplSql">
+                <n2o:java method="delete" class="net.n2oapp.security.admin.sql.service.UserServiceSql">
                     <n2o:spring bean="userService"/>
                     <n2o:arguments>
                         <n2o:argument name="id" class="java.lang.Integer"/>
@@ -80,7 +80,7 @@
 
         <action id="changeUserActive">
             <invocation>
-                <n2o:java method="changeActive" class="net.n2oapp.security.admin.sql.service.UserServiceImplSql">
+                <n2o:java method="changeActive" class="net.n2oapp.security.admin.sql.service.UserServiceSql">
                     <n2o:arguments>
                         <n2o:argument name="id" class="java.lang.Integer"/>
                     </n2o:arguments>
