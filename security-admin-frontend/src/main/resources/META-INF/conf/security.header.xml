@@ -2,10 +2,5 @@
 <header xmlns="http://n2oapp.net/framework/config/schema/header-2.0"
         brand-name="Управление доступом" home-page-id="users">
     <nav ref-id="security"/>
-    <extra-menu>
-        <sub-menu label="#{username}" icon="fa fa-user">
-            <page page-id="profile" route="/profile" label="Профиль"/>
-            <a label="Выход" href="/logout"/>
-        </sub-menu>
-    </extra-menu>
+    <extra-menu ref-id="user"/>
 </header>

@@ -22,7 +22,7 @@ import java.util.List;
  * Реализация сервиса управления правами доступа для sql
  */
 @Service
-public class PermissionServiceImplSql implements PermissionService{
+public class PermissionServiceSql implements PermissionService{
 
     private final static String INSERT_PERMISSION = "sql/permission/insert_permission.sql";
     private final static String UPDATE_PERMISSION = "sql/permission/update_permission.sql";
