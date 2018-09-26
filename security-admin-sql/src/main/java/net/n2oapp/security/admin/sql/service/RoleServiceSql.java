@@ -20,7 +20,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
-
 import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -32,7 +31,7 @@ import java.util.stream.Collectors;
  * Реализация сервиса управления ролями для sql
  */
 @Service
-public class RoleServiceImplSql implements RoleService {
+public class RoleServiceSql implements RoleService {
 
     private final static String INSERT_ROLE = "sql/role/insert_role.sql";
     private final static String UPDATE_ROLE = "sql/role/update_role.sql";

@@ -5,19 +5,23 @@
 
     <!-- n2o -->
 
-    <bean id="simpleAuthorizationApi" class="net.n2oapp.framework.access.simple.SimpleAuthorizationApi">
-        <property name="permissionApi" ref="securitySimplePermissionApi"/>
-    </bean>
+    <!--<bean id="simpleAuthorizationApi" class="net.n2oapp.framework.access.simple.SimpleAuthorizationApi">-->
+        <!--<constructor-arg name="permissionApi" ref="securitySimplePermissionApi"/>-->
+        <!--<constructor-arg name="adminService" ref="adminService"/>-->
+    <!--</bean>-->
 
-    <bean id="advancedAuthorizationApi" class="net.n2oapp.security.auth.access.AdvancedAuthorizationApi">
-        <property name="permissionApi" ref="securitySimplePermissionApi"/>
-    </bean>
+    <!--<bean id="advancedAuthorizationApi" class="net.n2oapp.security.auth.access.AdvancedAuthorizationApi">-->
+        <!--<constructor-arg name="permissionApi" ref="securitySimplePermissionApi"/>-->
+        <!--<constructor-arg name="adminService" ref="adminService"/>-->
+    <!--</bean>-->
 
     <bean id="securitySimplePermissionApi" class="net.n2oapp.security.auth.SecuritySimplePermissionApi"/>
 
     <bean id="logoutHandler"
           class="net.n2oapp.security.auth.listener.AuthenticationLogoutHandler">
     </bean>
+
+    <!--<bean id="adminService" class="net.n2oapp.framework.access.AdminService"/>-->
 
     <bean id="authenticationSuccessListener" class="net.n2oapp.security.auth.listener.AuthenticationSuccessListener">
         <property name="eventBus" ref="n2oEventBus"/>
@@ -27,7 +31,7 @@
         <property name="eventBus" ref="n2oEventBus"/>
     </bean>
 
-    <bean id="accessSchemaValidatorOverrided" class="net.n2oapp.security.auth.access.SimpleAccessSchemaValidatorOverrided"/>
+    <bean id="simpleAccessSchemaValidator" class="net.n2oapp.security.auth.access.SimpleAccessSchemaValidatorOverrided"/>
 
     <bean id="n2oContext" class="net.n2oapp.security.auth.context.SpringSecurityUserContext" primary="true"/>
 </beans>

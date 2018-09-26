@@ -1,64 +1,53 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<query xmlns:n2o="http://n2oapp.net/framework/config/schema/n2o-query-executions-1.0"
-       xmlns="http://n2oapp.net/framework/config/schema/query-3.0">
-    <object-id>${sec.admin.role.object.id}</object-id>
-    <name>Роли</name>
-    <execution>
-        <n2o:sql>
-            <n2o:items-query>
-                select :select
-                from sec.role r
-                where :where
-                order by :order, id
-            </n2o:items-query>
-            <n2o:count-query>
-                select count(id)
-                from sec.role r
-                where :where
-            </n2o:count-query>
-            <n2o:alias>r</n2o:alias>
-        </n2o:sql>
-    </execution>
+<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0" object-id="${sec.admin.role.object.id}" name="Роли">
+    <list>
+        <sql>
+            select :select
+            from sec.role r
+            where :filters
+            order by :sorting, id
+        </sql>
+    </list>
+    <count>
+        <sql>
+            select count(id)
+            from sec.role r
+            where :filters
+        </sql>
+    </count>
 
     <fields>
-        <field>
-            <id>id</id>
-            <domain>integer</domain>
-            <display/>
+        <field id="id" domain="integer">
+            <select/>
             <sorting/>
-            <filters auto-generate="true"/>
-        </field>
-        <field>
-            <id>name</id>
-            <domain>string</domain>
-            <display>name</display>
-            <name>Название</name>
-            <sorting>name</sorting>
             <filters>
-                <filter type="eq" filter-field="name">trim(lower(name)) like '%'||trim(lower(:name))||'%'</filter>
+                <eq filter-id="id">id = :id</eq>
             </filters>
         </field>
-        <field>
-            <id>code</id>
-            <domain>string</domain>
-            <display>code</display>
-            <name>Код</name>
-            <filters auto-generate="true"/>
-        </field>
-        <field>
-            <id>description</id>
-            <domain>string</domain>
-            <display>description</display>
-            <name>Описание</name>
-            <sorting>description</sorting>
+        <field id="name" domain="string" name="Название">
+            <select/>
+            <sorting/>
             <filters>
-                <filter type="eq" filter-field="description">trim(lower(description)) like
+                <eq filter-id="name">trim(lower(name)) like '%'||trim(lower(:name))||'%'</eq>
+            </filters>
+        </field>
+        <field id="code" domain="string" name="Код">
+            <select/>
+            <filters>
+                <eq filter-id="code"/>
+            </filters>
+        </field>
+        <field id="description" domain="string" name="Описание">
+            <select/>
+            <sorting/>
+            <filters>
+                <eq filter-id="description">trim(lower(description)) like
                     '%'||trim(lower(:description))||'%'
-                </filter>
+                </eq>
             </filters>
         </field>
 
-        <field>
+        <!--<field>
             <id>permissions*.id</id>
             <domain>integer[]</domain>
             <display>
@@ -91,7 +80,7 @@
                  ]]>
             </display>
             <name>Роли</name>
-        </field>
+        </field>-->
 
     </fields>
 </query>
