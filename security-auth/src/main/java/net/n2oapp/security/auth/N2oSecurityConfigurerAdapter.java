@@ -13,8 +13,7 @@ public abstract class N2oSecurityConfigurerAdapter extends WebSecurityConfigurer
     }
 
     protected void ignore(WebSecurity.IgnoredRequestConfigurer ignore) {
-        ignore.antMatchers("/dist/**", "/lib/**", "/n2o/**", "/build/**", "/bundle/**"
-                , "/public/**", "/resources/**", "/static/**");
+        ignore.antMatchers("/static/**", "/public/**", "/dist/**", "/webjars/**", "/lib/**", "/build/**", "/bundle/**");
     }
 
     protected abstract void authorize(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry url)
