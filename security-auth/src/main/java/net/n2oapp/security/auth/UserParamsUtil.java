@@ -106,11 +106,11 @@ public class UserParamsUtil {
      * Получить детальную информацию о пользователю в виде ключ-значение
      * @return Детальная информация о пользователе в виде ключ-значение
      */
-    public static <T extends UserDetails> Map<String, String> getUserDetailsAsMap(T userDetails) {
+    public static <T extends UserDetails> Map<String, Object> getUserDetailsAsMap(T userDetails) {
         if (userDetails == null)
             return Collections.emptyMap();
         PropertyDescriptor[] propertyDescriptors = BeanUtils.getPropertyDescriptors(userDetails.getClass());
-        Map<String, String> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
             map.put(propertyDescriptor.getName(), getProperty(userDetails, propertyDescriptor));
         }
@@ -121,7 +121,7 @@ public class UserParamsUtil {
      * Получить детальную информацию о пользователю в виде ключ-значение
      * @return Детальная информация о пользователе в виде ключ-значение
      */
-    public static Map<String, String> getUserDetailsAsMap() {
+    public static Map<String, Object> getUserDetailsAsMap() {
         return getUserDetailsAsMap(getUserDetails());
     }
 
