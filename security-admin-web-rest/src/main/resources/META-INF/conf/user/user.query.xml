@@ -110,5 +110,15 @@
             </filters>
             <name>Роли</name>
         </field>
+
+        <!--todo Пока не работает множественный поиск-->
+        <field>
+            <id>role.id</id>
+            <domain>integer</domain>
+            <filters>
+                <filter type="eq" filter-field="role.id">roles=:role.id</filter>
+            </filters>
+            <name>Роли</name>
+        </field>
     </fields>
 </query>

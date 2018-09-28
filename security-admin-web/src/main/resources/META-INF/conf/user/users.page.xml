@@ -2,7 +2,7 @@
 <page xmlns="http://n2oapp.net/framework/config/schema/page-2.0"
       xmlns:ctrl="http://n2oapp.net/framework/config/schema/n2o-control-1.0" name="Пользователи">
     <regions>
-        <panel place="single">
+        <none place="single">
             <table name="Пользователи" query-id="${sec.admin.user.query.id}">
                 <columns>
                     <column text-field-id="username"/>
@@ -12,10 +12,9 @@
                             <invoke route="/changeUserActive" action-id="changeUserActive"/>
                         </checkbox>
                     </column>
-                    <!-- <column column-field-id="roles" name="Роли">
+                     <column text-field-id="roles" label="Роли">
                          <list label-field-id="name"/>
-                     </column>-->
-
+                     </column>
                 </columns>
                 <filters>
                     <row>
@@ -41,7 +40,7 @@
                              </ctrl:set-value-expression>
                          </ctrl:hidden>-->
 
-                        <ctrl:input-select id="roleFilter" type="multi" label="Роли" cache="off">
+                        <ctrl:input-select id="role" type="single" label="Роли">
                             <ctrl:query query-id="${sec.admin.role.query.id}" value-field-id="id"
                                         label-field-id="name"/>
                         </ctrl:input-select>
@@ -60,6 +59,6 @@
 
                 </toolbar>
             </table>
-        </panel>
+        </none>
     </regions>
 </page>

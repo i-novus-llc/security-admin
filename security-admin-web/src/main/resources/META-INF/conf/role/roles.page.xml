@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <page xmlns="http://n2oapp.net/framework/config/schema/page-2.0" object-id="${sec.admin.role.object.id}" name="Роли">
     <regions>
-        <panel place="single">
+        <none place="single">
             <table name="Роли" query-id="${sec.admin.role.query.id}">
                 <toolbar>
                     <button action-id="create" label="Создать"/>
@@ -16,15 +16,16 @@
                      </column>-->
                 </columns>
                 <filters>
-                    <input-text id="name"/>
-                    <input-text id="description"/>
-                    <!--<input-select-tree id="permissionFilter" ajax="false" label="Права доступа"-->
-                                            <!--checkboxes="true">-->
-                        <!--<inheritance-nodes parent-field-id="parentId" label-field-id="name" value-field-id="id"-->
-                                                <!--query-id="${sec.admin.permission.query.id}"-->
-                                                <!--has-children-field-id="hasChildren" search-field-id="name">-->
-                        <!--</inheritance-nodes>-->
-                    <!--</input-select-tree>-->
+                    <row>
+                        <input-text id="name"/>
+                        <input-text id="description"/>
+                        <input-select-tree id="permissionFilter" ajax="false" label="Права доступа">
+                            <inheritance-nodes parent-field-id="parentId" label-field-id="name" value-field-id="id"
+                                               query-id="${sec.admin.permission.query.id}"
+                                               has-children-field-id="hasChildren" search-field-id="name">
+                            </inheritance-nodes>
+                        </input-select-tree>
+                    </row>
                 </filters>
                 <actions>
                     <action id="create" name="Создать">
@@ -38,7 +39,7 @@
                     </action>
                 </actions>
             </table>
-        </panel>
+        </none>
     </regions>
 
 </page>
