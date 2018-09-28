@@ -1,10 +1,13 @@
 package net.n2oapp.security.auth;
 
+import net.n2oapp.security.auth.authority.PermissionGrantedAuthority;
 import net.n2oapp.security.auth.authority.RoleGrantedAuthority;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Пользователь с расширенными атрибутами
@@ -78,5 +81,19 @@ public class User extends org.springframework.security.core.userdetails.User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<String> getRoles() {
+        return getAuthorities()
+                .stream()
+                .filter(a -> a instanceof RoleGrantedAuthority)
+                .map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+    }
+
+    public List<String> getPermissions() {
+        return getAuthorities()
+                .stream()
+                .filter(a -> a instanceof PermissionGrantedAuthority)
+                .map(GrantedAuthority::getAuthority).collect(Collectors.toList());
     }
 }
