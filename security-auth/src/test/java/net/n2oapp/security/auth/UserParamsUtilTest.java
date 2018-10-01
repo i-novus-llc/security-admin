@@ -5,7 +5,7 @@ import org.junit.runner.RunWith;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -38,6 +38,7 @@ public class UserParamsUtilTest {
         User user = new User("test");
         user.setSurname("Testov");
         assertThat(UserParamsUtil.getUserDetailsAsMap(user).get("surname"), is("Testov"));
+        assertThat(((ArrayList<String>)UserParamsUtil.getUserDetailsAsMap(user).get("roles")).get(0), is("ROLE_USER"));
     }
 
     @Test
