@@ -15,13 +15,13 @@
         </constructor-arg>
     </bean>
 
-    <bean id="n2oSimpleDetailManager" class="net.n2oapp.security.auth.simple.N2oSimpleDetailManager">
+    <bean id="userDetailsManager" class="net.n2oapp.security.auth.simple.N2oSimpleDetailManager">
         <!--<property name="authenticationManager" ref="providerManager"/>-->
         <property name="authenticationProvider" ref="authenticationProvider"/>
     </bean>
 
     <bean id="authenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
-        <property name="userDetailsService" ref="n2oSimpleDetailManager"/>
+        <property name="userDetailsService" ref="userDetailsManager"/>
         <property name="passwordEncoder" ref="passwordEncoder"/>
     </bean>
 

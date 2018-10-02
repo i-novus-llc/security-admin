@@ -1,10 +1,10 @@
 package net.n2oapp.security.auth.simple;
 
-import net.n2oapp.context.StaticSpringContext;
 import net.n2oapp.properties.StaticProperties;
 import net.n2oapp.security.admin.api.service.RoleService;
 import net.n2oapp.security.auth.User;
 import net.n2oapp.security.auth.authority.RoleGrantedAuthority;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.provisioning.UserDetailsManager;
 
@@ -24,9 +24,11 @@ import java.util.regex.Pattern;
  */
 public class RegistrationServlet extends HttpServlet {
 
-    private UserDetailsManager userDetailsManager = StaticSpringContext.getBean(UserDetailsManager.class);
+    @Autowired
+    private UserDetailsManager userDetailsManager;
 
-    private RoleService roleService = StaticSpringContext.getBean(RoleService.class);
+    @Autowired
+    private RoleService roleService;
 
 
     /**
