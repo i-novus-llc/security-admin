@@ -9,11 +9,6 @@ import org.springframework.security.config.annotation.web.configurers.Expression
 public class SecurityConfig extends OpenIdSecurityConfigurerAdapter {
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        super.configure(http);
-    }
-
-    @Override
     protected void authorize(ExpressionUrlAuthorizationConfigurer<HttpSecurity>
                                      .ExpressionInterceptUrlRegistry url) {
         url.anyRequest().authenticated();

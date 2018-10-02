@@ -5,6 +5,7 @@ import net.n2oapp.framework.api.user.UserContext;
 import net.n2oapp.security.auth.authority.PermissionGrantedAuthority;
 import net.n2oapp.security.auth.authority.RoleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Objects;
 
@@ -15,28 +16,27 @@ public class SecuritySimplePermissionApi implements PermissionApi {
 
     @Deprecated
     public boolean hasPermission(UserContext user, String permissionId) {
-        return SecurityContextHolder.getContext().getAuthentication() != null &&
-                SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+        UserDetails userDetails = UserParamsUtil.getUserDetails();
+        return userDetails != null && userDetails.getAuthorities().stream()
                         .filter(a -> a instanceof PermissionGrantedAuthority)
-                        .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(permissionId));
+                        .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equalsIgnoreCase(permissionId));
     }
 
     @Override
     public boolean hasRole(UserContext user, String roleId) {
-        return SecurityContextHolder.getContext().getAuthentication() != null &&
-                SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+        UserDetails userDetails = UserParamsUtil.getUserDetails();
+        return userDetails != null && userDetails.getAuthorities().stream()
                         .filter(a -> a instanceof RoleGrantedAuthority)
-                        .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(roleId));
+                        .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equalsIgnoreCase(roleId));
     }
     @Override
     public boolean hasAuthentication(UserContext user) {
-        return SecurityContextHolder.getContext().getAuthentication() != null &&
-                SecurityContextHolder.getContext().getAuthentication().getPrincipal() != null;
+        UserDetails userDetails = UserParamsUtil.getUserDetails();
+        return userDetails != null && userDetails.isEnabled();
     }
 
     @Override
     public boolean hasUsername(UserContext user, String name) {
-        return SecurityContextHolder.getContext().getAuthentication() != null
-                && Objects.equals(UserParamsUtil.getUsername(SecurityContextHolder.getContext().getAuthentication().getPrincipal()), name);
+        return UserParamsUtil.getUsername().equalsIgnoreCase(name);
     }
 }
