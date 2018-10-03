@@ -12,7 +12,7 @@ import static net.n2oapp.security.auth.simple.SpringConfigUtil.*;
 /**
  * Адаптер для настройки безопасности с простой аутентификацией по логину и паролю
  */
-@Import(SimpleAuthConfig.class)
+@Import({SimpleAuthConfig.class, SimpleAuthController.class})
 public abstract class SimpleSecurityConfigurerAdapter extends N2oSecurityConfigurerAdapter {
 
     private DaoAuthenticationProvider daoAuthenticationProvider;
@@ -22,7 +22,7 @@ public abstract class SimpleSecurityConfigurerAdapter extends N2oSecurityConfigu
     }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    protected void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(daoAuthenticationProvider);
     }
 
