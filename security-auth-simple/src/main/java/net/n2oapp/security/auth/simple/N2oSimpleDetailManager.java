@@ -36,7 +36,6 @@ import java.util.stream.Collectors;
 public class N2oSimpleDetailManager implements UserDetailsManager {
     private static final Logger log = LoggerFactory.getLogger(N2oSimpleDetailManager.class);
 
-    @Autowired
     private AuthenticationProvider authenticationProvider;
 
     @Autowired

@@ -1,12 +1,10 @@
 package net.n2oapp.security.auth.simple;
 
 import net.n2oapp.security.auth.N2oSecurityConfigurerAdapter;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 
 import static net.n2oapp.security.auth.simple.SpringConfigUtil.*;
@@ -14,6 +12,7 @@ import static net.n2oapp.security.auth.simple.SpringConfigUtil.*;
 /**
  * Адаптер для настройки безопасности с простой аутентификацией по логину и паролю
  */
+@Import(SimpleAuthConfig.class)
 public abstract class SimpleSecurityConfigurerAdapter extends N2oSecurityConfigurerAdapter {
 
     private DaoAuthenticationProvider daoAuthenticationProvider;
