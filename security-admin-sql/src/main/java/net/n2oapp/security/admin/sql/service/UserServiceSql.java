@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 /**
  * Реализация сервиса управления пользователями для sql
  */
-@Service
+@Service("userService")
 public class UserServiceSql implements UserService {
 
     private final static String INSERT_USER = "sql/user/insert_user.sql";

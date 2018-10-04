@@ -12,9 +12,9 @@
                             <invoke route="/changeUserActive" action-id="changeUserActive"/>
                         </checkbox>
                     </column>
-                     <column text-field-id="roles" label="Роли">
-                         <list label-field-id="name"/>
-                     </column>
+                     <!--<column text-field-id="roles" label="Роли">-->
+                         <!--<list label-field-id="name"/>-->
+                     <!--</column>-->
                 </columns>
                 <filters>
                     <row>
