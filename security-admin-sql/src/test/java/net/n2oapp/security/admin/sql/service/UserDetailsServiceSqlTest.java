@@ -42,13 +42,16 @@ public class UserDetailsServiceSqlTest {
         assertThat(user.getId(), is(1));
         assertThat(user.getUsername(), is(u.getUsername()));
         assertThat(user.getEmail(), is(u.getEmail()));
-        assertThat(user.getSurname(), is(u.getSurname()));
         assertThat(user.getGuid(), is(u.getGuid()));
+        assertThat(user.getSurname(), is(u.getSurname()));
         assertThat(user.getName(), is(u.getName()));
 
         assertThat(user.getPatronymic(), is("patronymic1"));
         assertThat(user.getPassword(), is("password1"));
         assertThat(user.getIsActive(), is(true));
+        assertThat(user.getFio(), is("surname1 name1 patronymic1"));
+        assertThat(user.getRoles().size(), is(2));
+
 
         assertThat(user.getRoles().get(0).getId(), is(1));
         assertThat(user.getRoles().get(0).getName(), is("user"));

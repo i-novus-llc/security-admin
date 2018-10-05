@@ -14,14 +14,15 @@ import org.springframework.stereotype.Service;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserDetailsServiceSql implements UserDetailsService {
 
     private final static String LOAD_USER_DETAILS = "sql/user/load_user_details.sql";
-    private final static String GET_ROLES = "sql/user/get_roles.sql";
-    private final static String GET_PERMISSIONS = "sql/user/get_permissions.sql";
+    private final static String FIND_ROLES_WITH_PERMISSIONS = "sql/user/find_roles_with_permissions.sql";
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -39,7 +40,7 @@ public class UserDetailsServiceSql implements UserDetailsService {
             user = jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(LOAD_USER_DETAILS), namedParameters,
                     (resultSet, i) -> {
                 User u = userModel(resultSet);
-                u.setRoles(getRoles(u.getId()));
+                u.setRoles(findAllRolesWithPermissions(u.getId()));
                 return u;
             });
         } catch (EmptyResultDataAccessException ignored) {}
@@ -47,33 +48,35 @@ public class UserDetailsServiceSql implements UserDetailsService {
         return user;
     }
 
-    private List<Role> getRoles(Integer userId) {
-        MapSqlParameterSource namedParameters =
-                new MapSqlParameterSource("userId", userId);
-        List<Role> roles = null;
-        try {
-            roles = jdbcTemplate.query(SqlUtil.getResourceFileAsString(GET_ROLES), namedParameters, (resultSet, i) -> {
-                Role r = roleModel(resultSet);
-                r.setPermissions(getPermissions(r.getId()));
-                return r;
-            });
-        } catch (EmptyResultDataAccessException ignored) {}
+    private List<Role> findAllRolesWithPermissions(Integer userId) {
+        List<Role> roles = new ArrayList<>();
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource("userId", userId);
 
+        List<Map<String, Object>> rows = jdbcTemplate
+                .queryForList(SqlUtil.getResourceFileAsString(FIND_ROLES_WITH_PERMISSIONS), namedParameters);
+        Integer currentRoleId = null;
+        Role role = null;
+        for (Map<String, Object> row : rows) {
+            Permission p = new Permission();
+            p.setId((Integer) row.get("p_id"));
+            p.setName((String) row.get("p_name"));
+            p.setCode((String) row.get("p_code"));
+            p.setParentId((Integer) row.get("p_parent_id"));
+            Integer roleId = (Integer) row.get("r_id");
+            if (!roleId.equals(currentRoleId)) {
+                currentRoleId = roleId;
+                role = new Role();
+                role.setPermissions(new ArrayList<>());
+                role.setId(roleId);
+                role.setName((String) row.get("r_name"));
+                role.setCode((String) row.get("r_code"));
+                role.setDescription((String) row.get("r_description"));
+                roles.add(role);
+            }
+            if (p.getId() != null)
+                role.getPermissions().add(p);
+        }
         return roles;
-    }
-
-    private List<Permission> getPermissions(Integer roleId) {
-        MapSqlParameterSource namedParameters =
-                new MapSqlParameterSource("roleId", roleId);
-        List<Permission> permissions = null;
-        try {
-            permissions = jdbcTemplate.query(SqlUtil.getResourceFileAsString(GET_PERMISSIONS), namedParameters, (resultSet, i) -> {
-                Permission r = permissionModel(resultSet);
-                return r;
-            });
-        } catch (EmptyResultDataAccessException ignored) {}
-
-        return permissions;
     }
 
     private User userModel(ResultSet resultSet) throws SQLException {
@@ -88,37 +91,13 @@ public class UserDetailsServiceSql implements UserDetailsService {
         user.setSurname(resultSet.getString("surname"));
         user.setName(resultSet.getString("name"));
         user.setPatronymic(resultSet.getString("patronymic"));
-        user.setFio(getFio(user));
+        user.setFio(getFio(user.getSurname(), user.getName(), user.getPatronymic()));
         return user;
     }
-
-    private Role roleModel(ResultSet resultSet) throws SQLException {
-        if (resultSet == null) return null;
-        Role role = new Role();
-        role.setId(resultSet.getInt("id"));
-        role.setName(resultSet.getString("name"));
-        role.setCode(resultSet.getString("code"));
-        role.setDescription(resultSet.getString("description"));
-        return role;
-    }
-
-    private Permission permissionModel(ResultSet resultSet) throws SQLException {
-        if (resultSet == null) return null;
-        Permission permission = new Permission();
-        permission.setId(resultSet.getInt("id"));
-        permission.setName(resultSet.getString("name"));
-        permission.setCode(resultSet.getString("code"));
-        Integer parentId = resultSet.getInt("parent_id");
-        permission.setParentId(
-                resultSet.wasNull() ? null : parentId
-        );
-        if (resultSet.wasNull()) permission.setParentId(null);
-        return permission;
-    }
-
-    private String getFio(User user) {
-        return (user.getSurname() != null ? user.getSurname() : "")
-                + (user.getName() != null ? " " + user.getName() : "")
-                + (user.getPatronymic() != null ? " " + user.getPatronymic() : "");
+    
+    private String getFio(String surname, String name, String patronymic) {
+        return (surname != null ? surname + " " : "")
+                + (name != null ? name + " " : "")
+                + (patronymic!= null ? patronymic + " " : "").trim();
     }
 }
