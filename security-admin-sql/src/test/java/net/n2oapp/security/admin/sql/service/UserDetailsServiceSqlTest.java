@@ -16,6 +16,9 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertNotNull;
 
+/**
+ * Тест SQL реализации сервиса предоставления ролей/пермишенов по пользователю
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, properties = "")
 @TestPropertySource("classpath:test.properties")

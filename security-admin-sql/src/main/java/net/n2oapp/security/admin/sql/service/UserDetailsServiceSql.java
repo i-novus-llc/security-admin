@@ -18,6 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Реализация сервиса предоставления информации о пользователе (ролей/пермишенов)
+ */
 @Service
 public class UserDetailsServiceSql implements UserDetailsService {
 
@@ -94,7 +97,7 @@ public class UserDetailsServiceSql implements UserDetailsService {
         user.setFio(getFio(user.getSurname(), user.getName(), user.getPatronymic()));
         return user;
     }
-    
+
     private String getFio(String surname, String name, String patronymic) {
         return (surname != null ? surname + " " : "")
                 + (name != null ? name + " " : "")
