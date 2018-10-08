@@ -11,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Arrays;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
@@ -26,7 +28,7 @@ import static org.junit.Assert.assertNotNull;
 public class UserDetailsServiceSqlTest {
 
     @Autowired
-    UserDetailsService service;
+    private UserDetailsService service;
 
     @Test
     public void testUp() {
@@ -40,6 +42,7 @@ public class UserDetailsServiceSqlTest {
         u.setEmail("test@example.com");
         u.setSurname("surname1");
         u.setName("name1");
+        u.setRoleNames(Arrays.asList("user", "admin"));
 
         User user = service.loadUserDetails(u);
         assertThat(user.getId(), is(1));
@@ -79,5 +82,43 @@ public class UserDetailsServiceSqlTest {
         assertThat(user.getRoles().get(1).getCode(), is("code2"));
         assertThat(user.getRoles().get(1).getDescription(), is("description2"));
         assertThat(user.getRoles().get(1).getPermissions().size(), is(0));
+    }
+
+    /**
+     * Пользователя не существует в бд
+     */
+    @Test
+    public void loadUserDetailsTestWithoutUser() {
+        UserDetailsToken u = new UserDetailsToken();
+        u.setUsername("test5");
+        u.setEmail("test@example.com");
+        u.setSurname("surname1");
+        u.setName("name1");
+        u.setGuid("0c161cec-fbc7-42e4-b0d5-5224f7e5751a");
+        u.setRoleNames(Arrays.asList("user", "admin"));
+
+        User user = service.loadUserDetails(u);
+
+        assertThat(user.getId(), is(3));
+        assertThat(user.getRoles().size(), is(2));
+        assertThat(user.getRoles().get(0).getId(), is(1));
+        assertThat(user.getRoles().get(0).getName(), is("user"));
+        assertThat(user.getRoles().get(0).getCode(), is("code1"));
+        assertThat(user.getRoles().get(0).getDescription(), is("description1"));
+
+        assertThat(user.getRoles().get(0).getPermissions().size(), is(2));
+        assertThat(user.getRoles().get(0).getPermissions().get(0).getId(), is(1));
+        assertThat(user.getRoles().get(0).getPermissions().get(0).getName(), is("test"));
+        assertThat(user.getRoles().get(0).getPermissions().get(0).getCode(), is("test"));
+        assertThat(user.getRoles().get(0).getPermissions().get(1).getId(), is(2));
+        assertThat(user.getRoles().get(0).getPermissions().get(1).getName(), is("test2"));
+        assertThat(user.getRoles().get(0).getPermissions().get(1).getCode(), is("test2"));
+        assertThat(user.getRoles().get(0).getPermissions().get(1).getParentId(), is(1));
+
+        assertThat(user.getRoles().get(1).getId(), is(2));
+        assertThat(user.getRoles().get(1).getName(), is("admin"));
+        assertThat(user.getRoles().get(1).getCode(), is("code2"));
+        assertThat(user.getRoles().get(1).getDescription(), is("description2"));
+
     }
 }
