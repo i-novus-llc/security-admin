@@ -1,12 +1,16 @@
 package net.n2oapp.security.auth.simple;
 
+import net.n2oapp.framework.api.context.ContextProcessor;
+import net.n2oapp.framework.api.data.DomainProcessor;
+import net.n2oapp.framework.api.data.QueryProcessor;
+import net.n2oapp.framework.engine.data.N2oInvocationFactory;
+import net.n2oapp.framework.engine.data.N2oQueryProcessor;
+import net.n2oapp.security.admin.api.criteria.BaseCriteriaConstructor;
 import net.n2oapp.security.auth.N2oSecurityConfigurerAdapter;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 
 import static net.n2oapp.security.auth.simple.SpringConfigUtil.*;
@@ -45,4 +49,13 @@ public abstract class SimpleSecurityConfigurerAdapter extends N2oSecurityConfigu
 
     protected abstract void authorize(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry url)
             throws Exception;
+
+    @Bean
+    public QueryProcessor queryProcessor(ContextProcessor contextProcessor,
+                                         DomainProcessor domainProcessor,
+                                         N2oInvocationFactory invocationFactory) {
+        N2oQueryProcessor queryProcessor = new N2oQueryProcessor(contextProcessor, domainProcessor, invocationFactory);
+        queryProcessor.setCriteriaResolver(new BaseCriteriaConstructor());
+        return queryProcessor;
+    }
 }

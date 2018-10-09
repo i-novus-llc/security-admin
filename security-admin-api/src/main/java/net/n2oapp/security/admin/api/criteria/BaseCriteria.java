@@ -49,7 +49,7 @@ public class BaseCriteria implements Pageable {
 
     @Override
     public int getOffset() {
-        return this.page * this.size;
+        return (this.page - 1) * this.size;
     }
 
     @Override
