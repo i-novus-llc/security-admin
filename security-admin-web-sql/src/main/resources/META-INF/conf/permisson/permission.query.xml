@@ -39,7 +39,7 @@
         </field>
         <field id="hasChildren" domain="boolean">
             <select mapping="['has_children']">
-                coalesce((select true from sec.permission as rp where rp.parent_id = p.id limit 1),
+                coalesce((select true from sec.permission as rp where rp.parent_id = sec.permission.id limit 1),
                 false) as has_children
             </select>
         </field>

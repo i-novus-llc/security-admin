@@ -1,49 +1,48 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <query xmlns="http://n2oapp.net/framework/config/schema/query-4.0" object-id="${sec.admin.role.object.id}" name="Роли">
-    <list>
-        <sql>
-            select :select
-            from sec.role r
-            where :filters
-            order by :sorting, id
-        </sql>
+    <list result-mapping="['content']" count-mapping="['totalElements']">
+        <java method="findAll" class="net.n2oapp.security.admin.api.service.RoleService">
+            <spring bean="roleService"/>
+            <arguments>
+                <argument class="net.n2oapp.security.admin.api.criteria.RoleCriteria" type="criteria"/>
+            </arguments>
+        </java>
     </list>
-    <count>
-        <sql>
-            select count(id)
-            from sec.role r
-            where :filters
-        </sql>
-    </count>
+    <unique result-mapping="#this">
+        <java method="getById" class="net.n2oapp.security.admin.api.service.RoleService">
+            <spring bean="roleService"/>
+            <arguments>
+                <argument type="primitive"/>
+            </arguments>
+        </java>
+    </unique>
 
     <fields>
         <field id="id" domain="integer">
-            <select/>
+            <select mapping="id"/>
             <sorting/>
             <filters>
-                <eq filter-id="id">id = :id</eq>
+                <eq filter-id="id" mapping="[0]"/>
             </filters>
         </field>
         <field id="name" domain="string" name="Название">
-            <select/>
+            <select mapping="name"/>
             <sorting/>
             <filters>
-                <eq filter-id="name">trim(lower(name)) like '%'||trim(lower(:name))||'%'</eq>
+                <eq filter-id="name" mapping="name"/>
             </filters>
         </field>
         <field id="code" domain="string" name="Код">
-            <select/>
+            <select mapping="code"/>
             <filters>
-                <eq filter-id="code"/>
+                <eq filter-id="code" mapping="code"/>
             </filters>
         </field>
         <field id="description" domain="string" name="Описание">
             <select/>
             <sorting/>
             <filters>
-                <eq filter-id="description">trim(lower(description)) like
-                    '%'||trim(lower(:description))||'%'
-                </eq>
+                <eq filter-id="description" mapping="description"/>
             </filters>
         </field>
 
