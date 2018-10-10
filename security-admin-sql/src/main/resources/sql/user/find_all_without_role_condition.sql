@@ -6,9 +6,9 @@ where ur.user_id=u.id)  as ids,
 from sec.user_role ur join sec.role r on r.id=ur.role_id
 where ur.user_id=u.id)  as names
 from sec.user u
-where (:username is null or username = :username)
-and (:fio::varchar is null or (trim(lower(u.surname)) like '%'||trim(lower(:fio))||'%')
-or(trim(lower(u.name)) like '%'||trim(lower(:fio))||'%' )or(trim(lower(u.patronymic)) like '%'||trim(lower(:fio))||'%')
-or (trim(lower((coalesce(u.surname,'')||' '||coalesce(u.name,'')||' '||coalesce(u.patronymic,'')))) like '%'||trim(lower(:fio))||'%'))
+where (:username is null or username like (lower('%'||trim(:username)||'%')))
+and (:fio::varchar is null or (trim(lower(u.surname::varchar)) like lower('%'||trim(:fio)||'%'))
+or(trim(lower(u.name::varchar)) like lower('%'||trim(:fio)||'%') )or(trim(lower(u.patronymic::varchar)) like lower('%'||trim(:fio)||'%'))
+or (trim(lower((coalesce(u.surname,'')||' '||coalesce(u.name,'')||' '||coalesce(u.patronymic,'')))) like lower('%'||trim(:fio)||'%')))
 and (:isActive::boolean is null or is_active = :isActive) and (:password::varchar is null or password = :password)
 limit :limit offset :offset;
