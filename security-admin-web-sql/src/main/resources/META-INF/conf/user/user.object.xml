@@ -6,7 +6,7 @@
     <actions>
         <action id="create">
             <invocation>
-                <n2o:java method="create" class="net.n2oapp.security.admin.sql.service.UserServiceSql">
+                <n2o:java method="create" class="net.n2oapp.security.admin.api.service.UserService">
                     <n2o:spring bean="userService"/>
                     <n2o:arguments>
                         <n2o:argument name="userEntity" class="net.n2oapp.security.admin.api.model.UserForm"/>
@@ -33,7 +33,7 @@
 
         <action id="update">
             <invocation>
-                <n2o:java  method="update" class="net.n2oapp.security.admin.sql.service.UserServiceSql">
+                <n2o:java  method="update" class="net.n2oapp.security.admin.api.service.UserService">
                     <n2o:spring bean="userService"/>
                     <n2o:arguments>
                         <n2o:argument name="userEntity" class="net.n2oapp.security.admin.api.model.UserForm"/>
@@ -58,13 +58,13 @@
             </out-parameters>
             <success-text>Пользователь сохранен</success-text>
             <validations activate="blackList">
-                <validation ref-id="uniqUsername"/>
+                <validation ref-id="uniqueUsername"/>
             </validations>
         </action>
 
         <action id="delete">
             <invocation>
-                <n2o:java method="delete" class="net.n2oapp.security.admin.sql.service.UserServiceSql">
+                <n2o:java method="delete" class="net.n2oapp.security.admin.api.service.UserService">
                     <n2o:spring bean="userService"/>
                     <n2o:arguments>
                         <n2o:argument name="id" class="java.lang.Integer"/>
@@ -80,7 +80,7 @@
 
         <action id="changeUserActive">
             <invocation>
-                <n2o:java method="changeActive" class="net.n2oapp.security.admin.sql.service.UserServiceSql">
+                <n2o:java method="changeActive" class="net.n2oapp.security.admin.api.service.UserService">
                     <n2o:arguments>
                         <n2o:argument name="id" class="java.lang.Integer"/>
                     </n2o:arguments>
@@ -94,17 +94,20 @@
     </actions>
 
     <validations>
-        <constraint id="uniqUsername" level="error">
+        <constraint id="uniqueUsername" level="error">
             <message>Пользователь с таким именем уже существует</message>
             <invocation>
-                <n2o:sql>
-                    <![CDATA[ select count(id) from sec.user where username = :username]]>
-                </n2o:sql>
+                <n2o:java method="checkUniqueUsername" class="net.n2oapp.security.admin.api.service.UserService">
+                    <n2o:spring bean="userService"/>
+                    <n2o:arguments>
+                        <n2o:argument name="username" class="java.lang.String" type="class"/>
+                    </n2o:arguments>
+                </n2o:java>
             </invocation>
             <in-parameters>
-                <param name="username" mapping="['username']" domain="string"/>
+                <param name="username" mapping="[0]" />
             </in-parameters>
-            <result expression="[0][0][0] == 0"/>
+            <result expression="#this == true"/>
         </constraint>
 
         <condition id="usernameValidation" level="error">
