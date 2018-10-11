@@ -47,6 +47,7 @@ public class UserServiceSql implements UserService {
     private final static String FIND_ALL_WITHOUT_ROLE_CONDITION = "sql/user/find_all_without_role_condition.sql";
     private final static String FIND_ALL_COUNT = "sql/user/find_all_count.sql";
     private final static String FIND_ALL_COUNT_WITHOUT_ROLE_CONDITION = "sql/user/find_all_count_without_role_condition.sql";
+    private final static String CHECK_UNIQUE_USERNAME = "sql/user/check_unique_username.sql";
 
     @Autowired
     private TransactionTemplate transactionTemplate;
@@ -173,6 +174,13 @@ public class UserServiceSql implements UserService {
                         .addValue("isActive", !getById(id).getIsActive());
         jdbcTemplate.update(SqlUtil.getResourceFileAsString(UPDATE_USER_ACTIVE), namedParameters);
         return getById(id);
+    }
+
+    @Override
+    public Boolean checkUniqueUsername(String username) {
+        return jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(CHECK_UNIQUE_USERNAME),
+                new MapSqlParameterSource("username", username),
+                Integer.class) == 0;
     }
 
 

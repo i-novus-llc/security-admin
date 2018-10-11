@@ -1,0 +1,1 @@
+select count(*) from sec.user where username = :username

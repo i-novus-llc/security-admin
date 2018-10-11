@@ -49,6 +49,12 @@ public class UserServiceTest {
         checkValidationUsername(user);
     }
 
+    @Test
+    public void testCheckUniqueUsername() {
+        assertEquals(false, service.checkUniqueUsername("test2"));
+        assertEquals(true, service.checkUniqueUsername("nonExistentUser"));
+    }
+
 
     private void checkValidationEmail(User user) {
 

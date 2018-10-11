@@ -88,6 +88,12 @@ public class UserServiceSqlTest {
         assertEquals(2, user.getTotalElements());
     }
 
+    @Test
+    public void testCheckUniqueUsername() {
+        assertEquals(false, service.checkUniqueUsername("test2"));
+        assertEquals(true, service.checkUniqueUsername("nonExistentUser"));
+    }
+
     private static UserForm newUser(Boolean generate) {
         UserForm user = new UserForm();
         user.setUsername("userName2");

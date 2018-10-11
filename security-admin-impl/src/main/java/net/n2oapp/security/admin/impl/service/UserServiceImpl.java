@@ -159,6 +159,11 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
+    public Boolean checkUniqueUsername(String username) {
+        return userRepository.findOneByUsername(username) == null;
+    }
+
     private UserEntity entityForm(UserEntity entity, UserForm model) {
         entity.setGuid(model.getGuid() == null ? null : UUID.fromString(model.getGuid()));
         entity.setUsername(model.getUsername());
