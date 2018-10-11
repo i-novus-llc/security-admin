@@ -1,0 +1,1 @@
+select count(*) from sec.user_role where role_id = :id

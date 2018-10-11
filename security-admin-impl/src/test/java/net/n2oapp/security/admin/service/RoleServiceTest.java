@@ -48,6 +48,14 @@ public class RoleServiceTest {
         checkValidationRoleExists(1);
     }
 
+    @Test
+    public void testCountUsersWithRole() {
+        assertEquals(Integer.valueOf(0), service.countUsersWithRole(0));
+        assertEquals(Integer.valueOf(2), service.countUsersWithRole(1));
+        assertEquals(Integer.valueOf(1), service.countUsersWithRole(2));
+        assertEquals(Integer.valueOf(0), service.countUsersWithRole(3));
+    }
+
     private void checkValidationRoleName(Role role) {
         Throwable thrown = catchThrowable(() -> {
             service.create(newRole());

@@ -50,4 +50,10 @@ public class RoleServiceRestClient implements RoleService {
         roleCriteria.setOrders(criteria.getOrders());
         return client.findAll(roleCriteria);
     }
+
+    @Override
+    public Integer countUsersWithRole(Integer roleId) {
+        //todo Реализовать
+        return 0;
+    }
 }

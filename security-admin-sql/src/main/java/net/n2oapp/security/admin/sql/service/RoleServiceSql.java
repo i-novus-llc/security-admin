@@ -41,6 +41,7 @@ public class RoleServiceSql implements RoleService {
     private final static String GET_ROLE_BY_ID = "sql/role/get_role_by_id.sql";
     private final static String FIND_ALL = "sql/role/find_all.sql";
     private final static String FIND_ALL_COUNT = "sql/role/find_all_count.sql";
+    private final static String COUNT_USERS_WITH_ROLE = "sql/role/count_users_with_role.sql";
 
     @Autowired
     private TransactionTemplate transactionTemplate;
@@ -126,6 +127,13 @@ public class RoleServiceSql implements RoleService {
         Integer count = jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(FIND_ALL_COUNT), namedParameters,Integer.class);
         return new PageImpl<>(roles,criteria,count);
 
+    }
+
+    @Override
+    public Integer countUsersWithRole(Integer roleId) {
+        return jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(COUNT_USERS_WITH_ROLE),
+                new MapSqlParameterSource("id", roleId),
+                Integer.class);
     }
 
     private Role model (ResultSet resultSet) throws SQLException {

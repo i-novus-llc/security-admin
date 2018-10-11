@@ -8,6 +8,7 @@ INSERT INTO sec.role(id, name, code, description) VALUES (2, 'admin','code2','de
 INSERT INTO sec.user(id,username,email,name,surname,patronymic,password, is_active) VALUES (1, 'test', 'test@example.com','name1','surname1','patronymic1','password1',true);
 INSERT INTO sec.user(id,username,email,name,surname,patronymic,password, is_active) VALUES (2, 'test2', 'test@example.com','name1','surname1','patronymic1','password1',true);
 INSERT INTO sec.user_role(user_id, role_id) VALUES (1,1);
+INSERT INTO sec.user_role(user_id, role_id) VALUES (2,1);
 INSERT INTO sec.user_role(user_id, role_id) VALUES (1,2);
 INSERT INTO sec.role_permission (role_id, permission_id) VALUES (1,1);
 INSERT INTO sec.role_permission (role_id, permission_id) VALUES (1,2);

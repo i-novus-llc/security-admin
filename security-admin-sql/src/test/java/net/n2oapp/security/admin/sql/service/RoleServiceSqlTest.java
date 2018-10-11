@@ -1,7 +1,9 @@
 package net.n2oapp.security.admin.sql.service;
 
 import net.n2oapp.security.admin.api.criteria.RoleCriteria;
-import net.n2oapp.security.admin.api.model.*;
+import net.n2oapp.security.admin.api.model.Permission;
+import net.n2oapp.security.admin.api.model.Role;
+import net.n2oapp.security.admin.api.model.RoleForm;
 import net.n2oapp.security.admin.api.service.RoleService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -17,9 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 /**
  * Тест SQL реализации сервиса управления ролями
@@ -77,6 +76,14 @@ public class RoleServiceSqlTest {
         criteria.setPermissionIds(permissions);
         Page<Role> role = service.findAll(criteria);
         assertEquals(1, role.getTotalElements());
+    }
+
+    @Test
+    public void testCountUsersWithRole() {
+        assertEquals(Integer.valueOf(0), service.countUsersWithRole(0));
+        assertEquals(Integer.valueOf(2), service.countUsersWithRole(1));
+        assertEquals(Integer.valueOf(1), service.countUsersWithRole(2));
+        assertEquals(Integer.valueOf(0), service.countUsersWithRole(3));
     }
 
     private static RoleForm newRole() {
