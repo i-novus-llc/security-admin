@@ -49,13 +49,4 @@ public abstract class SimpleSecurityConfigurerAdapter extends N2oSecurityConfigu
 
     protected abstract void authorize(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry url)
             throws Exception;
-
-    @Bean
-    public QueryProcessor queryProcessor(ContextProcessor contextProcessor,
-                                         DomainProcessor domainProcessor,
-                                         N2oInvocationFactory invocationFactory) {
-        N2oQueryProcessor queryProcessor = new N2oQueryProcessor(contextProcessor, domainProcessor, invocationFactory);
-        queryProcessor.setCriteriaResolver(new BaseCriteriaConstructor());
-        return queryProcessor;
-    }
 }

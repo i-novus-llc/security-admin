@@ -1,47 +1,37 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <query xmlns="http://n2oapp.net/framework/config/schema/query-4.0" object-id="${sec.admin.permission.object.id}" name="Права доступа">
-    <list>
-        <sql>
-            select :select
-            from sec.permission
-            where :filters
-        </sql>
+    <list count-mapping="#this.size()" result-mapping="#this">
+        <java method="getAll" class="net.n2oapp.security.admin.api.service.PermissionService">
+            <spring bean="permissionService"/>
+        </java>
     </list>
-    <count>
-        <sql>
-            select count(p.id)
-            from sec.permission
-            where :filters
-        </sql>
-    </count>
 
     <fields>
         <field id="id" domain="integer">
-            <select/>
+            <select mapping="id"/>
+            <sorting/>
             <filters>
-                <eq filter-id="id"/>
+                <eq filter-id="id" mapping="[0]"/>
             </filters>
         </field>
         <field id="name" domain="string" name="Название">
-            <select/>
+            <select mapping="name"/>
+            <sorting/>
             <filters>
-                <eq filter-id="name"/>
+                <eq filter-id="name" mapping="name"/>
             </filters>
         </field>
         <field id="code" domain="string" name="Код">
-            <select/>
+            <select mapping="code"/>
             <filters>
-                <eq filter-id="code"/>
+                <eq filter-id="code" mapping="code"/>
             </filters>
         </field>
         <field id="parentId" domain="integer">
-            <select>parent_id</select>
+            <select mapping="parentId"/>
         </field>
         <field id="hasChildren" domain="boolean">
-            <select mapping="['has_children']">
-                coalesce((select true from sec.permission as rp where rp.parent_id = sec.permission.id limit 1),
-                false) as has_children
-            </select>
+            <select mapping="hasChildren"/>
         </field>
     </fields>
 </query>
