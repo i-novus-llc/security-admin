@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 /**
  * Реализация сервиса управления ролями
  */
-@Service
+@Service("roleService")
 @Transactional
 public class RoleServiceImpl implements RoleService {
     @Autowired

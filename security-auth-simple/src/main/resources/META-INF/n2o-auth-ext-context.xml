@@ -26,12 +26,4 @@
     </bean>
 
     <bean id="currentUserUpdatePasswordService" class="net.n2oapp.security.auth.simple.CurrentUserUpdatePasswordService"/>
-
-
-    <bean id="userService" class="net.n2oapp.security.admin.sql.service.UserServiceSql"/>
-    <bean id="roleService" class="net.n2oapp.security.admin.sql.service.RoleServiceSql"/>
-    <bean id="permissionService" class="net.n2oapp.security.admin.sql.service.PermissionServiceSql"/>
-
-
-
 </beans>
