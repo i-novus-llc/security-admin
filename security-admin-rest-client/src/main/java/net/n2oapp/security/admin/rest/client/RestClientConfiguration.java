@@ -1,6 +1,5 @@
 package net.n2oapp.security.admin.rest.client;
 
-import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import net.n2oapp.platform.jaxrs.autoconfigure.EnableJaxRsProxyClient;
 import net.n2oapp.security.admin.rest.api.PermissionRestService;
 import net.n2oapp.security.admin.rest.api.RoleRestService;
@@ -16,22 +15,22 @@ import org.springframework.context.annotation.Configuration;
 public class RestClientConfiguration {
 
     @Bean
-    public UserServiceRestClient userServiceRestClient(@Qualifier("userRestServiceJaxRsProxyClient") UserRestService client) {
+    public UserServiceRestClient userService(@Qualifier("userRestServiceJaxRsProxyClient") UserRestService client) {
         return new UserServiceRestClient(client);
     }
 
     @Bean
-    public UserDetailsServiceRestClient userDetailsServiceRestClient(@Qualifier("userRestServiceJaxRsProxyClient") UserRestService client) {
+    public UserDetailsServiceRestClient userDetailsService(@Qualifier("userRestServiceJaxRsProxyClient") UserRestService client) {
         return new UserDetailsServiceRestClient(client);
     }
 
     @Bean
-    public RoleServiceRestClient roleServiceRestClient(@Qualifier("roleRestServiceJaxRsProxyClient") RoleRestService client) {
+    public RoleServiceRestClient roleService(@Qualifier("roleRestServiceJaxRsProxyClient") RoleRestService client) {
         return new RoleServiceRestClient(client);
     }
 
     @Bean
-    public PermissionServiceRestClient permissionServiceRestClient(@Qualifier("permissionRestServiceJaxRsProxyClient") PermissionRestService client) {
+    public PermissionServiceRestClient permissionService(@Qualifier("permissionRestServiceJaxRsProxyClient") PermissionRestService client) {
         return new PermissionServiceRestClient(client);
     }
 
