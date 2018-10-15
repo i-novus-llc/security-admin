@@ -1,6 +1,5 @@
 package net.n2oapp.security.auth.simple;
 
-import net.n2oapp.context.StaticSpringContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,7 +15,8 @@ import java.util.Objects;
  */
 public class CurrentUserUpdatePasswordService {
 
-    private UserDetailsManager userDetailsManager = StaticSpringContext.getBean(UserDetailsManager.class);
+    @Autowired
+    private UserDetailsManager userDetailsManager;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 

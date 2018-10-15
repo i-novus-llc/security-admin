@@ -36,7 +36,6 @@ import java.util.stream.Collectors;
 public class N2oSimpleDetailManager implements UserDetailsManager {
     private static final Logger log = LoggerFactory.getLogger(N2oSimpleDetailManager.class);
 
-
     private AuthenticationProvider authenticationProvider;
 
     @Autowired
@@ -182,7 +181,7 @@ public class N2oSimpleDetailManager implements UserDetailsManager {
             throw new IncorrectResultSizeDataAccessException(
                     "More than one user found with name '" + username + "'", 1);
         }
-        if (users.getTotalElements() == 1) {
+        if (users.getTotalElements() == 1 && users.getContent().get(0).getRoles() != null) {
             tempRoleAuthorities = users.getContent().get(0).getRoles().stream().map(Role::getId).collect(Collectors.toList());
         }
         if (tempRoleAuthorities == null) return null;

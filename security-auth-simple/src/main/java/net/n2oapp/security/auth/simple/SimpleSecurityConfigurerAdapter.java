@@ -1,6 +1,7 @@
 package net.n2oapp.security.auth.simple;
 
 import net.n2oapp.security.auth.N2oSecurityConfigurerAdapter;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,6 +12,7 @@ import static net.n2oapp.security.auth.simple.SpringConfigUtil.*;
 /**
  * Адаптер для настройки безопасности с простой аутентификацией по логину и паролю
  */
+@Import({SimpleAuthConfig.class, SimpleAuthController.class})
 public abstract class SimpleSecurityConfigurerAdapter extends N2oSecurityConfigurerAdapter {
 
     private DaoAuthenticationProvider daoAuthenticationProvider;
@@ -20,7 +22,7 @@ public abstract class SimpleSecurityConfigurerAdapter extends N2oSecurityConfigu
     }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    protected void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(daoAuthenticationProvider);
     }
 
