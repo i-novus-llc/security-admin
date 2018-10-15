@@ -27,7 +27,7 @@ public class UserRepositoryTest {
     public void checkCountUsersWithRoleId() {
         Integer roleId = 1;
         int id = userRepository.countUsersWithRoleId(roleId);
-        Assert.assertEquals(1, id);
+        Assert.assertEquals(2, id);
     }
 
 }
