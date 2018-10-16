@@ -58,7 +58,7 @@
         <field id="email" domain="string" name="E-mail">
             <select mapping="email"/>
         </field>
-        META-INF/conf/role/role.query.xml
+
         <field id="isActive" domain="boolean" name="Активность">
             <select mapping="['isActive']">u.is_active as isActive</select>
             <sorting>is_active :isActiveDirection</sorting>
@@ -73,15 +73,19 @@
                 <eq filter-id="fio" mapping="fio"/>
             </filters>
         </field>
-        <!--<field id="roles*.id" domain="integer[]" name="Роли">-->
-            <!--<select mapping="['roleIds']"></select>-->
-            <!--&lt;!&ndash;<filters>&ndash;&gt;-->
-                <!--&lt;!&ndash;<in mapping="['roleIds']" filter-id="roleFilter*.id"></in>&ndash;&gt;-->
-            <!--&lt;!&ndash;</filters>&ndash;&gt;-->
-        <!--</field>-->
+        <field id="roleIds" domain="integer[]" name="Роли">
+            <select mapping="['roles'].![id]"></select>
+            <!--<filters>-->
+                <!--<in mapping="['roleIds']" filter-id="roleIds"></in>-->
+            <!--</filters>-->
+        </field>
 
-        <!--<field id="roles*.name" domain="string[]" name="Роли">-->
-            <!--<select mapping="['roleNames']"></select>-->
-        <!--</field>-->
+        <field id="roleNames" domain="string[]" name="Роли">
+            <select mapping="['roles'].![name]"></select>
+        </field>
+
+        <field id="roles" domain="object[]" name="Роли">
+            <select mapping="['roles']"></select>
+        </field>
     </fields>
 </query>

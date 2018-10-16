@@ -11,9 +11,9 @@
                 <columns>
                     <column text-field-id="name"/>
                     <column text-field-id="description"/>
-                    <!-- <column text-field-id="permissions" name="Права доступа">
+                     <column text-field-id="permissionNames" name="Права доступа">
                          <list label-field-id="name"/>
-                     </column>-->
+                     </column>
                 </columns>
                 <filters>
                     <row>

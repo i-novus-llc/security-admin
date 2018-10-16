@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.api.model;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Permission {
     private Integer id;
     private String name;

@@ -46,40 +46,20 @@
             </filters>
         </field>
 
-        <!--<field>
-            <id>permissions*.id</id>
-            <domain>integer[]</domain>
-            <display>
-                <![CDATA[
-                  (select ARRAY_AGG(p.id)
-                from sec.role_permission
-                rp join sec.permission p on p.id=rp.permission_id where rp.role_id=r.id)
-                 ]]>
-            </display>
-            <filters>
-                <filter type="in" filter-field="permissionFilter*.id">
-                    <![CDATA[
-                        exists (select ur1.permission_id
-                        from sec.role_permission ur1
-                        where role_id = r.id and permission_id in (:permissionFilter*.id))
-                    ]]>
-                </filter>
-            </filters>
-            <name>Роли</name>
+        <field id="permissionIds" domain="integer[]" name="Права">
+            <select mapping="['permissions'].![id]"></select>
+            <!--<filters>-->
+                <!--<in mapping="['permissionIds']" filter-id="permissionIds"></in>-->
+            <!--</filters>-->
         </field>
 
-        <field>
-            <id>permissions*.name</id>
-            <domain>string[]</domain>
-            <display>
-                <![CDATA[
-                  (select ARRAY_AGG(p.name)
-                from sec.role_permission
-                rp join sec.permission p on p.id=rp.permission_id where rp.role_id=r.id)
-                 ]]>
-            </display>
-            <name>Роли</name>
-        </field>-->
+        <field id="permissionNames" domain="string[]" name="Права">
+            <select mapping="['permissions'].![name]"></select>
+        </field>
+
+        <field id="permissions" domain="object[]" name="Права">
+            <select mapping="['permissions']"></select>
+        </field>
 
     </fields>
 </query>

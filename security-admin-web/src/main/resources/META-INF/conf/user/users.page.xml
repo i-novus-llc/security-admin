@@ -12,9 +12,9 @@
                             <invoke route="/changeUserActive" action-id="changeUserActive"/>
                         </checkbox>
                     </column>
-                     <!--<column text-field-id="roles" label="Роли">-->
-                         <!--<list label-field-id="name"/>-->
-                     <!--</column>-->
+                     <column text-field-id="roleNames" label="Роли">
+                         <list label-field-id="name"/>
+                     </column>
                 </columns>
                 <filters>
                     <row>
@@ -40,7 +40,7 @@
                              </ctrl:set-value-expression>
                          </ctrl:hidden>-->
 
-                        <ctrl:input-select id="role" type="single" label="Роли">
+                        <ctrl:input-select id="roles" type="single" label="Роли">
                             <ctrl:query query-id="${sec.admin.role.query.id}" value-field-id="id"
                                         label-field-id="name"/>
                         </ctrl:input-select>
