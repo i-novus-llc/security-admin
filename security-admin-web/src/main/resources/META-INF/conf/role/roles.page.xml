@@ -19,12 +19,12 @@
                     <row>
                         <input-text id="name"/>
                         <input-text id="description"/>
-                        <input-select-tree id="permissionFilter" ajax="false" label="Права доступа">
-                            <inheritance-nodes parent-field-id="parentId" label-field-id="name" value-field-id="id"
-                                               query-id="${sec.admin.permission.query.id}"
-                                               has-children-field-id="hasChildren" search-field-id="name">
-                            </inheritance-nodes>
-                        </input-select-tree>
+                        <!--<input-select-tree id="permissionFilter" ajax="false" label="Права доступа">-->
+                            <!--<inheritance-nodes parent-field-id="parentId" label-field-id="name" value-field-id="id"-->
+                                               <!--query-id="${sec.admin.permission.query.id}"-->
+                                               <!--has-children-field-id="hasChildren" search-field-id="name">-->
+                            <!--</inheritance-nodes>-->
+                        <!--</input-select-tree>-->
                     </row>
                 </filters>
                 <actions>
