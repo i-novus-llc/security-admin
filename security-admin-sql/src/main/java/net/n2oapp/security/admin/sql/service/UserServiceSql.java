@@ -144,14 +144,20 @@ public class UserServiceSql implements UserService {
 
     @Override
     public Page<User> findAll(UserCriteria criteria) {
+        String sorting = criteria.getOrders() == null || criteria.getOrders().size() == 0
+                ? "id" : criteria.getOrders().get(0).getProperty();
+        String direction = criteria.getOrders() == null || criteria.getOrders().size() == 0
+                ? "ASC" : criteria.getOrders().get(0).getDirection().name();
         MapSqlParameterSource namedParameters =
                 new MapSqlParameterSource("username", criteria.getUsername())
                         .addValue("isActive", criteria.getIsActive())
                         .addValue("fio", criteria.getFio())
                         .addValue("password", criteria.getPassword())
                         .addValue("limit", criteria.getPageSize())
-                        .addValue("offset", criteria.getOffset());
-        if (criteria.getRoleIds() == null) {
+                        .addValue("offset", criteria.getOffset())
+                        .addValue("sorting", sorting)
+                        .addValue("direction", direction);
+        if (criteria.getRoleIds() == null || criteria.getRoleIds().size() == 0) {
             List<User> users = jdbcTemplate.query(SqlUtil.getResourceFileAsString(FIND_ALL_WITHOUT_ROLE_CONDITION), namedParameters, (resultSet, i) -> {
                 return model(resultSet);
             });
@@ -228,10 +234,10 @@ public class UserServiceSql implements UserService {
         user.setEmail(resultSet.getString("email"));
         user.setPasswordHash(resultSet.getString("password"));
         user.setIsActive(resultSet.getBoolean("is_active"));
+        user.setRoles(new ArrayList<>());
         if (resultSet.getObject("ids") != null && resultSet.getObject("names") != null) {
             Array a = resultSet.getArray("ids");
             Object idsObject = a.getArray();
-            List<Role> roles = new ArrayList<>();
             Integer[] ids;
             String[] names;
             // эта проверка нужна для поддержки различных реализаций для h2 и postrgesql
@@ -255,10 +261,9 @@ public class UserServiceSql implements UserService {
                     Role role = new Role();
                     role.setId(ids[i]);
                     role.setName(names[i]);
-                    roles.add(role);
+                    user.getRoles().add(role);
                 }
             }
-            user.setRoles(roles);
         }
         return user;
     }

@@ -115,12 +115,19 @@ public class RoleServiceSql implements RoleService {
 
     @Override
     public Page<Role> findAll(RoleCriteria criteria) {
+        String sorting = criteria.getOrders() == null || criteria.getOrders().size() == 0
+                ? "id" : criteria.getOrders().get(0).getProperty();
+        String direction = criteria.getOrders() == null || criteria.getOrders().size() == 0
+                ? "ASC" : criteria.getOrders().get(0).getDirection().name();
         SqlParameterSource namedParameters =
                 new MapSqlParameterSource("name", criteria.getName())
                         .addValue("description", criteria.getDescription())
-                        .addValue("permissionIds", criteria.getPermissionIds())
+                        .addValue("permissionIds", criteria.getPermissionIds().size() != 0 ? criteria.getPermissionIds() : null)
                         .addValue("limit", criteria.getPageSize())
-                        .addValue("offset", criteria.getOffset());
+                        .addValue("offset", criteria.getOffset())
+                        .addValue("sorting", sorting)
+                        .addValue("direction", direction);
+
         List<Role> roles = jdbcTemplate.query(SqlUtil.getResourceFileAsString(FIND_ALL), namedParameters, (resultSet, i) -> {
             return model(resultSet);
         });
@@ -143,6 +150,7 @@ public class RoleServiceSql implements RoleService {
         role.setName(resultSet.getString("name"));
         role.setCode(resultSet.getString("code"));
         role.setDescription(resultSet.getString("description"));
+        role.setPermissions(new ArrayList<>());
         if (resultSet.getObject("ids") != null && resultSet.getObject("names") != null) {
             List<Permission> permissions = new ArrayList<>();
             Array a = resultSet.getArray("ids");
@@ -176,10 +184,8 @@ public class RoleServiceSql implements RoleService {
                 permission.setId(ids[i]);
                 permission.setName(names[i]);
                 permission.setCode(codes[i]);
-                permissions.add(permission);
+                role.getPermissions().add(permission);
             }
-
-            role.setPermissions(permissions);
         }
         return role;
     }

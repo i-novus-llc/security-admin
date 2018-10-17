@@ -14,4 +14,10 @@ and (:isActive::boolean is null or is_active = :isActive) and (:password::varcha
 and exists (select ur1.role_id
                         from sec.user_role ur1
                         where user_id = u.id and role_id in (:roleIds))
+                        order by
+                            case when :sorting = 'id' then u.id end asc,
+                            case when :sorting = 'username' and :direction = 'DESC'  then u.username end desc,
+                            case when :sorting = 'username' and :direction = 'ASC'  then u.username end asc,
+                            case when :sorting = 'fio' and :direction = 'ASC'  then u.surname end asc,
+                            case when :sorting = 'fio' and :direction = 'DESC'  then u.surname end desc
 limit :limit offset :offset;

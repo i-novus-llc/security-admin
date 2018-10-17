@@ -14,4 +14,10 @@ where (:name is null or (trim(lower(name))) like (lower('%'||trim(:name)||'%')))
 and (:permissionIds is null or exists (select ur1.permission_id
                         from sec.role_permission ur1
                         where role_id = r.id and permission_id in(:permissionIds)))
+                        order by
+                            case when :sorting = 'id' then r.id end asc,
+                            case when :direction = 'DESC' and :sorting = 'name' then r.name end desc,
+                            case when :direction = 'ASC' and :sorting = 'name' then r.name end asc,
+                            case when :direction = 'DESC' and :sorting = 'description' then r.description end desc,
+                            case when :direction = 'ASC' and :sorting = 'description' then r.description end asc
 limit :limit offset :offset;

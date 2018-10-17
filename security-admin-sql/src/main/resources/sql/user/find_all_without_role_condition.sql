@@ -11,4 +11,10 @@ and (:fio::varchar is null or (trim(lower(u.surname::varchar)) like lower('%'||t
 or(trim(lower(u.name::varchar)) like lower('%'||trim(:fio)||'%') )or(trim(lower(u.patronymic::varchar)) like lower('%'||trim(:fio)||'%'))
 or (trim(lower((coalesce(u.surname,'')||' '||coalesce(u.name,'')||' '||coalesce(u.patronymic,'')))) like lower('%'||trim(:fio)||'%')))
 and (:isActive::boolean is null or is_active = :isActive) and (:password::varchar is null or password = :password)
+                        order by
+                            case when :sorting = 'id' then u.id end asc,
+                            case when :sorting = 'username' and :direction = 'DESC'  then u.username end desc,
+                            case when :sorting = 'username' and :direction = 'ASC'  then u.username end asc,
+                            case when :sorting = 'fio' and :direction = 'ASC'  then u.surname end asc,
+                            case when :sorting = 'fio' and :direction = 'DESC'  then u.surname end desc
 limit :limit offset :offset;
