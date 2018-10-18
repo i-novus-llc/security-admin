@@ -40,10 +40,10 @@
                              </ctrl:set-value-expression>
                          </ctrl:hidden>-->
 
-                        <!--<ctrl:input-select id="roles" type="single" label="Роли">-->
-                            <!--<ctrl:query query-id="${sec.admin.role.query.id}" value-field-id="id"-->
-                                        <!--label-field-id="name"/>-->
-                        <!--</ctrl:input-select>-->
+                        <ctrl:input-select id="roles" type="multi" label="Роли" visible="false">
+                            <ctrl:query query-id="${sec.admin.role.query.id}" value-field-id="id"
+                                        label-field-id="name"/>
+                        </ctrl:input-select>
                     </row>
                 </filters>
                 <toolbar>

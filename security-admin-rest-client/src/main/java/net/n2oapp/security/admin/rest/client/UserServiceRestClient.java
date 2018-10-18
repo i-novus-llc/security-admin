@@ -59,6 +59,8 @@ public class UserServiceRestClient implements UserService {
 
     @Override
     public Boolean checkUniqueUsername(String username) {
-        return null;
+        RestUserCriteria criteria = new RestUserCriteria();
+        criteria.setUsername(username);
+        return client.findAll(criteria).getContent().size() == 0;
     }
 }
