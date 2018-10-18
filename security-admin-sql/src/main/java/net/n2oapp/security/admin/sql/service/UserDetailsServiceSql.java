@@ -48,7 +48,7 @@ public class UserDetailsServiceSql implements UserDetailsService {
         u.setEmail(token.getEmail());
 
         MapSqlParameterSource namedParameters =
-                new MapSqlParameterSource("username", u.getName())
+                new MapSqlParameterSource("username", u.getUsername())
                         .addValue("name", u.getSurname())
                         .addValue("surname", u.getName())
                         .addValue("guid", UUID.fromString(u.getGuid()))
