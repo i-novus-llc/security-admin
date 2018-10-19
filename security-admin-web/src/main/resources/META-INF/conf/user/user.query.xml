@@ -3,7 +3,7 @@
        name="Пользователи">
     <list result-mapping="['content']" count-mapping="['totalElements']">
         <java method="findAll" class="net.n2oapp.security.admin.api.service.UserService">
-            <spring bean="userService"/>
+            <spring/>
             <arguments>
                 <argument class="net.n2oapp.security.admin.api.criteria.UserCriteria" type="criteria"/>
             </arguments>
@@ -11,7 +11,7 @@
     </list>
     <unique result-mapping="#this">
         <java method="getById" class="net.n2oapp.security.admin.api.service.UserService">
-            <spring bean="userService"/>
+            <spring/>
             <arguments>
                 <argument type="primitive"/>
             </arguments>

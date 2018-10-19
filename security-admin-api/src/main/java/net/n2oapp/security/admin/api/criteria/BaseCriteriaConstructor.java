@@ -4,12 +4,10 @@ import net.n2oapp.framework.api.criteria.N2oPreparedCriteria;
 import net.n2oapp.framework.api.data.CriteriaConstructor;
 import org.springframework.data.domain.Sort;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class BaseCriteriaConstructor implements CriteriaConstructor, Serializable {
+public class BaseCriteriaConstructor implements CriteriaConstructor {
     @Override
     public <T> T construct(N2oPreparedCriteria criteria, Class<T> criteriaClass) {
         T instance;

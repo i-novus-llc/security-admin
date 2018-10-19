@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * Сервис прав доступа
  */
-@Service("permissionService")
+@Service
 @Transactional
 public class PermissionServiceImpl implements PermissionService {
 

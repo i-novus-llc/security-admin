@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 /**
  * Реализация сервиса управления ролями для sql
  */
-@Service("roleService")
+@Service
 public class RoleServiceSql implements RoleService {
 
     private final static String INSERT_ROLE = "sql/role/insert_role.sql";
