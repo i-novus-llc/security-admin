@@ -12,3 +12,4 @@ select
 			right join sec.role as r on r.id = rp.role_id
 			join sec.user_role as ur on ur.role_id = r.id
 			    where (:userId is null or ur.user_id = :userId)
+                order by r_id;

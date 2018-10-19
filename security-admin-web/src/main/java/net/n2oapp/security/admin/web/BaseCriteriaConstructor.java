@@ -1,7 +1,8 @@
-package net.n2oapp.security.admin.api.criteria;
+package net.n2oapp.security.admin.web;
 
 import net.n2oapp.framework.api.criteria.N2oPreparedCriteria;
 import net.n2oapp.framework.api.data.CriteriaConstructor;
+import net.n2oapp.security.admin.api.criteria.BaseCriteria;
 import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
@@ -25,12 +26,6 @@ public class BaseCriteriaConstructor implements CriteriaConstructor {
                         .getDirection().getExpression()), criteria.getSorting().getField()));
             }
             ((BaseCriteria)instance).setOrders(orders);
-
-            if (instance instanceof RoleCriteria) {
-                ((RoleCriteria) instance).setPermissionIds(new ArrayList<>());
-            } else if (instance instanceof UserCriteria) {
-                ((UserCriteria) instance).setRoleIds(new ArrayList<>());
-            }
         }
         return instance;
     }
