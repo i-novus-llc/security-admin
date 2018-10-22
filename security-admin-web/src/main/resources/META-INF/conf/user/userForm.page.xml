@@ -2,41 +2,48 @@
 <simple-page xmlns="http://n2oapp.net/framework/config/schema/page-2.0" name="Создание пользователя">
     <form query-id="${sec.admin.user.query.id}">
         <fields>
-            <input-text id="username">
-                <validations>
-                    <validation ref-id="usernameValidation" side="client" target="field"/>
-                </validations>
-            </input-text>
-            <input-text id="email" label="Email">
-                <validations>
-                    <validation ref-id="emailValidation" side="client"/>
-                </validations>
-            </input-text>
-            <password id="password" visible="${n2o.security.admin.user.password.input}"
-                      required="${n2o.security.admin.user.password.input}" label="Пароль">
-                <validations>
-                    <validation ref-id="passwordLengthValidation" side="server"/>
-                    <validation ref-id="passwordValidation" side="client"/>
-                </validations>
-            </password>
-            <password id="passwordCheck" visible="${n2o.security.admin.user.password.input}"
-                      required="${n2o.security.admin.user.password.input}" label="Подтвердить пароль">
-                <validations>
-                    <validation ref-id="passwordCheckValidation" side="server"/>
-                </validations>
-                <dependencies>
-                    <enabling-condition>
-                        password != null;
-                    </enabling-condition>
-                </dependencies>
-            </password>
+            <row>
+                <input-text id="username">
+                    <validations>
+                        <validation ref-id="usernameValidation" target="field"/>
+                    </validations>
+                </input-text>
+                <input-text id="email" label="Email">
+                    <validations>
+                        <validation ref-id="emailValidation"/>
+                    </validations>
+                </input-text>
+            </row>
+            <row>
+                <password id="password" visible="${n2o.security.admin.user.password.input}"
+                          required="${n2o.security.admin.user.password.input}" label="Пароль">
+                    <validations>
+                        <validation ref-id="passwordLengthValidation"/>
+                    </validations>
+                </password>
+                <password id="passwordCheck" visible="${n2o.security.admin.user.password.input}"
+                          required="${n2o.security.admin.user.password.input}" label="Подтвердить пароль">
+                    <validations>
+                        <validation ref-id="passwordCheckValidation" side="server"/>
+                    </validations>
+                    <dependencies>
+                        <enabling-condition on="password"> typeof password != 'undefined' &amp;&amp; password != null &amp;&amp; password != ''</enabling-condition>
+                    </dependencies>
+                </password>
+            </row>
             <input-text id="surname"/>
             <input-text id="name"/>
             <input-text id="patronymic"/>
-            <checkbox id="isActive" default-value="true"/>
-            <input-select id="roles" type="multi" label="Роли" cache="off" required="true">
-                <query query-id="${sec.admin.role.query.id}" value-field-id="id" label-field-id="name"/>
-            </input-select>
+            <row>
+                <col size="10">
+                    <input-select id="roles" type="multi" label="Роли" cache="off" required="true">
+                        <query query-id="${sec.admin.role.query.id}" value-field-id="id" label-field-id="name"/>
+                    </input-select>
+                </col>
+                <col size="2">
+                    <checkbox id="isActive" default-value="true"/>
+                </col>
+            </row>
         </fields>
     </form>
 </simple-page>

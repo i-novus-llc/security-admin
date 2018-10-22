@@ -113,11 +113,12 @@
         <condition id="usernameValidation" level="error">
             <message>Неверное имя</message>
             <expression on="username">
-                <![CDATA[
+                <![CDATA[function(){
                     if (typeof username != 'undefined' && username != null && username != '') {
                         var regex = new RegExp('^[-_\\.a-zA-Z][-_\\.a-zA-Z0-9]+$');
-                        regex.test(username);
-                     }else true;
+                        return regex.test(username);
+                     } else return true;
+                     }()
                 ]]>
             </expression>
         </condition>
@@ -125,11 +126,12 @@
         <condition id="emailValidation" level="error">
             <message>Неверный email</message>
             <expression on="email">
-                <![CDATA[
+                <![CDATA[function(){
                 if (typeof email != 'undefined' && email != null && email != '') {
                     var regex = new RegExp('[A-Za-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[A-Za-z0-9!#$%&\'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\\.)+[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?');
-                    regex.test(email);
-                } else true;
+                    return regex.test(email);
+                } else return true;
+                }()
                 ]]>
             </expression>
         </condition>
@@ -137,11 +139,12 @@
         <condition id="passwordValidation" level="error">
             <message>Неверный формат пароля</message>
             <expression on="password">
-                <![CDATA[
+                <![CDATA[function(){
                     if (typeof password != 'undefined' && password != null && password != '') {
                         var regex = new RegExp('[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?');
-                        regex.test(password);
-                     }else true;
+                        return regex.test(password);
+                     }else return true;
+                     }()
                 ]]>
             </expression>
         </condition>
@@ -149,10 +152,22 @@
         <condition id="passwordLengthValidation" level="error">
             <message>Некорректная длина пароля</message>
             <expression on="password">
-                <![CDATA[
+                <![CDATA[function(){
                     if (typeof password != 'undefined' && password != null && password != '') {
-                        password.length >= ${sec.admin.user.password.length.validation}
-                     }else true;
+                        return password.length >= ${sec.admin.user.password.length.validation}
+                     } else return true;
+                  }()
+                ]]>
+            </expression>
+        </condition>
+        <condition id="newPasswordLengthValidation" level="error">
+            <message>Некорректная длина пароля</message>
+            <expression on="newPassword">
+                <![CDATA[(function(password){
+                    if (typeof password != 'undefined' && password != null && password != '') {
+                        return password.length >= ${sec.admin.user.password.length.validation}
+                     } else return true;
+                  }(newPassword))
                 ]]>
             </expression>
         </condition>
@@ -160,10 +175,11 @@
         <condition id="passwordCheckValidation" level="error">
             <message>Введённые пароли не совпадают</message>
             <expression on="passwordCheck,password">
-                <![CDATA[
+                <![CDATA[function(){
                     if (typeof passwordCheck != 'undefined' && passwordCheck != null && passwordCheck != '') {
-                        passwordCheck === password;
-                     }else true;
+                        return passwordCheck === password;
+                     } else return true;
+                   }()
                 ]]>
             </expression>
         </condition>
@@ -171,10 +187,11 @@
         <condition id="newPasswordCheckValidation" level="error">
             <message>Введённые пароли не совпадают</message>
             <expression on="passwordCheck,newPassword">
-                <![CDATA[
+                <![CDATA[function(){
                     if (typeof newPassword != 'undefined' && newPassword != null && newPassword != '') {
-                        passwordCheck === newPassword;
-                     }else true;
+                        return passwordCheck === newPassword;
+                     } else return true;
+                   }()
                 ]]>
             </expression>
         </condition>
