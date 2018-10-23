@@ -13,8 +13,6 @@ public class AdminBackendApplication extends SpringBootServletInitializer {
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application
-                .properties("spring.config.location=file:" + System.getProperty("user.home") + "/.n2o/placeholders.properties")
-                .sources(AdminBackendApplication.class);
+        return application.sources(AdminBackendApplication.class);
     }
 }

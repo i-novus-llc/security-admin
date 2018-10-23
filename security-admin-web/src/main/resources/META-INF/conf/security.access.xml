@@ -1,10 +1,8 @@
 <access xmlns="http://n2oapp.net/framework/config/schema/access-schema-1.0">
-
     <authenticated>
-        <object-access object-id="user" actions="*"/>
-        <page-access pages="users"/>
-        <object-access object-id="role" />
+        <object-access object-id="permission" />
     </authenticated>
+
     <permission id="sec.admin.user.read">
         <object-access object-id="${sec.admin.user.object.id}"/>
     </permission>
@@ -14,12 +12,10 @@
     </permission>
 
     <permission id="sec.admin.user.edit">
-        <object-access object-id="${sec.admin.user.object.id}"/>
-        <object-access object-id="${sec.admin.user.object.id}" actions="create,update,delete,changeUserActive"/>
+        <object-access object-id="${sec.admin.user.object.id}" actions="*"/>
     </permission>
 
     <permission id="sec.admin.role.edit">
-        <object-access object-id="${sec.admin.role.object.id}"/>
-        <object-access object-id="${sec.admin.role.object.id}" actions="create,update,delete"/>
+        <object-access object-id="${sec.admin.role.object.id}" actions="*"/>
     </permission>
 </access>
