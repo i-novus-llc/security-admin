@@ -13,7 +13,8 @@ import java.util.stream.Collectors;
  * Пользователь с расширенными атрибутами
  */
 public class User extends org.springframework.security.core.userdetails.User {
-    public static final String DEFAULT_ROLE = "ROLE_USER";
+    private static final String DEFAULT_ROLE = "ROLE_USER";
+
     private String surname;
     private String name;
     private String patronymic;
