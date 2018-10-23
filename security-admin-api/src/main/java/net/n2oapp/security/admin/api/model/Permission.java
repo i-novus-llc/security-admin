@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.api.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,10 +10,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class Permission {
+    @JsonProperty
     private Integer id;
+    @JsonProperty
     private String name;
+    @JsonProperty
     private String code;
+    @JsonProperty
     private Integer parentId;
+    @JsonProperty
     private Boolean hasChildren;
-
 }

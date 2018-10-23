@@ -2,40 +2,43 @@
 <simple-page xmlns="http://n2oapp.net/framework/config/schema/page-2.0" object-id="${sec.admin.user.object.id}" name="Изменение пользователя">
     <form query-id="${sec.admin.user.query.id}">
         <fields>
-            <input-text id="username" readonly="true">
-                <validations>
-                    <validation ref-id="usernameValidation" side="client" target="field"/>
-                </validations>
-            </input-text>
-            <input-text id="email" label="Email">
-                <validations>
-                    <validation ref-id="emailValidation" side="client"/>
-                </validations>
-            </input-text>
-            <password id="newPassword" label="Изменить пароль" visible="${n2o.security.admin.user.password.editable}">
-                <validations>
-                    <validation ref-id="passwordLengthValidation" side="server"/>
-                    <validation ref-id="passwordValidation" side="client"/>
-                </validations>
-            </password>
-            <password id="passwordCheck" label="Подтвердить пароль"
-                      visible="${n2o.security.admin.user.password.editable}">
-                <validations>
-                    <validation ref-id="newPasswordCheckValidation" side="server"/>
-                </validations>
-                <dependencies>
-                    <enabling-condition>
-                        newPassword != null;
-                    </enabling-condition>
-                </dependencies>
-            </password>
+            <row>
+                <input-text id="username" readonly="true"/>
+                <input-text id="email" label="Email">
+                    <validations>
+                        <validation ref-id="emailValidation"/>
+                    </validations>
+                </input-text>
+            </row>
+            <row>
+                <password id="newPassword" label="Новый пароль" visible="${n2o.security.admin.user.password.editable}">
+                    <validations>
+                        <validation ref-id="newPasswordLengthValidation"/>
+                    </validations>
+                </password>
+                <password id="passwordCheck" label="Подтвердить пароль"
+                          visible="${n2o.security.admin.user.password.editable}">
+                    <validations>
+                        <validation ref-id="newPasswordCheckValidation"/>
+                    </validations>
+                    <dependencies>
+                        <enabling-condition on="password">typeof newPassword != 'undefined' &amp;&amp; newPassword != null &amp;&amp; newPassword != ''</enabling-condition>
+                    </dependencies>
+                </password>
+            </row>
             <input-text id="surname"/>
             <input-text id="name"/>
             <input-text id="patronymic"/>
-            <checkbox id="isActive" default-value="true"/>
-            <input-select id="roles" type="multi" label="Роли" cache="off" required="true">
-                <query query-id="${sec.admin.role.query.id}" value-field-id="id" label-field-id="name"/>
-            </input-select>
+            <row>
+                <col size="10">
+                    <input-select id="roles" type="multi" label="Роли" cache="off" required="true">
+                        <query query-id="${sec.admin.role.query.id}" value-field-id="id" label-field-id="name"/>
+                    </input-select>
+                </col>
+                <col size="2">
+                    <checkbox id="isActive" default-value="true"/>
+                </col>
+            </row>
         </fields>
     </form>
 </simple-page>

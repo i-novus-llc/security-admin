@@ -76,6 +76,11 @@ public class RoleServiceImpl implements RoleService {
         return all.map(this::model);
     }
 
+    @Override
+    public Integer countUsersWithRole(Integer roleId) {
+        return userRepository.countUsersWithRoleId(roleId);
+    }
+
     private RoleEntity entity(RoleForm model) {
         if (model == null) return null;
         RoleEntity entity = new RoleEntity();

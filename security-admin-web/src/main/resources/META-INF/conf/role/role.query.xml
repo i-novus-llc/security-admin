@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0" object-id="${sec.admin.role.object.id}" name="Роли">
+    <list result-mapping="['content']" count-mapping="['totalElements']">
+        <java method="findAll" class="net.n2oapp.security.admin.api.service.RoleService">
+            <spring/>
+            <arguments>
+                <argument class="net.n2oapp.security.admin.api.criteria.RoleCriteria" type="criteria"/>
+            </arguments>
+        </java>
+    </list>
+    <unique result-mapping="#this">
+        <java method="getById" class="net.n2oapp.security.admin.api.service.RoleService">
+            <spring/>
+            <arguments>
+                <argument type="primitive"/>
+            </arguments>
+        </java>
+    </unique>
+
+    <fields>
+        <field id="id" domain="integer">
+            <select mapping="id"/>
+            <sorting/>
+            <filters>
+                <eq filter-id="id" mapping="[0]"/>
+            </filters>
+        </field>
+        <field id="name" domain="string" name="Название">
+            <select mapping="name"/>
+            <sorting/>
+            <filters>
+                <eq filter-id="name" mapping="name"/>
+            </filters>
+        </field>
+        <field id="code" domain="string" name="Код">
+            <select mapping="code"/>
+            <filters>
+                <eq filter-id="code" mapping="code"/>
+            </filters>
+        </field>
+        <field id="description" domain="string" name="Описание">
+            <select/>
+            <sorting/>
+            <filters>
+                <eq filter-id="description" mapping="description"/>
+            </filters>
+        </field>
+
+        <field id="permissionIds" domain="integer[]" name="Права">
+            <select mapping="['permissions'].![id]"></select>
+            <!--<filters>-->
+                <!--<in mapping="['permissionIds']" filter-id="permissionIds"></in>-->
+            <!--</filters>-->
+        </field>
+
+        <field id="permissionNames" domain="string[]" name="Права">
+            <select mapping="['permissions'].![name]"></select>
+        </field>
+
+        <field id="permissions" domain="object[]" name="Права">
+            <select mapping="['permissions']"></select>
+        </field>
+
+    </fields>
+</query>

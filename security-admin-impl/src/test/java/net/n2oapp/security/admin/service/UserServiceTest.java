@@ -19,8 +19,7 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 
 /**
@@ -47,6 +46,12 @@ public class UserServiceTest {
         checkValidationEmail(user);
         checkValidationPassword(user);
         checkValidationUsername(user);
+    }
+
+    @Test
+    public void testCheckUniqueUsername() {
+        assertFalse( service.checkUniqueUsername("test2"));
+        assertTrue(service.checkUniqueUsername("nonExistentUser"));
     }
 
 

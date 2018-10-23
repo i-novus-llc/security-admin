@@ -56,4 +56,11 @@ public class UserServiceRestClient implements UserService {
     public User changeActive(Integer id) {
         return client.changeActive(id);
     }
+
+    @Override
+    public Boolean checkUniqueUsername(String username) {
+        RestUserCriteria criteria = new RestUserCriteria();
+        criteria.setUsername(username);
+        return client.findAll(criteria).getContent().size() == 0;
+    }
 }

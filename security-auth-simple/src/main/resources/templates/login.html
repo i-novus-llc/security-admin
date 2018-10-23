@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" http-equiv="Content-Type" content="text/html"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="icon" href="favicon.ico"/>
+        <title th:text="${title}"/>
+        <link href="dist/css/n2o/bootstrap.css" rel="stylesheet"/>
+        <link href="dist/css/n2o/n2o.css" rel="stylesheet"/>
+        <link href="dist/signin.css" rel="stylesheet"/>
+    </head>
+    <body>
+        <form class="form-signin" action="/login" method="post">
+            <h2 class="form-signin-heading" th:text="${title}" align="left"></h2>
+            <output th:if="${not #lists.isEmpty(param.error)} and ${param.error[0]} == 'true'"
+                    id="errorText" title="errorText" style="color: red">Введены неправильные данные!</output>
+
+            <label for="auth_username" class="sr-only">Логин</label>
+            <input type="text" id="auth_username" name="username" class="form-control" placeholder="Логин"/>
+            <label for="auth_password" class="sr-only">Пароль</label>
+            <input type="password" id="auth_password" name="password" class="form-control" placeholder="Пароль"/>
+            <br/>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Войти</button>
+            <br/>
+            <div th:if="${registrationEnabled} == true">
+                или <a href="registration">Зарегистрироваться</a>
+            </div>
+        </form>
+    </body>
+</html>

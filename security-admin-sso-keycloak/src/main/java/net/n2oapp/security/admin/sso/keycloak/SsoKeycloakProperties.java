@@ -13,12 +13,12 @@ public class SsoKeycloakProperties {
     /**
      * Адрес возврата после аутентификации
      */
-    private String redirectUrl = "http://localhost:8085/admin";
+    private String redirectUrl = "http://localhost:8080/admin";
 
     /**
      * Адрес сервера keycloak
      */
-    private String serverUrl = "http://127.0.0.1:8080/auth";
+    private String serverUrl = "http://127.0.0.1:8888/auth";
 
     /**
      * Название домена

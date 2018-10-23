@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0" object-id="${sec.admin.user.object.id}"
+       name="Пользователи">
+    <list result-mapping="['content']" count-mapping="['totalElements']">
+        <java method="findAll" class="net.n2oapp.security.admin.api.service.UserService">
+            <spring/>
+            <arguments>
+                <argument class="net.n2oapp.security.admin.api.criteria.UserCriteria" type="criteria"/>
+            </arguments>
+        </java>
+    </list>
+    <unique result-mapping="#this">
+        <java method="getById" class="net.n2oapp.security.admin.api.service.UserService">
+            <spring/>
+            <arguments>
+                <argument type="primitive"/>
+            </arguments>
+        </java>
+    </unique>
+
+
+    <fields>
+        <field id="id" domain="integer">
+            <select mapping="id"/>
+            <sorting/>
+            <filters>
+                <eq filter-id="id" mapping="[0]"/>
+            </filters>
+        </field>
+        <field id="guid" domain="string">
+            <select/>
+        </field>
+        <field id="username" domain="string" name="Имя пользователя">
+            <select mapping="username"/>
+            <sorting/>
+            <filters>
+                <like filter-id="username" mapping="username"/>
+            </filters>
+        </field>
+        <field id="surname" domain="string" name="Фамилия">
+            <select mapping="surname"/>
+            <filters>
+                <like filter-id="surname" mapping="surname"/>
+            </filters>
+        </field>
+        <field id="name" domain="string" name="Имя">
+            <select mapping="name"/>
+            <filters>
+                <eq filter-id="name" mapping="name"/>
+            </filters>
+        </field>
+        <field id="patronymic" domain="string" name="Отчество">
+            <select mapping="patronymic"/>
+            <filters>
+                <eq filter-id="patronymic" mapping="patronymic"/>
+            </filters>
+        </field>
+        <field id="email" domain="string" name="E-mail">
+            <select mapping="email"/>
+        </field>
+
+        <field id="isActive" domain="boolean" name="Активность">
+            <select mapping="['isActive']">u.is_active as isActive</select>
+            <filters>
+                <eq filter-id="isActive"/>
+            </filters>
+        </field>
+        <field id="fio" domain="string" name="ФИО">
+            <select mapping="['fio']"/>
+            <sorting/>
+            <filters>
+                <eq filter-id="fio" mapping="fio"/>
+            </filters>
+        </field>
+        <field id="roleIds" domain="integer[]" name="Роли">
+            <select mapping="['roles'].![id]"></select>
+            <!--<filters>-->
+                <!--<in mapping="['roleIds']" filter-id="roleIds"></in>-->
+            <!--</filters>-->
+        </field>
+
+        <field id="roleNames" domain="string[]" name="Роли">
+            <select mapping="['roles'].![name]"></select>
+        </field>
+
+        <field id="roles" domain="object[]" name="Роли">
+            <select mapping="['roles']"></select>
+        </field>
+    </fields>
+</query>

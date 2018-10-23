@@ -51,4 +51,11 @@ public interface UserService {
      * @return Модель пользователя
      */
     User changeActive(Integer id);
+
+    /**
+     * Проверить уникальность имени пользователя
+     * @param username имя пользователя
+     * @return <code>true</code> имя уникально <code>false</code> иначе
+     */
+    Boolean checkUniqueUsername(String username);
 }

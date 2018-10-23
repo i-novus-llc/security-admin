@@ -41,6 +41,7 @@ public class RoleServiceSql implements RoleService {
     private final static String GET_ROLE_BY_ID = "sql/role/get_role_by_id.sql";
     private final static String FIND_ALL = "sql/role/find_all.sql";
     private final static String FIND_ALL_COUNT = "sql/role/find_all_count.sql";
+    private final static String COUNT_USERS_WITH_ROLE = "sql/role/count_users_with_role.sql";
 
     @Autowired
     private TransactionTemplate transactionTemplate;
@@ -114,18 +115,32 @@ public class RoleServiceSql implements RoleService {
 
     @Override
     public Page<Role> findAll(RoleCriteria criteria) {
+        String sorting = criteria.getOrders() == null || criteria.getOrders().size() == 0
+                ? "id" : criteria.getOrders().get(0).getProperty();
+        String direction = criteria.getOrders() == null || criteria.getOrders().size() == 0
+                ? "ASC" : criteria.getOrders().get(0).getDirection().name();
         SqlParameterSource namedParameters =
                 new MapSqlParameterSource("name", criteria.getName())
                         .addValue("description", criteria.getDescription())
                         .addValue("permissionIds", criteria.getPermissionIds())
                         .addValue("limit", criteria.getPageSize())
-                        .addValue("offset", criteria.getOffset());
+                        .addValue("offset", criteria.getOffset())
+                        .addValue("sorting", sorting)
+                        .addValue("direction", direction);
+
         List<Role> roles = jdbcTemplate.query(SqlUtil.getResourceFileAsString(FIND_ALL), namedParameters, (resultSet, i) -> {
             return model(resultSet);
         });
         Integer count = jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(FIND_ALL_COUNT), namedParameters,Integer.class);
         return new PageImpl<>(roles,criteria,count);
 
+    }
+
+    @Override
+    public Integer countUsersWithRole(Integer roleId) {
+        return jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(COUNT_USERS_WITH_ROLE),
+                new MapSqlParameterSource("id", roleId),
+                Integer.class);
     }
 
     private Role model (ResultSet resultSet) throws SQLException {
@@ -135,6 +150,7 @@ public class RoleServiceSql implements RoleService {
         role.setName(resultSet.getString("name"));
         role.setCode(resultSet.getString("code"));
         role.setDescription(resultSet.getString("description"));
+        role.setPermissions(new ArrayList<>());
         if (resultSet.getObject("ids") != null && resultSet.getObject("names") != null) {
             List<Permission> permissions = new ArrayList<>();
             Array a = resultSet.getArray("ids");
@@ -168,10 +184,8 @@ public class RoleServiceSql implements RoleService {
                 permission.setId(ids[i]);
                 permission.setName(names[i]);
                 permission.setCode(codes[i]);
-                permissions.add(permission);
+                role.getPermissions().add(permission);
             }
-
-            role.setPermissions(permissions);
         }
         return role;
     }

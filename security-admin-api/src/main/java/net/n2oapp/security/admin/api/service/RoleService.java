@@ -43,4 +43,12 @@ public interface RoleService {
      * @return Страница найденных ролей
      */
     Page<Role> findAll(RoleCriteria criteria);
+
+    /**
+     * Возвращает количество
+     * пользователей с данной ролью
+     * @param roleId - идентификатор роли
+     * @return Количество пользователей
+     */
+    Integer countUsersWithRole(Integer roleId);
 }
