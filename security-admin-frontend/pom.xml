@@ -17,7 +17,7 @@
     </properties>
 
     <build>
-        <finalName>ROOT</finalName>
+        <finalName>frontend</finalName>
     </build>
 
     <dependencies>
