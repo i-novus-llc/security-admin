@@ -97,9 +97,12 @@ public class RoleServiceImplSql implements RoleService {
 
     @Override
     public void delete(Integer id) {
-        SqlParameterSource namedParameters =
-                new MapSqlParameterSource("id", id);
-        jdbcTemplate.update(SqlUtil.getResourceFileAsString(DELETE_ROLE), namedParameters);
+        transactionTemplate.execute(transactionStatus -> {
+            SqlParameterSource namedParameters =
+                    new MapSqlParameterSource("id", id);
+            jdbcTemplate.update(SqlUtil.getResourceFileAsString(DELETE_ROLE), namedParameters);
+            return id;
+        });
     }
 
     @Override

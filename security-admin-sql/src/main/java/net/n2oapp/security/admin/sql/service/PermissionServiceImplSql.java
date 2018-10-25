@@ -70,9 +70,12 @@ public class PermissionServiceImplSql implements PermissionService{
 
     @Override
     public void delete(Integer id) {
-        SqlParameterSource namedParameters =
-                new MapSqlParameterSource("id", id);
-        jdbcTemplate.update(SqlUtil.getResourceFileAsString(DELETE_PERMISSION), namedParameters);
+        transactionTemplate.execute(transactionStatus -> {
+            SqlParameterSource namedParameters =
+                    new MapSqlParameterSource("id", id);
+            jdbcTemplate.update(SqlUtil.getResourceFileAsString(DELETE_PERMISSION), namedParameters);
+            return id;
+        });
     }
 
     @Override

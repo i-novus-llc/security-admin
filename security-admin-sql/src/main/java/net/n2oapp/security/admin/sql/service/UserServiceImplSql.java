@@ -125,9 +125,12 @@ public class UserServiceImplSql implements UserService {
 
     @Override
     public void delete(Integer id) {
-        SqlParameterSource namedParameters =
-                new MapSqlParameterSource("id", id);
-        jdbcTemplate.update(SqlUtil.getResourceFileAsString(DELETE_USER), namedParameters);
+        transactionTemplate.execute(transactionStatus -> {
+            SqlParameterSource namedParameters =
+                    new MapSqlParameterSource("id", id);
+            jdbcTemplate.update(SqlUtil.getResourceFileAsString(DELETE_USER), namedParameters);
+            return id;
+        });
     }
 
     @Override
