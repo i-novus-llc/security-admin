@@ -40,7 +40,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             userEntity.setName(userDetails.getName());
             userEntity.setIsActive(true);
             if (userDetails.getRoleNames() != null){
-                userEntity.setRoleList(userDetails.getRoleNames().stream().map(name -> getOrCreateRole(name)).collect(Collectors.toList()));
+                userEntity.setRoleList(userDetails.getRoleNames().stream().map(this::getOrCreateRole).collect(Collectors.toList()));
             }
             userRepository.save(userEntity);
         } else {
@@ -106,7 +106,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         model.setSurname(entity.getSurname());
         model.setPatronymic(entity.getPatronymic());
         model.setIsActive(entity.getIsActive());
-        model.setPassword(entity.getPassword());
         model.setEmail(entity.getEmail());
         StringBuilder builder = new StringBuilder();
         if (entity.getSurname() != null) {

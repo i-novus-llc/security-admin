@@ -46,17 +46,22 @@ public class UserServiceSqlTest {
 
     @Test
     public void crud() {
-        User user = create();
+        User user = create(true);
         update(form(user));
         delete(user.getId());
     }
 
-    private User create() {
-        User user = service.create(newUser(true));
+    @Test
+    public void crud2() {
+        User user = create(false);
+        update(form(user));
+        delete(user.getId());
+    }
+
+    private User create(boolean generate) {
+        User user = service.create(newUser(generate));
         assertNotNull(service.getById(user.getId()));
         assertTrue(greenMail.waitForIncomingEmail(1000, 1));
-        User userWithtMail = service.create(newUser(false));
-        assertNotNull(service.getById(userWithtMail.getId()));
         return user;
     }
 

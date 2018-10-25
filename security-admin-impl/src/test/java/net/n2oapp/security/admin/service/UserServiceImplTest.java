@@ -29,7 +29,7 @@ import static org.junit.Assert.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @TestPropertySource("classpath:test.properties")
 @AutoConfigureTestDatabase
-public class UserServiceTest {
+public class UserServiceImplTest {
 
     @Autowired
     private UserService service;
@@ -94,6 +94,7 @@ public class UserServiceTest {
         assertEquals("exception.passwordLength", thrown.getMessage());
         thrown = catchThrowable(() -> {
             user.setPassword("userpassword");
+            user.setPasswordCheck("userpassword");
             service.update(form(user));
         });
         assertThat(thrown).isInstanceOf(UserException.class);

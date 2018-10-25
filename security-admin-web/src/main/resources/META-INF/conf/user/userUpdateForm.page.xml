@@ -4,20 +4,20 @@
         <fields>
             <row>
                 <input-text id="username" readonly="true"/>
-                <input-text id="email" label="Email">
+                <input-text id="email" label="Email" required="${sec.admin.user.email.required}">
                     <validations>
                         <validation ref-id="emailValidation"/>
                     </validations>
                 </input-text>
             </row>
             <row>
-                <password id="newPassword" label="Новый пароль" visible="${n2o.security.admin.user.password.editable}">
+                <password id="newPassword" label="Новый пароль" visible="${sec.admin.user.password.editable}">
                     <validations>
                         <validation ref-id="newPasswordLengthValidation"/>
                     </validations>
                 </password>
                 <password id="passwordCheck" label="Подтвердить пароль"
-                          visible="${n2o.security.admin.user.password.editable}">
+                          visible="${sec.admin.user.password.editable}">
                     <validations>
                         <validation ref-id="newPasswordCheckValidation"/>
                     </validations>

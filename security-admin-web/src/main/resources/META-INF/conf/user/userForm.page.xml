@@ -3,26 +3,27 @@
     <form query-id="${sec.admin.user.query.id}">
         <fields>
             <row>
-                <input-text id="username">
+                <input-text id="username" required="true">
                     <validations>
                         <validation ref-id="usernameValidation" target="field"/>
+                        <!--<validation ref-id="uniqueUsername"/>-->
                     </validations>
                 </input-text>
-                <input-text id="email" label="Email">
+                <input-text id="email" label="Email" required="${sec.admin.user.email.required}">
                     <validations>
                         <validation ref-id="emailValidation"/>
                     </validations>
                 </input-text>
             </row>
             <row>
-                <password id="password" visible="${n2o.security.admin.user.password.input}"
-                          required="${n2o.security.admin.user.password.input}" label="Пароль">
+                <password id="password"
+                          required="${sec.admin.user.password.input}" label="Пароль">
                     <validations>
                         <validation ref-id="passwordLengthValidation"/>
                     </validations>
                 </password>
-                <password id="passwordCheck" visible="${n2o.security.admin.user.password.input}"
-                          required="${n2o.security.admin.user.password.input}" label="Подтвердить пароль">
+                <password id="passwordCheck"
+                          required="${sec.admin.user.password.input}" label="Подтвердить пароль">
                     <validations>
                         <validation ref-id="passwordCheckValidation" side="server"/>
                     </validations>

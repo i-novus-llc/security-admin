@@ -24,22 +24,22 @@ public class AdminCommonsConfiguration {
     @Value("${sec.password.generate.length}")
     private Integer passwordGeneratorLength;
 
-    @Value("${sec.spring.mail.host}")
+    @Value("${sec.mail.host}")
     private String mailHost;
 
-    @Value("${sec.spring.mail.port}")
+    @Value("${sec.mail.port}")
     private int mailPort;
 
-    @Value("${sec.spring.mail.username}")
+    @Value("${sec.mail.username}")
     private String mailUsername;
 
-    @Value("${sec.spring.mail.password}")
+    @Value("${sec.mail.password}")
     private String mailPassword;
 
-    @Value("${sec.spring.mail.properties.mail.smtp.auth}")
+    @Value("${sec.mail.smtp.auth}")
     private Boolean mailSmtpAuth;
 
-    @Value("${sec.spring.mail.properties.mail.smtp.starttls.enable}")
+    @Value("${sec.mail.smtp.starttls.enabled}")
     private Boolean mailSmtpStarttlsEnable;
 
 

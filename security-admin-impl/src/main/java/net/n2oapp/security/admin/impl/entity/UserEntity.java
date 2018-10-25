@@ -69,7 +69,7 @@ public class UserEntity {
      * Пароль пользователя
      */
     @Column(name = "password")
-    private String password;
+    private String passwordHash;
 
     /**
      * Активен ли пользователь

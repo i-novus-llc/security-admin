@@ -154,7 +154,7 @@
             <expression on="password">
                 <![CDATA[function(){
                     if (typeof password != 'undefined' && password != null && password != '') {
-                        return password.length >= ${sec.admin.user.password.length.validation}
+                        return password.length >= ${sec.validation.password.length}
                      } else return true;
                   }()
                 ]]>
@@ -165,7 +165,7 @@
             <expression on="newPassword">
                 <![CDATA[(function(password){
                     if (typeof password != 'undefined' && password != null && password != '') {
-                        return password.length >= ${sec.admin.user.password.length.validation}
+                        return password.length >= ${sec.validation.password.length}
                      } else return true;
                   }(newPassword))
                 ]]>

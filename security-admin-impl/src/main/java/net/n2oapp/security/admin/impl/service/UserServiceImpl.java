@@ -6,8 +6,11 @@ import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
+import net.n2oapp.security.admin.api.service.MailService;
 import net.n2oapp.security.admin.api.service.UserService;
+import net.n2oapp.security.admin.commons.util.MailServiceImpl;
 import net.n2oapp.security.admin.commons.util.PasswordGenerator;
+import net.n2oapp.security.admin.commons.util.UserValidations;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
@@ -37,27 +40,13 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PasswordGenerator passwordGenerator;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private MailService mailService;
+    @Autowired
+    private UserValidations userValidations;
 
-    @Value("${n2o.security.validation.username:true}")
-    private Boolean validationUsername;
-
-    @Value("${n2o.security.validation.password.length}")
-    private Integer validationPasswordLength;
-
-    @Value("${n2o.security.validation.password.upper.case.letters}")
-    private Boolean validationPasswordUpperCaseLetters;
-
-    @Value("${n2o.security.validation.password.lower.case.letters}")
-    private Boolean validationPasswordLowerCaseLetters;
-
-    @Value("${n2o.security.validation.password.numbers}")
-    private Boolean validationPasswordNumbers;
-
-    @Value("${n2o.security.validation.password.special.symbols}")
-    private Boolean validationPasswordSpecialSymbols;
 
     public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, SsoUserRoleProvider provider) {
         this.userRepository = userRepository;
@@ -67,58 +56,57 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User create(UserForm user) {
-        checkUsernameUniq(user.getId(), user.getUsername());
-        checkUsername(user.getUsername());
-        checkEmail(user.getEmail());
-        if (user.getPassword() != null) {
-            checkPassword(user.getPassword(), user.getPasswordCheck(), user.getId());
-        }
-        UserEntity entity = entityForm(new UserEntity(), user);
-        if (entity.getPassword() == null) {
-            entity.setPassword(passwordGenerator.generate());
+        userValidations.checkUsernameUniq(user.getId(), model(userRepository.findOneByUsername(user.getUsername())));
+        userValidations.checkUsername(user.getUsername());
+        userValidations.checkEmail(user.getEmail());
+        String password = user.getPassword();
+        if (password != null)
+            userValidations.checkPassword(password, user.getPasswordCheck(), user.getId());
+        if (password == null) {
+            password = passwordGenerator.generate();
+            user.setPassword(password);
         }
         //сохраняем пароль в закодированном виде
-        String password = entity.getPassword();
-        String encodedPassword = passwordEncoder.encode(password);
-        entity.setPassword(encodedPassword);
+        UserEntity entity = entityForm(new UserEntity(), user);
+        String passwordHash = passwordEncoder.encode(password);
+        entity.setPasswordHash(passwordHash);
         UserEntity savedUser = userRepository.save(entity);
-        // получаем модель для сохранения провайдером, ему надо передать незакодированный пароль
-        User result = model(savedUser);
-        result.setPassword(password);
-        User providerResult = provider.createUser(result);
-        if (providerResult != null) {
-            providerResult.setPassword(encodedPassword);
-            savedUser = userRepository.save(entity(providerResult));
+        // получаем модель для сохранения SSO провайдером, ему надо передать незакодированный пароль
+        User ssoUser = model(savedUser);
+        ssoUser.setPassword(password);
+        ssoUser = provider.createUser(ssoUser);
+        if (ssoUser != null) {
+            UserEntity changedSsoUser = entity(ssoUser);
+            changedSsoUser.setPasswordHash(passwordHash);
+            savedUser = userRepository.save(changedSsoUser);
         }
-
+        mailService.sendWelcomeMail(user);
         return model(savedUser);
     }
 
     @Override
     public User update(UserForm user) {
-        checkUsernameUniq(user.getId(), user.getUsername());
-        checkUsername(user.getUsername());
-        checkEmail(user.getEmail());
+        userValidations.checkUsernameUniq(user.getId(), model(userRepository.findOneByUsername(user.getUsername())));
+        userValidations.checkUsername(user.getUsername());
+        userValidations.checkEmail(user.getEmail());
         if (user.getNewPassword() != null) {
-            checkPassword(user.getNewPassword(), user.getPasswordCheck(), user.getId());
+            userValidations.checkPassword(user.getNewPassword(), user.getPasswordCheck(), user.getId());
         }
-        UserEntity entity = userRepository.getOne(user.getId());
-        UserEntity ent = entityForm(entity, user);
+        UserEntity entityUser = userRepository.getOne(user.getId());
+        entityUser = entityForm(entityUser, user);
         // кодируем пароль перед сохранением в бд если он изменился
-        if (user.getNewPassword() != null) {
-            ent.setPassword(passwordEncoder.encode(ent.getPassword()));
-        }
-        UserEntity resultEntity = userRepository.save(ent);
-        //в провайдер отправляем незакодированный пароль, если он изменился. и отправляем null если не изменялся пароль
-        User result = model(resultEntity);
+        if (user.getNewPassword() != null)
+            entityUser.setPasswordHash(passwordEncoder.encode(user.getNewPassword()));
+        UserEntity updatedUser = userRepository.save(entityUser);
+        //в провайдер отправляем незакодированный пароль, если он изменился, и отправляем null, если не изменялся пароль
+        User ssoUser = model(updatedUser);
         if (user.getNewPassword() == null) {
-            result.setPassword(null);
+            ssoUser.setPassword(null);
         } else {
-            result.setPassword(user.getPassword());
+            ssoUser.setPassword(user.getNewPassword());
         }
-        provider.updateUser(result);
-
-        return model(resultEntity);
+        provider.updateUser(ssoUser);
+        return model(updatedUser);
     }
 
     @Override
@@ -169,12 +157,8 @@ public class UserServiceImpl implements UserService {
         entity.setUsername(model.getUsername());
         entity.setName(model.getName());
         entity.setSurname(model.getSurname());
-        entity.setPassword(model.getPassword());
         entity.setPatronymic(model.getPatronymic());
         entity.setIsActive(model.getIsActive());
-        if (model.getNewPassword() != null) {
-            entity.setPassword(model.getNewPassword());
-        }
         entity.setEmail(model.getEmail());
         if (model.getRoles() != null)
             entity.setRoleList(model.getRoles().stream().map(RoleEntity::new).collect(Collectors.toList()));
@@ -190,7 +174,6 @@ public class UserServiceImpl implements UserService {
         entity.setSurname(model.getSurname());
         entity.setPatronymic(model.getPatronymic());
         entity.setIsActive(model.getIsActive());
-        entity.setPassword(model.getPassword());
         entity.setEmail(model.getEmail());
         if (model.getRoles() != null)
             entity.setRoleList(model.getRoles().stream().map(r -> new RoleEntity(r.getId())).collect(Collectors.toList()));
@@ -207,7 +190,6 @@ public class UserServiceImpl implements UserService {
         model.setSurname(entity.getSurname());
         model.setPatronymic(entity.getPatronymic());
         model.setIsActive(entity.getIsActive());
-        model.setPassword(entity.getPassword());
         model.setEmail(entity.getEmail());
         StringBuilder builder = new StringBuilder();
         if (entity.getSurname() != null) {
@@ -238,87 +220,4 @@ public class UserServiceImpl implements UserService {
         model.setDescription(entity.getDescription());
         return model;
     }
-
-    /**
-     * Валидация на уникальность юзернейма пользователя
-     */
-    public boolean checkUsernameUniq(Integer id, String username) {
-        UserEntity userEntity = userRepository.findOneByUsername(username);
-        Boolean result = id == null ? userEntity == null : ((userEntity == null) || (userEntity.getId().equals(id)));
-        if (result) {
-            return true;
-        } else
-            throw new UserException("exception.uniqueUsername");
-    }
-
-    /**
-     * Валидация на  ввод юзернейма согласно формату
-     */
-    private boolean checkUsername(String username) {
-        if (validationUsername) {
-            String regexp = "^[a-zA-Z][a-zA-Z0-9]+$";
-            Pattern pattern = Pattern.compile(regexp);
-            Matcher matcher = pattern.matcher(username);
-            if (!matcher.matches())
-                throw new UserException("exception.wrongUsername");
-        }
-        return true;
-    }
-
-    /**
-     * Валидация на  ввод email согласно формату
-     */
-    private boolean checkEmail(String email) {
-        String regexp = "[A-Za-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[A-Za-z0-9!#$%&\'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9]" +
-                "(?:[A-Za-z0-9-]*[A-Za-z0-9])?\\.)+[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?";
-        Pattern pattern = Pattern.compile(regexp);
-        Matcher matcher = pattern.matcher(email);
-        if (!matcher.matches())
-            throw new UserException("exception.wrongEmail");
-        return true;
-    }
-
-    /**
-     * Валидация на  ввод пароля согласно формату
-     */
-    private boolean checkPassword(String password, String passwordCheck, Integer id) {
-        if (password.length() < validationPasswordLength)
-            throw new UserException("exception.passwordLength");
-        String regexp;
-        Pattern pattern;
-        Matcher matcher;
-        if (validationPasswordUpperCaseLetters) {
-            regexp = "^(?=.*[A-Z])(?=\\S+$).*$";
-            pattern = Pattern.compile(regexp);
-            matcher = pattern.matcher(password);
-            if (!matcher.matches())
-                throw new UserException("exception.uppercaseLetters");
-        }
-        if (validationPasswordLowerCaseLetters) {
-            regexp = "^(?=.*[a-z])(?=\\S+$).*$";
-            pattern = Pattern.compile(regexp);
-            matcher = pattern.matcher(password);
-            if (!matcher.matches())
-                throw new UserException("exception.lowercaseLetters");
-        }
-        if (validationPasswordNumbers) {
-            regexp = "^(?=.*[0-9])(?=\\S+$).*$";
-            pattern = Pattern.compile(regexp);
-            matcher = pattern.matcher(password);
-            if (!matcher.matches())
-                throw new UserException("exception.numbers");
-        }
-        if (validationPasswordSpecialSymbols) {
-            regexp = "(?=.*[@#$%^&+=])(?=\\S+$).*$";
-            pattern = Pattern.compile(regexp);
-            matcher = pattern.matcher(password);
-            if (!matcher.matches())
-                throw new UserException("exception.specialSymbols");
-        }
-        if (((id == null) || (passwordCheck != null)) && (!password.equals(passwordCheck))) {
-            throw new UserException("exception.passwordsMatch");
-        }
-        return true;
-    }
-
 }

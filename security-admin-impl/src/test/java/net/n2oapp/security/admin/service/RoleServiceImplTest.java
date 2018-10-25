@@ -29,7 +29,7 @@ import static org.junit.Assert.assertNotNull;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @TestPropertySource("classpath:test.properties")
 @AutoConfigureTestDatabase
-public class RoleServiceTest {
+public class RoleServiceImplTest {
 
 
     @Autowired

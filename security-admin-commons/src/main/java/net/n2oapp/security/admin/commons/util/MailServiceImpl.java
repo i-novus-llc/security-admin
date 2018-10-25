@@ -25,10 +25,9 @@ import java.util.Map;
 @Service
 public class MailServiceImpl implements MailService {
 
-
     @Autowired
     private JavaMailSender emailSender;
-    @Value("mail/welcomeUser.html")
+    @Value("${sec.password.mail.body.path}")
     private String welcomeUserMail;
     @Value("${sec.password.mail.subject}")
     private String mailSubject;
@@ -39,9 +38,9 @@ public class MailServiceImpl implements MailService {
         if (sendWelcomeEmail) {
             Map<String, String> data = new HashMap<>();
             data.put("username", user.getUsername());
-            data.put("surname", user.getSurname());
-            data.put("name", user.getName());
-            data.put("patronymic", user.getPatronymic() == null ? "" : user.getPatronymic());
+            data.put("surname", valueOrEmpty(user.getSurname()));
+            data.put("name", valueOrEmpty(user.getName()));
+            data.put("patronymic", valueOrEmpty(user.getPatronymic()));
             data.put("password", user.getPassword());
             data.put("email", user.getEmail());
             String subjectTemplate = mailSubject;
@@ -66,5 +65,11 @@ public class MailServiceImpl implements MailService {
                 throw new IllegalStateException("Exception while sending mail notification to " + user.getUsername() + "\n", e);
             }
         }
+    }
+
+    private String valueOrEmpty(String param) {
+        if (param == null)
+            return "";
+        return param;
     }
 }

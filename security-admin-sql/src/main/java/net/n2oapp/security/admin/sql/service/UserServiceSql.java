@@ -4,10 +4,12 @@ import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
+import net.n2oapp.security.admin.api.service.MailService;
 import net.n2oapp.security.admin.api.service.RoleService;
 import net.n2oapp.security.admin.api.service.UserService;
 import net.n2oapp.security.admin.commons.util.MailServiceImpl;
 import net.n2oapp.security.admin.commons.util.PasswordGenerator;
+import net.n2oapp.security.admin.commons.util.UserValidations;
 import net.n2oapp.security.admin.sql.util.SqlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -40,6 +42,7 @@ public class UserServiceSql implements UserService {
     private final static String UPDATE_USER_WITHOUT_PASS = "sql/user/update_user_without_password.sql";
     private final static String DELETE_USER = "sql/user/delete_user.sql";
     private final static String INSERT_USER_ROLE = "sql/user/insert_user_role.sql";
+    private final static String GET_USER_BY_USERNAME = "sql/user/get_user_by_username.sql";
     private final static String GET_USER_BY_ID = "sql/user/get_user_by_id.sql";
     private final static String UPDATE_USER_ACTIVE = "sql/user/update_user_active.sql";
     private final static String DELETE_USER_ROLE = "sql/user/delete_user_role.sql";
@@ -62,13 +65,28 @@ public class UserServiceSql implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private MailServiceImpl mailService;
+    private MailService mailService;
 
     @Autowired
     private RoleService service;
 
+    @Autowired
+    private UserValidations userValidations;
+
     @Override
     public User create(UserForm user) {
+        userValidations.checkUsernameUniq(user.getId(), getByUsername(user.getUsername()));
+        userValidations.checkUsername(user.getUsername());
+        userValidations.checkEmail(user.getEmail());
+        String password = user.getPassword();
+        if (password != null) {
+            userValidations.checkPassword(password, user.getPasswordCheck(), user.getId());
+        }
+        if (password == null) {
+            password = passwordGenerator.generate();
+            user.setPassword(password);
+        }
+        String passwordHash = passwordEncoder.encode(password);
         transactionTemplate.execute(transactionStatus -> {
             SqlParameterSource namedParameters =
                     new MapSqlParameterSource("username", user.getUsername())
@@ -78,16 +96,7 @@ public class UserServiceSql implements UserService {
                             .addValue("patronymic", user.getPatronymic())
                             .addValue("isActive", true)
                             .addValue("guid", user.getGuid());
-            String password = null;
-            String encodedPassword = null;
-            Boolean generate = user.getPassword() == null;
-            if (generate) {
-                password = passwordGenerator.generate();
-                encodedPassword = passwordEncoder.encode(password);
-                ((MapSqlParameterSource) namedParameters).addValue("password", encodedPassword);
-            } else {
-                ((MapSqlParameterSource) namedParameters).addValue("password", passwordEncoder.encode(user.getPassword()));
-            }
+            ((MapSqlParameterSource) namedParameters).addValue("password", passwordHash);
             KeyHolder keyHolder = new GeneratedKeyHolder();
             jdbcTemplate.update(SqlUtil.getResourceFileAsString(INSERT_USER), namedParameters, keyHolder, new String[]{"id"});
             user.setId((Integer) keyHolder.getKey());
@@ -101,6 +110,12 @@ public class UserServiceSql implements UserService {
 
     @Override
     public User update(UserForm user) {
+        userValidations.checkUsernameUniq(user.getId(), getByUsername(user.getUsername()));
+        userValidations.checkUsername(user.getUsername());
+        userValidations.checkEmail(user.getEmail());
+        if (user.getNewPassword() != null) {
+            userValidations.checkPassword(user.getNewPassword(), user.getPasswordCheck(), user.getId());
+        }
         transactionTemplate.execute(transactionStatus -> {
             MapSqlParameterSource namedParameters =
                     new MapSqlParameterSource("id", user.getId())
@@ -114,7 +129,7 @@ public class UserServiceSql implements UserService {
             if (user.getNewPassword() == null) {
                 jdbcTemplate.update(SqlUtil.getResourceFileAsString(UPDATE_USER_WITHOUT_PASS), namedParameters);
             } else {
-                namedParameters.addValue("password",passwordEncoder.encode(user.getNewPassword()));
+                namedParameters.addValue("password", passwordEncoder.encode(user.getNewPassword()));
                 jdbcTemplate.update(SqlUtil.getResourceFileAsString(UPDATE_USER), namedParameters);
             }
             jdbcTemplate.update(SqlUtil.getResourceFileAsString(DELETE_USER_ROLE), namedParameters);
@@ -133,13 +148,13 @@ public class UserServiceSql implements UserService {
 
     @Override
     public User getById(Integer id) {
-            try {
-                return jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(GET_USER_BY_ID), new MapSqlParameterSource("id", id),(resultSet, i) -> {
-                    return model(resultSet);
-                });
-            } catch (EmptyResultDataAccessException e) {
-              return  null;
-            }
+        try {
+            return jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(GET_USER_BY_ID), new MapSqlParameterSource("id", id), (resultSet, i) -> {
+                return model(resultSet);
+            });
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     @Override
@@ -189,6 +204,11 @@ public class UserServiceSql implements UserService {
                 Integer.class) == 0;
     }
 
+    private User getByUsername(String username) {
+        List<User> result = jdbcTemplate.query(SqlUtil.getResourceFileAsString(GET_USER_BY_USERNAME),
+                new MapSqlParameterSource("username", username), (resultSet, i) -> model(resultSet));
+        return result.isEmpty() ? null : result.get(0);
+    }
 
     private void saveRoles(UserForm user) {
         if (user.getRoles() != null) {
@@ -221,7 +241,7 @@ public class UserServiceSql implements UserService {
         return user;
     }
 
-    private User model (ResultSet resultSet) throws SQLException {
+    private User model(ResultSet resultSet) throws SQLException {
         if (resultSet == null) return null;
         User user = new User();
         user.setId(resultSet.getInt("id"));
@@ -247,13 +267,13 @@ public class UserServiceSql implements UserService {
                 a = resultSet.getArray("names");
                 names = (String[]) a.getArray();
             } else {
-                Object[]  idsObj = (Object[]) resultSet.getObject("ids");
+                Object[] idsObj = (Object[]) resultSet.getObject("ids");
                 Object[] namesObj = (Object[]) resultSet.getObject("names");
                 ids = new Integer[idsObj.length];
                 names = new String[idsObj.length];
                 for (int i = 0; i < idsObj.length; i++) {
-                    ids[i] = (Integer)((Object[]) idsObj[i])[0];
-                    names[i] = (String)((Object[])namesObj[i])[0];
+                    ids[i] = (Integer) ((Object[]) idsObj[i])[0];
+                    names[i] = (String) ((Object[]) namesObj[i])[0];
                 }
             }
             if (ids != null && names != null) {
@@ -281,8 +301,6 @@ public class UserServiceSql implements UserService {
         }
         return builder.toString();
     }
-
-
 
 
 }
