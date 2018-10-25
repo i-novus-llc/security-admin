@@ -75,7 +75,7 @@ public class UserServiceImplSql implements UserService {
                             .addValue("surname", user.getSurname())
                             .addValue("name", user.getName())
                             .addValue("patronymic", user.getPatronymic())
-                            .addValue("isActive", true)
+                            .addValue("isActive", user.getIsActive())
                             .addValue("guid", user.getGuid());
             String password = null;
             String encodedPassword = null;
