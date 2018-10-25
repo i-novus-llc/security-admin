@@ -3,11 +3,11 @@
              name="Профиль пользователя">
     <form>
         <fields>
-            <output-text id="username" label="Логин" default-value="#{username}"/>
-            <output-text id="surname" label="Фамилия" default-value="#{surname}"/>
-            <output-text id="name" label="Имя" default-value="#{name}"/>
-            <output-text id="patronymic" label="Отчество" default-value="#{patronymic}"/>
-            <output-text id="email" label="Электронная почта" default-value="#{email}"/>
+            <input-text id="username" label="Логин" default-value="#{username}" readonly="true"/>
+            <input-text id="surname" label="Фамилия" default-value="#{surname}" readonly="true"/>
+            <input-text id="name" label="Имя" default-value="#{name}" readonly="true"/>
+            <input-text id="patronymic" label="Отчество" default-value="#{patronymic}" readonly="true"/>
+            <input-text id="email" label="Электронная почта" default-value="#{email}" readonly="true"/>
         </fields>
     </form>
 </simple-page>

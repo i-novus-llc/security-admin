@@ -59,6 +59,9 @@
 
         <field id="permissions" domain="object[]" name="Права">
             <select mapping="['permissions']"></select>
+            <filters>
+                <in filter-id="permissions*.id" mapping="permissions"/>
+            </filters>
         </field>
 
     </fields>
