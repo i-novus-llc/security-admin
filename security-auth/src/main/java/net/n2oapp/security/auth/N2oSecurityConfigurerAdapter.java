@@ -1,18 +1,14 @@
 package net.n2oapp.security.auth;
 
-import net.n2oapp.framework.access.AdminService;
 import net.n2oapp.framework.access.simple.PermissionApi;
-import net.n2oapp.framework.access.simple.SimpleAuthorizationApi;
-import net.n2oapp.framework.api.metadata.pipeline.ReadCompileBindTerminalPipeline;
-import net.n2oapp.framework.config.N2oApplicationBuilder;
 import net.n2oapp.security.auth.context.SpringSecurityUserContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.ExceptionHandlingConfigurer;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
-
-import java.util.Collections;
+import org.springframework.security.web.AuthenticationEntryPoint;
 
 public abstract class N2oSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
@@ -46,5 +42,12 @@ public abstract class N2oSecurityConfigurerAdapter extends WebSecurityConfigurer
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         authorize(beforeAuthorize(http));
+    }
+
+    protected HttpSecurity configureExceptionHandling(ExceptionHandlingConfigurer<HttpSecurity> exceptionHandling,
+                                                          AuthenticationEntryPoint entryPoint) throws Exception {
+        return exceptionHandling
+                .authenticationEntryPoint(entryPoint)
+                .and();
     }
 }
