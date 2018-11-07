@@ -1,4 +1,4 @@
-package net.n2oapp.security.auth.simple;
+package net.n2oapp.security.auth;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
@@ -8,16 +8,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class AjaxAwareLoginUrlAuthenticationEntryPoint extends LoginUrlAuthenticationEntryPoint {
+public class N2oUrlAuthenticationEntryPoint extends LoginUrlAuthenticationEntryPoint {
 
-    public AjaxAwareLoginUrlAuthenticationEntryPoint(String loginFormUrl) {
+    private String n2oUrl;
+
+    public N2oUrlAuthenticationEntryPoint(String loginFormUrl, String n2oUrl) {
         super(loginFormUrl);
+        this.n2oUrl = n2oUrl;
     }
 
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException, ServletException {
-
-        if (isAjaxRequest(request) && authException != null) {
+        if (isN2oRequest(request) && authException != null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.flushBuffer();
             return;
@@ -25,7 +27,7 @@ public class AjaxAwareLoginUrlAuthenticationEntryPoint extends LoginUrlAuthentic
         super.commence(request, response, authException);
     }
 
-    private static boolean isAjaxRequest(HttpServletRequest request) {
-        return "XMLHttpRequest".equalsIgnoreCase(request.getHeader("X-Requested-With"));
+    private boolean isN2oRequest(HttpServletRequest request) {
+        return request.getServletPath().startsWith(n2oUrl);
     }
 }
