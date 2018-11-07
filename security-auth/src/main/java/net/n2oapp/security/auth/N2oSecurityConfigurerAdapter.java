@@ -2,6 +2,7 @@ package net.n2oapp.security.auth;
 
 import net.n2oapp.framework.access.simple.PermissionApi;
 import net.n2oapp.security.auth.context.SpringSecurityUserContext;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -11,6 +12,9 @@ import org.springframework.security.config.annotation.web.configurers.Expression
 import org.springframework.security.web.AuthenticationEntryPoint;
 
 public abstract class N2oSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
+
+    @Value("${n2o.api.url}")
+    private String n2oUrl;
 
     @Bean
     public PermissionApi securitySimplePermissionApi() {
@@ -44,10 +48,9 @@ public abstract class N2oSecurityConfigurerAdapter extends WebSecurityConfigurer
         authorize(beforeAuthorize(http));
     }
 
-    protected HttpSecurity configureExceptionHandling(ExceptionHandlingConfigurer<HttpSecurity> exceptionHandling,
-                                                          AuthenticationEntryPoint entryPoint) throws Exception {
+    protected HttpSecurity configureExceptionHandling(ExceptionHandlingConfigurer<HttpSecurity> exceptionHandling) throws Exception {
         return exceptionHandling
-                .authenticationEntryPoint(entryPoint)
+                .authenticationEntryPoint(new N2oUrlAuthenticationEntryPoint("/login", n2oUrl))
                 .and();
     }
 }

@@ -1,7 +1,6 @@
 package net.n2oapp.security.auth.simple;
 
 import net.n2oapp.security.auth.N2oSecurityConfigurerAdapter;
-import net.n2oapp.security.auth.N2oUrlAuthenticationEntryPoint;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -16,13 +15,9 @@ import static net.n2oapp.security.auth.simple.SpringConfigUtil.*;
 @Import({SimpleAuthConfig.class, SimpleAuthController.class})
 public abstract class SimpleSecurityConfigurerAdapter extends N2oSecurityConfigurerAdapter {
 
-    private N2oUrlAuthenticationEntryPoint n2oUrlAuthenticationEntryPoint;
-
     private DaoAuthenticationProvider daoAuthenticationProvider;
 
-    public SimpleSecurityConfigurerAdapter(N2oUrlAuthenticationEntryPoint n2oUrlAuthenticationEntryPoint,
-                                           DaoAuthenticationProvider daoAuthenticationProvider) {
-        this.n2oUrlAuthenticationEntryPoint = n2oUrlAuthenticationEntryPoint;
+    public SimpleSecurityConfigurerAdapter(DaoAuthenticationProvider daoAuthenticationProvider) {
         this.daoAuthenticationProvider = daoAuthenticationProvider;
     }
 
@@ -38,7 +33,7 @@ public abstract class SimpleSecurityConfigurerAdapter extends N2oSecurityConfigu
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        configureExceptionHandling(http.exceptionHandling(), n2oUrlAuthenticationEntryPoint);
+        configureExceptionHandling(http.exceptionHandling());
         authorize(beforeAuthorize(http));
         configureLogin(http.formLogin());
         configureLogout(http.logout());

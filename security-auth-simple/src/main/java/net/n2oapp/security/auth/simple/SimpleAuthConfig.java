@@ -1,7 +1,5 @@
 package net.n2oapp.security.auth.simple;
 
-import net.n2oapp.security.auth.N2oUrlAuthenticationEntryPoint;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,9 +14,6 @@ import java.util.Arrays;
 
 @Configuration
 public class SimpleAuthConfig {
-
-    @Value("${n2o.api.url}")
-    private String n2oUrl;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -59,10 +54,4 @@ public class SimpleAuthConfig {
     public ServletRegistrationBean servletRegistrationBean() {
         return new ServletRegistrationBean(registrationServlet(), "/registrationServlet");
     }
-
-    @Bean
-    public N2oUrlAuthenticationEntryPoint n2oUrlAuthenticationEntryPoint() {
-        return new N2oUrlAuthenticationEntryPoint("/login", n2oUrl);
-    }
-
 }
