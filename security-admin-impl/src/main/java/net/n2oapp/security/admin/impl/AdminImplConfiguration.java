@@ -15,7 +15,8 @@ import org.springframework.context.annotation.PropertySource;
 
 
 @Configuration
-@PropertySource("classpath:security.properties")
+@PropertySource(value = {"classpath:security.properties", "classpath:placeholders.properties"},
+        ignoreResourceNotFound = true)
 @ComponentScan({"net.n2oapp.security.admin.impl", "net.n2oapp.security.admin.api"})
 @Import(AdminCommonsConfiguration.class)
 public class AdminImplConfiguration {

@@ -17,7 +17,8 @@ import java.util.Properties;
  * Конфигурация security-admin-commons
  */
 @Configuration
-@PropertySource("classpath:mail.properties")
+@PropertySource(value = {"classpath:mail.properties", "classpath:placeholders.properties"},
+        ignoreResourceNotFound = true)
 @ComponentScan("net.n2oapp.security.admin.commons")
 public class AdminCommonsConfiguration {
 
