@@ -13,7 +13,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 
 public abstract class N2oSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
-    @Value("${n2o.api.url}")
+    @Value("${n2o.api.url:/n2o}")
     private String n2oUrl;
 
     @Bean
