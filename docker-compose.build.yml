@@ -1,0 +1,12 @@
+version: "3.6"
+services:
+  backend:
+    build:
+      context: .
+      args:
+        JAR_FILE: security-admin-backend/target/backend.jar
+#  frontend:
+#    build:
+#      context: .
+#      args:
+#        JAR_FILE: security-admin-frontend/target/frontend.jar

@@ -1,0 +1,18 @@
+version: "3.6"
+services:
+  db:
+    image: postgres:9.6.11-alpine
+    environment:
+      POSTGRES_DB: sec
+  backend:
+    image: "${PROJECT_NAME}_backend:${TAG}"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db/sec
+      SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
+    depends_on:
+      - db
+    restart: on-failure
+#  frontend:
+#    image: "${PROJECT_NAME}_frontend:${TAG}"
+#    depends_on:
+#      - backend
