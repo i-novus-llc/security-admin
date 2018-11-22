@@ -3,6 +3,6 @@ services:
   backend:
     ports:
       - "8080"
-#  frontend:
-#    ports:
-#      - "8080"
+  frontend:
+    ports:
+      - "8080"
