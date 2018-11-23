@@ -46,7 +46,6 @@ public class UserServiceImplTest {
         checkValidationEmail(user);
         checkValidationPassword(user);
         checkValidationUsername(user);
-        service.delete(user.getId());
     }
 
     @Test
@@ -161,7 +160,7 @@ public class UserServiceImplTest {
         user.setPasswordCheck("userPassword1$");
         user.setIsActive(true);
         List<Integer> roles = new ArrayList<>();
-        roles.add(1);
+        roles.add(10);
         user.setRoles(roles);
         return user;
     }
