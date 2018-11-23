@@ -46,6 +46,7 @@ public class UserServiceImplTest {
         checkValidationEmail(user);
         checkValidationPassword(user);
         checkValidationUsername(user);
+        service.delete(user.getId());
     }
 
     @Test

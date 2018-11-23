@@ -61,7 +61,7 @@ public class RoleRestTest {
         delete(id);
     }
 
-    public Integer create() {
+    private Integer create() {
         Role role = client.create(newRole());
         assertNotNull(role);
         assertEquals(1, role.getPermissions().size());
@@ -69,7 +69,7 @@ public class RoleRestTest {
         return role.getId();
     }
 
-    public void update(Integer id) {
+    private void update(Integer id) {
         Role role = client.getById(id);
         role.setName("userUpdate");
         client.update(form(role));
@@ -77,7 +77,7 @@ public class RoleRestTest {
 
     }
 
-    public void delete(Integer id) {
+    private void delete(Integer id) {
         client.delete(id);
         Role role = client.getById(id);
         assertNull(role);
