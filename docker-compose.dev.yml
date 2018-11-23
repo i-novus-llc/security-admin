@@ -1,5 +1,14 @@
 version: "3.6"
 services:
+  keycloak-db:
+    ports:
+      - "5432"
+  keycloak:
+    ports:
+      - "8080"
+  db:
+    ports:
+      - "5432"
   backend:
     ports:
       - "8080"
