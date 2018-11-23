@@ -51,7 +51,7 @@ public class UserServiceImplTest {
 
     @Test
     public void testCheckUniqueUsername() {
-        assertFalse( service.checkUniqueUsername("test2"));
+        assertFalse(service.checkUniqueUsername("test2"));
         assertTrue(service.checkUniqueUsername("nonExistentUser"));
     }
 
