@@ -36,7 +36,7 @@ public class UserDetailsServiceSqlTest {
     }
 
     @Test
-    public void  loadUserDetailsTest() {
+    public void loadUserDetailsTest() {
         UserDetailsToken u = new UserDetailsToken();
         u.setUsername("test");
         u.setEmail("test@example.com");
@@ -45,7 +45,6 @@ public class UserDetailsServiceSqlTest {
         u.setRoleNames(Arrays.asList("user", "admin"));
 
         User user = service.loadUserDetails(u);
-        assertThat(user.getId(), is(1));
         assertThat(user.getUsername(), is(u.getUsername()));
         assertThat(user.getEmail(), is(u.getEmail()));
         assertThat(user.getGuid(), is(u.getGuid()));
@@ -99,7 +98,7 @@ public class UserDetailsServiceSqlTest {
 
         User user = service.loadUserDetails(u);
 
-        assertThat(user.getId(), is(3));
+        assertThat(user.getUsername(), is(u.getUsername()));
         assertThat(user.getRoles().size(), is(2));
         assertThat(user.getRoles().get(0).getId(), is(1));
         assertThat(user.getRoles().get(0).getName(), is("user"));
