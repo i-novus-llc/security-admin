@@ -48,9 +48,9 @@
 
         <field id="permissionIds" domain="integer[]" name="Права">
             <select mapping="['permissions'].![id]"></select>
-            <!--<filters>-->
-                <!--<in mapping="['permissionIds']" filter-id="permissionIds"></in>-->
-            <!--</filters>-->
+            <filters>
+                <in mapping="['permissionIds']" filter-id="permissionIds"></in>
+            </filters>
         </field>
 
         <field id="permissionNames" domain="string[]" name="Права">

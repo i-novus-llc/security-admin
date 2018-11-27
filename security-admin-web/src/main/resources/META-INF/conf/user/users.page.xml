@@ -11,7 +11,7 @@
                     <column text-field-id="fio"/>
                     <column text-field-id="isActive">
                         <checkbox>
-                            <invoke route="/changeUserActive" action-id="changeUserActive"/>
+                            <invoke route="/changeUserActive" operation-id="changeUserActive"/>
                         </checkbox>
                     </column>
                      <column text-field-id="roleNames" label="Роли">
@@ -20,8 +20,8 @@
                 </columns>
                 <filters>
                     <row>
-                        <ctrl:input-text id="username"/>
-                        <ctrl:input-text id="fio" css-class="n2o-control-10"/>
+                        <input-text id="username"/>
+                        <input-text id="fio" class="n2o-control-10"/>
                         <!-- <ctrl:checkbox-group id="activeList" label="Активность" inline="true" css-class="n2o-control-4">
                              <ctrl:options>
                                  <ctrl:option>{"id" : "true", "name" :"Да"}</ctrl:option>
@@ -42,10 +42,10 @@
                              </ctrl:set-value-expression>
                          </ctrl:hidden>-->
 
-                        <ctrl:input-select id="roles" type="multi" label="Роли" visible="false">
-                            <ctrl:query query-id="${sec.admin.role.query.id}" value-field-id="id"
-                                        label-field-id="name"/>
-                        </ctrl:input-select>
+                        <input-select id="roles" type="multi" label="Роли" visible="false"
+                                      query-id="${sec.admin.role.query.id}" value-field-id="id"
+                                      label-field-id="name">
+                        </input-select>
                     </row>
                 </filters>
                 <toolbar>
