@@ -4,31 +4,22 @@
         <fields>
             <row>
                 <input-text id="username" required="true">
-                    <validations>
-                        <validation ref-id="usernameValidation" target="field"/>
-                        <!--<validation ref-id="uniqueUsername"/>-->
-                    </validations>
+                    <validations white-list="usernameValidation"/>
                 </input-text>
                 <input-text id="email" label="Email" required="${sec.admin.user.email.required}">
-                    <validations>
-                        <validation ref-id="emailValidation"/>
-                    </validations>
+                    <validations white-list="emailValidation"/>
                 </input-text>
             </row>
             <row>
                 <password id="password"
                           required="${sec.admin.user.password.input}" label="Пароль">
-                    <validations>
-                        <validation ref-id="passwordLengthValidation"/>
-                    </validations>
+                    <validations white-list="passwordLengthValidation"/>
                 </password>
                 <password id="passwordCheck"
                           required="${sec.admin.user.password.input}" label="Подтвердить пароль">
-                    <validations>
-                        <validation ref-id="passwordCheckValidation" side="server"/>
-                    </validations>
+                    <validations white-list="passwordCheckValidation"/>
                     <dependencies>
-                        <enabling-condition on="password"> typeof password != 'undefined' &amp;&amp; password != null &amp;&amp; password != ''</enabling-condition>
+                        <enabling on="password">typeof password != 'undefined' &amp;&amp; password != null &amp;&amp; password != ''</enabling>
                     </dependencies>
                 </password>
             </row>
@@ -37,9 +28,9 @@
             <input-text id="patronymic"/>
             <row>
                 <col size="10">
-                    <input-select id="roles" type="multi" label="Роли" cache="off" required="true">
-                        <query query-id="${sec.admin.role.query.id}" value-field-id="id" label-field-id="name"/>
-                    </input-select>
+                    <input-select id="roles" type="multi" label="Роли" cache="false"
+                                  required="true" query-id="${sec.admin.role.query.id}"
+                                  value-field-id="id" label-field-id="name"/>
                 </col>
                 <col size="2">
                     <checkbox id="isActive" default-value="true"/>
