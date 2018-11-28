@@ -82,24 +82,24 @@ public class SecurityConfig extends OpenIdSecurityConfigurerAdapter {
 }
 ----
 +
-. Задать следующие настройки в файле `META-INF/n2o-build.properties` или `[USER_HOME]/.n2o/placeholders.properties`:
+. Задать следующие настройки в файле `application.properties` или link:https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html[в окружении]:
 +
-[source,python]
+[source,ruby]
 ----
 #Базовый адрес сервиса аутентификации
-n2o.security.oauth2.auth-server-uri=http://localhost:8888/auth
-#Адрес сервиса получения токена аутентификации
-n2o.security.oauth2.access-token-uri=/token
-#Адрес сервиса авторизации
-n2o.security.oauth2.user-authorization-uri=/auth
-#Адрес сервиса получения информации о пользователе
-n2o.security.oauth2.user-info-uri=/userinfo
-#Адрес сервиса единого выхода
-n2o.security.oauth2.logout-uri=/logout?redirect_uri=http://localhost:8080/
+security.oauth2.auth-server-uri=http://localhost:8888/auth
 #Идентификатор клиента OAuth2 OpenId Connect
-n2o.security.oauth2.client-id=myapp
+security.oauth2.client.client-id=myapp
 #Секретное слово клиента OAuth2 OpenId Connect
-n2o.security.oauth2.client-secret=mysecret
+security.oauth2.client.client-secret=mysecret
+#Запрашиваемый уровень доступа
+security.oauth2.client.scope=read,write
+#Адрес сервиса получения токена аутентификации
+security.oauth2.client.access-token-uri=${security.oauth2.auth-server-uri}/token
+#Адрес сервиса получения информации о пользователе
+security.oauth2.resource.user-info-uri=${security.oauth2.auth-server-uri}/userinfo
+#Адрес сервиса единого выхода
+security.oauth2.sso.logout-uri=${security.oauth2.auth-server-uri}/logout?redirect_uri=http://localhost:8080
 ----
 
 == SSO
@@ -167,16 +167,18 @@ image::images\readme-ffb7e.png[]
 image::images\add.role.png[]
 +
 . Теперь Keycloak настроен! Осталось добавить настройки синхронизации с сервисами администрирования.
-В файле `[USER_HOME]/.n2o/placeholders.properties` задайте следующие настройки:
+В файле `application.properties`
+или link:https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html[в окружении]
+задайте следующие настройки:
 +
-[source,python]
+[source,ruby]
 ----
-#Сервер Keycloak
+#Адрес сервера Keycloak
 keycloak.serverUrl=http://localhost:8888/auth
-#Realm
+#Название домена
 keycloak.realm=security-admin
-#ClientId
-keycloak.clientId=admin-cli
+#Идентификатор клиента
+keycloak.clientId=security-admin-sso
 #Пользователь с правами администрирования
 keycloak.username=restclient
 #Пароль пользователя с правами администрирования
@@ -190,7 +192,8 @@ keycloak.sendChangePassword=true
 
 === Auth Gateway
 В этом разделе рассказывается про установку шлюзового сервера аутентификации.
-Это SSO сервер, построенный на базе Spring Cloud Security, интегрируемый с любыми другими серверами аутентификации по протоколу OAuth2 OpenId Connect, например, с Keycloak.
+Это SSO сервер, построенный на базе Spring Cloud Security,
+интегрируемый с любыми другими серверами аутентификации по протоколу OAuth2 OpenId Connect, например, с Keycloak.
 
 *Схема SSO аутентификации*
 
@@ -221,18 +224,18 @@ image::images\readme-05d0a.png[]
 image::images\readme-e72a1.png[]
 
 Требования к приложению::
-- N2O 6.1+
+- N2O 7.0+
 - Spring 4.3+
 
 *Установка*
 
-. Добавьте зависимость от реализации интерфейса `security-admin-web-sql`:
+. Добавьте зависимость от реализации интерфейса `security-admin-web`:
 +
 [source,xml]
 ----
 <dependency>
     <groupId>net.n2oapp.framework.security</groupId>
-    <artifactId>security-admin-web-sql</artifactId>
+    <artifactId>security-admin-web</artifactId>
     <version>${security.admin.version}</version>
 </dependency>
 ----
@@ -289,23 +292,25 @@ CREATE DATABASE security ENCODING = 'UTF8';
 
 
 === Embedded UI + REST Client
-Эта схема предусматривает установку пользовательского интерфейса администрирования внутри Вашего прикладного приложения с удаленными вызовами REST сервисов к отдельно стоящему REST серверу администрирования.
+Эта схема предусматривает установку пользовательского интерфейса администрирования
+внутри Вашего прикладного приложения с удаленными вызовами REST сервисов
+к отдельно стоящему REST серверу администрирования.
 
 image::images\readme-eadda.png[]
 
 Требования к приложению::
-- N2O 6.1+
+- N2O 7.0+
 - Spring 4.3+
 
 *Установка*
 
-. Добавьте зависимость от реализации интерфейса `security-admin-web-rest`:
+. Добавьте зависимость от реализации интерфейса `security-admin-web`:
 +
 [source,xml]
 ----
 <dependency>
     <groupId>net.n2oapp.framework.security</groupId>
-    <artifactId>security-admin-web-rest</artifactId>
+    <artifactId>security-admin-web</artifactId>
     <version>${security.admin.version}</version>
 </dependency>
 ----
@@ -321,36 +326,39 @@ image::images\readme-eadda.png[]
 </dependency>
 ----
 +
-. В ресурсах проекта в файле `META-INF/n2o-build.properties` или `[USER_HOME]/.n2o/placeholders.properties` задайте адрес backend сервисов:
+. В файле `application.properties`
+или link:https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html[в окружении]
+задайте адрес backend сервисов:
 +
-[source,shell]
+[source,ruby]
 ----
 #Адрес REST сервисов администрирования
-sec.admin.rest.url=http://localhost:8080/backend/api
+sec.admin.rest.url=http://localhost:9090/api
 ----
 +
 . Запустите Ваше приложение
 
 
 === Standalone UI Server + REST Client
-Эта схема предусматривает разворачивание фронтенд сервера пользовательского интерфейса администрирования с удаленными вызовами REST сервисов к отдельно стоящему REST серверу администрирования.
+Эта схема предусматривает разворачивание фронтенд сервера пользовательского
+интерфейса администрирования с удаленными вызовами REST сервисов к отдельно
+стоящему REST серверу администрирования.
 
 image::images\readme-2565b.png[]
 
 *Установка*
 
-. Скачайте war файл `security-admin-frontend` по link:http://https://ci.i-novus.ru/view/n2o/job/security-admin.develop.build/ws/security-admin-frontend/target/ROOT.war[ссылке]
-. Задайте настройки OAuth2 OpenId Connect аутентификации в файле `placeholders.properties` в папке `/[USER_HOME]/.n2o`
+. Скачайте link:https://git.i-novus.ru/framework/security-admin[исходный код проекта]
+и соберите его командой `mvn clean package -Pstandalone`
+, или скачайте link:https://ci.i-novus.ru/view/n2o/job/security-admin.master.release/ws/security-admin-frontend/target/frontend.jar[собранный jar файл] `frontend.jar`
 . Задайте настройку адреса REST сервисов администрирования `sec.admin.rest.url`
+. Запустите UI сервер командой `java -jar frontend.jar` и настройками бекенда и oauth2 аутентификации:
 +
-[source,python]
+[source]
 ----
-#Адрес REST сервисов администрирования
-sec.admin.rest.url=http://localhost:8080/backend/api
+java -jar frontend.jar --sec.admin.rest.url=http://localhost:9090/api --keycloak.server-url=http://localhost:8888/auth -security.oauth2.client.client-secret=mysecret
 ----
 +
-. Скопируйте war файл в `/[TOMCAT_HOME]/webapps`
-. Запустите Tomcat командой `/bin/startup`
 . Проверьте, что в браузере доступен адрес: http://localhost:8080/
 
 
@@ -361,22 +369,6 @@ image::images\readme-75921.png[]
 
 *Установка*
 
-. На сервере Tomcat создайте jdbc ресурс с именем `jdbc/security`, например, так:
-+
-[source,xml]
-----
-<Resource name="jdbc/security"
-          auth="Container"
-          type="javax.sql.DataSource"
-          username="postgres"
-          password="postgres"
-          driverClassName="org.postgresql.Driver"
-          url="jdbc:postgresql://localhost:5432/security"
-          maxActive="20"
-          maxIdle="10"
-          validationQuery="select 1"/>
-----
-+
 . Создайте базу данных `security`:
 +
 [source,sql]
@@ -384,10 +376,18 @@ image::images\readme-75921.png[]
 CREATE DATABASE security ENCODING = 'UTF8';
 ----
 +
-. Скачайте war файл `security-admin-backend` по link:http://https://ci.i-novus.ru/view/n2o/job/security-admin.develop.build/ws/security-admin-backend/target/backend.war[ссылке]
-. Скопируйте war файл в `/[TOMCAT_HOME]/webapps`
-. Запустите Tomcat командой `/bin/startup`
-. Проверьте, что в браузере доступен адрес: http://localhost:8080/backend/api/info
+. Скачайте link:https://git.i-novus.ru/framework/security-admin[исходный код проекта]
+и соберите его командой `mvn clean package -Pstandalone`,
+или скачайте link:https://ci.i-novus.ru/view/n2o/job/security-admin.master.release/ws/security-admin-backend/target/backend.jar[собранный jar файл]
+`backend.jar`
+. Запустите бекенд командой `java -jar backend.jar` с настройками созданной БД:
++
+[source]
+----
+java -jar backend.jar --spring.datasource.url=jdbc:postgresql://localhost:5432/security --spring.datasource.username=postgres --spring.datasource.password=postgres
+----
++
+. Проверьте, что в браузере доступен адрес: http://localhost:9090/api/info
 
 
 == Авторизация
@@ -527,12 +527,12 @@ insert into sec.permission(name, code) values('Право доступа к мо
 По умолчанию доступны следующие параметры:
 [source,xml]
 ----
-<ctrl:output-text id="username" default-value="#{username?}"/>
-<ctrl:output-text id="name" default-value="#{name?}"/>
-<ctrl:output-text id="surname" default-value="#{surname?}"/>
-<ctrl:output-text id="patronymic" default-value="#{patronymic?}"/>
-<ctrl:output-text id="email" default-value="#{email?}"/>
-<ctrl:output-text id="enabled" default-value="#{enabled?}"/>
+<output-text id="username" default-value="#{username?}"/>
+<output-text id="name" default-value="#{name?}"/>
+<output-text id="surname" default-value="#{surname?}"/>
+<output-text id="patronymic" default-value="#{patronymic?}"/>
+<output-text id="email" default-value="#{email?}"/>
+<output-text id="enabled" default-value="#{enabled?}"/>
 ----
 
 
@@ -567,15 +567,6 @@ $KEYCLOAK_HOME/bin/jboss-cli.sh --command="module add --name=net.n2oapp.security
 +
 image::images\index-0c310.png[]
 
-=== Тема UI администрирования
-
-Тема интерфейса администрирования доступа задаётся через настройку `n2o.ui.theme`:
-
-[source,python]
-----
-#Стилевая тема N2O (dist/css/default, dist/css/n2o, ...)
-n2o.ui.theme=dist/css/n2o
-----
-
 == Расширение профиля пользователя
 В этом разделе рассказывается как расширить профиль пользователя новыми атрибутами, как встроить их в интерфейс и использовать в контексте приложения.
+//todo
