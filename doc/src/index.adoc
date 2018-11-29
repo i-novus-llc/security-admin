@@ -188,6 +188,18 @@ keycloak.sendVerifyEmail=true
 #Отправлять ли ссылку на смену пароля при создании пользователя
 keycloak.sendChangePassword=true
 ----
++
+. Если при попытке залогиниться Keycloak выдаст сообщение:
+
+*We're sorry...*
+
+*Invalid parameter: redirect_uri*
+
+проверьте этот параметр в адрессной строке
+
+`localhost:8888/auth/realms/security-admin/protocol/openid-connect/auth?client_id=myapp&redirect_uri=http://127.0.0.1:8080/login&response_type=code`
+
+и добавьте этот URL в список `Valid Redirect URIs` в настройках ранее созданого клиента
 
 
 === Auth Gateway
