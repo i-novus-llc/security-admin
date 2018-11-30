@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: security-admin-backend
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      config:
+        enabled: true
+        fail-fast: false
