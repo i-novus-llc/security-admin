@@ -3,6 +3,7 @@ INSERT INTO sec.permission (id, name, code)VALUES (1, 'test','test');
 INSERT INTO sec.permission (id, name, code, parent_id)VALUES (2, 'test2','test2',1);
 --for search
 --ROLE
+INSERT INTO sec.role(id, name, code, description) VALUES (10, 'test','test','test');
 INSERT INTO sec.role(id, name, code, description) VALUES (1, 'user','code1','description1');
 INSERT INTO sec.role(id, name, code, description) VALUES (2, 'admin','code2','description2');
 --USER

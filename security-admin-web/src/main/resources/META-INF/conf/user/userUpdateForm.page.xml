@@ -5,24 +5,18 @@
             <row>
                 <input-text id="username" readonly="true"/>
                 <input-text id="email" label="Email" required="${sec.admin.user.email.required}">
-                    <validations>
-                        <validation ref-id="emailValidation"/>
-                    </validations>
+                    <validations white-list="emailValidation"/>
                 </input-text>
             </row>
             <row>
                 <password id="newPassword" label="Новый пароль" visible="${sec.admin.user.password.editable}">
-                    <validations>
-                        <validation ref-id="newPasswordLengthValidation"/>
-                    </validations>
+                    <validations white-list="newPasswordLengthValidation"/>
                 </password>
                 <password id="passwordCheck" label="Подтвердить пароль"
                           visible="${sec.admin.user.password.editable}">
-                    <validations>
-                        <validation ref-id="newPasswordCheckValidation"/>
-                    </validations>
+                    <validations white-list="newPasswordCheckValidation"/>
                     <dependencies>
-                        <enabling-condition on="password">typeof newPassword != 'undefined' &amp;&amp; newPassword != null &amp;&amp; newPassword != ''</enabling-condition>
+                        <enabling on="password">typeof newPassword != 'undefined' &amp;&amp; newPassword != null &amp;&amp; newPassword != ''</enabling>
                     </dependencies>
                 </password>
             </row>
@@ -31,9 +25,8 @@
             <input-text id="patronymic"/>
             <row>
                 <col size="10">
-                    <input-select id="roles" type="multi" label="Роли" cache="off" required="true">
-                        <query query-id="${sec.admin.role.query.id}" value-field-id="id" label-field-id="name"/>
-                    </input-select>
+                    <input-select id="roles" type="multi" label="Роли" cache="false" required="true"
+                                  query-id="${sec.admin.role.query.id}" value-field-id="id" label-field-id="name"/>
                 </col>
                 <col size="2">
                     <checkbox id="isActive" default-value="true"/>

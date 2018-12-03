@@ -74,17 +74,23 @@
         </field>
         <field id="roleIds" domain="integer[]" name="Роли">
             <select mapping="['roles'].![id]"></select>
-            <!--<filters>-->
-                <!--<in mapping="['roleIds']" filter-id="roleIds"></in>-->
-            <!--</filters>-->
+            <filters>
+                <in mapping="['roleIds']" filter-id="roleIds"></in>
+            </filters>
         </field>
 
         <field id="roleNames" domain="string[]" name="Роли">
             <select mapping="['roles'].![name]"></select>
+            <filters>
+                <in mapping="['roleNames']" filter-id="roleNames"></in>
+            </filters>
         </field>
 
         <field id="roles" domain="object[]" name="Роли">
             <select mapping="['roles']"></select>
+            <filters>
+                <in filter-id="roles*.id" domain="integer[]" mapping="roleIds"/>
+            </filters>
         </field>
     </fields>
 </query>

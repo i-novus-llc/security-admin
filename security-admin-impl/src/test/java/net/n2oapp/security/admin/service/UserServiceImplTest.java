@@ -50,7 +50,7 @@ public class UserServiceImplTest {
 
     @Test
     public void testCheckUniqueUsername() {
-        assertFalse( service.checkUniqueUsername("test2"));
+        assertFalse(service.checkUniqueUsername("test2"));
         assertTrue(service.checkUniqueUsername("nonExistentUser"));
     }
 
@@ -160,7 +160,7 @@ public class UserServiceImplTest {
         user.setPasswordCheck("userPassword1$");
         user.setIsActive(true);
         List<Integer> roles = new ArrayList<>();
-        roles.add(1);
+        roles.add(10);
         user.setRoles(roles);
         return user;
     }
