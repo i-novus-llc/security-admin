@@ -35,7 +35,6 @@ services:
   frontend:
     image: "${PROJECT_NAME}_frontend:${TAG}"
     environment:
-      KEYCLOAK_SERVER_URL: http://keycloak:8080
       SPRING_CLOUD_CONSUL_HOST: ${spring_cloud_consul_host}
     depends_on:
       - backend
