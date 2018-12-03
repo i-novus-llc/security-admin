@@ -10,4 +10,4 @@ ENV KEYCLOAK_SERVER_URL=http://localhost:8082
 ARG JAR_FILE
 COPY ${JAR_FILE} app.jar
 
-ENTRYPOINT ["java","-jar","app.jar","-Dkeycloak.server-url=${KEYCLOAK_SERVER_URL}","-Dspring.cloud.consul.host=${CONSUL_HOST}"]
+ENTRYPOINT ["java","-jar","app.jar","-Dkeycloak.server-url=${KEYCLOAK_SERVER_URL}"]
