@@ -25,7 +25,7 @@ services:
     image: "${PROJECT_NAME}_backend:${TAG}"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db/sec
-      SPRING_DATASOURCE_USER: sec_user
+      SPRING_DATASOURCE_USERNAME: sec_user
       SPRING_DATASOURCE_PASSWORD: sec_pass
       SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
       SPRING_CLOUD_CONSUL_HOST: ${spring_cloud_consul_host}
