@@ -84,7 +84,7 @@ public class SecurityConfig extends OpenIdSecurityConfigurerAdapter {
 +
 . Задать следующие настройки в файле `application.properties` или link:https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html[в окружении]:
 +
-[source,ruby]
+[source]
 ----
 #Базовый адрес сервиса аутентификации
 security.oauth2.auth-server-uri=http://localhost:8888/auth
@@ -140,6 +140,15 @@ image::images\readme-28fc6.png[]
 +
 image::images\readme-f04f6.png[]
 +
+. Перейдите на вкладку "Mappers" и нажмите кнопку "Add Builtin"
+. Выберите чекбоксами пункты: `username`, `email`, `realm roles`, `family name`, `given name`, `middle name`, `full name` и нажмите "Add selected"
++
+image::images\mappers_added.png[]
++
+. Нажмите на "realm roles" и измените поле "Token Claim Name" на `roles`, включите поле "Add to userinfo" и нажмите "Save"
++
+image::images\role_mapping.png[]
++
 . Для корректной отправки сообщений пользователю (с напоминанием пароля, подтверждением учетных данных и тд.) из Keycloak пропишите найстройки email сервера в разделе Email в Realm settings.
 +
 image::images\email.png[]
@@ -166,27 +175,35 @@ image::images\readme-ffb7e.png[]
 +
 image::images\add.role.png[]
 +
-. Теперь Keycloak настроен! Осталось добавить настройки синхронизации с сервисами администрирования.
-В файле `application.properties`
-или link:https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html[в окружении]
-задайте следующие настройки:
+. Теперь Keycloak настроен!
+Осталось распостранить настройки Keycloak для всех приложений для которых он является SSO сервером.
+Если у вас развёрнут сервер конфигурации (Config Server), то задайте в нём следующие настройки,
+если они отличаются от дефолтных:
 +
-[source,ruby]
+[source]
 ----
 #Адрес сервера Keycloak
-keycloak.serverUrl=http://localhost:8888/auth
+keycloak.server-url=http://localhost:8888/auth
+#Адрес возврата после аутентификации
+keycloak.redirect-url=http://localhost:8080
 #Название домена
 keycloak.realm=security-admin
-#Идентификатор клиента
-keycloak.clientId=security-admin-sso
+#Идентификатор клиента администрирования
+keycloak.admin-client-id=admin-cli
 #Пользователь с правами администрирования
 keycloak.username=restclient
 #Пароль пользователя с правами администрирования
 keycloak.password=
 #Отправлять ли подтверждение email при создании пользователя
-keycloak.sendVerifyEmail=true
+keycloak.send-verify-email=true
 #Отправлять ли ссылку на смену пароля при создании пользователя
-keycloak.sendChangePassword=true
+keycloak.send-change-password=true
+#Идентификатор клиента приложений
+keycloak.client-id=security-admin-sso
+#Секретное слово клиента
+security.oauth2.client.client-secret=
+#Уровень доступа клиента
+security.oauth2.client.scope=read, write
 ----
 +
 . Если при попытке залогиниться Keycloak выдаст сообщение:
@@ -342,7 +359,7 @@ image::images\readme-eadda.png[]
 или link:https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html[в окружении]
 задайте адрес backend сервисов:
 +
-[source,ruby]
+[source]
 ----
 #Адрес REST сервисов администрирования
 sec.admin.rest.url=http://localhost:9090/api
@@ -433,7 +450,7 @@ java -jar backend.jar --spring.datasource.url=jdbc:postgresql://localhost:5432/s
 
 Гранулярность доступа задётся настройкой `n2o.sec.granularity` в файле `META-INF/n2o-build.properties` или `[USER_HOME]/.n2o/placeholders.properties`:
 
-[source,python]
+[source]
 ----
 #Вид гранулярности доступа
 n2o.sec.granularity=urp
@@ -558,7 +575,7 @@ insert into sec.permission(name, code) values('Право доступа к мо
 
 . Выполните команду
 +
-[source,shell]
+[source]
 ----
 $KEYCLOAK_HOME/bin/jboss-cli.sh --command="module add --name=net.n2oapp.security.theme.keycloak --resources=target/keycloak-n2o-theme.jar"
 ----
