@@ -12,7 +12,7 @@ services:
     - "5432"
   backend:
     ports:
-    - "8080"
+    - "8091:8080"
   frontend:
     ports:
     - "8090:8080"
