@@ -38,7 +38,7 @@ public class SsoKeycloakProperties {
     /**
      * Имя пользователя с правами на создание, реадктирование и удаление ролей и пользователей в keycloak
      */
-    private String username = "restadmin";
+    private String username = "restclient";
 
     /**
      * Пароль пользователя с правами на создание, реадктирование и удаление ролей и пользователей в keycloak

@@ -32,7 +32,8 @@
                         <show-modal page-id="roleForm" submit-operation-id="create" model="filter" object-id="role"/>
                     </action>
                     <action id="update" name="Изменить">
-                        <show-modal page-id="roleFormUpdate" submit-operation-id="update" object-id="role"/>
+                        <show-modal page-id="roleFormUpdate" submit-operation-id="update" object-id="role"
+                                    detail-field-id="id"/>
                     </action>
                     <action id="delete" name="Удалить">
                         <invoke operation-id="delete"/>

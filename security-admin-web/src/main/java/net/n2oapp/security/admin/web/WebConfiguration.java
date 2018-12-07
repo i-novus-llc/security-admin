@@ -14,7 +14,7 @@ public class WebConfiguration {
     public QueryProcessor queryProcessor(ContextProcessor contextProcessor,
                                          DomainProcessor domainProcessor,
                                          N2oInvocationFactory invocationFactory) {
-        N2oQueryProcessor queryProcessor = new N2oQueryProcessor(contextProcessor, domainProcessor, invocationFactory);
+        N2oQueryProcessor queryProcessor = new N2oQueryProcessor(contextProcessor, invocationFactory);
         queryProcessor.setCriteriaResolver(new BaseCriteriaConstructor());
         return queryProcessor;
     }
