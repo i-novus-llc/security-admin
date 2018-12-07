@@ -13,6 +13,8 @@ services:
       DB_ADDR: keycloak-db
       DB_DATABASE: keycloak
       DB_PASSWORD: keycloak
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
     depends_on:
       - keycloak-db
   db:
@@ -29,6 +31,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: sec_pass
       SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
       SPRING_CLOUD_CONSUL_HOST: ${spring_cloud_consul_host}
+      SEC_ADMIN_REST_URL: http://backend:8080/api
     depends_on:
       - db
     restart: on-failure
