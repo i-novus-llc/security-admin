@@ -31,7 +31,6 @@ services:
       SPRING_DATASOURCE_PASSWORD: sec_pass
       SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
       SPRING_CLOUD_CONSUL_HOST: ${spring_cloud_consul_host}
-      SEC_ADMIN_REST_URL: http://backend:8080/api
     depends_on:
       - db
     restart: on-failure
@@ -39,6 +38,7 @@ services:
     image: "${PROJECT_NAME}_frontend:${TAG}"
     environment:
       SPRING_CLOUD_CONSUL_HOST: ${spring_cloud_consul_host}
+      SEC_ADMIN_REST_URL: http://backend:8080/api
     depends_on:
       - backend
       - keycloak
