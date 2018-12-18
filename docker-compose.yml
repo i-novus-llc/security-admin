@@ -11,7 +11,7 @@ services:
     deploy:
       placement:
         constraints:
-        - node.hostname == os-4
+        - node.labels.type == db
 
   keycloak:
     image: jboss/keycloak:3.4.3.Final
@@ -43,7 +43,7 @@ services:
     deploy:
       placement:
         constraints:
-        - node.hostname == os-4
+        - node.labels.type == db
 
   backend:
     image: "538721144237.dkr.ecr.eu-west-1.amazonaws.com/security-admin/backend:${TAG}"
