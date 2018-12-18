@@ -9,5 +9,6 @@
     <include file="security/admin/db/changelog/V3_create_roles.xml"/>
     <include file="security/admin/db/changelog/V5_create_user_role_index.xml"/>
     <include file="security/admin/db/changelog/V7_add_column_user_guid.xml"/>
+    <include file="security/admin/db/changelog/V8_create_bank.xml"/>
 
 </databaseChangeLog>
