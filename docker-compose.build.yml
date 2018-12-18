@@ -5,8 +5,10 @@ services:
       context: security-admin-backend
       args:
         JAR_FILE: target/backend.jar
+    image: "538721144237.dkr.ecr.eu-west-1.amazonaws.com/security-admin/backend:${TAG}"
   frontend:
     build:
       context: security-admin-frontend
       args:
         JAR_FILE: target/frontend.jar
+    image: "538721144237.dkr.ecr.eu-west-1.amazonaws.com/security-admin/frontend:${TAG}"
