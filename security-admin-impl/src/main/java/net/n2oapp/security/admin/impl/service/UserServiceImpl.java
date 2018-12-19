@@ -186,7 +186,9 @@ public class UserServiceImpl implements UserService {
         entity.setEmail(model.getEmail());
         if (model.getRoles() != null)
             entity.setRoleList(model.getRoles().stream().map(r -> new RoleEntity(r.getId())).collect(Collectors.toList()));
-        entity.setBank(new BankEntity(model.getBank().getId()));
+        if(model.getBank()!=null) {
+            entity.setBank(new BankEntity(model.getBank().getId()));
+        }
         return entity;
     }
 

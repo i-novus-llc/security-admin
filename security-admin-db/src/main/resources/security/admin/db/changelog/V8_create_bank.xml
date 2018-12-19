@@ -5,22 +5,19 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
 
-    <preConditions>
-        <dbms type="postgresql" />
-    </preConditions>
 
-    <changeSet author="tvalieva" id="20181217-01">
+    <changeSet author="tvalieva" id="20181217-01" dbms="postgresql">
         <comment>Расширение uuid-ossp</comment>
         <sql>CREATE EXTENSION IF NOT EXISTS "uuid-ossp";</sql>
     </changeSet>
 
-    <changeSet id="20181217-02" author="tvalieva">
+    <changeSet id="20181218-02" author="tvalieva" dbms="postgresql">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="bank"/>
+                <tableExists tableName="bank" schemaName="sec"/>
             </not>
         </preConditions>
-        <createTable tableName="bank" remarks="Сведения о банке">
+        <createTable tableName="bank" remarks="Сведения о банке" schemaName="sec">
             <column name="id" type="uuid" remarks="Идентификатор" defaultValue="uuid_generate_v4()">
                 <constraints primaryKey="true"/>
             </column>
@@ -41,10 +38,10 @@
                 <constraints foreignKeyName="bank_parent_id_fk" referencedTableName="bank" referencedColumnNames="id"/>
             </column>
         </createTable>
-        <createIndex tableName="bank" indexName="bank_id_ux" unique="true">
+        <createIndex tableName="bank" indexName="bank_id_ux" unique="true" schemaName="sec">
             <column name="id"/>
         </createIndex>
-        <createIndex tableName="bank" indexName="parent_id_ix">
+        <createIndex tableName="bank" indexName="parent_id_ix" schemaName="sec">
             <column name="parent_id"/>
         </createIndex>
     </changeSet>

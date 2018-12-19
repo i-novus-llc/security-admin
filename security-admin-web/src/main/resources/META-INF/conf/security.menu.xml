@@ -2,4 +2,5 @@
 <menu xmlns="http://n2oapp.net/framework/config/schema/simple-menu-1.0">
     <page page-id="users" label="Пользователи"/>
     <page page-id="roles" label="Роли"/>
+    <page page-id="banks" label="Банки"/>
 </menu>

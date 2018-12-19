@@ -37,7 +37,7 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
-    public Page<Bank> search(BankCriteria criteria) {
+    public Page<Bank> findAll(BankCriteria criteria) {
         final Specification<BankEntity> specification = new BankSpecifications(criteria);
         final Page<BankEntity> all = bankRepository.findAll(specification, criteria);
         return all.map(this::model);

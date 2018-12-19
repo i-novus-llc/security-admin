@@ -2,9 +2,9 @@ package net.n2oapp.security.admin.impl.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
 import javax.persistence.*;
-import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
@@ -16,7 +16,7 @@ import java.util.UUID;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "bank")
+@Table(name = "bank", schema = "sec")
 public class BankEntity extends AbstractEntity {
 
     /**
@@ -42,6 +42,8 @@ public class BankEntity extends AbstractEntity {
     /**
      * Дата регистрации Банком России
      */
+
+    @Convert(converter = Jsr310JpaConverters.LocalDateTimeConverter.class)
     private LocalDateTime regDt;
     /**
      * ИНН
