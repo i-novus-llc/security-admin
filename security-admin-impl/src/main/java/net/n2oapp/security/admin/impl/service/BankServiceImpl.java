@@ -44,8 +44,8 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
-    public Bank getById(UUID id) {
-        BankEntity entity = bankRepository.findOne(id);
+    public Bank getById(String id) {
+        BankEntity entity = bankRepository.findOne(UUID.fromString(id));
         return model(entity);
     }
 
@@ -66,7 +66,7 @@ public class BankServiceImpl implements BankService {
         if (Boolean.TRUE.equals(bank.getIsCoincidesAddress())) {
             bank.setActualAddress(bank.getLegalAddress());
         }
-        Bank model = getById(bank.getId());
+        Bank model = getById(bank.getId().toString());
         if (model.getLastActionDate().truncatedTo(ChronoUnit.MILLIS).compareTo(bank.getLastActionDate()) != 0) {
             throw new OptimisticLockException(String.format("Сущность \"%s\" с идентификатором %s была изменена. " +
                     "Пожалуйста, обновите страницу и попробуйте снова", bank.getClass().getSimpleName(), bank.getId()));

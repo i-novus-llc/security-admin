@@ -55,7 +55,7 @@ public class BankSpecifications implements Specification<BankEntity> {
         }
 
         if (criteria.getParent() != null) {
-            predicate = builder.and(predicate, builder.equal(root.get(BankEntity_.parent), criteria.getParent()));
+            predicate = builder.and(predicate, builder.equal(root.get(BankEntity_.parent).get("id"), criteria.getParent()));
         }
         return predicate;
     }

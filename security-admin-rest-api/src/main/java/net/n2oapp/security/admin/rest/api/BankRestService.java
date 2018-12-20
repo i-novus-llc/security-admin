@@ -33,7 +33,7 @@ public interface BankRestService {
     @Path("/{id}")
     @ApiOperation("Получить сведения о банке по идентификатору")
     @ApiResponse(code = 200, message = "Сведения о банке")
-    Bank getById(@PathParam("id") UUID id);
+    Bank getById(@PathParam("id") String id);
 
 
     @POST

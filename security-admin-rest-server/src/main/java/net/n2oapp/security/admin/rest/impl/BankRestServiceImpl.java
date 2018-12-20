@@ -29,7 +29,7 @@ public class BankRestServiceImpl implements BankRestService {
     }
 
     @Override
-    public Bank getById(UUID id) {
+    public Bank getById(String id) {
         return service.getById(id);
     }
 

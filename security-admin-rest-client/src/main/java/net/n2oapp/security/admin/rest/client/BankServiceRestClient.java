@@ -35,7 +35,7 @@ public class BankServiceRestClient implements BankService {
     }
 
     @Override
-    public Bank getById(UUID id) {
+    public Bank getById(String id) {
         return client.getById(id);
     }
 

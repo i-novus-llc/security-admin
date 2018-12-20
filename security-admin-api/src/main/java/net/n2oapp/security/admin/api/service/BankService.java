@@ -26,7 +26,7 @@ public interface BankService {
      * @param id Идентификатор
      * @return Модель банка
      */
-    Bank getById(UUID id);
+    Bank getById(String id);
 
     /**
      * Создать сведения о банке

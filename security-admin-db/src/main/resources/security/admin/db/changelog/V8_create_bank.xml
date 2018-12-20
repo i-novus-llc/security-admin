@@ -11,7 +11,7 @@
         <sql>CREATE EXTENSION IF NOT EXISTS "uuid-ossp";</sql>
     </changeSet>
 
-    <changeSet id="20181218-02" author="tvalieva" dbms="postgresql">
+    <changeSet id="20181218-002" author="tvalieva" dbms="postgresql">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="bank" schemaName="sec"/>
