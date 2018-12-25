@@ -12,4 +12,6 @@
         <sqlFile path="create_admin.sql"/>
     </changeSet>
 
+    <include file="classpath*:/security/admin/db/rdm/changelog.xml"/>
+
 </databaseChangeLog>
