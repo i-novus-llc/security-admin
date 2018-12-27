@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+
+
+    <changeSet author="tvalieva" id="20181217-01" dbms="postgresql">
+        <comment>Расширение uuid-ossp</comment>
+        <sql>CREATE EXTENSION IF NOT EXISTS "uuid-ossp";</sql>
+    </changeSet>
+
+    <changeSet id="20181218-002" author="tvalieva" dbms="postgresql">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="bank" schemaName="sec"/>
+            </not>
+        </preConditions>
+        <createTable tableName="bank" remarks="Сведения о банке" schemaName="sec">
+            <column name="id" type="uuid" remarks="Идентификатор" defaultValue="uuid_generate_v4()">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="full_name" type="varchar NOT NULL" remarks="Полное наименование"/>
+            <column name="short_name" type="varchar NOT NULL" remarks="Сокращенное наименование"/>
+            <column name="reg_num" type="varchar" remarks="Регистрационный номер"/>
+            <column name="reg_dt" type="timestamp without time zone" remarks="Дата регистрации Банком России"/>
+            <column name="inn" type="varchar NOT NULL" remarks="ИНН"/>
+            <column name="ogrn" type="varchar NOT NULL" remarks="ОГРН"/>
+            <column name="bik" type="varchar" remarks="БИК"/>
+            <column name="kpp" type="varchar NOT NULL" remarks="КПП"/>
+            <column name="legal_address" type="varchar NOT NULL" remarks="Юридический адрес"/>
+            <column name="actual_address" type="varchar" remarks="Фактический адрес"/>
+            <column name="creation_date" type="timestamp without time zone" remarks="Дата создания записи"/>
+            <column name="last_action_date" type="timestamp without time zone"
+                    remarks="Дата последнего действия над записью"/>
+            <column name="parent_id" type="UUID" remarks="Головная организация">
+                <constraints foreignKeyName="bank_parent_id_fk" referencedTableName="bank" referencedColumnNames="id"/>
+            </column>
+        </createTable>
+        <createIndex tableName="bank" indexName="bank_id_ux" unique="true" schemaName="sec">
+            <column name="id"/>
+        </createIndex>
+        <createIndex tableName="bank" indexName="parent_id_ix" schemaName="sec">
+            <column name="parent_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="20181217-03" author="tvalieva">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="user" columnName="bank_id" schemaName="sec"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="user" schemaName="sec">
+            <column name="bank_id" type="uuid" remarks="Идентификатор банка">
+                <constraints foreignKeyName="user_bank_id_fx" referencedTableName="bank" referencedColumnNames="id"/>
+            </column>
+        </addColumn>
+        <createIndex tableName="user" indexName="bank_id_ix" schemaName="sec">
+            <column name="bank_id"/>
+        </createIndex>
+    </changeSet>
+
+
+    <changeSet id="20181217-05" author="tvalieva">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="user" columnName="last_action_date" schemaName="sec"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="user" schemaName="sec">
+            <column name="last_action_date" type="timestamp without time zone"
+                    remarks="Дата последнего действия над записью"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20181217-06" author="tvalieva">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="user" columnName="creation_date" schemaName="sec"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="user" schemaName="sec">
+            <column name="creation_date" type="timestamp without time zone"
+                    remarks="Дата создания записи"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

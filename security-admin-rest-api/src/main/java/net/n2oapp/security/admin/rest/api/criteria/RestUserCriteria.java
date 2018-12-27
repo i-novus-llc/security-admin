@@ -5,6 +5,7 @@ import org.springframework.data.domain.Sort;
 
 import javax.ws.rs.QueryParam;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Модель фильтрации пользователей для rest вызовов
@@ -20,6 +21,12 @@ public class RestUserCriteria extends UserCriteria {
     @Override
     public void setFio(String fio) {
         super.setFio(fio);
+    }
+
+    @QueryParam("bank")
+    @Override
+    public  void setBank(UUID bank) {
+        super.setBank(bank);
     }
 
     @QueryParam("isActive")

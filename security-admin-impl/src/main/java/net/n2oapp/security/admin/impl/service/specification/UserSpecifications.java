@@ -1,10 +1,7 @@
 package net.n2oapp.security.admin.impl.service.specification;
 
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
-import net.n2oapp.security.admin.impl.entity.RoleEntity;
-import net.n2oapp.security.admin.impl.entity.RoleEntity_;
-import net.n2oapp.security.admin.impl.entity.UserEntity;
-import net.n2oapp.security.admin.impl.entity.UserEntity_;
+import net.n2oapp.security.admin.impl.entity.*;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
@@ -40,6 +37,9 @@ public class UserSpecifications implements Specification<UserEntity> {
         }
         if (criteria.getIsActive() != null) {
             predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.isActive), criteria.getIsActive()));
+        }
+        if(criteria.getBank()!= null){
+            predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.bank).get("id"), criteria.getBank()));
         }
         if (criteria.getRoleIds() != null && !criteria.getRoleIds().isEmpty()) {
             Subquery sub = criteriaQuery.subquery(Integer.class);
