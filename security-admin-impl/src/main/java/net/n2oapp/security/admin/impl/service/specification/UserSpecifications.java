@@ -38,9 +38,6 @@ public class UserSpecifications implements Specification<UserEntity> {
         if (criteria.getIsActive() != null) {
             predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.isActive), criteria.getIsActive()));
         }
-        if(criteria.getBank()!= null){
-            predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.bank).get("id"), criteria.getBank()));
-        }
         if (criteria.getRoleIds() != null && !criteria.getRoleIds().isEmpty()) {
             Subquery sub = criteriaQuery.subquery(Integer.class);
             Root subRoot = sub.from(RoleEntity.class);

@@ -77,6 +77,9 @@
                 <eq filter-id="parents.id" mapping="parent"/>
             </filters>
         </field>
+        <field id="lastActionDate" domain="date">
+            <select mapping="lastActionDate"/>
+        </field>
 
     </fields>
 </query>

@@ -7,9 +7,11 @@ import net.n2oapp.security.admin.api.model.bank.BankCreateForm;
 import net.n2oapp.security.admin.api.model.bank.BankForm;
 import net.n2oapp.security.admin.api.model.bank.BankUpdateForm;
 import net.n2oapp.security.admin.api.service.BankService;
+import net.n2oapp.security.admin.api.service.UserService;
 import net.n2oapp.security.admin.impl.entity.BankEntity;
 import net.n2oapp.security.admin.impl.repository.BankRepository;
 import net.n2oapp.security.admin.impl.service.specification.BankSpecifications;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -67,10 +69,10 @@ public class BankServiceImpl implements BankService {
             bank.setActualAddress(bank.getLegalAddress());
         }
         Bank model = getById(bank.getId().toString());
-        if (model.getLastActionDate().truncatedTo(ChronoUnit.MILLIS).compareTo(bank.getLastActionDate()) != 0) {
+        /*if (model.getLastActionDate().truncatedTo(ChronoUnit.MILLIS).compareTo(bank.getLastActionDate()) != 0) {
             throw new OptimisticLockException(String.format("Сущность \"%s\" с идентификатором %s была изменена. " +
                     "Пожалуйста, обновите страницу и попробуйте снова", bank.getClass().getSimpleName(), bank.getId()));
-        }
+        }*/
 
         BankEntity entity = entityForm(new BankEntity(), bank);
         entity.setId(bank.getId());

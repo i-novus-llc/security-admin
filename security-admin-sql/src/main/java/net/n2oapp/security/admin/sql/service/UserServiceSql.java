@@ -29,6 +29,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -170,6 +171,7 @@ public class UserServiceSql implements UserService {
                         .addValue("password", criteria.getPassword())
                         .addValue("limit", criteria.getPageSize())
                         .addValue("offset", criteria.getOffset())
+                        .addValue("bank", UUID.fromString(criteria.getBank()))
                         .addValue("sorting", sorting)
                         .addValue("direction", direction);
         if (criteria.getRoleIds() == null || criteria.getRoleIds().size() == 0) {

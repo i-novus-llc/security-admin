@@ -87,13 +87,8 @@ public class UserEntity extends AbstractEntity{
     )
     private List<RoleEntity> roleList;
 
-    /**
-     * Банк
-     */
-    @ManyToOne
-    @JoinColumn(name = "bank_id")
-    private BankEntity bank;
-
+    @OneToMany(mappedBy = "user")
+    private List<EmployeeBankEntity> employeeBankList;
 
 }
 

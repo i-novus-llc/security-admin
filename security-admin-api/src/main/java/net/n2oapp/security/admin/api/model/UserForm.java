@@ -23,6 +23,5 @@ public class UserForm {
     private String passwordCheck;
     private Boolean isActive;
     private List<Integer> roles;
-    private Bank bank;
     private LocalDateTime lastActionDate;
 }

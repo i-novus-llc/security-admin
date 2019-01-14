@@ -1,7 +1,6 @@
 package net.n2oapp.security.admin.api.model;
 
 import lombok.Data;
-import net.n2oapp.security.admin.api.model.bank.Bank;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,7 +23,6 @@ public class User {
     private String passwordCheck;
     private Boolean isActive;
     private List<Role> roles;
-    private Bank bank;
     private LocalDateTime lastActionDate;
 
 }

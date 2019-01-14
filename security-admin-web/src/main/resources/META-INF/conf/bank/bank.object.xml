@@ -31,6 +31,35 @@
             <success-text>Сведения о банке сохранены</success-text>
         </action>
 
+
+        <action id="update">
+            <invocation>
+                <n2o:java method="update" class="net.n2oapp.security.admin.api.service.BankService">
+                    <n2o:spring/>
+                    <n2o:arguments>
+                        <n2o:argument name="bank" class="net.n2oapp.security.admin.api.model.bank.BankUpdateForm"/>
+                    </n2o:arguments>
+                </n2o:java>
+            </invocation>
+            <in-parameters>
+                <param name="id" mapping="[0].id" domain="string"/>
+                <param name="fullName" mapping="[0].fullName" domain="string" />
+                <param name="shortName" mapping="[0].shortName" domain="string" />
+                <param name="regNum" mapping="[0].regNum" domain="string"/>
+                <param name="ogrn" mapping="[0].ogrn"/>
+                <param name="bik" mapping="[0].bik" domain="string"/>
+                <param name="inn" mapping="[0].inn"/>
+                <param name="kpp" mapping="[0].kpp" domain="string"/>
+                <param name="legalAddress" mapping="[0].legalAddress" domain="string" />
+                <param name="actualAddress" mapping="[0].actualAddress" domain="string"/>
+                <param name="isCoincidesAddress" mapping="[0].isCoincidesAddress" domain="boolean"/>
+            </in-parameters>
+            <out-parameters>
+                <param name="id" mapping="id"/>
+            </out-parameters>
+            <success-text>Сведения о банке изменены</success-text>
+        </action>
+
     </actions>
 </object>
 
