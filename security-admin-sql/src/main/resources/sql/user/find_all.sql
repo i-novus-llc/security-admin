@@ -7,7 +7,6 @@ from sec.user_role ur join sec.role r on r.id=ur.role_id
 where ur.user_id=u.id)  as names
 from sec.user u
 where (:username is null or username like (lower('%'||trim(:username)||'%')))
-and (:bank is null or bank_id = :bank)
 and (:fio::varchar is null or (trim(lower(u.surname::varchar)) like lower('%'||trim(:fio)||'%'))
 or(trim(lower(u.name::varchar)) like lower('%'||trim(:fio)||'%') )or(trim(lower(u.patronymic::varchar)) like lower('%'||trim(:fio)||'%'))
 or (trim(lower((coalesce(u.surname,'')||' '||coalesce(u.name,'')||' '||coalesce(u.patronymic,'')))) like lower('%'||trim(:fio)||'%')))

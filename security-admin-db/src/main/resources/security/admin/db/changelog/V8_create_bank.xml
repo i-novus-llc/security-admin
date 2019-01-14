@@ -5,60 +5,53 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
 
-    <changeSet author="tvalieva" id="20181217-01" dbms="postgresql">
-        <comment>Расширение uuid-ossp</comment>
-        <sql>CREATE EXTENSION IF NOT EXISTS "uuid-ossp";</sql>
-    </changeSet>
 
-    <changeSet id="20181218-002" author="tvalieva" dbms="postgresql">
+    <changeSet id="20190110-02" author="tvalieva">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="bank" schemaName="sec"/>
             </not>
         </preConditions>
-        <createTable tableName="bank" remarks="Сведения о банке" schemaName="sec">
-            <column name="id" type="uuid" remarks="Идентификатор" defaultValue="uuid_generate_v4()">
-                <constraints primaryKey="true"/>
-            </column>
-            <column name="full_name" type="varchar NOT NULL" remarks="Полное наименование"/>
-            <column name="short_name" type="varchar NOT NULL" remarks="Сокращенное наименование"/>
-            <column name="reg_num" type="varchar" remarks="Регистрационный номер"/>
-            <column name="reg_dt" type="timestamp without time zone" remarks="Дата регистрации Банком России"/>
-            <column name="inn" type="varchar NOT NULL" remarks="ИНН"/>
-            <column name="ogrn" type="varchar NOT NULL" remarks="ОГРН"/>
-            <column name="bik" type="varchar" remarks="БИК"/>
-            <column name="kpp" type="varchar NOT NULL" remarks="КПП"/>
-            <column name="legal_address" type="varchar NOT NULL" remarks="Юридический адрес"/>
-            <column name="actual_address" type="varchar" remarks="Фактический адрес"/>
-            <column name="creation_date" type="timestamp without time zone" remarks="Дата создания записи"/>
-            <column name="last_action_date" type="timestamp without time zone"
-                    remarks="Дата последнего действия над записью"/>
-            <column name="parent_id" type="UUID" remarks="Головная организация">
-                <constraints foreignKeyName="bank_parent_id_fk" referencedTableName="bank" referencedColumnNames="id"/>
-            </column>
-        </createTable>
-        <createIndex tableName="bank" indexName="bank_id_ux" unique="true" schemaName="sec">
-            <column name="id"/>
-        </createIndex>
-        <createIndex tableName="bank" indexName="parent_id_ix" schemaName="sec">
-            <column name="parent_id"/>
-        </createIndex>
+        <sql>
+            create table if not exists sec.bank (
+            id uuid NOT NULL,
+            full_name varchar NOT NULL,
+            short_name varchar NOT NULL,
+            reg_num varchar NULL,
+            reg_dt timestamp NULL,
+            inn varchar NOT NULL,
+            ogrn varchar NOT NULL,
+            bik varchar NULL,
+            kpp varchar NOT NULL,
+            legal_address varchar NOT NULL,
+            actual_address varchar NULL,
+            creation_date timestamp NULL,
+            last_action_date timestamp NULL,
+            parent_id uuid NULL,
+            CONSTRAINT pk_bank PRIMARY KEY (id),
+            CONSTRAINT bank_parent_id_fk FOREIGN KEY (parent_id) REFERENCES bank(id)
+            );
+
+            comment on table sec.bank is 'Сведения о банке';
+
+            comment on column sec.bank.id is 'Ид-р ';
+            comment on column sec.bank.full_name is 'Полное наименование';
+            comment on column sec.bank.short_name is 'Сокращенное наименование';
+            comment on column sec.bank.reg_num is 'Регистрационный номер';
+            comment on column sec.bank.reg_dt is 'Дата регистрации Банком России';
+            comment on column sec.bank.inn is 'ИНН';
+            comment on column sec.bank.ogrn is 'ОГРН';
+            comment on column sec.bank.bik is 'БИК';
+            comment on column sec.bank.kpp is 'КПП';
+            comment on column sec.bank.legal_address is 'Юридический адрес';
+            comment on column sec.bank.actual_address is 'Фактический адрес';
+            comment on column sec.bank.parent_id is 'Головная организация';
+
+        </sql>
     </changeSet>
 
 
-    <changeSet id="20181217-05" author="tvalieva">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <columnExists tableName="user" columnName="last_action_date" schemaName="sec"/>
-            </not>
-        </preConditions>
-        <addColumn tableName="user" schemaName="sec">
-            <column name="last_action_date" type="timestamp without time zone"
-                    remarks="Дата последнего действия над записью"/>
-        </addColumn>
-    </changeSet>
-
-    <changeSet id="20181217-06" author="tvalieva">
+    <changeSet id="20190110-03" author="tvalieva">
         <preConditions onFail="MARK_RAN">
             <not>
                 <columnExists tableName="user" columnName="creation_date" schemaName="sec"/>
@@ -70,15 +63,10 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="20190111-01" author="tvalieva">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <tableExists tableName="employee_bank" schemaName="sec"/>
-            </not>
-        </preConditions>
+    <changeSet id="20190110-04" author="tvalieva">
         <sql>
-            CREATE TABLE sec.employee_bank (
-            id uuid NOT NULL DEFAULT uuid_generate_v4(),
+            create table if not exists sec.employee_bank (
+            id uuid NOT NULL,
             position varchar ,
             bank_id uuid,
             user_id integer,
@@ -88,10 +76,6 @@
             CONSTRAINT employee_bank_bank_id_id_fk FOREIGN KEY (bank_id) REFERENCES sec.bank(id),
             CONSTRAINT employee_bank_user_id_id_fk FOREIGN KEY (user_id) REFERENCES sec.user(id)
             );
-            CREATE UNIQUE INDEX employee_bank_id_ux ON sec.employee_bank USING btree (id);
-            CREATE INDEX bank_id_ix ON sec.employee_bank USING btree (bank_id);
-            CREATE INDEX user_id_ix ON sec.employee_bank USING btree (user_id);
-
             comment on table sec.employee_bank is 'Уполномоченные лица Банк';
 
             comment on column sec.employee_bank.id is 'Ид-р ';
