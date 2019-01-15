@@ -34,6 +34,10 @@
             <select mapping="user.email"/>
         </field>
 
+        <field id="name" domain="string" name="Имя">
+            <select mapping="user.name"/>
+        </field>
+
         <field id="surname" domain="string" name="Фамилия">
             <select mapping="user.surname"/>
         </field>
@@ -44,6 +48,11 @@
 
         <field id="username" domain="string" name="Имя пользователя">
             <select mapping="user.username"/>
+        </field>
+
+
+        <field id="isActive" domain="boolean" name="Активность">
+            <select mapping="user.isActive"/>
         </field>
 
         <field id="password" domain="string" name="Пароль">
