@@ -42,6 +42,7 @@
         </field>
         <field id="regNum" domain="string" name="Регистрационный номер">
             <select mapping="regNum"/>
+            <sorting/>
         </field>
         <field id="regDt" domain="date" name="Дата регистрации Банком России">
             <select mapping="regDt"/>
