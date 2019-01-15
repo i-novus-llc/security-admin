@@ -1,10 +1,7 @@
 package net.n2oapp.security.admin.impl.service.specification;
 
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
-import net.n2oapp.security.admin.impl.entity.RoleEntity;
-import net.n2oapp.security.admin.impl.entity.RoleEntity_;
-import net.n2oapp.security.admin.impl.entity.UserEntity;
-import net.n2oapp.security.admin.impl.entity.UserEntity_;
+import net.n2oapp.security.admin.impl.entity.*;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;

@@ -34,7 +34,7 @@ public class SimpleAccessSchemaValidatorOverrided extends TypedMetadataValidator
         StreamUtil.safeStreamOf(metadata.getN2oPermissions()).flatMap(p -> StreamUtil.safeStreamOf(p.getAccessPoints())).forEach(this::validate);
         StreamUtil.safeStreamOf(metadata.getN2oRoles()).flatMap(p -> StreamUtil.safeStreamOf(p.getAccessPoints())).forEach(this::validate);
         StreamUtil.safeStreamOf(metadata.getN2oUserAccesses()).flatMap(p -> StreamUtil.safeStreamOf(p.getAccessPoints())).forEach(this::validate);
-        StreamUtil.safeStreamOf(metadata.getGuestPoints()).forEach(this::validate);
+//        StreamUtil.safeStreamOf(metadata.getGuestPoints()).forEach(this::validate);
         StreamUtil.safeStreamOf(metadata.getAuthenticatedPoints()).forEach(this::validate);
     }
 
@@ -69,10 +69,10 @@ public class SimpleAccessSchemaValidatorOverrided extends TypedMetadataValidator
             }
         }
         if (accessPoint.getAccessFilters() != null)
-            accessPoint.getAccessFilters().forEach(f -> {
+            Arrays.asList(accessPoint.getAccessFilters()).forEach(f -> {
                 if (f.getFieldId() == null)
                     throw new N2oMetadataValidationException("n2o.fieldIdNotSpecified").addData(accessPoint.getObjectId());
-                if ((f.getType() == null || !f.getType().arity.equals(FilterType.Arity.nullary)) && f.getValue() == null && (f.getValues() == null || f.getValues().isEmpty()))
+                if ((f.getType() == null || !f.getType().arity.equals(FilterType.Arity.nullary)) && f.getValue() == null && (f.getValues() == null || Arrays.asList(f.getValues()).isEmpty()))
                     throw new N2oMetadataValidationException("n2o.filterValueNotSpecified").addData(accessPoint.getObjectId());
             });
     }

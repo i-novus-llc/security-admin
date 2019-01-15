@@ -60,10 +60,11 @@ public class AdvancedPermissionAndRoleCollector {
                 .map(N2oObjectAccessPoint.class::cast)
                 .filter(o -> (o.getObjectId().equals(objectId) || objectId.matches(o.getObjectId())) && o.getAction().equals(actionId))
                 .filter(o -> o.getAccessFilters() != null)
-                .flatMap(o -> o.getAccessFilters().stream())
+                .flatMap(o -> Arrays.asList(o.getAccessFilters()).stream())
                 .map(ac -> {
-                    if (ac.getValues() != null && !ac.getValues().isEmpty()) {
-                        return new N2oAccessFilter(ac.getFieldId(), ac.getValues(), ac.getType());
+                    List<String> values = Arrays.asList(ac.getValues());
+                    if (ac.getValues() != null && !values.isEmpty()) {
+                        return new N2oAccessFilter(ac.getFieldId(), values, ac.getType());
                     } else {
                         return new N2oAccessFilter(ac.getFieldId(), ac.getValue(), ac.getType());
                     }

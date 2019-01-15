@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0" object-id="${sec.admin.bank.object.id}"
+       name="Сведения о банках">
+    <list result-mapping="['content']" count-mapping="['totalElements']">
+        <java method="findAll" class="net.n2oapp.security.admin.api.service.BankService">
+            <spring/>
+            <arguments>
+                <argument class="net.n2oapp.security.admin.api.criteria.BankCriteria" type="criteria"/>
+            </arguments>
+        </java>
+    </list>
+    <unique result-mapping="#this">
+        <java method="getById" class="net.n2oapp.security.admin.api.service.BankService">
+            <spring/>
+            <arguments>
+                <argument type="primitive"/>
+            </arguments>
+        </java>
+    </unique>
+
+
+    <fields>
+        <field id="id" domain="string">
+            <select mapping="id"/>
+            <sorting/>
+            <filters>
+                <eq filter-id="id" mapping="[0]"/>
+            </filters>
+        </field>
+        <field id="name" domain="string">
+            <filters>
+                <eq filter-id="name" mapping="name"/>
+            </filters>
+        </field>
+        <field id="fullName" domain="string" name="Полное наименование">
+            <select mapping="fullName"/>
+            <sorting/>
+        </field>
+        <field id="shortName" domain="string" name="Сокращенное наименование">
+            <select mapping="shortName"/>
+            <sorting/>
+        </field>
+        <field id="regNum" domain="string" name="Регистрационный номер">
+            <select mapping="regNum"/>
+            <sorting/>
+        </field>
+        <field id="regDt" domain="date" name="Дата регистрации Банком России">
+            <select mapping="regDt"/>
+            <sorting/>
+        </field>
+        <field id="inn" domain="string" name="ИНН">
+            <select mapping="inn"/>
+            <sorting/>
+        </field>
+        <field id="ogrn" domain="string" name="ОГРН">
+            <select mapping="ogrn"/>
+            <sorting/>
+        </field>
+        <field id="bik" domain="string" name="БИК">
+            <select mapping="bik"/>
+            <sorting/>
+        </field>
+        <field id="kpp" domain="string" name="КПП">
+            <select mapping="kpp"/>
+            <sorting/>
+        </field>
+        <field id="legalAddress" domain="string" name="Юридический адрес">
+            <select mapping="legalAddress"/>
+            <sorting/>
+        </field>
+        <field id="actualAddress" domain="string" name="Фактический адрес">
+            <select mapping="actualAddress"/>
+            <sorting/>
+        </field>
+        <field id="parents.id" domain="string">
+            <filters>
+                <eq filter-id="parents.id" mapping="parent"/>
+            </filters>
+        </field>
+        <field id="lastActionDate" domain="date">
+            <select mapping="lastActionDate"/>
+        </field>
+
+    </fields>
+</query>

@@ -1,23 +1,25 @@
 package net.n2oapp.security.admin.impl.service;
 
-import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
+import net.n2oapp.security.admin.api.model.EmployeeBank;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
+import net.n2oapp.security.admin.api.model.bank.Bank;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.MailService;
 import net.n2oapp.security.admin.api.service.UserService;
-import net.n2oapp.security.admin.commons.util.MailServiceImpl;
 import net.n2oapp.security.admin.commons.util.PasswordGenerator;
 import net.n2oapp.security.admin.commons.util.UserValidations;
+import net.n2oapp.security.admin.impl.entity.BankEntity;
+import net.n2oapp.security.admin.impl.entity.EmployeeBankEntity;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
+import net.n2oapp.security.admin.impl.repository.EmployeeBankRepository;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.UserSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -25,8 +27,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -37,6 +37,7 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private SsoUserRoleProvider provider;
+    private EmployeeBankRepository employeeBankRepository;
 
     @Autowired
     private PasswordGenerator passwordGenerator;
@@ -48,9 +49,10 @@ public class UserServiceImpl implements UserService {
     private UserValidations userValidations;
 
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, SsoUserRoleProvider provider) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, EmployeeBankRepository employeeBankRepository, SsoUserRoleProvider provider) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.employeeBankRepository = employeeBankRepository;
         this.provider = provider;
     }
 
@@ -162,6 +164,8 @@ public class UserServiceImpl implements UserService {
         entity.setEmail(model.getEmail());
         if (model.getRoles() != null)
             entity.setRoleList(model.getRoles().stream().map(RoleEntity::new).collect(Collectors.toList()));
+
+
         return entity;
     }
 
@@ -218,6 +222,14 @@ public class UserServiceImpl implements UserService {
         model.setCode(entity.getCode());
         model.setName(entity.getName());
         model.setDescription(entity.getDescription());
+        return model;
+    }
+
+    private EmployeeBank model(EmployeeBankEntity entity) {
+        if (entity == null) return null;
+        EmployeeBank model = new EmployeeBank();
+        model.setId(entity.getId());
+        model.setPosition(entity.getPosition());
         return model;
     }
 }

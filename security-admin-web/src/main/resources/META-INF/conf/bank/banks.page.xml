@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<page xmlns="http://n2oapp.net/framework/config/schema/page-2.0"
+      object-id="${sec.admin.bank.object.id}"
+      name="Сведения о банках">
+    <regions>
+        <none place="single">
+            <table name="Сведения о банках" query-id="${sec.admin.bank.query.id}">
+                <columns>
+                    <column text-field-id="fullName"/>
+                    <column text-field-id="inn"/>
+                    <column text-field-id="ogrn"/>
+                    <column text-field-id="bik"/>
+                    <column text-field-id="legalAddress"/>
+                </columns>
+                <filters>
+                    <row>
+                        <input-text id="name" label=""/>
+                    </row>
+                    <row>
+                        <col size="10">
+                            <input-select id="parents" label="Головные организации"
+                                          query-id="${sec.admin.bank.query.id}"
+                                          value-field-id="id" label-field-id="shortName"/>
+                        </col>
+
+                        <radio-group id="type" label="">
+                            <options>
+                                <option id="1" code="1" name="Головная организация"/>
+                                <option id="2" code="2" name="Подразделение банка"/>
+                            </options>
+                        </radio-group>
+                    </row>
+                </filters>
+                <toolbar>
+                    <button id="create" label="Добавить">
+                        <show-modal page-id="bankForm" submit-operation-id="create" model="filter" object-id="bank"
+                                    upload="defaults"/>
+                    </button>
+                    <button id="update" label="Изменить">
+                        <open-page page-id="bankFormUpdate" detail-field-id="id" upload="query"/>
+                    </button>
+                </toolbar>
+
+            </table>
+        </none>
+    </regions>
+</page>

@@ -5,6 +5,7 @@ import org.springframework.data.domain.Sort;
 
 import javax.ws.rs.QueryParam;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Модель фильтрации пользователей для rest вызовов

@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<object xmlns="http://n2oapp.net/framework/config/schema/object-2.0"
+        xmlns:n2o="http://n2oapp.net/framework/config/schema/n2o-invocations-2.0">
+    <name>Сведения о банках</name>
+
+    <actions>
+        <action id="create">
+            <invocation>
+                <n2o:java method="create" class="net.n2oapp.security.admin.api.service.BankService">
+                    <n2o:spring/>
+                    <n2o:arguments>
+                        <n2o:argument name="bankEntity" class="net.n2oapp.security.admin.api.model.bank.BankCreateForm"/>
+                    </n2o:arguments>
+                </n2o:java>
+            </invocation>
+            <in-parameters>
+                <param name="fullName" mapping="[0].fullName" domain="string" />
+                <param name="shortName" mapping="[0].shortName" domain="string" />
+                <param name="regNum" mapping="[0].regNum" domain="string"/>
+                <param name="ogrn" mapping="[0].ogrn"/>
+                <param name="bik" mapping="[0].bik" domain="string"/>
+                <param name="inn" mapping="[0].inn"/>
+                <param name="kpp" mapping="[0].kpp" domain="string"/>
+                <param name="legalAddress" mapping="[0].legalAddress" domain="string" />
+                <param name="actualAddress" mapping="[0].actualAddress" domain="string"/>
+                <param name="isCoincidesAddress" mapping="[0].isCoincidesAddress" domain="boolean"/>
+            </in-parameters>
+            <out-parameters>
+                <param name="id" mapping="id"/>
+            </out-parameters>
+            <success-text>Сведения о банке сохранены</success-text>
+        </action>
+
+
+        <action id="update">
+            <invocation>
+                <n2o:java method="update" class="net.n2oapp.security.admin.api.service.BankService">
+                    <n2o:spring/>
+                    <n2o:arguments>
+                        <n2o:argument name="bank" class="net.n2oapp.security.admin.api.model.bank.BankUpdateForm"/>
+                    </n2o:arguments>
+                </n2o:java>
+            </invocation>
+            <in-parameters>
+                <param name="id" mapping="[0].id" domain="string"/>
+                <param name="fullName" mapping="[0].fullName" domain="string" />
+                <param name="shortName" mapping="[0].shortName" domain="string" />
+                <param name="regNum" mapping="[0].regNum" domain="string"/>
+                <param name="ogrn" mapping="[0].ogrn"/>
+                <param name="bik" mapping="[0].bik" domain="string"/>
+                <param name="inn" mapping="[0].inn"/>
+                <param name="kpp" mapping="[0].kpp" domain="string"/>
+                <param name="legalAddress" mapping="[0].legalAddress" domain="string" />
+                <param name="actualAddress" mapping="[0].actualAddress" domain="string"/>
+                <param name="isCoincidesAddress" mapping="[0].isCoincidesAddress" domain="boolean"/>
+            </in-parameters>
+            <out-parameters>
+                <param name="id" mapping="id"/>
+            </out-parameters>
+            <success-text>Сведения о банке изменены</success-text>
+        </action>
+
+    </actions>
+</object>
+
+
+
+
+
