@@ -23,12 +23,6 @@ public class RestUserCriteria extends UserCriteria {
         super.setFio(fio);
     }
 
-    @QueryParam("bank")
-    @Override
-    public  void setBank(UUID bank) {
-        super.setBank(bank);
-    }
-
     @QueryParam("isActive")
     @Override
     public void setIsActive(Boolean isActive) {

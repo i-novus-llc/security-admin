@@ -20,7 +20,7 @@
                         <col size="10">
                             <input-select id="parents" label="Головные организации"
                                           query-id="${sec.admin.bank.query.id}"
-                                          value-field-id="id" label-field-id="shortName" />
+                                          value-field-id="id" label-field-id="shortName"/>
                         </col>
 
                         <radio-group id="type" label="">
@@ -33,10 +33,14 @@
                 </filters>
                 <toolbar>
                     <button id="create" label="Добавить">
-                        <show-modal page-id="bankForm" submit-operation-id="create" model="filter" object-id="bank"/>
+                        <show-modal page-id="bankForm" submit-operation-id="create" model="filter" object-id="bank"
+                                    upload="defaults"/>
                     </button>
-
+                    <button id="update" label="Изменить">
+                        <open-page page-id="bankFormUpdate" detail-field-id="id" upload="query"/>
+                    </button>
                 </toolbar>
+
             </table>
         </none>
     </regions>

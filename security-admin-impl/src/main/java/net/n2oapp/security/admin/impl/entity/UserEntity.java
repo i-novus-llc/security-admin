@@ -16,7 +16,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @Table(name = "user", schema = "sec")
-public class UserEntity extends AbstractEntity{
+public class UserEntity extends AbstractEntity {
 
     /**
      * Идентификатор пользователя
@@ -87,13 +87,8 @@ public class UserEntity extends AbstractEntity{
     )
     private List<RoleEntity> roleList;
 
-    /**
-     * Банк
-     */
-    @ManyToOne
-    @JoinColumn(name = "bank_id")
-    private BankEntity bank;
-
+    @OneToMany(mappedBy = "user")
+    private List<EmployeeBankEntity> employeeBankList;
 
 }
 

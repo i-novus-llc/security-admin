@@ -1,26 +1,25 @@
 package net.n2oapp.security.admin.impl.service;
 
-import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
+import net.n2oapp.security.admin.api.model.EmployeeBank;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.api.model.bank.Bank;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
-import net.n2oapp.security.admin.api.service.BankService;
 import net.n2oapp.security.admin.api.service.MailService;
 import net.n2oapp.security.admin.api.service.UserService;
-import net.n2oapp.security.admin.commons.util.MailServiceImpl;
 import net.n2oapp.security.admin.commons.util.PasswordGenerator;
 import net.n2oapp.security.admin.commons.util.UserValidations;
 import net.n2oapp.security.admin.impl.entity.BankEntity;
+import net.n2oapp.security.admin.impl.entity.EmployeeBankEntity;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
+import net.n2oapp.security.admin.impl.repository.EmployeeBankRepository;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.UserSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -28,8 +27,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -40,6 +37,7 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private SsoUserRoleProvider provider;
+    private EmployeeBankRepository employeeBankRepository;
 
     @Autowired
     private PasswordGenerator passwordGenerator;
@@ -49,13 +47,12 @@ public class UserServiceImpl implements UserService {
     private MailService mailService;
     @Autowired
     private UserValidations userValidations;
-    @Autowired
-    private BankService bankService;
 
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, SsoUserRoleProvider provider) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, EmployeeBankRepository employeeBankRepository, SsoUserRoleProvider provider) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.employeeBankRepository = employeeBankRepository;
         this.provider = provider;
     }
 
@@ -167,9 +164,7 @@ public class UserServiceImpl implements UserService {
         entity.setEmail(model.getEmail());
         if (model.getRoles() != null)
             entity.setRoleList(model.getRoles().stream().map(RoleEntity::new).collect(Collectors.toList()));
-        if(model.getBank()!=null) {
-            entity.setBank(new BankEntity(model.getBank().getId()));
-        }
+
 
         return entity;
     }
@@ -186,9 +181,6 @@ public class UserServiceImpl implements UserService {
         entity.setEmail(model.getEmail());
         if (model.getRoles() != null)
             entity.setRoleList(model.getRoles().stream().map(r -> new RoleEntity(r.getId())).collect(Collectors.toList()));
-        if(model.getBank()!=null) {
-            entity.setBank(new BankEntity(model.getBank().getId()));
-        }
         return entity;
     }
 
@@ -220,9 +212,6 @@ public class UserServiceImpl implements UserService {
                 return model(re);
             }).collect(Collectors.toList()));
         }
-        if(entity.getBank()!= null){
-            model.setBank(model(entity.getBank()));
-        }
         return model;
     }
 
@@ -236,21 +225,11 @@ public class UserServiceImpl implements UserService {
         return model;
     }
 
-    private Bank model(BankEntity entity) {
+    private EmployeeBank model(EmployeeBankEntity entity) {
         if (entity == null) return null;
-        Bank model = new Bank();
+        EmployeeBank model = new EmployeeBank();
         model.setId(entity.getId());
-        model.setFullName(entity.getFullName());
-        model.setShortName(entity.getShortName());
-        model.setRegNum(entity.getRegNum());
-        model.setInn(entity.getInn());
-        model.setOgrn(entity.getOgrn());
-        model.setKpp(entity.getKpp());
-        model.setBik(entity.getBik());
-        model.setActualAddress(entity.getActualAddress());
-        model.setLegalAddress(entity.getLegalAddress());
-        model.setLastActionDate(entity.getLastActionDate());
-        model.setCreationDate(entity.getCreationDate());
+        model.setPosition(entity.getPosition());
         return model;
     }
 }

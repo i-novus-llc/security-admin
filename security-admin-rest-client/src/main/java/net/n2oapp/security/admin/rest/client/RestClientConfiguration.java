@@ -1,23 +1,25 @@
 package net.n2oapp.security.admin.rest.client;
 
 import net.n2oapp.platform.jaxrs.autoconfigure.EnableJaxRsProxyClient;
-import net.n2oapp.security.admin.rest.api.BankRestService;
-import net.n2oapp.security.admin.rest.api.PermissionRestService;
-import net.n2oapp.security.admin.rest.api.RoleRestService;
-import net.n2oapp.security.admin.rest.api.UserRestService;
+import net.n2oapp.security.admin.rest.api.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableJaxRsProxyClient(
-        classes = {UserRestService.class, RoleRestService.class, PermissionRestService.class, BankRestService.class},
+        classes = {UserRestService.class, RoleRestService.class, PermissionRestService.class, BankRestService.class, EmployeeBankRestService.class},
         address = "${sec.admin.rest.url}")
 public class RestClientConfiguration {
 
     @Bean
     public UserServiceRestClient userService(@Qualifier("userRestServiceJaxRsProxyClient") UserRestService client) {
         return new UserServiceRestClient(client);
+    }
+
+    @Bean
+    public EmployeeBankServiceRestClient employeeBankService(@Qualifier("employeeBankRestServiceJaxRsProxyClient") EmployeeBankRestService client)    {
+        return new EmployeeBankServiceRestClient(client);
     }
 
     @Bean
