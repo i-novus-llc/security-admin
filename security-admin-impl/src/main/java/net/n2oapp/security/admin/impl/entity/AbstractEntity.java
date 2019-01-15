@@ -7,8 +7,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.util.Objects;
-import java.util.UUID;
 
 @Data
 @MappedSuperclass

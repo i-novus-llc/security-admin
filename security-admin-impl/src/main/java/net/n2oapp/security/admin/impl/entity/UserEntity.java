@@ -16,7 +16,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @Table(name = "user", schema = "sec")
-public class UserEntity extends AbstractEntity{
+public class UserEntity extends AbstractEntity {
 
     /**
      * Идентификатор пользователя

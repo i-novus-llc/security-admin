@@ -4,8 +4,6 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-
-
     <changeSet id="20190115-01" author="tvalieva">
         <preConditions onFail="MARK_RAN">
             <not>
@@ -86,5 +84,15 @@
         </sql>
     </changeSet>
 
+    <changeSet id="20190115-02" author="abelov">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="user" columnName="last_action_date" schemaName="sec"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="user" schemaName="sec">
+            <column name="last_action_date" type="timestamp without time zone" remarks="Дата последнего изменения записи"/>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>
