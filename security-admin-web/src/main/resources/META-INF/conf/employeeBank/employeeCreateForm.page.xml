@@ -1,8 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <simple-page xmlns="http://n2oapp.net/framework/config/schema/page-2.0"
-             name="Изменение пользователя">
-    <form query-id="employeeBank">
+             name="Введите сведения об уполномоченном лице">
+    <form query-id="employeeBank" id="employeeBank">
         <fields>
+            <input-text id="bankId"/>
             <row>
                 <input-text id="email" label="Email" required="true"/>
             </row>
@@ -25,9 +26,9 @@
             </row>
             <row>
                 <password id="password"
-                          required="${sec.admin.user.password.input}" label="Пароль"/>
+                          required="true" label="Пароль"/>
                 <password id="passwordCheck"
-                          required="${sec.admin.user.password.input}" label="Подтвердить пароль">
+                          required="true" label="Подтвердить пароль">
 
                 </password>
             </row>
@@ -35,6 +36,10 @@
                 <input-select id="roles" type="multi" label="Роли" cache="false" required="true"
                               query-id="${sec.admin.role.query.id}" value-field-id="id" label-field-id="name"/>
             </row>
+            <row>
+                <checkbox id="isActive"/>
+            </row>
         </fields>
     </form>
+
 </simple-page>

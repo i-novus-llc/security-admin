@@ -34,19 +34,22 @@
             <table name="Пользователи" query-id="employeeBank" depends-on="bank" master-field-id="id"
                    detail-field-id="bankId">
                 <columns>
-                    <column text-field-id="name"/>
+                    <column text-field-id="employeeName"/>
                     <column text-field-id="position"/>
-                    <column text-field-id="user.email"/>
+                    <column text-field-id="email"/>
                     <column text-field-id="roleNames" label="Роли">
                         <list label-field-id="name"/>
+                    </column>
+                    <column text-field-id="isActive" label="Авторизован">
+                        <checkbox/>
                     </column>
 
                 </columns>
                 <toolbar>
-                    <button label="Добавить">
-                        <show-modal page-id="employeeCreateForm" submit-operation-id="create"  close-after-submit="true" object-id="employeeBank">
+                    <button label="Добавить" model="filter">
+                        <show-modal page-id="employeeCreateForm" submit-operation-id="create"  close-after-submit="true" object-id="employeeBank" upload="defaults">
                             <pre-filters>
-                                <eq field-id="bankId" value="{id}"/>
+                                <eq field-id="bankId" value="{id}" ref-model="filter"/>
                             </pre-filters>
                         </show-modal>
 
