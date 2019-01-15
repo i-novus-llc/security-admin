@@ -6,7 +6,7 @@
 
 
 
-    <changeSet id="20190110-02" author="tvalieva">
+    <changeSet id="20190115-01" author="tvalieva">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="bank" schemaName="sec"/>
@@ -29,7 +29,7 @@
             last_action_date timestamp NULL,
             parent_id uuid NULL,
             CONSTRAINT pk_bank PRIMARY KEY (id),
-            CONSTRAINT bank_parent_id_fk FOREIGN KEY (parent_id) REFERENCES bank(id)
+            CONSTRAINT bank_parent_id_fk FOREIGN KEY (parent_id) REFERENCES sec.bank(id)
             );
 
             comment on table sec.bank is 'Сведения о банке';
