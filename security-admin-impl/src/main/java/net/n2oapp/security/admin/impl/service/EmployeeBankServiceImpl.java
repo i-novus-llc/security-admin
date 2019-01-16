@@ -133,6 +133,8 @@ public class EmployeeBankServiceImpl implements EmployeeBankService {
         entity.setPosition(model.getPosition());
         UserEntity userEntity = userRepository.findOne(model.getUser().getId());
         entity.setUser(userEntity);
+        BankEntity bankEntity = bankRepository.findOne(model.getBank().getId());
+        entity.setBank(bankEntity);
         return entity;
     }
 
