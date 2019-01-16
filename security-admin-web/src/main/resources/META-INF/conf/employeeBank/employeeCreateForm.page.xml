@@ -25,18 +25,15 @@
             </row>
             <row>
                 <password id="password"
-                          required="true" label="Пароль"/>
+                          required="${sec.admin.user.password.input}" label="Пароль"/>
                 <password id="passwordCheck"
-                          required="true" label="Подтвердить пароль">
+                          required="${sec.admin.user.password.input}" label="Подтвердить пароль">
 
                 </password>
             </row>
             <row>
                 <input-select id="roles" type="multi" label="Роли" cache="false" required="true"
                               query-id="${sec.admin.role.query.id}" value-field-id="id" label-field-id="name"/>
-            </row>
-            <row>
-                <checkbox id="isActive"/>
             </row>
         </fields>
     </form>

@@ -1,10 +1,7 @@
 package net.n2oapp.security.admin.impl.service;
 
 import net.n2oapp.security.admin.api.criteria.EmployeeBankCriteria;
-import net.n2oapp.security.admin.api.model.EmployeeBank;
-import net.n2oapp.security.admin.api.model.EmployeeBankForm;
-import net.n2oapp.security.admin.api.model.Role;
-import net.n2oapp.security.admin.api.model.User;
+import net.n2oapp.security.admin.api.model.*;
 import net.n2oapp.security.admin.api.model.bank.Bank;
 import net.n2oapp.security.admin.api.service.EmployeeBankService;
 import net.n2oapp.security.admin.api.service.UserService;
@@ -23,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -59,7 +57,7 @@ public class EmployeeBankServiceImpl implements EmployeeBankService {
 
     @Override
     public Page<EmployeeBank> findByBank(EmployeeBankCriteria criteria) {
-        List<EmployeeBank> list = employeeBankRepository.findByBankId(criteria.getBankId()).stream().map(this::model).collect(Collectors.toList());
+        List<EmployeeBank> list = employeeBankRepository.findByBankId(UUID.fromString(criteria.getBankId())).stream().map(this::model).collect(Collectors.toList());
         return new PageImpl<>(list);
 
     }

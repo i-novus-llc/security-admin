@@ -15,4 +15,6 @@
         <sqlFile path="create_admin_bank.sql"/>
     </changeSet>
 
+    <include file="classpath*:/security/admin/db/rdm/changelog.xml"/>
+
 </databaseChangeLog>

@@ -88,7 +88,6 @@ public class BankServiceImpl implements BankService {
         model.setFullName(entity.getFullName());
         model.setShortName(entity.getShortName());
         model.setRegNum(entity.getRegNum());
-        model.setRegDt(entity.getRegDt());
         model.setInn(entity.getInn());
         model.setOgrn(entity.getOgrn());
         model.setKpp(entity.getKpp());

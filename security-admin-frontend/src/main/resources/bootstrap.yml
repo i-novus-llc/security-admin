@@ -6,5 +6,5 @@ spring:
       host: docker.one
       port: 8500
       config:
-        enabled: false
+        enabled: true
         fail-fast: false
