@@ -9,6 +9,11 @@
         <page-access pages="users"/>
     </permission>
 
+    <permission id="sec.admin.bank.read">
+        <object-access object-id="${sec.admin.bank.object.id}"/>
+        <page-access pages="banks"/>
+    </permission>
+
     <permission id="sec.admin.role.read">
         <object-access object-id="${sec.admin.role.object.id}"/>
         <page-access pages="roles"/>
@@ -18,7 +23,12 @@
         <object-access object-id="${sec.admin.user.object.id}" actions="*"/>
     </permission>
 
+    <permission id="sec.admin.bank.edit">
+        <object-access object-id="${sec.admin.bank.object.id}" actions="*"/>
+    </permission>
+
     <permission id="sec.admin.role.edit">
         <object-access object-id="${sec.admin.role.object.id}" actions="*"/>
     </permission>
+
 </access>

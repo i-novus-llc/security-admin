@@ -12,11 +12,11 @@
                 <password id="newPassword" label="Новый пароль" visible="${sec.admin.user.password.editable}">
                     <validations white-list="newPasswordLengthValidation"/>
                 </password>
-                <password id="passwordCheck" label="Подтвердить пароль"
+                <password id="passwordCheck" label="Подтвердить пароль" depends-on=""
                           visible="${sec.admin.user.password.editable}">
                     <validations white-list="newPasswordCheckValidation"/>
                     <dependencies>
-                        <enabling on="password">typeof newPassword != 'undefined' &amp;&amp; newPassword != null &amp;&amp; newPassword != ''</enabling>
+                        <enabling on="newPassword">typeof newPassword != 'undefined' &amp;&amp; newPassword != null &amp;&amp; newPassword != ''</enabling>
                     </dependencies>
                 </password>
             </row>
