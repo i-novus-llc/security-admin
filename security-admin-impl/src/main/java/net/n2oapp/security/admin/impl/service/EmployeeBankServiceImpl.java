@@ -57,7 +57,7 @@ public class EmployeeBankServiceImpl implements EmployeeBankService {
 
     @Override
     public Page<EmployeeBank> findByBank(EmployeeBankCriteria criteria) {
-        List<EmployeeBank> list = employeeBankRepository.findByBankId(UUID.fromString(criteria.getBankId())).stream().map(this::model).collect(Collectors.toList());
+        List<EmployeeBank> list = employeeBankRepository.findByBankId(criteria.getBankId()).stream().map(this::model).collect(Collectors.toList());
         return new PageImpl<>(list);
 
     }
