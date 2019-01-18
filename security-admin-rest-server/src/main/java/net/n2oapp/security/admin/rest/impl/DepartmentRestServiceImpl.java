@@ -5,6 +5,7 @@ import net.n2oapp.security.admin.api.model.bank.BankCreateForm;
 import net.n2oapp.security.admin.api.model.bank.BankUpdateForm;
 import net.n2oapp.security.admin.api.model.department.Department;
 import net.n2oapp.security.admin.api.model.department.DepartmentUpdateForm;
+import net.n2oapp.security.admin.api.model.department.DepartmentCreateForm;
 import net.n2oapp.security.admin.api.service.BankService;
 import net.n2oapp.security.admin.api.service.DepartmentService;
 import net.n2oapp.security.admin.rest.api.BankRestService;
@@ -37,7 +38,7 @@ public class DepartmentRestServiceImpl implements DepartmentRestService {
     }
 
     @Override
-    public Department create(BankCreateForm department) {
+    public Department create(DepartmentCreateForm department) {
         return service.create(department);
     }
 

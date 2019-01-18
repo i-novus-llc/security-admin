@@ -16,6 +16,8 @@ import net.n2oapp.security.admin.impl.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +29,8 @@ import static java.util.stream.Collectors.joining;
  * @author lgalimova
  * @since 18.01.2019
  */
+@Service
+@Transactional
 public class EmployeeDomrfServiceImpl implements EmployeeDomrfService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;

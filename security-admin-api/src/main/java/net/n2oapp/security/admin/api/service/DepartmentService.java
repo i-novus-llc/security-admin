@@ -2,6 +2,7 @@ package net.n2oapp.security.admin.api.service;
 
 import net.n2oapp.security.admin.api.criteria.DepartmentCriteria;
 import net.n2oapp.security.admin.api.model.department.Department;
+import net.n2oapp.security.admin.api.model.department.DepartmentCreateForm;
 import net.n2oapp.security.admin.api.model.department.DepartmentUpdateForm;
 import org.springframework.data.domain.Page;
 
@@ -30,7 +31,7 @@ public interface DepartmentService {
      * @param department Модель подразделения
      * @return Созданное подразделение
      */
-    Department create(DepartmentUpdateForm department);
+    Department create(DepartmentCreateForm department);
 
     /**
      * Изменение сведений о подразделении

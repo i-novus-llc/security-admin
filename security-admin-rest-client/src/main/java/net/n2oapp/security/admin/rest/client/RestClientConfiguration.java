@@ -23,13 +23,18 @@ public class RestClientConfiguration {
     }
 
     @Bean
+    public EmployeeDomrfServiceRestClient employeeDomrfServiceService(@Qualifier("employeeDomrfRestServiceJaxRsProxyClient") EmployeeDomrfRestService client)    {
+        return new EmployeeDomrfServiceRestClient(client);
+    }
+
+    @Bean
     public BankServiceRestClient bankService(@Qualifier("bankRestServiceJaxRsProxyClient") BankRestService client) {
         return new BankServiceRestClient(client);
     }
 
     @Bean
-    public DepartmentServiceRestClient bankService(@Qualifier("bankRestServiceJaxRsProxyClient") BankRestService client) {
-        return new BankServiceRestClient(client);
+    public DepartmentServiceRestClient departmentService(@Qualifier("departmentRestServiceJaxRsProxyClient") DepartmentRestService client) {
+        return new DepartmentServiceRestClient(client);
     }
 
     @Bean
