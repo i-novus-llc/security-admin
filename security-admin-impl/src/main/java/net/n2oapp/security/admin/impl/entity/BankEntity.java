@@ -2,6 +2,7 @@ package net.n2oapp.security.admin.impl.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.n2oapp.security.admin.api.model.bank.Bank;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
 import javax.persistence.*;
@@ -106,5 +107,22 @@ public class BankEntity extends AbstractEntity {
         if (id == null) {
             id = UUID.randomUUID();
         }
+    }
+
+    public Bank extractModel(){
+        Bank model = new Bank();
+        model.setId(this.id);
+        model.setFullName(this.fullName);
+        model.setShortName(this.shortName);
+        model.setRegNum(this.regNum);
+        model.setInn(this.inn);
+        model.setOgrn(this.ogrn);
+        model.setKpp(this.kpp);
+        model.setBik(this.bik);
+        model.setActualAddress(this.actualAddress);
+        model.setLegalAddress(this.legalAddress);
+        model.setLastActionDate(this.getLastActionDate());
+        model.setCreationDate(this.getCreationDate());
+        return model;
     }
 }

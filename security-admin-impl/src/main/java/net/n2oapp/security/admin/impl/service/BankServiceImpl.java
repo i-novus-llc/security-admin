@@ -7,20 +7,16 @@ import net.n2oapp.security.admin.api.model.bank.BankCreateForm;
 import net.n2oapp.security.admin.api.model.bank.BankForm;
 import net.n2oapp.security.admin.api.model.bank.BankUpdateForm;
 import net.n2oapp.security.admin.api.service.BankService;
-import net.n2oapp.security.admin.api.service.UserService;
 import net.n2oapp.security.admin.impl.entity.BankEntity;
 import net.n2oapp.security.admin.impl.repository.BankRepository;
 import net.n2oapp.security.admin.impl.service.specification.BankSpecifications;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.OptimisticLockException;
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;

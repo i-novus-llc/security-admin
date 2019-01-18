@@ -9,13 +9,13 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * Сущность Уполномоченные лица Банк
+ * Сущность Уполномоченные лица ДОМ.РФ
  */
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "employee_bank", schema = "sec")
-public class EmployeeBankEntity extends AbstractEntity {
+@Table(name = "employee_domrf", schema = "sec")
+public class EmployeeDomrfEntity extends AbstractEntity {
 
     /**
      * Идентификатор записи
@@ -40,17 +40,17 @@ public class EmployeeBankEntity extends AbstractEntity {
     private UserEntity user;
 
     /**
-     * Банк
+     * Подразделение
      */
     @ManyToOne
-    @JoinColumn(name = "bank_id", referencedColumnName = "id")
-    private BankEntity bank;
+    @JoinColumn(name = "department_id", referencedColumnName = "id")
+    private DepartmentEntity department;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        EmployeeBankEntity that = (EmployeeBankEntity) o;
+        EmployeeDomrfEntity that = (EmployeeDomrfEntity) o;
         return Objects.equals(id, that.id);
     }
 
@@ -65,5 +65,6 @@ public class EmployeeBankEntity extends AbstractEntity {
             id = UUID.randomUUID();
         }
     }
+
 }
 
