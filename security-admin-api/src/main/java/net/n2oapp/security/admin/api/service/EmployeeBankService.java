@@ -1,11 +1,8 @@
 package net.n2oapp.security.admin.api.service;
 
 import net.n2oapp.security.admin.api.criteria.EmployeeBankCriteria;
-import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import net.n2oapp.security.admin.api.model.EmployeeBank;
 import net.n2oapp.security.admin.api.model.EmployeeBankForm;
-import net.n2oapp.security.admin.api.model.User;
-import net.n2oapp.security.admin.api.model.UserForm;
 import org.springframework.data.domain.Page;
 
 /**

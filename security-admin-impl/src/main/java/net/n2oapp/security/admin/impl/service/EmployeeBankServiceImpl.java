@@ -1,8 +1,9 @@
 package net.n2oapp.security.admin.impl.service;
 
 import net.n2oapp.security.admin.api.criteria.EmployeeBankCriteria;
-import net.n2oapp.security.admin.api.model.*;
-import net.n2oapp.security.admin.api.model.bank.Bank;
+import net.n2oapp.security.admin.api.model.EmployeeBank;
+import net.n2oapp.security.admin.api.model.EmployeeBankForm;
+import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.service.EmployeeBankService;
 import net.n2oapp.security.admin.api.service.UserService;
 import net.n2oapp.security.admin.impl.entity.BankEntity;
@@ -20,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -67,66 +67,24 @@ public class EmployeeBankServiceImpl implements EmployeeBankService {
         EmployeeBank model = new EmployeeBank();
         model.setId(entity.getId());
         model.setPosition(entity.getPosition());
-        model.setUser(model(entity.getUser()));
-        if(entity.getUser()!=null){
-            model.setEmployeeName(Stream.of(entity.getUser().getSurname(), entity.getUser().getName(), entity.getUser().getPatronymic()).filter(s -> s!=null && !s.isEmpty()).collect(joining(" ")));
-        }
-        model.setBank(model(entity.getBank()));
-        return model;
-    }
 
-    private User model(UserEntity entity) {
-        if (entity == null) return null;
-        User model = new User();
-        model.setId(entity.getId());
-        model.setGuid(entity.getGuid() == null ? null : entity.getGuid().toString());
-        model.setUsername(entity.getUsername());
-        model.setName(entity.getName());
-        model.setSurname(entity.getSurname());
-        model.setPatronymic(entity.getPatronymic());
-        model.setIsActive(entity.getIsActive());
-        model.setEmail(entity.getEmail());
-        StringBuilder builder = new StringBuilder();
-        if (entity.getSurname() != null) {
-            builder.append(entity.getSurname()).append(" ");
-        }
-        if (entity.getName() != null) {
-            builder.append(entity.getName()).append(" ");
-        }
-        if (entity.getPatronymic() != null) {
-            builder.append(entity.getPatronymic());
-        }
-        model.setFio(builder.toString());
-
-        if (entity.getRoleList() != null) {
-            model.setRoles(entity.getRoleList().stream().map(e -> {
+        User user = entity.getUser().extractModel();
+        if (entity.getUser().getRoleList() != null) {
+            user.setRoles(entity.getUser().getRoleList().stream().map(e -> {
                 RoleEntity re = roleRepository.findOne(e.getId());
-                return model(re);
+                return re.extractModel();
             }).collect(Collectors.toList()));
         }
-
+        model.setUser(user);
+        if (entity.getUser() != null) {
+            model.setEmployeeName(Stream.of(entity.getUser().getSurname(), entity.getUser().getName(), entity.getUser().getPatronymic()).filter(s -> s != null && !s.isEmpty()).collect(joining(" ")));
+        }
+        if (entity.getBank() != null)
+            model.setBank(entity.getBank().extractModel());
         return model;
     }
 
-    private Bank model(BankEntity entity) {
-        if (entity == null) return null;
-        Bank model = new Bank();
-        model.setId(entity.getId());
-        model.setFullName(entity.getFullName());
-        model.setShortName(entity.getShortName());
-        model.setRegNum(entity.getRegNum());
-        model.setInn(entity.getInn());
-        model.setOgrn(entity.getOgrn());
-        model.setKpp(entity.getKpp());
-        model.setBik(entity.getBik());
-        model.setActualAddress(entity.getActualAddress());
-        model.setLegalAddress(entity.getLegalAddress());
-        model.setLastActionDate(entity.getLastActionDate());
-        model.setCreationDate(entity.getCreationDate());
-        return model;
-    }
-
-    private EmployeeBankEntity entityForm( EmployeeBankForm model) {
+    private EmployeeBankEntity entityForm(EmployeeBankForm model) {
         EmployeeBankEntity entity = new EmployeeBankEntity();
         entity.setPosition(model.getPosition());
         UserEntity userEntity = userRepository.findOne(model.getUser().getId());
@@ -134,17 +92,6 @@ public class EmployeeBankServiceImpl implements EmployeeBankService {
         BankEntity bankEntity = bankRepository.findOne(model.getBank().getId());
         entity.setBank(bankEntity);
         return entity;
-    }
-
-
-    private Role model(RoleEntity entity) {
-        if (entity == null) return null;
-        Role model = new Role();
-        model.setId(entity.getId());
-        model.setCode(entity.getCode());
-        model.setName(entity.getName());
-        model.setDescription(entity.getDescription());
-        return model;
     }
 
 }

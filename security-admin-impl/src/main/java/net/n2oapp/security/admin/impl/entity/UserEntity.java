@@ -3,6 +3,7 @@ package net.n2oapp.security.admin.impl.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.n2oapp.security.admin.api.model.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -89,6 +90,30 @@ public class UserEntity extends AbstractEntity {
 
     @OneToMany(mappedBy = "user")
     private List<EmployeeBankEntity> employeeBankList;
+
+    public User extractModel() {
+        User model = new User();
+        model.setId(this.id);
+        model.setGuid(this.guid == null ? null : this.guid.toString());
+        model.setUsername(this.username);
+        model.setName(this.name);
+        model.setSurname(this.surname);
+        model.setPatronymic(this.patronymic);
+        model.setIsActive(this.isActive);
+        model.setEmail(this.email);
+        StringBuilder builder = new StringBuilder();
+        if (this.surname != null) {
+            builder.append(this.surname).append(" ");
+        }
+        if (this.name != null) {
+            builder.append(this.name).append(" ");
+        }
+        if (this.patronymic != null) {
+            builder.append(this.patronymic);
+        }
+        model.setFio(builder.toString());
+        return model;
+    }
 
 }
 

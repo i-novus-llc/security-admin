@@ -28,6 +28,11 @@ public class RestClientConfiguration {
     }
 
     @Bean
+    public DepartmentServiceRestClient bankService(@Qualifier("bankRestServiceJaxRsProxyClient") BankRestService client) {
+        return new BankServiceRestClient(client);
+    }
+
+    @Bean
     public UserDetailsServiceRestClient userDetailsService(@Qualifier("userRestServiceJaxRsProxyClient") UserRestService client) {
         return new UserDetailsServiceRestClient(client);
     }

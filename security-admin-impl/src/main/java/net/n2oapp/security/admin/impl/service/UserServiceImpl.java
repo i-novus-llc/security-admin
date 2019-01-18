@@ -1,18 +1,13 @@
 package net.n2oapp.security.admin.impl.service;
 
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
-import net.n2oapp.security.admin.api.model.EmployeeBank;
-import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
-import net.n2oapp.security.admin.api.model.bank.Bank;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.MailService;
 import net.n2oapp.security.admin.api.service.UserService;
 import net.n2oapp.security.admin.commons.util.PasswordGenerator;
 import net.n2oapp.security.admin.commons.util.UserValidations;
-import net.n2oapp.security.admin.impl.entity.BankEntity;
-import net.n2oapp.security.admin.impl.entity.EmployeeBankEntity;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
 import net.n2oapp.security.admin.impl.repository.EmployeeBankRepository;
@@ -209,27 +204,9 @@ public class UserServiceImpl implements UserService {
         if (entity.getRoleList() != null) {
             model.setRoles(entity.getRoleList().stream().map(e -> {
                 RoleEntity re = roleRepository.findOne(e.getId());
-                return model(re);
+                return re.extractModel();
             }).collect(Collectors.toList()));
         }
-        return model;
-    }
-
-    private Role model(RoleEntity entity) {
-        if (entity == null) return null;
-        Role model = new Role();
-        model.setId(entity.getId());
-        model.setCode(entity.getCode());
-        model.setName(entity.getName());
-        model.setDescription(entity.getDescription());
-        return model;
-    }
-
-    private EmployeeBank model(EmployeeBankEntity entity) {
-        if (entity == null) return null;
-        EmployeeBank model = new EmployeeBank();
-        model.setId(entity.getId());
-        model.setPosition(entity.getPosition());
         return model;
     }
 }
