@@ -50,8 +50,8 @@
             <artifactId>n2o-spring-boot-starter</artifactId>
         </dependency>
         <dependency>
-            <groupId>net.n2oapp.framework</groupId>
-            <artifactId>n2o-web</artifactId>
+            <groupId>ru.i-novus.domrf.lkb</groupId>
+            <artifactId>frontend</artifactId>
         </dependency>
         <!-- /N2O -->
 

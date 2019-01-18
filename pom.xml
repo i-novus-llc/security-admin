@@ -19,6 +19,7 @@
         <java.version>1.8</java.version>
         <n2o.version>7.0.2</n2o.version>
         <n2o.platform.version>1.3</n2o.platform.version>
+        <lkb.app.version>1.0-SNAPSHOT</lkb.app.version>
     </properties>
 
     <scm>
@@ -143,6 +144,12 @@
                 <groupId>net.n2oapp.framework</groupId>
                 <artifactId>n2o-spring-boot-starter</artifactId>
                 <version>${n2o.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>ru.i-novus.domrf.lkb</groupId>
+                <artifactId>frontend</artifactId>
+                <version>${lkb.app.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
