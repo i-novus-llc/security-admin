@@ -8,7 +8,8 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableJaxRsProxyClient(
-        classes = {UserRestService.class, RoleRestService.class, PermissionRestService.class, BankRestService.class, EmployeeBankRestService.class},
+        classes = {UserRestService.class, RoleRestService.class, PermissionRestService.class, BankRestService.class, EmployeeBankRestService.class,
+                EmployeeDomrfRestService.class, DepartmentRestService.class},
         address = "${sec.admin.rest.url}")
 public class RestClientConfiguration {
 
