@@ -32,7 +32,7 @@
                     </row>
                 </filters>
                 <toolbar>
-                    <button id="create" label="Добавить">
+                    <button id="create" label="Добавить" model="filter">
                         <show-modal page-id="bankForm" submit-operation-id="create" model="filter" object-id="${sec.admin.bank.object.id}"
                                     upload="defaults"/>
                     </button>
