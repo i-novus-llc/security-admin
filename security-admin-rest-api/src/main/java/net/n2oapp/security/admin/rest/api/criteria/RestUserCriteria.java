@@ -34,18 +34,6 @@ public class RestUserCriteria extends UserCriteria {
         super.setRoleIds(roleIds);
     }
 
-    @QueryParam("page")
-    @Override
-    public void setPage(int page) {
-        super.setPage(page);
-    }
-
-    @QueryParam("size")
-    @Override
-    public void setSize(int size) {
-        super.setSize(size);
-    }
-
     @QueryParam("sort")
     @Override
     public void setOrders(List<Sort.Order> orders) {

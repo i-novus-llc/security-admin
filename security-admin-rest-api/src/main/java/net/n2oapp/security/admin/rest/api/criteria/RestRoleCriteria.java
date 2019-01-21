@@ -10,19 +10,6 @@ import java.util.List;
  * Модель фильтрации ролей для rest вызовов
  */
 public class RestRoleCriteria extends RoleCriteria {
-
-    @QueryParam("page")
-    @Override
-    public void setPage(int page) {
-        super.setPage(page);
-    }
-
-    @QueryParam("size")
-    @Override
-    public void setSize(int size) {
-        super.setSize(size);
-    }
-
     @QueryParam("sort")
     @Override
     public void setOrders(List<Sort.Order> orders) {
