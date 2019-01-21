@@ -14,8 +14,7 @@ public class RestRoleCriteria extends RoleCriteria {
     @QueryParam("page")
     @Override
     public void setPage(int page) {
-        //todo  у n2o отсчет начинается с 1
-        super.setPage(page - 1);
+        super.setPage(page);
     }
 
     @QueryParam("size")
