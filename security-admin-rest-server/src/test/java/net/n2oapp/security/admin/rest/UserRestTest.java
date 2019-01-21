@@ -1,5 +1,7 @@
 package net.n2oapp.security.admin.rest;
 
+import com.icegreen.greenmail.junit.GreenMailRule;
+import com.icegreen.greenmail.util.ServerSetup;
 import net.n2oapp.security.admin.TestApplication;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
@@ -7,7 +9,7 @@ import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.rest.api.UserRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
 import net.n2oapp.security.admin.rest.api.criteria.RestUserDetailsToken;
-import org.apache.cxf.jaxrs.client.JAXRSClientFactoryBean;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 /**
  * Тест Rest сервиса управления пользователями
@@ -38,6 +38,9 @@ import static org.junit.Assert.assertNull;
 @TestPropertySource("classpath:test.properties")
 @AutoConfigureTestDatabase
 public class UserRestTest {
+
+    @Rule
+    public final GreenMailRule greenMail = new GreenMailRule(new ServerSetup(2525, null, "smtp"));
 
     @Autowired
     @Qualifier("userRestServiceJaxRsProxyClient")
@@ -104,6 +107,7 @@ public class UserRestTest {
         assertNotNull(user);
         assertEquals(1, user.getRoles().size());
         assertEquals((Integer) 1, user.getRoles().iterator().next().getId());
+        assertTrue(greenMail.waitForIncomingEmail(1000, 1));
         return user;
     }
 
