@@ -7,8 +7,8 @@
     <changeSet id="payment_init_permissions" author="dbilalov" dbms="postgresql">
         <sql>
             insert into sec.permission(name, code) select 'Доступ к модулю "Оплата"', 'payment' where not exists (select 1 from sec.permission where code = 'payment');
-            insert into sec.permission(name, code, parent_id) select 'Доступ к модулю "Оплата". Банки', 'payment.bank', 'payment' where not exists (select 1 from sec.permission where code = 'payment.bank');
-            insert into sec.permission(name, code, parent_id) select 'Доступ к модулю "Оплата". ДОМ.РФ', 'payment.domrf', 'payment' where not exists (select 1 from sec.permission where code = 'payment.domrf');
+            insert into sec.permission(name, code, parent_id) select 'Доступ к модулю "Оплата". Банки', 'payment.bank', (select id from sec.permission where code = 'payment') where not exists (select 1 from sec.permission where code = 'payment.bank');
+            insert into sec.permission(name, code, parent_id) select 'Доступ к модулю "Оплата". ДОМ.РФ', 'payment.domrf', (select id from sec.permission where code = 'payment') where not exists (select 1 from sec.permission where code = 'payment.domrf');
 
             insert into sec.permission(name, code, parent_id)
             select 'Модуль "Оплата". Банки. Просмотр своих договоров', 'payment.bank.contract.read', (select id from sec.permission where code = 'payment.bank') where not exists (select 1 from sec.permission where code = 'payment.bank.contract.read');
