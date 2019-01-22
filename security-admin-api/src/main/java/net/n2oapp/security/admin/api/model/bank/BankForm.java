@@ -3,11 +3,10 @@ package net.n2oapp.security.admin.api.model.bank;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Data
 public class BankForm {
-    private UUID parentId;
+    private Bank parent;
     private String fullName;
     private String shortName;
     private String regNum;

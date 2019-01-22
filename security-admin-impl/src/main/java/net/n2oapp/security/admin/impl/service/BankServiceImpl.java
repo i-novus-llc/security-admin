@@ -97,6 +97,7 @@ public class BankServiceImpl implements BankService {
             Bank parent = new Bank();
             parent.setShortName(entity.getParent().getShortName());
             parent.setId(entity.getParent().getId());
+            model.setParent(parent);
         }
         return model;
     }
@@ -112,8 +113,8 @@ public class BankServiceImpl implements BankService {
         entity.setBik(model.getBik());
         entity.setActualAddress(model.getActualAddress());
         entity.setLegalAddress(model.getLegalAddress());
-        if(model.getParentId()!=null) {
-            entity.setParent(bankRepository.findOne(model.getParentId()));
+        if(model.getParent()!=null) {
+            entity.setParent(bankRepository.findOne(model.getParent().getId()));
         }
         return entity;
     }

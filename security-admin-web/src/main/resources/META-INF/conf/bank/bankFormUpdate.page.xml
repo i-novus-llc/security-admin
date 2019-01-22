@@ -11,7 +11,7 @@
                 </toolbar>
                 <fields>
                     <row>
-                        <input-select id="bank" label="Головная организация"
+                        <input-select id="parent" label="Головная организация"
                                       query-id="${sec.admin.bank.query.id}"
                                       value-field-id="id" label-field-id="shortName" enabled="false"/>
                     </row>

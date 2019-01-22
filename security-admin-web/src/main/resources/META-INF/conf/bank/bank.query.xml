@@ -77,9 +77,12 @@
                 <eq filter-id="parents.id" mapping="parent"/>
             </filters>
         </field>
-        <!--<field id="parent" domain="object">
-            <select mapping="parent"/>
-        </field>-->
+        <field id="parent.id" domain="string">
+            <select mapping="parent?.id"/>
+        </field>
+        <field id="parent.shortName" domain="string">
+            <select mapping="parent?.shortName"/>
+        </field>
 
     </fields>
 </query>

@@ -23,7 +23,7 @@
                 <param id="legalAddress" mapping="legalAddress" domain="string" />
                 <param id="actualAddress" mapping="actualAddress" domain="string"/>
                 <param id="isCoincidesAddress" mapping="isCoincidesAddress" domain="boolean"/>
-                <!--<param id="parent.id" mapping="parentId" domain="string"/>-->
+                <param id="parent.id" mapping="parent.id" domain="string"/>
             </in-parameters>
             <out-parameters>
                 <param id="id" mapping="id"/>
@@ -53,7 +53,7 @@
                 <param id="legalAddress" mapping="legalAddress" domain="string" />
                 <param id="actualAddress" mapping="actualAddress" domain="string"/>
                 <param id="isCoincidesAddress" mapping="isCoincidesAddress" domain="boolean"/>
-                <!--<param id="parent.id" mapping="parentId" domain="string"/>-->
+                <param id="parent.id" mapping="parent.id" domain="string"/>
             </in-parameters>
             <out-parameters>
                 <param id="id" mapping="id"/>

@@ -80,15 +80,13 @@ public class BankEntity extends AbstractEntity {
     /**
      * Головная организация
      */
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "parent_id", referencedColumnName = "id")
     private BankEntity parent;
 
     public BankEntity(UUID id) {
         setId(id);
     }
-
-
 
     @Override
     public boolean equals(Object o) {

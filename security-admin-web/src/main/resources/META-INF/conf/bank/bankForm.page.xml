@@ -15,12 +15,64 @@
             </row>
 
             <row>
-                <masked-input id="ogrn" mask="9999999999999" required="true"/>
-                <masked-input id="bik" mask="049999999"/>
+
+                <input-text id="ogrn"  required="true">
+                    <validations>
+                        <condition id="ogrnValidation" severity="danger" on="ogrn">
+                            <![CDATA[(function(){
+                    if (typeof ogrn != 'undefined' && ogrn != null && ogrn != '') {
+                        var regex = new RegExp('^([0-9]{13})$');
+                        return regex.test(ogrn);
+                    } else return true;
+                    })()
+                ]]>
+                        </condition>
+                    </validations>
+                </input-text>
+
+                <input-text id="bik"  required="true">
+                    <validations>
+                        <condition id="bikValidation" severity="danger" on="bik">
+                            <![CDATA[(function(){
+                    if (typeof bik != 'undefined' && bik != null && bik != '') {
+                        var regex = new RegExp('^(04[0-9]{7})$');
+                        return regex.test(bik);
+                    } else return true;
+                    })()
+                ]]>
+                        </condition>
+                    </validations>
+                </input-text>
             </row>
             <row>
-                <masked-input id="inn" mask="9999999999" required="true"/>
-                <masked-input id="kpp" mask="999999999" required="true"/>
+                <input-text id="inn"  required="true">
+                    <validations>
+                        <condition id="innValidation" severity="danger" on="inn">
+                            <![CDATA[(function(){
+                    if (typeof inn != 'undefined' && inn != null && inn != '') {
+                        var regex = new RegExp('^([0-9]{10})$');
+                        return regex.test(inn);
+                    } else return true;
+                    })()
+                ]]>
+                        </condition>
+                    </validations>
+                </input-text>
+
+                <input-text id="kpp"  required="true">
+                    <validations>
+                        <condition id="kppValidation" severity="danger" on="kpp">
+                            <![CDATA[(function(){
+                    if (typeof kpp != 'undefined' && kpp != null && kpp != '') {
+                        var regex = new RegExp('^([0-9]{9})$');
+                        return regex.test(kpp);
+                    } else return true;
+                    })()
+                ]]>
+                        </condition>
+                    </validations>
+                </input-text>
+
             </row>
             <input-text id="legalAddress" required="true"/>
             <input-text id="actualAddress">
