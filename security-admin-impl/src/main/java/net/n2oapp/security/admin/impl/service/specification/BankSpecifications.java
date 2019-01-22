@@ -30,15 +30,15 @@ public class BankSpecifications implements Specification<BankEntity> {
             criteria.setName(criteria.getName().toLowerCase().replace(" ", ""));
             predicate = builder.and(predicate,
                     builder.or(
-                            builder.like(builder.lower(builder.trim(root.get(BankEntity_.fullName))), criteria.getName() + "%"),
-                            builder.like(builder.lower(builder.trim(root.get(BankEntity_.shortName))), criteria.getName() + "%"),
-                            builder.like(builder.lower(builder.trim(root.get(BankEntity_.regNum))), criteria.getName() + "%"),
-                            builder.like(builder.lower(builder.trim(root.get(BankEntity_.inn))), criteria.getName() + "%"),
-                            builder.like(builder.lower(builder.trim(root.get(BankEntity_.ogrn))), criteria.getName() + "%"),
-                            builder.like(builder.lower(builder.trim(root.get(BankEntity_.bik))), criteria.getName() + "%"),
-                            builder.like(builder.lower(builder.trim(root.get(BankEntity_.kpp))), criteria.getName() + "%"),
-                            builder.like(builder.lower(builder.trim(root.get(BankEntity_.legalAddress))), criteria.getName() + "%"),
-                            builder.like(builder.lower(builder.trim(root.get(BankEntity_.actualAddress))), criteria.getName() + "%")
+                            builder.like(builder.lower(builder.trim(root.get(BankEntity_.fullName))), "%" + criteria.getName() + "%"),
+                            builder.like(builder.lower(builder.trim(root.get(BankEntity_.shortName))), "%" + criteria.getName() + "%"),
+                            builder.like(builder.lower(builder.trim(root.get(BankEntity_.regNum))), "%" + criteria.getName() + "%"),
+                            builder.like(builder.lower(builder.trim(root.get(BankEntity_.inn))), "%" + criteria.getName() + "%"),
+                            builder.like(builder.lower(builder.trim(root.get(BankEntity_.ogrn))), "%" + criteria.getName() + "%"),
+                            builder.like(builder.lower(builder.trim(root.get(BankEntity_.bik))), "%" + criteria.getName() + "%"),
+                            builder.like(builder.lower(builder.trim(root.get(BankEntity_.kpp))), "%" + criteria.getName() + "%"),
+                            builder.like(builder.lower(builder.trim(root.get(BankEntity_.legalAddress))), "%" + criteria.getName() + "%"),
+                            builder.like(builder.lower(builder.trim(root.get(BankEntity_.actualAddress))), "%" + criteria.getName() + "%")
                     ));
         }
         if (criteria.getType() != null) {

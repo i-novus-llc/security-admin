@@ -44,7 +44,7 @@
             <select mapping="regNum"/>
             <sorting/>
         </field>
-        <field id="regDt" domain="date" name="Дата регистрации Банком России">
+        <field id="regDt" domain="localdate" name="Дата регистрации Банком России">
             <select mapping="regDt"/>
             <sorting/>
         </field>
@@ -77,8 +77,11 @@
                 <eq filter-id="parents.id" mapping="parent"/>
             </filters>
         </field>
-        <field id="lastActionDate" domain="date">
-            <select mapping="lastActionDate"/>
+        <field id="parent.id" domain="string">
+            <select mapping="parent?.id"/>
+        </field>
+        <field id="parent.shortName" domain="string">
+            <select mapping="parent?.shortName"/>
         </field>
 
     </fields>

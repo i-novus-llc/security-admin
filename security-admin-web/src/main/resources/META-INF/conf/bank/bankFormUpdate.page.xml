@@ -2,7 +2,8 @@
 <page xmlns="http://n2oapp.net/framework/config/schema/page-2.0">
     <regions>
         <tabs place="single">
-            <form query-id="${sec.admin.bank.query.id}" id="bank" name="Данные организации" object-id="${sec.admin.bank.object.id}">
+            <form query-id="${sec.admin.bank.query.id}" id="bank" name="Данные организации"
+                  object-id="${sec.admin.bank.object.id}">
                 <toolbar>
                     <button id="update" label="Изменить">
                         <open-page page-id="bankForm" detail-field-id="id" submit-operation-id="update"/>
@@ -10,12 +11,17 @@
                 </toolbar>
                 <fields>
                     <row>
+                        <input-select id="parent" label="Головная организация"
+                                      query-id="${sec.admin.bank.query.id}"
+                                      value-field-id="id" label-field-id="shortName" enabled="false"/>
+                    </row>
+                    <row>
                         <input-text id="fullName" enabled="false"/>
                         <input-text id="regNum" enabled="false"/>
                     </row>
                     <row>
                         <input-text id="shortName" enabled="false"/>
-                        <input-text id="regNum" enabled="false"/>
+                        <date-time id="regDt" format="DD.MM.YYYY" enabled="false"/>
                     </row>
                     <row>
                         <input-text id="legalAddress" enabled="false"/>
@@ -50,6 +56,9 @@
                         <show-modal page-id="employeeCreateForm" submit-operation-id="create"  close-after-submit="true" object-id="employeeBank"
                                     upload="defaults"
                                     detail-field-id="bankId" route="/create">
+                            <pre-fields>
+                                <eq field-id="bankId" ref-model="filter"/>
+                            </pre-fields>
                         </show-modal>
                     </button>
                 </toolbar>
