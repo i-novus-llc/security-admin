@@ -2,23 +2,34 @@
 <simple-page xmlns="http://n2oapp.net/framework/config/schema/page-2.0" name="Добавление сведений о банке">
     <form query-id="${sec.admin.bank.query.id}">
         <fields>
-                <input-text id="fullName" required="true"/>
-                <input-text id="shortName" required="true"/>
             <row>
-                <input-text id="regNum"/>
-                <date-time id="regDt"/>
+                <input-select id="parent"  label="Головная организация"
+                              query-id="${sec.admin.bank.query.id}"
+                              value-field-id="id" label-field-id="shortName"/>
+            </row>
+            <input-text id="fullName" required="true"/>
+            <input-text id="shortName" required="true"/>
+            <row>
+                <input-text id="regNum" domain="integer" min="0"/>
+                <date-time id="regDt" format="DD.MM.YYYY"/>
             </row>
 
             <row>
-                <input-text id="ogrn"/>
-                <input-text id="bik"/>
+                <masked-input id="ogrn" mask="9999999999999" required="true"/>
+                <masked-input id="bik" mask="049999999"/>
             </row>
             <row>
-                <input-text id="inn"/>
-                <input-text id="kpp"/>
+                <masked-input id="inn" mask="9999999999" required="true"/>
+                <masked-input id="kpp" mask="999999999" required="true"/>
             </row>
-            <input-text id="legalAddress"/>
-            <input-text id="actualAddress"/>
+            <input-text id="legalAddress" required="true"/>
+            <input-text id="actualAddress">
+                <dependencies>
+                    <enabling on="isCoincidesAddress"><![CDATA[
+               typeof isCoincidesAddress === 'undefined' || !isCoincidesAddress
+                ]]></enabling>
+                </dependencies>
+            </input-text>
             <checkbox id="isCoincidesAddress" label="Совпадает с юридическим"/>
         </fields>
     </form>

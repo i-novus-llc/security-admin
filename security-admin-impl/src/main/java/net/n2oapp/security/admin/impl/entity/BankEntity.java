@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
@@ -43,8 +44,8 @@ public class BankEntity extends AbstractEntity {
      * Дата регистрации Банком России
      */
 
-    @Convert(converter = Jsr310JpaConverters.LocalDateTimeConverter.class)
-    private LocalDateTime regDt;
+    @Convert(converter = Jsr310JpaConverters.LocalDateConverter.class)
+    private LocalDate regDt;
     /**
      * ИНН
      */
@@ -78,8 +79,8 @@ public class BankEntity extends AbstractEntity {
     /**
      * Головная организация
      */
-    @ManyToOne
-    @JoinColumn(name = "parent_id")
+    @OneToOne
+    @JoinColumn(name = "parent_id", referencedColumnName = "id")
     private BankEntity parent;
 
     public BankEntity(UUID id) {

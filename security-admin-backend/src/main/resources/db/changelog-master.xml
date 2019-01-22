@@ -14,6 +14,9 @@
     <changeSet id="create_admin_bank" author="tvalieva">
         <sqlFile path="create_admin_bank.sql"/>
     </changeSet>
+    <changeSet id="create_admin_employee_bank" author="tvalieva">
+        <sqlFile path="create_admin_employee_bank.sql"/>
+    </changeSet>
 
     <include file="classpath*:/security/admin/db/rdm/changelog.xml"/>
 

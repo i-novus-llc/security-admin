@@ -88,6 +88,7 @@ public class BankServiceImpl implements BankService {
         model.setFullName(entity.getFullName());
         model.setShortName(entity.getShortName());
         model.setRegNum(entity.getRegNum());
+        model.setRegDt(entity.getRegDt());
         model.setInn(entity.getInn());
         model.setOgrn(entity.getOgrn());
         model.setKpp(entity.getKpp());
@@ -96,6 +97,11 @@ public class BankServiceImpl implements BankService {
         model.setLegalAddress(entity.getLegalAddress());
         model.setLastActionDate(entity.getLastActionDate());
         model.setCreationDate(entity.getCreationDate());
+        if(entity.getParent()!=null){
+            Bank parent = new Bank();
+            parent.setShortName(entity.getParent().getShortName());
+            parent.setId(entity.getParent().getId());
+        }
         return model;
     }
 
@@ -103,12 +109,16 @@ public class BankServiceImpl implements BankService {
         entity.setFullName(model.getFullName());
         entity.setShortName(model.getShortName());
         entity.setRegNum(model.getRegNum());
+        entity.setRegDt(model.getRegDt());
         entity.setInn(model.getInn());
         entity.setOgrn(model.getOgrn());
         entity.setKpp(model.getKpp());
         entity.setBik(model.getBik());
         entity.setActualAddress(model.getActualAddress());
         entity.setLegalAddress(model.getLegalAddress());
+        if(model.getParentId()!=null) {
+            entity.setParent(bankRepository.findOne(model.getParentId()));
+        }
         return entity;
     }
     private void validate(BankForm bank) {

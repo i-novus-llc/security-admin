@@ -38,6 +38,10 @@
             <select mapping="user.surname"/>
         </field>
 
+        <field id="name" domain="string" name="Имя">
+            <select mapping="user.name"/>
+        </field>
+
         <field id="patronymic" domain="string" name="Отчество">
             <select mapping="user.patronymic"/>
         </field>

@@ -10,12 +10,11 @@
                         <argument name="userEntity" class="net.n2oapp.security.admin.api.model.EmployeeBankForm" type="entity"/>
                     </arguments>
                 </java>
-
-
             </invocation>
             <in-parameters>
                 <param id="position" mapping="position" domain="string"/>
                 <param id="username" mapping="user.username" domain="string"/>
+                <param id="isActive" mapping="user.isActive" domain="boolean" default-value="false"/>
                 <param id="email" mapping="user.email" domain="string"/>
                 <param id="surname" mapping="user.surname" domain="string"/>
                 <param id="name" mapping="user.name" domain="string"/>
