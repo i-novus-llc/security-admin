@@ -41,40 +41,16 @@ public class OpenIdPrincipalExtractor implements PrincipalExtractor, Authorities
             return null;
         }
 
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        if (user.getRoles() != null) {
-            authorities.addAll(user.getRoles().stream().map(r -> new RoleGrantedAuthority(r.getCode())).collect(Collectors.toList()));
-            authorities.addAll(user.getRoles().stream().filter(r -> r.getPermissions() != null).flatMap(r -> r.getPermissions().stream())
-                    .map(p -> new PermissionGrantedAuthority(p.getCode())).collect(Collectors.toList()));
-            if(!(map instanceof UnmodifiableMap)) {
-                try {
-                    map.put(GRANTED_AUTHORITY_KEY, authorities);
-                } catch (Exception e) {
-                    //do nothing
-                }
-            }
-        }
-        return new User(user.getUsername(), "N/A", authorities, user.getSurname(), user.getName(),
+        return new User(user.getUsername(), "N/A", getAuthorities(map, user), user.getSurname(), user.getName(),
                 user.getPatronymic(), user.getEmail());
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<GrantedAuthority> extractAuthorities(Map<String, Object> map) {
-        if (map.containsKey(GRANTED_AUTHORITY_KEY)) {
-            return (List<GrantedAuthority>) map.get(GRANTED_AUTHORITY_KEY);
-        }
-
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        net.n2oapp.security.admin.api.model.User user = getUser(map);
-        if (user != null && user.getRoles() != null) {
-            authorities.addAll(user.getRoles().stream().map(r -> new RoleGrantedAuthority(r.getCode())).collect(Collectors.toList()));
-            authorities.addAll(user.getRoles().stream().filter(r -> r.getPermissions() != null).flatMap(r -> r.getPermissions().stream())
-                    .map(p -> new PermissionGrantedAuthority(p.getCode())).collect(Collectors.toList()));
-        }
-        return authorities;
+        return getAuthorities(map, null);
     }
 
+    @SuppressWarnings("unchecked")
     private net.n2oapp.security.admin.api.model.User getUser(Map<String, Object> map) {
         Object usernameObj = extractFromMap(PRINCIPAL_KEYS, map);
         if (usernameObj == null)
@@ -97,6 +73,28 @@ public class OpenIdPrincipalExtractor implements PrincipalExtractor, Authorities
         token.setEmail(email);
 
         return userDetailsService.loadUserDetails(token);
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<GrantedAuthority> getAuthorities(Map<String, Object> map, net.n2oapp.security.admin.api.model.User user) {
+        if (map.containsKey(GRANTED_AUTHORITY_KEY)) {
+            return (List<GrantedAuthority>) map.get(GRANTED_AUTHORITY_KEY);
+        }
+        if (user == null) {
+            user = getUser(map);
+        }
+
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        if (user != null && user.getRoles() != null) {
+            authorities.addAll(user.getRoles().stream().map(r -> new RoleGrantedAuthority(r.getCode())).collect(Collectors.toList()));
+            authorities.addAll(user.getRoles().stream().filter(r -> r.getPermissions() != null).flatMap(r -> r.getPermissions().stream())
+                    .map(p -> new PermissionGrantedAuthority(p.getCode())).collect(Collectors.toList()));
+
+            if (!(map instanceof UnmodifiableMap)) {
+                map.put(GRANTED_AUTHORITY_KEY, authorities);
+            }
+        }
+        return authorities;
     }
 
     private Object extractFromMap(String[] keys, Map<String, Object> map) {
