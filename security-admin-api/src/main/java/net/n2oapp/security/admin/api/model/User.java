@@ -14,6 +14,7 @@ public class User {
     private String guid;
     private String username;
     private String fio;
+    private String shortFio;
     private String email;
     private String surname;
     private String name;
@@ -24,5 +25,4 @@ public class User {
     private Boolean isActive;
     private List<Role> roles;
     private LocalDateTime lastActionDate;
-
 }

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.UUID;
 
 /**
  * REST сервис управления уполномоченными лицами банка
@@ -32,4 +33,10 @@ public interface EmployeeBankRestService {
     @ApiOperation("Создать уполномоченное лицо банка")
     @ApiResponse(code = 200, message = "Созданный уполномоченное лицо банка")
     EmployeeBank create(EmployeeBankForm user);
+
+    @GET
+    @Path("/{employeeBankId}")
+    @ApiOperation("Уполномоченное лицо банка")
+    @ApiResponse(code = 200, message = "Уполномоченное лицо банка")
+    EmployeeBank get(@PathParam("employeeBankId") UUID employeeBankId);
 }

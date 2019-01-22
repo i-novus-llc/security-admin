@@ -20,10 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static java.util.stream.Collectors.joining;
 
 /**
  * @author lgalimova
@@ -59,6 +57,12 @@ public class EmployeeDomrfServiceImpl implements EmployeeDomrfService {
         return new PageImpl<>(list);
     }
 
+    @Override
+    public EmployeeDomrf get(UUID id) {
+        EmployeeDomrfEntity employeeDomrfEntity = employeeDomrfRepository.findOne(id);
+        return model(employeeDomrfEntity);
+    }
+
     private EmployeeDomrf model(EmployeeDomrfEntity entity) {
         if (entity == null) return null;
         EmployeeDomrf model = new EmployeeDomrf();
@@ -72,9 +76,6 @@ public class EmployeeDomrfServiceImpl implements EmployeeDomrfService {
             }).collect(Collectors.toList()));
         }
         model.setUser(user);
-        if (entity.getUser() != null) {
-            model.setEmployeeName(Stream.of(entity.getUser().getSurname(), entity.getUser().getName(), entity.getUser().getPatronymic()).filter(s -> s != null && !s.isEmpty()).collect(joining(" ")));
-        }
         if (entity.getDepartment() != null) {
             model.setDepartment(entity.getDepartment().extractModel());
 

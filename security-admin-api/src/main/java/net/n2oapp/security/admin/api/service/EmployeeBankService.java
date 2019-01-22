@@ -5,6 +5,8 @@ import net.n2oapp.security.admin.api.model.EmployeeBank;
 import net.n2oapp.security.admin.api.model.EmployeeBankForm;
 import org.springframework.data.domain.Page;
 
+import java.util.UUID;
+
 /**
  * Сервис управления уполномоченными лицами банка
  */
@@ -25,7 +27,9 @@ public interface EmployeeBankService {
      */
     Page<EmployeeBank> findByBank(EmployeeBankCriteria criteria);
 
-
-
-
+    /**
+     * Метод возвращает уполномоченнное лицо банка по ид-ру
+     * @param id ид-р уполномоченного лица
+     */
+    EmployeeBank get(UUID id);
 }

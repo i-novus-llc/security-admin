@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 
+import java.util.UUID;
+
 
 /**
  * Реализация REST сервиса управления уполномоченными лицами банка
@@ -29,4 +31,8 @@ public class EmployeeBankRestServiceImpl implements EmployeeBankRestService {
         return service.create(employeeBankForm);
     }
 
+    @Override
+    public EmployeeBank get(UUID employeeBankId) {
+        return service.get(employeeBankId);
+    }
 }

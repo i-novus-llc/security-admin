@@ -4,6 +4,7 @@ package net.n2oapp.security.admin.impl.entity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.n2oapp.security.admin.api.model.User;
+import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -101,19 +102,23 @@ public class UserEntity extends AbstractEntity {
         model.setPatronymic(this.patronymic);
         model.setIsActive(this.isActive);
         model.setEmail(this.email);
-        StringBuilder builder = new StringBuilder();
-        if (this.surname != null) {
-            builder.append(this.surname).append(" ");
+        StringBuilder fioBuilder = new StringBuilder();
+        StringBuilder shortFioBuilder = new StringBuilder();
+        if (StringUtils.isNotBlank(this.surname)) {
+            fioBuilder.append(this.surname).append(" ");
+            shortFioBuilder.append(this.surname).append(" ");
         }
-        if (this.name != null) {
-            builder.append(this.name).append(" ");
+        if (StringUtils.isNotBlank(this.name)) {
+            fioBuilder.append(this.name).append(" ");
+            shortFioBuilder.append(this.name, 0, 1).append(". ");
         }
-        if (this.patronymic != null) {
-            builder.append(this.patronymic);
+        if (StringUtils.isNotBlank(this.patronymic)) {
+            fioBuilder.append(this.patronymic);
+            shortFioBuilder.append(this.patronymic, 0, 1).append(".");
         }
-        model.setFio(builder.toString());
+        model.setFio(fioBuilder.toString());
+        model.setShortFio(shortFioBuilder.toString());
         return model;
     }
-
 }
 

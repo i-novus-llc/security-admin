@@ -11,9 +11,7 @@ import java.util.UUID;
 @Data
 public class EmployeeBank {
     private UUID id;
-    private String employeeName;
     private String position;
     private User user;
     private Bank bank;
-
 }

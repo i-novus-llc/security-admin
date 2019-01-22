@@ -21,10 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static java.util.stream.Collectors.joining;
 
 /**
  * Реализация сервиса управления уполномоченными лицами банка
@@ -59,7 +57,12 @@ public class EmployeeBankServiceImpl implements EmployeeBankService {
     public Page<EmployeeBank> findByBank(EmployeeBankCriteria criteria) {
         List<EmployeeBank> list = employeeBankRepository.findByBankId(criteria.getBankId()).stream().map(this::model).collect(Collectors.toList());
         return new PageImpl<>(list);
+    }
 
+    @Override
+    public EmployeeBank get(UUID id) {
+        EmployeeBankEntity employeeBankEntity = employeeBankRepository.findOne(id);
+        return model(employeeBankEntity);
     }
 
     private EmployeeBank model(EmployeeBankEntity entity) {
@@ -76,9 +79,6 @@ public class EmployeeBankServiceImpl implements EmployeeBankService {
             }).collect(Collectors.toList()));
         }
         model.setUser(user);
-        if (entity.getUser() != null) {
-            model.setEmployeeName(Stream.of(entity.getUser().getSurname(), entity.getUser().getName(), entity.getUser().getPatronymic()).filter(s -> s != null && !s.isEmpty()).collect(joining(" ")));
-        }
         if (entity.getBank() != null)
             model.setBank(entity.getBank().extractModel());
         return model;
