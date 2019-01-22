@@ -88,13 +88,13 @@ public class User extends org.springframework.security.core.userdetails.User {
         return getAuthorities()
                 .stream()
                 .filter(a -> a instanceof RoleGrantedAuthority)
-                .map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+                .map(a -> ((RoleGrantedAuthority)a).getRole()).collect(Collectors.toList());
     }
 
     public List<String> getPermissions() {
         return getAuthorities()
                 .stream()
                 .filter(a -> a instanceof PermissionGrantedAuthority)
-                .map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+                .map(p -> ((PermissionGrantedAuthority)p).getPermission()).collect(Collectors.toList());
     }
 }

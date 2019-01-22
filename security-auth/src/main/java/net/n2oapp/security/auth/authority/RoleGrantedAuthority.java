@@ -8,6 +8,8 @@ import org.springframework.util.Assert;
  */
 public class RoleGrantedAuthority implements GrantedAuthority {
 
+    private static final String DEFAULT_ROLE_PREFIX = "ROLE_";
+
     private final String role;
 
     public RoleGrantedAuthority(String role) {
@@ -16,6 +18,10 @@ public class RoleGrantedAuthority implements GrantedAuthority {
     }
 
     public String getAuthority() {
+        return DEFAULT_ROLE_PREFIX + role;
+    }
+
+    public String getRole() {
         return role;
     }
 
