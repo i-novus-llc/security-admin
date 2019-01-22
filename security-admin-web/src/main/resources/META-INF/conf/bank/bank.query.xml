@@ -72,11 +72,11 @@
             <select mapping="actualAddress"/>
             <sorting/>
         </field>
-       <!-- <field id="parents.id" domain="string">
+        <field id="parents.id" domain="string">
             <filters>
                 <eq filter-id="parents.id" mapping="parent"/>
             </filters>
-        </field>-->
+        </field>
         <!--<field id="parent" domain="object">
             <select mapping="parent"/>
         </field>-->
