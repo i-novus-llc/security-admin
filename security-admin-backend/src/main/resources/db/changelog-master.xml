@@ -19,5 +19,6 @@
     </changeSet>
 
     <include file="classpath*:/security/admin/db/rdm/changelog.xml"/>
+    <include file="classpath*:/security/admin/db/payment/changelog.xml"/>
 
 </databaseChangeLog>

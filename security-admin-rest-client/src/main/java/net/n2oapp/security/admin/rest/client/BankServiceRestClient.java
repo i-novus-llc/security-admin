@@ -9,8 +9,6 @@ import net.n2oapp.security.admin.rest.api.BankRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestBankCriteria;
 import org.springframework.data.domain.Page;
 
-import java.util.UUID;
-
 /**
  * Прокси реализация сервиса управления пользователями, для вызова rest
  */

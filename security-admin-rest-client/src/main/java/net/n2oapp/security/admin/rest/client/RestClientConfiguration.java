@@ -8,7 +8,8 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableJaxRsProxyClient(
-        classes = {UserRestService.class, RoleRestService.class, PermissionRestService.class, BankRestService.class, EmployeeBankRestService.class},
+        classes = {UserRestService.class, RoleRestService.class, PermissionRestService.class, BankRestService.class, EmployeeBankRestService.class,
+                EmployeeDomrfRestService.class, DepartmentRestService.class},
         address = "${sec.admin.rest.url}")
 public class RestClientConfiguration {
 
@@ -23,8 +24,18 @@ public class RestClientConfiguration {
     }
 
     @Bean
+    public EmployeeDomrfServiceRestClient employeeDomrfServiceService(@Qualifier("employeeDomrfRestServiceJaxRsProxyClient") EmployeeDomrfRestService client)    {
+        return new EmployeeDomrfServiceRestClient(client);
+    }
+
+    @Bean
     public BankServiceRestClient bankService(@Qualifier("bankRestServiceJaxRsProxyClient") BankRestService client) {
         return new BankServiceRestClient(client);
+    }
+
+    @Bean
+    public DepartmentServiceRestClient departmentService(@Qualifier("departmentRestServiceJaxRsProxyClient") DepartmentRestService client) {
+        return new DepartmentServiceRestClient(client);
     }
 
     @Bean

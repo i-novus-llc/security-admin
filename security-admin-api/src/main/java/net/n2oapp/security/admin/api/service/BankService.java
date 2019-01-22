@@ -6,8 +6,6 @@ import net.n2oapp.security.admin.api.model.bank.BankCreateForm;
 import net.n2oapp.security.admin.api.model.bank.BankUpdateForm;
 import org.springframework.data.domain.Page;
 
-import java.util.UUID;
-
 /**
  * Сервис управления банками
  */

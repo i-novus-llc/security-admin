@@ -3,7 +3,9 @@ package net.n2oapp.security.admin.impl.entity;
 import lombok.Data;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
-import javax.persistence.*;
+import javax.persistence.Convert;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.PrePersist;
 import java.io.Serializable;
 import java.time.Clock;
 import java.time.LocalDateTime;

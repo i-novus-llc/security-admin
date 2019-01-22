@@ -30,19 +30,6 @@ public class RestBankCriteria extends BankCriteria {
         super.setParent(parent);
     }
 
-    @QueryParam("page")
-    @Override
-    public void setPage(int page) {
-        //todo  у n2o отсчет начинается с 1
-        super.setPage(page - 1);
-    }
-
-    @QueryParam("size")
-    @Override
-    public void setSize(int size) {
-        super.setSize(size);
-    }
-
     @QueryParam("sort")
     @Override
     public void setOrders(List<Sort.Order> orders) {

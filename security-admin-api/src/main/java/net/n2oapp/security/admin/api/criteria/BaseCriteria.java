@@ -5,7 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -54,7 +57,7 @@ public class BaseCriteria implements Pageable {
     @Override
     @JsonIgnore
     public int getOffset() {
-        return (this.page - 1) * this.size;
+        return (this.page) * this.size;
     }
 
     @Override

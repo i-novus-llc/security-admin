@@ -1,7 +1,6 @@
 package net.n2oapp.security.admin.impl;
 
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
-import net.n2oapp.security.admin.api.service.BankService;
 import net.n2oapp.security.admin.api.service.UserService;
 import net.n2oapp.security.admin.commons.AdminCommonsConfiguration;
 import net.n2oapp.security.admin.impl.provider.SimpleSsoUserRoleProvider;
@@ -10,11 +9,7 @@ import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.UserServiceImpl;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 

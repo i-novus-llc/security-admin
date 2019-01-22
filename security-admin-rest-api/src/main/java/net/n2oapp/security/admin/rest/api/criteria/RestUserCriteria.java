@@ -5,7 +5,6 @@ import org.springframework.data.domain.Sort;
 
 import javax.ws.rs.QueryParam;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Модель фильтрации пользователей для rest вызовов
@@ -33,19 +32,6 @@ public class RestUserCriteria extends UserCriteria {
     @Override
     public void setRoleIds(List<Integer> roleIds) {
         super.setRoleIds(roleIds);
-    }
-
-    @QueryParam("page")
-    @Override
-    public void setPage(int page) {
-        //todo  у n2o отсчет начинается с 1
-        super.setPage(page - 1);
-    }
-
-    @QueryParam("size")
-    @Override
-    public void setSize(int size) {
-        super.setSize(size);
     }
 
     @QueryParam("sort")

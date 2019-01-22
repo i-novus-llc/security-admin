@@ -12,7 +12,6 @@ import org.springframework.data.domain.Page;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.util.List;
 
 /**
  * REST сервис управления пользоватлями
