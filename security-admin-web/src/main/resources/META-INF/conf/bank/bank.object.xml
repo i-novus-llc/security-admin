@@ -15,7 +15,7 @@
                 <param id="fullName" mapping="fullName" domain="string" />
                 <param id="shortName" mapping="shortName" domain="string" />
                 <param id="regNum" mapping="regNum" domain="string"/>
-                <!--<param name="regDt" mapping="regDt" domain="localdate"/>-->
+                <param id="regDt" mapping="regDt" domain="localdate"/>
                 <param id="ogrn" mapping="ogrn"/>
                 <param id="bik" mapping="bik" domain="string"/>
                 <param id="inn" mapping="inn"/>
@@ -45,7 +45,7 @@
                 <param id="fullName" mapping="fullName" domain="string" />
                 <param id="shortName" mapping="shortName" domain="string" />
                 <param id="regNum" mapping="regNum" domain="string"/>
-                <!--<param name="regDt" mapping="regDt" domain="localdate"/>-->
+                <param id="regDt" mapping="regDt" domain="localdate"/>
                 <param id="ogrn" mapping="ogrn"/>
                 <param id="bik" mapping="bik" domain="string"/>
                 <param id="inn" mapping="inn"/>
