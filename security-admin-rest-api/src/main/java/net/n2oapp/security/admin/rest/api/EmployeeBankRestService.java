@@ -35,8 +35,8 @@ public interface EmployeeBankRestService {
     EmployeeBank create(EmployeeBankForm user);
 
     @GET
-    @Path("/{employeeBankfId}")
+    @Path("/{employeeBankId}")
     @ApiOperation("Уполномоченное лицо банка")
     @ApiResponse(code = 200, message = "Уполномоченное лицо банка")
-    EmployeeBank get(@PathParam("employeeBankfId") UUID employeeBankfId);
+    EmployeeBank get(@PathParam("employeeBankId") UUID employeeBankId);
 }

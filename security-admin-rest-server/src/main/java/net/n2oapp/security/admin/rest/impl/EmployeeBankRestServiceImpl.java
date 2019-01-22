@@ -32,7 +32,7 @@ public class EmployeeBankRestServiceImpl implements EmployeeBankRestService {
     }
 
     @Override
-    public EmployeeBank get(UUID employeeBankfId) {
-        return service.get(employeeBankfId);
+    public EmployeeBank get(UUID employeeBankId) {
+        return service.get(employeeBankId);
     }
 }
