@@ -7,6 +7,8 @@ import net.n2oapp.security.admin.rest.api.EmployeeDomrfRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestEmployeeDomrfCriteria;
 import org.springframework.data.domain.Page;
 
+import java.util.UUID;
+
 /**
  * Прокси реализация сервиса управления уполномоченными лицами ДОМ.РФ, для вызова rest
  */
@@ -27,4 +29,8 @@ public class EmployeeDomrfServiceRestClient implements EmployeeDomrfService {
         return client.findByDepartment(employeeDomrfCriteria);
     }
 
+    @Override
+    public EmployeeDomrf get(UUID id) {
+        return client.get(id);
+    }
 }

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 
+import java.util.UUID;
+
 
 /**
  * Реализация REST сервиса управления уполномоченными лицами ДОМ.РФ
@@ -21,5 +23,10 @@ public class EmployeeDomrfRestServiceImpl implements EmployeeDomrfRestService {
     @Override
     public Page<EmployeeDomrf> findByDepartment(RestEmployeeDomrfCriteria criteria) {
         return service.findByDepartment(criteria);
+    }
+
+    @Override
+    public EmployeeDomrf get(UUID employeeDomrfId) {
+        return service.get(employeeDomrfId);
     }
 }

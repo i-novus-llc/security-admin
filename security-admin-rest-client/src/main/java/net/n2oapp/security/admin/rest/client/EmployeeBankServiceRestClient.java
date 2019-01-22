@@ -8,6 +8,8 @@ import net.n2oapp.security.admin.rest.api.EmployeeBankRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestEmployeeBankCriteria;
 import org.springframework.data.domain.Page;
 
+import java.util.UUID;
+
 /**
  * Прокси реализация сервиса управления уполномоченными лицами банка, для вызова rest
  */
@@ -33,4 +35,8 @@ public class EmployeeBankServiceRestClient implements EmployeeBankService {
         return client.findByBank(employeeBankCriteria);
     }
 
+    @Override
+    public EmployeeBank get(UUID id) {
+        return client.get(id);
+    }
 }

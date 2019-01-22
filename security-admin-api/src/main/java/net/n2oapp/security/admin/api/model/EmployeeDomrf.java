@@ -11,9 +11,7 @@ import java.util.UUID;
 @Data
 public class EmployeeDomrf {
     private UUID id;
-    private String employeeName;
     private String position;
     private User user;
     private Department department;
-
 }

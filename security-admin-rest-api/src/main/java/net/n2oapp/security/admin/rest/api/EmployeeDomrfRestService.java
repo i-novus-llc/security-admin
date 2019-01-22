@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.UUID;
 
 /**
  * REST сервис управления уполномоченными лицами ДОМ.РФ
@@ -25,4 +26,10 @@ public interface EmployeeDomrfRestService {
     @ApiOperation("Найти всех уполномоченных лиц ДОМ.РФ")
     @ApiResponse(code = 200, message = "Страница уполномоченных лиц ДОМ.РФ")
     Page<EmployeeDomrf> findByDepartment(@BeanParam RestEmployeeDomrfCriteria criteria);
+
+    @GET
+    @Path("/{employeeDomrfId}")
+    @ApiOperation("Уполномоченное лицо ДОМ.РФ")
+    @ApiResponse(code = 200, message = "Уполномоченное лицо ДОМ.РФ")
+    EmployeeDomrf get(@PathParam("employeeDomrfId") UUID employeeDomrfId);
 }
