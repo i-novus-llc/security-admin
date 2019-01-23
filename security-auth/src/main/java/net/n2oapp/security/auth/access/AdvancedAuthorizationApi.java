@@ -63,8 +63,11 @@ public class AdvancedAuthorizationApi extends SimpleAuthorizationApi {
         if (adminService.isAdmin(user.getUsername())) {
             return;
         }
-        List<N2oAccessFilter> filters = AdvancedPermissionAndRoleCollector.collectFilters(r -> permissionApi.hasRole(user, r.getId()),
-                p -> permissionApi.hasPermission(user, p.getId()), u -> permissionApi.hasUsername(user, u.getName()), objectId, actionId, getSchema());
+        List<N2oAccessFilter> filters = AdvancedPermissionAndRoleCollector.collectFilters(
+                r -> permissionApi.hasRole(user, r.getId()),
+                p -> permissionApi.hasPermission(user, p.getId()),
+                u -> permissionApi.hasUsername(user, user.getUsername()), objectId, actionId, getSchema()
+        );
         permission.setAccessFilters(FilterMerger.merge(resolveContext(user, filters)));
     }
 

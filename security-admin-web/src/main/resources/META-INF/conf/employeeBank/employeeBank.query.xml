@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0" object-id="employeeBank"
+       name="Пользователи">
+    <list result-mapping="['content']" count-mapping="['totalElements']">
+        <java method="findByBank" class="net.n2oapp.security.admin.api.service.EmployeeBankService">
+            <spring/>
+            <arguments>
+                <argument class="net.n2oapp.security.admin.api.criteria.EmployeeBankCriteria" type="criteria"/>
+            </arguments>
+        </java>
+    </list>
+
+    <fields>
+        <field id="id" domain="string">
+            <select mapping="id"/>
+            <sorting/>
+        </field>
+
+        <field id="bankId" domain="string">
+            <filters>
+                <eq mapping="bankId" domain="string" filter-id="bankId"/>
+            </filters>
+        </field>
+
+        <field id="employeeName" domain="string" name="Сотрудник">
+            <select mapping="employeeName"/>
+        </field>
+
+        <field id="position" domain="string" name="Должность">
+            <select mapping="position"/>
+        </field>
+
+        <field id="email" domain="string" name="Email">
+            <select mapping="user.email"/>
+        </field>
+
+        <field id="surname" domain="string" name="Фамилия">
+            <select mapping="user.surname"/>
+        </field>
+
+        <field id="name" domain="string" name="Имя">
+            <select mapping="user.name"/>
+        </field>
+
+        <field id="patronymic" domain="string" name="Отчество">
+            <select mapping="user.patronymic"/>
+        </field>
+
+        <field id="username" domain="string" name="Имя пользователя">
+            <select mapping="user.username"/>
+        </field>
+
+        <field id="password" domain="string" name="Пароль">
+            <select mapping="user.password"/>
+        </field>
+
+        <field id="passwordCheck" domain="string">
+            <select mapping="user.passwordCheck"/>
+        </field>
+
+        <field id="roleNames" domain="string[]" name="Роли">
+            <select mapping="user.roles.![name]"/>
+        </field>
+
+        <field id="roleIds" domain="integer[]" name="Роли">
+            <select mapping="user.roles.![id]"></select>
+        </field>
+
+        <field id="roles" domain="object[]" name="Роли">
+            <select mapping="user.roles"></select>
+        </field>
+
+    </fields>
+</query>

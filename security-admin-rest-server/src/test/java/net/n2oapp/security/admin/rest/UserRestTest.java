@@ -76,7 +76,7 @@ public class UserRestTest {
     }
 
     @Test
-    public void testUserDetails() throws Exception {
+    public void testUserDetails() {
         RestUserDetailsToken token = new RestUserDetailsToken();
         token.setUsername("test");
         token.setRoleNames(Arrays.asList("code1", "code2"));

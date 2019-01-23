@@ -4,20 +4,20 @@
         <fields>
             <row>
                 <input-text id="username" required="true">
-                    <validations white-list="usernameValidation"/>
+
                 </input-text>
                 <input-text id="email" label="Email" required="${sec.admin.user.email.required}">
-                    <validations white-list="emailValidation"/>
+
                 </input-text>
             </row>
             <row>
                 <password id="password"
                           required="${sec.admin.user.password.input}" label="Пароль">
-                    <validations white-list="passwordLengthValidation"/>
+
                 </password>
                 <password id="passwordCheck"
                           required="${sec.admin.user.password.input}" label="Подтвердить пароль">
-                    <validations white-list="passwordCheckValidation"/>
+
                     <dependencies>
                         <enabling on="password">typeof password != 'undefined' &amp;&amp; password != null &amp;&amp; password != ''</enabling>
                     </dependencies>
