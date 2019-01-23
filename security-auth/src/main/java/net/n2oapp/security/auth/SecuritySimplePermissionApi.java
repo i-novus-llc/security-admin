@@ -4,10 +4,8 @@ import net.n2oapp.framework.access.simple.PermissionApi;
 import net.n2oapp.framework.api.user.UserContext;
 import net.n2oapp.security.auth.authority.PermissionGrantedAuthority;
 import net.n2oapp.security.auth.authority.RoleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Objects;
 
 /**
  * Интерфейс для проверки прав и ролей пользователя с помощью Spring Security
@@ -19,7 +17,7 @@ public class SecuritySimplePermissionApi implements PermissionApi {
         UserDetails userDetails = UserParamsUtil.getUserDetails();
         return userDetails != null && userDetails.getAuthorities().stream()
                         .filter(a -> a instanceof PermissionGrantedAuthority)
-                        .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equalsIgnoreCase(permissionId));
+                        .anyMatch(grantedAuthority -> ((PermissionGrantedAuthority)grantedAuthority).getPermission().equalsIgnoreCase(permissionId));
     }
 
     @Override
@@ -27,7 +25,7 @@ public class SecuritySimplePermissionApi implements PermissionApi {
         UserDetails userDetails = UserParamsUtil.getUserDetails();
         return userDetails != null && userDetails.getAuthorities().stream()
                         .filter(a -> a instanceof RoleGrantedAuthority)
-                        .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equalsIgnoreCase(roleId));
+                        .anyMatch(grantedAuthority -> ((RoleGrantedAuthority)grantedAuthority).getRole().equalsIgnoreCase(roleId));
     }
     @Override
     public boolean hasAuthentication(UserContext user) {

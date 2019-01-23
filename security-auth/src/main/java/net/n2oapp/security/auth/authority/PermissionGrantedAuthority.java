@@ -19,6 +19,10 @@ public class PermissionGrantedAuthority implements GrantedAuthority {
         return permission;
     }
 
+    public String getPermission() {
+        return permission;
+    }
+
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
