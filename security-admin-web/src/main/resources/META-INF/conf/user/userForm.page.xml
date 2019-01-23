@@ -11,13 +11,11 @@
                 </input-text>
             </row>
             <row>
-                <password id="password"
-                          required="${sec.admin.user.password.input}" label="Пароль">
-
+                <password id="password" required="${sec.admin.user.password.input.required}"
+                          visible="${sec.admin.user.password.input.visible}" label="Пароль">
                 </password>
-                <password id="passwordCheck"
-                          required="${sec.admin.user.password.input}" label="Подтвердить пароль">
-
+                <password id="passwordCheck" required="${sec.admin.user.password.input.required}"
+                          visible="${sec.admin.user.password.input.visible}" label="Подтвердить пароль">
                     <dependencies>
                         <enabling on="password">typeof password != 'undefined' &amp;&amp; password != null &amp;&amp; password != ''</enabling>
                     </dependencies>

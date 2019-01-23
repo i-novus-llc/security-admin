@@ -19,7 +19,7 @@
                 <param name="surname" mapping="[0].surname" domain="string" required="true"/>
                 <param name="name" mapping="[0].name" domain="string" required="true"/>
                 <param name="patronymic" mapping="[0].patronymic" domain="string"/>
-                <param name="password" mapping="[0].password" domain="string" required="true"/>
+                <param name="password" mapping="[0].password" domain="string" required="${sec.admin.user.password.input.required}"/>
                 <param name="passwordCheck" mapping="[0].passwordCheck" domain="string"/>
                 <param name="isActive" mapping="[0].isActive" domain="boolean" value="false"/>
                 <param name="roles*.id" mapping="[0].roles" domain="integer[]" required="true"/>
@@ -78,6 +78,7 @@
             </in-parameters>
             <confirmation-text>Вы уверены, что хотите удалить пользователя?</confirmation-text>
             <success-text>Пользователь удален</success-text>
+            <validations activate="nothing"/>
         </action>
 
         <action id="changeUserActive">
