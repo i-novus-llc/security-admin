@@ -166,11 +166,11 @@
         <condition id="newPasswordLengthValidation" level="error">
             <message>Некорректная длина пароля</message>
             <expression on="newPassword">
-                <![CDATA[(function(password){
-                    if (typeof password != 'undefined' && password != null && password != '') {
-                        return password.length >= ${sec.validation.password.length}
+                <![CDATA[(function(){
+                    if (typeof newPassword != 'undefined' && newPassword != null && newPassword != '') {
+                        return newPassword.length >= ${sec.validation.password.length}
                      } else return true;
-                  }(newPassword))
+                  }())
                 ]]>
             </expression>
         </condition>
