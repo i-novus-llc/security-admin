@@ -3,17 +3,12 @@
     <form query-id="${sec.admin.user.query.id}">
         <fields>
             <row>
-                <input-text id="username" required="true">
-
-                </input-text>
-                <input-text id="email" label="Email" required="${sec.admin.user.email.required}">
-
-                </input-text>
+                <input-text id="username" required="true"/>
+                <input-text id="email" label="Email" required="${sec.admin.user.email.required}"/>
             </row>
             <row>
                 <password id="password" required="${sec.admin.user.password.input.required}"
-                          visible="${sec.admin.user.password.input.visible}" label="Пароль">
-                </password>
+                          visible="${sec.admin.user.password.input.visible}" label="Пароль"/>
                 <password id="passwordCheck" required="${sec.admin.user.password.input.required}"
                           visible="${sec.admin.user.password.input.visible}" label="Подтвердить пароль">
                     <dependencies>
@@ -21,8 +16,8 @@
                     </dependencies>
                 </password>
             </row>
-            <input-text id="surname"/>
-            <input-text id="name"/>
+            <input-text id="surname" required="${sec.admin.user.surname.input.required}"/>
+            <input-text id="name" required="${sec.admin.user.name.input.required}"/>
             <input-text id="patronymic"/>
             <row>
                 <col size="10">

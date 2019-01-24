@@ -16,8 +16,8 @@
             <in-parameters>
                 <param name="username" mapping="[0].username" domain="string" required="true"/>
                 <param name="email" mapping="[0].email" domain="string" required="true"/>
-                <param name="surname" mapping="[0].surname" domain="string" required="true"/>
-                <param name="name" mapping="[0].name" domain="string" required="true"/>
+                <param name="surname" mapping="[0].surname" domain="string" required="${sec.admin.user.surname.input.required}"/>
+                <param name="name" mapping="[0].name" domain="string" required="${sec.admin.user.name.input.required}"/>
                 <param name="patronymic" mapping="[0].patronymic" domain="string"/>
                 <param name="password" mapping="[0].password" domain="string" required="${sec.admin.user.password.input.required}"/>
                 <param name="passwordCheck" mapping="[0].passwordCheck" domain="string"/>
@@ -47,8 +47,8 @@
                 <param name="guid" mapping="[0].guid" domain="string"/>
                 <param name="username" mapping="[0].username" domain="string" required="true"/>
                 <param name="email" mapping="[0].email" domain="string" required="true"/>
-                <param name="surname" mapping="[0].surname" domain="string" required="true"/>
-                <param name="name" mapping="[0].name" domain="string" required="true"/>
+                <param name="surname" mapping="[0].surname" domain="string" required="${sec.admin.user.surname.input.required}"/>
+                <param name="name" mapping="[0].name" domain="string" required="${sec.admin.user.name.input.required}"/>
                 <param name="patronymic" mapping="[0].patronymic" domain="string"/>
                 <param name="newPassword" mapping="[0].newPassword" domain="string"/>
                 <param name="passwordCheck" mapping="[0].passwordCheck" domain="string"/>
