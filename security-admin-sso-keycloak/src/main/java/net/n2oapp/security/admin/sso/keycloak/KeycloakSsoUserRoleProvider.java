@@ -31,7 +31,7 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
         UserRepresentation userRepresentation = map(user);
         if (user.getPassword() != null) {
             CredentialRepresentation passwordCred = new CredentialRepresentation();
-            passwordCred.setTemporary(true);
+            passwordCred.setTemporary(properties.getPasswordTemporary());
             passwordCred.setType(CredentialRepresentation.PASSWORD);
             passwordCred.setValue(user.getPassword());
             userRepresentation.setCredentials(Arrays.asList(passwordCred));

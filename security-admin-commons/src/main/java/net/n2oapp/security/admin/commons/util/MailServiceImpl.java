@@ -33,7 +33,7 @@ public class MailServiceImpl implements MailService {
     private String mailSubject;
     @Value("${sec.password.mail.send}")
     private Boolean sendWelcomeEmail;
-    @Value("${sec.password.mail.application.path}")
+    @Value("${sec.password.mail.application.url}")
     private String appPath;
 
     public void sendWelcomeMail(UserForm user) {
