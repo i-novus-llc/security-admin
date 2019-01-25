@@ -40,7 +40,7 @@
             <table name="Пользователи" query-id="employeeBank" id="users" depends-on="bank" master-field-id="id"
                    detail-field-id="bankId">
                 <columns>
-                    <column text-field-id="employeeName"/>
+                    <column text-field-id="shortFio"/>
                     <column text-field-id="position"/>
                     <column text-field-id="email"/>
                     <column text-field-id="roleNames" label="Роли">

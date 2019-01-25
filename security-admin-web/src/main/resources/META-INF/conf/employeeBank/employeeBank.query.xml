@@ -22,8 +22,8 @@
             </filters>
         </field>
 
-        <field id="employeeName" domain="string" name="Сотрудник">
-            <select mapping="employeeName"/>
+        <field id="shortFio" domain="string" name="Сотрудник">
+            <select mapping="user.shortFio"/>
         </field>
 
         <field id="position" domain="string" name="Должность">
