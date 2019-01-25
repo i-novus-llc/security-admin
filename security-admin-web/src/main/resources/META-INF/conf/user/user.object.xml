@@ -113,19 +113,6 @@
             <result expression="#this == true"/>
         </constraint>
 
-        <condition id="usernameValidation" level="error">
-            <message>Неверное имя</message>
-            <expression on="username">
-                <![CDATA[(function(){
-                    if (typeof username != 'undefined' && username != null && username != '') {
-                        var regex = new RegExp('^[-_\\.a-zA-Z][-_\\.a-zA-Z0-9]+$');
-                        return regex.test(username);
-                     } else return true;
-                     })()
-                ]]>
-            </expression>
-        </condition>
-
         <condition id="emailValidation" level="error">
             <message>Неверный email</message>
             <expression on="email">
