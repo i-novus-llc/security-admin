@@ -16,10 +16,10 @@
             <in-parameters>
                 <param name="username" mapping="[0].username" domain="string" required="true"/>
                 <param name="email" mapping="[0].email" domain="string" required="true"/>
-                <param name="surname" mapping="[0].surname" domain="string" required="${sec.admin.user.surname.input.required}"/>
-                <param name="name" mapping="[0].name" domain="string" required="${sec.admin.user.name.input.required}"/>
+                <param name="surname" mapping="[0].surname" domain="string" required="true"/>
+                <param name="name" mapping="[0].name" domain="string" required="true"/>
                 <param name="patronymic" mapping="[0].patronymic" domain="string"/>
-                <param name="password" mapping="[0].password" domain="string" required="${sec.admin.user.password.input.required}"/>
+                <param name="password" mapping="[0].password" domain="string" required="true"/>
                 <param name="passwordCheck" mapping="[0].passwordCheck" domain="string"/>
                 <param name="isActive" mapping="[0].isActive" domain="boolean" value="false"/>
                 <param name="roles*.id" mapping="[0].roles" domain="integer[]" required="true"/>
@@ -28,9 +28,7 @@
                 <param name="id" mapping="id"/>
             </out-parameters>
             <success-text>Пользователь сохранен</success-text>
-            <validations activate="blackList">
-                <validation ref-id="newPasswordLengthValidation"/>
-            </validations>
+            <validations activate="all"/>
         </action>
 
         <action id="update">
@@ -47,8 +45,8 @@
                 <param name="guid" mapping="[0].guid" domain="string"/>
                 <param name="username" mapping="[0].username" domain="string" required="true"/>
                 <param name="email" mapping="[0].email" domain="string" required="true"/>
-                <param name="surname" mapping="[0].surname" domain="string" required="${sec.admin.user.surname.input.required}"/>
-                <param name="name" mapping="[0].name" domain="string" required="${sec.admin.user.name.input.required}"/>
+                <param name="surname" mapping="[0].surname" domain="string" required="true"/>
+                <param name="name" mapping="[0].name" domain="string" required="true"/>
                 <param name="patronymic" mapping="[0].patronymic" domain="string"/>
                 <param name="newPassword" mapping="[0].newPassword" domain="string"/>
                 <param name="passwordCheck" mapping="[0].passwordCheck" domain="string"/>
@@ -78,7 +76,6 @@
             </in-parameters>
             <confirmation-text>Вы уверены, что хотите удалить пользователя?</confirmation-text>
             <success-text>Пользователь удален</success-text>
-            <validations activate="nothing"/>
         </action>
 
         <action id="changeUserActive">
@@ -113,15 +110,28 @@
             <result expression="#this == true"/>
         </constraint>
 
+        <condition id="usernameValidation" level="error">
+            <message>Неверное имя</message>
+            <expression on="username">
+                <![CDATA[function(){
+                    if (typeof username != 'undefined' && username != null && username != '') {
+                        var regex = new RegExp('^[-_\\.a-zA-Z][-_\\.a-zA-Z0-9]+$');
+                        return regex.test(username);
+                     } else return true;
+                     }()
+                ]]>
+            </expression>
+        </condition>
+
         <condition id="emailValidation" level="error">
             <message>Неверный email</message>
             <expression on="email">
-                <![CDATA[(function(){
-                    if (typeof email != 'undefined' && email != null && email != '') {
-                        var regex = new RegExp('[A-Za-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[A-Za-z0-9!#$%&\'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\\.)+[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?');
-                        return regex.test(email);
-                    } else return true;
-                    })()
+                <![CDATA[function(){
+                if (typeof email != 'undefined' && email != null && email != '') {
+                    var regex = new RegExp('[A-Za-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[A-Za-z0-9!#$%&\'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\\.)+[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?');
+                    return regex.test(email);
+                } else return true;
+                }()
                 ]]>
             </expression>
         </condition>
@@ -129,12 +139,12 @@
         <condition id="passwordValidation" level="error">
             <message>Неверный формат пароля</message>
             <expression on="password">
-                <![CDATA[(function(){
+                <![CDATA[function(){
                     if (typeof password != 'undefined' && password != null && password != '') {
-                        var regex = new RegExp('(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,}');
+                        var regex = new RegExp('[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?');
                         return regex.test(password);
-                     } else return true;
-                     })()
+                     }else return true;
+                     }()
                 ]]>
             </expression>
         </condition>
@@ -142,22 +152,22 @@
         <condition id="passwordLengthValidation" level="error">
             <message>Некорректная длина пароля</message>
             <expression on="password">
-                <![CDATA[(function(){
+                <![CDATA[function(){
                     if (typeof password != 'undefined' && password != null && password != '') {
                         return password.length >= ${sec.validation.password.length}
                      } else return true;
-                  })()
+                  }()
                 ]]>
             </expression>
         </condition>
         <condition id="newPasswordLengthValidation" level="error">
             <message>Некорректная длина пароля</message>
             <expression on="newPassword">
-                <![CDATA[(function(){
-                    if (typeof newPassword != 'undefined' && newPassword != null && newPassword != '') {
-                        return newPassword.length >= ${sec.validation.password.length}
+                <![CDATA[(function(password){
+                    if (typeof password != 'undefined' && password != null && password != '') {
+                        return password.length >= ${sec.validation.password.length}
                      } else return true;
-                  }())
+                  }(newPassword))
                 ]]>
             </expression>
         </condition>
@@ -165,11 +175,11 @@
         <condition id="passwordCheckValidation" level="error">
             <message>Введённые пароли не совпадают</message>
             <expression on="passwordCheck,password">
-                <![CDATA[(function(){
-                    if (typeof passwordCheck != 'undefined' && passwordCheck != null && passwordCheck != '' && typeof password != 'undefined' && password != null && password != '') {
+                <![CDATA[function(){
+                    if (typeof passwordCheck != 'undefined' && passwordCheck != null && passwordCheck != '') {
                         return passwordCheck === password;
                      } else return true;
-                   })()
+                   }()
                 ]]>
             </expression>
         </condition>
@@ -177,11 +187,11 @@
         <condition id="newPasswordCheckValidation" level="error">
             <message>Введённые пароли не совпадают</message>
             <expression on="passwordCheck,newPassword">
-                <![CDATA[(function(){
+                <![CDATA[function(){
                     if (typeof newPassword != 'undefined' && newPassword != null && newPassword != '') {
                         return passwordCheck === newPassword;
                      } else return true;
-                   })()
+                   }()
                 ]]>
             </expression>
         </condition>

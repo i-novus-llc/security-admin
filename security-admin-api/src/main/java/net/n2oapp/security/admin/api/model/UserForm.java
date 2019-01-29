@@ -2,7 +2,6 @@ package net.n2oapp.security.admin.api.model;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -22,5 +21,4 @@ public class UserForm {
     private String passwordCheck;
     private Boolean isActive;
     private List<Integer> roles;
-    private LocalDateTime lastActionDate;
 }

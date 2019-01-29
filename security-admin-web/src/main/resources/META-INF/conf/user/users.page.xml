@@ -50,7 +50,7 @@
                 </filters>
                 <toolbar>
                     <button id="create" label="Создать">
-                        <show-modal page-id="userForm" submit-operation-id="create" model="filter" object-id="user" upload="defaults"/>
+                        <show-modal page-id="userForm" submit-operation-id="create" model="filter" object-id="user"/>
                     </button>
                     <button id="update" context="true" label="Изменить">
                         <show-modal page-id="userUpdateForm" submit-operation-id="update" object-id="user"

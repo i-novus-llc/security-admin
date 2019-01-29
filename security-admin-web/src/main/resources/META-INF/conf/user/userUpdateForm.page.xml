@@ -12,16 +12,16 @@
                 <password id="newPassword" label="Новый пароль" visible="${sec.admin.user.password.editable}">
                     <validations white-list="newPasswordLengthValidation"/>
                 </password>
-                <password id="passwordCheck" label="Подтвердить пароль" depends-on=""
+                <password id="passwordCheck" label="Подтвердить пароль"
                           visible="${sec.admin.user.password.editable}">
                     <validations white-list="newPasswordCheckValidation"/>
                     <dependencies>
-                        <enabling on="newPassword">typeof newPassword != 'undefined' &amp;&amp; newPassword != null &amp;&amp; newPassword != ''</enabling>
+                        <enabling on="password">typeof newPassword != 'undefined' &amp;&amp; newPassword != null &amp;&amp; newPassword != ''</enabling>
                     </dependencies>
                 </password>
             </row>
-            <input-text id="surname" required="${sec.admin.user.surname.input.required}"/>
-            <input-text id="name" required="${sec.admin.user.name.input.required}"/>
+            <input-text id="surname"/>
+            <input-text id="name"/>
             <input-text id="patronymic"/>
             <row>
                 <col size="10">

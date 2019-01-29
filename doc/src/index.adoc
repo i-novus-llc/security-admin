@@ -27,7 +27,7 @@
 [source,xml]
 ----
 <dependency>
-    <groupId>net.n2oapp.framework.security.lkb</groupId>
+    <groupId>net.n2oapp.framework.security</groupId>
     <artifactId>security-auth-simple</artifactId>
     <version>${security.admin.version}</version>
 </dependency>
@@ -60,7 +60,7 @@ public class SecurityConfig extends SimpleSecurityConfigurerAdapter {
 [source,xml]
 ----
 <dependency>
-    <groupId>net.n2oapp.framework.security.lkb</groupId>
+    <groupId>net.n2oapp.framework.security</groupId>
     <artifactId>security-auth-oauth2</artifactId>
     <version>${security.admin.version}</version>
 </dependency>
@@ -263,7 +263,7 @@ image::images\readme-e72a1.png[]
 [source,xml]
 ----
 <dependency>
-    <groupId>net.n2oapp.framework.security.lkb</groupId>
+    <groupId>net.n2oapp.framework.security</groupId>
     <artifactId>security-admin-web</artifactId>
     <version>${security.admin.version}</version>
 </dependency>
@@ -274,7 +274,7 @@ image::images\readme-e72a1.png[]
 [source,xml]
 ----
 <dependency>
-    <groupId>net.n2oapp.framework.security.lkb</groupId>
+    <groupId>net.n2oapp.framework.security</groupId>
     <artifactId>security-admin-sql</artifactId>
     <version>${security.admin.version}</version>
 </dependency>
@@ -338,7 +338,7 @@ image::images\readme-eadda.png[]
 [source,xml]
 ----
 <dependency>
-    <groupId>net.n2oapp.framework.security.lkb</groupId>
+    <groupId>net.n2oapp.framework.security</groupId>
     <artifactId>security-admin-web</artifactId>
     <version>${security.admin.version}</version>
 </dependency>
@@ -349,7 +349,7 @@ image::images\readme-eadda.png[]
 [source,xml]
 ----
 <dependency>
-    <groupId>net.n2oapp.framework.security.lkb</groupId>
+    <groupId>net.n2oapp.framework.security</groupId>
     <artifactId>security-admin-rest-client</artifactId>
     <version>${security.admin.version}</version>
 </dependency>
@@ -599,5 +599,3 @@ image::images\index-0c310.png[]
 == Расширение профиля пользователя
 В этом разделе рассказывается как расширить профиль пользователя новыми атрибутами, как встроить их в интерфейс и использовать в контексте приложения.
 //todo
-
-include::lkb.adoc[]

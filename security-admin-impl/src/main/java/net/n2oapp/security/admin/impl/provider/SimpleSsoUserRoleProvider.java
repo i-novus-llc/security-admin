@@ -3,6 +3,7 @@ package net.n2oapp.security.admin.impl.provider;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
+import org.springframework.stereotype.Service;
 
 /**
  * Дефолтная реализация

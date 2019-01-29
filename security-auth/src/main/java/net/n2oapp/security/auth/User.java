@@ -3,11 +3,9 @@ package net.n2oapp.security.auth;
 import net.n2oapp.security.auth.authority.PermissionGrantedAuthority;
 import net.n2oapp.security.auth.authority.RoleGrantedAuthority;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.util.StringUtils;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -84,19 +82,6 @@ public class User extends org.springframework.security.core.userdetails.User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getUserFullName() {
-        List<String> fullNameParts = new LinkedList<>();
-        if (!StringUtils.isEmpty(surname))
-            fullNameParts.add(surname);
-        if (!StringUtils.isEmpty(name))
-            fullNameParts.add(name);
-        if (!StringUtils.isEmpty(patronymic))
-            fullNameParts.add(patronymic);
-        if (fullNameParts.isEmpty())
-            fullNameParts.add(getUsername());
-        return String.join(" ", fullNameParts);
     }
 
     public List<String> getRoles() {

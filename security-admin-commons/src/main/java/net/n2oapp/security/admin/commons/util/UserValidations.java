@@ -48,7 +48,7 @@ public class UserValidations {
     public void checkUsername(String username) {
         if (!validationUsername)
             return;
-        String regexp = "^[a-zA-Z][a-zA-Z0-9_]+$";
+        String regexp = "^[a-zA-Z][a-zA-Z0-9]+$";
         Pattern pattern = Pattern.compile(regexp);
         Matcher matcher = pattern.matcher(username);
         if (!matcher.matches())

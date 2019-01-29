@@ -2,7 +2,6 @@ package net.n2oapp.security.admin.impl.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.n2oapp.security.admin.api.model.Role;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -62,13 +61,6 @@ public class RoleEntity {
         setId(id);
     }
 
-    public Role extractModel() {
-        Role model = new Role();
-        model.setId(this.id);
-        model.setCode(this.code);
-        model.setName(this.name);
-        model.setDescription(this.description);
-        return model;
-    }
+
 }
 

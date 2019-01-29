@@ -1,0 +1,79 @@
+version: "3.6"
+services:
+  keycloak-db:
+    image: postgres:9.6.11-alpine
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak
+    ports:
+    - "5432"
+    deploy:
+      placement:
+        constraints:
+        - node.labels.type == db
+
+  keycloak:
+    image: jboss/keycloak:3.4.3.Final
+    environment:
+      DB_VENDOR: postgres
+      DB_ADDR: keycloak-db
+      DB_DATABASE: keycloak
+      DB_PASSWORD: keycloak
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+    depends_on:
+    - keycloak-db
+    ports:
+    - "8080"
+    - "8443"
+    deploy:
+      placement:
+        constraints:
+        - node.hostname == os-4
+
+  db:
+    image: postgres:9.6.11-alpine
+    environment:
+      POSTGRES_DB: sec
+      POSTGRES_USER: sec_user
+      POSTGRES_PASSWORD: sec_pass
+    ports:
+    - "5432"
+    deploy:
+      placement:
+        constraints:
+        - node.labels.type == db
+
+  backend:
+    image: "538721144237.dkr.ecr.eu-west-1.amazonaws.com/security-admin/backend:${TAG}"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db/sec
+      SPRING_DATASOURCE_USERNAME: sec_user
+      SPRING_DATASOURCE_PASSWORD: sec_pass
+      SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
+      SPRING_CLOUD_CONSUL_HOST: ${spring_cloud_consul_host}
+    depends_on:
+    - db
+    restart: on-failure
+    ports:
+    - "8080"
+    deploy:
+      placement:
+        constraints:
+        - node.hostname == os-4
+
+  frontend:
+    image: "538721144237.dkr.ecr.eu-west-1.amazonaws.com/security-admin/frontend:${TAG}"
+    environment:
+      SPRING_CLOUD_CONSUL_HOST: ${spring_cloud_consul_host}
+      SEC_ADMIN_REST_URL: http://backend:8080/api
+    depends_on:
+    - backend
+    - keycloak
+    ports:
+    - "8080"
+    deploy:
+      placement:
+        constraints:
+        - node.hostname == os-4

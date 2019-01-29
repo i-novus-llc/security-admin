@@ -3,7 +3,7 @@ spring:
     name: security-admin-frontend
   cloud:
     consul:
-      host: docker.one
+      host: localhost
       port: 8500
       config:
         enabled: true
