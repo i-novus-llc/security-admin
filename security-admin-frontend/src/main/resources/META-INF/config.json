@@ -1,0 +1,7 @@
+{
+  "user": {
+    "username": "#{username}",
+    "orgShortName" : "ДОМ.РФ",
+    "userShortName" : "#{userFullName}"
+  }
+}

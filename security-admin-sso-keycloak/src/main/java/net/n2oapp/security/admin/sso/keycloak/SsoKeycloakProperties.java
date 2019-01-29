@@ -54,4 +54,9 @@ public class SsoKeycloakProperties {
      * Отправлять ли ссылку на смену пароля при создании пользователя
      */
     private Boolean sendChangePassword = true;
+
+    /**
+     * Является ли создаваемый пароль временным(если да, то при первом входе пользователь должен будет сменить его)
+     */
+    private Boolean passwordTemporary = false;
 }

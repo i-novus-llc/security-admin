@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>net.n2oapp.framework.security</groupId>
+    <groupId>net.n2oapp.framework.security.lkb</groupId>
     <artifactId>security-admin</artifactId>
     <packaging>pom</packaging>
     <version>3.0-SNAPSHOT</version>
@@ -17,8 +17,9 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <n2o.version>7.0.RC9</n2o.version>
-        <n2o.platform.version>1.3</n2o.platform.version>
+        <n2o.version>7.0.3</n2o.version>
+        <n2o-platform.version>1.3</n2o-platform.version>
+        <lkb-frontend.version>1.0-SNAPSHOT</lkb-frontend.version>
     </properties>
 
     <scm>
@@ -81,19 +82,19 @@
             <dependency>
                 <groupId>net.n2oapp.platform</groupId>
                 <artifactId>n2o-platform-i18n-commons</artifactId>
-                <version>${n2o.platform.version}</version>
+                <version>${n2o-platform.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>net.n2oapp.platform</groupId>
                 <artifactId>n2o-platform-starter-jaxrs-server</artifactId>
-                <version>${n2o.platform.version}</version>
+                <version>${n2o-platform.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>net.n2oapp.platform</groupId>
                 <artifactId>n2o-platform-starter-jaxrs-client</artifactId>
-                <version>${n2o.platform.version}</version>
+                <version>${n2o-platform.version}</version>
             </dependency>
 
 
@@ -143,6 +144,12 @@
                 <groupId>net.n2oapp.framework</groupId>
                 <artifactId>n2o-spring-boot-starter</artifactId>
                 <version>${n2o.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>ru.i-novus.domrf.lkb</groupId>
+                <artifactId>frontend</artifactId>
+                <version>${lkb-frontend.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

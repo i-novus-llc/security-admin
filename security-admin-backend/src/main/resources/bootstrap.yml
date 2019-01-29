@@ -3,8 +3,8 @@ spring:
     name: security-admin-backend
   cloud:
     consul:
-      host: localhost
+      host: docker.one
       port: 8500
       config:
-        enabled: true
+        enabled: false
         fail-fast: false

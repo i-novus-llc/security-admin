@@ -33,6 +33,8 @@ public class MailServiceImpl implements MailService {
     private String mailSubject;
     @Value("${sec.password.mail.send}")
     private Boolean sendWelcomeEmail;
+    @Value("${sec.password.mail.application.url}")
+    private String appPath;
 
     public void sendWelcomeMail(UserForm user) {
         if (sendWelcomeEmail) {
@@ -43,6 +45,7 @@ public class MailServiceImpl implements MailService {
             data.put("patronymic", valueOrEmpty(user.getPatronymic()));
             data.put("password", user.getPassword());
             data.put("email", user.getEmail());
+            data.put("appPath", appPath);
             String subjectTemplate = mailSubject;
             MimeMessage message = emailSender.createMimeMessage();
             String body = null;

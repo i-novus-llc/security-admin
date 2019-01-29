@@ -1,9 +1,14 @@
 package net.n2oapp.security.admin.api.criteria;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -38,21 +43,25 @@ public class BaseCriteria implements Pageable {
     }
 
     @Override
+    @JsonProperty("size")
     public int getPageSize() {
         return this.size;
     }
 
     @Override
+    @JsonProperty("page")
     public int getPageNumber() {
         return this.page;
     }
 
     @Override
+    @JsonIgnore
     public int getOffset() {
-        return (this.page - 1) * this.size;
+        return (this.page) * this.size;
     }
 
     @Override
+    @JsonIgnore
     public Sort getSort() {
         if (orders != null && !orders.isEmpty()) {
             return new Sort(orders);
@@ -72,29 +81,35 @@ public class BaseCriteria implements Pageable {
         return orders;
     }
 
+    @JsonIgnore
     public void setOrders(List<Sort.Order> orders) {
         this.orders = orders;
     }
 
     @Override
+    @JsonIgnore
     public Pageable next() {
         return new BaseCriteria(this.getPageNumber() + 1, this.getPageSize(), this.getSort());
     }
 
+    @JsonIgnore
     public Pageable previous() {
         return this.getPageNumber() == 0 ? this : new BaseCriteria(this.getPageNumber() - 1, this.getPageSize(), this.getSort());
     }
 
     @Override
+    @JsonIgnore
     public boolean hasPrevious() {
         return this.page > 0;
     }
 
+    @JsonIgnore
     public Pageable previousOrFirst() {
         return this.hasPrevious() ? this.previous() : this.first();
     }
 
     @Override
+    @JsonIgnore
     public Pageable first() {
         return new BaseCriteria(0, this.getPageSize(), this.getSort());
     }
