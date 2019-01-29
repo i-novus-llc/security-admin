@@ -35,6 +35,14 @@
             <version>${project.version}</version>
         </dependency>
 
+        <!-- platform -->
+        <dependency>
+            <groupId>net.n2oapp.platform</groupId>
+            <artifactId>n2o-platform-starter-jaxrs-client</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- /platform -->
+
     </dependencies>
 
 </project>

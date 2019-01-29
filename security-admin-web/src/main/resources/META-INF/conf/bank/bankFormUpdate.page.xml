@@ -21,7 +21,7 @@
                     </row>
                     <row>
                         <input-text id="shortName" enabled="false"/>
-                        <date-time id="regDt" format="DD.MM.YYYY" enabled="false"/>
+                        <date-time id="regDt" date-format="DD.MM.YYYY" enabled="false"/>
                     </row>
                     <row>
                         <input-text id="legalAddress" enabled="false"/>

@@ -17,13 +17,13 @@
                         <input-text id="name" no-label="true" placeholder="Введите текст для поиска"/>
                     </row>
                     <row>
-                        <col size="10">
+                        <col size="8">
                             <input-select id="parents" label="Головные организации"
                                           query-id="${sec.admin.bank.query.id}"
                                           value-field-id="id" label-field-id="shortName"/>
                         </col>
 
-                        <radio-group id="type" no-label="true">
+                        <radio-group id="type" no-label="true" inline="true">
                             <options>
                                 <option id="1" code="1" name="Головная организация"/>
                                 <option id="2" code="2" name="Подразделение банка"/>

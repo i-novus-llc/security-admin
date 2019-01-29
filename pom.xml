@@ -17,9 +17,9 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <n2o.version>7.0.2</n2o.version>
-        <n2o.platform.version>1.3</n2o.platform.version>
-        <lkb.app.version>1.0-SNAPSHOT</lkb.app.version>
+        <n2o.version>7.0.3</n2o.version>
+        <n2o-platform.version>1.3</n2o-platform.version>
+        <lkb-frontend.version>1.0-SNAPSHOT</lkb-frontend.version>
     </properties>
 
     <scm>
@@ -82,19 +82,19 @@
             <dependency>
                 <groupId>net.n2oapp.platform</groupId>
                 <artifactId>n2o-platform-i18n-commons</artifactId>
-                <version>${n2o.platform.version}</version>
+                <version>${n2o-platform.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>net.n2oapp.platform</groupId>
                 <artifactId>n2o-platform-starter-jaxrs-server</artifactId>
-                <version>${n2o.platform.version}</version>
+                <version>${n2o-platform.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>net.n2oapp.platform</groupId>
                 <artifactId>n2o-platform-starter-jaxrs-client</artifactId>
-                <version>${n2o.platform.version}</version>
+                <version>${n2o-platform.version}</version>
             </dependency>
 
 
@@ -149,7 +149,7 @@
             <dependency>
                 <groupId>ru.i-novus.domrf.lkb</groupId>
                 <artifactId>frontend</artifactId>
-                <version>${lkb.app.version}</version>
+                <version>${lkb-frontend.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

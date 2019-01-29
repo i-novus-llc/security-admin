@@ -11,7 +11,7 @@
             <input-text id="shortName" required="true"/>
             <row>
                 <input-text id="regNum" domain="integer" min="0"/>
-                <date-time id="regDt" format="DD.MM.YYYY"/>
+                <date-time id="regDt" date-format="DD.MM.YYYY"/>
             </row>
 
             <row>
