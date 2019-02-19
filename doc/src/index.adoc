@@ -212,7 +212,7 @@ security.oauth2.client.scope=read, write
 
 *Invalid parameter: redirect_uri*
 
-проверьте этот параметр в адрессной строке
+проверьте этот параметр в адресной строке
 
 `localhost:8888/auth/realms/security-admin/protocol/openid-connect/auth?client_id=myapp&redirect_uri=http://127.0.0.1:8080/login&response_type=code`
 
