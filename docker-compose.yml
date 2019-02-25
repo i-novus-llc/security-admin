@@ -9,6 +9,9 @@ services:
     ports:
     - "5432"
     deploy:
+      resources:
+        limits:
+          memory: 1024M
       placement:
         constraints:
         - node.labels.type == db
@@ -22,12 +25,16 @@ services:
       DB_PASSWORD: keycloak
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: admin
+      JAVA_OPTS: -Xmx200m
     depends_on:
     - keycloak-db
     ports:
     - "8080"
     - "8443"
     deploy:
+      resources:
+        limits:
+          memory: 500M
       placement:
         constraints:
         - node.hostname == os-4
@@ -41,6 +48,9 @@ services:
     ports:
     - "5432"
     deploy:
+      resources:
+        limits:
+          memory: 1024M
       placement:
         constraints:
         - node.labels.type == db
@@ -53,12 +63,16 @@ services:
       SPRING_DATASOURCE_PASSWORD: sec_pass
       SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
       SPRING_CLOUD_CONSUL_HOST: ${spring_cloud_consul_host}
+      JAVA_OPTS: -Xmx200m
     depends_on:
     - db
     restart: on-failure
     ports:
     - "8080"
     deploy:
+      resources:
+        limits:
+          memory: 500M
       placement:
         constraints:
         - node.hostname == os-4
@@ -68,12 +82,16 @@ services:
     environment:
       SPRING_CLOUD_CONSUL_HOST: ${spring_cloud_consul_host}
       SEC_ADMIN_REST_URL: http://backend:8080/api
+      JAVA_OPTS: -Xmx200m
     depends_on:
     - backend
     - keycloak
     ports:
     - "8080"
     deploy:
+      resources:
+        limits:
+          memory: 500M
       placement:
         constraints:
         - node.hostname == os-4
