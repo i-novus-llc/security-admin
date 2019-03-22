@@ -1,12 +1,5 @@
 version: "3.6"
 services:
-  keycloak-db:
-    ports:
-    - "5432"
-  keycloak:
-    ports:
-    - "8888:8080"
-    - "8889:8443"
   db:
     ports:
     - "5432"
