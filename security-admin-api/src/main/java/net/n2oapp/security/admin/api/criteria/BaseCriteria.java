@@ -11,7 +11,6 @@ import java.util.stream.StreamSupport;
  * Базовая модель фильтрации данных в таблице
  */
 public class BaseCriteria implements Pageable {
-
     private int page;
     private int size;
     private List<Sort.Order> orders;
@@ -66,6 +65,14 @@ public class BaseCriteria implements Pageable {
 
     public void setSize(int size) {
         this.size = size;
+    }
+
+    public int getPage() {
+        return page;
+    }
+
+    public int getSize() {
+        return size;
     }
 
     public List<Sort.Order> getOrders() {

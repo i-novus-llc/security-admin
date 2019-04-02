@@ -2,6 +2,7 @@ package net.n2oapp.security.admin.web;
 
 import net.n2oapp.framework.api.context.ContextProcessor;
 import net.n2oapp.framework.api.data.DomainProcessor;
+import net.n2oapp.framework.api.data.QueryExceptionHandler;
 import net.n2oapp.framework.api.data.QueryProcessor;
 import net.n2oapp.framework.engine.data.N2oInvocationFactory;
 import net.n2oapp.framework.engine.data.N2oQueryProcessor;
@@ -13,8 +14,10 @@ public class WebConfiguration {
     @Bean
     public QueryProcessor queryProcessor(ContextProcessor contextProcessor,
                                          DomainProcessor domainProcessor,
-                                         N2oInvocationFactory invocationFactory) {
-        N2oQueryProcessor queryProcessor = new N2oQueryProcessor(contextProcessor, invocationFactory);
+                                         N2oInvocationFactory invocationFactory,
+                                         QueryExceptionHandler exceptionHandler) {
+        N2oQueryProcessor queryProcessor = new N2oQueryProcessor(invocationFactory, contextProcessor, domainProcessor,
+                exceptionHandler);
         queryProcessor.setCriteriaResolver(new BaseCriteriaConstructor());
         return queryProcessor;
     }
