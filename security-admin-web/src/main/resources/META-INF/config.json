@@ -2,7 +2,8 @@
   "user": {
     "username": "#{username}",
     "roles": #{roles},
-    "permissions": #{permissions}
+    "permissions": #{permissions},
+    "token" : "#{token}"
   }
 }
 
