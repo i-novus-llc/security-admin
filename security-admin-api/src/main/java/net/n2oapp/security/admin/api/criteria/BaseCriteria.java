@@ -3,7 +3,10 @@ package net.n2oapp.security.admin.api.criteria;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -12,7 +15,7 @@ import java.util.stream.StreamSupport;
  */
 public class BaseCriteria implements Pageable {
     private int page;
-    private int size;
+    private int size = 10;
     private List<Sort.Order> orders;
 
     public BaseCriteria() {
@@ -47,7 +50,7 @@ public class BaseCriteria implements Pageable {
     }
 
     @Override
-    public int getOffset() {
+    public long getOffset() {
         return (this.page - 1) * this.size;
     }
 

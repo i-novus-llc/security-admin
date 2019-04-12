@@ -1,8 +1,8 @@
 {
   "user": {
     "username": "#{username}",
-    "roles": #{roles},
-    "permissions": #{permissions}
+    "roles": "#{roles}",
+    "permissions": "#{permissions}"
   }
 }
 

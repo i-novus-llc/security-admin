@@ -44,11 +44,19 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!-- N2O -->
+<!--        PLATFORM-->
         <dependency>
-            <groupId>net.n2oapp.framework</groupId>
-            <artifactId>n2o-spring-boot-starter</artifactId>
+            <groupId>net.n2oapp.platform</groupId>
+            <artifactId>n2o-platform-starter-web</artifactId>
+            <version>${n2o-platform.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>net.n2oapp.platform</groupId>
+            <artifactId>n2o-platform-starter-jaxrs-server</artifactId>
+        </dependency>
+
+        <!-- N2O -->
         <dependency>
             <groupId>net.n2oapp.framework</groupId>
             <artifactId>n2o-web</artifactId>

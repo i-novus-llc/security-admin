@@ -9,16 +9,16 @@
     <version>3.0-SNAPSHOT</version>
 
     <parent>
-        <groupId>net.n2oapp.parent</groupId>
-        <artifactId>parent</artifactId>
-        <version>2.3</version>
+        <groupId>net.n2oapp.platform</groupId>
+        <artifactId>n2o-platform-parent</artifactId>
+        <version>2.6-SNAPSHOT</version>
         <relativePath/>
     </parent>
 
     <properties>
         <java.version>1.8</java.version>
-        <n2o.version>7.1.11</n2o.version>
-        <n2o.platform.version>1.3</n2o.platform.version>
+        <n2o.version>7.2.0-SNAPSHOT</n2o.version>
+        <n2o-platform.version>2.6-SNAPSHOT</n2o-platform.version>
     </properties>
 
     <scm>
@@ -81,19 +81,19 @@
             <dependency>
                 <groupId>net.n2oapp.platform</groupId>
                 <artifactId>n2o-platform-i18n-commons</artifactId>
-                <version>${n2o.platform.version}</version>
+                <version>${n2o-platform.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>net.n2oapp.platform</groupId>
                 <artifactId>n2o-platform-starter-jaxrs-server</artifactId>
-                <version>${n2o.platform.version}</version>
+                <version>${n2o-platform.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>net.n2oapp.platform</groupId>
                 <artifactId>n2o-platform-starter-jaxrs-client</artifactId>
-                <version>${n2o.platform.version}</version>
+                <version>${n2o-platform.version}</version>
             </dependency>
 
 
