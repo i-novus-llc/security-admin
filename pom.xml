@@ -17,8 +17,8 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <n2o.version>7.2.0-SNAPSHOT</n2o.version>
-        <n2o-platform.version>2.6-SNAPSHOT</n2o-platform.version>
+        <n2o.version>7.3.0-SNAPSHOT</n2o.version>
+        <config.server.enable>false</config.server.enable>
     </properties>
 
     <scm>
@@ -48,115 +48,16 @@
         <module>doc</module>
     </modules>
 
-    <dependencyManagement>
-
-        <dependencies>
-
-            <dependency>
-                <groupId>org.modelmapper.extensions</groupId>
-                <artifactId>modelmapper-spring</artifactId>
-                <version>1.1.0</version>
-            </dependency>
-
-            <dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>2.6</version>
-            </dependency>
-
-            <dependency>
-                <groupId>commons-lang</groupId>
-                <artifactId>commons-lang</artifactId>
-                <version>2.6</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-consul-dependencies</artifactId>
-                <version>1.3.0.RELEASE</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>net.n2oapp.platform</groupId>
-                <artifactId>n2o-platform-i18n-commons</artifactId>
-                <version>${n2o-platform.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.n2oapp.platform</groupId>
-                <artifactId>n2o-platform-starter-jaxrs-server</artifactId>
-                <version>${n2o-platform.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.n2oapp.platform</groupId>
-                <artifactId>n2o-platform-starter-jaxrs-client</artifactId>
-                <version>${n2o-platform.version}</version>
-            </dependency>
-
-
-            <dependency>
-                <groupId>net.n2oapp.framework</groupId>
-                <artifactId>n2o-api</artifactId>
-                <version>${n2o.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.n2oapp.framework</groupId>
-                <artifactId>n2o-web</artifactId>
-                <version>${n2o.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.n2oapp.framework</groupId>
-                <artifactId>n2o-engine</artifactId>
-                <version>${n2o.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.n2oapp.framework</groupId>
-                <artifactId>n2o-access</artifactId>
-                <version>${n2o.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.n2oapp.framework</groupId>
-                <artifactId>n2o-engine-rest</artifactId>
-                <version>${n2o.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.n2oapp.framework</groupId>
-                <artifactId>n2o-engine-sql</artifactId>
-                <version>${n2o.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.n2oapp.framework</groupId>
-                <artifactId>n2o-spring-boot-starter</artifactId>
-                <version>${n2o.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <configuration>
-                        <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
-                        <includes>
-                            <include>**/*Test.java</include>
-                            <include>**/*Tests.java</include>
-                        </includes>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
+    <profiles>
+        <profile>
+            <id>production</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <config.server.enable>true</config.server.enable>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>

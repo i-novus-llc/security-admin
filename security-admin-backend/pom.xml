@@ -135,6 +135,9 @@
     <profiles>
         <profile>
             <id>standalone</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <properties>
                 <packaging.type>jar</packaging.type>
             </properties>

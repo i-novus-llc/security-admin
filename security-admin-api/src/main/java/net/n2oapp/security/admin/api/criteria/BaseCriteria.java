@@ -1,12 +1,10 @@
 package net.n2oapp.security.admin.api.criteria;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Spliterator;
-import java.util.Spliterators;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -93,6 +91,21 @@ public class BaseCriteria implements Pageable {
 
     public Pageable previous() {
         return this.getPageNumber() == 0 ? this : new BaseCriteria(this.getPageNumber() - 1, this.getPageSize(), this.getSort());
+    }
+
+    @JsonIgnore
+    public boolean isPaged() {
+        return true;
+    }
+
+    @JsonIgnore
+    public boolean isUnpaged() {
+        return !isPaged();
+    }
+
+    @Override
+    public Optional<Pageable> toOptional() {
+        return Optional.empty();
     }
 
     @Override
