@@ -14,7 +14,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 @EnableJaxRsProxyClient(
         classes = {UserRestService.class, RoleRestService.class, PermissionRestService.class},
-        address = "http://localhost:${server.port}/rest")
+        address = "http://localhost:${server.port}/api")
 @EnableEmbeddedPg
 public class TestApplication {
     public static void main(String[] args) {
