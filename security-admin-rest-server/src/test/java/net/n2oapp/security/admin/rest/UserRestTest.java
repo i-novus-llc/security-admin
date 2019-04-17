@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 /**
@@ -49,14 +50,14 @@ public class UserRestTest {
         List<Integer> roles = new ArrayList<>();
         roles.add(1);
         RestUserCriteria criteria = new RestUserCriteria();
-        criteria.setPage(1);
+        criteria.setPage(0);
         criteria.setSize(4);
         List<Sort.Order> orders = new ArrayList<>();
         orders.add(new Sort.Order(Sort.Direction.DESC,"fio"));
         criteria.setOrders(orders);
         Page<User> user = client.findAll(criteria);
-        assertEquals(user.getContent().get(0).getSurname(),"surname3");
-        assertEquals(user.getContent().get(2).getSurname(),"surname1");
+        assertThat(user.getContent().stream().map(User::getSurname).collect(Collectors.toList()), hasItem("surname3"));
+        assertThat(user.getContent().stream().map(User::getSurname).collect(Collectors.toList()), hasItem("surname1"));
         criteria.setUsername("test");
         criteria.setFio(" surname1 name1  patronymic1");
         criteria.setIsActive(true);

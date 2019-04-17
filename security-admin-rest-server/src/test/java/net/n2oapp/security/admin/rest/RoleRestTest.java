@@ -43,7 +43,7 @@ public class RoleRestTest {
         List<Integer> permissions = new ArrayList<>();
         permissions.add(1);
         RestRoleCriteria criteria = new RestRoleCriteria();
-        criteria.setPage(1);
+        criteria.setPage(0);
         criteria.setSize(4);
         criteria.setName("user");
         criteria.setDescription("description1");

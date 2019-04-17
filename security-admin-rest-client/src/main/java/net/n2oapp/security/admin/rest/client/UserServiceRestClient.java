@@ -62,7 +62,7 @@ public class UserServiceRestClient implements UserService {
         RestUserCriteria criteria = new RestUserCriteria();
         criteria.setUsername(username);
         criteria.setSize(10);
-        criteria.setPage(1);
+        criteria.setPage(0);
         return client.findAll(criteria).getContent().size() == 0;
     }
 }
