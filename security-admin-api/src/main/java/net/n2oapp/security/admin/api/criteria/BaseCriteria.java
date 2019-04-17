@@ -49,7 +49,7 @@ public class BaseCriteria implements Pageable {
 
     @Override
     public long getOffset() {
-        return (this.page - 1) * this.size;
+        return this.page * this.size;
     }
 
     @Override
@@ -90,7 +90,7 @@ public class BaseCriteria implements Pageable {
     }
 
     public Pageable previous() {
-        return this.getPageNumber() == 0 ? this : new BaseCriteria(this.getPageNumber() - 1, this.getPageSize(), this.getSort());
+        return this.getPageNumber() == 0 ? this : new BaseCriteria(this.getPageNumber(), this.getPageSize(), this.getSort());
     }
 
     @JsonIgnore
