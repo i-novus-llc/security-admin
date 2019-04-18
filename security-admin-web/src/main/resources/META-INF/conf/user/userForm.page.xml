@@ -13,7 +13,7 @@
             <row>
                 <password id="password"
                           required="${sec.admin.user.password.input}" label="Пароль">
-                    <validations white-list="passwordLengthValidation"/>
+                    <validations white-list="passwordLengthValidation,passwordValidation"/>
                 </password>
                 <password id="passwordCheck"
                           required="${sec.admin.user.password.input}" label="Подтвердить пароль">

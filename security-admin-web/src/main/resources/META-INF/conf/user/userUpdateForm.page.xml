@@ -10,7 +10,7 @@
             </row>
             <row>
                 <password id="newPassword" label="Новый пароль" visible="${sec.admin.user.password.editable}">
-                    <validations white-list="newPasswordLengthValidation"/>
+                    <validations white-list="newPasswordLengthValidation,newPasswordValidation"/>
                 </password>
                 <password id="passwordCheck" label="Подтвердить пароль"
                           visible="${sec.admin.user.password.editable}">
