@@ -1,9 +1,9 @@
 {
   "user": {
     "username": "#{username}",
-    "roles": #{roles},
-    "permissions": #{permissions},
-    "token" : "#{token}"
+    "token" : "#{token}",
+    "roles": "#{roles}",
+    "permissions": "#{permissions}"
   }
 }
 

@@ -10,15 +10,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class WebConfiguration {
+public class AdminWebConfiguration {
     @Bean
-    public QueryProcessor queryProcessor(ContextProcessor contextProcessor,
+    public QueryProcessor saQueryProcessor(ContextProcessor contextProcessor,
                                          DomainProcessor domainProcessor,
                                          N2oInvocationFactory invocationFactory,
                                          QueryExceptionHandler exceptionHandler) {
         N2oQueryProcessor queryProcessor = new N2oQueryProcessor(invocationFactory, contextProcessor, domainProcessor,
                 exceptionHandler);
         queryProcessor.setCriteriaResolver(new BaseCriteriaConstructor());
+        queryProcessor.setPageStartsWith0(true);
         return queryProcessor;
     }
 }

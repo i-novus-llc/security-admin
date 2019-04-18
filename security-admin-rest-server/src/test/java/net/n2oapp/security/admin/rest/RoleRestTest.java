@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -34,7 +33,6 @@ import static org.junit.Assert.assertNull;
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
         properties = "server.port=8290")
 @TestPropertySource("classpath:test.properties")
-@AutoConfigureTestDatabase
 public class RoleRestTest {
     @Autowired
     @Qualifier("roleRestServiceJaxRsProxyClient")
@@ -45,7 +43,7 @@ public class RoleRestTest {
         List<Integer> permissions = new ArrayList<>();
         permissions.add(1);
         RestRoleCriteria criteria = new RestRoleCriteria();
-        criteria.setPage(1);
+        criteria.setPage(0);
         criteria.setSize(4);
         criteria.setName("user");
         criteria.setDescription("description1");

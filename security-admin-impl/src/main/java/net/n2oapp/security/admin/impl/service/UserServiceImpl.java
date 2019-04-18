@@ -1,6 +1,5 @@
 package net.n2oapp.security.admin.impl.service;
 
-import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
@@ -8,7 +7,6 @@ import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.MailService;
 import net.n2oapp.security.admin.api.service.UserService;
-import net.n2oapp.security.admin.commons.util.MailServiceImpl;
 import net.n2oapp.security.admin.commons.util.PasswordGenerator;
 import net.n2oapp.security.admin.commons.util.UserValidations;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
@@ -17,7 +15,6 @@ import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.UserSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -25,8 +22,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -111,14 +106,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(Integer id) {
-        UserEntity user = userRepository.findOne(id);
-        userRepository.delete(id);
+        UserEntity user = userRepository.findById(id).orElse(null);
+        userRepository.deleteById(id);
         provider.deleteUser(model(user));
     }
 
     @Override
     public User getById(Integer id) {
-        UserEntity entity = userRepository.findOne(id);
+        UserEntity entity = userRepository.findById(id).orElse(null);
         return model(entity);
     }
 
@@ -139,7 +134,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User changeActive(Integer id) {
-        UserEntity userEntity = userRepository.findOne(id);
+        UserEntity userEntity = userRepository.findById(id).get();
         userEntity.setIsActive(!userEntity.getIsActive());
         User result = model(userRepository.save(userEntity));
         provider.changeActivity(result);
@@ -204,7 +199,7 @@ public class UserServiceImpl implements UserService {
         model.setFio(builder.toString());
         if (entity.getRoleList() != null) {
             model.setRoles(entity.getRoleList().stream().map(e -> {
-                RoleEntity re = roleRepository.findOne(e.getId());
+                RoleEntity re = roleRepository.findById(e.getId()).get();
                 return model(re);
             }).collect(Collectors.toList()));
         }

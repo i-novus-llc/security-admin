@@ -1,199 +1,170 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<object xmlns="http://n2oapp.net/framework/config/schema/object-2.0"
-        xmlns:n2o="http://n2oapp.net/framework/config/schema/n2o-invocations-2.0">
-    <name>Пользователи</name>
+<object xmlns="http://n2oapp.net/framework/config/schema/object-3.0" name="Пользователи">
 
-    <actions>
-        <action id="create">
+    <operations>
+        <operation id="create" success-text="Пользователь сохранен">
             <invocation>
-                <n2o:java method="create" class="net.n2oapp.security.admin.api.service.UserService">
-                    <n2o:spring/>
-                    <n2o:arguments>
-                        <n2o:argument name="userEntity" class="net.n2oapp.security.admin.api.model.UserForm"/>
-                    </n2o:arguments>
-                </n2o:java>
+                <java method="create" class="net.n2oapp.security.admin.api.service.UserService">
+                    <spring/>
+                    <arguments>
+                        <argument name="userEntity" class="net.n2oapp.security.admin.api.model.UserForm"/>
+                    </arguments>
+                </java>
             </invocation>
             <in-parameters>
-                <param name="username" mapping="[0].username" domain="string" required="true"/>
-                <param name="email" mapping="[0].email" domain="string" required="true"/>
-                <param name="surname" mapping="[0].surname" domain="string" required="true"/>
-                <param name="name" mapping="[0].name" domain="string" required="true"/>
-                <param name="patronymic" mapping="[0].patronymic" domain="string"/>
-                <param name="password" mapping="[0].password" domain="string" required="true"/>
-                <param name="passwordCheck" mapping="[0].passwordCheck" domain="string"/>
-                <param name="isActive" mapping="[0].isActive" domain="boolean" value="false"/>
-                <param name="roles*.id" mapping="[0].roles" domain="integer[]" required="true"/>
+                <param id="username" mapping="[0].username" domain="string" required="true"/>
+                <param id="email" mapping="[0].email" domain="string" required="true"/>
+                <param id="surname" mapping="[0].surname" domain="string" required="true"/>
+                <param id="name" mapping="[0].name" domain="string" required="true"/>
+                <param id="patronymic" mapping="[0].patronymic" domain="string"/>
+                <param id="password" mapping="[0].password" domain="string" required="true"/>
+                <param id="passwordCheck" mapping="[0].passwordCheck" domain="string"/>
+                <param id="isActive" mapping="[0].isActive" domain="boolean" default-value="true"/>
+                <param id="roles*.id" mapping="[0].roles" domain="integer[]" required="true"/>
             </in-parameters>
             <out-parameters>
-                <param name="id" mapping="id"/>
+                <param id="id" mapping="id"/>
             </out-parameters>
-            <success-text>Пользователь сохранен</success-text>
-            <validations activate="all"/>
-        </action>
+            <validations/>
+        </operation>
 
-        <action id="update">
+        <operation id="update" success-text="Пользователь сохранен">
             <invocation>
-                <n2o:java  method="update" class="net.n2oapp.security.admin.api.service.UserService">
-                    <n2o:spring/>
-                    <n2o:arguments>
-                        <n2o:argument name="userEntity" class="net.n2oapp.security.admin.api.model.UserForm"/>
-                    </n2o:arguments>
-                </n2o:java>
+                <java method="update" class="net.n2oapp.security.admin.api.service.UserService">
+                    <spring/>
+                    <arguments>
+                        <argument name="userEntity" class="net.n2oapp.security.admin.api.model.UserForm"/>
+                    </arguments>
+                </java>
             </invocation>
             <in-parameters>
-                <param name="id" mapping="[0].id" domain="integer" required="true"/>
-                <param name="guid" mapping="[0].guid" domain="string"/>
-                <param name="username" mapping="[0].username" domain="string" required="true"/>
-                <param name="email" mapping="[0].email" domain="string" required="true"/>
-                <param name="surname" mapping="[0].surname" domain="string" required="true"/>
-                <param name="name" mapping="[0].name" domain="string" required="true"/>
-                <param name="patronymic" mapping="[0].patronymic" domain="string"/>
-                <param name="newPassword" mapping="[0].newPassword" domain="string"/>
-                <param name="passwordCheck" mapping="[0].passwordCheck" domain="string"/>
-                <param name="isActive" mapping="[0].isActive" domain="boolean" value="false"/>
-                <param name="roles*.id" mapping="[0].roles" domain="integer[]" required="true"/>
+                <param id="id" mapping="[0].id" domain="integer" required="true"/>
+                <param id="guid" mapping="[0].guid" domain="string"/>
+                <param id="username" mapping="[0].username" domain="string" required="true"/>
+                <param id="email" mapping="[0].email" domain="string" required="true"/>
+                <param id="surname" mapping="[0].surname" domain="string" required="true"/>
+                <param id="name" mapping="[0].name" domain="string" required="true"/>
+                <param id="patronymic" mapping="[0].patronymic" domain="string"/>
+                <param id="newPassword" mapping="[0].newPassword" domain="string"/>
+                <param id="passwordCheck" mapping="[0].passwordCheck" domain="string"/>
+                <param id="isActive" mapping="[0].isActive" domain="boolean" default-value="true"/>
+                <param id="roles*.id" mapping="[0].roles" domain="integer[]" required="true"/>
             </in-parameters>
             <out-parameters>
-                <param name="id" mapping="id"/>
+                <param id="id" mapping="id"/>
             </out-parameters>
-            <success-text>Пользователь сохранен</success-text>
-            <validations activate="blackList">
-                <validation ref-id="uniqueUsername"/>
-            </validations>
-        </action>
+            <validations/>
+        </operation>
 
-        <action id="delete">
+        <operation id="delete"
+                   confirm-text="Вы уверены, что хотите удалить пользователя?"
+                   success-text="Пользователь удален">
             <invocation>
-                <n2o:java method="delete" class="net.n2oapp.security.admin.api.service.UserService">
-                    <n2o:spring/>
-                    <n2o:arguments>
-                        <n2o:argument name="id" class="java.lang.Integer"/>
-                    </n2o:arguments>
-                </n2o:java>
+                <java method="delete" class="net.n2oapp.security.admin.api.service.UserService">
+                    <spring/>
+                    <arguments>
+                        <argument name="id" class="java.lang.Integer"/>
+                    </arguments>
+                </java>
             </invocation>
             <in-parameters>
-                <param name="id" mapping="[0]" domain="integer" required="true"/>
+                <param id="id" mapping="[0]" domain="integer" required="true"/>
             </in-parameters>
-            <confirmation-text>Вы уверены, что хотите удалить пользователя?</confirmation-text>
-            <success-text>Пользователь удален</success-text>
-        </action>
+            <validations/>
+        </operation>
 
-        <action id="changeUserActive">
+        <operation id="changeUserActive" success-text="Активность пользователя изменена!">
             <invocation>
-                <n2o:java method="changeActive" class="net.n2oapp.security.admin.api.service.UserService">
-                    <n2o:arguments>
-                        <n2o:argument name="id" class="java.lang.Integer"/>
-                    </n2o:arguments>
-                </n2o:java>
+                <java method="changeActive" class="net.n2oapp.security.admin.api.service.UserService">
+                    <arguments>
+                        <argument name="id" class="java.lang.Integer"/>
+                    </arguments>
+                </java>
             </invocation>
             <in-parameters>
-                <param name="id" mapping="[0]" domain="integer" required="true"/>
+                <param id="id" mapping="[0]" domain="integer" required="true"/>
             </in-parameters>
-            <success-text>Активность пользователя изменена!</success-text>
-        </action>
-    </actions>
+        </operation>
+    </operations>
 
     <validations>
-        <constraint id="uniqueUsername" level="error">
-            <message>Пользователь с таким именем уже существует</message>
-            <invocation>
-                <n2o:java method="checkUniqueUsername" class="net.n2oapp.security.admin.api.service.UserService">
-                    <n2o:spring/>
-                    <n2o:arguments>
-                        <n2o:argument name="username" class="java.lang.String" type="class"/>
-                    </n2o:arguments>
-                </n2o:java>
-            </invocation>
-            <in-parameters>
-                <param name="username" mapping="[0]" />
-            </in-parameters>
-            <result expression="#this == true"/>
-        </constraint>
-
-        <condition id="usernameValidation" level="error">
-            <message>Неверное имя</message>
-            <expression on="username">
-                <![CDATA[function(){
+        <condition id="usernameValidation" severity="danger" message="Неверное имя" on="username">
+            <![CDATA[
                     if (typeof username != 'undefined' && username != null && username != '') {
-                        var regex = new RegExp('^[-_\\.a-zA-Z][-_\\.a-zA-Z0-9]+$');
+                        var regex = new RegExp('${sec.validation.username.regexp}');
                         return regex.test(username);
                      } else return true;
-                     }()
                 ]]>
-            </expression>
         </condition>
 
-        <condition id="emailValidation" level="error">
-            <message>Неверный email</message>
-            <expression on="email">
-                <![CDATA[function(){
+        <condition id="emailValidation" severity="danger" message="Неверный email" on="email">
+                <![CDATA[
                 if (typeof email != 'undefined' && email != null && email != '') {
-                    var regex = new RegExp('[A-Za-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[A-Za-z0-9!#$%&\'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\\.)+[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?');
+	                var regex = new RegExp('${sec.validation.email.regexp}');
                     return regex.test(email);
                 } else return true;
-                }()
                 ]]>
-            </expression>
         </condition>
 
-        <condition id="passwordValidation" level="error">
-            <message>Неверный формат пароля</message>
-            <expression on="password">
-                <![CDATA[function(){
+        <condition id="passwordValidation" severity="danger" on="password"
+                   message="Неверный формат пароля" field-id="password">
+                <![CDATA[
                     if (typeof password != 'undefined' && password != null && password != '') {
-                        var regex = new RegExp('[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?');
+                        var regex = new RegExp('${sec.validation.password.regexp}');
                         return regex.test(password);
-                     }else return true;
-                     }()
+                    } else return true;
                 ]]>
-            </expression>
         </condition>
 
-        <condition id="passwordLengthValidation" level="error">
-            <message>Некорректная длина пароля</message>
-            <expression on="password">
-                <![CDATA[function(){
+        <condition id="newPasswordValidation" severity="danger" on="newPassword"
+                   message="Неверный формат пароля" field-id="newPassword">
+            <![CDATA[
+                    if (typeof newPassword != 'undefined' && newPassword != null && newPassword != '') {
+                        var regex = new RegExp('${sec.validation.password.regexp}');
+                        return regex.test(newPassword);
+                    } else return true;
+                ]]>
+        </condition>
+
+        <condition id="passwordLengthValidation" severity="danger"
+                   on="password" field-id="password"
+                   message="Некорректная длина пароля">
+                <![CDATA[
                     if (typeof password != 'undefined' && password != null && password != '') {
                         return password.length >= ${sec.validation.password.length}
                      } else return true;
-                  }()
                 ]]>
-            </expression>
         </condition>
-        <condition id="newPasswordLengthValidation" level="error">
-            <message>Некорректная длина пароля</message>
-            <expression on="newPassword">
-                <![CDATA[(function(password){
-                    if (typeof password != 'undefined' && password != null && password != '') {
-                        return password.length >= ${sec.validation.password.length}
+        <condition id="newPasswordLengthValidation" severity="danger"
+                   on="newPassword" field-id="newPassword"
+                   message="Некорректная длина пароля">
+                <![CDATA[
+                    if (typeof newPassword != 'undefined' && newPassword != null && newPassword != '') {
+                        return newPassword.length >= ${sec.validation.password.length}
                      } else return true;
-                  }(newPassword))
                 ]]>
-            </expression>
         </condition>
 
-        <condition id="passwordCheckValidation" level="error">
-            <message>Введённые пароли не совпадают</message>
-            <expression on="passwordCheck,password">
-                <![CDATA[function(){
-                    if (typeof passwordCheck != 'undefined' && passwordCheck != null && passwordCheck != '') {
+        <condition id="passwordCheckValidation" severity="danger"
+                   on="passwordCheck,password" field-id="passwordCheck"
+                   message="Введённые пароли не совпадают">
+                <![CDATA[
+                    if (typeof password != 'undefined' && password != null && password != ''
+                      && typeof passwordCheck != 'undefined') {
                         return passwordCheck === password;
                      } else return true;
-                   }()
                 ]]>
-            </expression>
         </condition>
 
-        <condition id="newPasswordCheckValidation" level="error">
-            <message>Введённые пароли не совпадают</message>
-            <expression on="passwordCheck,newPassword">
-                <![CDATA[function(){
-                    if (typeof newPassword != 'undefined' && newPassword != null && newPassword != '') {
+        <condition id="newPasswordCheckValidation" severity="danger"
+                   on="passwordCheck,newPassword" field-id="passwordCheck"
+                   message="Введённые пароли не совпадают">
+                <![CDATA[
+                    if (typeof newPassword != 'undefined' && newPassword != null && newPassword != ''
+                      && typeof passwordCheck != 'undefined') {
                         return passwordCheck === newPassword;
                      } else return true;
-                   }()
                 ]]>
-            </expression>
         </condition>
     </validations>
 </object>
