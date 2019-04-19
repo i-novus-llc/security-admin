@@ -1,4 +1,4 @@
-FROM openjdk:8-jre-alpine
+FROM openjdk:11-slim
 
 RUN apk add tzdata
 ENV TZ=Europe/Moscow
