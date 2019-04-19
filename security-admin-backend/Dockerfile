@@ -1,8 +1,5 @@
 FROM openjdk:11-slim
 
-RUN apk add tzdata
-ENV TZ=Europe/Moscow
-
 EXPOSE 8080
 
 ARG JAR_FILE
