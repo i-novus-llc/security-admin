@@ -55,9 +55,9 @@ public class BaseCriteria implements Pageable {
     @Override
     public Sort getSort() {
         if (orders != null && !orders.isEmpty()) {
-            return new Sort(orders);
+            return Sort.by(orders);
         } else
-            return null;
+            return Sort.unsorted();
     }
 
     public void setPage(int page) {
