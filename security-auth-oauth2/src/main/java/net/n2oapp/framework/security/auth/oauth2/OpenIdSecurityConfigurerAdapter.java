@@ -14,6 +14,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
+import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Адаптер для настройки SSO аутентификации по протоколу OAuth2 OpenId Connect
@@ -21,8 +25,8 @@ import org.springframework.security.oauth2.provider.authentication.OAuth2Authent
 @EnableOAuth2Sso
 public abstract class OpenIdSecurityConfigurerAdapter extends N2oSecurityConfigurerAdapter {
 
-    @Value("${security.oauth2.sso.logout-uri:/logout}")
-    private String ssoLogout;
+    @Value("${security.oauth2.sso.logout-uri}")
+    private String ssoLogoutUri;
     @Autowired
     private OAuth2SsoProperties sso;
 
@@ -56,7 +60,13 @@ public abstract class OpenIdSecurityConfigurerAdapter extends N2oSecurityConfigu
     }
 
     protected LogoutConfigurer<HttpSecurity> configureLogout(LogoutConfigurer<HttpSecurity> logout) throws Exception {
-        return logout.logoutSuccessUrl(ssoLogout != null ? ssoLogout : "/");
+        if (ssoLogoutUri == null)
+            return logout.logoutSuccessUrl("/logout");
+        else {
+            AutoRedirectLogoutSuccessHandler logoutSuccessHandler = new AutoRedirectLogoutSuccessHandler();
+            logoutSuccessHandler.setDefaultTargetUrl(ssoLogoutUri);
+            return logout.logoutSuccessHandler(logoutSuccessHandler);
+        }
     }
 
     private OAuth2AuthenticationDetails getAuthenticationDetails() {
@@ -71,5 +81,24 @@ public abstract class OpenIdSecurityConfigurerAdapter extends N2oSecurityConfigu
             }
         }
         return null;
+    }
+
+    /**
+     * Gives support of login-like behaviour. Makes possible redirect back to application from sso server without any manual back-url configuration.
+     */
+    protected static class AutoRedirectLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
+        /**
+         * Adds server and servlet base path part of url from request to redirect parameter value.<br/>
+         * Base target url should end with parameter "redirect_uri=".<br/>
+         * For example, if request contains "http://mydomain.com/app/base/path/some/service" then "http://mydomain.com/app/base/path" will be added to target url.
+         * @param request
+         * @param response
+         * @return Extended target URL.
+         */
+        @Override
+        protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response) {
+            StringBuffer requestURL = request.getRequestURL();
+            return super.determineTargetUrl(request, response) + requestURL.substring(0, requestURL.lastIndexOf(request.getServletPath()));
+        }
     }
 }
