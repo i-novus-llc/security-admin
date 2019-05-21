@@ -99,7 +99,7 @@ security.oauth2.client.access-token-uri=${security.oauth2.auth-server-uri}/token
 #Адрес сервиса получения информации о пользователе
 security.oauth2.resource.user-info-uri=${security.oauth2.auth-server-uri}/userinfo
 #Адрес сервиса единого выхода
-security.oauth2.sso.logout-uri=${security.oauth2.auth-server-uri}/logout?redirect_uri=http://localhost:8080
+security.oauth2.sso.logout-uri=${security.oauth2.auth-server-uri}/logout?redirect_uri=
 ----
 
 == SSO
