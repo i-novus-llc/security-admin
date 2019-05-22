@@ -14,10 +14,10 @@
             <in-parameters>
                 <param id="username" mapping="[0].username" domain="string" required="true"/>
                 <param id="email" mapping="[0].email" domain="string" required="true"/>
-                <param id="surname" mapping="[0].surname" domain="string" required="true"/>
-                <param id="name" mapping="[0].name" domain="string" required="true"/>
+                <param id="surname" mapping="[0].surname" domain="string" required="${sec.admin.user.surname.required}"/>
+                <param id="name" mapping="[0].name" domain="string" required="${sec.admin.user.name.required}"/>
                 <param id="patronymic" mapping="[0].patronymic" domain="string"/>
-                <param id="password" mapping="[0].password" domain="string" required="true"/>
+                <param id="password" mapping="[0].password" domain="string" required="${sec.admin.user.password.input}"/>
                 <param id="passwordCheck" mapping="[0].passwordCheck" domain="string"/>
                 <param id="isActive" mapping="[0].isActive" domain="boolean" default-value="true"/>
                 <param id="roles*.id" mapping="[0].roles" domain="integer[]" required="true"/>
@@ -76,6 +76,7 @@
         <operation id="changeUserActive" success-text="Активность пользователя изменена!">
             <invocation>
                 <java method="changeActive" class="net.n2oapp.security.admin.api.service.UserService">
+                    <spring/>
                     <arguments>
                         <argument name="id" class="java.lang.Integer"/>
                     </arguments>
