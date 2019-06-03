@@ -4,6 +4,6 @@
     <a label="Войти" href="/login" sec:anonymous="true"/>
     <sub-menu label="#{username}" icon="fa fa-user" sec:authenticated="true">
         <page page-id="profile" route="/profile" label="Профиль"/>
-        <a label="Выход" href="/logout"/>
+        <a label="Выход" href="logout"/>
     </sub-menu>
 </nav>
