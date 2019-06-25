@@ -11,13 +11,13 @@
     <parent>
         <groupId>net.n2oapp.platform</groupId>
         <artifactId>n2o-platform-parent</artifactId>
-        <version>2.6</version>
+        <version>2.9</version>
         <relativePath/>
     </parent>
 
     <properties>
         <java.version>11</java.version>
-        <n2o.version>7.2.19</n2o.version>
+        <n2o.version>7.3.6</n2o.version>
         <config.server.enable>false</config.server.enable>
     </properties>
 
