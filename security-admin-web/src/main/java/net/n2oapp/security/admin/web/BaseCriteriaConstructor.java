@@ -18,7 +18,7 @@ public class BaseCriteriaConstructor implements CriteriaConstructor {
             throw new IllegalArgumentException(e);
         }
         if (instance instanceof BaseCriteria) {
-            ((BaseCriteria)instance).setPage(criteria.getPage());
+            ((BaseCriteria)instance).setPage(criteria.getPage() - 1);
             ((BaseCriteria)instance).setSize(criteria.getSize());
             List<Sort.Order> orders = new ArrayList<>();
             if (criteria.getSorting() != null) {

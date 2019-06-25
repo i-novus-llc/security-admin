@@ -61,6 +61,8 @@ public class UserServiceRestClient implements UserService {
     public Boolean checkUniqueUsername(String username) {
         RestUserCriteria criteria = new RestUserCriteria();
         criteria.setUsername(username);
+        criteria.setSize(10);
+        criteria.setPage(0);
         return client.findAll(criteria).getContent().size() == 0;
     }
 }

@@ -1,89 +1,85 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<object xmlns="http://n2oapp.net/framework/config/schema/object-2.0"
-        xmlns:n2o="http://n2oapp.net/framework/config/schema/n2o-invocations-2.0">
-    <name>Роли</name>
+<object xmlns="http://n2oapp.net/framework/config/schema/object-3.0"
+        name="Роли">
 
-    <actions>
-        <action id="create">
+    <operations>
+        <operation id="create"
+                   success-text="Роль сохранена">
             <invocation>
-                <n2o:java method="create" class="net.n2oapp.security.admin.api.service.RoleService">
-                    <n2o:spring/>
-                    <n2o:arguments>
-                        <n2o:argument name="role" class="net.n2oapp.security.admin.api.model.RoleForm"/>
-                    </n2o:arguments>
-                </n2o:java>
+                <java method="create" class="net.n2oapp.security.admin.api.service.RoleService">
+                    <spring/>
+                    <arguments>
+                        <argument name="role" class="net.n2oapp.security.admin.api.model.RoleForm"/>
+                    </arguments>
+                </java>
             </invocation>
             <in-parameters>
-                <param name="name" mapping="[0].name" domain="string" required="true"/>
-                <param name="code" mapping="[0].code" domain="string" required="true"/>
-                <param name="description" mapping="[0].description" domain="string"/>
-                <param name="permissions*.id" mapping="[0].permissions" domain="integer[]"/>
+                <param id="name" mapping="[0].name" domain="string" required="true"/>
+                <param id="code" mapping="[0].code" domain="string" required="true"/>
+                <param id="description" mapping="[0].description" domain="string"/>
+                <param id="permissions*.id" mapping="[0].permissions" domain="integer[]"/>
             </in-parameters>
             <out-parameters>
-                <param name="id" mapping="id"/>
+                <param id="id" mapping="id"/>
             </out-parameters>
-            <success-text>Роль сохранена</success-text>
-            <validations activate="nothing"/>
-        </action>
+        </operation>
 
-        <action id="update">
+        <operation id="update"
+                   success-text="Роль сохранена">
             <invocation>
-                <n2o:java method="update" class="net.n2oapp.security.admin.api.service.RoleService">
-                    <n2o:spring/>
-                    <n2o:arguments>
-                        <n2o:argument name="role" class="net.n2oapp.security.admin.api.model.RoleForm"/>
-                    </n2o:arguments>
-                </n2o:java>
+                <java method="update" class="net.n2oapp.security.admin.api.service.RoleService">
+                    <spring/>
+                    <arguments>
+                        <argument name="role" class="net.n2oapp.security.admin.api.model.RoleForm"/>
+                    </arguments>
+                </java>
             </invocation>
             <in-parameters>
-                <param name="id" mapping="[0].id" domain="integer" required="true"/>
-                <param name="name" mapping="[0].name" domain="string" required="true"/>
-                <param name="code" mapping="[0].code" domain="string" required="true"/>
-                <param name="description" mapping="[0].description" domain="string"/>
-                <param name="permissions*.id" mapping="[0].permissions" domain="integer[]"/>
+                <param id="id" mapping="[0].id" domain="integer" required="true"/>
+                <param id="name" mapping="[0].name" domain="string" required="true"/>
+                <param id="code" mapping="[0].code" domain="string" required="true"/>
+                <param id="description" mapping="[0].description" domain="string"/>
+                <param id="permissions*.id" mapping="[0].permissions" domain="integer[]"/>
             </in-parameters>
             <out-parameters>
-                <param name="id" mapping="id"/>
+                <param id="id" mapping="id"/>
             </out-parameters>
-            <success-text>Роль сохранена</success-text>
-            <validations activate="nothing"/>
-        </action>
+        </operation>
 
-        <action id="delete">
+        <operation id="delete"
+                   confirm-text="Вы уверены, что хотите удалить роль?"
+                   success-text="Роль удалена">
             <invocation>
-                <n2o:java method="delete" class="net.n2oapp.security.admin.api.service.RoleService">
-                    <n2o:spring/>
-                    <n2o:arguments>
-                        <n2o:argument name="id" class="java.lang.Integer" type="class"/>
-                    </n2o:arguments>
-                </n2o:java>
+                <java method="delete" class="net.n2oapp.security.admin.api.service.RoleService">
+                    <spring/>
+                    <arguments>
+                        <argument name="id" class="java.lang.Integer" type="class"/>
+                    </arguments>
+                </java>
             </invocation>
             <in-parameters>
-                <param name="id" mapping="[0]" domain="integer" required="true"/>
+                <param id="id" mapping="[0]" domain="integer" required="true"/>
             </in-parameters>
-            <confirmation-text>Вы уверены, что хотите удалить роль?</confirmation-text>
-            <success-text>Роль удалена</success-text>
-            <validations activate="whiteList">
-                <validation ref-id="usedRole"/>
-            </validations>
-        </action>
-    </actions>
+            <validations white-list="usedRole"/>
+        </operation>
+    </operations>
 
     <validations>
-        <constraint id="usedRole" level="error">
-            <message>Удаление невозможно, так как имеются пользователи с такой ролью!</message>
+        <constraint id="usedRole"
+                    severity="danger"
+                    message="Удаление невозможно, так как имеются пользователи с такой ролью!"
+                    result="#this == 0">
             <invocation>
-                <n2o:java method="countUsersWithRole" class="net.n2oapp.security.admin.api.service.RoleService">
-                    <n2o:spring/>
-                    <n2o:arguments>
-                       <n2o:argument name="id" class="java.lang.Integer" type="class"/>
-                    </n2o:arguments>
-                </n2o:java>
+                <java method="countUsersWithRole" class="net.n2oapp.security.admin.api.service.RoleService">
+                    <spring/>
+                    <arguments>
+                        <argument name="id" class="java.lang.Integer" type="class"/>
+                    </arguments>
+                </java>
             </invocation>
             <in-parameters>
-                <param name="id" mapping="[0]" domain="integer"/>
+                <param id="id" mapping="[0]" domain="integer"/>
             </in-parameters>
-            <result expression="#this == 0"/>
         </constraint>
     </validations>
 </object>

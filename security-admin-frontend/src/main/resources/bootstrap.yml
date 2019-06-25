@@ -3,8 +3,5 @@ spring:
     name: security-admin-frontend
   cloud:
     consul:
-      host: localhost
-      port: 8500
       config:
-        enabled: true
-        fail-fast: false
+        enabled: ${config.server.enable}

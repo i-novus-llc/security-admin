@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 @EnableJaxRsProxyClient(
         classes = {UserRestService.class, RoleRestService.class, PermissionRestService.class},
         address = "${sec.admin.rest.url}")
-public class RestClientConfiguration {
+public class AdminRestClientConfiguration {
 
     @Bean
     public UserServiceRestClient userService(@Qualifier("userRestServiceJaxRsProxyClient") UserRestService client) {

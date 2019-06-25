@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.api.criteria;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
@@ -12,7 +13,7 @@ import java.util.stream.StreamSupport;
  */
 public class BaseCriteria implements Pageable {
     private int page;
-    private int size;
+    private int size = 10;
     private List<Sort.Order> orders;
 
     public BaseCriteria() {
@@ -47,16 +48,16 @@ public class BaseCriteria implements Pageable {
     }
 
     @Override
-    public int getOffset() {
-        return (this.page - 1) * this.size;
+    public long getOffset() {
+        return this.page * this.size;
     }
 
     @Override
     public Sort getSort() {
         if (orders != null && !orders.isEmpty()) {
-            return new Sort(orders);
+            return Sort.by(orders);
         } else
-            return null;
+            return Sort.unsorted();
     }
 
     public void setPage(int page) {
@@ -89,7 +90,22 @@ public class BaseCriteria implements Pageable {
     }
 
     public Pageable previous() {
-        return this.getPageNumber() == 0 ? this : new BaseCriteria(this.getPageNumber() - 1, this.getPageSize(), this.getSort());
+        return this.getPageNumber() == 0 ? this : new BaseCriteria(this.getPageNumber(), this.getPageSize(), this.getSort());
+    }
+
+    @JsonIgnore
+    public boolean isPaged() {
+        return true;
+    }
+
+    @JsonIgnore
+    public boolean isUnpaged() {
+        return !isPaged();
+    }
+
+    @Override
+    public Optional<Pageable> toOptional() {
+        return Optional.empty();
     }
 
     @Override

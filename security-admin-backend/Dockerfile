@@ -1,7 +1,4 @@
-FROM openjdk:8-jre-alpine
-
-RUN apk add tzdata
-ENV TZ=Europe/Moscow
+FROM openjdk:11-slim
 
 EXPOSE 8080
 

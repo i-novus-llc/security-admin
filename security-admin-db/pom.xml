@@ -18,6 +18,7 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>${h2.property}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>

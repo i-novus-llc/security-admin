@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.ExceptionHandlingConfigurer;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
-import org.springframework.security.web.AuthenticationEntryPoint;
 
 public abstract class N2oSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
@@ -32,7 +31,7 @@ public abstract class N2oSecurityConfigurerAdapter extends WebSecurityConfigurer
     }
 
     protected void ignore(WebSecurity.IgnoredRequestConfigurer ignore) {
-        ignore.antMatchers("/static/**", "/public/**", "/dist/**", "/webjars/**", "/lib/**", "/build/**", "/bundle/**");
+        ignore.antMatchers("/static/**", "/public/**", "/dist/**", "/webjars/**", "/lib/**", "/build/**", "/bundle/**", "/error");
     }
 
     protected abstract void authorize(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry url)

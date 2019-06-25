@@ -51,7 +51,7 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
                         if (roleRep.isPresent()) {
                             roles.add(roleRep.get());
                         } else {
-                            throw new UserException("exception.ssoRoleNotFound").set(r.getCode());
+                            throw new UserException("exception.ssoRoleNotFound");
                         }
                     });
                     realmResource.users().get(userId).roles().realmLevel().add(roles);

@@ -99,7 +99,7 @@ security.oauth2.client.access-token-uri=${security.oauth2.auth-server-uri}/token
 #Адрес сервиса получения информации о пользователе
 security.oauth2.resource.user-info-uri=${security.oauth2.auth-server-uri}/userinfo
 #Адрес сервиса единого выхода
-security.oauth2.sso.logout-uri=${security.oauth2.auth-server-uri}/logout?redirect_uri=http://localhost:8080
+security.oauth2.sso.logout-uri=${security.oauth2.auth-server-uri}/logout?redirect_uri=
 ----
 
 == SSO
@@ -212,7 +212,7 @@ security.oauth2.client.scope=read, write
 
 *Invalid parameter: redirect_uri*
 
-проверьте этот параметр в адрессной строке
+проверьте этот параметр в адресной строке
 
 `localhost:8888/auth/realms/security-admin/protocol/openid-connect/auth?client_id=myapp&redirect_uri=http://127.0.0.1:8080/login&response_type=code`
 

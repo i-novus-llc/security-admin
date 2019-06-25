@@ -38,30 +38,12 @@ public class RoleServiceSqlTest {
         assertNotNull(service);
     }
 
-
     @Test
-    public void crud() {
-        Role role = create();
-        update(form(role));
-        delete(role.getId());
-    }
-    private Role create() {
-        Role role = service.create(newRole());
-        assertNotNull(service.getById(role.getId()));
-        return role;
-    }
-
-    private Role update(RoleForm role) {
-        role.setName("userName1Update");
-        Role updateRole = service.update(role);
-        assertEquals("userName1Update", service.getById(role.getId()).getName() );
-        return updateRole;
-    }
-
-    private void delete(Integer id) {
-        service.delete(id);
-        Role role = service.getById(id);
-        assertNull(role);
+    public void testCountUsersWithRole() {
+        assertEquals(Integer.valueOf(0), service.countUsersWithRole(0));
+        assertEquals(Integer.valueOf(2), service.countUsersWithRole(1));
+        assertEquals(Integer.valueOf(1), service.countUsersWithRole(2));
+        assertEquals(Integer.valueOf(0), service.countUsersWithRole(3));
     }
 
     @Test
@@ -79,11 +61,29 @@ public class RoleServiceSqlTest {
     }
 
     @Test
-    public void testCountUsersWithRole() {
-        assertEquals(Integer.valueOf(0), service.countUsersWithRole(0));
-        assertEquals(Integer.valueOf(2), service.countUsersWithRole(1));
-        assertEquals(Integer.valueOf(1), service.countUsersWithRole(2));
-        assertEquals(Integer.valueOf(0), service.countUsersWithRole(3));
+    public void crud() {
+        Role role = create();
+        update(form(role));
+        delete(role.getId());
+    }
+
+    private Role create() {
+        Role role = service.create(newRole());
+        assertNotNull(service.getById(role.getId()));
+        return role;
+    }
+
+    private Role update(RoleForm role) {
+        role.setName("userName1Update");
+        Role updateRole = service.update(role);
+        assertEquals("userName1Update", service.getById(role.getId()).getName() );
+        return updateRole;
+    }
+
+    private void delete(Integer id) {
+        service.delete(id);
+        Role role = service.getById(id);
+        assertNull(role);
     }
 
     private static RoleForm newRole() {

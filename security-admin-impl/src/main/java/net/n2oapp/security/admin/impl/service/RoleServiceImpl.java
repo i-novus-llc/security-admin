@@ -57,14 +57,14 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public void delete(Integer id) {
         checkRoleExist(id);
-        RoleEntity roleEntity = roleRepository.findOne(id);
-        roleRepository.delete(id);
+        RoleEntity roleEntity = roleRepository.findById(id).orElse(null);
+        roleRepository.deleteById(id);
         provider.deleteRole(model(roleEntity));
     }
 
     @Override
     public Role getById(Integer id) {
-        RoleEntity roleEntity = roleRepository.findOne(id);
+        RoleEntity roleEntity = roleRepository.findById(id).orElse(null);
         return model(roleEntity);
     }
 

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <simple-page xmlns="http://n2oapp.net/framework/config/schema/page-2.0" name="Создание пользователя">
-    <form query-id="${sec.admin.user.query.id}">
+    <form query-id="${sec.admin.user.query.id}" upload="defaults">
         <fields>
             <row>
                 <input-text id="username" required="true">
@@ -12,20 +12,24 @@
             </row>
             <row>
                 <password id="password"
-                          required="${sec.admin.user.password.input}" label="Пароль">
-                    <validations white-list="passwordLengthValidation"/>
+                          required="${sec.admin.user.password.input}"
+                          visible="${sec.admin.user.password.input}"
+                          label="Пароль" eye="false">
+                    <validations white-list="passwordLengthValidation,passwordValidation"/>
                 </password>
                 <password id="passwordCheck"
-                          required="${sec.admin.user.password.input}" label="Подтвердить пароль">
+                          required="${sec.admin.user.password.input}"
+                          visible="${sec.admin.user.password.input}"
+                          label="Подтвердить пароль" eye="false">
                     <validations white-list="passwordCheckValidation"/>
                     <dependencies>
                         <enabling on="password">typeof password != 'undefined' &amp;&amp; password != null &amp;&amp; password != ''</enabling>
                     </dependencies>
                 </password>
             </row>
-            <input-text id="surname"/>
-            <input-text id="name"/>
-            <input-text id="patronymic"/>
+            <input-text id="surname" required="${sec.admin.user.surname.required}" length="100"/>
+            <input-text id="name" required="${sec.admin.user.name.required}" length="100"/>
+            <input-text id="patronymic" length="100"/>
             <row>
                 <col size="10">
                     <input-select id="roles" type="multi" label="Роли" cache="false"

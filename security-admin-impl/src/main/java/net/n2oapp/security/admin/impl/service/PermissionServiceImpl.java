@@ -34,13 +34,13 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public void delete(Integer id) {
-        permissionRepository.delete(id);
+        permissionRepository.deleteById(id);
 
     }
 
     @Override
     public Permission getById(Integer id) {
-        PermissionEntity permissionEntity = permissionRepository.findOne(id);
+        PermissionEntity permissionEntity = permissionRepository.findById(id).get();
         return model(permissionEntity);
     }
 
