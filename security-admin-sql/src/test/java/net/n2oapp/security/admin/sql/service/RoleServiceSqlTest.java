@@ -34,20 +34,21 @@ public class RoleServiceSqlTest {
 
 
     @Test
-    public void testUp() throws Exception {
+    public void test() throws Exception {
         assertNotNull(service);
+        countUsersWithRole();
+        search();
+        crud();
     }
 
-    @Test
-    public void testCountUsersWithRole() {
+    private void countUsersWithRole() {
         assertEquals(Integer.valueOf(0), service.countUsersWithRole(0));
         assertEquals(Integer.valueOf(2), service.countUsersWithRole(1));
         assertEquals(Integer.valueOf(1), service.countUsersWithRole(2));
         assertEquals(Integer.valueOf(0), service.countUsersWithRole(3));
     }
 
-    @Test
-    public void search() throws Exception {
+    private void search() throws Exception {
         List<Integer> permissions = new ArrayList<>();
         permissions.add(1);
         RoleCriteria criteria = new RoleCriteria();
@@ -60,8 +61,7 @@ public class RoleServiceSqlTest {
         assertEquals(1, role.getTotalElements());
     }
 
-    @Test
-    public void crud() {
+    private void crud() {
         Role role = create();
         update(form(role));
         delete(role.getId());
