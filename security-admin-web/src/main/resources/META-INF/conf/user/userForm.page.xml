@@ -14,13 +14,13 @@
                 <password id="password"
                           required="${sec.admin.user.password.input}"
                           visible="${sec.admin.user.password.input}"
-                          label="Пароль">
+                          label="Пароль" eye="false">
                     <validations white-list="passwordLengthValidation,passwordValidation"/>
                 </password>
                 <password id="passwordCheck"
                           required="${sec.admin.user.password.input}"
                           visible="${sec.admin.user.password.input}"
-                          label="Подтвердить пароль">
+                          label="Подтвердить пароль" eye="false">
                     <validations white-list="passwordCheckValidation"/>
                     <dependencies>
                         <enabling on="password">typeof password != 'undefined' &amp;&amp; password != null &amp;&amp; password != ''</enabling>
