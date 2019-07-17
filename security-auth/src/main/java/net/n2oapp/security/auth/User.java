@@ -3,9 +3,11 @@ package net.n2oapp.security.auth;
 import net.n2oapp.security.auth.authority.PermissionGrantedAuthority;
 import net.n2oapp.security.auth.authority.RoleGrantedAuthority;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.util.StringUtils;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +31,8 @@ public class User extends org.springframework.security.core.userdetails.User {
     }
 
     public User(String username, String password, boolean enabled, boolean accountNonExpired,
-                boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
+                boolean credentialsNonExpired, boolean accountNonLocked,
+                Collection<? extends GrantedAuthority> authorities) {
         super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
     }
 
@@ -43,7 +46,8 @@ public class User extends org.springframework.security.core.userdetails.User {
     }
 
     public User(String username, String password, boolean enabled, boolean accountNonExpired,
-                boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities,
+                boolean credentialsNonExpired, boolean accountNonLocked,
+                Collection<? extends GrantedAuthority> authorities,
                 String surname, String name, String patronymic, String email) {
         super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
         this.surname = surname;
@@ -62,6 +66,19 @@ public class User extends org.springframework.security.core.userdetails.User {
 
     public String getName() {
         return name;
+    }
+
+    public String getUserFullName() {
+        List<String> fullNameParts = new LinkedList<>();
+        if (!StringUtils.isEmpty(surname))
+            fullNameParts.add(surname);
+        if (!StringUtils.isEmpty(name))
+            fullNameParts.add(name);
+        if (!StringUtils.isEmpty(patronymic))
+            fullNameParts.add(patronymic);
+        if (fullNameParts.isEmpty())
+            fullNameParts.add(getUsername());
+        return String.join(" ", fullNameParts);
     }
 
     public void setName(String name) {
@@ -88,13 +105,13 @@ public class User extends org.springframework.security.core.userdetails.User {
         return getAuthorities()
                 .stream()
                 .filter(a -> a instanceof RoleGrantedAuthority)
-                .map(a -> ((RoleGrantedAuthority)a).getRole()).collect(Collectors.toList());
+                .map(a -> ((RoleGrantedAuthority) a).getRole()).collect(Collectors.toList());
     }
 
     public List<String> getPermissions() {
         return getAuthorities()
                 .stream()
                 .filter(a -> a instanceof PermissionGrantedAuthority)
-                .map(p -> ((PermissionGrantedAuthority)p).getPermission()).collect(Collectors.toList());
+                .map(p -> ((PermissionGrantedAuthority) p).getPermission()).collect(Collectors.toList());
     }
 }
