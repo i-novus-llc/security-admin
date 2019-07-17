@@ -31,7 +31,8 @@ public class User extends org.springframework.security.core.userdetails.User {
     }
 
     public User(String username, String password, boolean enabled, boolean accountNonExpired,
-                boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
+                boolean credentialsNonExpired, boolean accountNonLocked,
+                Collection<? extends GrantedAuthority> authorities) {
         super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
     }
 
@@ -45,7 +46,8 @@ public class User extends org.springframework.security.core.userdetails.User {
     }
 
     public User(String username, String password, boolean enabled, boolean accountNonExpired,
-                boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities,
+                boolean credentialsNonExpired, boolean accountNonLocked,
+                Collection<? extends GrantedAuthority> authorities,
                 String surname, String name, String patronymic, String email) {
         super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
         this.surname = surname;
@@ -78,6 +80,7 @@ public class User extends org.springframework.security.core.userdetails.User {
             fullNameParts.add(getUsername());
         return String.join(" ", fullNameParts);
     }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -102,13 +105,13 @@ public class User extends org.springframework.security.core.userdetails.User {
         return getAuthorities()
                 .stream()
                 .filter(a -> a instanceof RoleGrantedAuthority)
-                .map(a -> ((RoleGrantedAuthority)a).getRole()).collect(Collectors.toList());
+                .map(a -> ((RoleGrantedAuthority) a).getRole()).collect(Collectors.toList());
     }
 
     public List<String> getPermissions() {
         return getAuthorities()
                 .stream()
                 .filter(a -> a instanceof PermissionGrantedAuthority)
-                .map(p -> ((PermissionGrantedAuthority)p).getPermission()).collect(Collectors.toList());
+                .map(p -> ((PermissionGrantedAuthority) p).getPermission()).collect(Collectors.toList());
     }
 }
