@@ -3,55 +3,56 @@ services:
   db:
     image: postgres:9.6.11-alpine
     environment:
-      POSTGRES_DB: sec
-      POSTGRES_USER: sec_user
-      POSTGRES_PASSWORD: sec_pass
+      - POSTGRES_DB=sec
+      - POSTGRES_USER=sec_user
+      - POSTGRES_PASSWORD=sec_pass
     ports:
-    - "5432"
+      - 5432
     deploy:
       resources:
         limits:
           memory: 1024M
       placement:
         constraints:
-        - node.labels.type == db
+          - node.labels.type == db
 
   backend:
     image: "538721144237.dkr.ecr.eu-west-1.amazonaws.com/security-admin/backend:${TAG}"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db/sec
-      SPRING_DATASOURCE_USERNAME: sec_user
-      SPRING_DATASOURCE_PASSWORD: sec_pass
-      SERVER_TOMCAT_ACCESSLOG_ENABLED: "true"
-      SPRING_CLOUD_CONSUL_HOST: consul-agent.local
-      JAVA_OPTS: -Xmx200m
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db/sec
+      - SPRING_DATASOURCE_USERNAME=sec_user
+      - SPRING_DATASOURCE_PASSWORD=sec_pass
+      - SERVER_TOMCAT_ACCESSLOG_ENABLED="true"
+      - JAVA_OPTS=-Xmx200m
+      - SERVER_PORT=8080
     depends_on:
-    - db
+      - db
     restart: on-failure
     ports:
-    - "8080"
+      - 8080
     deploy:
       resources:
         limits:
-          memory: 500M
+          memory: 600M
       placement:
         constraints:
-        - node.hostname == os-4
+          - node.labels.dc == hetzner
 
   frontend:
     image: "538721144237.dkr.ecr.eu-west-1.amazonaws.com/security-admin/frontend:${TAG}"
     environment:
-      SPRING_CLOUD_CONSUL_HOST: consul-agent.local
-      SEC_ADMIN_REST_URL: http://backend:8080/api
-      JAVA_OPTS: -Xmx200m
+      - SEC_ADMIN_REST_URL=http://backend:8080/api
+      - JAVA_OPTS=-Xmx200m
+      - SERVER_PORT=8080
     depends_on:
-    - backend
+      - backend
     ports:
-    - "8080"
+      - 8080
     deploy:
       resources:
         limits:
-          memory: 500M
+          memory: 600M
       placement:
         constraints:
-        - node.hostname == os-4
+          - node.labels.dc == hetzner
+

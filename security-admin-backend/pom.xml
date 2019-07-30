@@ -51,6 +51,11 @@
             <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-starter-jaxrs-server</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>net.n2oapp.platform</groupId>
+            <artifactId>n2o-platform-starter-ms</artifactId>
+        </dependency>
         <!-- /PLATFORM -->
 
         <!-- SPRING BOOT -->
@@ -77,13 +82,6 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
         <!-- /SPRING BOOT -->
-
-        <!--cloud-->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-consul-config</artifactId>
-        </dependency>
-        <!--/cloud-->
 
         <dependency>
             <groupId>org.liquibase</groupId>
