@@ -15,6 +15,7 @@ import java.security.Principal;
 @EnableOAuth2Sso
 @RestController
 public class TestClientApplication {
+
     @RequestMapping("/")
     public String home(Principal user, Authentication authentication) {
         return "Hello " + user.getName();
