@@ -1,11 +1,11 @@
-package net.n2oapp.security.auth;
+package net.n2oapp.security.user;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.*;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import java.beans.PropertyDescriptor;
@@ -22,6 +22,7 @@ public class UserParamsUtil {
 
     /**
      * Получение текущей сессии пользователя по контексту {@link SecurityContextHolder}
+     *
      * @return пустую строку или, если имеется, id сессии
      */
     public static String getSessionId() {
@@ -33,6 +34,7 @@ public class UserParamsUtil {
 
     /**
      * Получение сессии пользователя по аутентификации
+     *
      * @param authentication Объект с информацией об аутентификации
      * @return пустую строку или, если имеется, id сессии
      */
@@ -40,17 +42,18 @@ public class UserParamsUtil {
         if (authentication == null)
             return "";
         if (authentication.getDetails() instanceof WebAuthenticationDetails) {
-            WebAuthenticationDetails sessionDetails = (WebAuthenticationDetails)authentication.getDetails();
+            WebAuthenticationDetails sessionDetails = (WebAuthenticationDetails) authentication.getDetails();
             return sessionDetails.getSessionId();
         } else {
             String sessionId = getProperty(authentication,
-                        BeanUtils.getPropertyDescriptor(authentication.getClass(), "sessionId"));
+                    BeanUtils.getPropertyDescriptor(authentication.getClass(), "sessionId"));
             return sessionId == null ? "" : sessionId;
         }
     }
 
     /**
      * Получение имени текущего пользователя по контексту {@link SecurityContextHolder}
+     *
      * @return пустую строку или имя пользователя, если он не анонимный
      */
     public static String getUsername() {
@@ -67,14 +70,15 @@ public class UserParamsUtil {
 
     /**
      * Получение имени пользователя по principal
+     *
      * @param principal Объект с данными пользвателя
      * @return пустую строку или имя пользователя, если он не анонимный
      */
     public static String getUsername(Object principal) {
         String username = "";
-        if(principal instanceof String) {
+        if (principal instanceof String) {
             username = (String) principal;
-        } else if(principal instanceof UserDetails) {
+        } else if (principal instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) principal;
             username = userDetails.getUsername();
         }
@@ -83,6 +87,7 @@ public class UserParamsUtil {
 
     /**
      * Получить детальную информацию о текущем пользователе по контексту {@link SecurityContextHolder}
+     *
      * @param <T> Класс детальнйо информации о пользователе
      * @return Детальная информация о пользователе
      */
@@ -104,6 +109,7 @@ public class UserParamsUtil {
 
     /**
      * Получить детальную информацию о пользователю в виде ключ-значение
+     *
      * @return Детальная информация о пользователе в виде ключ-значение
      */
     public static <T extends UserDetails> Map<String, Object> getUserDetailsAsMap(T userDetails) {
@@ -119,6 +125,7 @@ public class UserParamsUtil {
 
     /**
      * Получить детальную информацию о пользователю в виде ключ-значение
+     *
      * @return Детальная информация о пользователе в виде ключ-значение
      */
     public static Map<String, Object> getUserDetailsAsMap() {
@@ -127,9 +134,10 @@ public class UserParamsUtil {
 
     /**
      * Получить детальную информацию о пользователе по имени свойства
+     *
      * @param userDetails Детальная информация о пользователе
-     * @param property Имя свойства
-     * @param <T> Тип значения
+     * @param property    Имя свойства
+     * @param <T>         Тип значения
      * @return Детальная информация о пользователе по имени свойства
      */
     public static <T, U extends UserDetails> T getUserDetailsProperty(U userDetails, String property) {
@@ -141,8 +149,9 @@ public class UserParamsUtil {
 
     /**
      * Получить детальную информацию о пользователе по имени свойства
+     *
      * @param property Имя свойства
-     * @param <T> Тип значения
+     * @param <T>      Тип значения
      * @return Детальная информация о пользователе по имени свойства
      */
     public static <T> T getUserDetailsProperty(String property) {

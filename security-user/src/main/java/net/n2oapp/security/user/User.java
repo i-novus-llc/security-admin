@@ -1,7 +1,7 @@
-package net.n2oapp.security.auth;
+package net.n2oapp.security.user;
 
-import net.n2oapp.security.auth.authority.PermissionGrantedAuthority;
-import net.n2oapp.security.auth.authority.RoleGrantedAuthority;
+import net.n2oapp.security.user.authority.PermissionGrantedAuthority;
+import net.n2oapp.security.user.authority.RoleGrantedAuthority;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.util.StringUtils;
 

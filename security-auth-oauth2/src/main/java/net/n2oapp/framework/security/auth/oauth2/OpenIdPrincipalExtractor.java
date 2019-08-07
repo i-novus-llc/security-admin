@@ -2,15 +2,18 @@ package net.n2oapp.framework.security.auth.oauth2;
 
 import net.n2oapp.security.admin.api.model.UserDetailsToken;
 import net.n2oapp.security.admin.api.service.UserDetailsService;
-import net.n2oapp.security.auth.User;
-import net.n2oapp.security.auth.authority.PermissionGrantedAuthority;
-import net.n2oapp.security.auth.authority.RoleGrantedAuthority;
+import net.n2oapp.security.user.User;
+import net.n2oapp.security.user.authority.PermissionGrantedAuthority;
+import net.n2oapp.security.user.authority.RoleGrantedAuthority;
 import org.apache.commons.collections.map.UnmodifiableMap;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.AuthoritiesExtractor;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
 import org.springframework.security.core.GrantedAuthority;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
