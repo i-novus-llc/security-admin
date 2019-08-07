@@ -47,7 +47,7 @@
         <module>security-admin-frontend</module>
         <module>keycloak-theme</module>
         <module>doc</module>
-        <module>security-user</module>
+        <module>security-auth-common</module>
     </modules>
 
     <profiles>
