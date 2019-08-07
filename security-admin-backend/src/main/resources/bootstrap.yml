@@ -1,6 +1,6 @@
 spring:
   application:
-    name: security-admin-backend
+    name: ${project.artifactId}
   cloud:
     consul:
       config:
