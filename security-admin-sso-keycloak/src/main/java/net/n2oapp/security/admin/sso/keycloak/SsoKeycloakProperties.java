@@ -18,15 +18,15 @@ public class SsoKeycloakProperties {
     /**
      * Адрес сервера keycloak
      */
-    private String serverUrl = "http://127.0.0.1:8888/auth";
+    private String serverUrl = "http://127.0.0.1:8085/auth";
 
     /**
      * Название домена
      */
-    private String realm = "security-admin";
+    private String realm = "epmp";
 
     /**
-     * Идентификатор клиента
+     * Идентификатор клиента client id
      */
     private String clientId = "security-admin-sso";
 
@@ -43,7 +43,7 @@ public class SsoKeycloakProperties {
     /**
      * Пароль пользователя с правами на создание, реадктирование и удаление ролей и пользователей в keycloak
      */
-    private String password;
+    private String password = "restclient";
 
     /**
      * Отправлять ли подтверждение email при создании пользователя

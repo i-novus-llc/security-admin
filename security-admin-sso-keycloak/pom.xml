@@ -11,6 +11,10 @@
         <relativePath>..</relativePath>
     </parent>
 
+    <properties>
+        <wiremock-standalone.version>2.20.0</wiremock-standalone.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>net.n2oapp.framework.security</groupId>
@@ -20,28 +24,13 @@
 
         <dependency>
             <groupId>org.keycloak</groupId>
-            <artifactId>keycloak-cxf-admin-client</artifactId>
-            <version>3.4.0.Final</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.cxf</groupId>
-                    <artifactId>cxf-rt-frontend-jaxrs</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.cxf</groupId>
-                    <artifactId>cxf-rt-transports-http-jetty</artifactId>
-                </exclusion>
-            </exclusions>
+            <artifactId>keycloak-admin-client</artifactId>
+            <version>6.0.1</version>
         </dependency>
 
         <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-rs-service-description</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-frontend-jaxrs</artifactId>
+            <groupId>net.n2oapp.platform</groupId>
+            <artifactId>n2o-platform-starter-jaxrs-server</artifactId>
         </dependency>
 
         <dependency>
@@ -49,6 +38,19 @@
             <artifactId>n2o-platform-i18n-commons</artifactId>
         </dependency>
 
+        <!-- Test -->
+        <dependency>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock-standalone</artifactId>
+            <version>${wiremock-standalone.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>net.n2oapp.platform</groupId>
+            <artifactId>n2o-platform-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 
