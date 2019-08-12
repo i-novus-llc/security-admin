@@ -15,6 +15,7 @@ import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.representations.AccessToken;
 import org.keycloak.representations.AccessTokenResponse;
 import org.keycloak.representations.idm.CredentialRepresentation;
+import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
@@ -37,7 +38,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -45,7 +48,9 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootConfiguration
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, properties = {
+        "keycloak.serverUrl=http://127.0.0.1:8590/auth"
+})
 public class KeycloakRestUserServiceTest {
 
     @Configuration
@@ -68,13 +73,11 @@ public class KeycloakRestUserServiceTest {
     @Autowired
     private KeycloakRestUserService userService;
 
-/*
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(8590);
 
     @Before
     public void setUp() throws IOException {
-
         wireMockRule.stubFor(post(urlPathMatching("/api/path/v1.0/resourcename"))
                 .withRequestBody(containing("\"somethinginheader\":\"50cca0e4-69ea-4247\""))
                 .willReturn(aResponse()
@@ -82,10 +85,9 @@ public class KeycloakRestUserServiceTest {
                         .withHeader("Content-Type", APPLICATION_JSON)));
                         //.withBody(fileToJSON("datafile.with.data.json"))));
     }
-*/
 
     @Test
-    public void testCRUDUser(){
+    public void testCRUDUser() {
         //create
         UserRepresentation user = new UserRepresentation();
         user.setEnabled(true);
@@ -110,9 +112,50 @@ public class KeycloakRestUserServiceTest {
         assertEquals(updatedUser.getFirstName(), "newFirstName");
         assertEquals(updatedUser.getLastName(), "newSurname");
 
+        //update roles
+        ArrayList<RoleRepresentation> userRoles = new ArrayList<>();
+        RoleRepresentation role1 = new RoleRepresentation();
+        role1.setId("1b59b5e4-06c1-4352-bcd7-0097ea066d90");
+        role1.setName("sec.admin");
+        userRoles.add(role1);
+        userService.addUserRoles(userGuid, userRoles);
+        List<RoleRepresentation> actualUserRoles = userService.getActualUserRoles(userGuid);
+        assertEquals(actualUserRoles.size(), 3);
+
+        //delete roles
+        userService.deleteUserRoles(userGuid, userRoles);
+        actualUserRoles = userService.getActualUserRoles(userGuid);
+        assertEquals(actualUserRoles.size(), 2);
+
+        //change password
+        userService.changePassword(userGuid, "newpass");
+        //todo как проверить что пароль изменился?
+
         //delete
         userService.deleteUser(userGuid);
         assertNull(userService.getById(userGuid));
+    }
+
+    @Test
+    public void testExecuteActionsEmail() {
+        UserRepresentation user = new UserRepresentation();
+        user.setEnabled(true);
+        user.setUsername("test2");
+        user.setFirstName("testName2");
+        user.setLastName("testSurname2");
+        user.setEmail("test2@mail.ru");
+        CredentialRepresentation passwordCred = new CredentialRepresentation();
+        passwordCred.setTemporary(false);
+        passwordCred.setType(CredentialRepresentation.PASSWORD);
+        passwordCred.setValue("test2");
+        user.setCredentials(Arrays.asList(passwordCred));
+        String userGuid = userService.createUser(user);
+        assertNotNull(userGuid);
+
+        List<String> actions = new ArrayList<>();
+        actions.add("VERIFY_EMAIL");
+        actions.add("UPDATE_PASSWORD");
+        userService.executeActionsEmail(actions, userGuid);
     }
 
 

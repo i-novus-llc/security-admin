@@ -4,23 +4,23 @@ import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
-import org.keycloak.admin.client.Keycloak;
-import org.keycloak.admin.client.KeycloakBuilder;
-import org.keycloak.admin.client.resource.RealmResource;
-import org.keycloak.admin.client.resource.RolesResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
-import org.keycloak.representations.idm.ErrorRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.core.Response;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
 
     private SsoKeycloakProperties properties;
+
+    @Autowired
+    private KeycloakRestRoleService roleService;
+
+    @Autowired
+    private KeycloakRestUserService userService;
 
     public KeycloakSsoUserRoleProvider(SsoKeycloakProperties properties) {
         this.properties = properties;
@@ -29,128 +29,81 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
     @Override
     public User createUser(User user) {
         UserRepresentation userRepresentation = map(user);
-        if (user.getPassword() != null) {
-            CredentialRepresentation passwordCred = new CredentialRepresentation();
-            passwordCred.setTemporary(false);
-            passwordCred.setType(CredentialRepresentation.PASSWORD);
-            passwordCred.setValue(user.getPassword());
-            userRepresentation.setCredentials(Arrays.asList(passwordCred));
-        }
-        RealmResource realmResource = keycloak().realm(properties.getRealm());
-        Response response = null;
-        try {
-            response = realmResource.users().create(userRepresentation);
-            if (response.getStatus() >= 200 && response.getStatus() < 300) {
-                String userId = response.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
-                user.setGuid(userId);
-                if (user.getRoles() != null) {
-                    List<RoleRepresentation> roles = new ArrayList<>();
-                    List<RoleRepresentation> roleRepresentationList = realmResource.roles().list();
-                    user.getRoles().forEach(r -> {
-                        Optional<RoleRepresentation> roleRep = roleRepresentationList.stream().filter(rp -> rp.getName().equals(r.getCode())).findAny();
-                        if (roleRep.isPresent()) {
-                            roles.add(roleRep.get());
-                        } else {
-                            throw new UserException("exception.ssoRoleNotFound");
-                        }
-                    });
-                    realmResource.users().get(userId).roles().realmLevel().add(roles);
+        String userGuid = userService.createUser(userRepresentation);
+        user.setGuid(userGuid);
+        if (user.getRoles() != null) {
+            List<RoleRepresentation> roles = new ArrayList<>();
+            List<RoleRepresentation> roleRepresentationList = roleService.getAllRoles();
+            user.getRoles().forEach(r -> {
+                Optional<RoleRepresentation> roleRep = roleRepresentationList.stream().filter(rp -> rp.getName().equals(r.getName())).findAny();
+                if (roleRep.isPresent()) {
+                    roles.add(roleRep.get());
+                } else {
+                    throw new UserException("exception.ssoRoleNotFound");
                 }
-                if (properties.getSendVerifyEmail() || properties.getSendChangePassword()) {
-                    List<String> actions = new ArrayList<>();
-                    if (properties.getSendVerifyEmail()) {
-                        actions.add("VERIFY_EMAIL");
-                    }
-                    if (properties.getSendChangePassword()) {
-                        actions.add("UPDATE_PASSWORD");
-                    }
-                    realmResource.users().get(userId).executeActionsEmail(properties.getClientId(), properties.getRedirectUrl(), actions);
-                }
-                return user;
-            } else {
-                throw new IllegalArgumentException(response.readEntity(ErrorRepresentation.class).getErrorMessage());
-            }
-        } finally {
-            if (response != null) {
-                response.close();
-            }
+            });
+            userService.addUserRoles(userGuid, roles);
         }
+        if (properties.getSendVerifyEmail() || properties.getSendChangePassword()) {
+            List<String> actions = new ArrayList<>();
+            if (properties.getSendVerifyEmail()) {
+                actions.add("VERIFY_EMAIL");
+            }
+            if (properties.getSendChangePassword()) {
+                actions.add("UPDATE_PASSWORD");
+            }
+            userService.executeActionsEmail(actions, userGuid);
+        }
+        return user;
     }
 
     @Override
     public void updateUser(User user) {
-        RealmResource realmResource = keycloak().realm(properties.getRealm());
         UserRepresentation userRepresentation = map(user);
-        realmResource.users().get(user.getGuid()).update(userRepresentation);
+        userService.updateUser(userRepresentation);
         List<RoleRepresentation> forRemove = new ArrayList<>();
         if (user.getRoles() == null || user.getRoles().isEmpty()) {
-            forRemove = realmResource.users().get(user.getGuid()).roles().realmLevel().listEffective();
+            forRemove = userService.getActualUserRoles(user.getGuid());
         } else {
             Set<String> roleNames = user.getRoles().stream().map(Role::getCode).collect(Collectors.toSet());
-            List<RoleRepresentation> effective = realmResource.users().get(user.getGuid()).roles().realmLevel().listEffective();
+            List<RoleRepresentation> effective = userService.getActualUserRoles(user.getGuid());
             if (effective != null) {
                 forRemove = effective.stream().filter(e -> !roleNames.contains(e.getName())).collect(Collectors.toList());
             }
-            List<RoleRepresentation> roles = new ArrayList<>();
-            roleNames.forEach(r -> {
-                roles.add(realmResource.roles().get(r).toRepresentation());
-            });
-            realmResource.users().get(user.getGuid()).roles().realmLevel().add(roles);
+            userService.addUserRoles(user.getGuid(), user.getRoles().stream().map(r -> map(r)).collect(Collectors.toList()));
         }
-        realmResource.users().get(user.getGuid()).roles().realmLevel().remove(forRemove);
+        userService.deleteUserRoles(user.getGuid(), forRemove);
         if (user.getPassword() != null) {
-            CredentialRepresentation passwordCred = new CredentialRepresentation();
-            passwordCred.setTemporary(false);
-            passwordCred.setType(CredentialRepresentation.PASSWORD);
-            passwordCred.setValue(user.getPassword());
-            realmResource.users().get(user.getGuid()).resetPassword(passwordCred);
+            userService.changePassword(user.getGuid(), user.getPassword());
         }
     }
 
     @Override
     public void deleteUser(User user) {
-        keycloak().realm(properties.getRealm()).users().delete(user.getGuid());
+        userService.deleteUser(user.getGuid());
     }
 
     @Override
     public void changeActivity(User user) {
         UserRepresentation userRepresentation = map(user);
         userRepresentation.setEnabled(user.getIsActive());
-        keycloak().realm(properties.getRealm()).users().get(user.getGuid()).update(userRepresentation);
+        userService.updateUser(userRepresentation);
     }
 
     @Override
     public Role createRole(Role role) {
-        RolesResource resource = keycloak().realm(properties.getRealm()).roles();
-        RoleRepresentation roleRepresentation = map(role);
-        resource.create(roleRepresentation);
+        roleService.createRole(map(role));
         return role;
     }
 
     @Override
     public void updateRole(Role role) {
-        RolesResource resource = keycloak().realm(properties.getRealm()).roles();
-        try {
-            resource.get(role.getCode()).toRepresentation();
-        } catch (NotFoundException e) {
-            RoleRepresentation roleRepresentation = map(role);
-            resource.create(roleRepresentation);
-        }
+        roleService.updateRole(map(role));
     }
 
     @Override
     public void deleteRole(Role role) {
-        keycloak().realm(properties.getRealm()).roles().deleteRole(role.getCode());
-    }
-
-    private Keycloak keycloak() {
-        return KeycloakBuilder.builder()
-                .serverUrl(properties.getServerUrl())
-                .realm(properties.getRealm())
-                .clientId(properties.getAdminClientId())
-                .username(properties.getUsername())
-                .password(properties.getPassword())
-                .build();
+        roleService.deleteRole(role.getCode());
     }
 
     private UserRepresentation map(User user) {
@@ -161,6 +114,13 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
         kUser.setFirstName(user.getName());
         kUser.setLastName(user.getSurname());
         kUser.setEmail(user.getEmail());
+        if (user.getPassword() != null) {
+            CredentialRepresentation passwordCred = new CredentialRepresentation();
+            passwordCred.setTemporary(false);
+            passwordCred.setType(CredentialRepresentation.PASSWORD);
+            passwordCred.setValue(user.getPassword());
+            kUser.setCredentials(Arrays.asList(passwordCred));
+        }
         return kUser;
     }
 
@@ -170,5 +130,13 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
         res.setComposite(false);
         res.setDescription(role.getDescription());
         return res;
+    }
+
+    public void setRoleService(KeycloakRestRoleService roleService) {
+        this.roleService = roleService;
+    }
+
+    public void setUserService(KeycloakRestUserService userService) {
+        this.userService = userService;
     }
 }

@@ -6,15 +6,21 @@ import lombok.Getter;
 import lombok.Setter;
 import org.keycloak.representations.idm.ErrorRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
-import org.keycloak.representations.idm.RolesRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestOperations;
 
 import javax.ws.rs.core.Response;
-import java.util.*;
-import java.util.stream.Collector;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class KeycloakRestRoleService {
@@ -45,12 +51,17 @@ public class KeycloakRestRoleService {
         }
     }
 
-    public List<RoleRepresentation> getAllRoles(String realm, String clientId){
-        return Collections.emptyList();
-    }
-
-    public List<RoleRepresentation> getActualUserRoles(String realm, String clientId, String userGuid){
-        return Collections.emptyList();
+    public List<RoleRepresentation> getAllRoles(){
+        final String serverUrl = String.format(ROLES, properties.getServerUrl(), properties.getRealm());
+        try {
+            ResponseEntity<RoleRepresentation[]> response = template.getForEntity(serverUrl, RoleRepresentation[].class);
+            return Arrays.asList(response.getBody());
+        } catch (HttpClientErrorException ex) {
+            if (ex.getRawStatusCode() == 404) {
+                return Collections.emptyList();
+            }
+            throw ex;
+        }
     }
 
     public String createRole(RoleRepresentation role) {
@@ -93,37 +104,38 @@ public class KeycloakRestRoleService {
             throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
         }
         if (response.getStatusCodeValue() >= 200 && response.getStatusCodeValue() < 300) {
-
-            RoleRepresentation[] currentCompositesRes = getRoleComposites(role.getName());
-            Set<String> currentComposites = new HashSet<>();
-            for (RoleRepresentation r : currentCompositesRes) {
-                currentComposites.add(r.getId());
-            }
-            Set<IdObject> forRemove;
-            if (role.getComposites() == null) {
+            if (role.isComposite()) {
+                RoleRepresentation[] currentCompositesRes = getRoleComposites(role.getName());
+                Set<String> currentComposites = new HashSet<>();
+                for (RoleRepresentation r : currentCompositesRes) {
+                    currentComposites.add(r.getId());
+                }
+                Set<IdObject> forRemove;
+                if (role.getComposites() == null) {
                     forRemove = currentComposites.stream().map(r -> new IdObject(r)).collect(Collectors.toSet());
-            } else {
-                Set<String> composites = new HashSet<>();
-                if (role.getComposites().getRealm() != null) {
-                    composites.addAll(role.getComposites().getRealm());
-                }
-                if (role.getComposites().getClient() != null) {
-                    composites.addAll(role.getComposites().getClient().values().stream().filter(r -> r != null)
-                            .flatMap(r -> r.stream()).collect(Collectors.toSet()));
-                }
-                forRemove = currentComposites.stream().filter(r -> !composites.contains(r)).map(r -> new IdObject(r)).collect(Collectors.toSet());
-                Set<IdObject> newComposites = composites.stream().filter(r -> !currentComposites.contains(r))
-                        .map(r -> new IdObject(r)).collect(Collectors.toSet());
-                if (newComposites != null) {
-                    ResponseEntity<Response> compositesResponse = template
-                            .postForEntity(roleCompositesServerUrl, new HttpEntity<>(newComposites, headers), Response.class);
-                    if (compositesResponse.getStatusCodeValue() < 200 || compositesResponse.getStatusCodeValue() > 300) {
-                        throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
+                } else {
+                    Set<String> composites = new HashSet<>();
+                    if (role.getComposites().getRealm() != null) {
+                        composites.addAll(role.getComposites().getRealm());
+                    }
+                    if (role.getComposites().getClient() != null) {
+                        composites.addAll(role.getComposites().getClient().values().stream().filter(r -> r != null)
+                                .flatMap(r -> r.stream()).collect(Collectors.toSet()));
+                    }
+                    forRemove = currentComposites.stream().filter(r -> !composites.contains(r)).map(r -> new IdObject(r)).collect(Collectors.toSet());
+                    Set<IdObject> newComposites = composites.stream().filter(r -> !currentComposites.contains(r))
+                            .map(r -> new IdObject(r)).collect(Collectors.toSet());
+                    if (newComposites != null) {
+                        ResponseEntity<Response> compositesResponse = template
+                                .postForEntity(roleCompositesServerUrl, new HttpEntity<>(newComposites, headers), Response.class);
+                        if (compositesResponse.getStatusCodeValue() < 200 || compositesResponse.getStatusCodeValue() > 300) {
+                            throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
+                        }
                     }
                 }
-            }
-            if (!forRemove.isEmpty()) {
-                template.exchange(roleCompositesServerUrl, HttpMethod.DELETE, new HttpEntity<>(forRemove, headers), Response.class);
+                if (!forRemove.isEmpty()) {
+                    template.exchange(roleCompositesServerUrl, HttpMethod.DELETE, new HttpEntity<>(forRemove, headers), Response.class);
+                }
             }
         } else {
             throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
