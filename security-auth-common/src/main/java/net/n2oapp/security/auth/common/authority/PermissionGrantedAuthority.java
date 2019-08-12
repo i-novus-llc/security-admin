@@ -1,4 +1,4 @@
-package net.n2oapp.security.user.authority;
+package net.n2oapp.security.auth.common.authority;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.util.Assert;

@@ -2,8 +2,8 @@ package net.n2oapp.security.auth.simple;
 
 import net.n2oapp.properties.StaticProperties;
 import net.n2oapp.security.admin.api.service.RoleService;
-import net.n2oapp.security.auth.User;
-import net.n2oapp.security.auth.authority.RoleGrantedAuthority;
+import net.n2oapp.security.auth.common.User;
+import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.provisioning.UserDetailsManager;
@@ -34,6 +34,7 @@ public class RegistrationServlet extends HttpServlet {
     /**
      * Проверка существования в бд пользователя с введенным username,
      * редирект c заданым параметром error в случае ошибки
+     *
      * @param request
      * @param response
      * @throws ServletException
@@ -50,6 +51,7 @@ public class RegistrationServlet extends HttpServlet {
      * Получение кода ошибки, и, если он имеется,
      * редирект с заполненным параметром error,
      * создание пользователя и редирект на страницу входа
+     *
      * @param request
      * @param response
      * @throws ServletException
@@ -64,9 +66,9 @@ public class RegistrationServlet extends HttpServlet {
         String repeatedPassword = request.getParameter("password2");
         String surname = request.getParameter("surname");
         String name = request.getParameter("name");
-        String patronymic= request.getParameter("patronymic");
+        String patronymic = request.getParameter("patronymic");
         String errorCode = checkErrorCode(username, email, password, repeatedPassword, userDetailsManager);
-        if(errorCode != null) {
+        if (errorCode != null) {
             response.sendRedirect("registration?error=" + errorCode);
             return;
         }
@@ -78,9 +80,10 @@ public class RegistrationServlet extends HttpServlet {
      * Проверка существования пользователя с введенным username в бд,
      * эквивалентности значений полей password1 и password2,
      * и тогоб что поле username заполнено
-     * @param username данные из поля username
-     * @param password данные из поля password1
-     * @param repeatedPassword данные из поля password2
+     *
+     * @param username           данные из поля username
+     * @param password           данные из поля password1
+     * @param repeatedPassword   данные из поля password2
      * @param userDetailsManager менеджер для работы с бд
      * @return код ошибки или null
      * @throws ServletException
@@ -106,15 +109,16 @@ public class RegistrationServlet extends HttpServlet {
 
     /**
      * Логика создания пользователя
-     * @param username данные из поля username
-     * @param password данные из поля password1
+     *
+     * @param username           данные из поля username
+     * @param password           данные из поля password1
      * @param userDetailsManager менеджер для работы с бд
      */
     private void createUser(String username, String password, String surname, String name, String patronymic,
                             String email, UserDetailsManager userDetailsManager) {
         String authority = StaticProperties.getProperty("n2o.auth.authority");
         List<GrantedAuthority> authorities = new ArrayList<>();
-        if(authority != null) {
+        if (authority != null) {
             authorities.add(new RoleGrantedAuthority(authority));
         }
         User user = new User(username, password, authorities, surname, name, patronymic, email);

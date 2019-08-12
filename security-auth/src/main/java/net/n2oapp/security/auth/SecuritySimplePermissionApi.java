@@ -2,9 +2,9 @@ package net.n2oapp.security.auth;
 
 import net.n2oapp.framework.access.simple.PermissionApi;
 import net.n2oapp.framework.api.user.UserContext;
-import net.n2oapp.security.user.UserParamsUtil;
-import net.n2oapp.security.user.authority.PermissionGrantedAuthority;
-import net.n2oapp.security.user.authority.RoleGrantedAuthority;
+import net.n2oapp.security.auth.common.UserParamsUtil;
+import net.n2oapp.security.auth.common.authority.PermissionGrantedAuthority;
+import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 

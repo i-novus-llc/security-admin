@@ -1,4 +1,4 @@
-package net.n2oapp.security.user;
+package net.n2oapp.security.auth.common;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;

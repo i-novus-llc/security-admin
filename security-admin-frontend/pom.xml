@@ -40,7 +40,7 @@
         <!--</dependency>-->
         <dependency>
             <groupId>net.n2oapp.framework.security</groupId>
-            <artifactId>security-auth-oauth2</artifactId>
+            <artifactId>security-auth-oauth2-gateway</artifactId>
             <version>${project.version}</version>
         </dependency>
 

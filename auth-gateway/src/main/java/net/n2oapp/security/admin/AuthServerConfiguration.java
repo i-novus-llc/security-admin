@@ -28,7 +28,7 @@ public class AuthServerConfiguration extends OAuth2AuthorizationServerConfigurat
                 .scopes("read", "write")
                 .autoApprove(true)
                 .accessTokenValiditySeconds(3600)
-                .redirectUris("http://localhost:9999/client")
+                .redirectUris("http://localhost:9999/client", "http://localhost:9999/client/login", "http://localhost:8081/admin/login", "http://localhost:8081/admin")
                 .and()
                 .withClient("clientCredentialsClient")
                 .secret("clientCredentialsClientSecret")

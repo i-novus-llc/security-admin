@@ -1,7 +1,7 @@
 package net.n2oapp.security.auth;
 
-import net.n2oapp.security.user.User;
-import net.n2oapp.security.user.UserParamsUtil;
+import net.n2oapp.security.auth.common.User;
+import net.n2oapp.security.auth.common.UserParamsUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.security.test.context.support.WithMockUser;
