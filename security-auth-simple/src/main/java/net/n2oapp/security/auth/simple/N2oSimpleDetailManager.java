@@ -5,9 +5,9 @@ import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.api.service.RoleService;
 import net.n2oapp.security.admin.api.service.UserService;
-import net.n2oapp.security.auth.User;
-import net.n2oapp.security.auth.authority.PermissionGrantedAuthority;
-import net.n2oapp.security.auth.authority.RoleGrantedAuthority;
+import net.n2oapp.security.user.User;
+import net.n2oapp.security.user.authority.PermissionGrantedAuthority;
+import net.n2oapp.security.user.authority.RoleGrantedAuthority;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,9 +65,8 @@ public class N2oSimpleDetailManager implements UserDetailsManager {
         criteria.setSize(1);
         Page<net.n2oapp.security.admin.api.model.User> users = userService.findAll(criteria);
         if (users.getTotalElements() == 1) {
-           id =  users.getContent().get(0).getId();
-        }
-        else {
+            id = users.getContent().get(0).getId();
+        } else {
             if (users.getTotalElements() > 1)
                 throw new IncorrectResultSizeDataAccessException(
                         "More than one user found with name '" + user.getUsername() + "'", 1);
@@ -99,7 +98,6 @@ public class N2oSimpleDetailManager implements UserDetailsManager {
         }
 
         String username = currentUser.getName();
-
 
 
         // If an authentication manager has been set, re-authenticate the user with the
