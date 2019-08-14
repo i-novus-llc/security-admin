@@ -38,6 +38,10 @@ public class KeycloakRestRoleService {
         this.properties = properties;
     }
 
+    public void setTemplate(RestOperations template) {
+        this.template = template;
+    }
+
     public RoleRepresentation getByName(String roleName) {
         final String serverUrl = String.format(ROLE_BY_NAME, properties.getServerUrl(), properties.getRealm(), roleName);
         try {

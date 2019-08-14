@@ -35,7 +35,7 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
             List<RoleRepresentation> roles = new ArrayList<>();
             List<RoleRepresentation> roleRepresentationList = roleService.getAllRoles();
             user.getRoles().forEach(r -> {
-                Optional<RoleRepresentation> roleRep = roleRepresentationList.stream().filter(rp -> rp.getName().equals(r.getName())).findAny();
+                Optional<RoleRepresentation> roleRep = roleRepresentationList.stream().filter(rp -> rp.getName().equals(r.getCode())).findAny();
                 if (roleRep.isPresent()) {
                     roles.add(roleRep.get());
                 } else {
@@ -70,7 +70,10 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
             if (effective != null) {
                 forRemove = effective.stream().filter(e -> !roleNames.contains(e.getName())).collect(Collectors.toList());
             }
-            userService.addUserRoles(user.getGuid(), user.getRoles().stream().map(r -> map(r)).collect(Collectors.toList()));
+            Set<String> effectiveRoleNames = effective == null ? new HashSet<>() :
+                    effective.stream().map(r -> r.getName()).collect(Collectors.toSet());
+            userService.addUserRoles(user.getGuid(), user.getRoles().stream()
+                    .filter(r -> !effectiveRoleNames.contains(r.getCode())).map(r -> map(r)).collect(Collectors.toList()));
         }
         userService.deleteUserRoles(user.getGuid(), forRemove);
         if (user.getPassword() != null) {

@@ -33,7 +33,12 @@ public class SsoKeycloakProperties {
     /**
      * Идентификатор клиента администрирования пользователей и ролей в keycloak
      */
-    private String adminClientId = "admin-cli";
+    private String adminClientId = "access-admin";
+
+    /**
+     * Ключ клиента администрирования пользователей и ролей в keycloak
+     */
+    private String adminClientSecret;
 
     /**
      * Имя пользователя с правами на создание, реадктирование и удаление ролей и пользователей в keycloak

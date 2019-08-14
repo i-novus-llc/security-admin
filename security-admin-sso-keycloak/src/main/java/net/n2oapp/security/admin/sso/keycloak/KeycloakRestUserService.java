@@ -28,6 +28,9 @@ public class KeycloakRestUserService {
     @Autowired
     private RestOperations template;
 
+    @Autowired
+    private KeycloakRestRoleService roleService;
+
     public KeycloakRestUserService(SsoKeycloakProperties properties) {
         this.properties = properties;
     }
@@ -82,6 +85,12 @@ public class KeycloakRestUserService {
 
     public void addUserRoles(String userGuid, List<RoleRepresentation> roles) {
         if (roles != null && !roles.isEmpty()) {
+            roles.forEach(r -> {
+               if (r.getId() == null) {
+                   RoleRepresentation byName = roleService.getByName(r.getName());
+                   r.setId(byName.getId());
+               }
+            });
             final String serverUrl = String.format(USER_ROLES, properties.getServerUrl(), properties.getRealm(), userGuid);
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
