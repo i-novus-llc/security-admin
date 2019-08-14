@@ -19,9 +19,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.keycloak</groupId>
+            <groupId>ru.i-novus.components</groupId>
             <artifactId>keycloak-cxf-admin-client</artifactId>
-            <version>3.4.0.Final</version>
+            <version>3.5.0.Final</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.cxf</groupId>
