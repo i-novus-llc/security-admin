@@ -116,7 +116,7 @@ public class JpaClientDetailsServiceTest {
     }
 
     @Test
-    public void testlistClientDetails() {
+    public void testListClientDetails() {
         Client client2 = client();
         client2.setClientId("testId2");
         service.addClientDetails(client());
