@@ -23,6 +23,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Сервис для создания, изменения, удаления ролей в keycloak
+ */
 public class KeycloakRestRoleService {
 
     private static String ROLE_BY_NAME = "%s/admin/realms/%s/roles/%s";
@@ -42,6 +45,11 @@ public class KeycloakRestRoleService {
         this.template = template;
     }
 
+    /**
+     * Получение роли по уникальному имени(коду)
+     * @param roleName имя роля
+     * @return  роль
+     */
     public RoleRepresentation getByName(String roleName) {
         final String serverUrl = String.format(ROLE_BY_NAME, properties.getServerUrl(), properties.getRealm(), roleName);
         try {
@@ -55,6 +63,10 @@ public class KeycloakRestRoleService {
         }
     }
 
+    /**
+     * Получение всех ролей realm уровня из keycloak
+     * @return  список ролей
+     */
     public List<RoleRepresentation> getAllRoles(){
         final String serverUrl = String.format(ROLES, properties.getServerUrl(), properties.getRealm());
         try {
@@ -68,6 +80,11 @@ public class KeycloakRestRoleService {
         }
     }
 
+    /**
+     * Создать роль
+     * @param role  данные новой роли
+     * @return      идентификатор новой роли
+     */
     public String createRole(RoleRepresentation role) {
         final String serverUrl = String.format(ROLES, properties.getServerUrl(), properties.getRealm());
         final String roleCompositesServerUrl = String.format(ROLE_COMPOSITES, properties.getServerUrl(), properties.getRealm(), role.getName());
@@ -97,6 +114,10 @@ public class KeycloakRestRoleService {
         }
     }
 
+    /**
+     * Изменить роль
+     * @param role  данные роли
+     */
     public void updateRole(RoleRepresentation role) {
         final String serverUrl = String.format(ROLE_BY_NAME, properties.getServerUrl(), properties.getRealm(), role.getName());
         final String roleCompositesServerUrl = String.format(ROLE_COMPOSITES, properties.getServerUrl(), properties.getRealm(), role.getName());
@@ -146,11 +167,20 @@ public class KeycloakRestRoleService {
         }
     }
 
+    /**
+     * Получение содержимого роли, в случае если она композитная
+     * @param roleName  имя роли
+     * @return      список ролей
+     */
     public RoleRepresentation[] getRoleComposites(String roleName) {
         final String roleCompositesServerUrl = String.format(ROLE_COMPOSITES, properties.getServerUrl(), properties.getRealm(), roleName);
         return template.getForEntity(roleCompositesServerUrl, RoleRepresentation[].class).getBody();
     }
 
+    /**
+     * Удаление роли
+     * @param roleName  имя роли
+     */
     public void deleteRole(String roleName) {
         final String serverUrl = String.format(ROLE_BY_NAME, properties.getServerUrl(), properties.getRealm(), roleName);
         HttpHeaders headers = new HttpHeaders();
@@ -165,7 +195,7 @@ public class KeycloakRestRoleService {
     @Getter
     @Setter
     @AllArgsConstructor
-    class IdObject {
+    static class IdObject {
         private String id;
     }
 }

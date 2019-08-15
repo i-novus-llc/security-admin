@@ -15,6 +15,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Сервис для создания, изменения, удаления пользователя в keycloak
+ */
 public class KeycloakRestUserService {
 
     private static String USER_BY_ID = "%s/admin/realms/%s/users/%s";
@@ -35,6 +38,11 @@ public class KeycloakRestUserService {
         this.properties = properties;
     }
 
+    /**
+     * Получение пользователя по guid
+     * @param userGuid  guid пользователя
+     * @return          данные пользователя
+     */
     public UserRepresentation getById(String userGuid) {
         final String serverUrl = String.format(USER_BY_ID, properties.getServerUrl(), properties.getRealm(), userGuid);
         try {
@@ -48,6 +56,11 @@ public class KeycloakRestUserService {
         }
     }
 
+    /**
+     * Добавление пользователя
+     * @param user  данные пользователя
+     * @return      giud пользователя в keycloak
+     */
     public String createUser(UserRepresentation user) {
         final String serverUrl = String.format(USERS, properties.getServerUrl(), properties.getRealm());
         HttpHeaders headers = new HttpHeaders();
@@ -61,6 +74,10 @@ public class KeycloakRestUserService {
         }
     }
 
+    /**
+     * Изменение пользователя
+     * @param user    данные пользователя
+     */
     public void updateUser(UserRepresentation user) {
         final String serverUrl = String.format(USER_BY_ID, properties.getServerUrl(), properties.getRealm(), user.getId());
         HttpHeaders headers = new HttpHeaders();
@@ -72,6 +89,10 @@ public class KeycloakRestUserService {
         }
     }
 
+    /**
+     * Удаление пользователя
+     * @param guid giud пользователя keycloak
+     */
     public void deleteUser(String guid) {
         final String serverUrl = String.format(USER_BY_ID, properties.getServerUrl(), properties.getRealm(), guid);
         HttpHeaders headers = new HttpHeaders();
@@ -83,6 +104,11 @@ public class KeycloakRestUserService {
         }
     }
 
+    /**
+     * Добавление пользователю ролей
+     * @param userGuid  giud пользователя
+     * @param roles     список ролей
+     */
     public void addUserRoles(String userGuid, List<RoleRepresentation> roles) {
         if (roles != null && !roles.isEmpty()) {
             roles.forEach(r -> {
@@ -101,6 +127,11 @@ public class KeycloakRestUserService {
         }
     }
 
+    /**
+     * Получение актуальных ролей пользователя
+     * @param userGuid      giud пользователя
+     * @return              список ролей
+     */
     public List<RoleRepresentation> getActualUserRoles(String userGuid) {
         final String serverUrl = String.format(USER_ROLES, properties.getServerUrl(), properties.getRealm(), userGuid);
         try {
@@ -114,6 +145,11 @@ public class KeycloakRestUserService {
         }
     }
 
+    /**
+     * Удаление ролей у пользователя
+     * @param userGuid  guid пользователя
+     * @param roles     список ролей
+     */
     public void deleteUserRoles(String userGuid, List<RoleRepresentation> roles) {
         if (roles != null && !roles.isEmpty()) {
             final String serverUrl = String.format(USER_ROLES, properties.getServerUrl(), properties.getRealm(), userGuid);
@@ -126,6 +162,11 @@ public class KeycloakRestUserService {
         }
     }
 
+    /**
+     * Изменние пароля
+     * @param userGuid      giud пользователя
+     * @param newPassword   новый пароль
+     */
     public void changePassword(String userGuid, String newPassword) {
         CredentialRepresentation passwordCred = new CredentialRepresentation();
         passwordCred.setTemporary(false);
@@ -140,6 +181,11 @@ public class KeycloakRestUserService {
         }
     }
 
+    /**
+     * Вызов действий keycloak
+     * @param actions   список дейстивй
+     * @param userGuid  giud пользователя
+     */
     public void executeActionsEmail(List<String> actions, String userGuid) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(String.format(EMAIL_ACTIONS, properties.getServerUrl(), properties.getRealm(), userGuid))
                 .queryParam("redirect_uri", properties.getRedirectUrl())

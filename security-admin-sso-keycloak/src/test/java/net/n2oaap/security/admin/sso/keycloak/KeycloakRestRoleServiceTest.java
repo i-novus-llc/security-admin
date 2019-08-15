@@ -40,17 +40,17 @@ public class KeycloakRestRoleServiceTest {
     public void setUp() throws IOException {
         roleService = new KeycloakRestRoleService(properties);
         roleService.setTemplate(new RestTemplate());
-        wireMockRule.stubFor(post(urlPathMatching("/auth/admin/realms/epmp/roles/"))
+        wireMockRule.stubFor(post(urlPathMatching("/auth/admin/realms/master/roles/"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", APPLICATION_JSON)
                         .withHeader("Location", "/1b59b5e4-06c1-4352-bcd7-0097ea066d90")));
-        wireMockRule.stubFor(get(urlPathMatching("/auth/admin/realms/epmp/roles/test.role"))
+        wireMockRule.stubFor(get(urlPathMatching("/auth/admin/realms/master/roles/test.role"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", APPLICATION_JSON)
                         .withBody("{\"id\":\"1b59b5e4-06c1-4352-bcd7-0097ea066d90\", \"name\":\"test.role\", \"description\":\"test composite role\", \"composite\":\"false\"}")));
-        wireMockRule.stubFor(delete(urlPathMatching("/auth/admin/realms/epmp/roles/test.role"))
+        wireMockRule.stubFor(delete(urlPathMatching("/auth/admin/realms/master/roles/test.role"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", APPLICATION_JSON)));

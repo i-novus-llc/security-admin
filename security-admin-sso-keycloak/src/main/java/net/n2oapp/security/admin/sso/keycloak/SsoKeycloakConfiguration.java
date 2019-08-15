@@ -24,13 +24,11 @@ public class SsoKeycloakConfiguration {
 
 
     @Bean
-    @Primary
     KeycloakRestRoleService keycloakRestRoleService(SsoKeycloakProperties properties) {
         return new KeycloakRestRoleService(properties);
     }
 
     @Bean
-    @Primary
     KeycloakRestUserService keycloakRestUserService(SsoKeycloakProperties properties) {
         return new KeycloakRestUserService(properties);
     }

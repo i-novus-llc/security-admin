@@ -23,7 +23,7 @@ public class SsoKeycloakProperties {
     /**
      * Название домена
      */
-    private String realm = "epmp";
+    private String realm = "master";
 
     /**
      * Идентификатор клиента client id
@@ -39,16 +39,6 @@ public class SsoKeycloakProperties {
      * Ключ клиента администрирования пользователей и ролей в keycloak
      */
     private String adminClientSecret;
-
-    /**
-     * Имя пользователя с правами на создание, реадктирование и удаление ролей и пользователей в keycloak
-     */
-    private String username = "restclient";
-
-    /**
-     * Пароль пользователя с правами на создание, реадктирование и удаление ролей и пользователей в keycloak
-     */
-    private String password = "restclient";
 
     /**
      * Отправлять ли подтверждение email при создании пользователя
