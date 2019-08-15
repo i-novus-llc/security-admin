@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!-- Название схемы управления доступом -->
+    <property name="n2o.security.admin.schema" value="sec"/>
+
+    <!-- Название таблицы с клиентами -->
+    <property name="n2o.security.admin.client.table" value="oauth_client_details"/>
+    <!-- Название колонки в таблице клиентов, в которой хранится id(имя) клиента -->
+    <property name="n2o.security.admin.client.id" value="client_id"/>
+    <!-- Название колонки в таблице клиентов, в которой хранится секрет клиента -->
+    <property name="n2o.security.admin.client.secret" value="client_secret"/>
+    <!-- Название колонки в таблице клиентов, в которой хранятся authorized grant types(тип авторизации?) клиента -->
+    <property name="n2o.security.admin.client.types" value="authorized_grant_types"/>
+    <!-- Название колонки в таблице клиентов, в которой хранятся URI разрешённые для редиректа клиента -->
+    <property name="n2o.security.admin.client.redirect" value="registered_redirect_uri"/>
+    <!-- Название колонки в таблице клиентов, в которой хранится время жизни токена-->
+    <property name="n2o.security.admin.client.token.time" value="access_token_validity_seconds"/>
+
+</databaseChangeLog>
