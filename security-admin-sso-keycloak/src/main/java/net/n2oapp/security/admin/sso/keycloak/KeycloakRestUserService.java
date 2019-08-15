@@ -189,7 +189,7 @@ public class KeycloakRestUserService {
     public void executeActionsEmail(List<String> actions, String userGuid) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(String.format(EMAIL_ACTIONS, properties.getServerUrl(), properties.getRealm(), userGuid))
                 .queryParam("redirect_uri", properties.getRedirectUrl())
-                .queryParam("client_id", properties.getClientId());
+                .queryParam("client_id", properties.getAdminClientId());
         final String serverUrl = builder.toUriString();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
