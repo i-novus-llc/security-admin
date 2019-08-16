@@ -1,7 +1,7 @@
 package net.n2oapp.security.admin;
 
 import net.n2oapp.security.auth.common.User;
-import net.n2oapp.security.auth.common.authority.PermissionGrantedAuthority;
+import net.n2oapp.security.auth.common.UserParamsUtil;
 import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -61,17 +61,6 @@ public class UserTokenConverter implements UserAuthenticationConverter {
     }
 
     private Collection<? extends GrantedAuthority> getAuthorities(Map<String, ?> map) {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        if (map.containsKey(ROLES)) {
-            for (String role : (List<String>) map.get(ROLES)) {
-                authorities.add(new RoleGrantedAuthority(role));
-            }
-        }
-        if (map.containsKey(PERMISSIONS)) {
-            for (String role : (List<String>) map.get(PERMISSIONS)) {
-                authorities.add(new PermissionGrantedAuthority(role));
-            }
-        }
-        return authorities;
+        return UserParamsUtil.extractRolesAndPermissions(map);
     }
 }

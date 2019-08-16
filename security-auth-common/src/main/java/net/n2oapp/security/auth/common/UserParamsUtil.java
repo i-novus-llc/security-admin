@@ -1,8 +1,11 @@
 package net.n2oapp.security.auth.common;
 
+import net.n2oapp.security.auth.common.authority.PermissionGrantedAuthority;
+import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,14 +14,15 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Утилитный класс для получения username и sessionId
  */
 public class UserParamsUtil {
+
+    private static final String ROLES = "roles";
+    private static final String PERMISSIONS = "permissions";
 
     /**
      * Получение текущей сессии пользователя по контексту {@link SecurityContextHolder}
@@ -169,5 +173,20 @@ public class UserParamsUtil {
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new IllegalArgumentException(e);
         }
+    }
+
+    public static List<GrantedAuthority> extractRolesAndPermissions(Map<String, ?> map) {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        if (map.containsKey(ROLES)) {
+            for (String role : (List<String>) map.get(ROLES)) {
+                authorities.add(new RoleGrantedAuthority(role));
+            }
+        }
+        if (map.containsKey(PERMISSIONS)) {
+            for (String role : (List<String>) map.get(PERMISSIONS)) {
+                authorities.add(new PermissionGrantedAuthority(role));
+            }
+        }
+        return authorities;
     }
 }

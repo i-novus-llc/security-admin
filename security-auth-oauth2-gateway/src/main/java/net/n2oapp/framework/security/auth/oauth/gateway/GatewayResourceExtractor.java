@@ -1,36 +1,30 @@
 package net.n2oapp.framework.security.auth.oauth.gateway;
 
 import net.n2oapp.security.auth.common.User;
-import net.n2oapp.security.auth.common.authority.PermissionGrantedAuthority;
-import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
+import net.n2oapp.security.auth.common.UserParamsUtil;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.AuthoritiesExtractor;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
 import org.springframework.security.core.GrantedAuthority;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class GatewayResourceExtractor implements PrincipalExtractor, AuthoritiesExtractor {
+
+    private static final String USERNAME = "username";
+    private static final String NAME = "name";
+    private static final String EMAIL = "email";
+    private static final String SURNAME = "surname";
+    private static final String PATRONYMIC = "patronymic";
+
     @Override
     public List<GrantedAuthority> extractAuthorities(Map<String, Object> map) {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        if (map.containsKey("roles")) {
-            for (String role : (List<String>) map.get("roles")) {
-                authorities.add(new RoleGrantedAuthority(role));
-            }
-        }
-        if (map.containsKey("permissions")) {
-            for (String role : (List<String>) map.get("permissions")) {
-                authorities.add(new PermissionGrantedAuthority(role));
-            }
-        }
-        return authorities;
+        return UserParamsUtil.extractRolesAndPermissions(map);
     }
 
     @Override
     public Object extractPrincipal(Map<String, Object> map) {
-        return new User((String) map.get("username"), "N/A", extractAuthorities(map), (String) map.get("surname"), (String) map.get("name"),
-                (String) map.get("patronymic"), (String) map.get("email"));
+        return new User((String) map.get(USERNAME), "N/A", extractAuthorities(map), (String) map.get(SURNAME), (String) map.get(NAME),
+                (String) map.get(PATRONYMIC), (String) map.get(EMAIL));
     }
 }
