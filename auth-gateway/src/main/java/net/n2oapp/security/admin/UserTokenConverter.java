@@ -6,11 +6,11 @@ import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.provider.token.DefaultUserAuthenticationConverter;
+import org.springframework.security.oauth2.provider.token.UserAuthenticationConverter;
 
 import java.util.*;
 
-public class UserTokenConverter extends DefaultUserAuthenticationConverter {
+public class UserTokenConverter implements UserAuthenticationConverter {
 
     static final String ROLES = "roles";
     static final String PERMISSIONS = "permissions";
