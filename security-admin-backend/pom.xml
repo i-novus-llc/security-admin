@@ -25,7 +25,7 @@
         <!-- APP -->
         <dependency>
             <groupId>net.n2oapp.framework.security</groupId>
-            <artifactId>auth-gateway</artifactId>
+            <artifactId>security-admin-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
         <!--<dependency>-->

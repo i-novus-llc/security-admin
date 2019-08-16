@@ -2,7 +2,6 @@ package net.n2oapp.security.admin;
 
 import net.n2oapp.framework.security.auth.oauth2.keycloak.OpenIdPrincipalExtractor;
 import net.n2oapp.security.admin.api.service.UserDetailsService;
-import net.n2oapp.security.admin.impl.AdminImplConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
@@ -10,7 +9,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -36,11 +34,7 @@ import java.util.List;
 @EnableOAuth2Client
 @EnableWebSecurity
 @Order(200)
-@Import(AdminImplConfiguration.class)
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-
-    @Autowired
-    OAuth2ClientContext oauth2ClientContext;
+public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
 
     @Value("${sec.admin.jwt.signing_key}")
     private String signingKey;
@@ -49,8 +43,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private String verifierKey;
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    private OAuth2ClientContext oauth2ClientContext;
 
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -70,12 +66,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    @ConfigurationProperties("github")
-    public ClientResources github() {
-        return new ClientResources();
-    }
-
-    @Bean
     @ConfigurationProperties("keycloak")
     public ClientResources keycloak() {
         return new ClientResources();
@@ -84,7 +74,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private Filter ssoFilter() {
         CompositeFilter filter = new CompositeFilter();
         List<Filter> filters = new ArrayList<>();
-        filters.add(ssoFilter(github(), "/login/github"));
         filters.add(ssoFilter(keycloak(), "/login/keycloak"));
         filter.setFilters(filters);
         return filter;
