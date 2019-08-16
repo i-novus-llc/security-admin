@@ -44,16 +44,6 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
             });
             userService.addUserRoles(userGuid, roles);
         }
-        if (properties.getSendVerifyEmail() || properties.getSendChangePassword()) {
-            List<String> actions = new ArrayList<>();
-            if (properties.getSendVerifyEmail()) {
-                actions.add("VERIFY_EMAIL");
-            }
-            if (properties.getSendChangePassword()) {
-                actions.add("UPDATE_PASSWORD");
-            }
-            userService.executeActionsEmail(actions, userGuid);
-        }
         return user;
     }
 
@@ -117,9 +107,10 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
         kUser.setFirstName(user.getName());
         kUser.setLastName(user.getSurname());
         kUser.setEmail(user.getEmail());
+        kUser.setEmailVerified(properties.getEmailVerified());
         if (user.getPassword() != null) {
             CredentialRepresentation passwordCred = new CredentialRepresentation();
-            passwordCred.setTemporary(false);
+            passwordCred.setTemporary(properties.getTemporaryPassword());
             passwordCred.setType(CredentialRepresentation.PASSWORD);
             passwordCred.setValue(user.getPassword());
             kUser.setCredentials(Arrays.asList(passwordCred));

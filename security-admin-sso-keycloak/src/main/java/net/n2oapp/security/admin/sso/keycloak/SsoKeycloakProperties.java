@@ -11,11 +11,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class SsoKeycloakProperties {
 
     /**
-     * Адрес возврата после аутентификации
-     */
-    private String redirectUrl = "http://localhost:8080/admin";
-
-    /**
      * Адрес сервера keycloak
      */
     private String serverUrl = "http://127.0.0.1:8085/auth";
@@ -41,12 +36,12 @@ public class SsoKeycloakProperties {
     private String adminClientSecret;
 
     /**
-     * Отправлять ли подтверждение email при создании пользователя
+     * Является ли пароль временным
      */
-    private Boolean sendVerifyEmail = true;
+    private Boolean temporaryPassword = true;
 
     /**
-     * Отправлять ли ссылку на смену пароля при создании пользователя
+     * Подтвержден ли email пользователя
      */
-    private Boolean sendChangePassword = true;
+    private Boolean emailVerified = false;
 }

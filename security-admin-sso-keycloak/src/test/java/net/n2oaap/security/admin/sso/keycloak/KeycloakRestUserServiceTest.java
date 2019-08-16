@@ -85,27 +85,4 @@ public class KeycloakRestUserServiceTest {
         userService.deleteUser(userGuid);
         assertNull(userService.getById(userGuid));
     }
-
-    @Test
-    public void testExecuteActionsEmail() {
-        UserRepresentation user = new UserRepresentation();
-        user.setEnabled(true);
-        user.setUsername("test2");
-        user.setFirstName("testName2");
-        user.setLastName("testSurname2");
-        user.setEmail("test2@mail.ru");
-        CredentialRepresentation passwordCred = new CredentialRepresentation();
-        passwordCred.setTemporary(false);
-        passwordCred.setType(CredentialRepresentation.PASSWORD);
-        passwordCred.setValue("test2");
-        user.setCredentials(Arrays.asList(passwordCred));
-        String userGuid = userService.createUser(user);
-        assertNotNull(userGuid);
-
-        List<String> actions = new ArrayList<>();
-        actions.add("VERIFY_EMAIL");
-        actions.add("UPDATE_PASSWORD");
-        userService.executeActionsEmail(actions, userGuid);
-        userService.deleteUser(userGuid);
-    }
 }

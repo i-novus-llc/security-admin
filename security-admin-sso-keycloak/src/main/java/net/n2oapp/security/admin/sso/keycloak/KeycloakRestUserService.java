@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestOperations;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.ws.rs.core.Response;
 import java.util.Arrays;
@@ -176,25 +175,6 @@ public class KeycloakRestUserService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         ResponseEntity<Response> response = template.exchange(serverUrl, HttpMethod.PUT, new HttpEntity<>(passwordCred, headers), Response.class);
-        if (response.getStatusCodeValue() < 200 || response.getStatusCodeValue() > 300) {
-            throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
-        }
-    }
-
-    /**
-     * Вызов действий keycloak
-     * @param actions   список дейстивй
-     * @param userGuid  giud пользователя
-     */
-    public void executeActionsEmail(List<String> actions, String userGuid) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(String.format(EMAIL_ACTIONS, properties.getServerUrl(), properties.getRealm(), userGuid))
-                .queryParam("redirect_uri", properties.getRedirectUrl())
-                .queryParam("client_id", properties.getAdminClientId());
-        final String serverUrl = builder.toUriString();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        ResponseEntity<Response> response = template
-                .exchange(serverUrl, HttpMethod.PUT, new HttpEntity<>(actions, headers), Response.class);
         if (response.getStatusCodeValue() < 200 || response.getStatusCodeValue() > 300) {
             throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
         }
