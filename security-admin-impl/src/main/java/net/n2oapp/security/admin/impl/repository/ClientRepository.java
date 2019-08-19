@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
  * Репозиторий клиентов
  */
 @Repository
-public interface ClientRepo extends JpaRepository<ClientEntity, Integer> {
+public interface ClientRepository extends JpaRepository<ClientEntity, Integer> {
     ClientEntity findByClientId(String clientId);
 }

@@ -3,7 +3,7 @@ package net.n2oapp.security.admin.impl.service;
 import net.n2oapp.security.admin.api.model.Client;
 import net.n2oapp.security.admin.api.service.ClientService;
 import net.n2oapp.security.admin.impl.entity.ClientEntity;
-import net.n2oapp.security.admin.impl.repository.ClientRepo;
+import net.n2oapp.security.admin.impl.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,28 +16,28 @@ import java.util.*;
 public class ClientServiceImpl implements ClientService {
 
     @Autowired
-    private ClientRepo clientRepo;
+    private ClientRepository clientRepository;
 
 
     @Override
     public Client create(Client client) {
-        return model(clientRepo.save(entity(client)));
+        return model(clientRepository.save(entity(client)));
     }
 
     @Override
     public Client update(Client client) {
-        return model(clientRepo.save(entity(client)));
+        return model(clientRepository.save(entity(client)));
     }
 
     @Override
     public void delete(String id) {
         Client client = this.findById(id);
-        clientRepo.deleteById(client.getId());
+        clientRepository.deleteById(client.getId());
     }
 
     @Override
     public Client findById(String id) {
-        ClientEntity entity = clientRepo.findByClientId(id);
+        ClientEntity entity = clientRepository.findByClientId(id);
         if (entity == null) throw new NoSuchElementException();
         return model(entity);
     }
@@ -45,7 +45,7 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public List<Client> findAll() {
         List<Client> clientList = new ArrayList<>();
-        clientRepo.findAll().forEach(clientEntity -> clientList.add(model(clientEntity)));
+        clientRepository.findAll().forEach(clientEntity -> clientList.add(model(clientEntity)));
         return clientList;
     }
 
