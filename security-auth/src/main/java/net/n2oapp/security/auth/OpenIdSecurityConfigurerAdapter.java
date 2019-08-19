@@ -1,13 +1,10 @@
-package net.n2oapp.framework.security.auth.oauth2.keycloak;
+package net.n2oapp.security.auth;
 
-import net.n2oapp.security.admin.api.service.UserDetailsService;
-import net.n2oapp.security.auth.N2oSecurityConfigurerAdapter;
 import net.n2oapp.security.auth.context.SpringSecurityUserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2SsoProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.core.Authentication;
@@ -22,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Адаптер для настройки SSO аутентификации по протоколу OAuth2 OpenId Connect
  */
+@EnableOAuth2Sso
 public abstract class OpenIdSecurityConfigurerAdapter extends N2oSecurityConfigurerAdapter {
 
     @Value("${security.oauth2.sso.logout-uri}")
@@ -86,6 +84,7 @@ public abstract class OpenIdSecurityConfigurerAdapter extends N2oSecurityConfigu
          * Adds server and servlet base path part of url from request to redirect parameter value.<br/>
          * Base target url should end with parameter "redirect_uri=".<br/>
          * For example, if request contains "http://mydomain.com/app/base/path/some/service" then "http://mydomain.com/app/base/path" will be added to target url.
+         *
          * @param request
          * @param response
          * @return Extended target URL.
