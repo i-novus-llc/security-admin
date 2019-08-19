@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin;
 
+import net.n2oapp.security.admin.service.Oauth2ClientService;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.security.oauth2.authserver.AuthorizationServerProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.authserver.OAuth2AuthorizationServerConfiguration;
@@ -15,26 +16,16 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 @EnableAuthorizationServer
 public class AuthServerConfiguration extends OAuth2AuthorizationServerConfiguration {
 
-    public AuthServerConfiguration(BaseClientDetails details, AuthenticationConfiguration authenticationConfiguration, ObjectProvider<TokenStore> tokenStore, ObjectProvider<AccessTokenConverter> tokenConverter, AuthorizationServerProperties properties) throws Exception {
+
+    public AuthServerConfiguration(BaseClientDetails details, AuthenticationConfiguration authenticationConfiguration
+            , ObjectProvider<TokenStore> tokenStore, ObjectProvider<AccessTokenConverter> tokenConverter,
+                                   AuthorizationServerProperties properties) throws Exception {
         super(details, authenticationConfiguration, tokenStore, tokenConverter, properties);
     }
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.inMemory()
-                .withClient("authCodeClient")
-                .secret("authCodeClientSecret")
-                .authorizedGrantTypes("authorization_code")
-                .scopes("read", "write")
-                .autoApprove(true)
-                .accessTokenValiditySeconds(3600)
-                .redirectUris("http://localhost:9999/client", "http://localhost:9999/client/login", "http://localhost:8081/admin/login", "http://localhost:8081/admin")
-                .and()
-                .withClient("clientCredentialsClient")
-                .secret("clientCredentialsClientSecret")
-                .authorizedGrantTypes("client_credentials")
-                .scopes("read", "write")
-                .autoApprove(true)
-                .accessTokenValiditySeconds(3600);
+
+        clients.withClientDetails(new Oauth2ClientService());
     }
 }
