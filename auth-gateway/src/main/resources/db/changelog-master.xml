@@ -11,5 +11,8 @@
     <changeSet id="create_admin1" author="rgalina">
         <sqlFile path="create_admin.sql"/>
     </changeSet>
+    <changeSet id="add_test_client" author="aarifullin">
+        <sqlFile path="data.sql"/>
+    </changeSet>
 
 </databaseChangeLog>

@@ -3,6 +3,7 @@ package net.n2oapp.security.admin.service;
 
 import net.n2oapp.security.admin.api.model.Client;
 import net.n2oapp.security.admin.impl.service.ClientServiceImpl;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,11 @@ public class ClientServiceImplTest {
     @Autowired
     private ClientServiceImpl service;
 
+    @After
+    public void cleanDB() {
+        service.findAll().forEach(client -> service.delete(client.getClientId()));
+    }
+
     @Test
     public void testUp() throws Exception {
         assertNotNull(service);
@@ -43,9 +49,10 @@ public class ClientServiceImplTest {
         Client clientFromDB = service.findById(clientExample.getClientId());
 
         compareClient(clientFromDB, clientExample);
-
+        clientExample.setClientId("newClientId");
         clientExample.setClientSecret("newSecret");
         clientExample.setAccessTokenValiditySeconds(69);
+        clientExample.setRefreshTokenValiditySeconds(88);
         Set<String> stringSet = new HashSet<>();
         stringSet.add("new.uri.1");
         stringSet.add("new.uri.2");
@@ -54,6 +61,7 @@ public class ClientServiceImplTest {
         stringSet.add("newGrantTypes1");
         stringSet.add("newGrantTypes2");
         clientExample.setAuthorizedGrantTypes(stringSet);
+        clientExample.setLogoutUrl("newLogout");
 
         service.update(clientExample);
         clientFromDB = service.findById(clientExample.getClientId());
@@ -62,9 +70,7 @@ public class ClientServiceImplTest {
 
         service.delete(clientFromDB.getClientId());
         String clientId = clientFromDB.getClientId();
-        Throwable thrown = catchThrowable(() -> {
-            service.findById(clientId);
-        });
+        Throwable thrown = catchThrowable(() -> service.findById(clientId));
         assertThat(thrown).isInstanceOf(NoSuchElementException.class);
     }
 
@@ -84,6 +90,7 @@ public class ClientServiceImplTest {
         client.setClientId("testId");
         client.setClientSecret("testSecret");
         client.setAccessTokenValiditySeconds(666);
+        client.setRefreshTokenValiditySeconds(667);
         Set<String> stringSet = new HashSet<>();
         stringSet.add("test.uri.1");
         stringSet.add("test.uri.2");
@@ -92,6 +99,7 @@ public class ClientServiceImplTest {
         stringSet.add("testGrantTypes1");
         stringSet.add("testGrantTypes2");
         client.setAuthorizedGrantTypes(stringSet);
+        client.setLogoutUrl("testLogout");
         return client;
     }
 
@@ -101,6 +109,8 @@ public class ClientServiceImplTest {
         assertEquals(clientFirst.getAuthorizedGrantTypes(), clientSecond.getAuthorizedGrantTypes());
         assertEquals(clientFirst.getRegisteredRedirectUri(), clientSecond.getRegisteredRedirectUri());
         assertEquals(clientFirst.getClientSecret(), clientSecond.getClientSecret());
+        assertEquals(clientFirst.getRefreshTokenValiditySeconds(), clientSecond.getRefreshTokenValiditySeconds());
+        assertEquals(clientFirst.getLogoutUrl(), clientSecond.getLogoutUrl());
     }
 
 }

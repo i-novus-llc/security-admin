@@ -9,10 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Transactional
@@ -34,12 +31,15 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public void delete(String id) {
-        clientRepo.deleteById(id);
+        Client client = this.findById(id);
+        clientRepo.deleteById(client.getId());
     }
 
     @Override
     public Client findById(String id) {
-        return model(clientRepo.findById(id).orElseThrow());
+        ClientEntity entity = clientRepo.findByClientId(id);
+        if (entity == null) throw new NoSuchElementException();
+        return model(entity);
     }
 
     @Override
@@ -51,7 +51,8 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public boolean existsById(String id) {
-        return clientRepo.existsById(id);
+        this.findById(id);
+        return true;
     }
 
     private HashSet<String> stringToSet(String string) {
@@ -60,11 +61,14 @@ public class ClientServiceImpl implements ClientService {
 
     private Client model(ClientEntity clientEntity) {
         Client client = new Client();
+        client.setId(clientEntity.getId());
         client.setClientId(clientEntity.getClientId());
         client.setClientSecret(clientEntity.getClientSecret());
         client.setAuthorizedGrantTypes(stringToSet(clientEntity.getAuthorizedGrantTypes()));
         client.setRegisteredRedirectUri(stringToSet(clientEntity.getRegisteredRedirectUri()));
         client.setAccessTokenValiditySeconds(clientEntity.getAccessTokenValiditySeconds());
+        client.setRefreshTokenValiditySeconds(clientEntity.getRefreshTokenValiditySeconds());
+        client.setLogoutUrl(clientEntity.getLogoutUrl());
 
         return client;
 
@@ -72,11 +76,14 @@ public class ClientServiceImpl implements ClientService {
 
     private ClientEntity entity(Client client) {
         ClientEntity entity = new ClientEntity();
+        entity.setId(client.getId());
         entity.setClientId(client.getClientId());
         entity.setClientSecret(client.getClientSecret());
         entity.setAuthorizedGrantTypes(StringUtils.collectionToCommaDelimitedString(client.getAuthorizedGrantTypes()));
         entity.setRegisteredRedirectUri(StringUtils.collectionToCommaDelimitedString(client.getRegisteredRedirectUri()));
         entity.setAccessTokenValiditySeconds(client.getAccessTokenValiditySeconds());
+        entity.setRefreshTokenValiditySeconds(client.getRefreshTokenValiditySeconds());
+        entity.setLogoutUrl(client.getLogoutUrl());
 
         return entity;
     }

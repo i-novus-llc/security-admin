@@ -9,13 +9,22 @@ import java.util.Map;
 import java.util.Set;
 
 public class Oauth2Client implements ClientDetails {
-
+    private Integer id;
     private String clientId;
     private String clientSecret;
     private Set<String> authorizedGrantTypes;
     private Set<String> registeredRedirectUri;
     private Integer accessTokenValiditySeconds;
+    private Integer refreshTokenValiditySeconds;
+    private String logoutUrl;
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     @Override
     public String getClientId() {
@@ -90,7 +99,11 @@ public class Oauth2Client implements ClientDetails {
 
     @Override
     public Integer getRefreshTokenValiditySeconds() {
-        return null;
+        return refreshTokenValiditySeconds;
+    }
+
+    public void setRefreshTokenValiditySeconds(Integer refreshTokenValiditySeconds) {
+        this.refreshTokenValiditySeconds = refreshTokenValiditySeconds;
     }
 
 
@@ -104,5 +117,11 @@ public class Oauth2Client implements ClientDetails {
         return null;
     }
 
+    public String getLogoutUrl() {
+        return logoutUrl;
+    }
 
+    public void setLogoutUrl(String logoutUrl) {
+        this.logoutUrl = logoutUrl;
+    }
 }

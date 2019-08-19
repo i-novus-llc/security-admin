@@ -44,7 +44,11 @@
     <!-- Название колонки в таблице клиентов, в которой хранятся URI разрешённые для редиректа клиента -->
     <property name="n2o.security.admin.client.column.redirect" value="registered_redirect_uri"/>
     <!-- Название колонки в таблице клиентов, в которой хранится время жизни токена-->
-    <property name="n2o.security.admin.client.column.token.time" value="access_token_validity_seconds"/>
+    <property name="n2o.security.admin.client.column.token_time" value="access_token_validity_seconds"/>
+    <!-- Название колонки в таблице клиентов, в которой хранится время жизни refresh токена-->
+    <property name="n2o.security.admin.client.column.refresh_token_time" value="refresh_token_validity_seconds"/>
+    <!-- Название колонки в таблице клиентов, в которой хранится URL для выхода-->
+    <property name="n2o.security.admin.client.column.logout" value="logout_url"/>
     <!-- Название индекса для для поля с id клиента -->
     <property name="n2o.security.admin.client.id.index" value="client_idx"/>
 

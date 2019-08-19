@@ -12,10 +12,13 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 public class Client {
+    private Integer id;
     private String clientId;
     private String clientSecret;
     private Set<String> authorizedGrantTypes;
     private Set<String> registeredRedirectUri;
     private Integer accessTokenValiditySeconds;
+    private Integer refreshTokenValiditySeconds;
+    private String logoutUrl;
 
 }

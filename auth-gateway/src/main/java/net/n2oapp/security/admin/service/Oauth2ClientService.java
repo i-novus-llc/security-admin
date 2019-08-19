@@ -78,24 +78,34 @@ public class Oauth2ClientService implements ClientDetailsService, ClientRegistra
 
     private Oauth2Client oauth2Model(Client apiModel) {
         Oauth2Client client = new Oauth2Client();
+        client.setId(apiModel.getId());
         client.setClientId(apiModel.getClientId());
         client.setClientSecret(apiModel.getClientSecret());
         client.setAuthorizedGrantTypes(apiModel.getAuthorizedGrantTypes());
         client.setRegisteredRedirectUri(apiModel.getRegisteredRedirectUri());
         client.setAccessTokenValiditySeconds(apiModel.getAccessTokenValiditySeconds());
+        client.setRefreshTokenValiditySeconds(apiModel.getRefreshTokenValiditySeconds());
+        client.setLogoutUrl(apiModel.getLogoutUrl());
 
         return client;
 
     }
 
-    private Client apiModel(ClientDetails oauth2Model) {
+    private Client apiModel(ClientDetails clientDetails) {
         Client apiModel = new Client();
+        Oauth2Client oauth2Model;
+        if (clientDetails instanceof Oauth2Client) {
+            oauth2Model = (Oauth2Client) clientDetails;
+        } else throw new IllegalArgumentException("net.n2oapp.security.admin.model.Oauth2Client expected");
+
+        apiModel.setId(oauth2Model.getId());
         apiModel.setClientId(oauth2Model.getClientId());
         apiModel.setClientSecret(oauth2Model.getClientSecret());
         apiModel.setAuthorizedGrantTypes(oauth2Model.getAuthorizedGrantTypes());
         apiModel.setRegisteredRedirectUri(oauth2Model.getRegisteredRedirectUri());
         apiModel.setAccessTokenValiditySeconds(oauth2Model.getAccessTokenValiditySeconds());
-
+        apiModel.setRefreshTokenValiditySeconds(oauth2Model.getRefreshTokenValiditySeconds());
+        apiModel.setLogoutUrl(oauth2Model.getLogoutUrl());
         return apiModel;
     }
 }
