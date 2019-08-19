@@ -6,10 +6,7 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
 
-    <include file="classpath*:/properties.xml"/>
-    <include file="classpath*:/security/admin/db/urp/properties.xml"/>
-    <include file="classpath*:/security/admin/db/urp/changelog.xml"/>
     <changeSet id="create_client" author="aarifullin">
-        <sqlFile path="oauth_client_details.sql"/>
+        <sqlFile path="security/admin/db/changelog/sql/V8_create_client.sql"/>
     </changeSet>
 </databaseChangeLog>
