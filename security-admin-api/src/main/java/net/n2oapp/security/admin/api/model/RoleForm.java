@@ -1,5 +1,7 @@
 package net.n2oapp.security.admin.api.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,11 +12,22 @@ import java.util.List;
  */
 @Data
 @NoArgsConstructor
+@ApiModel("Роль")
 public class RoleForm {
+
+    @ApiModelProperty(value = "Идентификатор")
     private Integer id;
+
+    @ApiModelProperty(value = "Название")
     private String name;
+
+    @ApiModelProperty(value = "Код")
     private String code;
+
+    @ApiModelProperty(value = "Описание")
     private String description;
+
+    @ApiModelProperty(value = "Права доступа")
     private List<Integer> permissions;
 
 

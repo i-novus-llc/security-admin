@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.rest.api.criteria;
 
+import io.swagger.annotations.ApiParam;
 import net.n2oapp.security.admin.api.model.UserDetailsToken;
 
 import javax.ws.rs.QueryParam;
@@ -24,36 +25,42 @@ public class RestUserDetailsToken extends UserDetailsToken {
 
     @QueryParam("guid")
     @Override
+    @ApiParam(value = "Уникальный идентификатор")
     public void setGuid(String guid) {
         super.setGuid(guid);
     }
 
     @QueryParam("username")
     @Override
+    @ApiParam(value = "Имя пользователя")
     public void setUsername(String username) {
         super.setUsername(username);
     }
 
     @QueryParam("name")
     @Override
+    @ApiParam(value = "Имя")
     public void setName(String name) {
         super.setName(name);
     }
 
     @QueryParam("surname")
     @Override
+    @ApiParam(value = "Фамилия")
     public void setSurname(String surname) {
         super.setSurname(surname);
     }
 
     @QueryParam("email")
     @Override
+    @ApiParam(value = "Электронный адрес")
     public void setEmail(String email) {
         super.setEmail(email);
     }
 
     @QueryParam("rolenames")
     @Override
+    @ApiParam(value = "Список имен ролей")
     public void setRoleNames(List<String> roleNames) {
         super.setRoleNames(roleNames);
     }

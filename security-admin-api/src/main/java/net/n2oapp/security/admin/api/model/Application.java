@@ -1,6 +1,8 @@
 package net.n2oapp.security.admin.api.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,12 +11,19 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
+@ApiModel("Служба")
 public class Application {
+
     @JsonProperty
+    @ApiModelProperty("Код")
     private String code;
+
     @JsonProperty
+    @ApiModelProperty("Наименование")
     private String name;
+
     @JsonProperty
+    @ApiModelProperty("Код системы")
     private String systemCode;
 
 }

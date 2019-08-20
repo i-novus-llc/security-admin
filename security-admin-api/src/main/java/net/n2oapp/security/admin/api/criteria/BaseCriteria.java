@@ -60,6 +60,22 @@ public class BaseCriteria implements Pageable {
             return Sort.unsorted();
     }
 
+    public void setPageSize(int size) {
+        this.size = size;
+    }
+
+    public void setPageNumber(int page) {
+        this.page = page;
+    }
+
+    public void setOffset(long offset) {
+        throw new UnsupportedOperationException();
+    }
+
+    public void setSort(Sort sort) {
+        throw new UnsupportedOperationException();
+    }
+
     public void setPage(int page) {
         this.page = page;
     }

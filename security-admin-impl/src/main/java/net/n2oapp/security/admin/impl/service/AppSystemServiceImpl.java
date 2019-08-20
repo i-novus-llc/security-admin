@@ -2,7 +2,9 @@ package net.n2oapp.security.admin.impl.service;
 
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.criteria.SystemCriteria;
-import net.n2oapp.security.admin.api.model.*;
+import net.n2oapp.security.admin.api.model.AppSystem;
+import net.n2oapp.security.admin.api.model.AppSystemForm;
+import net.n2oapp.security.admin.api.model.Application;
 import net.n2oapp.security.admin.api.service.AppSystemService;
 import net.n2oapp.security.admin.impl.entity.ApplicationEntity;
 import net.n2oapp.security.admin.impl.entity.SystemEntity;

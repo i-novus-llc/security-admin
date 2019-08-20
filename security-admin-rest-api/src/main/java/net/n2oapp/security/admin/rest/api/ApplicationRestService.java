@@ -2,6 +2,7 @@ package net.n2oapp.security.admin.rest.api;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import net.n2oapp.security.admin.api.model.Application;
 import net.n2oapp.security.admin.api.model.ApplicationForm;
@@ -30,25 +31,25 @@ public interface ApplicationRestService {
     @Path("/{id}")
     @ApiOperation("Получить приложение по идентификатору")
     @ApiResponse(code = 200, message = "Приложения")
-    Application getById(@PathParam("id") String code);
+    Application getById(@ApiParam(value = "Код приложения") @PathParam("id") String code);
 
     @POST
     @Path("/")
     @ApiOperation("Создать приложение")
     @ApiResponse(code = 200, message = "Созданное приложение")
-    Application create(ApplicationForm serviceForm);
+    Application create(@ApiParam(value = "Приложение") ApplicationForm serviceForm);
 
     @PUT
     @Path("/")
     @ApiOperation("Изменить приложение")
     @ApiResponse(code = 200, message = "Измененное приложение")
-    Application update(ApplicationForm serviceForm);
+    Application update(@ApiParam(value = "Приложение") ApplicationForm serviceForm);
 
     @DELETE
     @Path("/{code}")
     @ApiOperation("Удалить приложение")
     @ApiResponse(code = 200, message = "Приложение удалена")
-    void delete(@PathParam("code") String code);
+    void delete(@ApiParam(value = "Код приложения") @PathParam("code") String code);
 
 }
 
