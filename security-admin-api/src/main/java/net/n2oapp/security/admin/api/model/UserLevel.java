@@ -5,9 +5,9 @@ package net.n2oapp.security.admin.api.model;
  */
 public enum UserLevel {
     NONE("Без ограничений"),
+    FEDERAL("Федеральный уровень"),
     REGIONAL("Региональный уровень"),
-    ORGANIZATION("Уровень организации"),
-    FEDERAL("Федеральный уровень");
+    ORGANIZATION("Уровень организации");
 
     private String desc;
 

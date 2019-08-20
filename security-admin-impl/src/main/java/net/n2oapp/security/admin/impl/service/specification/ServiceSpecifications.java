@@ -29,23 +29,3 @@ public class ServiceSpecifications implements Specification<ServiceEntity> {
         return predicate;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

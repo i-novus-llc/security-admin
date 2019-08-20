@@ -30,23 +30,3 @@ public class SystemSpecifications implements Specification<SystemEntity> {
         return predicate;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
