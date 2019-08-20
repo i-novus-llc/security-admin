@@ -33,16 +33,23 @@
             <version>${project.version}</version>
         </dependency>
 
+
+        <dependency>
+            <groupId>net.n2oapp.framework.security</groupId>
+            <artifactId>security-auth</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.n2oapp.framework.security</groupId>
+            <artifactId>security-auth-oauth2-keycloak</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!--<dependency>-->
             <!--<groupId>net.n2oapp.framework.security</groupId>-->
             <!--<artifactId>security-auth-simple</artifactId>-->
             <!--<version>${project.version}</version>-->
         <!--</dependency>-->
-        <dependency>
-            <groupId>net.n2oapp.framework.security</groupId>
-            <artifactId>security-auth-oauth2-gateway</artifactId>
-            <version>${project.version}</version>
-        </dependency>
 
 <!--        PLATFORM-->
         <dependency>
@@ -118,6 +125,40 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        <profile>
+            <id>keycloak</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>net.n2oapp.framework.security</groupId>
+                    <artifactId>security-auth</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>net.n2oapp.framework.security</groupId>
+                    <artifactId>security-auth-oauth2-keycloak</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>gateway</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>!keycloak</name>
+                </property>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>net.n2oapp.framework.security</groupId>
+                    <artifactId>security-auth-oauth2-gateway</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+            </dependencies>
         </profile>
     </profiles>
 

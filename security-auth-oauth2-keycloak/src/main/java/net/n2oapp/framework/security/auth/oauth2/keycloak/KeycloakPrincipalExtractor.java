@@ -8,6 +8,7 @@ import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.AuthoritiesExtractor;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 /**
  * Создание объекта пользователя из информации в SSO сервере
  */
+@Component
 public class KeycloakPrincipalExtractor implements PrincipalExtractor, AuthoritiesExtractor {
 
     private static final String GRANTED_AUTHORITY_KEY = "GrantedAuthorityKey";

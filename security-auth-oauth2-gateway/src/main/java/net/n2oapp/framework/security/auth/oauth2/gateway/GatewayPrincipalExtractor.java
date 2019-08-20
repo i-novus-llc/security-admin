@@ -1,14 +1,16 @@
-package net.n2oapp.framework.security.auth.oauth.gateway;
+package net.n2oapp.framework.security.auth.oauth2.gateway;
 
 import net.n2oapp.security.auth.common.User;
 import net.n2oapp.security.auth.common.UserParamsUtil;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.AuthoritiesExtractor;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 
+@Component
 public class GatewayPrincipalExtractor implements PrincipalExtractor, AuthoritiesExtractor {
 
     private static final String USERNAME = "username";
