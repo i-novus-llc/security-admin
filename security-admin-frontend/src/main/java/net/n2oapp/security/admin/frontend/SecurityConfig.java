@@ -1,6 +1,6 @@
 package net.n2oapp.security.admin.frontend;
 
-import net.n2oapp.framework.security.auth.oauth.gateway.GatewayResourceExtractor;
+import net.n2oapp.framework.security.auth.oauth.gateway.GatewayPrincipalExtractor;
 import net.n2oapp.security.auth.OpenIdSecurityConfigurerAdapter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,8 +17,8 @@ public class SecurityConfig extends OpenIdSecurityConfigurerAdapter {
     }
 
     @Bean
-    public GatewayResourceExtractor gatewayResourceExtractor() {
-        return new GatewayResourceExtractor();
+    public GatewayPrincipalExtractor gatewayResourceExtractor() {
+        return new GatewayPrincipalExtractor();
     }
 
 }

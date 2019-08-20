@@ -19,7 +19,7 @@
         </dependency>
         <dependency>
             <groupId>net.n2oapp.framework.security</groupId>
-            <artifactId>security-auth</artifactId>
+            <artifactId>security-auth-common</artifactId>
             <version>${project.version}</version>
         </dependency>
 

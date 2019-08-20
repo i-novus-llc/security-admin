@@ -9,7 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.List;
 import java.util.Map;
 
-public class GatewayResourceExtractor implements PrincipalExtractor, AuthoritiesExtractor {
+public class GatewayPrincipalExtractor implements PrincipalExtractor, AuthoritiesExtractor {
 
     private static final String USERNAME = "username";
     private static final String NAME = "name";

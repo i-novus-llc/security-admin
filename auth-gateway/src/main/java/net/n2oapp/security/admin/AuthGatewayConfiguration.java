@@ -1,6 +1,6 @@
 package net.n2oapp.security.admin;
 
-import net.n2oapp.framework.security.auth.oauth2.keycloak.OpenIdPrincipalExtractor;
+import net.n2oapp.framework.security.auth.oauth2.keycloak.KeycloakPrincipalExtractor;
 import net.n2oapp.security.admin.api.service.UserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -86,7 +86,7 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
         filter.setRestTemplate(template);
         UserInfoTokenServices tokenServices = new UserInfoTokenServices(client.getResource().getUserInfoUri(), client.getClient().getClientId());
         tokenServices.setRestTemplate(template);
-        OpenIdPrincipalExtractor extractor = new OpenIdPrincipalExtractor(userDetailsService);
+        KeycloakPrincipalExtractor extractor = new KeycloakPrincipalExtractor(userDetailsService);
         tokenServices.setAuthoritiesExtractor(extractor);
         tokenServices.setPrincipalExtractor(extractor);
         filter.setTokenServices(tokenServices);

@@ -5,7 +5,6 @@ import net.n2oapp.security.admin.api.service.UserDetailsService;
 import net.n2oapp.security.auth.common.User;
 import net.n2oapp.security.auth.common.authority.PermissionGrantedAuthority;
 import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
-import org.apache.commons.collections.map.UnmodifiableMap;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.AuthoritiesExtractor;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,7 +18,7 @@ import java.util.stream.Collectors;
 /**
  * Создание объекта пользователя из информации в SSO сервере
  */
-public class OpenIdPrincipalExtractor implements PrincipalExtractor, AuthoritiesExtractor {
+public class KeycloakPrincipalExtractor implements PrincipalExtractor, AuthoritiesExtractor {
 
     private static final String GRANTED_AUTHORITY_KEY = "GrantedAuthorityKey";
 
@@ -33,7 +32,7 @@ public class OpenIdPrincipalExtractor implements PrincipalExtractor, Authorities
 
     private UserDetailsService userDetailsService;
 
-    public OpenIdPrincipalExtractor(UserDetailsService userDetailsService) {
+    public KeycloakPrincipalExtractor(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
@@ -93,9 +92,7 @@ public class OpenIdPrincipalExtractor implements PrincipalExtractor, Authorities
             authorities.addAll(user.getRoles().stream().filter(r -> r.getPermissions() != null).flatMap(r -> r.getPermissions().stream())
                     .map(p -> new PermissionGrantedAuthority(p.getCode())).collect(Collectors.toList()));
 
-            if (!(map instanceof UnmodifiableMap)) {
-                map.put(GRANTED_AUTHORITY_KEY, authorities);
-            }
+            map.put(GRANTED_AUTHORITY_KEY, authorities);
         }
         return authorities;
     }
