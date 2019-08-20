@@ -31,22 +31,15 @@ import java.util.stream.Collectors;
 public class AppServiceServiceImpl implements AppServiceService {
     @Autowired
     private ServiceRepository serviceRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private RoleRepository roleRepository;
-    @Autowired
-    private PermissionRepository permissionRepository;
 
     @Override
     public AppService create(AppServiceForm service) {
-        checkSystemUniq(service.getCode());
+        checkServiceUniq(service.getCode());
         return model(serviceRepository.save(entity(service)));
     }
 
     @Override
     public AppService update(AppServiceForm service) {
-        checkSystemUniq(service.getCode());
         return model(serviceRepository.save(entity(service)));
     }
 
@@ -112,7 +105,7 @@ public class AppServiceServiceImpl implements AppServiceService {
     /**
      * Валидация на уникальность кода системы при создании
      */
-    private Boolean checkSystemUniq(String code) {
+    private Boolean checkServiceUniq(String code) {
         ServiceEntity systemEntity= serviceRepository.findById(code).orElse(null);
         if (systemEntity == null) {
             return true;

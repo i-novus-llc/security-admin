@@ -29,7 +29,7 @@ public class RestServiceCriteria extends ServiceCriteria {
         super.setOrders(orders);
     }
 
-    @QueryParam("name")
+    @QueryParam("systemCode")
     @Override
     public void setSystemCode(String code) {
         super.setSystemCode(code);

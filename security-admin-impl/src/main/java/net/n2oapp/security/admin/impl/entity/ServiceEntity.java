@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "permission", schema = "sec")
+@Table(name = "service", schema = "sec")
 public class ServiceEntity {
     /**
      * Код службы

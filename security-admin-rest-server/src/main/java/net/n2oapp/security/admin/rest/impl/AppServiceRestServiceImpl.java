@@ -5,6 +5,7 @@ import net.n2oapp.security.admin.api.model.AppService;
 import net.n2oapp.security.admin.api.model.AppServiceForm;
 import net.n2oapp.security.admin.api.service.AppServiceService;
 import net.n2oapp.security.admin.rest.api.AppServiceRestService;
+import net.n2oapp.security.admin.rest.api.criteria.RestServiceCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -19,7 +20,7 @@ public class AppServiceRestServiceImpl implements AppServiceRestService {
     private AppServiceService service;
 
     @Override
-    public Page<AppService> findAll(ServiceCriteria criteria) {
+    public Page<AppService> findAll(RestServiceCriteria criteria) {
         return service.findAll(criteria);
     }
 

@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiResponse;
 import net.n2oapp.security.admin.api.criteria.ServiceCriteria;
 import net.n2oapp.security.admin.api.model.AppService;
 import net.n2oapp.security.admin.api.model.AppServiceForm;
+import net.n2oapp.security.admin.rest.api.criteria.RestServiceCriteria;
 import org.springframework.data.domain.Page;
 
 import javax.ws.rs.*;
@@ -24,7 +25,7 @@ public interface AppServiceRestService {
     @Path("/")
     @ApiOperation("Найти службу по критериям поиска")
     @ApiResponse(code = 200, message = "Страница служб")
-    Page<AppService> findAll(@BeanParam ServiceCriteria criteria);
+    Page<AppService> findAll(@BeanParam RestServiceCriteria criteria);
 
     @GET
     @Path("/{id}")

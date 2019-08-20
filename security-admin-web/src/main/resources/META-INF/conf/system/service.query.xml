@@ -1,39 +1,27 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0" object-id="system"
+<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0" object-id="service"
        name="Системы">
     <list result-mapping="['content']" count-mapping="['totalElements']">
-        <java method="findAll" class="net.n2oapp.security.admin.api.service.AppSystemService">
+        <java method="findAll" class="net.n2oapp.security.admin.api.service.AppServiceService">
             <spring/>
             <arguments>
-                <argument class="net.n2oapp.security.admin.api.criteria.SystemCriteria" type="criteria"/>
+                <argument class="net.n2oapp.security.admin.api.criteria.ServiceCriteria" type="criteria"/>
             </arguments>
         </java>
     </list>
-    <unique result-mapping="#this">
-        <java method="getById" class="net.n2oapp.security.admin.api.service.AppSystemService">
-            <spring/>
-            <arguments>
-                <argument type="primitive" name="code"/>
-            </arguments>
-        </java>
-    </unique>
 
     <fields>
         <field id="id" domain="string">
             <select mapping="code"/>
-            <sorting/>
-            <filters>
-                <eq filter-id="id" mapping="code"/>
-            </filters>
         </field>
         <field id="name" domain="string" name="Имя">
             <select mapping="name"/>
-            <filters>
-                <eq filter-id="name" mapping="name"/>
-            </filters>
         </field>
-        <field id="services" domain="object[]" name="Службы">
-            <select mapping="appServices"></select>
+        <field id="systemCode" domain="string">
+            <select mapping="systemCode"/>
+            <filters>
+                <eq filter-id="systemCode" mapping="systemCode"/>
+            </filters>
         </field>
     </fields>
 </query>

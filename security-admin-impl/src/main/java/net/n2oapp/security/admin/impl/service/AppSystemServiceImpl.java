@@ -40,15 +40,17 @@ public class AppSystemServiceImpl implements AppSystemService {
 
     @Override
     public AppSystem create(AppSystemForm system) {
-        checkSystemUniq(system.getCode());
+        checkSystemUniq(system.getCode(), null);
         AppSystem result = model(systemRepository.save(entity(system)));
         return result;
     }
 
     @Override
-    public AppSystem update(AppSystemForm role) {
-        checkSystemUniq(role.getCode());
-        return model(systemRepository.save(entity(role)));
+    public AppSystem update(AppSystemForm system) {
+        SystemEntity entity = systemRepository.getOne(system.getCode());
+        entity.setName(system.getName());
+        entity.setDescription(system.getDescription());
+        return model(systemRepository.save(entity));
     }
 
     @Override
@@ -116,9 +118,9 @@ public class AppSystemServiceImpl implements AppSystemService {
     /**
      * Валидация на уникальность кода системы при создании
      */
-    private Boolean checkSystemUniq(String code) {
+    private Boolean checkSystemUniq(String code, String systemId) {
         SystemEntity systemEntity= systemRepository.findById(code).orElse(null);
-        if (systemEntity == null) {
+        if (systemEntity == null || systemEntity.getCode().equals(systemId)) {
             return true;
         } else {
             throw new UserException("exception.uniqueSystem");
@@ -133,6 +135,6 @@ public class AppSystemServiceImpl implements AppSystemService {
         if (roleRepository.countRolesWithSystemCode(code) == 0 && permissionRepository.countPermissionsWithSystemCode(code) == 0)
             return true;
         else
-            throw new UserException("exception.usernameWithSuchRoleExists");
+            throw new UserException("exception.roleOrPermissionWithSuchRoleExists");
     }
 }

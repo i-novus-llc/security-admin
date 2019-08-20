@@ -30,5 +30,6 @@
 
     <permission id="sec.admin.system.edit">
         <object-access object-id="system" operations="*"/>
+        <object-access object-id="service" operations="*"/>
     </permission>
 </access>

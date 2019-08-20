@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0" object-id="system"
+       name="Системы">
+    <unique result-mapping="#this">
+        <java method="getById" class="net.n2oapp.security.admin.api.service.AppSystemService">
+            <spring/>
+            <arguments>
+                <argument type="class" class="java.lang.String"/>
+            </arguments>
+        </java>
+    </unique>
+
+    <fields>
+        <field id="systemCode" domain="string">
+            <select mapping="code"/>
+            <filters>
+                <eq filter-id="systemCode" mapping="[0]"/>
+            </filters>
+        </field>
+    </fields>
+</query>

@@ -4,7 +4,7 @@
       name="Системы">
     <regions>
         <region place="single">
-            <table name="Системы" query-id="system">
+            <table name="Системы" query-id="system" route="/">
                 <columns>
                     <column text-field-id="id" label="Код"/>
                     <column text-field-id="name" label="Наименование"/>
@@ -22,7 +22,7 @@
                 <rows>
                     <click>
                         <open-page page-id="systemFormUpdate" submit-operation-id="update" object-id="system"
-                                    detail-field-id="id" route="/:id/update" close-after-submit="true"/>
+                                    detail-field-id="id" route="/:id/update" />
                     </click>
                 </rows>
                 <filters>
@@ -34,7 +34,7 @@
                 <toolbar>
                     <button id="create" label="Создать" model="filter">
                         <open-page page-id="systemForm" submit-operation-id="create" model="filter"
-                                    object-id="system" upload="defaults" route="create" close-after-submit="true"/>
+                                    object-id="system" upload="defaults" route="/create" close-after-submit="true"/>
                     </button>
                 </toolbar>
             </table>
