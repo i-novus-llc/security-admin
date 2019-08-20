@@ -11,47 +11,37 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class SsoKeycloakProperties {
 
     /**
-     * Адрес возврата после аутентификации
-     */
-    private String redirectUrl = "http://localhost:8080/admin";
-
-    /**
      * Адрес сервера keycloak
      */
-    private String serverUrl = "http://127.0.0.1:8888/auth";
+    private String serverUrl = "http://127.0.0.1:8085/auth";
 
     /**
      * Название домена
      */
-    private String realm = "security-admin";
+    private String realm = "master";
 
     /**
-     * Идентификатор клиента
+     * Идентификатор клиента client id
      */
     private String clientId = "security-admin-sso";
 
     /**
      * Идентификатор клиента администрирования пользователей и ролей в keycloak
      */
-    private String adminClientId = "admin-cli";
+    private String adminClientId = "access-admin";
 
     /**
-     * Имя пользователя с правами на создание, реадктирование и удаление ролей и пользователей в keycloak
+     * Ключ клиента администрирования пользователей и ролей в keycloak
      */
-    private String username = "restclient";
+    private String adminClientSecret;
 
     /**
-     * Пароль пользователя с правами на создание, реадктирование и удаление ролей и пользователей в keycloak
+     * Является ли пароль временным
      */
-    private String password;
+    private Boolean temporaryPassword = true;
 
     /**
-     * Отправлять ли подтверждение email при создании пользователя
+     * Подтвержден ли email пользователя
      */
-    private Boolean sendVerifyEmail = true;
-
-    /**
-     * Отправлять ли ссылку на смену пароля при создании пользователя
-     */
-    private Boolean sendChangePassword = true;
+    private Boolean emailVerified = false;
 }
