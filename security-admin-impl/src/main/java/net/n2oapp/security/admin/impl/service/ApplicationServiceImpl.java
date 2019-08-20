@@ -1,18 +1,15 @@
 package net.n2oapp.security.admin.impl.service;
 
 import net.n2oapp.platform.i18n.UserException;
-import net.n2oapp.security.admin.api.criteria.ServiceCriteria;
-import net.n2oapp.security.admin.api.model.AppService;
-import net.n2oapp.security.admin.api.model.AppServiceForm;
+import net.n2oapp.security.admin.api.criteria.ApplicationCriteria;
+import net.n2oapp.security.admin.api.model.Application;
+import net.n2oapp.security.admin.api.model.ApplicationForm;
 import net.n2oapp.security.admin.api.model.AppSystem;
-import net.n2oapp.security.admin.api.service.AppServiceService;
-import net.n2oapp.security.admin.impl.entity.ServiceEntity;
+import net.n2oapp.security.admin.api.service.ApplicationService;
+import net.n2oapp.security.admin.impl.entity.ApplicationEntity;
 import net.n2oapp.security.admin.impl.entity.SystemEntity;
-import net.n2oapp.security.admin.impl.repository.PermissionRepository;
-import net.n2oapp.security.admin.impl.repository.RoleRepository;
-import net.n2oapp.security.admin.impl.repository.ServiceRepository;
-import net.n2oapp.security.admin.impl.repository.UserRepository;
-import net.n2oapp.security.admin.impl.service.specification.ServiceSpecifications;
+import net.n2oapp.security.admin.impl.repository.ApplicationRepository;
+import net.n2oapp.security.admin.impl.service.specification.ApplicationSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -24,55 +21,55 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 /**
- * Реализация сервиса управления службами
+ * Реализация сервиса управления приложениями
  */
 @Service
 @Transactional
-public class AppServiceServiceImpl implements AppServiceService {
+public class ApplicationServiceImpl implements ApplicationService {
     @Autowired
-    private ServiceRepository serviceRepository;
+    private ApplicationRepository applicationRepository;
 
     @Override
-    public AppService create(AppServiceForm service) {
+    public Application create(ApplicationForm service) {
         checkServiceUniq(service.getCode());
-        return model(serviceRepository.save(entity(service)));
+        return model(applicationRepository.save(entity(service)));
     }
 
     @Override
-    public AppService update(AppServiceForm service) {
-        return model(serviceRepository.save(entity(service)));
+    public Application update(ApplicationForm service) {
+        return model(applicationRepository.save(entity(service)));
     }
 
     @Override
     public void delete(String code) {
-        serviceRepository.deleteById(code);
+        applicationRepository.deleteById(code);
     }
 
     @Override
-    public AppService getById(String id) {
-        return model(serviceRepository.findById(id).orElse(null));
+    public Application getById(String id) {
+        return model(applicationRepository.findById(id).orElse(null));
     }
 
     @Override
-    public Page<AppService> findAll(ServiceCriteria criteria) {
-        Specification<ServiceEntity> specification = new ServiceSpecifications(criteria);
+    public Page<Application> findAll(ApplicationCriteria criteria) {
+        Specification<ApplicationEntity> specification = new ApplicationSpecifications(criteria);
         if (criteria.getOrders() == null) {
             criteria.setOrders(Arrays.asList(new Sort.Order(Sort.Direction.ASC, "code")));
         } else {
             criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "code"));
         }
-        Page<ServiceEntity> all = serviceRepository.findAll(specification, criteria);
+        Page<ApplicationEntity> all = applicationRepository.findAll(specification, criteria);
         return all.map(this::model);
     }
 
     @Override
-    public Boolean isServiceExist(String code) {
+    public Boolean isApplicationExist(String code) {
         return getById(code) != null;
     }
 
-    private ServiceEntity entity(AppServiceForm model) {
+    private ApplicationEntity entity(ApplicationForm model) {
         if (model == null) return null;
-        ServiceEntity entity = new ServiceEntity();
+        ApplicationEntity entity = new ApplicationEntity();
         entity.setName(model.getName());
         entity.setCode(model.getCode());
         entity.setSystemCode(new SystemEntity(model.getSystemCode()));
@@ -85,16 +82,16 @@ public class AppServiceServiceImpl implements AppServiceService {
         model.setName(entity.getName());
         model.setCode(entity.getCode());
         model.setDescription(entity.getDescription());
-        if (entity.getServiceList() != null) {
-            model.setAppServices(entity.getServiceList().stream().map(this::model).collect(Collectors.toList()));
+        if (entity.getApplicationList() != null) {
+            model.setApplications(entity.getApplicationList().stream().map(this::model).collect(Collectors.toList()));
         }
         return model;
 
     }
 
-    private AppService model(ServiceEntity entity) {
+    private Application model(ApplicationEntity entity) {
         if (entity == null) return null;
-        AppService model = new AppService();
+        Application model = new Application();
         model.setCode(entity.getCode());
         model.setName(entity.getName());
         model.setSystemCode(entity.getSystemCode().getCode());
@@ -106,7 +103,7 @@ public class AppServiceServiceImpl implements AppServiceService {
      * Валидация на уникальность кода системы при создании
      */
     private Boolean checkServiceUniq(String code) {
-        ServiceEntity systemEntity= serviceRepository.findById(code).orElse(null);
+        ApplicationEntity systemEntity= applicationRepository.findById(code).orElse(null);
         if (systemEntity == null) {
             return true;
         } else {

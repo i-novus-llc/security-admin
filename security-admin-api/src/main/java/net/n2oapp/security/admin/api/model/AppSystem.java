@@ -19,5 +19,5 @@ public class AppSystem {
     @JsonProperty
     private String description;
     @JsonProperty
-    private List<AppService> appServices;
+    private List<Application> applications;
 }

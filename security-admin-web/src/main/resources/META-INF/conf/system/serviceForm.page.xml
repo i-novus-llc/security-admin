@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <simple-page xmlns="http://n2oapp.net/framework/config/schema/page-2.0"
-             name="Добавление службы">
+             name="Добавление приложения">
     <form upload="defaults" query-id="service" default-values-query-id="serviceDefault">
         <fields>
-            <input-text id="id" label="Код службы" required="true"/>
-            <input-text id="name" label="Наименование службы" required="true"/>
+            <input-text id="id" label="Код приложения" required="true"/>
+            <input-text id="name" label="Наименование приложения" required="true"/>
         </fields>
     </form>
 </simple-page>

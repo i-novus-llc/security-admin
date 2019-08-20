@@ -38,10 +38,10 @@ public class SystemEntity {
     private String description;
 
     /**
-     * Службы системы
+     * Приложения системы
      */
     @OneToMany(mappedBy = "systemCode", fetch = FetchType.LAZY)
-    private List<ServiceEntity> serviceList;
+    private List<ApplicationEntity> applicationList;
 
 
     public SystemEntity(@NotNull String code) {

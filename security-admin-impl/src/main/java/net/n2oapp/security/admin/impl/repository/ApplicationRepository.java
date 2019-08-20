@@ -1,13 +1,13 @@
 package net.n2oapp.security.admin.impl.repository;
 
-import net.n2oapp.security.admin.impl.entity.ServiceEntity;
+import net.n2oapp.security.admin.impl.entity.ApplicationEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 /**
- * Репозиторий служб
+ * Репозиторий приложений
  */
 @Repository
-public interface ServiceRepository extends JpaRepository<ServiceEntity, String>, JpaSpecificationExecutor<ServiceEntity> {
+public interface ApplicationRepository extends JpaRepository<ApplicationEntity, String>, JpaSpecificationExecutor<ApplicationEntity> {
 }

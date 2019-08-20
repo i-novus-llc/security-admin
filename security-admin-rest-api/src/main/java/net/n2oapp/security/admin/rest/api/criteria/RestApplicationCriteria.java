@@ -1,15 +1,15 @@
 package net.n2oapp.security.admin.rest.api.criteria;
 
-import net.n2oapp.security.admin.api.criteria.ServiceCriteria;
+import net.n2oapp.security.admin.api.criteria.ApplicationCriteria;
 import org.springframework.data.domain.Sort;
 
 import javax.ws.rs.QueryParam;
 import java.util.List;
 
 /**
- * Модель фильтрации служб для rest вызовов
+ * Модель фильтрации приложений для rest вызовов
  */
-public class RestServiceCriteria extends ServiceCriteria {
+public class RestApplicationCriteria extends ApplicationCriteria {
 
     @QueryParam("page")
     @Override

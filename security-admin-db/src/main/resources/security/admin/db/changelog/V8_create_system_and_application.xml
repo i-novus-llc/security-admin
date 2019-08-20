@@ -11,11 +11,11 @@
         <sqlFile path="security/admin/db/changelog/sql/V8_systems.sql"/>
     </changeSet>
 
-    <changeSet id="create_service" author="rbarysheva" dbms="postgresql">
-        <sqlFile path="security/admin/db/changelog/sql/V8_services.sql"/>
+    <changeSet id="create_application" author="rbarysheva" dbms="postgresql">
+        <sqlFile path="security/admin/db/changelog/sql/V8_application.sql"/>
     </changeSet>
-    <changeSet id="create_service" author="rbarysheva" dbms="h2">
-        <sqlFile path="security/admin/db/changelog/sql/V8_services.sql"/>
+    <changeSet id="create_application" author="rbarysheva" dbms="h2">
+        <sqlFile path="security/admin/db/changelog/sql/V8_application.sql"/>
     </changeSet>
 
 </databaseChangeLog>

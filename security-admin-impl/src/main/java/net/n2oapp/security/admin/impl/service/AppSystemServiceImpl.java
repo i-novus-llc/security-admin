@@ -4,9 +4,7 @@ import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.criteria.SystemCriteria;
 import net.n2oapp.security.admin.api.model.*;
 import net.n2oapp.security.admin.api.service.AppSystemService;
-import net.n2oapp.security.admin.impl.entity.PermissionEntity;
-import net.n2oapp.security.admin.impl.entity.RoleEntity;
-import net.n2oapp.security.admin.impl.entity.ServiceEntity;
+import net.n2oapp.security.admin.impl.entity.ApplicationEntity;
 import net.n2oapp.security.admin.impl.entity.SystemEntity;
 import net.n2oapp.security.admin.impl.repository.PermissionRepository;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
@@ -88,7 +86,7 @@ public class AppSystemServiceImpl implements AppSystemService {
         entity.setCode(model.getCode());
         entity.setDescription(model.getDescription());
         if (model.getServices() != null) {
-            entity.setServiceList(model.getServices().stream().map(ServiceEntity::new).collect(Collectors.toList()));
+            entity.setApplicationList(model.getServices().stream().map(ApplicationEntity::new).collect(Collectors.toList()));
         }
         return entity;
     }
@@ -99,16 +97,16 @@ public class AppSystemServiceImpl implements AppSystemService {
         model.setName(entity.getName());
         model.setCode(entity.getCode());
         model.setDescription(entity.getDescription());
-        if (entity.getServiceList() != null) {
-            model.setAppServices(entity.getServiceList().stream().map(this::model).collect(Collectors.toList()));
+        if (entity.getApplicationList() != null) {
+            model.setApplications(entity.getApplicationList().stream().map(this::model).collect(Collectors.toList()));
         }
         return model;
 
     }
 
-    private AppService model(ServiceEntity entity) {
+    private Application model(ApplicationEntity entity) {
         if (entity == null) return null;
-        AppService model = new AppService();
+        Application model = new Application();
         model.setCode(entity.getCode());
         model.setName(entity.getName());
         model.setSystemCode(entity.getSystemCode().getCode());

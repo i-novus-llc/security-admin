@@ -6,35 +6,35 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 /**
- * Сущность Служба
+ * Сущность Приложение
  */
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "service", schema = "sec")
-public class ServiceEntity {
+@Table(name = "application", schema = "sec")
+public class ApplicationEntity {
     /**
-     * Код службы
+     * Код приложения
      */
     @Id
     @Column(name = "code", nullable = false)
     private String code;
 
     /**
-     * Наименование службы
+     * Наименование приложения
      */
     @Column(name = "name", nullable = false)
     private String name;
 
 
     /**
-     * Прикладная система (подсистема, модуль), которой принадлежит служба
+     * Прикладная система (подсистема, модуль), которой принадлежит приложение
      */
     @JoinColumn(name = "system_code")
     @ManyToOne(fetch = FetchType.EAGER)
     private SystemEntity systemCode;
 
-    public ServiceEntity(String code) {
+    public ApplicationEntity(String code) {
         this.code = code;
     }
 }

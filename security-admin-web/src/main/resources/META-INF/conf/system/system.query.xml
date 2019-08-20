@@ -39,8 +39,8 @@
                 <eq filter-id="description" mapping="description"/>
             </filters>
         </field>
-        <field id="services" domain="object[]" name="Службы">
-            <select mapping="appServices"></select>
+        <field id="services" domain="object[]" name="Приложения">
+            <select mapping="applications"></select>
         </field>
     </fields>
 </query>

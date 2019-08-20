@@ -2,12 +2,12 @@
 <object xmlns="http://n2oapp.net/framework/config/schema/object-3.0" name="Системы">
 
     <operations>
-        <operation id="create" success-text="Служба сохранена">
+        <operation id="create" success-text="Приложение сохранено">
             <invocation>
-                <java method="create" class="net.n2oapp.security.admin.api.service.AppServiceService">
+                <java method="create" class="net.n2oapp.security.admin.api.service.ApplicationService">
                     <spring/>
                     <arguments>
-                        <argument type="class" class="net.n2oapp.security.admin.api.model.AppServiceForm"/>
+                        <argument type="class" class="net.n2oapp.security.admin.api.model.ApplicationForm"/>
                     </arguments>
                 </java>
             </invocation>
@@ -23,10 +23,10 @@
         </operation>
 
         <operation id="delete"
-                   confirm-text="Вы уверены, что хотите удалить службу?"
-                   success-text="Служба удалена">
+                   confirm-text="Вы уверены, что хотите удалить приложение?"
+                   success-text="Приложение удалено">
             <invocation>
-                <java method="delete" class="net.n2oapp.security.admin.api.service.AppServiceService">
+                <java method="delete" class="net.n2oapp.security.admin.api.service.ApplicationService">
                     <spring/>
                     <arguments>
                         <argument type="primitive"/>
@@ -42,10 +42,10 @@
 
     <validations>
         <constraint id="uniqServiceCode" server-moment="before-operation" severity="danger"
-                    message="Существует служба с указанным кодом"
+                    message="Существует приложение с указанным кодом"
                     result="!(#this)">
             <invocation>
-                <java method="isServiceExist" class="net.n2oapp.security.admin.api.service.AppServiceService">
+                <java method="isApplicationExist" class="net.n2oapp.security.admin.api.service.ApplicationService">
                     <spring/>
                     <arguments>
                         <argument type="primitive"/>
