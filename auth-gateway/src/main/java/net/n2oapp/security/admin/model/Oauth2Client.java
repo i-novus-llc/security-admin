@@ -4,6 +4,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.util.StringUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -37,7 +38,7 @@ public class Oauth2Client implements ClientDetails {
 
     @Override
     public Set<String> getResourceIds() {
-        return null;
+        return Collections.emptySet();
     }
 
     @Override
@@ -66,7 +67,7 @@ public class Oauth2Client implements ClientDetails {
 
     @Override
     public Set<String> getScope() {
-        return null;
+        return Set.of("read", "write");
     }
 
     @Override
@@ -109,12 +110,12 @@ public class Oauth2Client implements ClientDetails {
 
     @Override
     public Map<String, Object> getAdditionalInformation() {
-        return null;
+        return Collections.emptyMap();
     }
 
     @Override
     public List<GrantedAuthority> getAuthorities() {
-        return null;
+        return Collections.emptyList();
     }
 
     public String getLogoutUrl() {
