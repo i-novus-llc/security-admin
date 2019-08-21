@@ -153,14 +153,17 @@ image::images\role_mapping.png[]
 +
 image::images\email.png[]
 +
-. Создайте системного пользователя для синхронизации с сервисами администрирования (Users > Add user)
+. Создайте системного клиента для синхронизации с сервисами администрирования (Clients > Create)
 +
-image::images\readme-5a80d.png[]
+image::images\readme-create-client.png[]
 +
-. На вкладке "Credentials" задайте системному пользователю пароль (Credentials > New Password)
-. Добавьте ему все права администрирования (Role Mappings > Client Roles > realm-management > [select all] > Add selected > Save)
+. Затем выберите его и на вкладке "Settings" задайте Access Type - Confidential, Service Accounts Enabled - ON, нажмите Save
 +
-image::images\readme-e90b4.png[]
+image::images\readme-settings.png[]
++
+. На вкладке "Service Account Roles" добавьте роли для управления realm и пользователями
++
+image::images\readme-service-account-roles.png[]
 +
 . Создайте роль администрирования системы (Roles > Add role)
 +
