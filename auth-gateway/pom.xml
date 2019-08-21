@@ -13,6 +13,10 @@
 
     <artifactId>auth-gateway</artifactId>
 
+    <build>
+        <finalName>auth-gateway</finalName>
+    </build>
+
     <dependencies>
 
         <dependency>
