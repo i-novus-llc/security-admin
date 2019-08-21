@@ -240,12 +240,32 @@ image::images\readme-05d0a.png[]
 . Шлюз повторяет авторизованный запрос на адрес `/userinfo` к серверу аутентификации
 . После получения информации о пользователе от сервера аутентификации шлюз дополняет её информацией от сервиса администрирования (например, правами доступа)
 
-*Установка*
+*Запуск*
 
-. Скачайте запускаемый jar файл SSO сервера по link:http://[ссылке] в отдельную папку
-. Создайте файл настроек `application.properties`
-. Задайте настройки
-. Запустите сервер, выполнив команду `java -jar ssoserver.jar`
+*  Запускаемый jar файл SSO сервера можно получить, выполнив команду `mvn clean package`
+*  Для доступа к Keycloak необходимо переопределить следующие настройки:
+[listing]
+....
+keycloak.server-url=http://localhost:8888/auth
+keycloak.realm=security-admin
+
+sec.admin.keycloak.auth-server-uri=${keycloak.server-url}/realms/${keycloak.realm}/protocol/openid-connect
+sec.admin.keycloak.client.client-id=auth-gateway
+sec.admin.keycloak.client.client-secret=1a9030fbca47a5b2c28e92f19050bb77824b5ad1
+sec.admin.keycloak.client.access-token-uri=${sec.admin.keycloak.auth-server-uri}/token
+sec.admin.keycloak.client.user-authorization-uri=${sec.admin.keycloak.auth-server-uri}/auth
+sec.admin.keycloak.client.client-authentication-scheme=form
+sec.admin.keycloak.resource.user-info-uri=${sec.admin.keycloak.auth-server-uri}/userinfo
+....
+
+* Согласно протоколу OAuth2 auth-gateway открывает следующие эндпоинты:
+
+[listing]
+....
+Authorization endpoint: /oauth/authorize
+Token endpoint: /oauth/token
+UserInfo endpoint: /userinfo
+....
 
 == Администрирование доступа
 В этом разделе рассказывается об установке сервера администрирования доступа в зависимости от выбранной Вами схемы развертывания.
