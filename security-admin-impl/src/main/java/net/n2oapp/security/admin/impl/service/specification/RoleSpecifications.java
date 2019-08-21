@@ -10,7 +10,7 @@ import org.springframework.data.jpa.domain.Specification;
 import javax.persistence.criteria.*;
 
 /**
- * Реализация фитров для ролей пользователя
+ * Реализация фильтров для ролей пользователя
  */
 public class RoleSpecifications implements Specification<RoleEntity> {
     private RoleCriteria criteria;

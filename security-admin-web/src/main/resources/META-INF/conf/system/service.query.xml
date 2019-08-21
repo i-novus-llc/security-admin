@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0" object-id="service"
+       name="Системы">
+    <list result-mapping="['content']" count-mapping="['totalElements']">
+        <java method="findAll" class="net.n2oapp.security.admin.api.service.ApplicationService">
+            <spring/>
+            <arguments>
+                <argument class="net.n2oapp.security.admin.api.criteria.ApplicationCriteria" type="criteria"/>
+            </arguments>
+        </java>
+    </list>
+
+    <fields>
+        <field id="id" domain="string">
+            <select mapping="code"/>
+        </field>
+        <field id="name" domain="string" name="Имя">
+            <select mapping="name"/>
+        </field>
+        <field id="systemCode" domain="string">
+            <select mapping="systemCode"/>
+            <filters>
+                <eq filter-id="systemCode" mapping="systemCode"/>
+            </filters>
+        </field>
+    </fields>
+</query>

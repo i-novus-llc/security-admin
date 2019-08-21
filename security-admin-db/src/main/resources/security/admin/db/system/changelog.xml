@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <include file="security/admin/db/changelog/V8_create_system_and_application.xml"/>
+    <include file="security/admin/db/changelog/V9_create_directories.xml"/>
+    <include file="security/admin/db/changelog/V10_update_user_role_permission.xml"/>
+
+</databaseChangeLog>

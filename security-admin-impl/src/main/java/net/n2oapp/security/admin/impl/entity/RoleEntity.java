@@ -2,6 +2,7 @@ package net.n2oapp.security.admin.impl.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.n2oapp.security.admin.api.model.UserLevel;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -41,6 +42,19 @@ public class RoleEntity {
      */
     @Column(name = "description")
     private String description;
+
+    /**
+     * Уровень пользователя, для которого предназначена роль
+     */
+    @Column(name = "user_level")
+    private UserLevel userLevel;
+
+    /**
+     * Прикладная система (подсистема, модуль), которой принадлежит роль
+     */
+    @JoinColumn(name = "system_code")
+    @ManyToOne(fetch = FetchType.EAGER)
+    private SystemEntity systemCode;
 
     /**
      * Права доступа роли

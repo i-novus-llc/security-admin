@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<object xmlns="http://n2oapp.net/framework/config/schema/object-3.0" name="Системы">
+
+    <operations>
+        <operation id="create" success-text="Система сохранена">
+            <invocation>
+                <java method="create" class="net.n2oapp.security.admin.api.service.AppSystemService">
+                    <spring/>
+                    <arguments>
+                        <argument type="class" class="net.n2oapp.security.admin.api.model.AppSystemForm"/>
+                    </arguments>
+                </java>
+            </invocation>
+            <in-parameters>
+                <param id="id" mapping="[0].code" domain="string" required="true"/>
+                <param id="name" mapping="[0].name" domain="string" required="true"/>
+                <param id="description" mapping="[0].description" domain="string"/>
+            </in-parameters>
+            <out-parameters>
+                <param id="id" mapping="code"/>
+            </out-parameters>
+            <validations black-list="uniqSystemCode"/>
+        </operation>
+
+        <operation id="update" success-text="Система сохранена">
+            <invocation>
+                <java method="update" class="net.n2oapp.security.admin.api.service.AppSystemService">
+                    <spring/>
+                    <arguments>
+                        <argument type="class" class="net.n2oapp.security.admin.api.model.AppSystemForm"/>
+                    </arguments>
+                </java>
+            </invocation>
+            <in-parameters>
+                <param id="id" mapping="[0].code" domain="string" required="true"/>
+                <param id="name" mapping="[0].name" domain="string" required="true"/>
+                <param id="description" mapping="[0].description" domain="string"/>
+            </in-parameters>
+            <out-parameters>
+                <param id="id" mapping="code"/>
+            </out-parameters>
+            <validations black-list="uniqSystemCode"/>
+        </operation>
+
+        <operation id="delete"
+                   confirm-text="Вы уверены, что хотите удалить систему?"
+                   success-text="Система удалена">
+            <invocation>
+                <java method="delete" class="net.n2oapp.security.admin.api.service.AppSystemService">
+                    <spring/>
+                    <arguments>
+                        <argument type="primitive"/>
+                    </arguments>
+                </java>
+            </invocation>
+            <in-parameters>
+                <param id="id" mapping="[0]" domain="string" required="true"/>
+            </in-parameters>
+            <validations black-list="uniqSystemCode"/>
+        </operation>
+    </operations>
+
+    <validations>
+        <constraint id="uniqSystemCode" server-moment="before-operation" severity="danger"
+                    message="Существует система с указанным кодом"
+                    result="!(#this)">
+            <invocation>
+                <java method="isSystemExist" class="net.n2oapp.security.admin.api.service.AppSystemService">
+                    <spring/>
+                    <arguments>
+                        <argument type="primitive"/>
+                    </arguments>
+                </java>
+            </invocation>
+            <in-parameters>
+                <param id="id" mapping="[0]" domain="string" required="true"/>
+            </in-parameters>
+        </constraint>
+    </validations>
+</object>
+
+
+
+
+
