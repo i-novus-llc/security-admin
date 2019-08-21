@@ -175,6 +175,12 @@ public class UserParamsUtil {
         }
     }
 
+    /**
+     * Извлечь список полномочий из информации о пользователе
+     *
+     * @param map Информация о пользователе
+     * @return Список полномочий
+     */
     public static List<GrantedAuthority> extractRolesAndPermissions(Map<String, ?> map) {
         List<GrantedAuthority> authorities = new ArrayList<>();
         if (map.containsKey(ROLES)) {

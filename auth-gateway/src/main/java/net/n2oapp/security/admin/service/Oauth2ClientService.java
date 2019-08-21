@@ -1,7 +1,7 @@
 package net.n2oapp.security.admin.service;
 
 import net.n2oapp.security.admin.api.model.Client;
-import net.n2oapp.security.admin.impl.service.ClientServiceImpl;
+import net.n2oapp.security.admin.api.service.ClientService;
 import net.n2oapp.security.admin.model.Oauth2Client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.provider.*;
@@ -15,7 +15,7 @@ import java.util.NoSuchElementException;
 public class Oauth2ClientService implements ClientDetailsService, ClientRegistrationService {
 
     @Autowired
-    private ClientServiceImpl clientService;
+    private ClientService clientService;
 
 
     @Override

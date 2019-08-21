@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Создание объекта пользователя из информации в SSO сервере
+ */
 @Component
 public class GatewayPrincipalExtractor implements PrincipalExtractor, AuthoritiesExtractor {
 

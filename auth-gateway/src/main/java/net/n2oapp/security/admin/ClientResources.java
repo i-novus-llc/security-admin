@@ -4,6 +4,9 @@ import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceS
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
 
+/**
+ * Клиенсткие ресурсы для протокола OAuth2
+ */
 class ClientResources {
 
     @NestedConfigurationProperty

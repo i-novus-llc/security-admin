@@ -66,7 +66,7 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    @ConfigurationProperties("keycloak")
+    @ConfigurationProperties("sec.admin.keycloak")
     public ClientResources keycloak() {
         return new ClientResources();
     }
