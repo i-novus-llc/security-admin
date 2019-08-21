@@ -24,8 +24,4 @@ public class AppSystemForm {
     @ApiModelProperty(value = "Описание")
     private String description;
 
-    @ApiModelProperty(value = "Приложения")
-    private List<String> services;
-
-
 }

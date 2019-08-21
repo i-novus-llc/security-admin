@@ -2,7 +2,6 @@ package net.n2oapp.security.admin.rest.client;
 
 import net.n2oapp.security.admin.api.criteria.ApplicationCriteria;
 import net.n2oapp.security.admin.api.model.Application;
-import net.n2oapp.security.admin.api.model.ApplicationForm;
 import net.n2oapp.security.admin.api.service.ApplicationService;
 import net.n2oapp.security.admin.rest.api.ApplicationRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestApplicationCriteria;
@@ -20,12 +19,12 @@ public class ApplicationServiceRestClient implements ApplicationService {
     }
 
     @Override
-    public Application create(ApplicationForm system) {
+    public Application create(Application system) {
         return client.create(system);
     }
 
     @Override
-    public Application update(ApplicationForm system) {
+    public Application update(Application system) {
         return client.update(system);
     }
 

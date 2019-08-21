@@ -7,7 +7,7 @@
                 <java method="create" class="net.n2oapp.security.admin.api.service.ApplicationService">
                     <spring/>
                     <arguments>
-                        <argument type="class" class="net.n2oapp.security.admin.api.model.ApplicationForm"/>
+                        <argument type="class" class="net.n2oapp.security.admin.api.model.Application"/>
                     </arguments>
                 </java>
             </invocation>

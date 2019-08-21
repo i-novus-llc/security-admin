@@ -87,9 +87,6 @@ public class AppSystemServiceImpl implements AppSystemService {
         entity.setName(model.getName());
         entity.setCode(model.getCode());
         entity.setDescription(model.getDescription());
-        if (model.getServices() != null) {
-            entity.setApplicationList(model.getServices().stream().map(ApplicationEntity::new).collect(Collectors.toList()));
-        }
         return entity;
     }
 

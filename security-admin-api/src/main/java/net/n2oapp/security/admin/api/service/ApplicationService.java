@@ -2,7 +2,6 @@ package net.n2oapp.security.admin.api.service;
 
 import net.n2oapp.security.admin.api.criteria.ApplicationCriteria;
 import net.n2oapp.security.admin.api.model.Application;
-import net.n2oapp.security.admin.api.model.ApplicationForm;
 import org.springframework.data.domain.Page;
 
 /**
@@ -15,14 +14,14 @@ public interface ApplicationService {
      * @param service Модель приложения для создания
      * @return Созданное приложение
      */
-    Application create(ApplicationForm service);
+    Application create(Application service);
 
     /**
      * Изменить приложение
      * @param service Модель приложения для изменения
      * @return Измененное приложение
      */
-    Application update(ApplicationForm service);
+    Application update(Application service);
 
     /**
      * Удалить приложение

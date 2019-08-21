@@ -3,7 +3,6 @@ package net.n2oapp.security.admin.impl.service;
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.criteria.ApplicationCriteria;
 import net.n2oapp.security.admin.api.model.Application;
-import net.n2oapp.security.admin.api.model.ApplicationForm;
 import net.n2oapp.security.admin.api.model.AppSystem;
 import net.n2oapp.security.admin.api.service.ApplicationService;
 import net.n2oapp.security.admin.impl.entity.ApplicationEntity;
@@ -30,13 +29,13 @@ public class ApplicationServiceImpl implements ApplicationService {
     private ApplicationRepository applicationRepository;
 
     @Override
-    public Application create(ApplicationForm service) {
+    public Application create(Application service) {
         checkServiceUniq(service.getCode());
         return model(applicationRepository.save(entity(service)));
     }
 
     @Override
-    public Application update(ApplicationForm service) {
+    public Application update(Application service) {
         return model(applicationRepository.save(entity(service)));
     }
 
@@ -67,7 +66,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         return getById(code) != null;
     }
 
-    private ApplicationEntity entity(ApplicationForm model) {
+    private ApplicationEntity entity(Application model) {
         if (model == null) return null;
         ApplicationEntity entity = new ApplicationEntity();
         entity.setName(model.getName());

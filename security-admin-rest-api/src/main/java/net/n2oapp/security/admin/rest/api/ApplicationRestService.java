@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import net.n2oapp.security.admin.api.model.Application;
-import net.n2oapp.security.admin.api.model.ApplicationForm;
 import net.n2oapp.security.admin.rest.api.criteria.RestApplicationCriteria;
 import org.springframework.data.domain.Page;
 
@@ -37,13 +36,13 @@ public interface ApplicationRestService {
     @Path("/")
     @ApiOperation("Создать приложение")
     @ApiResponse(code = 200, message = "Созданное приложение")
-    Application create(@ApiParam(value = "Приложение") ApplicationForm serviceForm);
+    Application create(@ApiParam(value = "Приложение") Application serviceForm);
 
     @PUT
     @Path("/")
     @ApiOperation("Изменить приложение")
     @ApiResponse(code = 200, message = "Измененное приложение")
-    Application update(@ApiParam(value = "Приложение") ApplicationForm serviceForm);
+    Application update(@ApiParam(value = "Приложение") Application serviceForm);
 
     @DELETE
     @Path("/{code}")

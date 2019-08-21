@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
-@ApiModel("Служба")
+@ApiModel("Приложение")
 public class Application {
 
     @JsonProperty

@@ -1,7 +1,6 @@
 package net.n2oapp.security.admin.rest.impl;
 
 import net.n2oapp.security.admin.api.model.Application;
-import net.n2oapp.security.admin.api.model.ApplicationForm;
 import net.n2oapp.security.admin.api.service.ApplicationService;
 import net.n2oapp.security.admin.rest.api.ApplicationRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestApplicationCriteria;
@@ -29,12 +28,12 @@ public class ApplicationRestServiceImpl implements ApplicationRestService {
     }
 
     @Override
-    public Application create(ApplicationForm systemForm) {
+    public Application create(Application systemForm) {
         return service.create(systemForm);
     }
 
     @Override
-    public Application update(ApplicationForm systemForm) {
+    public Application update(Application systemForm) {
         return service.update(systemForm);
 
     }
