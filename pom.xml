@@ -18,6 +18,7 @@
     <properties>
         <java.version>11</java.version>
         <n2o.version>7.3.17</n2o.version>
+        <spring.boot.version>2.1.1.RELEASE</spring.boot.version>
         <config.server.enable>false</config.server.enable>
     </properties>
 
@@ -29,9 +30,12 @@
     </scm>
 
     <modules>
+        <module>auth-gateway</module>
         <module>security-auth</module>
+        <module>security-auth-common</module>
         <module>security-auth-simple</module>
-        <module>security-auth-oauth2</module>
+        <module>security-auth-oauth2-gateway</module>
+        <module>security-auth-oauth2-keycloak</module>
         <module>security-admin-api</module>
         <module>security-admin-impl</module>
         <module>security-admin-web</module>
@@ -46,7 +50,23 @@
         <module>security-admin-frontend</module>
         <module>keycloak-theme</module>
         <module>doc</module>
+
     </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.security.oauth.boot</groupId>
+                <artifactId>spring-security-oauth2-autoconfigure</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security.oauth</groupId>
+                <artifactId>spring-security-oauth2</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <profiles>
         <profile>

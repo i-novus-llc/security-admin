@@ -2,7 +2,7 @@ package net.n2oapp.security.auth.context;
 
 import net.n2oapp.framework.api.context.ContextEngine;
 import net.n2oapp.framework.api.user.UserContext;
-import net.n2oapp.security.auth.UserParamsUtil;
+import net.n2oapp.security.auth.common.UserParamsUtil;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Map;
