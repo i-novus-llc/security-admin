@@ -25,14 +25,15 @@ public class RoleSpecifications implements Specification<RoleEntity> {
         if (criteria.getName() != null)
             predicate = builder.and(predicate, builder.like(root.get(RoleEntity_.name), criteria.getName() + "%"));
         if (criteria.getDescription() != null)
-            predicate = builder.and(predicate, builder.like(root.get(RoleEntity_.description), criteria.getDescription() + "%"));
-        if (criteria.getPermissionIds() != null && !criteria.getPermissionIds().isEmpty()) {
+            predicate = builder.and(predicate, builder.like(root.get(RoleEntity_.description),
+                    criteria.getDescription() + "%"));
+        if (criteria.getPermissionCode() != null && !criteria.getPermissionCode().isEmpty()) {
             Subquery sub = criteriaQuery.subquery(Integer.class);
             Root subRoot = sub.from(PermissionEntity.class);
             ListJoin<PermissionEntity, RoleEntity> subRoles = subRoot.join(PermissionEntity_.roleList);
-            sub.select(subRoot.get(PermissionEntity_.id));
+            sub.select(subRoot.get(PermissionEntity_.code));
             sub.where(builder.and(builder.equal(root.get(RoleEntity_.id), subRoles.get(RoleEntity_.id)),
-                    subRoot.get(PermissionEntity_.id).in(criteria.getPermissionIds())));
+                    subRoot.get(PermissionEntity_.code).in(criteria.getPermissionCode())));
             predicate = builder.and(predicate, builder.exists(sub));
         }
         return predicate;

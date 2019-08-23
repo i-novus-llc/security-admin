@@ -1,6 +1,9 @@
 package net.n2oapp.security.admin.sql.service;
 
-import net.n2oapp.security.admin.api.model.*;
+import net.n2oapp.security.admin.api.model.Permission;
+import net.n2oapp.security.admin.api.model.Role;
+import net.n2oapp.security.admin.api.model.User;
+import net.n2oapp.security.admin.api.model.UserDetailsToken;
 import net.n2oapp.security.admin.api.service.UserDetailsService;
 import net.n2oapp.security.admin.sql.util.SqlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +61,8 @@ public class UserDetailsServiceSql implements UserDetailsService {
                         .addValue("patronymic", null);
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(SqlUtil.getResourceFileAsString(INSERT_USER), namedParameters, keyHolder, new String[]{"id"});
+        jdbcTemplate.update(SqlUtil.getResourceFileAsString(INSERT_USER), namedParameters, keyHolder, new String[]{
+                "id"});
         u.setId((Integer) keyHolder.getKey());
         saveRoles(token, u);
         return u;
@@ -92,11 +96,12 @@ public class UserDetailsServiceSql implements UserDetailsService {
         try {
             user = jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(LOAD_USER_DETAILS), parameters,
                     (resultSet, i) -> {
-                User u = userModel(resultSet);
-                u.setRoles(findAllRolesWithPermissions(u.getId()));
-                return u;
-            });
-        } catch (EmptyResultDataAccessException ignored) {}
+                        User u = userModel(resultSet);
+                        u.setRoles(findAllRolesWithPermissions(u.getId()));
+                        return u;
+                    });
+        } catch (EmptyResultDataAccessException ignored) {
+        }
 
         return user;
     }
@@ -111,10 +116,9 @@ public class UserDetailsServiceSql implements UserDetailsService {
         Role role = null;
         for (Map<String, Object> row : rows) {
             Permission p = new Permission();
-            p.setId((Integer) row.get("p_id"));
             p.setName((String) row.get("p_name"));
             p.setCode((String) row.get("p_code"));
-            p.setParentId((Integer) row.get("p_parent_id"));
+            p.setParentCode((String) row.get("p_parent_code"));
             Integer roleId = (Integer) row.get("r_id");
             if (!roleId.equals(currentRoleId)) {
                 currentRoleId = roleId;
@@ -126,7 +130,7 @@ public class UserDetailsServiceSql implements UserDetailsService {
                 role.setDescription((String) row.get("r_description"));
                 roles.add(role);
             }
-            if (p.getId() != null)
+            if (p.getCode() != null)
                 role.getPermissions().add(p);
         }
         return roles;
@@ -151,6 +155,6 @@ public class UserDetailsServiceSql implements UserDetailsService {
     private String getFio(String surname, String name, String patronymic) {
         return (surname != null ? surname + " " : "")
                 + (name != null ? name + " " : "")
-                + (patronymic!= null ? patronymic + " " : "").trim();
+                + (patronymic != null ? patronymic + " " : "").trim();
     }
 }

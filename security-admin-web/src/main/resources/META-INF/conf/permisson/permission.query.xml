@@ -9,17 +9,14 @@
     </list>
 
     <fields>
-        <field id="id" domain="integer">
-            <select mapping="id"/>
-        </field>
         <field id="name" domain="string" name="Название">
             <select mapping="name"/>
         </field>
-        <field id="code" domain="string" name="Код">
+        <field id="id" domain="string" name="Код">
             <select mapping="code"/>
         </field>
-        <field id="parentId" domain="integer">
-            <select mapping="parentId"/>
+        <field id="parentCode" domain="string">
+            <select mapping="parentCode"/>
         </field>
     </fields>
 </query>

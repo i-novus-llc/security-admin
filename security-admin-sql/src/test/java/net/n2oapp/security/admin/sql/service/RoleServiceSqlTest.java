@@ -41,16 +41,15 @@ public class RoleServiceSqlTest {
     }
 
 
-
     private void search() throws Exception {
-        List<Integer> permissions = new ArrayList<>();
-        permissions.add(1);
+        List<String> permissions = new ArrayList<>();
+        permissions.add("test");
         RoleCriteria criteria = new RoleCriteria();
         criteria.setPage(0);
         criteria.setSize(4);
         criteria.setName("user");
         criteria.setDescription("description1");
-        criteria.setPermissionIds(permissions);
+        criteria.setPermissionCode(permissions);
         Page<Role> role = service.findAll(criteria);
         assertEquals(1, role.getTotalElements());
     }
@@ -70,7 +69,7 @@ public class RoleServiceSqlTest {
     private Role update(RoleForm role) {
         role.setName("userName1Update");
         Role updateRole = service.update(role);
-        assertEquals("userName1Update", service.getById(role.getId()).getName() );
+        assertEquals("userName1Update", service.getById(role.getId()).getName());
         return updateRole;
     }
 
@@ -85,8 +84,8 @@ public class RoleServiceSqlTest {
         role.setName("user1");
         role.setCode("code1");
         role.setDescription("description1");
-        List<Integer> permissions = new ArrayList<>();
-        permissions.add(1);
+        List<String> permissions = new ArrayList<>();
+        permissions.add("test");
         role.setPermissions(permissions);
         return role;
     }
@@ -97,7 +96,7 @@ public class RoleServiceSqlTest {
         form.setName(role.getName());
         form.setCode(role.getCode());
         form.setDescription(role.getDescription());
-        form.setPermissions(role.getPermissions().stream().map(Permission::getId).collect(Collectors.toList()));
+        form.setPermissions(role.getPermissions().stream().map(Permission::getCode).collect(Collectors.toList()));
         return form;
     }
 

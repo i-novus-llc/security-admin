@@ -39,7 +39,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             userEntity.setSurname(userDetails.getSurname());
             userEntity.setName(userDetails.getName());
             userEntity.setIsActive(true);
-            if (userDetails.getRoleNames() != null){
+            if (userDetails.getRoleNames() != null) {
                 userEntity.setRoleList(userDetails.getRoleNames().stream().map(this::getOrCreateRole).collect(Collectors.toList()));
             }
             userRepository.save(userEntity);
@@ -75,7 +75,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                     }
                 }
                 if (!roleNamesCopy.isEmpty()) {
-                    for(String r : roleNamesCopy) {
+                    for (String r : roleNamesCopy) {
                         RoleEntity role = getOrCreateRole(r);
                         userEntity.getRoleList().add(role);
                     }
@@ -141,10 +141,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private Permission model(PermissionEntity entity) {
         if (entity == null) return null;
         Permission model = new Permission();
-        model.setId(entity.getId());
         model.setName(entity.getName());
         model.setCode(entity.getCode());
-        model.setParentId(entity.getParentId());
+        model.setParentCode(entity.getParentCode());
         return model;
     }
 

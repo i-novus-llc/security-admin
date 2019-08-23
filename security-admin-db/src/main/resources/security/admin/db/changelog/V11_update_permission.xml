@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="drop_permission_constraint" author="aarifullin" dbms="postgresql">
+        <sqlFile path="security/admin/db/changelog/sql/V11_drop_permission_constraint.sql"/>
+    </changeSet>
+
+    <changeSet id="update_permission" author="aarifullin" dbms="postgresql">
+        <sqlFile path="security/admin/db/changelog/sql/V11_update_permission.sql"/>
+    </changeSet>
+
+    <changeSet id="update_permission_constraint" author="aarifullin" dbms="postgresql">
+        <sqlFile path="security/admin/db/changelog/sql/V11_update_permission_constraint.sql"/>
+    </changeSet>
+
+    <changeSet id="permission_index" author="aarifullin" dbms="postgresql">
+        <sqlFile path="security/admin/db/changelog/sql/V11_permission_index.sql"/>
+    </changeSet>
+
+
+
+
+
+
+    <changeSet id="drop_permission_constraint" author="aarifullin" dbms="h2">
+        <sqlFile path="security/admin/db/changelog/h2/V11_drop_permission_constraint.sql"/>
+    </changeSet>
+
+    <changeSet id="update_permission" author="aarifullin" dbms="h2">
+        <sqlFile path="security/admin/db/changelog/h2/V11_update_permission.sql"/>
+    </changeSet>
+
+    <changeSet id="update_permission_constraint" author="aarifullin" dbms="h2">
+        <sqlFile path="security/admin/db/changelog/h2/V11_update_permission_constraint.sql"/>
+    </changeSet>
+
+    <changeSet id="permission_index" author="aarifullin" dbms="h2">
+        <sqlFile path="security/admin/db/changelog/h2/V11_permission_index.sql"/>
+    </changeSet>
+
+
+</databaseChangeLog>

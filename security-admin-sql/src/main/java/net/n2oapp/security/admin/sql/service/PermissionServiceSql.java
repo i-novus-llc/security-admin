@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -22,7 +21,7 @@ import java.util.List;
  * Реализация сервиса управления правами доступа для sql
  */
 @Service
-public class PermissionServiceSql implements PermissionService{
+public class PermissionServiceSql implements PermissionService {
 
     private final static String INSERT_PERMISSION = "sql/permission/insert_permission.sql";
     private final static String UPDATE_PERMISSION = "sql/permission/update_permission.sql";
@@ -45,10 +44,9 @@ public class PermissionServiceSql implements PermissionService{
             SqlParameterSource namedParameters =
                     new MapSqlParameterSource("name", permission.getName())
                             .addValue("code", permission.getCode())
-                            .addValue("parentId", permission.getParentId());
-            KeyHolder keyHolder = new GeneratedKeyHolder();
-            jdbcTemplate.update(SqlUtil.getResourceFileAsString(INSERT_PERMISSION), namedParameters, keyHolder, new String[]{"id"});
-            permission.setId((Integer) keyHolder.getKey());
+                            .addValue("parent_code", permission.getParentCode());
+            jdbcTemplate.update(SqlUtil.getResourceFileAsString(INSERT_PERMISSION), namedParameters,
+                    new GeneratedKeyHolder(), null);
             return permission;
         });
         return permission;
@@ -58,10 +56,10 @@ public class PermissionServiceSql implements PermissionService{
     public Permission update(Permission permission) {
         transactionTemplate.execute(transactionStatus -> {
             SqlParameterSource namedParameters =
-                    new MapSqlParameterSource("id", permission.getId())
+                    new MapSqlParameterSource()
                             .addValue("name", permission.getName())
                             .addValue("code", permission.getCode())
-                            .addValue("parentId", permission.getParentId());
+                            .addValue("parent_code", permission.getParentCode());
             jdbcTemplate.update(SqlUtil.getResourceFileAsString(UPDATE_PERMISSION), namedParameters);
             return permission;
         });
@@ -69,19 +67,20 @@ public class PermissionServiceSql implements PermissionService{
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(String code) {
         SqlParameterSource namedParameters =
-                new MapSqlParameterSource("id", id);
+                new MapSqlParameterSource("code", code);
         jdbcTemplate.update(SqlUtil.getResourceFileAsString(DELETE_PERMISSION), namedParameters);
     }
 
     @Override
-    public Permission getById(Integer id) {
+    public Permission getById(String code) {
         try {
-            return jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(GET_PERMISSION_BY_ID), new MapSqlParameterSource("id", id), (resultSet, i) -> {
+            return jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(GET_PERMISSION_BY_ID),
+                    new MapSqlParameterSource("code", code), (resultSet, i) -> {
                 return model(resultSet);
             });
-        }catch(EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             return null;
         }
 
@@ -89,14 +88,16 @@ public class PermissionServiceSql implements PermissionService{
 
     @Override
     public List<Permission> getAll() {
-        return jdbcTemplate.query(SqlUtil.getResourceFileAsString(GET_ALL), new MapSqlParameterSource(), (resultSet, i) -> {
+        return jdbcTemplate.query(SqlUtil.getResourceFileAsString(GET_ALL), new MapSqlParameterSource(), (resultSet,
+                                                                                                          i) -> {
             return model(resultSet);
         });
     }
 
     @Override
-    public List<Permission> getAllByParentId(Integer parentId) {
-        return jdbcTemplate.query(SqlUtil.getResourceFileAsString(GET_ALL_BY_PARENT_ID), new MapSqlParameterSource("parentId", parentId), (resultSet, i) -> {
+    public List<Permission> getAllByParentCode(String parentCode) {
+        return jdbcTemplate.query(SqlUtil.getResourceFileAsString(GET_ALL_BY_PARENT_ID), new MapSqlParameterSource(
+                "parent_code", parentCode), (resultSet, i) -> {
             return model(resultSet);
         });
 
@@ -104,7 +105,8 @@ public class PermissionServiceSql implements PermissionService{
 
     @Override
     public List<Permission> getAllByParentIdIsNull() {
-        return jdbcTemplate.query(SqlUtil.getResourceFileAsString(GET_ALL_BY_PARENT_ID_IS_NULL), new MapSqlParameterSource(), (resultSet, i) -> {
+        return jdbcTemplate.query(SqlUtil.getResourceFileAsString(GET_ALL_BY_PARENT_ID_IS_NULL),
+                new MapSqlParameterSource(), (resultSet, i) -> {
             return model(resultSet);
         });
     }
@@ -112,11 +114,11 @@ public class PermissionServiceSql implements PermissionService{
     private Permission model(ResultSet resultSet) throws SQLException {
         if (resultSet == null) return null;
         Permission permission = new Permission();
-        permission.setId(resultSet.getInt("id"));
         permission.setName(resultSet.getString("name"));
         permission.setCode(resultSet.getString("code"));
-        permission.setParentId(resultSet.getInt("parent_id"));
-        permission.setHasChildren(jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(HAS_CHILDREN), new MapSqlParameterSource("id", permission.getId()), Boolean.class));
+        permission.setParentCode(resultSet.getString("parent_code"));
+        permission.setHasChildren(jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(HAS_CHILDREN),
+                new MapSqlParameterSource("code", permission.getCode()), Boolean.class));
         return permission;
     }
 

@@ -5,7 +5,7 @@ import net.n2oapp.security.admin.api.model.Permission;
 import java.util.List;
 
 /**
- *  Сервис управления правами доступа
+ * Сервис управления правами доступа
  */
 public interface PermissionService {
 
@@ -19,6 +19,7 @@ public interface PermissionService {
 
     /**
      * Изменить право доступа
+     *
      * @param permission Модель права доступа
      * @return Измененное право доступа
      */
@@ -26,19 +27,22 @@ public interface PermissionService {
 
     /**
      * Удалить право доступа
-     * @param id Идентификатор права доступа
+     *
+     * @param code Идентификатор права доступа
      */
-    void delete(Integer id);
+    void delete(String code);
 
     /**
      * Получить право доступа по идентификатору
-     * @param id Идентификатор
+     *
+     * @param code Идентификатор
      * @return Модель прав доступа
      */
-    Permission getById(Integer id);
+    Permission getById(String code);
 
     /**
      * Найти все права доступаии поиска
+     *
      * @return Страница найденных всех прав доступа
      */
     List<Permission> getAll();
@@ -46,10 +50,10 @@ public interface PermissionService {
     /**
      * Найти все права доступаии поиска по идентификатору родительского элемента
      *
-     * @param parentId Идентификатор
+     * @param parentCode Идентификатор
      * @return Страница найденных дочерних прав доступа
      */
-    List<Permission> getAllByParentId(Integer parentId);
+    List<Permission> getAllByParentCode(String parentCode);
 
     /**
      * Найти все права доступаии поиска по идентификатору родительского элемента

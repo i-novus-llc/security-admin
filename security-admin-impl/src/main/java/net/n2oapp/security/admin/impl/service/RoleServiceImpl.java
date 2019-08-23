@@ -124,7 +124,7 @@ public class RoleServiceImpl implements RoleService {
     private Permission model(PermissionEntity entity) {
         if (entity == null) return null;
         Permission model = new Permission();
-        model.setId(entity.getId());
+        model.setCode(entity.getCode());
         model.setName(entity.getName());
         return model;
     }
@@ -132,7 +132,7 @@ public class RoleServiceImpl implements RoleService {
     private PermissionEntity entity(Permission entity) {
         if (entity == null) return null;
         PermissionEntity model = new PermissionEntity();
-        model.setId(entity.getId());
+        model.setCode(entity.getCode());
         model.setName(entity.getName());
         return model;
     }

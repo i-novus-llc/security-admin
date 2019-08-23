@@ -15,10 +15,6 @@ import lombok.NoArgsConstructor;
 public class Permission {
 
     @JsonProperty
-    @ApiModelProperty(value = "Идентификатор")
-    private Integer id;
-
-    @JsonProperty
     @ApiModelProperty(value = "Название")
     private String name;
 
@@ -27,8 +23,8 @@ public class Permission {
     private String code;
 
     @JsonProperty
-    @ApiModelProperty(value = "Идентификатор родителя")
-    private Integer parentId;
+    @ApiModelProperty(value = "Код родителя")
+    private String parentCode;
 
     @JsonProperty
     @ApiModelProperty(value = "Имеет ли детей")

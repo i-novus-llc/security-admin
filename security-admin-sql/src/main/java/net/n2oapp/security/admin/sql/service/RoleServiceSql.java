@@ -60,7 +60,8 @@ public class RoleServiceSql implements RoleService {
                             .addValue("code", role.getCode())
                             .addValue("description", role.getDescription());
             KeyHolder keyHolder = new GeneratedKeyHolder();
-            jdbcTemplate.update(SqlUtil.getResourceFileAsString(INSERT_ROLE), namedParameters, keyHolder, new String[]{"id"});
+            jdbcTemplate.update(SqlUtil.getResourceFileAsString(INSERT_ROLE), namedParameters, keyHolder,
+                    new String[]{"id"});
             role.setId((Integer) keyHolder.getKey());
             savePermissions(role);
             return model(role);
@@ -73,7 +74,7 @@ public class RoleServiceSql implements RoleService {
             role.getPermissions().forEach(permission -> {
                 SqlParameterSource params =
                         new MapSqlParameterSource("roleId", role.getId())
-                                .addValue("permissionId", permission);
+                                .addValue("permission_code", permission);
                 jdbcTemplate.update(SqlUtil.getResourceFileAsString(INSERT_ROLE_PERMISSION), params);
             });
         }
@@ -105,11 +106,12 @@ public class RoleServiceSql implements RoleService {
     @Override
     public Role getById(Integer id) {
         try {
-            return jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(GET_ROLE_BY_ID), new MapSqlParameterSource("id", id),(resultSet, i) -> {
+            return jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(GET_ROLE_BY_ID),
+                    new MapSqlParameterSource("id", id), (resultSet, i) -> {
                 return model(resultSet);
             });
         } catch (EmptyResultDataAccessException e) {
-            return  null;
+            return null;
         }
     }
 
@@ -122,17 +124,19 @@ public class RoleServiceSql implements RoleService {
         SqlParameterSource namedParameters =
                 new MapSqlParameterSource("name", criteria.getName())
                         .addValue("description", criteria.getDescription())
-                        .addValue("permissionIds", criteria.getPermissionIds())
+                        .addValue("permission_code", criteria.getPermissionCode())
                         .addValue("limit", criteria.getPageSize())
                         .addValue("offset", criteria.getOffset())
                         .addValue("sorting", sorting)
                         .addValue("direction", direction);
 
-        List<Role> roles = jdbcTemplate.query(SqlUtil.getResourceFileAsString(FIND_ALL), namedParameters, (resultSet, i) -> {
+        List<Role> roles = jdbcTemplate.query(SqlUtil.getResourceFileAsString(FIND_ALL), namedParameters, (resultSet,
+                                                                                                           i) -> {
             return model(resultSet);
         });
-        Integer count = jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(FIND_ALL_COUNT), namedParameters,Integer.class);
-        return new PageImpl<>(roles,criteria,count);
+        Integer count = jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(FIND_ALL_COUNT), namedParameters,
+                Integer.class);
+        return new PageImpl<>(roles, criteria, count);
 
     }
 
@@ -143,7 +147,7 @@ public class RoleServiceSql implements RoleService {
                 Integer.class);
     }
 
-    private Role model (ResultSet resultSet) throws SQLException {
+    private Role model(ResultSet resultSet) throws SQLException {
         if (resultSet == null) return null;
         Role role = new Role();
         role.setId(resultSet.getInt("id"));
@@ -151,37 +155,30 @@ public class RoleServiceSql implements RoleService {
         role.setCode(resultSet.getString("code"));
         role.setDescription(resultSet.getString("description"));
         role.setPermissions(new ArrayList<>());
-        if (resultSet.getObject("ids") != null && resultSet.getObject("names") != null) {
+        if (resultSet.getObject("codes") != null && resultSet.getObject("names") != null) {
             List<Permission> permissions = new ArrayList<>();
-            Array a = resultSet.getArray("ids");
+            Array a = resultSet.getArray("codes");
             Object idsObject = a.getArray();
-            Integer[] ids;
             String[] names;
             String[] codes;
             // эта проверка нужна для поддержки различных реализаций для h2 и postrgesql
             // они возвращают разные объекты когда в запросе используется функция array_agg
             if (idsObject instanceof Integer[]) {
-                ids = (Integer[]) a.getArray();
+                codes = (String[]) a.getArray();
                 a = resultSet.getArray("names");
                 names = (String[]) a.getArray();
-                a = resultSet.getArray("codes");
-                codes = (String[]) a.getArray();
             } else {
-                Object[]  idsObj = (Object[]) resultSet.getObject("ids");
                 Object[] namesObj = (Object[]) resultSet.getObject("names");
                 Object[] codesObj = (Object[]) resultSet.getObject("codes");
-                ids = new Integer[idsObj.length];
                 names = new String[namesObj.length];
                 codes = new String[codesObj.length];
-                for (int i = 0; i < idsObj.length; i++) {
-                    ids[i] = (Integer)((Object[]) idsObj[i])[0];
-                    names[i] = (String)((Object[])namesObj[i])[0];
-                    codes[i] = (String)((Object[])codesObj[i])[0];
+                for (int i = 0; i < codesObj.length; i++) {
+                    names[i] = (String) ((Object[]) namesObj[i])[0];
+                    codes[i] = (String) ((Object[]) codesObj[i])[0];
                 }
             }
-            for (int i = 0; i < ids.length && i < names.length && i < codes.length; i++) {
+            for (int i = 0; i < codes.length && i < names.length && i < codes.length; i++) {
                 Permission permission = new Permission();
-                permission.setId(ids[i]);
                 permission.setName(names[i]);
                 permission.setCode(codes[i]);
                 role.getPermissions().add(permission);
@@ -197,7 +194,7 @@ public class RoleServiceSql implements RoleService {
         role.setCode(form.getCode());
         role.setName(form.getName());
         role.setDescription(form.getDescription());
-        if(form.getPermissions() != null) {
+        if (form.getPermissions() != null) {
             role.setPermissions(form.getPermissions().stream().map(service::getById).collect(Collectors.toList()));
         }
         return role;
