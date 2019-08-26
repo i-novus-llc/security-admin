@@ -55,7 +55,7 @@ public interface UserRestService {
     void delete(@ApiParam(value = "Идентификатор") @PathParam("id") Integer id);
 
     @PUT
-    @Path("changeActive/{id}")
+    @Path("/changeActive/{id}")
     @ApiOperation("Изменить статус пользователя")
     @ApiResponse(code = 200, message = "Пользователь с измененным статусом")
     User changeActive(@ApiParam(value = "Идентификатор") @PathParam("id") Integer id);

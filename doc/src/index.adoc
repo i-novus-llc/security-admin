@@ -94,6 +94,8 @@ security.oauth2.client.client-id=myapp
 security.oauth2.client.client-secret=mysecret
 #Запрашиваемый уровень доступа
 security.oauth2.client.scope=read,write
+#Адрес сервиса аутентификации через браузер
+security.oauth2.client.user-authorization-uri=${security.oauth2.auth-server-uri}/auth
 #Адрес сервиса получения токена аутентификации
 security.oauth2.client.access-token-uri=${security.oauth2.auth-server-uri}/token
 #Адрес сервиса получения информации о пользователе
@@ -123,7 +125,7 @@ image::images\readme-b6af3.png[]
 
 *Установка*
 
-. Запустить команду `/bin/standalone` (сервер поднимется по порту 8080, желательно link:https://www.keycloak.org/docs/2.5/server_installation/topics/network/ports.html[изменить этот порт] на какой-либо другой, например, 8888)
+. Запустить команду `/bin/standalone` (сервер поднимется по порту 8080, рекомендуется link:https://www.keycloak.org/docs/6.0/server_installation/[изменить этот порт] на 8888)
 . Создать супер пользователя `/bin/add-user-keycloak`
 . Войти в консоль администрирования `http://localhost:8888/auth`
 . Создайте домен системы (Add realm). Эта область хранения пользователей и ролей вашей системы.
@@ -177,11 +179,11 @@ image::images\readme-ffb7e.png[]
 . На вкладке "Role Mappings" добавьте роль "sec.admin"
 +
 image::images\add.role.png[]
-+
-. Теперь Keycloak настроен!
-Осталось распостранить настройки Keycloak для всех приложений для которых он является SSO сервером.
-Если у вас развёрнут сервер конфигурации (Config Server), то задайте в нём следующие настройки,
-если они отличаются от дефолтных:
+
+*Настройка приложений*
+
+. Теперь необходимо настроить все приложения для которых Keycloak является SSO сервером.
+Задать следующие настройки в файле `application.properties` или link:https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html[в окружении]:
 +
 [source]
 ----
@@ -191,22 +193,14 @@ keycloak.server-url=http://localhost:8888/auth
 keycloak.redirect-url=http://localhost:8080
 #Название домена
 keycloak.realm=security-admin
-#Идентификатор клиента администрирования
+#Идентификатор клиента для синхронизации
 keycloak.admin-client-id=admin-cli
-#Пользователь с правами администрирования
-keycloak.username=restclient
-#Пароль пользователя с правами администрирования
-keycloak.password=
-#Отправлять ли подтверждение email при создании пользователя
-keycloak.send-verify-email=true
-#Отправлять ли ссылку на смену пароля при создании пользователя
-keycloak.send-change-password=true
-#Идентификатор клиента приложений
-keycloak.client-id=security-admin-sso
-#Секретное слово клиента
-security.oauth2.client.client-secret=
-#Уровень доступа клиента
-security.oauth2.client.scope=read, write
+#Секретное слово клиента для синхронизации
+keycloak.admin-client-secret=admin-cli
+#Является ли пароль временным
+keycloak.temporary-password=true
+#Подтвержден ли email пользователя
+keycloak.email-verified=false
 ----
 +
 . Если при попытке залогиниться Keycloak выдаст сообщение:
