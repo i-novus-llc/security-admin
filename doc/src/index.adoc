@@ -77,7 +77,7 @@ Keycloak это открытый сервер SSO аутентификации, 
 Или выберите домен по умолчанию Master, если Ваша система основная.
 +
 image::images\keycloak1.png[]
-. Создайте клиентов OAuth2 (Clients > Create). Клиент - это приложение, которое будет аутентифицироваться в системе.
+. Создайте клиентов OAuth2 (Clients > Create). Клиент - это приложение, которое будет аутентифицироваться в Keycloak.
 В поле "Client ID" задаётся идентификатор клиента.
 +
 image::images\keycloak2.png[]
@@ -172,9 +172,9 @@ access.jwt.verifier_key=-----BEGIN PUBLIC KEY-----
 +
 [listing]
 #Базовый адрес сервера Keycloak
-keycloak.server-url=http://localhost:8888/auth
+access.keycloak.server-url=http://localhost:8888/auth
 #Название домена
-keycloak.realm=master
+access.keycloak.realm=master
 #Идентификатор клиента Auth Gateway в Keycloak
 access.keycloak.client.client-id=auth-gateway
 #Секретное слово клиента Auth Gateway
@@ -193,6 +193,25 @@ access.keycloak.client.client-secret=
 Authorization endpoint: /oauth/authorize
 Token endpoint: /oauth/token
 UserInfo endpoint: /userinfo
+Admin API: /api/info
+
+. Зарегистрируйте клиентов OAuth2. Клиент - это приложение, которое будет аутентифицироваться в Auth Gateway.
+Сделать это можно с помощью REST сервиса:
++
+----
+POST /api/clients
+Content-Type: application/json
+----
+Тело запроса:
++
+----
+{
+  "clientId" : "myapp",
+  "clientSecret" : "mysecret"
+  "grantTypes" : ["authorization_code"],
+  "registeredRedirectUrl" : ["http://localhost:8080/web"]
+}
+----
 
 == OAuth2 OpenId Connect
 В этом разделе рассказывается как подключить к вашему приложению авторизацию
@@ -248,9 +267,8 @@ public class SecurityConfig extends OpenIdSecurityConfigurerAdapter {
 ----
 +
 . Добавьте зависимость `security-auth-oauth2-keycloak`.
-Это подключит в ваше приложение бин `KeycloakPrincipalExtractor`,
-с помощью которого атрибуты пользователя полученные из Keycloak будут дополнены
-информацией из администрирования доступа:
+В ней находится реализация интерфейса `PrincipalExtractor` с помощью которой
+атрибуты пользователя Keycloak будут дополнены информацией из администрирования доступа:
 +
 [source,xml]
 ----
@@ -352,8 +370,8 @@ public class SecurityConfig extends OpenIdSecurityConfigurerAdapter {
 ----
 +
 . Добавьте зависимость `security-auth-oauth2-gateway`.
-Это подключит в ваше приложение бин `GatewayPrincipalExtractor`,
-с помощью которого будут получены атрибуты пользователя из Auth Gateway:
+В ней находится реализация интерфейса `PrincipalExtractor` с помощью которой
+будут получены атрибуты пользователя из Auth Gateway:
 +
 [source,xml]
 ----
@@ -787,22 +805,22 @@ image::images\sync3.png[]
 +
 . Задайте настройки в файле `application.properties`:
 +
-[source]
+[listing]
 ----
 #Адрес сервера Keycloak
-keycloak.server-url=http://localhost:8888/auth
+access.keycloak.server-url=http://localhost:8888/auth
 #Название домена
-keycloak.realm=master
+access.keycloak.realm=master
 #Идентификатор клиента для синхронизации
-keycloak.admin-client-id=access-service
+access.keycloak.admin-client-id=access-service
 #Секретное слово клиента для синхронизации
-keycloak.admin-client-secret=
+access.keycloak.admin-client-secret=
 #Является ли пароль временным
-keycloak.temporary-password=true
+access.keycloak.temporary-password=true
 #Подтвержден ли email пользователя
-keycloak.email-verified=false
+access.keycloak.email-verified=false
 #Настройка частоты синхронизации пользователей
-keycloak.sync-cron=0 0/17 * * * ? *
+access.keycloak.sync-cron=0 0/17 * * * ? *
 ----
 . Подключите бины синхронизации с Keycloak:
 +
@@ -838,20 +856,11 @@ public class Application {
 
 |===
 
-Гранулярность доступа задётся настройкой `n2o.sec.granularity` в файле `META-INF/n2o-build.properties` или `[USER_HOME]/.n2o/placeholders.properties`:
-
-[source]
-----
-#Вид гранулярности доступа
-n2o.sec.granularity=urp
-----
-
 От выбранной гранулярности зависит структура БД, интерфейс и сервисы администрирования.
-По умолчанию `urp`.
 
 === Авторизация функций приложения
 
-. Создайте права доступа к Вашему приложению через liquibase скрипты:
+. Создайте права доступа к dашему приложению через liquibase скрипты:
 +
 [source,sql]
 ----
