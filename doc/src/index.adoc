@@ -4,32 +4,40 @@
 :toc-title: Содержание
 
 == Введение
-Эта документация предназначена для установки, настройки и разворачивания универсального администрирования прав доступа, а так же подключение сервиса аутентификации и авторизации.
+Эта документация предназначена для установки, настройки и разворачивания микросервиса
+универсального администрирования прав доступа, а так же подключение аутентификации
+и авторизации.
 
 === Описание
 Универсальное администрирование доступа - это набор java библиотек для разворачивания системы аутентификации, авторизации и администрирования доступа в Вашем приложении.
 
 === Функциональность
 - Различные схемы развертывания (Embedded, Standalone)
-- Быстрое подключение провайдера аутентификации (Basic, OAuth2 OpenId Connect)
+- Быстрое подключение провайдера аутентификации (Basic, OAuth2)
+- Интеграция со сторонними серверами SSO (Keycloak, ESIA)
 - Настраиваемая гранулярность доступа (user-role, user-role-permission)
-- Настраиваемый пользовательский интерфейс на N2O фреймворке
-- Расширение свойств пользовательского контекста
+- Настраиваемый пользовательский интерфейс
+- Кастомизация
 
-== Аутентификация
-В этом разделе рассказывается как подключить аутентификацию и пользовательский контекст к Вашему приложению.
-Аутентификация может быть осуществлена разными протоколами: Basic или OAuth2 OpenId Connect.
+== Simple Auth
+В этом разделе рассказывается, как подключить простую авторизацию
+к вашему приложению.
 
-=== Basic Auth
+Требования к приложению::
+- Spring Boot 2.1
+- N2O Framework 7.3
 
-. Для подключения basic аутентификации необходимо добавить зависимость:
+Установка::
++
+. Для подключения simple аутентификации необходимо добавить
+зависимость:
 +
 [source,xml]
 ----
 <dependency>
     <groupId>net.n2oapp.framework.security</groupId>
     <artifactId>security-auth-simple</artifactId>
-    <version>${security.admin.version}</version>
+    <version>${security-admin.version}</version>
 </dependency>
 ----
 +
@@ -53,138 +61,102 @@ public class SecurityConfig extends SimpleSecurityConfigurerAdapter {
 }
 ----
 
-=== OAuth2 OpenId Connect
-
-. Для подключения OAuth2 OpenId Connect аутентификации необходимо добавить зависимость:
-+
-[source,xml]
-----
-<dependency>
-    <groupId>net.n2oapp.framework.security</groupId>
-    <artifactId>security-auth-oauth2</artifactId>
-    <version>${security.admin.version}</version>
-</dependency>
-----
-+
-. Создать и подключить конфигурационный бин:
-+
-[source,java]
-----
-@Configuration
-@EnableWebSecurity
-public class SecurityConfig extends OpenIdSecurityConfigurerAdapter {
-
-    @Override
-    protected void authorize(ExpressionUrlAuthorizationConfigurer<HttpSecurity>
-                                         .ExpressionInterceptUrlRegistry url) throws Exception {
-        url.anyRequest().authenticated();//все запросы авторизованы
-    }
-}
-----
-+
-. Задать следующие настройки в файле `application.properties` или link:https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html[в окружении]:
-+
-[source]
-----
-#Базовый адрес сервиса аутентификации
-security.oauth2.auth-server-uri=http://localhost:8888/auth
-#Идентификатор клиента OAuth2 OpenId Connect
-security.oauth2.client.client-id=myapp
-#Секретное слово клиента OAuth2 OpenId Connect
-security.oauth2.client.client-secret=mysecret
-#Запрашиваемый уровень доступа
-security.oauth2.client.scope=read,write
-#Адрес сервиса аутентификации через браузер
-security.oauth2.client.user-authorization-uri=${security.oauth2.auth-server-uri}/auth
-#Адрес сервиса получения токена аутентификации
-security.oauth2.client.access-token-uri=${security.oauth2.auth-server-uri}/token
-#Адрес сервиса получения информации о пользователе
-security.oauth2.resource.user-info-uri=${security.oauth2.auth-server-uri}/userinfo
-#Адрес сервиса единого выхода
-security.oauth2.sso.logout-uri=${security.oauth2.auth-server-uri}/logout?redirect_uri=
-----
-
 == SSO
-
-[NOTE]
-Подключение технологии единого входа (Single Sign-On) возможно только при использовании OAuth2 OpenId Connect типа аутентификации.
+В этом разделе объясняется как разворачивать сервер SSO и подключить
+к нему приложения по протоколу OAuth2 OpenId Connect.
 
 === Keycloak
-В этом разделе рассказывается про установку сервера Keycloak.
-Это открытый сервер SSO аутентификации, разворачиваемый на базе Wildfly.
+Keycloak это открытый сервер SSO аутентификации, разворачиваемый на базе Wildfly.
 
-*Схема SSO аутентификации*
+Установка::
 
-image::images\readme-b6af3.png[]
+. Скачайте Keycloak в варианте link:https://www.keycloak.org/downloads.html[Standalone server] версии 6.0
+. Запустите команду `/bin/standalone` (сервер поднимется по порту 8080, рекомендуется link:https://www.keycloak.org/docs/6.0/server_installation/[изменить этот порт] на 8888)
+. Создайте супер пользователя `/bin/add-user-keycloak`
+. Войдите в консоль администрирования `http://localhost:8888/auth`
+. Создайте домен системы (Add realm), если в Вашем Keycloak сервере будет несколько систем.
+Или выберите домен по умолчанию Master, если Ваша система основная.
++
+image::images\keycloak1.png[]
+. Создайте клиентов OAuth2 (Clients > Create). Клиент - это приложение, которое будет аутентифицироваться в системе.
+В поле "Client ID" задаётся идентификатор клиента.
++
+image::images\keycloak2.png[]
++
+. Нажмите "Save", откроется форма редактирования клиента.
+В поле "Access Type" выберите "confidential", чтобы никто не смог войти в
+Keycloak с помощью вашего клиента.
+Убедитесь, что поле "Standard Flow Enabled" находится в положении "ON".
+Этот режим позволяет входить в ваше приложение через браузер.
+В поле "Valid Redirect URIs" укажите правильные префиксы адресов, на которые возможна переадресация после успешного входа.
+Снова нажмите "Save".
++
+image::images\keycloak3.png[]
++
+[WARNING]
+Если при попытке входа Keycloak выдаст сообщение:
+*We're sorry...*
+*Invalid parameter: redirect_uri*
+проверьте этот параметр в адресной строке
+`http://localhost:8888/auth/realms/master/protocol/openid-connect/auth?client_id=myapp&redirect_uri=http://127.0.0.1:8080/login&response_type=code`
+и добавьте этот URL в список `Valid Redirect URIs` в настройках ранее созданого клиента
++
 
-. Запросы не авторизованных пользователей перенаправляют на Keycloak сервер
-. Keycloak показывает пользователю страницу аутентификации
-. После успешной аутентификации Keycloak перенаправляет запрос обратно на сервер приложений с токеном в параметрах
-. Приложение делает авторизованный запрос на Keycloak сервер на адрес `/userinfo` для получения информации о пользователе (username, ФИО, email, роли)
-. Приложение дополняет информацию о пользователе (получает права доступа), делая запрос `/details` на REST сервер администрирования
+. На вкладке "Credentials" будет информация о секретном слове (поле "Secret").
+Скопируйте его и используйте в настройках OAuth2 аутентификации вашего приложения.
++
+image::images\keycloak4.png[]
++
+. Создайте роль "admin" для администрирования системы (Roles > Add role)
++
+image::images\keycloak8.png[]
++
+. Создайте пользователя "admin", под которым Вы будете входить в модуль
+администрирования доступа (Users > Add user).
+Задайте "Email" и установите переключатель "Email Verified" в положение "ON".
+Нажмите "Save".
++
+image::images\keycloak9.png[]
++
+. На вкладке "Role Mappings" добавьте роль "admin"
++
+image::images\keycloak10.png[]
++
+. На вкладке "Credentials" дважды введите пароль пользователя.
+И переключите поле "Temporary" в положение "OFF". Нажмите "Reset Password".
++
+image::images\keycloak11.png[]
++
+. Создайте клиента для синхронизации с сервисами администрирования (Clients > Create).
+В поле "Client Id" введите "access-service", это значение по умолчанию, которое
+задается настройкой `keycloak.admin-client-id`. Нажмите "Save".
++
+image::images\keycloak5.png[]
++
+. В поле "Access Type" задайте "confidential". Затем поставьте переключатель
+"Service Accounts Enabled" в положение "ON", а переключатель
+"Standard Flow Enabled" в положение "OFF". Нажмите "Save".
++
+image::images\keycloak6.png[]
++
+. Перейдите на вкладку "Service Account Roles". Добавьте роли для управления
+realm и пользователями:
++
+image::images\keycloak7.png[]
++
+. Для корректной отправки сообщений пользователю
+(с напоминанием пароля, подтверждением учетных данных и тд.) из Keycloak
+пропишите найстройки вашего Email сервера (Realm settings > Email).
++
+image::images\keycloak12.png[]
++
 
-*Установка*
-
-. Запустить команду `/bin/standalone` (сервер поднимется по порту 8080, рекомендуется link:https://www.keycloak.org/docs/6.0/server_installation/[изменить этот порт] на 8888)
-. Создать супер пользователя `/bin/add-user-keycloak`
-. Войти в консоль администрирования `http://localhost:8888/auth`
-. Создайте домен системы (Add realm). Эта область хранения пользователей и ролей вашей системы.
-+
-image::images\readme-b2fb3.png[]
-+
-. Создайте клиента (Clients > Create). Клиент - это приложение, которое будет аутентифицироваться в системе.
-В поле "Client ID" задаётся идентификатор клиента. Скопируйте и используйте его в настройках OAuth2 аутентификации.
-+
-image::images\readme-28fc6.png[]
-+
-. Нажмите "Save", откроется форма редактирования клиента, где в поле "Access Type" выберите "confidential" и снова нажмите "Save"
-. На вкладке "Credentials" будет информация о секрете (поле "Secret"). Скопируйте его и используйте в настройках OAuth2 аутентификации.
-+
-image::images\readme-f04f6.png[]
-+
-. Перейдите на вкладку "Mappers" и нажмите кнопку "Add Builtin"
-. Выберите чекбоксами пункты: `username`, `email`, `realm roles`, `family name`, `given name`, `middle name`, `full name` и нажмите "Add selected"
-+
-image::images\mappers_added.png[]
-+
-. Нажмите на "realm roles" и измените поле "Token Claim Name" на `roles`, включите поле "Add to userinfo" и нажмите "Save"
-+
-image::images\role_mapping.png[]
-+
-. Для корректной отправки сообщений пользователю (с напоминанием пароля, подтверждением учетных данных и тд.) из Keycloak пропишите найстройки email сервера в разделе Email в Realm settings.
-+
-image::images\email.png[]
-+
-. Создайте системного клиента для синхронизации с сервисами администрирования (Clients > Create)
-+
-image::images\readme-create-client.png[]
-+
-. Затем выберите его и на вкладке "Settings" задайте Access Type - Confidential, Service Accounts Enabled - ON, нажмите Save
-+
-image::images\readme-settings.png[]
-+
-. На вкладке "Service Account Roles" добавьте роли для управления realm и пользователями
-+
-image::images\readme-service-account-roles.png[]
-+
-. Создайте роль администрирования системы (Roles > Add role)
-+
-image::images\sec.role.png[]
-+
-. Создайте пользователя "admin", под которым Вы будете входить в модуль администрирования доступа
-. На вкладке "Credentials" дважды введите пароль пользователя
-+
-image::images\readme-ffb7e.png[]
-+
-. На вкладке "Role Mappings" добавьте роль "sec.admin"
-+
-image::images\add.role.png[]
 
 *Настройка приложений*
 
-. Теперь необходимо настроить все приложения для которых Keycloak является SSO сервером.
+Теперь необходимо настроить все приложения для которых Keycloak является SSO сервером.
 Задать следующие настройки в файле `application.properties` или link:https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html[в окружении]:
-+
+
 [source]
 ----
 #Адрес сервера Keycloak
@@ -202,99 +174,296 @@ keycloak.temporary-password=true
 #Подтвержден ли email пользователя
 keycloak.email-verified=false
 ----
-+
-. Если при попытке залогиниться Keycloak выдаст сообщение:
-
-*We're sorry...*
-
-*Invalid parameter: redirect_uri*
-
-проверьте этот параметр в адресной строке
-
-`localhost:8888/auth/realms/security-admin/protocol/openid-connect/auth?client_id=myapp&redirect_uri=http://127.0.0.1:8080/login&response_type=code`
-
-и добавьте этот URL в список `Valid Redirect URIs` в настройках ранее созданого клиента
-
 
 === Auth Gateway
-В этом разделе рассказывается про установку шлюзового сервера аутентификации.
-Это SSO сервер, построенный на базе Spring Cloud Security,
-интегрируемый с любыми другими серверами аутентификации по протоколу OAuth2 OpenId Connect, например, с Keycloak.
+Auth Gateway - это SSO сервер, построенный на базе Spring Cloud Security,
+интегрируемый с любыми другими серверами аутентификации по протоколу
+OAuth2 OpenId Connect, например, с Keycloak или ЕСИА.
 
-*Схема SSO аутентификации*
+Установка::
 
-image::images\readme-05d0a.png[]
-
-
-. Запросы не авторизованных пользователей перенаправляют на шлюз авторизации с захешированным секретом от шлюза
-. Шлюз перенаправляет запросы не авторизованных пользователей на сервер аутентификации, заданный в настройках шлюза, например, Keycloak, с захешированным секретом от сервера
-. Сервер аутентификации показывает пользователю страницу аутентификации
-. После успешной аутентификации сервер перенаправляет запрос обратно на шлюз, а шлюз на сервер приложений с токеном в параметрах
- Приложение делает авторизованный запрос на шлюз на адрес `/userinfo` для получения информации о пользователе (username, ФИО, email, роли)
-. Шлюз повторяет авторизованный запрос на адрес `/userinfo` к серверу аутентификации
-. После получения информации о пользователе от сервера аутентификации шлюз дополняет её информацией от сервиса администрирования (например, правами доступа)
-
-*Запуск*
-
-*  Запускаемый jar файл SSO сервера можно получить, выполнив команду `mvn clean package`
-*  Для доступа к Keycloak необходимо переопределить следующие настройки:
+. Соберите Auth Gateway выполнив команду `mvn clean package`
+. Auth Gateway подписывает токены с помощью асинхронных ключей по алгоритму RSA.
+Задать ключи можно следующими настройками:
 [listing]
-....
+#Закрытый ключ
+sec.admin.jwt.signing_key=-----BEGIN RSA PRIVATE KEY-----
+#Открытый ключ
+sec.admin.jwt.verifier_key=-----BEGIN PUBLIC KEY-----
+
++
+. Для подключения Auth Gateway к Keycloak серверу необходимо задать следующие настройки:
+[listing]
+#Базовый адрес сервера Keycloak
 keycloak.server-url=http://localhost:8888/auth
-keycloak.realm=security-admin
-
-sec.admin.keycloak.auth-server-uri=${keycloak.server-url}/realms/${keycloak.realm}/protocol/openid-connect
+#Название домена
+keycloak.realm=master
+#Идентификатор клиента Auth Gateway в Keycloak
 sec.admin.keycloak.client.client-id=auth-gateway
+#Секретное слово клиента Auth Gateway
 sec.admin.keycloak.client.client-secret=1a9030fbca47a5b2c28e92f19050bb77824b5ad1
-sec.admin.keycloak.client.access-token-uri=${sec.admin.keycloak.auth-server-uri}/token
-sec.admin.keycloak.client.user-authorization-uri=${sec.admin.keycloak.auth-server-uri}/auth
-sec.admin.keycloak.client.client-authentication-scheme=form
-sec.admin.keycloak.resource.user-info-uri=${sec.admin.keycloak.auth-server-uri}/userinfo
-....
 
-* Согласно протоколу OAuth2 auth-gateway открывает следующие эндпоинты:
++
+[NOTE]
+Клиента auth-gateway необходимо заранее создать в Keycloak (см. link:#Keycloak[Keycloak])
 
+. Запустите сервер командой `java -jar auth-gateway.jar` с настройками выше
+. Согласно протоколу OAuth2 шлюзовой сервер аутентификации открывает
+следующие эндпоинты, проверьте их доступность:
 [listing]
-....
 Authorization endpoint: /oauth/authorize
 Token endpoint: /oauth/token
 UserInfo endpoint: /userinfo
-....
 
-== Администрирование доступа
-В этом разделе рассказывается об установке сервера администрирования доступа в зависимости от выбранной Вами схемы развертывания.
+== OAuth2 OpenId Connect
+В этом разделе рассказывается как подключить к вашему приложению авторизацию
+по протоколу OAuth2 OpenId Connect через SSO сервер.
 
-=== Embedded UI + SQL
-Эта схема предусматривает установку пользовательского интерфейса администрирования внутри Вашего прикладного приложения с SQL доступом к Базе Данных.
+=== Подключение к Keycloak
+
+Схема SSO аутентификации::
++
+image::images\readme-b6af3.png[]
+
+. Запросы не авторизованных пользователей перенаправляют на Keycloak сервер
+. Keycloak показывает пользователю страницу аутентификации
+. После успешной аутентификации Keycloak перенаправляет запрос обратно на сервер приложений с токеном в параметрах
+. Приложение делает авторизованный запрос на Keycloak сервер на адрес `/userinfo` для получения информации о пользователе (username, ФИО, email, роли)
+. Приложение дополняет информацию о пользователе (получает права доступа), делая запрос `/details` на REST сервер администрирования
+
+Требования к приложению::
++
+. Spring Boot 2.1
+. N2O Framework 7.3
+
+Установка::
++
+. Установите Keycloak (см. link:#_Keycloak[Keycloak])
+. Добавьте зависимость `security-auth-oauth2`.
+Она содержит класс `OpenIdSecurityConfigurerAdapter`
+и транзитивные зависимости от spring-security-oauth2:
++
+[source,xml]
+----
+<dependency>
+    <groupId>net.n2oapp.framework.security</groupId>
+    <artifactId>security-auth-oauth2</artifactId>
+    <version>${security-admin.version}</version>
+</dependency>
+----
++
+. Создайте класс конфигурации правил доступа:
++
+[source,java]
+----
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig extends OpenIdSecurityConfigurerAdapter {
+
+    @Override
+    protected void authorize(ExpressionUrlAuthorizationConfigurer<HttpSecurity>
+                                         .ExpressionInterceptUrlRegistry url) throws Exception {
+        url.anyRequest().authenticated();//все запросы авторизованы
+    }
+}
+----
++
+. Добавьте зависимость `security-auth-oauth2-keycloak`.
+Это подключит в ваше приложение бин `KeycloakPrincipalExtractor`,
+с помощью которого атрибуты пользователя полученные из Keycloak будут дополнены
+информацией из администрирования доступа:
++
+[source,xml]
+----
+<dependency>
+    <groupId>net.n2oapp.framework.security</groupId>
+    <artifactId>security-auth-oauth2-keycloak</artifactId>
+    <version>${security-admin.version}</version>
+</dependency>
+----
++
+. Далее необходимо подключить реализацию security-admin-api. В зависимости
+от вашей схемы развертывания (см. Схемы развертывания) это может быть SQL или JPA или REST Client реализация:
++
+[source,xml]
+----
+<dependency>
+    <groupId>net.n2oapp.framework.security</groupId>
+    <artifactId>security-admin-rest-client</artifactId>
+    <!--<artifactId>security-admin-sql</artifactId>-->
+    <!--<artifactId>security-admin-impl</artifactId>-->
+    <version>${security-admin.version}</version>
+</dependency>
+----
++
+. Для соединения с Keycloak сервером задайте следующие настройки
+в файле `application.properties`:
++
+[source]
+----
+#Базовый адрес сервиса аутентификации
+security.oauth2.auth-server-uri=http://localhost:8888/auth
+#Идентификатор клиента OAuth2 OpenId Connect
+security.oauth2.client.client-id=myapp
+#Секретное слово клиента OAuth2 OpenId Connect
+security.oauth2.client.client-secret=ab3d83a6-f9fa-4874-9647-f05e4d3e69fc
+#Запрашиваемый уровень доступа
+security.oauth2.client.scope=read,write
+#Адрес сервиса аутентификации через браузер
+security.oauth2.client.user-authorization-uri=${security.oauth2.auth-server-uri}/auth
+#Адрес сервиса получения токена аутентификации
+security.oauth2.client.access-token-uri=${security.oauth2.auth-server-uri}/token
+#Адрес сервиса получения информации о пользователе
+security.oauth2.resource.user-info-uri=${security.oauth2.auth-server-uri}/userinfo
+#Адрес сервиса единого выхода
+security.oauth2.sso.logout-uri=${security.oauth2.auth-server-uri}/logout?redirect_uri=
+----
++
+. Запустите ваше приложение. При открытии любой страницы через браузер должна
+произойти переадресация на страницу входа Keycloak.
+
+=== Подключение к Auth Gateway
+
+Схема SSO аутентификации::
++
+image::images\readme-05d0a.png[]
+
+
+. Пользователь открывает страницу приложения, требующую авторизации
+. Приложение перенаправляет запросы не авторизованных пользователей на шлюз авторизации
+. Шлюз перенаправляет запросы не авторизованных пользователей на сервер аутентификации, заданный в настройках шлюза, например, Keycloak
+. Сервер аутентификации показывает пользователю страницу аутентификации.
+После успешной аутентификации сервер перенаправляет запрос обратно на шлюз, а шлюз на сервер приложений
+. Приложение делает авторизованный запрос на шлюз на адрес `/userinfo` для получения информации о пользователе (username, ФИО, email, роли)
+. Шлюз повторяет авторизованный запрос на адрес `/userinfo` к серверу аутентификации
+. Шлюз дополняет информацию о пользователе (получает права доступа), делая запрос /details на REST сервер администрирования
+
+Требования к приложению::
++
+. Spring Boot 2.1
+. N2O Framework 7.3
+
+Установка::
++
+. Установите Auth Gateway (см. link:#_Auth_Gateway[Auth Gateway])
+. Добавьте зависимость `security-auth-oauth2`.
+Она содержит класс `OpenIdSecurityConfigurerAdapter`
+и транзитивные зависимости от spring-security-oauth2:
++
+[source,xml]
+----
+<dependency>
+    <groupId>net.n2oapp.framework.security</groupId>
+    <artifactId>security-auth-oauth2</artifactId>
+    <version>${security-admin.version}</version>
+</dependency>
+----
++
+. Создайте класс конфигурации правил доступа:
++
+[source,java]
+----
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig extends OpenIdSecurityConfigurerAdapter {
+
+    @Override
+    protected void authorize(ExpressionUrlAuthorizationConfigurer<HttpSecurity>
+                                         .ExpressionInterceptUrlRegistry url) throws Exception {
+        url.anyRequest().authenticated();//все запросы авторизованы
+    }
+}
+----
++
+. Добавьте зависимость `security-auth-oauth2-gateway`.
+Это подключит в ваше приложение бин `GatewayPrincipalExtractor`,
+с помощью которого будут получены атрибуты пользователя из Auth Gateway:
++
+[source,xml]
+----
+<dependency>
+    <groupId>net.n2oapp.framework.security</groupId>
+    <artifactId>security-auth-oauth2-gateway</artifactId>
+    <version>${security-admin.version}</version>
+</dependency>
+----
++
+. Для соединения с Auth Gateway сервером задайте следующие настройки
+в файле `application.properties`:
++
+[source]
+----
+#Базовый адрес сервиса аутентификации
+security.oauth2.auth-server-uri=http://localhost:9999
+#Идентификатор клиента OAuth2 OpenId Connect
+security.oauth2.client.client-id=myapp
+#Секретное слово клиента OAuth2 OpenId Connect
+security.oauth2.client.client-secret=mysecret
+#Запрашиваемый уровень доступа
+security.oauth2.client.scope=read,write
+#Адрес сервиса аутентификации через браузер
+security.oauth2.client.user-authorization-uri=${security.oauth2.auth-server-uri}/oauth/authorize
+#Адрес сервиса получения токена аутентификации
+security.oauth2.client.access-token-uri=${security.oauth2.auth-server-uri}/oauth2/token
+#Адрес сервиса получения информации о пользователе
+security.oauth2.resource.user-info-uri=${security.oauth2.auth-server-uri}/userinfo
+#Адрес сервиса единого выхода
+security.oauth2.sso.logout-uri=${security.oauth2.auth-server-uri}/logout?redirect_uri=
+----
++
+. Запустите ваше приложение. При открытии любой страницы через браузер должна
+произойти переадресация на страницу входа Auth Gateway.
+
+== Схемы развертывания
+В этом разделе рассказывается об установке администрирования доступа в зависимости от выбранной Вами схемы развертывания.
+
+=== Embedded WEB + SQL
+Эта схема предусматривает установку WEB интерфейса администрирования внутри вашего прикладного приложения с SQL доступом к Базе Данных.
 
 image::images\readme-e72a1.png[]
 
 Требования к приложению::
-- N2O 7.0+
-- Spring 4.3+
+- Spring Boot 2.1
+- N2O Framework 7.3
 
-*Установка*
 
-. Добавьте зависимость от реализации интерфейса `security-admin-web`:
+Установка::
++
+. Добавьте зависимость `security-admin-web`.
+Это встроит в ваше приложение страницы администрирования доступа:
 +
 [source,xml]
 ----
 <dependency>
     <groupId>net.n2oapp.framework.security</groupId>
     <artifactId>security-admin-web</artifactId>
-    <version>${security.admin.version}</version>
+    <version>${security-admin.version}</version>
 </dependency>
 ----
 +
-. Добавьте зависимость от реализации сервисов `security-admin-sql`:
+. Добавьте зависимость `security-admin-sql`.
+Это добавит в ваше приложение SQL реализацию интерфейсов security-admin-api:
 +
 [source,xml]
 ----
 <dependency>
     <groupId>net.n2oapp.framework.security</groupId>
     <artifactId>security-admin-sql</artifactId>
-    <version>${security.admin.version}</version>
+    <version>${security-admin.version}</version>
 </dependency>
+----
++
+. Подключите бины WEB интерфейса администирования к вашему приложению:
++
+[source,java]
+----
+@SpringBootApplication
+@Import({AdminWebConfiguration.class, AdminSqlConfiguration.class})
+public class Application {
+  public static void main(String[] args) {
+    SpringApplication.run(Application.class, args);
+  }
+}
 ----
 +
 . Добавьте скрипты наката БД в changelog файл liquibase:
@@ -311,21 +480,13 @@ image::images\readme-e72a1.png[]
 +
 Где, `[granularity]` вид link:#_Гранулярность_доступа[гранулярности доступа].
 +
-. На сервере Tomcat создайте jdbc ресурс с именем `jdbc/security`, например, так:
+. Настройте доступ к Базе Данных через jdbc с помощью настроек Spring Boot:
 +
-[source,xml]
-----
-<Resource name="jdbc/security"
-          auth="Container"
-          type="javax.sql.DataSource"
-          username="postgres"
-          password="postgres"
-          driverClassName="org.postgresql.Driver"
-          url="jdbc:postgresql://localhost:5432/security"
-          maxActive="20"
-          maxIdle="10"
-          validationQuery="select 1"/>
-----
+[listing]
+spring.datasource.url=jdbc:postgresql://localhost:5432/security
+spring.datasource.username=postgres
+spring.datasource.password=postgres
+
 +
 . Создайте базу данных `security`:
 +
@@ -333,48 +494,61 @@ image::images\readme-e72a1.png[]
 ----
 CREATE DATABASE security ENCODING = 'UTF8';
 ----
++
+. Запустите ваше приложение
 
-
-
-
-=== Embedded UI + REST Client
-Эта схема предусматривает установку пользовательского интерфейса администрирования
-внутри Вашего прикладного приложения с удаленными вызовами REST сервисов
+=== Embedded WEB + REST Client
+Эта схема предусматривает установку WEB интерфейса администрирования
+внутри вашего прикладного приложения с удаленными вызовами REST сервисов
 к отдельно стоящему REST серверу администрирования.
 
 image::images\readme-eadda.png[]
 
 Требования к приложению::
-- N2O 7.0+
-- Spring 4.3+
+- Spring Boot 2.1
+- N2O Framework 7.3
 
-*Установка*
-
-. Добавьте зависимость от реализации интерфейса `security-admin-web`:
+Установка::
++
+. Добавьте зависимость `security-admin-web`.
+Это встроит в ваше приложение страницы администрирования доступа:
 +
 [source,xml]
 ----
 <dependency>
     <groupId>net.n2oapp.framework.security</groupId>
     <artifactId>security-admin-web</artifactId>
-    <version>${security.admin.version}</version>
+    <version>${security-admin.version}</version>
 </dependency>
 ----
 +
-. Добавьте зависимость от реализации сервисов `security-admin-rest-client`:
+. Добавьте зависимость `security-admin-rest-client`.
+Это добавит в ваше приложение реализацию интерфейсов security-admin-api через
+REST запросы к серверу администрирования:
 +
 [source,xml]
 ----
 <dependency>
     <groupId>net.n2oapp.framework.security</groupId>
     <artifactId>security-admin-rest-client</artifactId>
-    <version>${security.admin.version}</version>
+    <version>${security-admin.version}</version>
 </dependency>
 ----
 +
-. В файле `application.properties`
-или link:https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html[в окружении]
-задайте адрес backend сервисов:
+. Подключите бины WEB интерфейса администирования к вашему приложению:
++
+[source,java]
+----
+@SpringBootApplication
+@Import({AdminWebConfiguration.class, AdminRestClientConfiguration.class})
+public class Application {
+  public static void main(String[] args) {
+    SpringApplication.run(Application.class, args);
+  }
+}
+----
++
+. В файле `application.properties` задайте адрес REST сервисов администрирования:
 +
 [source]
 ----
@@ -382,28 +556,29 @@ image::images\readme-eadda.png[]
 sec.admin.rest.url=http://localhost:9090/api
 ----
 +
-. Запустите Ваше приложение
+. Запустите ваше приложение
 
 
-=== Standalone UI Server + REST Client
-Эта схема предусматривает разворачивание фронтенд сервера пользовательского
+=== Standalone WEB Server + REST Client
+Эта схема предусматривает разворачивание WEB сервера пользовательского
 интерфейса администрирования с удаленными вызовами REST сервисов к отдельно
 стоящему REST серверу администрирования.
 
 image::images\readme-2565b.png[]
 
-*Установка*
-
-. Скачайте link:https://git.i-novus.ru/framework/security-admin[исходный код проекта]
-и соберите его командой `mvn clean package -Pstandalone`
-, или скачайте link:https://ci.i-novus.ru/view/n2o/job/security-admin.master.release/ws/security-admin-frontend/target/frontend.jar[собранный jar файл] `frontend.jar`
-. Задайте настройку адреса REST сервисов администрирования `sec.admin.rest.url`
-. Запустите UI сервер командой `java -jar frontend.jar` и настройками бекенда и oauth2 аутентификации:
+Установка::
++
+. Соберите WEB сервер пользовательского интерфейса командой `mvn clean package`
++
+. В файле `application.properties` задайте адрес REST сервисов администрирования:
 +
 [source]
 ----
-java -jar frontend.jar --sec.admin.rest.url=http://localhost:9090/api --keycloak.server-url=http://localhost:8888/auth -security.oauth2.client.client-secret=mysecret
+#Адрес REST сервисов администрирования
+sec.admin.rest.url=http://localhost:9090/api
 ----
++
+. Запустите WEB сервер командой `java -jar access-web.jar`
 +
 . Проверьте, что в браузере доступен адрес: http://localhost:8080/
 
@@ -413,8 +588,8 @@ java -jar frontend.jar --sec.admin.rest.url=http://localhost:9090/api --keycloak
 
 image::images\readme-75921.png[]
 
-*Установка*
-
+Установка::
++
 . Создайте базу данных `security`:
 +
 [source,sql]
@@ -422,22 +597,19 @@ image::images\readme-75921.png[]
 CREATE DATABASE security ENCODING = 'UTF8';
 ----
 +
-. Скачайте link:https://git.i-novus.ru/framework/security-admin[исходный код проекта]
-и соберите его командой `mvn clean package -Pstandalone`,
-или скачайте link:https://ci.i-novus.ru/view/n2o/job/security-admin.master.release/ws/security-admin-backend/target/backend.jar[собранный jar файл]
-`backend.jar`
-. Запустите бекенд командой `java -jar backend.jar` с настройками созданной БД:
+. Задайте настройки соединения с Базой Данных
 +
-[source]
-----
-java -jar backend.jar --spring.datasource.url=jdbc:postgresql://localhost:5432/security --spring.datasource.username=postgres --spring.datasource.password=postgres
-----
-+
+[listing]
+spring.datasource.url=jdbc:postgresql://localhost:5432/security
+spring.datasource.username=postgres
+spring.datasource.password=postgres
+
+. Соберите REST сервер администрирования доступа командой `mvn clean package`
+. Запустите REST сервер командой `java -jar access-service.jar`
 . Проверьте, что в браузере доступен адрес: http://localhost:9090/api/info
 
-
 == Авторизация
-В этом разделе рассказывается как настроить доступ к функциям Вашего приложения и к функциям администрирования.
+В этом разделе рассказывается как настроить доступ к функциям вашего приложения и к функциям администрирования.
 
 === Гранулярность доступа
 В зависимости от масштаба системы доступ к её функциям можно разрешать по ролям, правам доступа, группам и т.д.
@@ -505,7 +677,7 @@ insert into sec.permission(name, code) values('Право доступа к мо
 
 ==== Embedded UI
 
-. В N2O файле `[app].header.xml` Вашего приложения добавьте страницы администрирования:
+. В N2O файле `[app].header.xml` вашего приложения добавьте страницы администрирования:
 +
 [source,xml]
 ----
@@ -518,7 +690,7 @@ insert into sec.permission(name, code) values('Право доступа к мо
 </header>
 ----
 +
-. В N2O файле `[app].access.xml` Вашего приложения задайте права доступа к функциям администрирования:
+. В N2O файле `[app].access.xml` вашего приложения задайте права доступа к функциям администрирования:
 +
 [source,xml]
 ----
@@ -543,7 +715,7 @@ insert into sec.permission(name, code) values('Право доступа к мо
 
 ==== Standalone UI Server
 
-. В N2O файле `[app].header.xml` Вашего приложения добавьте переход на сервер администрирования:
+. В N2O файле `[app].header.xml` вашего приложения добавьте переход на сервер администрирования:
 +
 [source,xml]
 ----
@@ -555,7 +727,7 @@ insert into sec.permission(name, code) values('Право доступа к мо
 </header>
 ----
 +
-. В N2O файле `[app].access.xml` Вашего приложения задайте права доступа к переходу на сервер администрирования:
+. В N2O файле `[app].access.xml` вашего приложения задайте права доступа к переходу на сервер администрирования:
 +
 [source,xml]
 ----

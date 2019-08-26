@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>security-auth-oauth2-keycloak</artifactId>
+    <artifactId>security-auth-oauth2</artifactId>
 
     <parent>
         <artifactId>security-admin</artifactId>
@@ -14,9 +16,10 @@
     <dependencies>
         <dependency>
             <groupId>net.n2oapp.framework.security</groupId>
-            <artifactId>security-admin-api</artifactId>
+            <artifactId>security-auth</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>net.n2oapp.framework.security</groupId>
             <artifactId>security-auth-common</artifactId>
@@ -33,23 +36,6 @@
             <artifactId>spring-security-oauth2</artifactId>
         </dependency>
 
-
-        <!--spring-->
-        <dependency>
-            <!-- нужен для spring-security-oauth2 -->
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-        </dependency>
-        <!--/spring-->
 
     </dependencies>
 

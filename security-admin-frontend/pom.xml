@@ -26,6 +26,12 @@
             <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>net.n2oapp.framework.security</groupId>
+            <artifactId>security-auth-oauth2</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!--<dependency>-->
             <!--<groupId>net.n2oapp.framework.security</groupId>-->
             <!--<artifactId>security-auth-simple</artifactId>-->
@@ -74,11 +80,6 @@
             <dependencies>
                 <dependency>
                     <groupId>net.n2oapp.framework.security</groupId>
-                    <artifactId>security-auth</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>net.n2oapp.framework.security</groupId>
                     <artifactId>security-auth-oauth2-keycloak</artifactId>
                     <version>${project.version}</version>
                 </dependency>
@@ -103,7 +104,7 @@
     </profiles>
 
     <build>
-        <finalName>frontend</finalName>
+        <finalName>access-web</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

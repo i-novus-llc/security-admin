@@ -1,6 +1,6 @@
 package net.n2oapp.security.admin.frontend;
 
-import net.n2oapp.security.auth.OpenIdSecurityConfigurerAdapter;
+import net.n2oapp.security.auth.oauth2.OpenIdSecurityConfigurerAdapter;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
