@@ -152,29 +152,6 @@ image::images\keycloak12.png[]
 +
 
 
-*Настройка приложений*
-
-Теперь необходимо настроить все приложения для которых Keycloak является SSO сервером.
-Задать следующие настройки в файле `application.properties` или link:https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html[в окружении]:
-
-[source]
-----
-#Адрес сервера Keycloak
-keycloak.server-url=http://localhost:8888/auth
-#Адрес возврата после аутентификации
-keycloak.redirect-url=http://localhost:8080
-#Название домена
-keycloak.realm=security-admin
-#Идентификатор клиента для синхронизации
-keycloak.admin-client-id=admin-cli
-#Секретное слово клиента для синхронизации
-keycloak.admin-client-secret=admin-cli
-#Является ли пароль временным
-keycloak.temporary-password=true
-#Подтвержден ли email пользователя
-keycloak.email-verified=false
-----
-
 === Auth Gateway
 Auth Gateway - это SSO сервер, построенный на базе Spring Cloud Security,
 интегрируемый с любыми другими серверами аутентификации по протоколу
@@ -185,14 +162,15 @@ OAuth2 OpenId Connect, например, с Keycloak или ЕСИА.
 . Соберите Auth Gateway выполнив команду `mvn clean package`
 . Auth Gateway подписывает токены с помощью асинхронных ключей по алгоритму RSA.
 Задать ключи можно следующими настройками:
++
 [listing]
 #Закрытый ключ
 sec.admin.jwt.signing_key=-----BEGIN RSA PRIVATE KEY-----
 #Открытый ключ
 sec.admin.jwt.verifier_key=-----BEGIN PUBLIC KEY-----
 
-+
 . Для подключения Auth Gateway к Keycloak серверу необходимо задать следующие настройки:
++
 [listing]
 #Базовый адрес сервера Keycloak
 keycloak.server-url=http://localhost:8888/auth
@@ -201,15 +179,17 @@ keycloak.realm=master
 #Идентификатор клиента Auth Gateway в Keycloak
 sec.admin.keycloak.client.client-id=auth-gateway
 #Секретное слово клиента Auth Gateway
-sec.admin.keycloak.client.client-secret=1a9030fbca47a5b2c28e92f19050bb77824b5ad1
+sec.admin.keycloak.client.client-secret=
 
 +
 [NOTE]
 Клиента auth-gateway необходимо заранее создать в Keycloak (см. link:#Keycloak[Keycloak])
 
++
 . Запустите сервер командой `java -jar auth-gateway.jar` с настройками выше
 . Согласно протоколу OAuth2 шлюзовой сервер аутентификации открывает
 следующие эндпоинты, проверьте их доступность:
++
 [listing]
 Authorization endpoint: /oauth/authorize
 Token endpoint: /oauth/token
@@ -223,13 +203,13 @@ UserInfo endpoint: /userinfo
 
 Схема SSO аутентификации::
 +
-image::images\readme-b6af3.png[]
+image::images\oauth1.png[]
 
 . Запросы не авторизованных пользователей перенаправляют на Keycloak сервер
-. Keycloak показывает пользователю страницу аутентификации
-. После успешной аутентификации Keycloak перенаправляет запрос обратно на сервер приложений с токеном в параметрах
-. Приложение делает авторизованный запрос на Keycloak сервер на адрес `/userinfo` для получения информации о пользователе (username, ФИО, email, роли)
-. Приложение дополняет информацию о пользователе (получает права доступа), делая запрос `/details` на REST сервер администрирования
+. Keycloak показывает пользователю страницу входа
+. Приложение получает токен пользователя у Keycloak GET запросом `/token`
+. Приложение получает информацию о пользователе выполняя авторизованный GET запрос `/userinfo` на Keycloak
+. Приложение дополняет информацию о пользователе, делая POST запрос `/details` на REST сервер администрирования
 
 Требования к приложению::
 +
@@ -306,7 +286,7 @@ security.oauth2.auth-server-uri=http://localhost:8888/auth
 #Идентификатор клиента OAuth2 OpenId Connect
 security.oauth2.client.client-id=myapp
 #Секретное слово клиента OAuth2 OpenId Connect
-security.oauth2.client.client-secret=ab3d83a6-f9fa-4874-9647-f05e4d3e69fc
+security.oauth2.client.client-secret=
 #Запрашиваемый уровень доступа
 security.oauth2.client.scope=read,write
 #Адрес сервиса аутентификации через браузер
@@ -326,17 +306,14 @@ security.oauth2.sso.logout-uri=${security.oauth2.auth-server-uri}/logout?redirec
 
 Схема SSO аутентификации::
 +
-image::images\readme-05d0a.png[]
+image::images\oauth2.png[]
 
-
-. Пользователь открывает страницу приложения, требующую авторизации
-. Приложение перенаправляет запросы не авторизованных пользователей на шлюз авторизации
-. Шлюз перенаправляет запросы не авторизованных пользователей на сервер аутентификации, заданный в настройках шлюза, например, Keycloak
-. Сервер аутентификации показывает пользователю страницу аутентификации.
-После успешной аутентификации сервер перенаправляет запрос обратно на шлюз, а шлюз на сервер приложений
-. Приложение делает авторизованный запрос на шлюз на адрес `/userinfo` для получения информации о пользователе (username, ФИО, email, роли)
-. Шлюз повторяет авторизованный запрос на адрес `/userinfo` к серверу аутентификации
-. Шлюз дополняет информацию о пользователе (получает права доступа), делая запрос /details на REST сервер администрирования
+. Запросы не авторизованных пользователей перенаправляют на Auth Gateway сервер
+. Gateway пренаправляет пользователя на Keycloak
+. Keycloak показывает пользователю страницу входа
+. Auth Gateway получает Keycloak токен пользователя GET запросом `/token` к Keycloak
+. Приложение получает Auth Gateway токен пользователя GET запросом `/token` к Auth Gateway
+. Приложение получает информацию о пользователе выполняя авторизованный GET запрос `/userinfo` к Auth Gateway
 
 Требования к приложению::
 +
@@ -398,7 +375,7 @@ security.oauth2.auth-server-uri=http://localhost:9999
 #Идентификатор клиента OAuth2 OpenId Connect
 security.oauth2.client.client-id=myapp
 #Секретное слово клиента OAuth2 OpenId Connect
-security.oauth2.client.client-secret=mysecret
+security.oauth2.client.client-secret=
 #Запрашиваемый уровень доступа
 security.oauth2.client.scope=read,write
 #Адрес сервиса аутентификации через браузер
@@ -763,6 +740,83 @@ spring.datasource.password=postgres
 . Соберите REST сервер администрирования доступа командой `mvn clean package`
 . Запустите REST сервер командой `java -jar access-service.jar`
 . Проверьте, что в браузере доступен адрес: http://localhost:9090/api/info
+
+== Синхронизация с Keycloak
+В этом разделе рассказывается как настроить синхронизацию данных между Keycloak и
+сервером администрирования доступа.
+
+Виды синхронизации::
+- Прямая событийная.
++
+image::images\sync1.png[]
++
+Cервисы администрирования (1) после успешного сохранения данных в собственной
+Базе Данных (2) вызывают аналогичные операции в Keycloak (3).
+При неудаче изменения откатываются.
++
+- Обратная событийная
++
+image::images\sync2.png[]
++
+При успешном входе нового пользователя в приложение или в Auth Gateway (1),
+выполняется запрос `/userinfo` в Keycloak за информацией о пользователе (2),
+полученная информация отправляется в сервис `/details` администрирования доступа (3)
+для синхронизации её с Базой Данных (4).
++
+- Прямая асинхронная
++
+image::images\sync3.png[]
++
+Периодически вызывается сервис, который получает из Keycloak всех
+пользователей (1) и пытается связать их с пользователями в Базе Данных (2).
+Расписание вызова настраивается cron выражением.
+
+
+Установка::
++
+. Добавьте зависимость `security-admin-sso-keycloak`. Это подключит реализацию
+интерфейса `SsoUserRoleProvider`:
++
+[source,xml]
+----
+<dependency>
+    <groupId>net.n2oapp.framework.security</groupId>
+    <artifactId>security-admin-sso-keycloak</artifactId>
+    <version>${security-admin.version}</version>
+</dependency>
+----
++
+. Задайте настройки в файле `application.properties`:
++
+[source]
+----
+#Адрес сервера Keycloak
+keycloak.server-url=http://localhost:8888/auth
+#Название домена
+keycloak.realm=master
+#Идентификатор клиента для синхронизации
+keycloak.admin-client-id=access-service
+#Секретное слово клиента для синхронизации
+keycloak.admin-client-secret=
+#Является ли пароль временным
+keycloak.temporary-password=true
+#Подтвержден ли email пользователя
+keycloak.email-verified=false
+#Настройка частоты синхронизации пользователей
+keycloak.sync-cron=0 0/17 * * * ? *
+----
+. Подключите бины синхронизации с Keycloak:
++
+[source,java]
+----
+@SpringBootApplication
+@Import(SsoKeycloakConfiguration.class)
+public class Application {
+  public static void main(String[] args) {
+    SpringApplication.run(Application.class, args);
+  }
+}
+----
 
 == Авторизация
 В этом разделе рассказывается как настроить доступ к функциям вашего приложения и к функциям администрирования.
