@@ -783,14 +783,6 @@ spring.datasource.password=postgres
 |user-role-permission
 |sec.user, sec.role, sec.permission, sec.user_role, sec.role_permission
 
-|ugr
-|user-group-role
-|sec.user, sec.group, sec.role, sec.user_group, sec.group_role, sec.user_role
-
-|ugrp
-|user-group-role-permission
-|sec.user, sec.group, sec.role, sec.permission, sec.user_group, sec.group_role, sec.user_role, sec.role_permission
-
 |===
 
 Гранулярность доступа задётся настройкой `n2o.sec.granularity` в файле `META-INF/n2o-build.properties` или `[USER_HOME]/.n2o/placeholders.properties`:
