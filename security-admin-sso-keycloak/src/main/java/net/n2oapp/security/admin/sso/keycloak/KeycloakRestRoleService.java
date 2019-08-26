@@ -35,9 +35,9 @@ public class KeycloakRestRoleService {
     @Autowired
     private RestOperations template;
 
-    private SsoKeycloakProperties properties;
+    private AdminSsoKeycloakProperties properties;
 
-    public KeycloakRestRoleService(SsoKeycloakProperties properties) {
+    public KeycloakRestRoleService(AdminSsoKeycloakProperties properties) {
         this.properties = properties;
     }
 

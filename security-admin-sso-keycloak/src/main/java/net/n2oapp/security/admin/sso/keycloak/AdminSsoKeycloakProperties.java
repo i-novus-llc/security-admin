@@ -7,8 +7,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * Настройки для модуля взаимодействия с keycloak
  */
 @Data
-@ConfigurationProperties("keycloak")
-public class SsoKeycloakProperties {
+@ConfigurationProperties("access.keycloak")
+public class AdminSsoKeycloakProperties {
 
     /**
      * Адрес сервера keycloak

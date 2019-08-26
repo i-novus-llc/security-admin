@@ -3,7 +3,7 @@ package net.n2oaap.security.admin.sso.keycloak;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import net.n2oapp.security.admin.sso.keycloak.KeycloakRestRoleService;
 import net.n2oapp.security.admin.sso.keycloak.SsoKeycloakConfiguration;
-import net.n2oapp.security.admin.sso.keycloak.SsoKeycloakProperties;
+import net.n2oapp.security.admin.sso.keycloak.AdminSsoKeycloakProperties;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -24,12 +24,12 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringRunner.class)
 @SpringBootConfiguration
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, classes = SsoKeycloakConfiguration.class, properties = {
-        "keycloak.serverUrl=http://127.0.0.1:8590/auth",
+        "access.keycloak.serverUrl=http://127.0.0.1:8590/auth",
 })
 public class KeycloakRestRoleServiceTest {
 
     @Autowired
-    private SsoKeycloakProperties properties;
+    private AdminSsoKeycloakProperties properties;
 
     private KeycloakRestRoleService roleService;
 

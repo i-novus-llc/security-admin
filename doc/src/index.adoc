@@ -17,10 +17,9 @@
 - Интеграция со сторонними серверами SSO (Keycloak, ESIA)
 - Настраиваемая гранулярность доступа (user-role, user-role-permission)
 - Настраиваемый пользовательский интерфейс
-- Кастомизация
 
 == Simple Auth
-В этом разделе рассказывается, как подключить простую авторизацию
+В этом разделе рассказывается как подключить простую авторизацию
 к вашему приложению.
 
 Требования к приложению::
@@ -165,9 +164,9 @@ OAuth2 OpenId Connect, например, с Keycloak или ЕСИА.
 +
 [listing]
 #Закрытый ключ
-sec.admin.jwt.signing_key=-----BEGIN RSA PRIVATE KEY-----
+access.jwt.signing_key=-----BEGIN RSA PRIVATE KEY-----
 #Открытый ключ
-sec.admin.jwt.verifier_key=-----BEGIN PUBLIC KEY-----
+access.jwt.verifier_key=-----BEGIN PUBLIC KEY-----
 
 . Для подключения Auth Gateway к Keycloak серверу необходимо задать следующие настройки:
 +
@@ -177,9 +176,9 @@ keycloak.server-url=http://localhost:8888/auth
 #Название домена
 keycloak.realm=master
 #Идентификатор клиента Auth Gateway в Keycloak
-sec.admin.keycloak.client.client-id=auth-gateway
+access.keycloak.client.client-id=auth-gateway
 #Секретное слово клиента Auth Gateway
-sec.admin.keycloak.client.client-secret=
+access.keycloak.client.client-secret=
 
 +
 [NOTE]
@@ -612,7 +611,7 @@ public class Application {
 [source]
 ----
 #Адрес REST сервисов администрирования
-sec.admin.rest.url=http://localhost:9090/api
+access.service.url=http://localhost:9090/api
 ----
 +
 . Запустите ваше приложение
@@ -633,7 +632,7 @@ image::images\deploy4.png[]
 [source]
 ----
 #Адрес REST сервисов администрирования
-sec.admin.rest.url=http://localhost:9090/api
+access.service.url=http://localhost:9090/api
 ----
 +
 . Запустите WEB сервер командой `java -jar access-web.jar`
@@ -898,18 +897,18 @@ insert into sec.permission(name, code) values('Право доступа к мо
 ----
 <access>
   <permission id="user.read">
-      <object-access object-id="${sec.admin.user.object.id}"/>
+      <object-access object-id="${access.user.object.id}"/>
   </permission>
   <permission id="role.read">
-      <object-access object-id="${sec.admin.role.object.id}"/>
+      <object-access object-id="${access.role.object.id}"/>
   </permission>
   <permission id="user.edit">
-      <object-access object-id="${sec.admin.user.object.id}"/>
-      <object-access object-id="${sec.admin.user.object.id}" actions="create,update,delete,changeUserActive"/>
+      <object-access object-id="${access.user.object.id}"/>
+      <object-access object-id="${access.user.object.id}" actions="create,update,delete,changeUserActive"/>
   </permission>
   <permission id="role.edit">
-      <object-access object-id="${sec.admin.role.object.id}"/>
-      <object-access object-id="${sec.admin.role.object.id}" actions="create,update,delete"/>
+      <object-access object-id="${access.role.object.id}"/>
+      <object-access object-id="${access.role.object.id}" actions="create,update,delete"/>
   </permission>
   ...
 </access>
