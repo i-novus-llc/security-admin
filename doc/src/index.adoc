@@ -417,10 +417,10 @@ security.oauth2.sso.logout-uri=${security.oauth2.auth-server-uri}/logout?redirec
 == Схемы развертывания
 В этом разделе рассказывается об установке администрирования доступа в зависимости от выбранной Вами схемы развертывания.
 
-=== Embedded WEB + SQL
+=== Embedded WEB Server + SQL
 Эта схема предусматривает установку WEB интерфейса администрирования внутри вашего прикладного приложения с SQL доступом к Базе Данных.
 
-image::images\readme-e72a1.png[]
+image::images\deploy1.png[]
 
 Требования к приложению::
 - Spring Boot 2.1
@@ -497,12 +497,94 @@ CREATE DATABASE security ENCODING = 'UTF8';
 +
 . Запустите ваше приложение
 
-=== Embedded WEB + REST Client
+=== Embedded WEB Server + JPA
+Эта схема предусматривает установку WEB интерфейса администрирования внутри
+вашего прикладного приложения с JPA доступом к Базе Данных.
+
+image::images\deploy2.png[]
+
+Требования к приложению::
+- Spring Boot 2.1
+- N2O Framework 7.3
+
+
+Установка::
++
+. Добавьте зависимость `security-admin-web`.
+Это встроит в ваше приложение страницы администрирования доступа:
++
+[source,xml]
+----
+<dependency>
+    <groupId>net.n2oapp.framework.security</groupId>
+    <artifactId>security-admin-web</artifactId>
+    <version>${security-admin.version}</version>
+</dependency>
+----
++
+. Добавьте зависимость `security-admin-impl`.
+Это добавит в ваше приложение JPA реализацию интерфейсов security-admin-api:
++
+[source,xml]
+----
+<dependency>
+    <groupId>net.n2oapp.framework.security</groupId>
+    <artifactId>security-admin-impl</artifactId>
+    <version>${security-admin.version}</version>
+</dependency>
+----
++
+. Подключите бины WEB интерфейса администирования к вашему приложению:
++
+[source,java]
+----
+@SpringBootApplication
+@Import({AdminWebConfiguration.class, AdminImplConfiguration.class})
+public class Application {
+  public static void main(String[] args) {
+    SpringApplication.run(Application.class, args);
+  }
+}
+----
++
+. Добавьте скрипты наката БД в changelog файл liquibase:
++
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog>
+  <include file="classpath:/security/admin/db/[granularity]/properties.xml"/>
+    <include file="classpath:/security/admin/db/[granularity]/changelog.xml"/>
+    ...
+</databaseChangeLog>
+----
++
+Где, `[granularity]` вид link:#_Гранулярность_доступа[гранулярности доступа].
++
+. Настройте доступ к Базе Данных через jdbc с помощью настроек Spring Boot:
++
+[listing]
+spring.datasource.url=jdbc:postgresql://localhost:5432/security
+spring.datasource.username=postgres
+spring.datasource.password=postgres
+
++
+. Создайте базу данных `security`:
++
+[source,sql]
+----
+CREATE DATABASE security ENCODING = 'UTF8';
+----
++
+. Запустите ваше приложение
+
+
+=== Embedded WEB Server + REST Client
 Эта схема предусматривает установку WEB интерфейса администрирования
 внутри вашего прикладного приложения с удаленными вызовами REST сервисов
 к отдельно стоящему REST серверу администрирования.
 
-image::images\readme-eadda.png[]
+image::images\deploy3.png[]
 
 Требования к приложению::
 - Spring Boot 2.1
@@ -558,13 +640,12 @@ sec.admin.rest.url=http://localhost:9090/api
 +
 . Запустите ваше приложение
 
-
 === Standalone WEB Server + REST Client
 Эта схема предусматривает разворачивание WEB сервера пользовательского
 интерфейса администрирования с удаленными вызовами REST сервисов к отдельно
 стоящему REST серверу администрирования.
 
-image::images\readme-2565b.png[]
+image::images\deploy4.png[]
 
 Установка::
 +
@@ -582,11 +663,86 @@ sec.admin.rest.url=http://localhost:9090/api
 +
 . Проверьте, что в браузере доступен адрес: http://localhost:8080/
 
+=== Embedded REST Server
+Эта схема предусматривает разворачивание REST сервера администрирования доступа
+встроенного в ваше приложение.
+
+image::images\deploy5.png[]
+
+Установка::
++
+. Добавьте зависимость `security-admin-rest-server`.
+Это встроит в ваше приложение REST сервисы администрирования доступа:
++
+[source,xml]
+----
+<dependency>
+    <groupId>net.n2oapp.framework.security</groupId>
+    <artifactId>security-admin-rest-server</artifactId>
+    <version>${security-admin.version}</version>
+</dependency>
+----
++
+. Добавьте зависимость `security-admin-impl`.
+Это добавит в ваше приложение JPA реализацию интерфейсов security-admin-api:
++
+[source,xml]
+----
+<dependency>
+    <groupId>net.n2oapp.framework.security</groupId>
+    <artifactId>security-admin-impl</artifactId>
+    <version>${security-admin.version}</version>
+</dependency>
+----
++
+. Подключите бины REST сервисов администирования к вашему приложению:
++
+[source,java]
+----
+@SpringBootApplication
+@Import({AdminRestServerConfiguration.class, AdminImplConfiguration.class})
+public class Application {
+  public static void main(String[] args) {
+    SpringApplication.run(Application.class, args);
+  }
+}
+----
++
+. Добавьте скрипты наката БД в changelog файл liquibase:
++
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog>
+  <include file="classpath:/security/admin/db/[granularity]/properties.xml"/>
+    <include file="classpath:/security/admin/db/[granularity]/changelog.xml"/>
+    ...
+</databaseChangeLog>
+----
++
+Где, `[granularity]` вид link:#_Гранулярность_доступа[гранулярности доступа].
++
+. Настройте доступ к Базе Данных через jdbc с помощью настроек Spring Boot:
++
+[listing]
+spring.datasource.url=jdbc:postgresql://localhost:5432/security
+spring.datasource.username=postgres
+spring.datasource.password=postgres
+
++
+. Создайте базу данных `security`:
++
+[source,sql]
+----
+CREATE DATABASE security ENCODING = 'UTF8';
+----
++
+. Запустите ваше приложение
 
 === Standalone REST Server
 Эта схема предусматривает разворачивание REST сервера администрирования доступа.
 
-image::images\readme-75921.png[]
+image::images\deploy6.png[]
 
 Установка::
 +
