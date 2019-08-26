@@ -1,12 +1,13 @@
-package net.n2oapp.security.admin.service;
+package net.n2oapp.security.admin.rest;
 
 
+import net.n2oapp.security.admin.TestApplication;
 import net.n2oapp.security.admin.api.model.Client;
-import net.n2oapp.security.admin.impl.service.ClientServiceImpl;
-import org.junit.After;
+import net.n2oapp.security.admin.rest.api.ClientRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -14,74 +15,74 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
- * Тест сервиса управления клиентами
+ * Тест Rest сервиса управления клиентами
  */
+
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest(classes = TestApplication.class,
+        webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
+        properties = "server.port=8290")
 @TestPropertySource("classpath:test.properties")
-public class ClientServiceImplTest {
+public class ClientRestTest {
 
     @Autowired
-    private ClientServiceImpl service;
+    @Qualifier("clientRestServiceJaxRsProxyClient")
+    private ClientRestService clientService;
 
-    @After
-    public void cleanDB() {
-        service.findAll().getContent().forEach(client -> service.delete(client.getClientId()));
+    @Test
+    public void crud() {
+        String clientId = create();
+        clientId = update(clientId);
+        delete(clientId);
     }
 
     @Test
-    public void testUp() throws Exception {
-        assertNotNull(service);
+    public void findAll(){
+        clientService.create(newClient());
+        assertEquals(1,clientService.findAll().getTotalElements());
+        clientService.delete(newClient().getClientId());
     }
 
-    @Test
-    public void testCRUD() {
-        service.create(client());
+    private String create() {
+        Client client = clientService.create(newClient());
+        compareClient(client,newClient());
+        return client.getClientId();
+    }
 
-        Client clientExample = client();
-        Client clientFromDB = service.findById(clientExample.getClientId());
+    private String update(String id) {
+        Client client = clientService.getById(id);
 
-        compareClient(clientFromDB, clientExample);
-        clientExample.setClientId("newClientId");
-        clientExample.setClientSecret("newSecret");
-        clientExample.setAccessTokenValiditySeconds(69);
-        clientExample.setRefreshTokenValiditySeconds(88);
+        client.setClientId("newClientId");
+        client.setClientSecret("newSecret");
+        client.setAccessTokenValiditySeconds(69);
+        client.setRefreshTokenValiditySeconds(88);
         Set<String> stringSet = new HashSet<>();
         stringSet.add("new.uri.1");
         stringSet.add("new.uri.2");
-        clientExample.setRegisteredRedirectUri(stringSet);
+        client.setRegisteredRedirectUri(stringSet);
         stringSet = new HashSet<>();
         stringSet.add("newGrantTypes1");
         stringSet.add("newGrantTypes2");
-        clientExample.setAuthorizedGrantTypes(stringSet);
-        clientExample.setLogoutUrl("newLogout");
+        client.setAuthorizedGrantTypes(stringSet);
+        client.setLogoutUrl("newLogout");
 
-        service.update(clientExample);
-        clientFromDB = service.findById(clientExample.getClientId());
-
-        compareClient(clientExample, clientFromDB);
-
-        service.delete(clientFromDB.getClientId());
-        String clientId = clientFromDB.getClientId();
-        assertNull(service.findById(clientId));
-
+        Client clientExample = client;
+        client = clientService.update(client);
+        compareClient(client,clientExample);
+        return client.getClientId();
     }
 
-
-    @Test
-    public void testListClientDetails() {
-        Client client2 = client();
-        client2.setClientId("testId2");
-        service.create(client());
-        service.create(client2);
-        assertEquals(service.findAll().getContent().size(), 2);
-
+    private void delete(String id) {
+        clientService.delete(id);
+        Client client = clientService.getById(id);
+        assertNull(client);
     }
 
-    private Client client() {
+    private Client newClient(){
         Client client = new Client();
         client.setClientId("testId");
         client.setClientSecret("testSecret");
@@ -108,5 +109,4 @@ public class ClientServiceImplTest {
         assertEquals(clientFirst.getRefreshTokenValiditySeconds(), clientSecond.getRefreshTokenValiditySeconds());
         assertEquals(clientFirst.getLogoutUrl(), clientSecond.getLogoutUrl());
     }
-
 }

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 public class Oauth2ClientService implements ClientDetailsService, ClientRegistrationService {
@@ -21,12 +20,9 @@ public class Oauth2ClientService implements ClientDetailsService, ClientRegistra
     @Override
     public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
         Client client;
-        try {
-            client = clientService.findById(clientId);
-        } catch (NoSuchElementException e) {
-            throw new NoSuchClientException("Oauth2Client with id: " +
-                    clientId + " does not exists");
-        }
+        client = clientService.findById(clientId);
+        if (client == null) throw new NoSuchClientException("Oauth2Client with id: " +
+                clientId + " does not exists");
         return oauth2Model(client);
     }
 
@@ -52,12 +48,10 @@ public class Oauth2ClientService implements ClientDetailsService, ClientRegistra
     @Override
     public void updateClientSecret(String clientId, String secret) throws NoSuchClientException {
         Client client;
-        try {
-            client = clientService.findById(clientId);
-        } catch (NoSuchElementException e) {
-            throw new NoSuchClientException("Oauth2Client with id: " +
-                    clientId + " does not exists");
-        }
+        client = clientService.findById(clientId);
+        if (client == null) throw new NoSuchClientException("Oauth2Client with id: " +
+                clientId + " does not exists");
+
         client.setClientSecret(secret);
         clientService.update(client);
     }

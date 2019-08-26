@@ -5,11 +5,16 @@ import net.n2oapp.security.admin.api.service.ClientService;
 import net.n2oapp.security.admin.impl.entity.ClientEntity;
 import net.n2oapp.security.admin.impl.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 
 @Service
 @Transactional
@@ -38,21 +43,19 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public Client findById(String id) {
         ClientEntity entity = clientRepository.findByClientId(id);
-        if (entity == null) throw new NoSuchElementException();
         return model(entity);
     }
 
     @Override
-    public List<Client> findAll() {
+    public Page<Client> findAll() {
         List<Client> clientList = new ArrayList<>();
         clientRepository.findAll().forEach(clientEntity -> clientList.add(model(clientEntity)));
-        return clientList;
+        return new PageImpl<>(clientList);
     }
 
     @Override
     public boolean existsById(String id) {
-        this.findById(id);
-        return true;
+        return this.findById(id) == null ? false : true;
     }
 
     private HashSet<String> stringToSet(String string) {
@@ -60,6 +63,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     private Client model(ClientEntity clientEntity) {
+        if (clientEntity == null) return null;
         Client client = new Client();
         client.setId(clientEntity.getId());
         client.setClientId(clientEntity.getClientId());
@@ -75,6 +79,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     private ClientEntity entity(Client client) {
+        if (client == null) return null;
         ClientEntity entity = new ClientEntity();
         entity.setId(client.getId());
         entity.setClientId(client.getClientId());
