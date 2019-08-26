@@ -15,8 +15,6 @@ import java.util.Set;
 @NoArgsConstructor
 @ApiModel("Клиент")
 public class Client {
-    @ApiModelProperty("id")
-    private Integer id;
 
     @ApiModelProperty("Имя клиента")
     private String clientId;

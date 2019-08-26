@@ -3,7 +3,10 @@ package net.n2oapp.security.admin.impl.entity;
 
 import lombok.Data;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -15,17 +18,11 @@ import javax.validation.constraints.NotBlank;
 @Table(name = "client", schema = "sec")
 public class ClientEntity {
 
-    /**
-     * Идентификатор клиента
-     */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Integer id;
 
     /**
      * Имя клиента
      */
+    @Id
     @NotBlank
     @Column(name = "client_id", nullable = false, unique = true)
     private String clientId;

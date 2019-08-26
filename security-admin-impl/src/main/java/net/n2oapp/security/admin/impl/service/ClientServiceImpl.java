@@ -36,14 +36,12 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public void delete(String id) {
-        Client client = this.findById(id);
-        clientRepository.deleteById(client.getId());
+        clientRepository.deleteById(id);
     }
 
     @Override
     public Client findById(String id) {
-        ClientEntity entity = clientRepository.findByClientId(id);
-        return model(entity);
+        return model(clientRepository.findById(id).orElse(null));
     }
 
     @Override
@@ -55,7 +53,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public boolean existsById(String id) {
-        return this.findById(id) == null ? false : true;
+        return clientRepository.existsById(id);
     }
 
     private HashSet<String> stringToSet(String string) {
@@ -65,7 +63,6 @@ public class ClientServiceImpl implements ClientService {
     private Client model(ClientEntity clientEntity) {
         if (clientEntity == null) return null;
         Client client = new Client();
-        client.setId(clientEntity.getId());
         client.setClientId(clientEntity.getClientId());
         client.setClientSecret(clientEntity.getClientSecret());
         client.setAuthorizedGrantTypes(stringToSet(clientEntity.getAuthorizedGrantTypes()));
@@ -81,7 +78,6 @@ public class ClientServiceImpl implements ClientService {
     private ClientEntity entity(Client client) {
         if (client == null) return null;
         ClientEntity entity = new ClientEntity();
-        entity.setId(client.getId());
         entity.setClientId(client.getClientId());
         entity.setClientSecret(client.getClientSecret());
         entity.setAuthorizedGrantTypes(StringUtils.collectionToCommaDelimitedString(client.getAuthorizedGrantTypes()));

@@ -27,13 +27,13 @@ public class ClientServiceRestClient implements ClientService {
     }
 
     @Override
-    public void delete(String id) {
-        clientService.delete(id);
+    public void delete(String clientId) {
+        clientService.delete(clientId);
     }
 
     @Override
-    public Client findById(String id) {
-        return clientService.getById(id);
+    public Client findById(String clientId) {
+        return clientService.getById(clientId);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class ClientServiceRestClient implements ClientService {
     }
 
     @Override
-    public boolean existsById(String id) {
-        return clientService.getById(id) != null;
+    public boolean existsById(String clientId) {
+        return clientService.getById(clientId) != null;
     }
 }
