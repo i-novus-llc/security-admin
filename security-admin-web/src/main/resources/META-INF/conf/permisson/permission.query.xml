@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <query xmlns="http://n2oapp.net/framework/config/schema/query-4.0"
-       object-id="${sec.admin.permission.object.id}"
+       object-id="${access.permission.object.id}"
        name="Права доступа">
     <list count-mapping="#this.size()" result-mapping="#this">
         <java method="getAll" class="net.n2oapp.security.admin.api.service.PermissionService">
