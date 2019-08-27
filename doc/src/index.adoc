@@ -835,7 +835,7 @@ access.keycloak.sync-cron=0 0/17 * * * ? *
 [source,java]
 ----
 @SpringBootApplication
-@Import(SsoKeycloakConfiguration.class)
+@Import(AdminSsoKeycloakConfiguration.class)
 public class Application {
   public static void main(String[] args) {
     SpringApplication.run(Application.class, args);
