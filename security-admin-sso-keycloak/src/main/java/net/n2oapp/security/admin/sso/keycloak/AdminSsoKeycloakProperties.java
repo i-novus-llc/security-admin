@@ -7,8 +7,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * Настройки для модуля взаимодействия с keycloak
  */
 @Data
-@ConfigurationProperties("keycloak")
-public class SsoKeycloakProperties {
+@ConfigurationProperties("access.keycloak")
+public class AdminSsoKeycloakProperties {
 
     /**
      * Адрес сервера keycloak
@@ -21,17 +21,12 @@ public class SsoKeycloakProperties {
     private String realm = "master";
 
     /**
-     * Идентификатор клиента client id
-     */
-    private String clientId = "security-admin-sso";
-
-    /**
-     * Идентификатор клиента администрирования пользователей и ролей в keycloak
+     * Идентификатор клиента для синхронизации
      */
     private String adminClientId = "access-admin";
 
     /**
-     * Ключ клиента администрирования пользователей и ролей в keycloak
+     * Секретное слово клиента для синхронизации
      */
     private String adminClientSecret;
 

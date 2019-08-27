@@ -13,28 +13,28 @@ import org.springframework.security.oauth2.client.token.grant.client.ClientCrede
  * Конфигурация модуля взаимодействия с keycloak
  */
 @Configuration
-@EnableConfigurationProperties(SsoKeycloakProperties.class)
+@EnableConfigurationProperties(AdminSsoKeycloakProperties.class)
 public class SsoKeycloakConfiguration {
 
     @Bean
     @Primary
-    KeycloakSsoUserRoleProvider keycloakSsoUserRoleProvider(SsoKeycloakProperties properties) {
+    KeycloakSsoUserRoleProvider keycloakSsoUserRoleProvider(AdminSsoKeycloakProperties properties) {
         return new KeycloakSsoUserRoleProvider(properties);
     }
 
 
     @Bean
-    KeycloakRestRoleService keycloakRestRoleService(SsoKeycloakProperties properties) {
+    KeycloakRestRoleService keycloakRestRoleService(AdminSsoKeycloakProperties properties) {
         return new KeycloakRestRoleService(properties);
     }
 
     @Bean
-    KeycloakRestUserService keycloakRestUserService(SsoKeycloakProperties properties) {
+    KeycloakRestUserService keycloakRestUserService(AdminSsoKeycloakProperties properties) {
         return new KeycloakRestUserService(properties);
     }
 
     @Bean
-    OAuth2RestOperations keycloakRestTemplate(SsoKeycloakProperties properties) {
+    OAuth2RestOperations keycloakRestTemplate(AdminSsoKeycloakProperties properties) {
         ClientCredentialsResourceDetails resource = new ClientCredentialsResourceDetails();
         resource.setClientId(properties.getAdminClientId());
         resource.setClientSecret(properties.getAdminClientSecret());

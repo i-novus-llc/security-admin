@@ -24,13 +24,13 @@ public class KeycloakPrincipalExtractor implements PrincipalExtractor, Authoriti
 
     private static final String GRANTED_AUTHORITY_KEY = "GrantedAuthorityKey";
 
-    private static final String[] PRINCIPAL_KEYS = new String[]{"user", "username", "preferred_username",
-            "login", "userid", "user_id", "id", "name", "sub"};
-    private static final String[] SURNAME_KEYS = new String[]{"surname", "secondname", "second_name", "family_name"};
-    private static final String[] NAME_KEYS = new String[]{"firstname", "given_name", "name"};
-    private static final String[] EMAIL_KEYS = new String[]{"email", "e-mail"};
+    private static final String[] PRINCIPAL_KEYS = new String[]{"username", "preferred_username",
+            "login", "sub"};
+    private static final String[] SURNAME_KEYS = new String[]{"surname", "second_name", "family_name"};
+    private static final String[] NAME_KEYS = new String[]{"first_name", "given_name", "name"};
+    private static final String[] EMAIL_KEYS = new String[]{"email", "e-mail", "mail"};
     private static final String[] GUID_KEYS = new String[]{"sub"};
-    private static final String[] AUTHORITIES_KEYS = new String[]{"roles", "authorities"};
+    private static final String[] AUTHORITIES_KEYS = new String[]{"roles", "authorities", "realm_access.roles", "resource_access.roles"};
 
     private UserDetailsService userDetailsService;
 

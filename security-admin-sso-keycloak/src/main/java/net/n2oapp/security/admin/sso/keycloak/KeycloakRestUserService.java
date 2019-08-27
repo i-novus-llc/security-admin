@@ -25,7 +25,7 @@ public class KeycloakRestUserService {
     private static String EMAIL_ACTIONS = "%s/admin/realms/%s/users/%s/execute-actions-email";
     private static String RESET_PASSWORD = "%s/admin/realms/%s/users/%s/reset-password";
 
-    private SsoKeycloakProperties properties;
+    private AdminSsoKeycloakProperties properties;
 
     @Autowired
     private RestOperations template;
@@ -33,7 +33,7 @@ public class KeycloakRestUserService {
     @Autowired
     private KeycloakRestRoleService roleService;
 
-    public KeycloakRestUserService(SsoKeycloakProperties properties) {
+    public KeycloakRestUserService(AdminSsoKeycloakProperties properties) {
         this.properties = properties;
     }
 

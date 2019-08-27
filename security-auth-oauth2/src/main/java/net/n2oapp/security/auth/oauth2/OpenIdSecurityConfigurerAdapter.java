@@ -1,5 +1,6 @@
-package net.n2oapp.security.auth;
+package net.n2oapp.security.auth.oauth2;
 
+import net.n2oapp.security.auth.N2oSecurityConfigurerAdapter;
 import net.n2oapp.security.auth.context.SpringSecurityUserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

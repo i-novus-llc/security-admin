@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>security-admin-frontend</artifactId>
-    <packaging>${packaging.type}</packaging>
+    <packaging>jar</packaging>
 
     <parent>
         <artifactId>security-admin</artifactId>
@@ -12,13 +12,6 @@
         <relativePath>..</relativePath>
     </parent>
 
-    <properties>
-        <packaging.type>war</packaging.type>
-    </properties>
-
-    <build>
-        <finalName>frontend</finalName>
-    </build>
 
     <dependencies>
         <dependency>
@@ -30,6 +23,12 @@
         <dependency>
             <groupId>net.n2oapp.framework.security</groupId>
             <artifactId>security-admin-web</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.n2oapp.framework.security</groupId>
+            <artifactId>security-auth-oauth2</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -70,61 +69,15 @@
         </dependency>
         <!--/spring-->
 
-        <!-- servlet -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
     </dependencies>
 
     <profiles>
-        <profile>
-            <id>standalone</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <packaging.type>jar</packaging.type>
-            </properties>
-            <dependencies>
-                <dependency>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-tomcat</artifactId>
-                    <scope>compile</scope>
-                </dependency>
-            </dependencies>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>repackage</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <executable>true</executable>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
         <profile>
             <id>keycloak</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
             <dependencies>
-                <dependency>
-                    <groupId>net.n2oapp.framework.security</groupId>
-                    <artifactId>security-auth</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
                 <dependency>
                     <groupId>net.n2oapp.framework.security</groupId>
                     <artifactId>security-auth-oauth2-keycloak</artifactId>
@@ -149,5 +102,25 @@
             </dependencies>
         </profile>
     </profiles>
+
+    <build>
+        <finalName>access-web</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <executable>true</executable>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
