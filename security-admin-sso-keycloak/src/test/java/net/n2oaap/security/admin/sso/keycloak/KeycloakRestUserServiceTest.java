@@ -30,7 +30,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @SpringBootConfiguration
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, classes = SsoKeycloakConfiguration.class, properties = {
-        "keycloak.serverUrl=http://127.0.0.1:8085/auth", "keycloak.adminClientSecret=177b14bc-ad98-46bc-ac32-2c0f424a8a52"
+        "access.keycloak.serverUrl=http://127.0.0.1:8085/auth", "access.keycloak.adminClientSecret=177b14bc-ad98-46bc-ac32-2c0f424a8a52"
 })
 public class KeycloakRestUserServiceTest {
 

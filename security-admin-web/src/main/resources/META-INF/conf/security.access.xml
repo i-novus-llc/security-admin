@@ -3,32 +3,32 @@
         <object-access object-id="permission" />
         <object-access object-id="system" />
         <object-access object-id="service" />
-        <object-access object-id="${sec.admin.role.object.id}"/>
+        <object-access object-id="${access.role.object.id}"/>
     </authenticated>
 
-    <permission id="sec.admin.user.read">
-        <object-access object-id="${sec.admin.user.object.id}"/>
+    <permission id="access.user.read">
+        <object-access object-id="${access.user.object.id}"/>
         <page-access page-id="users"/>
     </permission>
 
-    <permission id="sec.admin.role.read">
-        <object-access object-id="${sec.admin.role.object.id}"/>
+    <permission id="access.role.read">
+        <object-access object-id="${access.role.object.id}"/>
         <page-access page-id="roles"/>
     </permission>
 
-    <permission id="sec.admin.system.read">
+    <permission id="access.system.read">
         <page-access page-id="systems"/>
     </permission>
 
-    <permission id="sec.admin.user.edit">
-        <object-access object-id="${sec.admin.user.object.id}" operations="*"/>
+    <permission id="access.user.edit">
+        <object-access object-id="${access.user.object.id}" operations="*"/>
     </permission>
 
-    <permission id="sec.admin.role.edit">
-        <object-access object-id="${sec.admin.role.object.id}" operations="*"/>
+    <permission id="access.role.edit">
+        <object-access object-id="${access.role.object.id}" operations="*"/>
     </permission>
 
-    <permission id="sec.admin.system.edit">
+    <permission id="access.system.edit">
         <object-access object-id="system" operations="*"/>
         <object-access object-id="service" operations="*"/>
     </permission>

@@ -8,22 +8,26 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
 
-    <properties>
-        <h2.property>1.4.197</h2.property>
-    </properties>
-
     <artifactId>security-admin-db</artifactId>
+
     <dependencies>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>${h2.property}</version>
-            <scope>test</scope>
-        </dependency>
 
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.197</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

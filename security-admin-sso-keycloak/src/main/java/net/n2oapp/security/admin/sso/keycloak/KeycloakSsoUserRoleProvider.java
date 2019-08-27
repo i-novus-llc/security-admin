@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
 
-    private SsoKeycloakProperties properties;
+    private AdminSsoKeycloakProperties properties;
 
     @Autowired
     private KeycloakRestRoleService roleService;
@@ -22,7 +22,7 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
     @Autowired
     private KeycloakRestUserService userService;
 
-    public KeycloakSsoUserRoleProvider(SsoKeycloakProperties properties) {
+    public KeycloakSsoUserRoleProvider(AdminSsoKeycloakProperties properties) {
         this.properties = properties;
     }
 

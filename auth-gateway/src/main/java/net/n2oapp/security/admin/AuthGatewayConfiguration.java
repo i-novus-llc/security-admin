@@ -36,10 +36,10 @@ import java.util.List;
 @Order(200)
 public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
 
-    @Value("${sec.admin.jwt.signing_key}")
+    @Value("${access.jwt.signing_key}")
     private String signingKey;
 
-    @Value("${sec.admin.jwt.verifier_key}")
+    @Value("${access.jwt.verifier_key}")
     private String verifierKey;
 
     @Autowired
@@ -66,7 +66,7 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    @ConfigurationProperties("sec.admin.keycloak")
+    @ConfigurationProperties("access.keycloak")
     public ClientResources keycloak() {
         return new ClientResources();
     }

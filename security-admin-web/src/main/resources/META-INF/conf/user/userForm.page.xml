@@ -1,25 +1,25 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <simple-page xmlns="http://n2oapp.net/framework/config/schema/page-2.0" name="Создание пользователя">
-    <form query-id="${sec.admin.user.query.id}" upload="defaults">
+    <form query-id="${access.user.query.id}" upload="defaults">
         <fields>
             <row>
                 <input-text id="username" required="true">
                     <validations white-list="usernameValidation"/>
                 </input-text>
-                <input-text id="email" label="Email" required="${sec.admin.user.email.required}">
+                <input-text id="email" label="Email" required="${access.user.email.required}">
                     <validations white-list="emailValidation"/>
                 </input-text>
             </row>
             <row>
                 <password id="password"
-                          required="${sec.admin.user.password.input}"
-                          visible="${sec.admin.user.password.input}"
+                          required="${access.user.password.input}"
+                          visible="${access.user.password.input}"
                           label="Пароль" eye="false">
                     <validations white-list="passwordLengthValidation,passwordValidation"/>
                 </password>
                 <password id="passwordCheck"
-                          required="${sec.admin.user.password.input}"
-                          visible="${sec.admin.user.password.input}"
+                          required="${access.user.password.input}"
+                          visible="${access.user.password.input}"
                           label="Подтвердить пароль" eye="false">
                     <validations white-list="passwordCheckValidation"/>
                     <dependencies>
@@ -27,13 +27,13 @@
                     </dependencies>
                 </password>
             </row>
-            <input-text id="surname" required="${sec.admin.user.surname.required}" length="100"/>
-            <input-text id="name" required="${sec.admin.user.name.required}" length="100"/>
+            <input-text id="surname" required="${access.user.surname.required}" length="100"/>
+            <input-text id="name" required="${access.user.name.required}" length="100"/>
             <input-text id="patronymic" length="100"/>
             <row>
                 <col size="10">
                     <input-select id="roles" type="multi" label="Роли" cache="false"
-                                  required="true" query-id="${sec.admin.role.query.id}"
+                                  required="true" query-id="${access.role.query.id}"
                                   value-field-id="id" label-field-id="name"/>
                 </col>
                 <col size="2">
