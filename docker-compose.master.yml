@@ -6,9 +6,6 @@ services:
   backend:
     ports:
     - "8091:8080"
-  auth-gateway:
-    ports:
-    - "8092:8080"
   frontend:
     ports:
     - "8090:8080"
