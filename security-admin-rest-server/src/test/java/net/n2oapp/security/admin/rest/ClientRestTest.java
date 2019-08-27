@@ -41,22 +41,21 @@ public class ClientRestTest {
     }
 
     @Test
-    public void findAll(){
+    public void findAll() {
         clientService.create(newClient());
-        assertEquals(1,clientService.findAll().getTotalElements());
+        assertEquals(1, clientService.findAll().getTotalElements());
         clientService.delete(newClient().getClientId());
     }
 
     private String create() {
         Client client = clientService.create(newClient());
-        compareClient(client,newClient());
+        compareClient(client, newClient());
         return client.getClientId();
     }
 
     private String update(String id) {
         Client client = clientService.getById(id);
 
-        client.setClientId("newClientId");
         client.setClientSecret("newSecret");
         client.setAccessTokenValiditySeconds(69);
         client.setRefreshTokenValiditySeconds(88);
@@ -72,7 +71,7 @@ public class ClientRestTest {
 
         Client clientExample = client;
         client = clientService.update(client);
-        compareClient(client,clientExample);
+        compareClient(client, clientExample);
         return client.getClientId();
     }
 
@@ -82,7 +81,7 @@ public class ClientRestTest {
         assertNull(client);
     }
 
-    private Client newClient(){
+    private Client newClient() {
         Client client = new Client();
         client.setClientId("testId");
         client.setClientSecret("testSecret");

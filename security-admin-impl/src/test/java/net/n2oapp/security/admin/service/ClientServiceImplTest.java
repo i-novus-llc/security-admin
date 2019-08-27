@@ -12,8 +12,11 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.Assert.*;
 
 /**
@@ -45,7 +48,6 @@ public class ClientServiceImplTest {
         Client clientFromDB = service.findById(clientExample.getClientId());
 
         compareClient(clientFromDB, clientExample);
-        clientExample.setClientId("newClientId");
         clientExample.setClientSecret("newSecret");
         clientExample.setAccessTokenValiditySeconds(69);
         clientExample.setRefreshTokenValiditySeconds(88);
@@ -61,6 +63,14 @@ public class ClientServiceImplTest {
 
         service.update(clientExample);
         clientFromDB = service.findById(clientExample.getClientId());
+
+        Throwable thrown = catchThrowable(() -> {
+            clientExample.setClientId("newClientId");
+            service.update(clientExample);
+        });
+        assertThat(thrown).isInstanceOf(NoSuchElementException.class);
+        clientExample.setClientId(client().getClientId());
+
 
         compareClient(clientExample, clientFromDB);
 

@@ -7,5 +7,5 @@
     <include file="classpath:/security/admin/db/ur/changelog.xml"/>
     <include file="classpath:/security/admin/db/changelog/V4_create_permissions.xml"/>
     <include file="classpath:/security/admin/db/changelog/V6_create_user_permission_index.xml"/>
-
+    <include file="classpath:/security/admin/db/system/changelog.xml"/>
 </databaseChangeLog>

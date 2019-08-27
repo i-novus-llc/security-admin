@@ -11,7 +11,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 /**
- * REST сервис управления приложениями
+ * REST сервис управления клиентами
  */
 @Path("/clients")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -29,23 +29,23 @@ public interface ClientRestService {
     @Path("/{clientId}")
     @ApiOperation("Получить клиента по идентификатору")
     @ApiResponse(code = 200, message = "Клиенты")
-    Client getById(@ApiParam(value = "Имя Клиента") @PathParam("clientId") String clientId);
+    Client getById(@ApiParam(value = "Имя клиента") @PathParam("clientId") String clientId);
 
     @POST
     @Path("/")
     @ApiOperation("Создать клиента")
-    @ApiResponse(code = 200, message = "Созданное приложение")
+    @ApiResponse(code = 200, message = "Созданный клиент")
     Client create(@ApiParam(value = "Клиент") Client clientForm);
 
     @PUT
     @Path("/")
     @ApiOperation("Изменить клиента")
-    @ApiResponse(code = 200, message = "Измененное приложение")
+    @ApiResponse(code = 200, message = "Измененный клиент")
     Client update(@ApiParam(value = "Клиент") Client clientForm);
 
     @DELETE
     @Path("/{clientId}")
     @ApiOperation("Удалить клиента")
-    @ApiResponse(code = 200, message = "Клиент удалена")
+    @ApiResponse(code = 204, message = "Клиент удален")
     void delete(@ApiParam(value = "Имя клиента") @PathParam("clientId") String clientId);
 }

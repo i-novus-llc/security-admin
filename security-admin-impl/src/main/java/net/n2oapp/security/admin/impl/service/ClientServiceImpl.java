@@ -31,6 +31,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public Client update(Client client) {
+        clientRepository.findById(client.getClientId()).orElseThrow();
         return model(clientRepository.save(entity(client)));
     }
 
@@ -88,4 +89,5 @@ public class ClientServiceImpl implements ClientService {
 
         return entity;
     }
+
 }
