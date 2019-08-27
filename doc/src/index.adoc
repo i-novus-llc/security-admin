@@ -316,6 +316,10 @@ security.oauth2.resource.user-info-uri=${security.oauth2.auth-server-uri}/userin
 security.oauth2.sso.logout-uri=${security.oauth2.auth-server-uri}/logout?redirect_uri=
 ----
 +
+[NOTE]
+Значения client-id и client-secret необходимо зарегистрировать в Keycloak (см link:#_Keycloak[Keycloak])
+
++
 . Запустите ваше приложение. При открытии любой страницы через браузер должна
 произойти переадресация на страницу входа Keycloak.
 
@@ -404,6 +408,10 @@ security.oauth2.resource.user-info-uri=${security.oauth2.auth-server-uri}/userin
 #Адрес сервиса единого выхода
 security.oauth2.sso.logout-uri=${security.oauth2.auth-server-uri}/logout?redirect_uri=
 ----
++
+[NOTE]
+Значения client-id и client-secret необходимо зарегистрировать в Gateway (см link:#_Auth_Gateway[Auth Gateway])
+
 +
 . Запустите ваше приложение. При открытии любой страницы через браузер должна
 произойти переадресация на страницу входа Auth Gateway.
