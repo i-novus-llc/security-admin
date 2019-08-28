@@ -34,15 +34,13 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public Client update(Client client) {
-        if (clientRepository.findById(client.getClientId()).orElse(null) == null)
-            throw new UserException("exception.clientNotFound");
+        clientNotExists(client.getClientId());
         return model(clientRepository.save(entity(client)));
     }
 
     @Override
     public void delete(String clientId) {
-        if (clientRepository.findById(clientId).orElse(null) == null)
-            throw new UserException("exception.clientNotFound");
+        clientNotExists(clientId);
         clientRepository.deleteById(clientId);
     }
 
@@ -88,6 +86,11 @@ public class ClientServiceImpl implements ClientService {
         entity.setLogoutUrl(client.getLogoutUrl());
 
         return entity;
+    }
+
+    private void clientNotExists(String id) {
+        if (clientRepository.findById(id).orElse(null) == null)
+            throw new UserException("exception.clientNotFound");
     }
 
 }
