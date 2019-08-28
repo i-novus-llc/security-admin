@@ -3,6 +3,7 @@ package net.n2oapp.security.admin;
 import net.n2oapp.framework.security.auth.oauth2.keycloak.KeycloakPrincipalExtractor;
 import net.n2oapp.security.admin.api.service.UserDetailsService;
 import net.n2oapp.security.admin.esia.EsiaAccessTokenProvider;
+import net.n2oapp.security.admin.esia.EsiaUserInfoTokenServices;
 import net.n2oapp.security.admin.esia.Pkcs7Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,9 +21,6 @@ import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
 import org.springframework.security.oauth2.client.token.AccessTokenProviderChain;
-import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsAccessTokenProvider;
-import org.springframework.security.oauth2.client.token.grant.implicit.ImplicitAccessTokenProvider;
-import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordAccessTokenProvider;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.TokenStore;
@@ -121,21 +119,16 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     private Filter ssoEsiaFilter(ClientResources client, String path) {
-        OAuth2ClientAuthenticationProcessingFilter filter = new OAuth2ClientAuthenticationProcessingFilter(
-                path);
-        OAuth2RestTemplate template = new OAuth2RestTemplate(client.getClient(), oauth2ClientContext);
-        template.setAccessTokenProvider(new AccessTokenProviderChain(Arrays.asList(
-                new EsiaAccessTokenProvider(pkcs7Util), new ImplicitAccessTokenProvider(),
-                new ResourceOwnerPasswordAccessTokenProvider(), new ClientCredentialsAccessTokenProvider())));
-
+        OAuth2ClientAuthenticationProcessingFilter filter = new OAuth2ClientAuthenticationProcessingFilter(path);
+        OAuth2RestTemplate template = new OAuth2RestTemplate(client.getClient(), oauth2ClientContext) ;
+        template.setAccessTokenProvider(new AccessTokenProviderChain(Arrays.asList(new EsiaAccessTokenProvider(pkcs7Util))));
         filter.setRestTemplate(template);
-        UserInfoTokenServices tokenServices = new UserInfoTokenServices(client.getResource().getUserInfoUri(), client.getClient().getClientId());
+        EsiaUserInfoTokenServices tokenServices = new EsiaUserInfoTokenServices(client.getResource().getUserInfoUri(), client.getClient().getClientId());
         tokenServices.setRestTemplate(template);
-        KeycloakPrincipalExtractor extractor = new KeycloakPrincipalExtractor(userDetailsService);
+        KeycloakPrincipalExtractor extractor = new KeycloakPrincipalExtractor(userDetailsService).setAuthServer(KeycloakPrincipalExtractor.AuthServer.ESIA);
         tokenServices.setAuthoritiesExtractor(extractor);
         tokenServices.setPrincipalExtractor(extractor);
         filter.setTokenServices(tokenServices);
-
         return filter;
     }
 

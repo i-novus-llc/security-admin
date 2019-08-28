@@ -76,10 +76,19 @@ public class EsiaAccessTokenProvider extends AuthorizationCodeAccessTokenProvide
 
     private MultiValueMap<String, String> getParametersForTokenRequest(AuthorizationCodeResourceDetails resource,
                                                                        AccessTokenRequest request) {
+        String timestamp = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss Z").format(new Date());
+        String scope = StringUtils.collectionToDelimitedString(resource.getScope(), " ");
+        String secret = pkcs7Util.getUrlSafeSign(scope + timestamp + resource.getClientId() + request.getStateKey());
 
         MultiValueMap<String, String> form = new LinkedMultiValueMap<String, String>();
-        form.set("grant_type", "authorization_code");
+        form.set("client_id", resource.getClientId());
         form.set("code", request.getAuthorizationCode());
+        form.set("grant_type", "authorization_code");
+        form.set("client_secret", secret);
+        form.set("state", request.getStateKey());
+        form.set("scope", scope);
+        form.set("timestamp", timestamp);
+        form.set("token_type", "Bearer");
 
         Object preservedState = request.getPreservedState();
         // The token endpoint has no use for the state so we don't send it back, but we are using it

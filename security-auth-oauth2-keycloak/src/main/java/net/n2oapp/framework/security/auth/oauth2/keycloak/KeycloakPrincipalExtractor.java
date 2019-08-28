@@ -22,17 +22,21 @@ import java.util.stream.Collectors;
 @Component
 public class KeycloakPrincipalExtractor implements PrincipalExtractor, AuthoritiesExtractor {
 
+    public enum AuthServer {KEYCLOAK, ESIA}
+
     private static final String GRANTED_AUTHORITY_KEY = "GrantedAuthorityKey";
 
     private static final String[] PRINCIPAL_KEYS = new String[]{"username", "preferred_username",
-            "login", "sub"};
-    private static final String[] SURNAME_KEYS = new String[]{"surname", "second_name", "family_name"};
-    private static final String[] NAME_KEYS = new String[]{"first_name", "given_name", "name"};
+            "login", "sub", "snils"};
+    private static final String[] SURNAME_KEYS = new String[]{"surname", "second_name", "family_name", "lastName"};
+    private static final String[] NAME_KEYS = new String[]{"first_name", "given_name", "name", "firstName"};
     private static final String[] EMAIL_KEYS = new String[]{"email", "e-mail", "mail"};
     private static final String[] GUID_KEYS = new String[]{"sub"};
     private static final String[] AUTHORITIES_KEYS = new String[]{"roles", "authorities", "realm_access.roles", "resource_access.roles"};
 
     private UserDetailsService userDetailsService;
+
+    private AuthServer authServer = AuthServer.KEYCLOAK;
 
     public KeycloakPrincipalExtractor(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
@@ -52,6 +56,11 @@ public class KeycloakPrincipalExtractor implements PrincipalExtractor, Authoriti
     @Override
     public List<GrantedAuthority> extractAuthorities(Map<String, Object> map) {
         return getAuthorities(map, null);
+    }
+
+    public KeycloakPrincipalExtractor setAuthServer(AuthServer sso) {
+        this.authServer = sso;
+        return this;
     }
 
     @SuppressWarnings("unchecked")
