@@ -4,6 +4,7 @@ package net.n2oapp.security.admin.rest;
 import net.n2oapp.security.admin.TestApplication;
 import net.n2oapp.security.admin.api.model.Client;
 import net.n2oapp.security.admin.rest.api.ClientRestService;
+import net.n2oapp.security.admin.rest.api.criteria.RestClientCriteria;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,8 @@ public class ClientRestTest {
     @Test
     public void findAll() {
         clientService.create(newClient());
-        assertEquals(1, clientService.findAll().getTotalElements());
+        RestClientCriteria criteria = new RestClientCriteria();
+        assertEquals(1, clientService.findAll(criteria).getTotalElements());
         clientService.delete(newClient().getClientId());
     }
 

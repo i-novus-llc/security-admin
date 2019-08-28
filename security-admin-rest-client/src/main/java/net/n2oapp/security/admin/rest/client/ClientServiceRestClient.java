@@ -1,8 +1,10 @@
 package net.n2oapp.security.admin.rest.client;
 
+import net.n2oapp.security.admin.api.criteria.ClientCriteria;
 import net.n2oapp.security.admin.api.model.Client;
 import net.n2oapp.security.admin.api.service.ClientService;
 import net.n2oapp.security.admin.rest.api.ClientRestService;
+import net.n2oapp.security.admin.rest.api.criteria.RestClientCriteria;
 import org.springframework.data.domain.Page;
 
 /**
@@ -37,12 +39,11 @@ public class ClientServiceRestClient implements ClientService {
     }
 
     @Override
-    public Page<Client> findAll() {
-        return clientService.findAll();
-    }
-
-    @Override
-    public boolean existsById(String clientId) {
-        return clientService.getById(clientId) != null;
+    public Page<Client> findAll(ClientCriteria criteria) {
+        RestClientCriteria clientCriteria = new RestClientCriteria();
+        clientCriteria.setClientId(criteria.getClientId());
+        clientCriteria.setPage(criteria.getPage());
+        clientCriteria.setSize(criteria.getSize());
+        return clientService.findAll(clientCriteria);
     }
 }

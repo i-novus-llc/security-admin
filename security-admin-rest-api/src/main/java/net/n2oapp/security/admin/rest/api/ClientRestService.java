@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import net.n2oapp.security.admin.api.model.Client;
+import net.n2oapp.security.admin.rest.api.criteria.RestClientCriteria;
 import org.springframework.data.domain.Page;
 
 import javax.ws.rs.*;
@@ -22,8 +23,8 @@ public interface ClientRestService {
     @GET
     @Path("/")
     @ApiOperation("Все клиенты")
-    @ApiResponse(code = 200, message = "Страница  клиентов")
-    Page<Client> findAll();
+    @ApiResponse(code = 200, message = "Найти клиентов по критериям поиска")
+    Page<Client> findAll(@BeanParam RestClientCriteria criteria);
 
     @GET
     @Path("/{clientId}")

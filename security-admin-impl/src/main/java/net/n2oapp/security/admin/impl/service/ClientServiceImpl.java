@@ -1,20 +1,21 @@
 package net.n2oapp.security.admin.impl.service;
 
+import net.n2oapp.platform.i18n.UserException;
+import net.n2oapp.security.admin.api.criteria.ClientCriteria;
 import net.n2oapp.security.admin.api.model.Client;
 import net.n2oapp.security.admin.api.service.ClientService;
 import net.n2oapp.security.admin.impl.entity.ClientEntity;
 import net.n2oapp.security.admin.impl.repository.ClientRepository;
+import net.n2oapp.security.admin.impl.service.specification.ClientSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 
 @Service
 @Transactional
@@ -26,35 +27,34 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public Client create(Client client) {
+        if (clientRepository.findById(client.getClientId()).orElse(null) != null)
+            throw new UserException("exception.uniqueClient");
         return model(clientRepository.save(entity(client)));
     }
 
     @Override
     public Client update(Client client) {
-        clientRepository.findById(client.getClientId()).orElseThrow();
+        if (clientRepository.findById(client.getClientId()).orElse(null) == null)
+            throw new UserException("exception.clientNotFound");
         return model(clientRepository.save(entity(client)));
     }
 
     @Override
-    public void delete(String id) {
-        clientRepository.deleteById(id);
+    public void delete(String clientId) {
+        if (clientRepository.findById(clientId).orElse(null) == null)
+            throw new UserException("exception.clientNotFound");
+        clientRepository.deleteById(clientId);
     }
 
     @Override
-    public Client findById(String id) {
-        return model(clientRepository.findById(id).orElse(null));
+    public Client findById(String clientId) {
+        return model(clientRepository.findById(clientId).orElse(null));
     }
 
     @Override
-    public Page<Client> findAll() {
-        List<Client> clientList = new ArrayList<>();
-        clientRepository.findAll().forEach(clientEntity -> clientList.add(model(clientEntity)));
-        return new PageImpl<>(clientList);
-    }
-
-    @Override
-    public boolean existsById(String id) {
-        return clientRepository.existsById(id);
+    public Page<Client> findAll(ClientCriteria criteria) {
+        Specification<ClientEntity> specification = new ClientSpecifications(criteria);
+        return clientRepository.findAll(specification, criteria).map(this::model);
     }
 
     private HashSet<String> stringToSet(String string) {

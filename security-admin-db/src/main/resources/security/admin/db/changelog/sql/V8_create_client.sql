@@ -1,4 +1,5 @@
-CREATE TABLE IF NOT EXISTS $ { n2o . security . admin . schema } . $ { n2o . security . admin . client . table } ($ { n2o.security.admin.client.column.client_id } VARCHAR (255) PRIMARY KEY NOT NULL,
+CREATE TABLE IF NOT EXISTS ${n2o.security.admin.schema}.${n2o.security.admin.client.table} (
+  ${n2o.security.admin.client.column.client_id} VARCHAR (255) PRIMARY KEY NOT NULL,
   ${n2o.security.admin.client.column.client_secret} VARCHAR(255),
   ${n2o.security.admin.client.column.grant_types} VARCHAR(255),
   ${n2o.security.admin.client.column.redirect} VARCHAR(1000),

@@ -1,6 +1,8 @@
 package net.n2oapp.security.admin.service;
 
 
+import net.n2oapp.platform.i18n.UserException;
+import net.n2oapp.security.admin.api.criteria.ClientCriteria;
 import net.n2oapp.security.admin.api.model.Client;
 import net.n2oapp.security.admin.impl.service.ClientServiceImpl;
 import org.junit.After;
@@ -12,7 +14,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashSet;
-import java.util.NoSuchElementException;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,7 +33,9 @@ public class ClientServiceImplTest {
 
     @After
     public void cleanDB() {
-        service.findAll().getContent().forEach(client -> service.delete(client.getClientId()));
+        ClientCriteria criteria = new ClientCriteria();
+        criteria.setPage(0);
+        service.findAll(criteria).getContent().forEach(client -> service.delete(client.getClientId()));
     }
 
     @Test
@@ -68,7 +71,7 @@ public class ClientServiceImplTest {
             clientExample.setClientId("newClientId");
             service.update(clientExample);
         });
-        assertThat(thrown).isInstanceOf(NoSuchElementException.class);
+        assertThat(thrown).isInstanceOf(UserException.class);
         clientExample.setClientId(client().getClientId());
 
 
@@ -87,7 +90,9 @@ public class ClientServiceImplTest {
         client2.setClientId("testId2");
         service.create(client());
         service.create(client2);
-        assertEquals(service.findAll().getContent().size(), 2);
+        ClientCriteria clientCriteria = new ClientCriteria();
+        clientCriteria.setClientId("testId2");
+        assertEquals(service.findAll(clientCriteria).getContent().size(), 1);
 
     }
 

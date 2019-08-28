@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.api.service;
 
+import net.n2oapp.security.admin.api.criteria.ClientCriteria;
 import net.n2oapp.security.admin.api.model.Client;
 import org.springframework.data.domain.Page;
 
@@ -41,14 +42,6 @@ public interface ClientService {
      *
      * @return Страница всех клиентов
      */
-    Page<Client> findAll();
-
-    /**
-     * Проверка наличия клиента по идентификатору
-     *
-     * @param id Идентификатор клиента
-     */
-    boolean existsById(String id);
-
+    Page<Client> findAll(ClientCriteria criteria);
 
 }

@@ -3,6 +3,7 @@ package net.n2oapp.security.admin.rest.impl;
 import net.n2oapp.security.admin.api.model.Client;
 import net.n2oapp.security.admin.api.service.ClientService;
 import net.n2oapp.security.admin.rest.api.ClientRestService;
+import net.n2oapp.security.admin.rest.api.criteria.RestClientCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -17,8 +18,8 @@ public class ClientRestServiceImpl implements ClientRestService {
     private ClientService service;
 
     @Override
-    public Page<Client> findAll() {
-        return service.findAll();
+    public Page<Client> findAll(RestClientCriteria clientCriteria) {
+        return service.findAll(clientCriteria);
     }
 
     @Override
