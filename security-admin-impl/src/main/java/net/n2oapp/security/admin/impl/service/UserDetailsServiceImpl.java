@@ -39,6 +39,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             userEntity.setSurname(userDetails.getSurname());
             userEntity.setName(userDetails.getName());
             userEntity.setIsActive(true);
+            userEntity.setExtSys(userDetails.getExtSys());
             if (userDetails.getRoleNames() != null){
                 userEntity.setRoleList(userDetails.getRoleNames().stream().map(this::getOrCreateRole).collect(Collectors.toList()));
             }
@@ -107,6 +108,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         model.setPatronymic(entity.getPatronymic());
         model.setIsActive(entity.getIsActive());
         model.setEmail(entity.getEmail());
+        model.setExtSys(entity.getExtSys());
         StringBuilder builder = new StringBuilder();
         if (entity.getSurname() != null) {
             builder.append(entity.getSurname()).append(" ");

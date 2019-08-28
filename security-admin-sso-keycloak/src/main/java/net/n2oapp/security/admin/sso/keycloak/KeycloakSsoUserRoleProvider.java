@@ -27,6 +27,11 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
     }
 
     @Override
+    public boolean isSupports(String ssoName) {
+        return ssoName == null || "keycloak".equals(ssoName.toLowerCase());
+    }
+
+    @Override
     public User createUser(User user) {
         UserRepresentation userRepresentation = map(user);
         String userGuid = userService.createUser(userRepresentation);

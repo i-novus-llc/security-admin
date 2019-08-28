@@ -13,6 +13,9 @@ import java.util.List;
 @ApiModel("Пользователь")
 public class UserDetailsToken {
 
+    @ApiModelProperty(value = "Наименование sso")
+    private String extSys;
+
     @ApiModelProperty(value = "Идентификатор sso")
     private String guid;
 

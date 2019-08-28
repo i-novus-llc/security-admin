@@ -67,13 +67,15 @@ public class UserServiceImpl implements UserService {
         entity.setPasswordHash(passwordHash);
         UserEntity savedUser = userRepository.save(entity);
         // получаем модель для сохранения SSO провайдером, ему надо передать незакодированный пароль
-        User ssoUser = model(savedUser);
-        ssoUser.setPassword(password);
-        ssoUser = provider.createUser(ssoUser);
-        if (ssoUser != null) {
-            UserEntity changedSsoUser = entity(ssoUser);
-            changedSsoUser.setPasswordHash(passwordHash);
-            savedUser = userRepository.save(changedSsoUser);
+        if (provider.isSupports(savedUser.getExtSys())) {
+            User ssoUser = model(savedUser);
+            ssoUser.setPassword(password);
+            ssoUser = provider.createUser(ssoUser);
+            if (ssoUser != null) {
+                UserEntity changedSsoUser = entity(ssoUser);
+                changedSsoUser.setPasswordHash(passwordHash);
+                savedUser = userRepository.save(changedSsoUser);
+            }
         }
         mailService.sendWelcomeMail(user);
         return model(savedUser);
@@ -94,13 +96,15 @@ public class UserServiceImpl implements UserService {
             entityUser.setPasswordHash(passwordEncoder.encode(user.getNewPassword()));
         UserEntity updatedUser = userRepository.save(entityUser);
         //в провайдер отправляем незакодированный пароль, если он изменился, и отправляем null, если не изменялся пароль
-        User ssoUser = model(updatedUser);
-        if (user.getNewPassword() == null) {
-            ssoUser.setPassword(null);
-        } else {
-            ssoUser.setPassword(user.getNewPassword());
+        if (provider.isSupports(updatedUser.getExtSys())) {
+            User ssoUser = model(updatedUser);
+            if (user.getNewPassword() == null) {
+                ssoUser.setPassword(null);
+            } else {
+                ssoUser.setPassword(user.getNewPassword());
+            }
+            provider.updateUser(ssoUser);
         }
-        provider.updateUser(ssoUser);
         return model(updatedUser);
     }
 
@@ -108,7 +112,9 @@ public class UserServiceImpl implements UserService {
     public void delete(Integer id) {
         UserEntity user = userRepository.findById(id).orElse(null);
         userRepository.deleteById(id);
-        provider.deleteUser(model(user));
+        if (user != null && provider.isSupports(user.getExtSys())) {
+            provider.deleteUser(model(user));
+        }
     }
 
     @Override
@@ -137,7 +143,9 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userRepository.findById(id).get();
         userEntity.setIsActive(!userEntity.getIsActive());
         User result = model(userRepository.save(userEntity));
-        provider.changeActivity(result);
+        if (provider.isSupports(userEntity.getExtSys())) {
+            provider.changeActivity(result);
+        }
         return result;
 
     }
@@ -154,6 +162,7 @@ public class UserServiceImpl implements UserService {
         entity.setSurname(model.getSurname());
         entity.setPatronymic(model.getPatronymic());
         entity.setIsActive(model.getIsActive());
+        entity.setExtSys(model.getExtSys());
         entity.setEmail(model.getEmail());
         if (model.getRoles() != null)
             entity.setRoleList(model.getRoles().stream().map(RoleEntity::new).collect(Collectors.toList()));
@@ -169,6 +178,7 @@ public class UserServiceImpl implements UserService {
         entity.setSurname(model.getSurname());
         entity.setPatronymic(model.getPatronymic());
         entity.setIsActive(model.getIsActive());
+        entity.setExtSys(model.getExtSys());
         entity.setEmail(model.getEmail());
         if (model.getRoles() != null)
             entity.setRoleList(model.getRoles().stream().map(r -> new RoleEntity(r.getId())).collect(Collectors.toList()));
@@ -185,6 +195,7 @@ public class UserServiceImpl implements UserService {
         model.setSurname(entity.getSurname());
         model.setPatronymic(entity.getPatronymic());
         model.setIsActive(entity.getIsActive());
+        model.setExtSys(entity.getExtSys());
         model.setEmail(entity.getEmail());
         StringBuilder builder = new StringBuilder();
         if (entity.getSurname() != null) {

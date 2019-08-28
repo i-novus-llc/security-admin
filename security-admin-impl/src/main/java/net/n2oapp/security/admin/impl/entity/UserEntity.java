@@ -87,8 +87,11 @@ public class UserEntity {
     )
     private List<RoleEntity> roleList;
 
-
-
+    /**
+     * внешний SSO сервер
+     */
+    @Column(name = "ext_sys")
+    private String extSys;
 
 }
 

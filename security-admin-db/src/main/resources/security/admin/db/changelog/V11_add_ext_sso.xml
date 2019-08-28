@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="EPMP-189-20190828-01" author="estartcev">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists columnName="ext_sys" schemaName="sec" tableName="user"/>
+            </not>
+        </preConditions>
+        <comment>Добавление колонки ext_sys</comment>
+        <sql>
+            ALTER TABLE sec.user ADD COLUMN ext_sys varchar;
+            COMMENT ON COLUMN sec.user.ext_sys IS 'Наимнование SSO';
+        </sql>
+    </changeSet>
+
+
+</databaseChangeLog>
