@@ -110,7 +110,10 @@ public class EsiaUserInfoTokenServices implements ResourceServerTokenServices {
                 token.setTokenType(DefaultOAuth2AccessToken.BEARER_TYPE);
                 restTemplate.getOAuth2ClientContext().setAccessToken(token);
             }
-            return restTemplate.getForEntity(path + "/" + getOID(accessToken), Map.class).getBody();
+            String oid = getOID(accessToken);
+            Map result = restTemplate.getForEntity(path + "/" + oid, Map.class).getBody();
+            if (result != null) result.put("oid", oid);
+            return result;
         } catch (Exception ex) {
             return Collections.singletonMap("error",
                     "Could not fetch user details");
