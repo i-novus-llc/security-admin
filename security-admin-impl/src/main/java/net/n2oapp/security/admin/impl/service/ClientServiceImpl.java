@@ -27,7 +27,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public Client create(Client client) {
-        if (clientRepository.findById(client.getClientId()).orElse(null) != null)
+        if (!clientRepository.findById(client.getClientId()).isEmpty())
             throw new UserException("exception.uniqueClient");
         return model(clientRepository.save(entity(client)));
     }
@@ -89,7 +89,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     private void clientNotExists(String id) {
-        if (clientRepository.findById(id).orElse(null) == null)
+        if (clientRepository.findById(id).isEmpty())
             throw new UserException("exception.clientNotFound");
     }
 
