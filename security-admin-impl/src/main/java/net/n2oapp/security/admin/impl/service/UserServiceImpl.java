@@ -21,7 +21,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -156,7 +155,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserEntity entityForm(UserEntity entity, UserForm model) {
-        entity.setExtUid(model.getExtUid() == null ? null : UUID.fromString(model.getExtUid()));
+        entity.setExtUid(model.getExtUid());
         entity.setUsername(model.getUsername());
         entity.setName(model.getName());
         entity.setSurname(model.getSurname());
@@ -172,7 +171,7 @@ public class UserServiceImpl implements UserService {
     private UserEntity entity(User model) {
         UserEntity entity = new UserEntity();
         entity.setId(model.getId());
-        entity.setExtUid(model.getExtUid() == null ? null : UUID.fromString(model.getExtUid()));
+        entity.setExtUid(model.getExtUid());
         entity.setUsername(model.getUsername());
         entity.setName(model.getName());
         entity.setSurname(model.getSurname());
@@ -189,7 +188,7 @@ public class UserServiceImpl implements UserService {
         if (entity == null) return null;
         User model = new User();
         model.setId(entity.getId());
-        model.setExtUid(entity.getExtUid() == null ? null : entity.getExtUid().toString());
+        model.setExtUid(entity.getExtUid());
         model.setUsername(entity.getUsername());
         model.setName(entity.getName());
         model.setSurname(entity.getSurname());

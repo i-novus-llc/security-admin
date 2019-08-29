@@ -16,7 +16,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Реализация сервиса предоставления информации о пользователе (ролей/пермишенов)
@@ -51,7 +50,7 @@ public class UserDetailsServiceSql implements UserDetailsService {
                 new MapSqlParameterSource("username", u.getUsername())
                         .addValue("name", u.getSurname())
                         .addValue("surname", u.getName())
-                        .addValue("extUid", UUID.fromString(u.getExtUid()))
+                        .addValue("extUid", u.getExtUid())
                         .addValue("email", u.getEmail())
                         .addValue("isActive", true)
                         .addValue("password", null)

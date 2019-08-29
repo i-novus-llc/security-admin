@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,7 +33,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (userEntity == null) {
             userEntity = new UserEntity();
             userEntity.setUsername(userDetails.getUsername());
-            userEntity.setExtUid(userDetails.getExtUid() == null ? null : UUID.fromString(userDetails.getExtUid()));
+            userEntity.setExtUid(userDetails.getExtUid());
             userEntity.setEmail(userDetails.getEmail());
             userEntity.setSurname(userDetails.getSurname());
             userEntity.setName(userDetails.getName());
@@ -47,7 +46,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         } else {
             userEntity.setIsActive(true);
             if (userDetails.getExtUid() != null) {
-                userEntity.setExtUid(userDetails.getExtUid() == null ? null : UUID.fromString(userDetails.getExtUid()));
+                userEntity.setExtUid(userDetails.getExtUid());
             }
             if (userDetails.getEmail() != null) {
                 userEntity.setEmail(userDetails.getEmail());
@@ -101,7 +100,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (entity == null) return null;
         User model = new User();
         model.setId(entity.getId());
-        model.setExtUid(entity.getExtUid() == null ? null : entity.getExtUid().toString());
+        model.setExtUid(entity.getExtUid());
         model.setUsername(entity.getUsername());
         model.setName(entity.getName());
         model.setSurname(entity.getSurname());

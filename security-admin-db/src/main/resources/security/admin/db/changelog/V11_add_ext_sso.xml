@@ -25,7 +25,9 @@
         </preConditions>
         <comment>Переименование колонки guid в ext_uid</comment>
         <sql>
-            ALTER TABLE sec.user RENAME COLUMN guid TO ext_uid;
+            ALTER TABLE sec.user ADD COLUMN ext_uid varchar;
+            UPDATE sec.user SET ext_uid = guid;
+            ALTER TABLE sec.user DROP COLUMN guid;
         </sql>
     </changeSet>
 
