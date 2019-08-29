@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Сервис для получения UserInfo с сервера ЕСИА
  * ex org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices
  */
 

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
@@ -20,6 +21,11 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+
+/**
+ * Компонент для формирования секрета при авторизации ч.з. ESIA
+ * ru.rt.eu.n2o.control.rri.util.Pkcs7Util
+ */
 
 @Component
 public final class Pkcs7Util {
@@ -34,6 +40,17 @@ public final class Pkcs7Util {
     private String keyStorePassword;
 
     private static final String SIGNATURE_ALG = "SHA256withRSA";
+
+    private CMSSignedDataGenerator generator;
+
+    public String getUrlSafeSign(final String content) {
+        try {
+            byte[] signedBytes = signPkcs7(content.getBytes(StandardCharsets.UTF_8));
+            return new String(Base64.getUrlEncoder().encode(signedBytes));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     private KeyStore loadKeyStore() throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
         KeyStore keystore = KeyStore.getInstance("PKCS12");
@@ -65,18 +82,10 @@ public final class Pkcs7Util {
         return generator;
     }
 
-    private byte[] signPkcs7(final byte[] content, final CMSSignedDataGenerator generator) throws CMSException, IOException {
-        CMSTypedData cmsTypedData = new CMSProcessableByteArray(content);
-        CMSSignedData signedData = generator.generate(cmsTypedData, true);
-        return signedData.getEncoded();
-    }
-
-    public String getUrlSafeSign(final String content) {
-        try {
-            byte[] signedBytes = signPkcs7(content.getBytes("UTF-8"), setUpProvider(loadKeyStore()));
-            return new String(Base64.getUrlEncoder().encode(signedBytes));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+    private byte[] signPkcs7(final byte[] content) throws Exception {
+        if (generator == null) {
+            generator = setUpProvider(loadKeyStore());
         }
+        return generator.generate(new CMSProcessableByteArray(content), true).getEncoded();
     }
 }

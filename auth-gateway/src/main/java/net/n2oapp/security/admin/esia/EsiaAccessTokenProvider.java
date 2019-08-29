@@ -18,6 +18,9 @@ import org.springframework.util.StringUtils;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+/**
+ * Provider для получения oauth2 токена с сервера ЕСИА
+ */
 
 public class EsiaAccessTokenProvider extends AuthorizationCodeAccessTokenProvider {
 

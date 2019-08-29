@@ -77,6 +77,7 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
         filter.setRedirectStrategy(new DefaultRedirectStrategy() {
             @Override
             public void sendRedirect(HttpServletRequest request, HttpServletResponse response, String url) throws IOException {
+                //в timestamp разница времени '+' записывается кодом, иначе timestamp не распарсится
                 super.sendRedirect(request, response, url.replace("+", "%2B"));
             }
         });
@@ -98,20 +99,20 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
     private Filter ssoFilter() {
         CompositeFilter filter = new CompositeFilter();
         List<Filter> filters = new ArrayList<>();
-        filters.add(ssoFilter(keycloak(), "/login/keycloak"));
+        filters.add(ssoKeycloakFilter(keycloak(), "/login/keycloak"));
         filters.add(ssoEsiaFilter(esia(), "/login/esia"));
         filter.setFilters(filters);
         return filter;
     }
 
-    private Filter ssoFilter(ClientResources client, String path) {
+    private Filter ssoKeycloakFilter(ClientResources client, String path) {
         OAuth2ClientAuthenticationProcessingFilter filter = new OAuth2ClientAuthenticationProcessingFilter(
                 path);
         OAuth2RestTemplate template = new OAuth2RestTemplate(client.getClient(), oauth2ClientContext);
         filter.setRestTemplate(template);
         UserInfoTokenServices tokenServices = new UserInfoTokenServices(client.getResource().getUserInfoUri(), client.getClient().getClientId());
         tokenServices.setRestTemplate(template);
-        KeycloakPrincipalExtractor extractor = new KeycloakPrincipalExtractor(userDetailsService);
+        KeycloakPrincipalExtractor extractor = new KeycloakPrincipalExtractor(userDetailsService).setAuthServer("KEYCLOAK");
         tokenServices.setAuthoritiesExtractor(extractor);
         tokenServices.setPrincipalExtractor(extractor);
         filter.setTokenServices(tokenServices);
@@ -125,7 +126,8 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
         filter.setRestTemplate(template);
         EsiaUserInfoTokenServices tokenServices = new EsiaUserInfoTokenServices(client.getResource().getUserInfoUri(), client.getClient().getClientId());
         tokenServices.setRestTemplate(template);
-        KeycloakPrincipalExtractor extractor = new KeycloakPrincipalExtractor(userDetailsService).setAuthServer(KeycloakPrincipalExtractor.AuthServer.ESIA);
+        KeycloakPrincipalExtractor extractor = new KeycloakPrincipalExtractor(userDetailsService)
+                .setAuthServer("ESIA").setPrincipalKeys("snils");
         tokenServices.setAuthoritiesExtractor(extractor);
         tokenServices.setPrincipalExtractor(extractor);
         filter.setTokenServices(tokenServices);
