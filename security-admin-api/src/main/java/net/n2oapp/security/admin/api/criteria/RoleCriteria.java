@@ -12,9 +12,9 @@ import java.util.List;
 public class RoleCriteria extends BaseCriteria {
     private String name;
     private String description;
-    private List<String> permissionCode;
+    private List<String> permissionCodes;
 
-    public void setPermissionCode(List<String> permissionCode) {
-        this.permissionCode = permissionCode != null ? permissionCode : new ArrayList<>();
+    public void setPermissionCodes(List<String> permissionCodes) {
+        this.permissionCodes = permissionCodes != null ? permissionCodes : new ArrayList<>();
     }
 }

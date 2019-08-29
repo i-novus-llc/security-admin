@@ -49,7 +49,7 @@ public class RoleServiceSqlTest {
         criteria.setSize(4);
         criteria.setName("user");
         criteria.setDescription("description1");
-        criteria.setPermissionCode(permissions);
+        criteria.setPermissionCodes(permissions);
         Page<Role> role = service.findAll(criteria);
         assertEquals(1, role.getTotalElements());
     }

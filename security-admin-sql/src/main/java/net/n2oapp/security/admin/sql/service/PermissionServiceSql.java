@@ -8,7 +8,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -45,8 +44,7 @@ public class PermissionServiceSql implements PermissionService {
                     new MapSqlParameterSource("name", permission.getName())
                             .addValue("code", permission.getCode())
                             .addValue("parent_code", permission.getParentCode());
-            jdbcTemplate.update(SqlUtil.getResourceFileAsString(INSERT_PERMISSION), namedParameters,
-                    new GeneratedKeyHolder(), null);
+            jdbcTemplate.update(SqlUtil.getResourceFileAsString(INSERT_PERMISSION), namedParameters);
             return permission;
         });
         return permission;
@@ -77,9 +75,7 @@ public class PermissionServiceSql implements PermissionService {
     public Permission getById(String code) {
         try {
             return jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(GET_PERMISSION_BY_ID),
-                    new MapSqlParameterSource("code", code), (resultSet, i) -> {
-                return model(resultSet);
-            });
+                    new MapSqlParameterSource("code", code), (resultSet, i) -> model(resultSet));
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
@@ -89,26 +85,20 @@ public class PermissionServiceSql implements PermissionService {
     @Override
     public List<Permission> getAll() {
         return jdbcTemplate.query(SqlUtil.getResourceFileAsString(GET_ALL), new MapSqlParameterSource(), (resultSet,
-                                                                                                          i) -> {
-            return model(resultSet);
-        });
+                                                                                                          i) -> model(resultSet));
     }
 
     @Override
     public List<Permission> getAllByParentCode(String parentCode) {
         return jdbcTemplate.query(SqlUtil.getResourceFileAsString(GET_ALL_BY_PARENT_ID), new MapSqlParameterSource(
-                "parent_code", parentCode), (resultSet, i) -> {
-            return model(resultSet);
-        });
+                "parent_code", parentCode), (resultSet, i) -> model(resultSet));
 
     }
 
     @Override
     public List<Permission> getAllByParentIdIsNull() {
         return jdbcTemplate.query(SqlUtil.getResourceFileAsString(GET_ALL_BY_PARENT_ID_IS_NULL),
-                new MapSqlParameterSource(), (resultSet, i) -> {
-            return model(resultSet);
-        });
+                new MapSqlParameterSource(), (resultSet, i) -> model(resultSet));
     }
 
     private Permission model(ResultSet resultSet) throws SQLException {

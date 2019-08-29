@@ -124,7 +124,7 @@ public class RoleServiceSql implements RoleService {
         SqlParameterSource namedParameters =
                 new MapSqlParameterSource("name", criteria.getName())
                         .addValue("description", criteria.getDescription())
-                        .addValue("permission_code", criteria.getPermissionCode())
+                        .addValue("permission_code", criteria.getPermissionCodes())
                         .addValue("limit", criteria.getPageSize())
                         .addValue("offset", criteria.getOffset())
                         .addValue("sorting", sorting)
