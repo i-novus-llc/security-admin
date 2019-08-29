@@ -39,7 +39,7 @@
             </invocation>
             <in-parameters>
                 <param id="id" mapping="[0].id" domain="integer" required="true"/>
-                <param id="guid" mapping="[0].guid" domain="string"/>
+                <param id="extUid" mapping="[0].extUid" domain="string"/>
                 <param id="username" mapping="[0].username" domain="string" required="true"/>
                 <param id="email" mapping="[0].email" domain="string" required="true"/>
                 <param id="surname" mapping="[0].surname" domain="string" required="true"/>

@@ -34,7 +34,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (userEntity == null) {
             userEntity = new UserEntity();
             userEntity.setUsername(userDetails.getUsername());
-            userEntity.setGuid(userDetails.getGuid() == null ? null : UUID.fromString(userDetails.getGuid()));
+            userEntity.setExtUid(userDetails.getExtUid() == null ? null : UUID.fromString(userDetails.getExtUid()));
             userEntity.setEmail(userDetails.getEmail());
             userEntity.setSurname(userDetails.getSurname());
             userEntity.setName(userDetails.getName());
@@ -46,8 +46,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             userRepository.save(userEntity);
         } else {
             userEntity.setIsActive(true);
-            if (userDetails.getGuid() != null) {
-                userEntity.setGuid(userDetails.getGuid() == null ? null : UUID.fromString(userDetails.getGuid()));
+            if (userDetails.getExtUid() != null) {
+                userEntity.setExtUid(userDetails.getExtUid() == null ? null : UUID.fromString(userDetails.getExtUid()));
             }
             if (userDetails.getEmail() != null) {
                 userEntity.setEmail(userDetails.getEmail());
@@ -101,7 +101,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (entity == null) return null;
         User model = new User();
         model.setId(entity.getId());
-        model.setGuid(entity.getGuid() == null ? null : entity.getGuid().toString());
+        model.setExtUid(entity.getExtUid() == null ? null : entity.getExtUid().toString());
         model.setUsername(entity.getUsername());
         model.setName(entity.getName());
         model.setSurname(entity.getSurname());

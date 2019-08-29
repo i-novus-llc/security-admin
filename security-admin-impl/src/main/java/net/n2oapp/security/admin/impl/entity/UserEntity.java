@@ -1,6 +1,5 @@
 package net.n2oapp.security.admin.impl.entity;
 
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -29,9 +28,8 @@ public class UserEntity {
     /**
      * Идентификатор пользователя в сторонних системах
      */
-    @Column(name = "guid")
-    private UUID guid;
-
+    @Column(name = "ext_uid")
+    private UUID extUid;
 
     /**
      * Логин пользователя
@@ -45,7 +43,6 @@ public class UserEntity {
      */
     @Column(name = "email")
     private String email;
-
 
     /**
      * Фамилия

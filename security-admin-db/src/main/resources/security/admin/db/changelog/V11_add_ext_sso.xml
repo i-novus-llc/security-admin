@@ -17,5 +17,17 @@
         </sql>
     </changeSet>
 
+    <changeSet id="EPMP-189-20190829-02" author="estartcev">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists columnName="ext_uid" schemaName="sec" tableName="user"/>
+            </not>
+        </preConditions>
+        <comment>Переименование колонки guid в ext_uid</comment>
+        <sql>
+            ALTER TABLE sec.user RENAME COLUMN guid TO ext_uid;
+        </sql>
+    </changeSet>
+
 
 </databaseChangeLog>

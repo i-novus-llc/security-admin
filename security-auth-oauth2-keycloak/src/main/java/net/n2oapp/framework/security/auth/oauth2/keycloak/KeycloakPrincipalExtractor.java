@@ -71,7 +71,7 @@ public class KeycloakPrincipalExtractor implements PrincipalExtractor, Authoriti
         UserDetailsToken token = new UserDetailsToken();
         token.setUsername(username);
         token.setRoleNames(roleList);
-        token.setGuid((String) extractFromMap(GUID_KEYS, map));
+        token.setExtUid((String) extractFromMap(GUID_KEYS, map));
         token.setSurname(surname);
         token.setName(name);
         token.setEmail(email);
