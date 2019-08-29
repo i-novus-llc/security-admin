@@ -48,12 +48,15 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private BackChannelLogoutHandler logoutSuccessHandler;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.antMatcher("/**").authorizeRequests().antMatchers("/", "/login**", "/webjars/**", "/api/**").permitAll().anyRequest()
                 .authenticated().and().exceptionHandling()
                 .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/")).and().logout()
-                .logoutSuccessUrl("/").permitAll().and().csrf().disable()
+                .logoutSuccessUrl("/").logoutSuccessHandler(logoutSuccessHandler).permitAll().and().csrf().disable()
                 .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
     }
 

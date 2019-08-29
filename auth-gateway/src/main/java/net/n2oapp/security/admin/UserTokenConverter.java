@@ -3,9 +3,11 @@ package net.n2oapp.security.admin;
 import net.n2oapp.security.auth.common.User;
 import net.n2oapp.security.auth.common.UserParamsUtil;
 import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 import org.springframework.security.oauth2.provider.token.UserAuthenticationConverter;
 
 import java.util.*;
@@ -18,6 +20,7 @@ public class UserTokenConverter implements UserAuthenticationConverter {
     static final String EMAIL = "email";
     static final String SURNAME = "surname";
     static final String PATRONYMIC = "patronymic";
+    static final String SID = "sid";
 
     @Override
     public Map<String, ?> convertUserAuthentication(Authentication authentication) {
@@ -29,6 +32,11 @@ public class UserTokenConverter implements UserAuthenticationConverter {
             response.put(SURNAME, user.getSurname());
             response.put(PATRONYMIC, user.getPatronymic());
             response.put(EMAIL, user.getEmail());
+            if (authentication.getDetails() instanceof Map) {
+                response.put(SID, ((Map) authentication.getDetails()).get(SID));
+            } else if (authentication.getDetails() instanceof OAuth2AuthenticationDetails) {
+                response.put(SID, ((OAuth2AuthenticationDetails) authentication.getDetails()).getSessionId());
+            }
         } else {
             response.put(USERNAME, authentication.getName());
         }
@@ -55,7 +63,9 @@ public class UserTokenConverter implements UserAuthenticationConverter {
             Collection<? extends GrantedAuthority> authorities = getAuthorities(map);
             Object principal = new User((String) map.get(USERNAME), "N/A", authorities, (String) map.get(SURNAME), (String) map.get(NAME),
                     (String) map.get(PATRONYMIC), (String) map.get(EMAIL));
-            return new UsernamePasswordAuthenticationToken(principal, "N/A", authorities);
+            AbstractAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(principal, "N/A", authorities);
+            authentication.setDetails(map);
+            return authentication;
         }
         return null;
     }

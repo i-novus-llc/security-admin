@@ -43,6 +43,7 @@ public class UserInfoEndpoint {
         map.put(USERNAME, authentication.getName());
         map.put(ROLES, roles);
         map.put(PERMISSIONS, permissions);
+        map.put(SID, ((Map<String, Object>) authentication.getUserAuthentication().getDetails()).get(SID));
         return map;
     }
 }

@@ -7,6 +7,7 @@
 
     <include file="classpath*:/security/admin/db/urp/properties.xml"/>
     <include file="classpath*:/security/admin/db/urp/changelog.xml"/>
+    <include file="classpath*:/security/admin/db/system/changelog.xml"/>
 
     <changeSet id="create_admin1" author="rgalina">
         <sqlFile path="create_admin.sql"/>
