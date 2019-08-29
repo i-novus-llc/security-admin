@@ -74,7 +74,7 @@ public class RoleServiceSql implements RoleService {
             role.getPermissions().forEach(permission -> {
                 SqlParameterSource params =
                         new MapSqlParameterSource("roleId", role.getId())
-                                .addValue("permission_code", permission);
+                                .addValue("permissionCode", permission);
                 jdbcTemplate.update(SqlUtil.getResourceFileAsString(INSERT_ROLE_PERMISSION), params);
             });
         }
@@ -124,7 +124,7 @@ public class RoleServiceSql implements RoleService {
         SqlParameterSource namedParameters =
                 new MapSqlParameterSource("name", criteria.getName())
                         .addValue("description", criteria.getDescription())
-                        .addValue("permission_code", criteria.getPermissionCodes())
+                        .addValue("permissionCode", criteria.getPermissionCodes())
                         .addValue("limit", criteria.getPageSize())
                         .addValue("offset", criteria.getOffset())
                         .addValue("sorting", sorting)
