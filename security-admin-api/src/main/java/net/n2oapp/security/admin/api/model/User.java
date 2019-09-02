@@ -20,7 +20,7 @@ public class User {
     private String extSys;
 
     @ApiModelProperty(value = "Внешний идентификатор")
-    private String guid;
+    private String extUid;
 
     @ApiModelProperty(value = "Имя пользователя")
     private String username;

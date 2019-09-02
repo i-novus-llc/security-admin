@@ -7,7 +7,6 @@ import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.api.service.MailService;
 import net.n2oapp.security.admin.api.service.RoleService;
 import net.n2oapp.security.admin.api.service.UserService;
-import net.n2oapp.security.admin.commons.util.MailServiceImpl;
 import net.n2oapp.security.admin.commons.util.PasswordGenerator;
 import net.n2oapp.security.admin.commons.util.UserValidations;
 import net.n2oapp.security.admin.sql.util.SqlUtil;
@@ -95,7 +94,7 @@ public class UserServiceSql implements UserService {
                             .addValue("name", user.getName())
                             .addValue("patronymic", user.getPatronymic())
                             .addValue("isActive", true)
-                            .addValue("guid", user.getGuid());
+                            .addValue("extUid", user.getExtUid());
             ((MapSqlParameterSource) namedParameters).addValue("password", passwordHash);
             KeyHolder keyHolder = new GeneratedKeyHolder();
             jdbcTemplate.update(SqlUtil.getResourceFileAsString(INSERT_USER), namedParameters, keyHolder, new String[]{"id"});
@@ -125,7 +124,7 @@ public class UserServiceSql implements UserService {
                             .addValue("name", user.getName())
                             .addValue("patronymic", user.getPatronymic())
                             .addValue("isActive", user.getIsActive())
-                            .addValue("guid", user.getGuid());
+                            .addValue("extUid", user.getExtUid());
             if (user.getNewPassword() == null) {
                 jdbcTemplate.update(SqlUtil.getResourceFileAsString(UPDATE_USER_WITHOUT_PASS), namedParameters);
             } else {
@@ -226,7 +225,7 @@ public class UserServiceSql implements UserService {
         if (form == null) return null;
         User user = new User();
         user.setId(form.getId());
-        user.setGuid(form.getGuid());
+        user.setExtUid(form.getExtUid());
         user.setUsername(form.getUsername());
         user.setName(form.getName());
         user.setSurname(form.getSurname());
@@ -245,7 +244,7 @@ public class UserServiceSql implements UserService {
         if (resultSet == null) return null;
         User user = new User();
         user.setId(resultSet.getInt("id"));
-        user.setGuid(resultSet.getString("guid"));
+        user.setExtUid(resultSet.getString("ext_uid"));
         user.setUsername(resultSet.getString("username"));
         user.setName(resultSet.getString("name"));
         user.setSurname(resultSet.getString("surname"));

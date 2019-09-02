@@ -17,17 +17,17 @@ public class RestUserDetailsToken extends UserDetailsToken {
     public RestUserDetailsToken(UserDetailsToken userDetails) {
         setEmail(userDetails.getEmail());
         setUsername(userDetails.getUsername());
-        setGuid(userDetails.getGuid());
+        setExtUid(userDetails.getExtUid());
         setName(userDetails.getName());
         setSurname(userDetails.getSurname());
         setRoleNames(userDetails.getRoleNames());
     }
 
-    @QueryParam("guid")
+    @QueryParam("extUid")
     @Override
     @ApiParam(value = "Уникальный идентификатор")
-    public void setGuid(String guid) {
-        super.setGuid(guid);
+    public void setExtUid(String extUid) {
+        super.setExtUid(extUid);
     }
 
     @QueryParam("username")

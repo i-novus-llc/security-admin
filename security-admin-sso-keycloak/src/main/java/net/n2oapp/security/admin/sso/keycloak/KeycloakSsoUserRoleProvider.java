@@ -35,7 +35,7 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
     public User createUser(User user) {
         UserRepresentation userRepresentation = map(user);
         String userGuid = userService.createUser(userRepresentation);
-        user.setGuid(userGuid);
+        user.setExtUid(userGuid);
         if (user.getRoles() != null) {
             List<RoleRepresentation> roles = new ArrayList<>();
             List<RoleRepresentation> roleRepresentationList = roleService.getAllRoles();
@@ -58,27 +58,27 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
         userService.updateUser(userRepresentation);
         List<RoleRepresentation> forRemove = new ArrayList<>();
         if (user.getRoles() == null || user.getRoles().isEmpty()) {
-            forRemove = userService.getActualUserRoles(user.getGuid());
+            forRemove = userService.getActualUserRoles(user.getExtUid());
         } else {
             Set<String> roleNames = user.getRoles().stream().map(Role::getCode).collect(Collectors.toSet());
-            List<RoleRepresentation> effective = userService.getActualUserRoles(user.getGuid());
+            List<RoleRepresentation> effective = userService.getActualUserRoles(user.getExtUid());
             if (effective != null) {
                 forRemove = effective.stream().filter(e -> !roleNames.contains(e.getName())).collect(Collectors.toList());
             }
             Set<String> effectiveRoleNames = effective == null ? new HashSet<>() :
                     effective.stream().map(r -> r.getName()).collect(Collectors.toSet());
-            userService.addUserRoles(user.getGuid(), user.getRoles().stream()
+            userService.addUserRoles(user.getExtUid(), user.getRoles().stream()
                     .filter(r -> !effectiveRoleNames.contains(r.getCode())).map(r -> map(r)).collect(Collectors.toList()));
         }
-        userService.deleteUserRoles(user.getGuid(), forRemove);
+        userService.deleteUserRoles(user.getExtUid(), forRemove);
         if (user.getPassword() != null) {
-            userService.changePassword(user.getGuid(), user.getPassword());
+            userService.changePassword(user.getExtUid(), user.getPassword());
         }
     }
 
     @Override
     public void deleteUser(User user) {
-        userService.deleteUser(user.getGuid());
+        userService.deleteUser(user.getExtUid());
     }
 
     @Override
@@ -106,7 +106,7 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
 
     private UserRepresentation map(User user) {
         UserRepresentation kUser = new UserRepresentation();
-        kUser.setId(user.getGuid());
+        kUser.setId(user.getExtUid());
         kUser.setEnabled(user.getIsActive());
         kUser.setUsername(user.getUsername());
         kUser.setFirstName(user.getName());
