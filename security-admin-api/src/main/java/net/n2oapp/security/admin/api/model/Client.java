@@ -2,6 +2,7 @@ package net.n2oapp.security.admin.api.model;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @ApiModel("Клиент")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Client {
 
     @ApiModelProperty("Имя клиента")
