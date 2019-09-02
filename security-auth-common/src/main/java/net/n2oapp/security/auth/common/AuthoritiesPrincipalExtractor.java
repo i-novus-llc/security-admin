@@ -1,8 +1,7 @@
-package net.n2oapp.framework.security.auth.oauth2.keycloak;
+package net.n2oapp.security.auth.common;
 
 import net.n2oapp.security.admin.api.model.UserDetailsToken;
 import net.n2oapp.security.admin.api.service.UserDetailsService;
-import net.n2oapp.security.auth.common.User;
 import net.n2oapp.security.auth.common.authority.PermissionGrantedAuthority;
 import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.AuthoritiesExtractor;
@@ -20,7 +19,7 @@ import java.util.stream.Collectors;
  * Создание объекта пользователя из информации в SSO сервере
  */
 @Component
-public class KeycloakPrincipalExtractor implements PrincipalExtractor, AuthoritiesExtractor {
+public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, AuthoritiesExtractor {
 
     private static final String GRANTED_AUTHORITY_KEY = "GrantedAuthorityKey";
 
@@ -29,14 +28,14 @@ public class KeycloakPrincipalExtractor implements PrincipalExtractor, Authoriti
     private static final String[] SURNAME_KEYS = new String[]{"surname", "second_name", "family_name", "lastName"};
     private static final String[] NAME_KEYS = new String[]{"first_name", "given_name", "name", "firstName"};
     private static final String[] EMAIL_KEYS = new String[]{"email", "e-mail", "mail"};
-    private static final String[] GUID_KEYS = new String[]{"sub"};
+    private static final String[] GUID_KEYS = new String[]{"sub", "oid"};
     private static final String[] AUTHORITIES_KEYS = new String[]{"roles", "authorities", "realm_access.roles", "resource_access.roles"};
 
     private UserDetailsService userDetailsService;
 
     private String authServer;
 
-    public KeycloakPrincipalExtractor(UserDetailsService userDetailsService) {
+    public AuthoritiesPrincipalExtractor(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
@@ -56,12 +55,12 @@ public class KeycloakPrincipalExtractor implements PrincipalExtractor, Authoriti
         return getAuthorities(map, null);
     }
 
-    public KeycloakPrincipalExtractor setAuthServer(String sso) {
+    public AuthoritiesPrincipalExtractor setAuthServer(String sso) {
         this.authServer = sso;
         return this;
     }
 
-    public KeycloakPrincipalExtractor setPrincipalKeys(String... pKeys) {
+    public AuthoritiesPrincipalExtractor setPrincipalKeys(String... pKeys) {
         PRINCIPAL_KEYS = pKeys;
         return this;
     }

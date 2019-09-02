@@ -1,6 +1,6 @@
 package net.n2oapp.security.admin;
 
-import net.n2oapp.framework.security.auth.oauth2.keycloak.KeycloakPrincipalExtractor;
+import net.n2oapp.security.auth.common.AuthoritiesPrincipalExtractor;
 import net.n2oapp.security.admin.api.service.UserDetailsService;
 import net.n2oapp.security.admin.esia.EsiaAccessTokenProvider;
 import net.n2oapp.security.admin.esia.EsiaUserInfoTokenServices;
@@ -112,7 +112,7 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
         filter.setRestTemplate(template);
         UserInfoTokenServices tokenServices = new UserInfoTokenServices(client.getResource().getUserInfoUri(), client.getClient().getClientId());
         tokenServices.setRestTemplate(template);
-        KeycloakPrincipalExtractor extractor = new KeycloakPrincipalExtractor(userDetailsService).setAuthServer("KEYCLOAK");
+        AuthoritiesPrincipalExtractor extractor = new AuthoritiesPrincipalExtractor(userDetailsService).setAuthServer("KEYCLOAK");
         tokenServices.setAuthoritiesExtractor(extractor);
         tokenServices.setPrincipalExtractor(extractor);
         filter.setTokenServices(tokenServices);
@@ -126,8 +126,8 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
         filter.setRestTemplate(template);
         EsiaUserInfoTokenServices tokenServices = new EsiaUserInfoTokenServices(client.getResource().getUserInfoUri(), client.getClient().getClientId());
         tokenServices.setRestTemplate(template);
-        KeycloakPrincipalExtractor extractor = new KeycloakPrincipalExtractor(userDetailsService)
-                .setAuthServer("ESIA").setPrincipalKeys("snils");
+        AuthoritiesPrincipalExtractor extractor = new AuthoritiesPrincipalExtractor(userDetailsService)
+                .setAuthServer("ESIA").setPrincipalKeys("snils");   //FIXME поменять на email
         tokenServices.setAuthoritiesExtractor(extractor);
         tokenServices.setPrincipalExtractor(extractor);
         filter.setTokenServices(tokenServices);
