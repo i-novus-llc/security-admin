@@ -64,6 +64,6 @@ public interface UserRestService {
     @Path("/details")
     @ApiOperation("Загрузить информацию о пользователе, по его имени и списку ролей")
     @ApiResponse(code = 200, message = "Страница пользователей")
-    User loadDetails(@BeanParam RestUserDetailsToken token);
+    User loadDetails(@ApiParam(value = "Информация о пользователе") RestUserDetailsToken token);
 
 }
