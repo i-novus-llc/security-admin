@@ -27,7 +27,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public Client create(Client client) {
-        if (!clientRepository.findById(client.getClientId()).isEmpty())
+        if (clientRepository.findById(client.getClientId()).isPresent())
             throw new UserException("exception.uniqueClient");
         return model(clientRepository.save(entity(client)));
     }
