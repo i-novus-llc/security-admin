@@ -12,7 +12,7 @@
     <parent>
         <artifactId>security-admin</artifactId>
         <groupId>net.n2oapp.framework.security</groupId>
-        <version>3.5-SNAPSHOT</version>
+        <version>3.5</version>
         <relativePath>..</relativePath>
     </parent>
 
