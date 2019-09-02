@@ -16,6 +16,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -55,7 +56,7 @@ public class ClientServiceImpl implements ClientService {
         return clientRepository.findAll(specification, criteria).map(this::model);
     }
 
-    private HashSet<String> stringToSet(String string) {
+    private Set<String> stringToSet(String string) {
         return new HashSet<>(Arrays.asList(StringUtils.tokenizeToStringArray(string, ",")));
     }
 
@@ -64,10 +65,10 @@ public class ClientServiceImpl implements ClientService {
         Client client = new Client();
         client.setClientId(clientEntity.getClientId());
         client.setClientSecret(clientEntity.getClientSecret());
-        client.setAuthorizedGrantTypes(stringToSet(clientEntity.getAuthorizedGrantTypes()));
-        client.setRegisteredRedirectUri(stringToSet(clientEntity.getRegisteredRedirectUri()));
-        client.setAccessTokenValiditySeconds(clientEntity.getAccessTokenValiditySeconds());
-        client.setRefreshTokenValiditySeconds(clientEntity.getRefreshTokenValiditySeconds());
+        client.setGrantTypes(stringToSet(clientEntity.getGrantTypes()));
+        client.setRedirectUris(stringToSet(clientEntity.getRedirectUris()));
+        client.setAccessTokenLifetime(clientEntity.getAccessTokenLifetime());
+        client.setRefreshTokenLifetime(clientEntity.getRefreshTokenLifetime());
         client.setLogoutUrl(clientEntity.getLogoutUrl());
 
         return client;
@@ -79,10 +80,10 @@ public class ClientServiceImpl implements ClientService {
         ClientEntity entity = new ClientEntity();
         entity.setClientId(client.getClientId());
         entity.setClientSecret(client.getClientSecret());
-        entity.setAuthorizedGrantTypes(StringUtils.collectionToCommaDelimitedString(client.getAuthorizedGrantTypes()));
-        entity.setRegisteredRedirectUri(StringUtils.collectionToCommaDelimitedString(client.getRegisteredRedirectUri()));
-        entity.setAccessTokenValiditySeconds(client.getAccessTokenValiditySeconds());
-        entity.setRefreshTokenValiditySeconds(client.getRefreshTokenValiditySeconds());
+        entity.setGrantTypes(StringUtils.collectionToCommaDelimitedString(client.getGrantTypes()));
+        entity.setRedirectUris(StringUtils.collectionToCommaDelimitedString(client.getRedirectUris()));
+        entity.setAccessTokenLifetime(client.getAccessTokenLifetime());
+        entity.setRefreshTokenLifetime(client.getRefreshTokenLifetime());
         entity.setLogoutUrl(client.getLogoutUrl());
 
         return entity;

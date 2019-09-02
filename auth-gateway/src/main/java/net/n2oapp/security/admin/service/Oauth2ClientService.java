@@ -32,10 +32,10 @@ public class Oauth2ClientService implements ClientDetailsService {
         Oauth2Client client = new Oauth2Client();
         client.setClientId(apiModel.getClientId());
         client.setClientSecret(apiModel.getClientSecret());
-        client.setAuthorizedGrantTypes(apiModel.getAuthorizedGrantTypes());
-        client.setRegisteredRedirectUri(apiModel.getRegisteredRedirectUri());
-        client.setAccessTokenValiditySeconds(apiModel.getAccessTokenValiditySeconds());
-        client.setRefreshTokenValiditySeconds(apiModel.getRefreshTokenValiditySeconds());
+        client.setAuthorizedGrantTypes(apiModel.getGrantTypes());
+        client.setRegisteredRedirectUri(apiModel.getRedirectUris());
+        client.setAccessTokenValiditySeconds(apiModel.getAccessTokenLifetime());
+        client.setRefreshTokenValiditySeconds(apiModel.getRefreshTokenLifetime());
         client.setLogoutUrl(apiModel.getLogoutUrl());
 
         return client;

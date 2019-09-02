@@ -23,16 +23,16 @@ public class Client {
     private String clientSecret;
 
     @ApiModelProperty("Тип авторизации")
-    private Set<String> authorizedGrantTypes;
+    private Set<String> grantTypes;
 
     @ApiModelProperty("URI разрешённые для редиректа")
-    private Set<String> registeredRedirectUri;
+    private Set<String> redirectUris;
 
     @ApiModelProperty("Время жизни токена")
-    private Integer accessTokenValiditySeconds;
+    private Integer accessTokenLifetime;
 
     @ApiModelProperty("Время жизни токена для обновления токенов")
-    private Integer refreshTokenValiditySeconds;
+    private Integer refreshTokenLifetime;
 
     @ApiModelProperty("URL для выходы")
     private String logoutUrl;

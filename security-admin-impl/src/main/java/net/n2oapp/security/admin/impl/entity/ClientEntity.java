@@ -12,12 +12,10 @@ import javax.validation.constraints.NotBlank;
 /**
  * Сущность Клиент
  */
-
 @Entity
 @Data
 @Table(name = "client", schema = "sec")
 public class ClientEntity {
-
 
     /**
      * Имя клиента
@@ -34,28 +32,28 @@ public class ClientEntity {
     private String clientSecret;
 
     /**
-     * Тип авторизации разрешённой клиента
+     * Разрешенные клиенту типы авторизации
      */
-    @Column(name = "authorized_grant_types")
-    private String authorizedGrantTypes;
+    @Column(name = "grant_types")
+    private String grantTypes;
 
     /**
      * Ссылки разрешённые для редиректа
      */
-    @Column(name = "registered_redirect_uri")
-    private String registeredRedirectUri;
+    @Column(name = "redirect_uris")
+    private String redirectUris;
 
     /**
-     * Время жизни токена
+     * Время жизни токена доступа
      */
-    @Column(name = "access_token_validity_seconds")
-    private Integer accessTokenValiditySeconds;
+    @Column(name = "access_token_lifetime")
+    private Integer accessTokenLifetime;
 
     /**
      * Время жизни refresh токена
      */
-    @Column(name = "refresh_token_validity_seconds")
-    private Integer refreshTokenValiditySeconds;
+    @Column(name = "refresh_token_lifetime")
+    private Integer refreshTokenLifetime;
 
     /**
      * Ссылка для выхода
