@@ -3,6 +3,9 @@ package net.n2oapp.framework.security.admin.gateway.adapter;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.jwt.Jwt;
 import org.springframework.security.jwt.JwtHelper;
 import org.springframework.security.jwt.crypto.sign.RsaVerifier;
@@ -16,6 +19,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -31,10 +35,10 @@ public class BackChannelLogoutFilter extends GenericFilterBean implements Initia
     private RestTemplate restTemplate = new RestTemplate();
     private volatile SignatureVerifier verifier;
 
-    private ClientServerSessionRegistry sessionRegistry;
+    private SessionRegistry sessionRegistry;
     private String tokenKeyEndpointUrl;
 
-    public BackChannelLogoutFilter(ClientServerSessionRegistry sessionRegistry, String tokenKeyEndpointUrl) {
+    public BackChannelLogoutFilter(SessionRegistry sessionRegistry, String tokenKeyEndpointUrl) {
         this.sessionRegistry = sessionRegistry;
         this.tokenKeyEndpointUrl = tokenKeyEndpointUrl;
     }
@@ -67,7 +71,9 @@ public class BackChannelLogoutFilter extends GenericFilterBean implements Initia
             throw new RuntimeException(e);
         }
         if (checkClaims(claims)) {
-            sessionRegistry.markSessionsAsExpired(claims.get(USERNAME).toString(), claims.get(SID).toString());
+            sessionRegistry.getAllSessions(new User(claims.get(USERNAME).toString(), "N/A", Collections.emptyList()), true)
+                    .forEach(SessionInformation::expireNow);
+
         }
 
     }

@@ -1,5 +1,6 @@
 package net.n2oapp.framework.security.admin.gateway.adapter;
 
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.web.authentication.session.ChangeSessionIdAuthenticationStrategy;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,9 +14,9 @@ import javax.servlet.http.HttpSession;
  */
 public class ChangeSessionIdServletRequestWrapper extends HttpServletRequestWrapper {
 
-    private ClientServerSessionRegistry sessionRegistry;
+    private SessionRegistry sessionRegistry;
 
-    public ChangeSessionIdServletRequestWrapper(HttpServletRequest request, ClientServerSessionRegistry sessionRegistry) {
+    public ChangeSessionIdServletRequestWrapper(HttpServletRequest request, SessionRegistry sessionRegistry) {
         super(request);
         this.sessionRegistry = sessionRegistry;
     }
@@ -31,7 +32,8 @@ public class ChangeSessionIdServletRequestWrapper extends HttpServletRequestWrap
         String newClientSessionId = super.changeSessionId();
 
         if (oldClientSessionId != null) {
-            sessionRegistry.changeSessionId(newClientSessionId, oldClientSessionId);
+            sessionRegistry.registerNewSession(newClientSessionId, sessionRegistry.getSessionInformation(oldClientSessionId).getPrincipal());
+            sessionRegistry.removeSessionInformation(oldClientSessionId);
         }
 
         return newClientSessionId;

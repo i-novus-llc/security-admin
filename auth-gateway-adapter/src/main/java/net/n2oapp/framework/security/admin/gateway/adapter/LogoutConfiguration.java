@@ -3,6 +3,7 @@ package net.n2oapp.framework.security.admin.gateway.adapter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.session.ConcurrentSessionFilter;
 
 import javax.servlet.http.HttpServletResponse;
@@ -11,12 +12,12 @@ import javax.servlet.http.HttpServletResponse;
 public class LogoutConfiguration {
 
     @Bean
-    public ClientServerSessionRegistry sessionRegistry() {
-        return new ClientServerSessionRegistry();
+    public SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
     }
 
     @Bean
-    public OnAuthenticationSuccess onAuthenticationSuccess(ClientServerSessionRegistry sessionRegistry) {
+    public OnAuthenticationSuccess onAuthenticationSuccess(SessionRegistry sessionRegistry) {
         return new OnAuthenticationSuccess(sessionRegistry);
     }
 

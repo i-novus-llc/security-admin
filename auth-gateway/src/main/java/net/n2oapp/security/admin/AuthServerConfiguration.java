@@ -17,15 +17,14 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 public class AuthServerConfiguration extends OAuth2AuthorizationServerConfiguration {
 
 
-    public AuthServerConfiguration(BaseClientDetails details, AuthenticationConfiguration authenticationConfiguration
-            , ObjectProvider<TokenStore> tokenStore, ObjectProvider<AccessTokenConverter> tokenConverter,
+    public AuthServerConfiguration(BaseClientDetails details, AuthenticationConfiguration authenticationConfiguration,
+                                   ObjectProvider<TokenStore> tokenStore, ObjectProvider<AccessTokenConverter> tokenConverter,
                                    AuthorizationServerProperties properties) throws Exception {
         super(details, authenticationConfiguration, tokenStore, tokenConverter, properties);
     }
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-
         clients.withClientDetails(new Oauth2ClientService());
     }
 }
