@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
  * Модель пользователя для actions
  */
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserForm {
     private Integer id;
     private String guid;

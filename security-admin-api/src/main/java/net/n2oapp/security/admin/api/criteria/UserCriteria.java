@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.api.criteria;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +13,7 @@ import java.util.Objects;
  */
 @Getter
 @Setter
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserCriteria extends BaseCriteria {
     private String username;
     private String fio;
