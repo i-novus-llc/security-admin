@@ -11,11 +11,14 @@ import net.n2oapp.security.admin.impl.entity.UserEntity;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,6 +29,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private UserRepository userRepository;
     @Autowired
     private RoleRepository roleRepository;
+
+    @Value("${access.keycloak.ignore-roles:offline_access,uma_authorization}")
+    private String[] ignoreRoles;
 
     @Override
     public User loadUserDetails(UserDetailsToken userDetails) {
@@ -39,8 +45,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             userEntity.setName(userDetails.getName());
             userEntity.setIsActive(true);
             userEntity.setExtSys(userDetails.getExtSys());
-            if (userDetails.getRoleNames() != null){
-                userEntity.setRoleList(userDetails.getRoleNames().stream().map(this::getOrCreateRole).collect(Collectors.toList()));
+            if (userDetails.getRoleNames() != null) {
+                userEntity.setRoleList(userDetails.getRoleNames().stream().map(this::getOrCreateRole).filter(Objects::nonNull).collect(Collectors.toList()));
             }
             userRepository.save(userEntity);
         } else {
@@ -69,16 +75,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                         roleNamesCopy.remove(r.getCode());
                     }
                 }
-                if (!roleForRemove.isEmpty()) {
-                    for (RoleEntity r : roleForRemove) {
-                        userEntity.getRoleList().remove(r);
-                    }
+                for (String s : ignoreRoles) {
+                    roleNamesCopy.remove(s);
                 }
-                if (!roleNamesCopy.isEmpty()) {
-                    for(String r : roleNamesCopy) {
-                        RoleEntity role = getOrCreateRole(r);
-                        userEntity.getRoleList().add(role);
-                    }
+                for (RoleEntity r : roleForRemove) {
+                    userEntity.getRoleList().remove(r);
+                }
+                for (String r : roleNamesCopy) {
+                    userEntity.getRoleList().add(getOrCreateRole(r));
                 }
             }
         }
@@ -86,6 +90,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     private RoleEntity getOrCreateRole(String name) {
+        for (String s : ignoreRoles) {
+            if (s.equals(name)) return null;
+        }
         RoleEntity roleEntity = roleRepository.findOneByCode(name);
         if (roleEntity == null) {
             roleEntity = new RoleEntity();
