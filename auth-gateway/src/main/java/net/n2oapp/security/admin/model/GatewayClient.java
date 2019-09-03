@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class Oauth2Client implements ClientDetails {
+public class GatewayClient implements ClientDetails {
     private String clientId;
     private String clientSecret;
     private Set<String> authorizedGrantTypes;

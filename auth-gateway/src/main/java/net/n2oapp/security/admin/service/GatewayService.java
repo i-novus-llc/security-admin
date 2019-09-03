@@ -2,7 +2,7 @@ package net.n2oapp.security.admin.service;
 
 import net.n2oapp.security.admin.api.model.Client;
 import net.n2oapp.security.admin.api.service.ClientService;
-import net.n2oapp.security.admin.model.Oauth2Client;
+import net.n2oapp.security.admin.model.GatewayClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
@@ -11,7 +11,7 @@ import org.springframework.security.oauth2.provider.NoSuchClientException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class Oauth2ClientService implements ClientDetailsService {
+public class GatewayService implements ClientDetailsService {
 
     @Autowired
     private ClientService clientService;
@@ -22,14 +22,14 @@ public class Oauth2ClientService implements ClientDetailsService {
         Client client;
         client = clientService.findById(clientId);
         if (client == null)
-            throw new NoSuchClientException("Oauth2Client with id: " +
+            throw new NoSuchClientException("GatewayClient with id: " +
                     clientId + " does not exists");
-        return oauth2Model(client);
+        return gatewayClient(client);
     }
 
 
-    private Oauth2Client oauth2Model(Client apiModel) {
-        Oauth2Client client = new Oauth2Client();
+    private GatewayClient gatewayClient(Client apiModel) {
+        GatewayClient client = new GatewayClient();
         client.setClientId(apiModel.getClientId());
         client.setClientSecret(apiModel.getClientSecret());
         client.setAuthorizedGrantTypes(apiModel.getGrantTypes());
