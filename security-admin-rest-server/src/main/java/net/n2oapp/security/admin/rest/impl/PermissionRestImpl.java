@@ -19,16 +19,16 @@ public class PermissionRestImpl implements PermissionRestService {
 
 
     @Override
-    public Page<Permission> getAll(Integer parentId, Boolean parentIdIsNull) {
+    public Page<Permission> getAll(String parentCode, Boolean parentIdIsNull) {
         if (Boolean.TRUE.equals(parentIdIsNull))
             return new PageImpl<>(service.getAllByParentIdIsNull());
-        return new PageImpl<>(parentId != null ? service.getAllByParentId(parentId) : service.getAll());
+        return new PageImpl<>(parentCode != null ? service.getAllByParentCode(parentCode) : service.getAll());
 
     }
 
     @Override
-    public Permission getById(Integer id) {
-        return service.getById(id);
+    public Permission getById(String code) {
+        return service.getByCode(code);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class PermissionRestImpl implements PermissionRestService {
     }
 
     @Override
-    public void delete(Integer id) {
-        service.delete(id);
+    public void delete(String code) {
+        service.delete(code);
     }
 }

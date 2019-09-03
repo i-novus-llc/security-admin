@@ -10,12 +10,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 /**
  * Тест SQL реализации сервиса управления правами доступа
@@ -40,25 +37,25 @@ public class PermissionServiceSqlTest {
     public void crud() {
         Permission permission = create();
         update(permission);
-        delete(permission.getId());
+        delete(permission.getCode());
     }
 
     private Permission create() {
         Permission permission = service.create(newPermission());
-        assertNotNull(service.getById(permission.getId()));
+        assertNotNull(service.getByCode(permission.getCode()));
         return permission;
     }
 
     private Permission update(Permission permission) {
         permission.setName("userName1Update");
         Permission updatePermission = service.update(permission);
-        assertEquals("userName1Update", service.getById(permission.getId()).getName());
+        assertEquals("userName1Update", service.getByCode(permission.getCode()).getName());
         return updatePermission;
     }
 
-    private void delete(Integer id) {
-        service.delete(id);
-        Permission permission = service.getById(id);
+    private void delete(String code) {
+        service.delete(code);
+        Permission permission = service.getByCode(code);
         assertNull(permission);
     }
 
@@ -70,9 +67,9 @@ public class PermissionServiceSqlTest {
 
     @Test
     public void getAllgetAllByParentId() throws Exception {
-        List<Permission> permissions = service.getAllByParentId(1);
+        List<Permission> permissions = service.getAllByParentCode("test");
         assertEquals(1, permissions.size());
-        assertEquals((Integer) 2, permissions.get(0).getId());
+        assertEquals("test2", permissions.get(0).getCode());
         assertEquals(false, permissions.get(0).getHasChildren());
     }
 
@@ -80,7 +77,7 @@ public class PermissionServiceSqlTest {
     public void getAllByParentIdIsNull() throws Exception {
         List<Permission> permissions = service.getAllByParentIdIsNull();
         assertEquals(1, permissions.size());
-        assertEquals((Integer) 1, permissions.get(0).getId());
+        assertEquals("test", permissions.get(0).getCode());
         assertEquals(true, permissions.get(0).getHasChildren());
     }
 
@@ -88,7 +85,7 @@ public class PermissionServiceSqlTest {
         Permission permission = new Permission();
         permission.setName("user1");
         permission.setCode("code1");
-        permission.setParentId(null);
+        permission.setParentCode(null);
         return permission;
     }
 

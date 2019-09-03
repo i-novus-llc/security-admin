@@ -10,7 +10,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.test.context.TestPropertySource;
@@ -20,9 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 /**
  * Тест Rest сервиса управления ролями пользователя
@@ -40,14 +37,14 @@ public class RoleRestTest {
 
     @Test
     public void search() throws Exception {
-        List<Integer> permissions = new ArrayList<>();
-        permissions.add(1);
+        List<String> permissions = new ArrayList<>();
+        permissions.add("test");
         RestRoleCriteria criteria = new RestRoleCriteria();
         criteria.setPage(0);
         criteria.setSize(4);
         criteria.setName("user");
         criteria.setDescription("description1");
-        criteria.setPermissionIds(permissions);
+        criteria.setPermissionCodes(permissions);
         Page<Role> role = client.findAll(criteria);
         assertEquals(1, role.getTotalElements());
     }
@@ -63,7 +60,7 @@ public class RoleRestTest {
         Role role = client.create(newRole());
         assertNotNull(role);
         assertEquals(1, role.getPermissions().size());
-        assertEquals((Integer) 1, role.getPermissions().iterator().next().getId());
+        assertEquals("test", role.getPermissions().iterator().next().getCode());
         return role.getId();
     }
 
@@ -87,8 +84,8 @@ public class RoleRestTest {
         role.setName("user1");
         role.setCode("code1");
         role.setDescription("description1");
-        List<Integer> permissions = new ArrayList<>();
-        permissions.add(1);
+        List<String> permissions = new ArrayList<>();
+        permissions.add("test");
         role.setPermissions(permissions);
         return role;
     }
@@ -99,7 +96,7 @@ public class RoleRestTest {
         form.setName(role.getName());
         form.setCode(role.getCode());
         form.setDescription(role.getDescription());
-        form.setPermissions(role.getPermissions().stream().map(Permission::getId).collect(Collectors.toList()));
+        form.setPermissions(role.getPermissions().stream().map(Permission::getCode).collect(Collectors.toList()));
         return form;
     }
 

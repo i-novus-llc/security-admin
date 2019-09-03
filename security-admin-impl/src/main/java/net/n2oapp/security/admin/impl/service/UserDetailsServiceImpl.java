@@ -149,10 +149,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private Permission model(PermissionEntity entity) {
         if (entity == null) return null;
         Permission model = new Permission();
-        model.setId(entity.getId());
         model.setName(entity.getName());
         model.setCode(entity.getCode());
-        model.setParentId(entity.getParentId());
+        model.setParentCode(entity.getParentCode());
         return model;
     }
 

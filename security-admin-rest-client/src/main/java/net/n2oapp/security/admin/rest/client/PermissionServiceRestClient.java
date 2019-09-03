@@ -28,13 +28,13 @@ public class PermissionServiceRestClient implements PermissionService {
     }
 
     @Override
-    public void delete(Integer id) {
-        client.delete(id);
+    public void delete(String code) {
+        client.delete(code);
     }
 
     @Override
-    public Permission getById(Integer id) {
-        return client.getById(id);
+    public Permission getByCode(String code) {
+        return client.getById(code);
     }
 
     @Override
@@ -43,8 +43,8 @@ public class PermissionServiceRestClient implements PermissionService {
     }
 
     @Override
-    public List<Permission> getAllByParentId(Integer parentId) {
-        return client.getAll(parentId, null).getContent();
+    public List<Permission> getAllByParentCode(String parentCode) {
+        return client.getAll(parentCode, null).getContent();
     }
 
     @Override
