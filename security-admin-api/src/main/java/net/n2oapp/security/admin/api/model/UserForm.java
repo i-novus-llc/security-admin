@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -11,6 +12,7 @@ import java.util.List;
  */
 @Data
 @ApiModel("Пользователь")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserForm {
 
     @ApiModelProperty(value = "Идентификатор")

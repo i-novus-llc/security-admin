@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @ApiModel("Право доступа")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Permission {
 
     @JsonProperty
