@@ -3,12 +3,16 @@ package net.n2oapp.security.admin.impl.provider;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
-import org.springframework.stereotype.Service;
 
 /**
  * Дефолтная реализация
  */
 public class SimpleSsoUserRoleProvider implements SsoUserRoleProvider {
+
+    @Override
+    public boolean isSupports(String ssoName) {
+        return true;
+    }
 
     @Override
     public User createUser(User user) {
