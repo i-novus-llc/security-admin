@@ -28,7 +28,7 @@ public class PermissionRestImpl implements PermissionRestService {
 
     @Override
     public Permission getById(String code) {
-        return service.getById(code);
+        return service.getByCode(code);
     }
 
     @Override

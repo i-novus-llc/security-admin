@@ -72,7 +72,7 @@ public class PermissionServiceSql implements PermissionService {
     }
 
     @Override
-    public Permission getById(String code) {
+    public Permission getByCode(String code) {
         try {
             return jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(GET_PERMISSION_BY_ID),
                     new MapSqlParameterSource("code", code), (resultSet, i) -> model(resultSet));

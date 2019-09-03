@@ -38,7 +38,7 @@ public interface PermissionService {
      * @param code Идентификатор
      * @return Модель прав доступа
      */
-    Permission getById(String code);
+    Permission getByCode(String code);
 
     /**
      * Найти все права доступаии поиска

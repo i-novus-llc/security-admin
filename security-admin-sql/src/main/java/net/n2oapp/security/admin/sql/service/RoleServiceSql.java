@@ -195,7 +195,7 @@ public class RoleServiceSql implements RoleService {
         role.setName(form.getName());
         role.setDescription(form.getDescription());
         if (form.getPermissions() != null) {
-            role.setPermissions(form.getPermissions().stream().map(service::getById).collect(Collectors.toList()));
+            role.setPermissions(form.getPermissions().stream().map(service::getByCode).collect(Collectors.toList()));
         }
         return role;
     }

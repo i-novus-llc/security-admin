@@ -42,20 +42,20 @@ public class PermissionServiceSqlTest {
 
     private Permission create() {
         Permission permission = service.create(newPermission());
-        assertNotNull(service.getById(permission.getCode()));
+        assertNotNull(service.getByCode(permission.getCode()));
         return permission;
     }
 
     private Permission update(Permission permission) {
         permission.setName("userName1Update");
         Permission updatePermission = service.update(permission);
-        assertEquals("userName1Update", service.getById(permission.getCode()).getName());
+        assertEquals("userName1Update", service.getByCode(permission.getCode()).getName());
         return updatePermission;
     }
 
     private void delete(String code) {
         service.delete(code);
-        Permission permission = service.getById(code);
+        Permission permission = service.getByCode(code);
         assertNull(permission);
     }
 

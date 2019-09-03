@@ -39,7 +39,7 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public Permission getById(String code) {
+    public Permission getByCode(String code) {
         PermissionEntity permissionEntity = permissionRepository.findById(code).get();
         return model(permissionEntity);
     }
