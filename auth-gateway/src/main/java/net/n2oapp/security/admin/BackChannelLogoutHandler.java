@@ -37,6 +37,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Обработчик единого выхода
+ */
 @Component
 public class BackChannelLogoutHandler implements LogoutSuccessHandler {
 

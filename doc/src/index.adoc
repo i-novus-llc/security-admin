@@ -416,16 +416,17 @@ security.oauth2.sso.logout-uri=${security.oauth2.auth-server-uri}/logout?redirec
 . Запустите ваше приложение. При открытии любой страницы через браузер должна
 произойти переадресация на страницу входа Auth Gateway.
 
-=== Single Sign-Out
+== Single Logout
+В этом разделе рассказывается о возможности подключения технологии единого выхода к приложению, использующему авторизацию по протоколу OAuth2 OpenId Connect.
+
+=== Выход из Auth Gateway
 Технология единого выхода реализована согласно спецификации
 link:https://openid.net/specs/openid-connect-backchannel-1_0.html[OpenID Connect Back-Channel Logout]
 и включает в себя следующие этапы:
 
-* Получение сервером аутентификации запроса на выход от одного из клиентов.
-
-* Отправка запросов клиентам, в которых пользователь имеет активные сессии.
-
-* Обработка запросов на выход на стороне клиентов.
+. Получение сервером аутентификации запроса на выход от одного из клиентов.
+. Отправка запросов клиентам, в которых пользователь имеет активные сессии.
+. Обработка запросов на выход на стороне клиентов.
 
 Для обеспечения возможности единого выхода необходимо подключить auth-gateway-adapter и настроить конфигурацию приложения.
 
@@ -446,12 +447,15 @@ link:https://openid.net/specs/openid-connect-backchannel-1_0.html[OpenID Connect
     @Autowired
     private ClientServerSessionRegistry sessionRegistry;
 
+    @Value("${security.oauth2.client.token-key-uri}")
+    private String tokenKeyUri;
+
     . . .
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         . . .
-        http.addFilterAfter(new BackChannelLogoutFilter(sessionRegistry, "http://localhost:9999/oauth/token_key"), LogoutFilter.class);
+        http.addFilterAfter(new BackChannelLogoutFilter(sessionRegistry, tokenKeyUri), LogoutFilter.class);
     }
 ----
 

@@ -68,7 +68,7 @@ public class BackChannelLogoutFilter extends GenericFilterBean implements Initia
             claims = mapper.readValue(jwt.getClaims(), new TypeReference<Map<String, Object>>() {
             });
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException("Cannot read logout token", e);
         }
         if (checkClaims(claims)) {
             sessionRegistry.getAllSessions(new User(claims.get(USERNAME).toString(), "N/A", Collections.emptyList()), true)
