@@ -36,7 +36,6 @@
         <module>security-auth-simple</module>
         <module>security-auth-oauth2</module>
         <module>security-auth-oauth2-gateway</module>
-        <module>security-auth-oauth2-keycloak</module>
         <module>security-admin-api</module>
         <module>security-admin-impl</module>
         <module>security-admin-web</module>

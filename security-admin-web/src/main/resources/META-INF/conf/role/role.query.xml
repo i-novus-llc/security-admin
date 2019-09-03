@@ -48,8 +48,8 @@
             </filters>
         </field>
 
-        <field id="permissionIds" domain="integer[]" name="Права">
-            <select mapping="['permissions'].![id]"></select>
+        <field id="permissionIds" domain="string[]" name="Права">
+            <select mapping="['permissions'].![code]"></select>
             <filters>
                 <in mapping="['permissionIds']" filter-id="permissionIds"></in>
             </filters>
@@ -59,11 +59,12 @@
             <select mapping="['permissions'].![name]"></select>
         </field>
 
-        <field id="permissions" domain="object[]" name="Права">
-            <select mapping="['permissions']"></select>
-            <filters>
-                <in filter-id="permissions*.id" domain="integer[]" mapping="permissionIds"/>
-            </filters>
+
+        <field id="permissions*.id" >
+            <select mapping="permissions.![code]"></select>
+        </field>
+        <field id="permissions*.name" >
+            <select mapping="permissions.![name]"></select>
         </field>
 
     </fields>

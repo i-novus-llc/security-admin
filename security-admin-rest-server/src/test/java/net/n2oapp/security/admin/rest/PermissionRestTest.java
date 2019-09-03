@@ -31,16 +31,16 @@ public class PermissionRestTest {
 
     @Test
     public void getAllByParentId() throws Exception {
-        Page<Permission> permissions = client.getAll(1, false);
+        Page<Permission> permissions = client.getAll("test", false);
         assertEquals(1, permissions.getTotalElements());
-        assertEquals((Integer) 2, permissions.getContent().get(0).getId());
+        assertEquals("test2", permissions.getContent().get(0).getCode());
     }
 
     @Test
     public void getAllParentIsNull() throws Exception {
-        Page<Permission> permissions = client.getAll(1, true);
+        Page<Permission> permissions = client.getAll("test", true);
         assertEquals(1, permissions.getTotalElements());
-        assertEquals((Integer) 1, permissions.getContent().get(0).getId());
+        assertEquals("test", permissions.getContent().get(0).getCode());
     }
 
     @Test

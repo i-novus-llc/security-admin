@@ -1,6 +1,9 @@
 package net.n2oapp.security.admin.sql.service;
 
-import net.n2oapp.security.admin.api.model.*;
+import net.n2oapp.security.admin.api.model.Permission;
+import net.n2oapp.security.admin.api.model.Role;
+import net.n2oapp.security.admin.api.model.User;
+import net.n2oapp.security.admin.api.model.UserDetailsToken;
 import net.n2oapp.security.admin.api.service.UserDetailsService;
 import net.n2oapp.security.admin.sql.util.SqlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +19,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Реализация сервиса предоставления информации о пользователе (ролей/пермишенов)
@@ -44,21 +46,22 @@ public class UserDetailsServiceSql implements UserDetailsService {
         u.setName(token.getName());
         u.setUsername(token.getUsername());
         u.setSurname(token.getSurname());
-        u.setGuid(token.getGuid());
+        u.setExtUid(token.getExtUid());
         u.setEmail(token.getEmail());
 
         MapSqlParameterSource namedParameters =
                 new MapSqlParameterSource("username", u.getUsername())
                         .addValue("name", u.getSurname())
                         .addValue("surname", u.getName())
-                        .addValue("guid", UUID.fromString(u.getGuid()))
+                        .addValue("extUid", u.getExtUid())
                         .addValue("email", u.getEmail())
                         .addValue("isActive", true)
                         .addValue("password", null)
                         .addValue("patronymic", null);
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(SqlUtil.getResourceFileAsString(INSERT_USER), namedParameters, keyHolder, new String[]{"id"});
+        jdbcTemplate.update(SqlUtil.getResourceFileAsString(INSERT_USER), namedParameters, keyHolder, new String[]{
+                "id"});
         u.setId((Integer) keyHolder.getKey());
         saveRoles(token, u);
         return u;
@@ -83,7 +86,7 @@ public class UserDetailsServiceSql implements UserDetailsService {
 
     private User getUser(UserDetailsToken token) {
         MapSqlParameterSource parameters =
-                new MapSqlParameterSource("guid", token.getGuid())
+                new MapSqlParameterSource("extUid", token.getExtUid())
                         .addValue("surname", token.getSurname())
                         .addValue("name", token.getName())
                         .addValue("username", token.getUsername())
@@ -92,11 +95,12 @@ public class UserDetailsServiceSql implements UserDetailsService {
         try {
             user = jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(LOAD_USER_DETAILS), parameters,
                     (resultSet, i) -> {
-                User u = userModel(resultSet);
-                u.setRoles(findAllRolesWithPermissions(u.getId()));
-                return u;
-            });
-        } catch (EmptyResultDataAccessException ignored) {}
+                        User u = userModel(resultSet);
+                        u.setRoles(findAllRolesWithPermissions(u.getId()));
+                        return u;
+                    });
+        } catch (EmptyResultDataAccessException ignored) {
+        }
 
         return user;
     }
@@ -111,10 +115,9 @@ public class UserDetailsServiceSql implements UserDetailsService {
         Role role = null;
         for (Map<String, Object> row : rows) {
             Permission p = new Permission();
-            p.setId((Integer) row.get("p_id"));
             p.setName((String) row.get("p_name"));
             p.setCode((String) row.get("p_code"));
-            p.setParentId((Integer) row.get("p_parent_id"));
+            p.setParentCode((String) row.get("p_parent_code"));
             Integer roleId = (Integer) row.get("r_id");
             if (!roleId.equals(currentRoleId)) {
                 currentRoleId = roleId;
@@ -126,7 +129,7 @@ public class UserDetailsServiceSql implements UserDetailsService {
                 role.setDescription((String) row.get("r_description"));
                 roles.add(role);
             }
-            if (p.getId() != null)
+            if (p.getCode() != null)
                 role.getPermissions().add(p);
         }
         return roles;
@@ -140,7 +143,7 @@ public class UserDetailsServiceSql implements UserDetailsService {
         user.setEmail(resultSet.getString("email"));
         user.setPassword(resultSet.getString("password"));
         user.setIsActive(resultSet.getBoolean("is_active"));
-        user.setGuid(resultSet.getString("guid"));
+        user.setExtUid(resultSet.getString("ext_uid"));
         user.setSurname(resultSet.getString("surname"));
         user.setName(resultSet.getString("name"));
         user.setPatronymic(resultSet.getString("patronymic"));
@@ -151,6 +154,6 @@ public class UserDetailsServiceSql implements UserDetailsService {
     private String getFio(String surname, String name, String patronymic) {
         return (surname != null ? surname + " " : "")
                 + (name != null ? name + " " : "")
-                + (patronymic!= null ? patronymic + " " : "").trim();
+                + (patronymic != null ? patronymic + " " : "").trim();
     }
 }

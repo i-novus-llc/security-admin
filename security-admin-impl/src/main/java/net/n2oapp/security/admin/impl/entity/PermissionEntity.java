@@ -16,13 +16,13 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "permission", schema = "sec")
 public class PermissionEntity {
+
     /**
-     * Идентификатор права доступа
+     * Код права доступа
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Integer id;
+    @Column(name = "code", nullable = false)
+    private String code;
 
     /**
      * Наименование права доступа
@@ -30,16 +30,11 @@ public class PermissionEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
-    /**
-     * Код права доступа
-     */
-    @Column(name = "code", nullable = false)
-    private String code;
 
-    @Column(name = "parent_id")
-    private Integer parentId;
+    @Column(name = "parent_code")
+    private String parentCode;
 
-    @Formula("(SELECT count(*) != 0 from sec.permission c where c.parent_id = id)")
+    @Formula("(SELECT count(*) != 0 from sec.permission c where c.parent_code = code)")
     private Boolean hasChildren;
 
     /**
@@ -59,10 +54,9 @@ public class PermissionEntity {
     private List<RoleEntity> roleList;
 
 
-    public PermissionEntity(Integer id) {
-        setId(id);
+    public PermissionEntity(String id) {
+        setCode(id);
     }
-
 
 
 }

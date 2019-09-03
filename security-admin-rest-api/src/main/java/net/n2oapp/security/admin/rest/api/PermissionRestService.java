@@ -23,15 +23,15 @@ public interface PermissionRestService {
     @Path("/")
     @ApiOperation("Найти все права доступа")
     @ApiResponse(code = 200, message = "Страница прав доступа")
-    Page<Permission> getAll(@ApiParam(value = "Идентификатор родителя") @QueryParam("parentId") Integer parentId,
-                            @ApiParam(value = "Параметр для получения родительских привелегий") @QueryParam("parentIdIsNull") Boolean parentIdIsNull);
+    Page<Permission> getAll(@ApiParam(value = "Код родителя") @QueryParam("parentCode") String parentCode,
+                            @ApiParam(value = "Параметр для получения родительских привелегий") @QueryParam("parentCodeIsNull") Boolean parentIdIsNull);
 
 
     @GET
-    @Path("/{id}")
+    @Path("/{code}")
     @ApiOperation("Получить право доступа по идентификатору")
     @ApiResponse(code = 200, message = "Права доступа")
-    Permission getById(@ApiParam(value = "Идентификатор") @PathParam("id") Integer id);
+    Permission getById(@ApiParam(value = "Код") @PathParam("code") String code);
 
     @POST
     @Path("/")
@@ -46,8 +46,8 @@ public interface PermissionRestService {
     Permission update(@ApiParam(value = "Привелегия") Permission permission);
 
     @DELETE
-    @Path("/{id}")
+    @Path("/{code}")
     @ApiOperation("Удалить право доступа")
     @ApiResponse(code = 200, message = "Право доступа удалено")
-    void delete(@ApiParam(value = "Идентификатор") Integer id);
+    void delete(@ApiParam(value = "Код") @PathParam("code") String code);
 }

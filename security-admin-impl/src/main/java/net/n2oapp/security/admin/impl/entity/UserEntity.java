@@ -1,13 +1,11 @@
 package net.n2oapp.security.admin.impl.entity;
 
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Сущность Пользователь
@@ -29,9 +27,8 @@ public class UserEntity {
     /**
      * Идентификатор пользователя в сторонних системах
      */
-    @Column(name = "guid")
-    private UUID guid;
-
+    @Column(name = "ext_uid")
+    private String extUid;
 
     /**
      * Логин пользователя
@@ -45,7 +42,6 @@ public class UserEntity {
      */
     @Column(name = "email")
     private String email;
-
 
     /**
      * Фамилия
@@ -87,8 +83,11 @@ public class UserEntity {
     )
     private List<RoleEntity> roleList;
 
-
-
+    /**
+     * внешний SSO сервер
+     */
+    @Column(name = "ext_sys")
+    private String extSys;
 
 }
 
