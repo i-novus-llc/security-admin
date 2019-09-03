@@ -1,1 +1,1 @@
-insert into sec.user(username, password, email, surname, name, patronymic, is_active, guid) values(:username, :password, :email, :surname, :name, :patronymic, :isActive, :guid);
+insert into sec.user(username, password, email, surname, name, patronymic, is_active, ext_uid) values(:username, :password, :email, :surname, :name, :patronymic, :isActive, :extUid);

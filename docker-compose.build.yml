@@ -5,7 +5,7 @@ services:
       context: security-admin-backend
       args:
         JAR_FILE: target/access-service.jar
-    image: "538721144237.dkr.ecr.eu-west-1.amazonaws.com/security-admin/backend:${TAG}"
+    image: "538721144237.dkr.ecr.eu-west-1.amazonaws.com/security-admin/access-service:${TAG}"
 
   auth-gateway:
     build:
@@ -19,4 +19,4 @@ services:
       context: security-admin-frontend
       args:
         JAR_FILE: target/access-web.jar
-    image: "538721144237.dkr.ecr.eu-west-1.amazonaws.com/security-admin/frontend:${TAG}"
+    image: "538721144237.dkr.ecr.eu-west-1.amazonaws.com/security-admin/access-web:${TAG}"
