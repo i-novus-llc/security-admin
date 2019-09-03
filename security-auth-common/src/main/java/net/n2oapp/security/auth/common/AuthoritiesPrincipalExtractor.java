@@ -23,8 +23,7 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
 
     private static final String GRANTED_AUTHORITY_KEY = "GrantedAuthorityKey";
 
-    private static String[] PRINCIPAL_KEYS = new String[]{"username", "preferred_username",
-            "login", "sub"};
+    private String[] PRINCIPAL_KEYS = new String[]{"username", "preferred_username", "login", "sub"};
     private static final String[] SURNAME_KEYS = new String[]{"surname", "second_name", "family_name", "lastName"};
     private static final String[] NAME_KEYS = new String[]{"first_name", "given_name", "name", "firstName"};
     private static final String[] EMAIL_KEYS = new String[]{"email", "e-mail", "mail"};
