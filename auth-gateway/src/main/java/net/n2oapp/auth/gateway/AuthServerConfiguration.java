@@ -1,6 +1,6 @@
-package net.n2oapp.security.admin;
+package net.n2oapp.auth.gateway;
 
-import net.n2oapp.security.admin.service.GatewayService;
+import net.n2oapp.auth.gateway.service.GatewayService;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.security.oauth2.authserver.AuthorizationServerProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.authserver.OAuth2AuthorizationServerConfiguration;
