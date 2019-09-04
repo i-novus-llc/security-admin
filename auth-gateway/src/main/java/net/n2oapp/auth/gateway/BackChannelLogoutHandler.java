@@ -1,5 +1,6 @@
 package net.n2oapp.auth.gateway;
 
+import net.n2oapp.security.admin.RedirectLogoutRequestHandler;
 import net.n2oapp.security.admin.api.criteria.ClientCriteria;
 import net.n2oapp.security.admin.api.model.Client;
 import net.n2oapp.security.admin.api.service.ClientService;
@@ -57,12 +58,16 @@ public class BackChannelLogoutHandler implements LogoutSuccessHandler {
     @Value("${access.jwt.signing_key}")
     private String signingKey;
 
+    @Value("${access.keycloak.logout-uri}")
+    private String logoutUri;
+
     @Autowired
     private ClientService clientService;
 
     @PostConstruct
     public void postConstruct() {
         signer = new RsaSigner(signingKey);
+        logoutSuccessHandler = new RedirectLogoutRequestHandler(logoutUri);
     }
 
     @Override
