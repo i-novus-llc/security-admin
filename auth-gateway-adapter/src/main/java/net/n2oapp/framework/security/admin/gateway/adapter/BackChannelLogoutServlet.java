@@ -2,7 +2,6 @@ package net.n2oapp.framework.security.admin.gateway.adapter;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.User;
@@ -11,24 +10,20 @@ import org.springframework.security.jwt.JwtHelper;
 import org.springframework.security.jwt.crypto.sign.RsaVerifier;
 import org.springframework.security.jwt.crypto.sign.SignatureVerifier;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.filter.GenericFilterBean;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 
 /**
- * Фильтр обработки запроса на выход
+ * Сервлет обработки запроса на выход
  */
-public class BackChannelLogoutFilter extends GenericFilterBean implements InitializingBean {
+public class BackChannelLogoutServlet extends HttpServlet {
 
     private static final String USERNAME = "username";
-    private static final String BACKCHANNEL_LOGOUT = "backchannel_logout";
 
     private ObjectMapper mapper = new ObjectMapper();
     private RestTemplate restTemplate = new RestTemplate();
@@ -37,26 +32,14 @@ public class BackChannelLogoutFilter extends GenericFilterBean implements Initia
     private SessionRegistry sessionRegistry;
     private String tokenKeyEndpointUrl;
 
-    public BackChannelLogoutFilter(SessionRegistry sessionRegistry, String tokenKeyEndpointUrl) {
+    public BackChannelLogoutServlet(SessionRegistry sessionRegistry, String tokenKeyEndpointUrl) {
         this.sessionRegistry = sessionRegistry;
         this.tokenKeyEndpointUrl = tokenKeyEndpointUrl;
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-
-        HttpServletRequest req = (HttpServletRequest) request;
-
-        if (isBackChannelLogout(req)) {
-            handleLogout(req);
-            return;
-        }
-
-        chain.doFilter(request, response);
-    }
-
-    private boolean isBackChannelLogout(HttpServletRequest request) {
-        return "POST".equals(request.getMethod()) && request.getServletPath().endsWith(BACKCHANNEL_LOGOUT);
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
+        handleLogout(req);
     }
 
     private void handleLogout(HttpServletRequest req) {
@@ -90,4 +73,5 @@ public class BackChannelLogoutFilter extends GenericFilterBean implements Initia
 
         return verifier;
     }
+
 }

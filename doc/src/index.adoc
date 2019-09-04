@@ -440,7 +440,7 @@ link:https://openid.net/specs/openid-connect-backchannel-1_0.html[OpenID Connect
 </dependency>
 ----
 
-А также настроить конфигурацию, добавив `BackChannelLogoutFilter`:
+А также настроить конфигурацию, зарегистрировав `BackChannelLogoutServlet`:
 
 [source,java]
 ----
@@ -452,10 +452,9 @@ link:https://openid.net/specs/openid-connect-backchannel-1_0.html[OpenID Connect
 
     . . .
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        . . .
-        http.addFilterAfter(new BackChannelLogoutFilter(sessionRegistry, tokenKeyUri), LogoutFilter.class);
+    @Bean
+    public ServletRegistrationBean servletRegistrationBean() {
+        return new ServletRegistrationBean(new BackChannelLogoutServlet(sessionRegistry, tokenKeyUri), "/backchannel_logout");
     }
 ----
 
