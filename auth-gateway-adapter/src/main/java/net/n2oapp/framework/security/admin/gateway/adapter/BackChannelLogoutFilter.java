@@ -28,7 +28,6 @@ import java.util.Map;
 public class BackChannelLogoutFilter extends GenericFilterBean implements InitializingBean {
 
     private static final String USERNAME = "username";
-    private static final String SID = "sid";
     private static final String BACKCHANNEL_LOGOUT = "backchannel_logout";
 
     private ObjectMapper mapper = new ObjectMapper();
@@ -53,7 +52,7 @@ public class BackChannelLogoutFilter extends GenericFilterBean implements Initia
             return;
         }
 
-        chain.doFilter(new ChangeSessionIdServletRequestWrapper(req, sessionRegistry), response);
+        chain.doFilter(request, response);
     }
 
     private boolean isBackChannelLogout(HttpServletRequest request) {

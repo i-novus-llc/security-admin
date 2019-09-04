@@ -17,6 +17,11 @@ public class LogoutConfiguration {
     }
 
     @Bean
+    public ChangeSessionIdListener changeSessionIdListener(SessionRegistry sessionRegistry) {
+        return new ChangeSessionIdListener(sessionRegistry);
+    }
+
+    @Bean
     public OnAuthenticationSuccess onAuthenticationSuccess(SessionRegistry sessionRegistry) {
         return new OnAuthenticationSuccess(sessionRegistry);
     }
