@@ -31,6 +31,7 @@
 
     <modules>
         <module>auth-gateway</module>
+        <module>auth-gateway-adapter</module>
         <module>security-auth</module>
         <module>security-auth-common</module>
         <module>security-auth-simple</module>
@@ -50,7 +51,6 @@
         <module>security-admin-frontend</module>
         <module>keycloak-theme</module>
         <module>doc</module>
-
     </modules>
 
     <dependencyManagement>
@@ -60,10 +60,17 @@
                 <artifactId>spring-security-oauth2-autoconfigure</artifactId>
                 <version>${spring.boot.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.springframework.security.oauth</groupId>
                 <artifactId>spring-security-oauth2</artifactId>
                 <version>${spring.boot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-jwt</artifactId>
+                <version>1.0.10.RELEASE</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
