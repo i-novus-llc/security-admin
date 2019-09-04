@@ -1,4 +1,4 @@
-package net.n2oapp.security.admin.model;
+package net.n2oapp.auth.gateway.model;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.provider.ClientDetails;

@@ -416,6 +416,51 @@ security.oauth2.sso.logout-uri=${security.oauth2.auth-server-uri}/logout?redirec
 . Запустите ваше приложение. При открытии любой страницы через браузер должна
 произойти переадресация на страницу входа Auth Gateway.
 
+== Single Logout
+В этом разделе рассказывается о возможности подключения технологии единого выхода к приложению, использующему авторизацию по протоколу OAuth2 OpenId Connect.
+
+=== Выход из Auth Gateway
+Технология единого выхода реализована согласно спецификации
+link:https://openid.net/specs/openid-connect-backchannel-1_0.html[OpenID Connect Back-Channel Logout]
+и включает в себя следующие этапы:
+
+. Получение сервером аутентификации запроса на выход от одного из клиентов.
+. Отправка запросов клиентам, в которых пользователь имеет активные сессии.
+. Обработка запросов на выход на стороне клиентов.
+
+Для обеспечения возможности единого выхода необходимо подключить auth-gateway-adapter и настроить конфигурацию приложения.
+
+Для подключения адаптера к приложению необходимо добавить следующую зависимость:
+[source,xml]
+----
+<dependency>
+    <groupId>net.n2oapp.framework.security</groupId>
+    <artifactId>auth-gateway-adapter</artifactId>
+    <version>${security-admin.version}</version>
+</dependency>
+----
+
+А также настроить конфигурацию, зарегистрировав `BackChannelLogoutServlet`:
+
+[source,java]
+----
+    @Autowired
+    private ClientServerSessionRegistry sessionRegistry;
+
+    @Value("${security.oauth2.client.token-key-uri}")
+    private String tokenKeyUri;
+
+    . . .
+
+    @Bean
+    public ServletRegistrationBean servletRegistrationBean() {
+        return new ServletRegistrationBean(new BackChannelLogoutServlet(sessionRegistry, tokenKeyUri), "/backchannel_logout");
+    }
+----
+
+[NOTE]
+Для обеспечения возможности единого выхода каждое приложение должно иметь уникальный client_id.
+
 == Схемы развертывания
 В этом разделе рассказывается об установке администрирования доступа в зависимости от выбранной Вами схемы развертывания.
 

@@ -1,10 +1,10 @@
-package net.n2oapp.security.admin;
+package net.n2oapp.auth.gateway;
 
-import net.n2oapp.security.auth.common.AuthoritiesPrincipalExtractor;
+import net.n2oapp.auth.gateway.esia.EsiaAccessTokenProvider;
+import net.n2oapp.auth.gateway.esia.EsiaUserInfoTokenServices;
+import net.n2oapp.auth.gateway.esia.Pkcs7Util;
 import net.n2oapp.security.admin.api.service.UserDetailsService;
-import net.n2oapp.security.admin.esia.EsiaAccessTokenProvider;
-import net.n2oapp.security.admin.esia.EsiaUserInfoTokenServices;
-import net.n2oapp.security.admin.esia.Pkcs7Util;
+import net.n2oapp.security.auth.common.AuthoritiesPrincipalExtractor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
@@ -58,6 +58,9 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
 
     @Autowired
+    private BackChannelLogoutHandler logoutSuccessHandler;
+
+    @Autowired
     private Pkcs7Util pkcs7Util;
 
     @Override
@@ -65,7 +68,7 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
         http.antMatcher("/**").authorizeRequests().antMatchers("/", "/login**", "/webjars/**", "/api/**").permitAll().anyRequest()
                 .authenticated().and().exceptionHandling()
                 .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/")).and().logout()
-                .logoutSuccessUrl("/").permitAll().and().csrf().disable()
+                .logoutSuccessUrl("/").logoutSuccessHandler(logoutSuccessHandler).permitAll().and().csrf().disable()
                 .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
     }
 
@@ -121,7 +124,7 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
 
     private Filter ssoEsiaFilter(ClientResources client, String path) {
         OAuth2ClientAuthenticationProcessingFilter filter = new OAuth2ClientAuthenticationProcessingFilter(path);
-        OAuth2RestTemplate template = new OAuth2RestTemplate(client.getClient(), oauth2ClientContext) ;
+        OAuth2RestTemplate template = new OAuth2RestTemplate(client.getClient(), oauth2ClientContext);
         template.setAccessTokenProvider(new AccessTokenProviderChain(Arrays.asList(new EsiaAccessTokenProvider(pkcs7Util))));
         filter.setRestTemplate(template);
         EsiaUserInfoTokenServices tokenServices = new EsiaUserInfoTokenServices(client.getResource().getUserInfoUri(), client.getClient().getClientId());
