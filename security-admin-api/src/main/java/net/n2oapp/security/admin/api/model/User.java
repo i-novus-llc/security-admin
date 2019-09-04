@@ -18,8 +18,11 @@ public class User {
     @ApiModelProperty(value = "Идентификатор")
     private Integer id;
 
+    @ApiModelProperty(value = "Наименование sso")
+    private String extSys;
+
     @ApiModelProperty(value = "Внешний идентификатор")
-    private String guid;
+    private String extUid;
 
     @ApiModelProperty(value = "Имя пользователя")
     private String username;

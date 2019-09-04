@@ -62,7 +62,7 @@ public class RoleEntity {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "role_permission", schema = "sec",
             joinColumns = {@JoinColumn(name = "role_id")},
-            inverseJoinColumns = {@JoinColumn(name = "permission_id")}
+            inverseJoinColumns = {@JoinColumn(name = "permission_code")}
     )
     private List<PermissionEntity> permissionList;
 

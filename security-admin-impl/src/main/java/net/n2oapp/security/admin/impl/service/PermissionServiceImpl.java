@@ -33,14 +33,14 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public void delete(Integer id) {
-        permissionRepository.deleteById(id);
+    public void delete(String code) {
+        permissionRepository.deleteById(code);
 
     }
 
     @Override
-    public Permission getById(Integer id) {
-        PermissionEntity permissionEntity = permissionRepository.findById(id).get();
+    public Permission getByCode(String code) {
+        PermissionEntity permissionEntity = permissionRepository.findById(code).get();
         return model(permissionEntity);
     }
 
@@ -50,33 +50,31 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public List<Permission> getAllByParentId(Integer parentId) {
-        return permissionRepository.findByParentId(parentId).stream().map(this::model).collect(Collectors.toList());
+    public List<Permission> getAllByParentCode(String parentCode) {
+        return permissionRepository.findByParentCode(parentCode).stream().map(this::model).collect(Collectors.toList());
     }
 
     @Override
     public List<Permission> getAllByParentIdIsNull() {
-        return permissionRepository.findByParentIdIsNull().stream().map(this::model).collect(Collectors.toList());
+        return permissionRepository.findByParentCodeIsNull().stream().map(this::model).collect(Collectors.toList());
     }
 
 
     private PermissionEntity entity(Permission model) {
         if (model == null) return null;
         PermissionEntity entity = new PermissionEntity();
-        entity.getId();
         entity.setName(model.getName());
         entity.setCode(model.getCode());
-        entity.setParentId(model.getParentId());
+        entity.setParentCode(model.getParentCode());
         return entity;
     }
 
     private Permission model(PermissionEntity entity) {
         if (entity == null) return null;
         Permission model = new Permission();
-        model.setId(entity.getId());
         model.setName(entity.getName());
         model.setCode(entity.getCode());
-        model.setParentId(entity.getParentId());
+        model.setParentCode(entity.getParentCode());
         model.setHasChildren(entity.getHasChildren());
         return model;
     }

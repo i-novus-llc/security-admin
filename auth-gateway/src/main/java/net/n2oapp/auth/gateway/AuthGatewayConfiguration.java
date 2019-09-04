@@ -1,9 +1,9 @@
-package net.n2oapp.security.admin;
+package net.n2oapp.auth.gateway;
 
+import net.n2oapp.auth.gateway.esia.EsiaAccessTokenProvider;
+import net.n2oapp.auth.gateway.esia.EsiaUserInfoTokenServices;
+import net.n2oapp.auth.gateway.esia.Pkcs7Util;
 import net.n2oapp.security.admin.api.service.UserDetailsService;
-import net.n2oapp.security.admin.esia.EsiaAccessTokenProvider;
-import net.n2oapp.security.admin.esia.EsiaUserInfoTokenServices;
-import net.n2oapp.security.admin.esia.Pkcs7Util;
 import net.n2oapp.security.auth.common.AuthoritiesPrincipalExtractor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

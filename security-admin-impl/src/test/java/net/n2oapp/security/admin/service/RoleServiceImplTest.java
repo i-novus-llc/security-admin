@@ -82,8 +82,8 @@ public class RoleServiceImplTest {
         role.setName("user1");
         role.setCode("code1");
         role.setDescription("description1");
-        List<Integer> permissions = new ArrayList<>();
-        permissions.add(1);
+        List<String> permissions = new ArrayList<>();
+        permissions.add("test");
         role.setPermissions(permissions);
         return role;
     }
@@ -94,7 +94,7 @@ public class RoleServiceImplTest {
         form.setName(role.getName());
         form.setCode(role.getCode());
         form.setDescription(role.getDescription());
-        form.setPermissions(role.getPermissions().stream().map(Permission::getId).collect(Collectors.toList()));
+        form.setPermissions(role.getPermissions().stream().map(Permission::getCode).collect(Collectors.toList()));
         return form;
     }
 

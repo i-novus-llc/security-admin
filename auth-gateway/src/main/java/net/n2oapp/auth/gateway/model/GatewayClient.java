@@ -1,4 +1,4 @@
-package net.n2oapp.security.admin.model;
+package net.n2oapp.auth.gateway.model;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.provider.ClientDetails;
@@ -9,8 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class Oauth2Client implements ClientDetails {
-    private Integer id;
+public class GatewayClient implements ClientDetails {
     private String clientId;
     private String clientSecret;
     private Set<String> authorizedGrantTypes;
@@ -19,13 +18,6 @@ public class Oauth2Client implements ClientDetails {
     private Integer refreshTokenValiditySeconds;
     private String logoutUrl;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     @Override
     public String getClientId() {

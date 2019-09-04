@@ -1,1 +1,1 @@
-delete from sec.permission where id = :id;
+delete from sec.permission where code = :code;

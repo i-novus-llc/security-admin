@@ -1,6 +1,6 @@
-package net.n2oapp.security.admin;
+package net.n2oapp.auth.gateway;
 
-import net.n2oapp.security.admin.service.Oauth2ClientService;
+import net.n2oapp.auth.gateway.service.GatewayService;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.security.oauth2.authserver.AuthorizationServerProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.authserver.OAuth2AuthorizationServerConfiguration;
@@ -25,6 +25,7 @@ public class AuthServerConfiguration extends OAuth2AuthorizationServerConfigurat
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.withClientDetails(new Oauth2ClientService());
+
+        clients.withClientDetails(new GatewayService());
     }
 }

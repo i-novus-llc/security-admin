@@ -1,5 +1,6 @@
-package net.n2oapp.security.admin;
+package net.n2oapp.auth.gateway;
 
+import net.n2oapp.security.admin.api.criteria.ClientCriteria;
 import net.n2oapp.security.admin.api.model.Client;
 import net.n2oapp.security.admin.api.service.ClientService;
 import net.n2oapp.security.auth.common.User;
@@ -119,7 +120,7 @@ public class BackChannelLogoutHandler implements LogoutSuccessHandler {
     }
 
     private List<Client> getTargetClients() {
-        return clientService.findAll().stream()
-                .filter(client -> client.getAuthorizedGrantTypes().contains("authorization_code")).collect(Collectors.toList());
+        return clientService.findAll(new ClientCriteria()).stream()
+                .filter(client -> client.getGrantTypes().contains("authorization_code")).collect(Collectors.toList());
     }
 }

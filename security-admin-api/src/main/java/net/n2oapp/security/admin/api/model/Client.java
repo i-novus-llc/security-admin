@@ -1,5 +1,7 @@
 package net.n2oapp.security.admin.api.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,15 +14,29 @@ import java.util.Set;
 
 @Data
 @NoArgsConstructor
+@ApiModel("Клиент")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Client {
-    private Integer id;
+
+    @ApiModelProperty("Имя клиента")
     private String clientId;
+
+    @ApiModelProperty("Секрет клиента")
     private String clientSecret;
-    private Set<String> authorizedGrantTypes;
-    private Set<String> registeredRedirectUri;
-    private Integer accessTokenValiditySeconds;
-    private Integer refreshTokenValiditySeconds;
+
+    @ApiModelProperty("Тип авторизации")
+    private Set<String> grantTypes;
+
+    @ApiModelProperty("URI разрешённые для редиректа")
+    private Set<String> redirectUris;
+
+    @ApiModelProperty("Время жизни токена")
+    private Integer accessTokenLifetime;
+
+    @ApiModelProperty("Время жизни токена для обновления токенов")
+    private Integer refreshTokenLifetime;
+
+    @ApiModelProperty("URL для выходы")
     private String logoutUrl;
 
 }

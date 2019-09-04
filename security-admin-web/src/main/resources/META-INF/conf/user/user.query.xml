@@ -27,7 +27,7 @@
                 <eq filter-id="id" mapping="[0]"/>
             </filters>
         </field>
-        <field id="guid" domain="string">
+        <field id="extUid" domain="string">
             <select/>
         </field>
         <field id="username" domain="string" name="Имя пользователя">

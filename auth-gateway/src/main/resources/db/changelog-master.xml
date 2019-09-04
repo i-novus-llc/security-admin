@@ -8,8 +8,10 @@
     <include file="classpath*:/security/admin/db/urp/properties.xml"/>
     <include file="classpath*:/security/admin/db/urp/changelog.xml"/>
     <include file="classpath*:/security/admin/db/system/changelog.xml"/>
+    <include file="classpath*:/security/admin/db/client/changelog.xml"/>
+    <include file="classpath*:/security/admin/db/client/properties.xml"/>
 
-    <changeSet id="create_admin1" author="rgalina">
+    <changeSet id="create_admin_new" author="rgalina">
         <sqlFile path="create_admin.sql"/>
     </changeSet>
 

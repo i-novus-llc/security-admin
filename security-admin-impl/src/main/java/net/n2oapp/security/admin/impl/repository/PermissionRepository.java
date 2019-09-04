@@ -14,12 +14,13 @@ import java.util.List;
  * Репозиторий прав доступа
  */
 @Repository
-public interface PermissionRepository  extends JpaRepository<PermissionEntity, Integer>,JpaSpecificationExecutor<PermissionEntity> {
-    List<PermissionEntity> findByParentId(Integer parentId);
+public interface PermissionRepository extends JpaRepository<PermissionEntity, String>,
+        JpaSpecificationExecutor<PermissionEntity> {
+    List<PermissionEntity> findByParentCode(String parentCode);
 
-    List<PermissionEntity> findByParentIdIsNull();
+    List<PermissionEntity> findByParentCodeIsNull();
 
 
-    @Query("select count(r) from PermissionEntity r where r.systemCode.id = :systemCode")
+    @Query("select count(r) from PermissionEntity r where r.systemCode.code = :systemCode")
     Integer countPermissionsWithSystemCode(@Param("systemCode") String systemCode);
 }
