@@ -56,12 +56,16 @@ public class BackChannelLogoutHandler implements LogoutSuccessHandler {
     @Value("${access.jwt.signing_key}")
     private String signingKey;
 
+    @Value("${access.keycloak.logout-uri}")
+    private String logoutUri;
+
     @Autowired
     private ClientService clientService;
 
     @PostConstruct
     public void postConstruct() {
         signer = new RsaSigner(signingKey);
+        logoutSuccessHandler = new RedirectLogoutRequestHandler(logoutUri);
     }
 
     @Override
