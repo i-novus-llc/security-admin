@@ -9,6 +9,12 @@ import net.n2oapp.security.admin.api.model.User;
 public interface SsoUserRoleProvider {
 
     /**
+     * Поддерживает ли провайдер синхронизацию пользователя
+     * @param ssoName наименование sso
+     */
+    boolean isSupports(String ssoName);
+
+    /**
      * Создание пользователя
      * @param user  пользователь для создания
      * @return  пользователь с обновленными данными

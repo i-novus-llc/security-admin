@@ -49,8 +49,8 @@ public class RestRoleCriteria extends RoleCriteria {
 
     @QueryParam("permissions")
     @Override
-    @ApiParam(value = "Список идентификаторов привелегий")
-    public void setPermissionIds(List<Integer> permissionIds) {
-        super.setPermissionIds(permissionIds);
+    @ApiParam(value = "Список кодов привелегий")
+    public void setPermissionCodes(List<String> permissionCodes) {
+        super.setPermissionCodes(permissionCodes);
     }
 }

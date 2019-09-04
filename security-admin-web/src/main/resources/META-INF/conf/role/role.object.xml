@@ -17,7 +17,7 @@
                 <param id="name" mapping="[0].name" domain="string" required="true"/>
                 <param id="code" mapping="[0].code" domain="string" required="true"/>
                 <param id="description" mapping="[0].description" domain="string"/>
-                <param id="permissions*.id" mapping="[0].permissions" domain="integer[]"/>
+                <param id="permissions*.id" mapping="[0].permissions" domain="string[]"/>
             </in-parameters>
             <out-parameters>
                 <param id="id" mapping="id"/>
@@ -39,7 +39,7 @@
                 <param id="name" mapping="[0].name" domain="string" required="true"/>
                 <param id="code" mapping="[0].code" domain="string" required="true"/>
                 <param id="description" mapping="[0].description" domain="string"/>
-                <param id="permissions*.id" mapping="[0].permissions" domain="integer[]"/>
+                <param id="permissions*.id" mapping="[0].permissions" domain="string[]"/>
             </in-parameters>
             <out-parameters>
                 <param id="id" mapping="id"/>

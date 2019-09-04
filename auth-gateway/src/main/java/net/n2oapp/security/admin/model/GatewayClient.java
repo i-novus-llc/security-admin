@@ -9,8 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class Oauth2Client implements ClientDetails {
-    private Integer id;
+public class GatewayClient implements ClientDetails {
     private String clientId;
     private String clientSecret;
     private Set<String> authorizedGrantTypes;
@@ -19,13 +18,6 @@ public class Oauth2Client implements ClientDetails {
     private Integer refreshTokenValiditySeconds;
     private String logoutUrl;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     @Override
     public String getClientId() {

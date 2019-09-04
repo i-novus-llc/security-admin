@@ -39,19 +39,20 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (userEntity == null) {
             userEntity = new UserEntity();
             userEntity.setUsername(userDetails.getUsername());
-            userEntity.setGuid(userDetails.getGuid() == null ? null : UUID.fromString(userDetails.getGuid()));
+            userEntity.setExtUid(userDetails.getExtUid());
             userEntity.setEmail(userDetails.getEmail());
             userEntity.setSurname(userDetails.getSurname());
             userEntity.setName(userDetails.getName());
             userEntity.setIsActive(true);
+            userEntity.setExtSys(userDetails.getExtSys());
             if (userDetails.getRoleNames() != null) {
                 userEntity.setRoleList(userDetails.getRoleNames().stream().map(this::getOrCreateRole).filter(Objects::nonNull).collect(Collectors.toList()));
             }
             userRepository.save(userEntity);
         } else {
             userEntity.setIsActive(true);
-            if (userDetails.getGuid() != null) {
-                userEntity.setGuid(userDetails.getGuid() == null ? null : UUID.fromString(userDetails.getGuid()));
+            if (userDetails.getExtUid() != null) {
+                userEntity.setExtUid(userDetails.getExtUid());
             }
             if (userDetails.getEmail() != null) {
                 userEntity.setEmail(userDetails.getEmail());
@@ -106,13 +107,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (entity == null) return null;
         User model = new User();
         model.setId(entity.getId());
-        model.setGuid(entity.getGuid() == null ? null : entity.getGuid().toString());
+        model.setExtUid(entity.getExtUid());
         model.setUsername(entity.getUsername());
         model.setName(entity.getName());
         model.setSurname(entity.getSurname());
         model.setPatronymic(entity.getPatronymic());
         model.setIsActive(entity.getIsActive());
         model.setEmail(entity.getEmail());
+        model.setExtSys(entity.getExtSys());
         StringBuilder builder = new StringBuilder();
         if (entity.getSurname() != null) {
             builder.append(entity.getSurname()).append(" ");
@@ -147,10 +149,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private Permission model(PermissionEntity entity) {
         if (entity == null) return null;
         Permission model = new Permission();
-        model.setId(entity.getId());
         model.setName(entity.getName());
         model.setCode(entity.getCode());
-        model.setParentId(entity.getParentId());
+        model.setParentCode(entity.getParentCode());
         return model;
     }
 

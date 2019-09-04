@@ -1,6 +1,8 @@
 package net.n2oapp.security.admin.service;
 
 
+import net.n2oapp.platform.i18n.UserException;
+import net.n2oapp.security.admin.api.criteria.ClientCriteria;
 import net.n2oapp.security.admin.api.model.Client;
 import net.n2oapp.security.admin.impl.service.ClientServiceImpl;
 import org.junit.After;
@@ -12,13 +14,11 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashSet;
-import java.util.NoSuchElementException;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * Тест сервиса управления клиентами
@@ -33,7 +33,9 @@ public class ClientServiceImplTest {
 
     @After
     public void cleanDB() {
-        service.findAll().forEach(client -> service.delete(client.getClientId()));
+        ClientCriteria criteria = new ClientCriteria();
+        criteria.setPage(0);
+        service.findAll(criteria).getContent().forEach(client -> service.delete(client.getClientId()));
     }
 
     @Test
@@ -49,29 +51,36 @@ public class ClientServiceImplTest {
         Client clientFromDB = service.findById(clientExample.getClientId());
 
         compareClient(clientFromDB, clientExample);
-        clientExample.setClientId("newClientId");
         clientExample.setClientSecret("newSecret");
-        clientExample.setAccessTokenValiditySeconds(69);
-        clientExample.setRefreshTokenValiditySeconds(88);
+        clientExample.setAccessTokenLifetime(69);
+        clientExample.setRefreshTokenLifetime(88);
         Set<String> stringSet = new HashSet<>();
         stringSet.add("new.uri.1");
         stringSet.add("new.uri.2");
-        clientExample.setRegisteredRedirectUri(stringSet);
+        clientExample.setRedirectUris(stringSet);
         stringSet = new HashSet<>();
         stringSet.add("newGrantTypes1");
         stringSet.add("newGrantTypes2");
-        clientExample.setAuthorizedGrantTypes(stringSet);
+        clientExample.setGrantTypes(stringSet);
         clientExample.setLogoutUrl("newLogout");
 
         service.update(clientExample);
         clientFromDB = service.findById(clientExample.getClientId());
 
+        Throwable thrown = catchThrowable(() -> {
+            clientExample.setClientId("newClientId");
+            service.update(clientExample);
+        });
+        assertThat(thrown).isInstanceOf(UserException.class);
+        clientExample.setClientId(client().getClientId());
+
+
         compareClient(clientExample, clientFromDB);
 
         service.delete(clientFromDB.getClientId());
         String clientId = clientFromDB.getClientId();
-        Throwable thrown = catchThrowable(() -> service.findById(clientId));
-        assertThat(thrown).isInstanceOf(NoSuchElementException.class);
+        assertNull(service.findById(clientId));
+
     }
 
 
@@ -81,7 +90,9 @@ public class ClientServiceImplTest {
         client2.setClientId("testId2");
         service.create(client());
         service.create(client2);
-        assertEquals(service.findAll().size(), 2);
+        ClientCriteria clientCriteria = new ClientCriteria();
+        clientCriteria.setClientId("testId2");
+        assertEquals(service.findAll(clientCriteria).getContent().size(), 1);
 
     }
 
@@ -89,27 +100,27 @@ public class ClientServiceImplTest {
         Client client = new Client();
         client.setClientId("testId");
         client.setClientSecret("testSecret");
-        client.setAccessTokenValiditySeconds(666);
-        client.setRefreshTokenValiditySeconds(667);
+        client.setAccessTokenLifetime(666);
+        client.setRefreshTokenLifetime(667);
         Set<String> stringSet = new HashSet<>();
         stringSet.add("test.uri.1");
         stringSet.add("test.uri.2");
-        client.setRegisteredRedirectUri(stringSet);
+        client.setRedirectUris(stringSet);
         stringSet = new HashSet<>();
         stringSet.add("testGrantTypes1");
         stringSet.add("testGrantTypes2");
-        client.setAuthorizedGrantTypes(stringSet);
+        client.setGrantTypes(stringSet);
         client.setLogoutUrl("testLogout");
         return client;
     }
 
     private void compareClient(Client clientFirst, Client clientSecond) {
         assertEquals(clientFirst.getClientId(), clientSecond.getClientId());
-        assertEquals(clientFirst.getAccessTokenValiditySeconds(), clientSecond.getAccessTokenValiditySeconds());
-        assertEquals(clientFirst.getAuthorizedGrantTypes(), clientSecond.getAuthorizedGrantTypes());
-        assertEquals(clientFirst.getRegisteredRedirectUri(), clientSecond.getRegisteredRedirectUri());
+        assertEquals(clientFirst.getAccessTokenLifetime(), clientSecond.getAccessTokenLifetime());
+        assertEquals(clientFirst.getGrantTypes(), clientSecond.getGrantTypes());
+        assertEquals(clientFirst.getRedirectUris(), clientSecond.getRedirectUris());
         assertEquals(clientFirst.getClientSecret(), clientSecond.getClientSecret());
-        assertEquals(clientFirst.getRefreshTokenValiditySeconds(), clientSecond.getRefreshTokenValiditySeconds());
+        assertEquals(clientFirst.getRefreshTokenLifetime(), clientSecond.getRefreshTokenLifetime());
         assertEquals(clientFirst.getLogoutUrl(), clientSecond.getLogoutUrl());
     }
 

@@ -30,7 +30,7 @@ public class RoleForm {
     private String description;
 
     @ApiModelProperty(value = "Права доступа")
-    private List<Integer> permissions;
+    private List<String> permissions;
 
 
 }

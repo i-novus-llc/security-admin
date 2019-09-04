@@ -1,6 +1,6 @@
 
-INSERT INTO sec.permission (id, name, code)VALUES (1, 'test','test');
-INSERT INTO sec.permission (id, name, code, parent_id)VALUES (2, 'test2','test2',1);
+INSERT INTO sec.permission (name, code)VALUES ('test','test');
+INSERT INTO sec.permission (name, code, parent_code)VALUES ('test2','test2','test');
 --for search
 --ROLE
 INSERT INTO sec.role(id, name, code, description) VALUES (10, 'test','test','test');
@@ -12,8 +12,8 @@ INSERT INTO sec.user(username,email,name,surname,patronymic,password, is_active)
 INSERT INTO sec.user(username,email,name,surname,patronymic,password, is_active) VALUES ('test3', 'test@example.com','name3','surname3','patronymic3','password3',true);
 INSERT INTO sec.user_role(user_id, role_id) VALUES (1,1);
 INSERT INTO sec.user_role(user_id, role_id) VALUES (1,2);
-INSERT INTO sec.role_permission (role_id, permission_id) VALUES (1,1);
-INSERT INTO sec.role_permission (role_id, permission_id) VALUES (1,2);
+INSERT INTO sec.role_permission (role_id, permission_code) VALUES (1,'test');
+INSERT INTO sec.role_permission (role_id, permission_code) VALUES (1,'test2');
 
 
 
