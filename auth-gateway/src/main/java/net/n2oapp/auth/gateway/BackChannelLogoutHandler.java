@@ -1,5 +1,6 @@
 package net.n2oapp.auth.gateway;
 
+import net.n2oapp.security.admin.RedirectLogoutRequestHandler;
 import net.n2oapp.security.admin.api.criteria.ClientCriteria;
 import net.n2oapp.security.admin.api.model.Client;
 import net.n2oapp.security.admin.api.service.ClientService;
