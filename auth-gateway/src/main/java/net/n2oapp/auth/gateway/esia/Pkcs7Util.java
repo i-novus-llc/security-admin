@@ -10,6 +10,7 @@ import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder;
 import org.bouncycastle.util.Store;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -27,12 +28,11 @@ import java.util.List;
  * Компонент для формирования секрета при авторизации ч.з. ESIA
  * ru.rt.eu.n2o.control.rri.util.Pkcs7Util
  */
-
 @Component
 public final class Pkcs7Util {
 
     @Value("${access.esia.path-to-keystore}")
-    private String pathToKeystore;
+    private Resource pathToKeystore;
 
     @Value("${access.esia.key-alias}")
     private String keyAlias;
@@ -49,13 +49,13 @@ public final class Pkcs7Util {
             byte[] signedBytes = signPkcs7(content.getBytes(StandardCharsets.UTF_8));
             return new String(Base64.getUrlEncoder().encode(signedBytes));
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException(e);
         }
     }
 
     private KeyStore loadKeyStore() throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
         KeyStore keystore = KeyStore.getInstance("PKCS12");
-        InputStream is = this.getClass().getClassLoader().getResourceAsStream(pathToKeystore);
+        InputStream is = pathToKeystore.getInputStream();
         keystore.load(is, keyStorePassword.toCharArray());
         return keystore;
     }
@@ -74,13 +74,13 @@ public final class Pkcs7Util {
         ContentSigner signer = new JcaContentSignerBuilder(SIGNATURE_ALG).setProvider("BC").
                 build((PrivateKey) (keystore.getKey(keyAlias, keyStorePassword.toCharArray())));
 
-        CMSSignedDataGenerator generator = new CMSSignedDataGenerator();
-        generator.addSignerInfoGenerator(new JcaSignerInfoGeneratorBuilder(new JcaDigestCalculatorProviderBuilder().setProvider("BC").
+        CMSSignedDataGenerator result = new CMSSignedDataGenerator();
+        result.addSignerInfoGenerator(new JcaSignerInfoGeneratorBuilder(new JcaDigestCalculatorProviderBuilder().setProvider("BC").
                 build()).build(signer, (X509Certificate) cert));
 
-        generator.addCertificates(store);
+        result.addCertificates(store);
 
-        return generator;
+        return result;
     }
 
     private byte[] signPkcs7(final byte[] content) throws Exception {
