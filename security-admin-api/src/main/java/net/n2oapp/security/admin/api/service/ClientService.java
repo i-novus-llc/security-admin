@@ -35,13 +35,31 @@ public interface ClientService {
      * @param id Идентификатор
      * @return Модель клиента
      */
-    Client findById(String id);
+    Client findByClientId(String id);
 
     /**
      * Получить  всех клиентов
      *
+     * @param criteria
      * @return Страница всех клиентов
      */
     Page<Client> findAll(ClientCriteria criteria);
 
+    /**
+     * Magic метод
+     *
+     * @param clientForm Модель клиента
+     * @return Созданного или обновленного клиента или null при удалении
+     */
+    Client persist(Client clientForm);
+
+
+    /**
+     * Получить клиента из базы, при отсутсвии вёрнет клиента с default значениями полей
+     * и clientId = id
+     *
+     * @param id Идентификатор
+     * @return
+     */
+    Client getOrCreate(String id);
 }

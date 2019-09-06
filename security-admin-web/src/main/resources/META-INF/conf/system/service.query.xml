@@ -9,10 +9,22 @@
             </arguments>
         </java>
     </list>
+    <unique result-mapping="#this">
+        <java method="getById" class="net.n2oapp.security.admin.api.service.ApplicationService">
+            <spring/>
+            <arguments>
+                <argument class="java.lang.String" type="class"/>
+            </arguments>
+        </java>
+    </unique>
 
     <fields>
         <field id="id" domain="string">
             <select mapping="code"/>
+            <filters>
+                <eq filter-id="id" mapping="code"/>
+                <eq filter-id="uniqueId" mapping="[0]"/>
+            </filters>
         </field>
         <field id="name" domain="string" name="Имя">
             <select mapping="name"/>
@@ -22,6 +34,9 @@
             <filters>
                 <eq filter-id="systemCode" mapping="systemCode"/>
             </filters>
+        </field>
+        <field id="oAuth" domain="boolean">
+            <select mapping="oAuth"/>
         </field>
     </fields>
 </query>
