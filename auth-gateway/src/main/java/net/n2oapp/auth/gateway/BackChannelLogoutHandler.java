@@ -122,6 +122,6 @@ public class BackChannelLogoutHandler implements LogoutSuccessHandler {
 
     private List<Client> getTargetClients() {
         return clientService.findAll(new ClientCriteria()).stream()
-                .filter(client -> client.getGrantTypes().contains("authorization_code")).collect(Collectors.toList());
+                .filter(Client::getIsAuthorizationCode).collect(Collectors.toList());
     }
 }
