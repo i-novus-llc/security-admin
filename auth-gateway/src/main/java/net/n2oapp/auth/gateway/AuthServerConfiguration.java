@@ -1,6 +1,6 @@
-package net.n2oapp.security.admin;
+package net.n2oapp.auth.gateway;
 
-import net.n2oapp.security.admin.service.GatewayService;
+import net.n2oapp.auth.gateway.service.GatewayService;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.security.oauth2.authserver.AuthorizationServerProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.authserver.OAuth2AuthorizationServerConfiguration;
@@ -17,8 +17,8 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 public class AuthServerConfiguration extends OAuth2AuthorizationServerConfiguration {
 
 
-    public AuthServerConfiguration(BaseClientDetails details, AuthenticationConfiguration authenticationConfiguration
-            , ObjectProvider<TokenStore> tokenStore, ObjectProvider<AccessTokenConverter> tokenConverter,
+    public AuthServerConfiguration(BaseClientDetails details, AuthenticationConfiguration authenticationConfiguration,
+                                   ObjectProvider<TokenStore> tokenStore, ObjectProvider<AccessTokenConverter> tokenConverter,
                                    AuthorizationServerProperties properties) throws Exception {
         super(details, authenticationConfiguration, tokenStore, tokenConverter, properties);
     }

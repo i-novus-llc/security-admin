@@ -1,4 +1,4 @@
-package net.n2oapp.security.admin.esia;
+package net.n2oapp.auth.gateway.esia;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.access.AccessDeniedException;
@@ -16,7 +16,9 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.TreeMap;
+import java.util.UUID;
 
 /**
  * Provider для получения oauth2 токена с сервера ЕСИА
