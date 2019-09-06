@@ -3,11 +3,9 @@ package net.n2oapp.security.admin.impl.entity;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 /**
  * Сущность Клиент
@@ -60,5 +58,15 @@ public class ClientEntity {
      */
     @Column(name = "logout_url")
     private String logoutUrl;
+
+    /**
+     * Роли клиента
+     */
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(schema = "sec", name = "client_role",
+            joinColumns = {@JoinColumn(name = "client_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id")}
+    )
+    private List<RoleEntity> roles;
 
 }

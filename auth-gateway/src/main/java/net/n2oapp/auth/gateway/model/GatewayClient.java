@@ -1,13 +1,14 @@
 package net.n2oapp.auth.gateway.model;
 
+import net.n2oapp.security.admin.api.model.Permission;
+import net.n2oapp.security.admin.api.model.Role;
+import net.n2oapp.security.auth.common.authority.PermissionGrantedAuthority;
+import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.util.StringUtils;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class GatewayClient implements ClientDetails {
     private String clientId;
@@ -16,7 +17,7 @@ public class GatewayClient implements ClientDetails {
     private Set<String> registeredRedirectUri;
     private Integer accessTokenValiditySeconds;
     private Integer refreshTokenValiditySeconds;
-    private String logoutUrl;
+    private List<Role> roles;
 
 
     @Override
@@ -107,14 +108,25 @@ public class GatewayClient implements ClientDetails {
 
     @Override
     public List<GrantedAuthority> getAuthorities() {
-        return Collections.emptyList();
+        List<GrantedAuthority> result = new ArrayList<>();
+        Set<RoleGrantedAuthority> roles = new HashSet<>();
+        Set<PermissionGrantedAuthority> permissions = new HashSet<>();
+        if (this.roles != null) {
+            for (Role role : this.roles) {
+                roles.add(new RoleGrantedAuthority(role.getCode()));
+                if (role.getPermissions() != null) {
+                    for (Permission permission : role.getPermissions()) {
+                        permissions.add(new PermissionGrantedAuthority(permission.getCode()));
+                    }
+                }
+            }
+            result.addAll(roles);
+            result.addAll(permissions);
+        }
+        return result;
     }
 
-    public String getLogoutUrl() {
-        return logoutUrl;
-    }
-
-    public void setLogoutUrl(String logoutUrl) {
-        this.logoutUrl = logoutUrl;
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 }
