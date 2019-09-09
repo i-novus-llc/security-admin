@@ -44,7 +44,7 @@
         </field>
 
         <field id="enableClient" domain="boolean">
-            <select mapping="enable"/>
+            <select mapping="enabled"/>
         </field>
 
         <field id="clientRoles" domain="integer[]" name="Роли">

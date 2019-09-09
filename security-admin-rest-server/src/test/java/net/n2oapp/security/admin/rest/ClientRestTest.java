@@ -47,7 +47,7 @@ public class ClientRestTest {
     public void persistAndGet() {
         Client client = clientService.getOrCreate("notExists");
         assertEquals(client.getClientId(), "notExists");
-        assertEquals(client.getEnable(), false);
+        assertEquals(client.getEnabled(), false);
         assertEquals(client.getIsAuthorizationCode(), true);
         assertNotNull(client.getClientSecret());
 
@@ -74,7 +74,7 @@ public class ClientRestTest {
         client = clientService.getOrCreate(newClient().getClientId());
         compareClient(client, clientFromCreateMethod);
 
-        client.setEnable(false);
+        client.setEnabled(false);
         clientService.persist(client);
         assertNull(clientService.getByClientId(client.getClientId()));
     }
@@ -138,7 +138,7 @@ public class ClientRestTest {
         List<Integer> roles = new ArrayList<>();
         roles.add(1);
         client.setRolesIds(roles);
-        client.setEnable(true);
+        client.setEnabled(true);
         return client;
     }
 

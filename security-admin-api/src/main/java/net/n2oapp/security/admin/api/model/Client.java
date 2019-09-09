@@ -64,6 +64,5 @@ public class Client {
     private List<Integer> rolesIds;
 
     @JsonProperty
-    private Boolean enable;
-
+    private Boolean enabled;
 }
