@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<object xmlns="http://n2oapp.net/framework/config/schema/object-3.0" name="Системы">
+<object xmlns="http://n2oapp.net/framework/config/schema/object-3.0" name="Приложения">
 
     <operations>
         <operation id="create" success-text="Приложение сохранено">
             <invocation>
-                <java method="create" class="net.n2oapp.security.admin.api.service.ApplicationService">
+                <java method="createApplication" class="net.n2oapp.security.admin.api.service.ApplicationSystemService">
                     <spring/>
                     <arguments>
                         <argument type="class" class="net.n2oapp.security.admin.api.model.Application"/>
@@ -24,7 +24,7 @@
 
         <operation id="update" success-text="Приложение обновлено">
             <invocation>
-                <java method="update" class="net.n2oapp.security.admin.api.service.ApplicationService">
+                <java method="updateApplication" class="net.n2oapp.security.admin.api.service.ApplicationSystemService">
                     <spring/>
                     <arguments>
                         <argument type="class" class="net.n2oapp.security.admin.api.model.Application"/>
@@ -45,7 +45,7 @@
                    confirm-text="Вы уверены, что хотите удалить приложение?"
                    success-text="Приложение удалено">
             <invocation>
-                <java method="delete" class="net.n2oapp.security.admin.api.service.ApplicationService">
+                <java method="deleteApplication" class="net.n2oapp.security.admin.api.service.ApplicationSystemService">
                     <spring/>
                     <arguments>
                         <argument type="primitive"/>
@@ -64,7 +64,8 @@
                     message="Существует приложение с указанным кодом"
                     result="!(#this)">
             <invocation>
-                <java method="isApplicationExist" class="net.n2oapp.security.admin.api.service.ApplicationService">
+                <java method="isApplicationExist"
+                      class="net.n2oapp.security.admin.api.service.ApplicationSystemService">
                     <spring/>
                     <arguments>
                         <argument type="primitive"/>
