@@ -53,7 +53,7 @@ public class ClientServiceImplTest {
     }
 
     @Test
-    public void crudNotPublic() {
+    public void testPersistAndGet() {
         Client client = service.getOrCreate("notExists");
         assertEquals(client.getClientId(), "notExists");
         assertEquals(client.getEnable(), false);

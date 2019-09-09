@@ -4,8 +4,6 @@
         <operation id="persist">
             <invocation>
                 <java method="persist" class="net.n2oapp.security.admin.api.service.ClientService">
-
-
                     <spring/>
                     <arguments>
                         <argument type="class" class="net.n2oapp.security.admin.api.model.Client"/>
