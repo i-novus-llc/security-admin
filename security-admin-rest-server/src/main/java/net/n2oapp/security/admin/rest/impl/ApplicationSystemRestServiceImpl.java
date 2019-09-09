@@ -13,7 +13,7 @@ import org.springframework.stereotype.Controller;
 
 
 /**
- * Реализация REST сервиса управления приложениями
+ * Реализация REST сервиса управления приложениями и системами
  */
 @Controller
 public class ApplicationSystemRestServiceImpl implements ApplicationSystemRestService {
