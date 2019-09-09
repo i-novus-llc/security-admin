@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class GatewayService implements ClientDetailsService {
@@ -36,7 +37,7 @@ public class GatewayService implements ClientDetailsService {
         client.setClientId(apiModel.getClientId());
         client.setClientSecret(apiModel.getClientSecret());
 
-        HashSet<String> authorizedGrantTypes = new HashSet<>();
+        Set<String> authorizedGrantTypes = new HashSet<>();
         if (apiModel.getIsClientGrant()) authorizedGrantTypes.add("client_credentials");
         if (apiModel.getIsAuthorizationCode()) authorizedGrantTypes.add("authorization_code");
         if (apiModel.getIsResourceOwnerPass()) authorizedGrantTypes.add("password");

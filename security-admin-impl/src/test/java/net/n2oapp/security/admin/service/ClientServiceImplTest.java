@@ -56,7 +56,7 @@ public class ClientServiceImplTest {
     public void testPersistAndGet() {
         Client client = service.getOrCreate("notExists");
         assertEquals(client.getClientId(), "notExists");
-        assertEquals(client.getEnable(), false);
+        assertEquals(client.getEnabled(), false);
         assertEquals(client.getIsAuthorizationCode(), true);
         assertNotNull(client.getClientSecret());
 
@@ -83,7 +83,7 @@ public class ClientServiceImplTest {
         client = service.getOrCreate(client().getClientId());
         compareClient(client, clientFromCreateMethod);
 
-        client.setEnable(false);
+        client.setEnabled(false);
         service.persist(client);
         assertNull(service.findByClientId(client.getClientId()));
     }
@@ -148,7 +148,7 @@ public class ClientServiceImplTest {
         client.setIsClientGrant(false);
         client.setIsAuthorizationCode(true);
         client.setLogoutUrl("testLogout");
-        client.setEnable(true);
+        client.setEnabled(true);
         return client;
     }
 

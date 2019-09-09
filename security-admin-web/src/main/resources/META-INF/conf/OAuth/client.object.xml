@@ -20,7 +20,7 @@
                 <param id="refreshTokenLifetime" mapping="[0].refreshTokenLifetime" domain="integer" required="true"/>
                 <param id="redirectUris" mapping="[0].redirectUris" domain="string[]" required="true"/>
                 <param id="logoutUrl" mapping="[0].logoutUrl" domain="string" required="true"/>
-                <param id="enableClient" mapping="[0].enable" domain="boolean" required="true"/>
+                <param id="enableClient" mapping="[0].enabled" domain="boolean" required="true"/>
                 <param id="clientRoles*.id" mapping="[0].rolesIds" domain="integer[]" required="false"/>
             </in-parameters>
             <validations/>

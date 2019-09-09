@@ -66,7 +66,7 @@ public class ClientServiceImpl implements ClientService {
     private Client model(ClientEntity clientEntity) {
         if (clientEntity == null) return null;
         Client client = new Client();
-        client.setEnable(true);
+        client.setEnabled(true);
         client.setClientId(clientEntity.getClientId());
         client.setClientSecret(clientEntity.getClientSecret());
         if (clientEntity.getGrantTypes() != null) {
@@ -129,7 +129,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public Client persist(Client clientForm) {
-        if (clientForm.getEnable()) {
+        if (clientForm.getEnabled()) {
             if (clientRepository.existsById(clientForm.getClientId())) {
                 return update(clientForm);
             }
@@ -149,13 +149,13 @@ public class ClientServiceImpl implements ClientService {
             client.setClientId(id);
             client.setClientSecret(UUID.randomUUID().toString());
             client.setIsAuthorizationCode(true);
-            client.setEnable(false);
+            client.setEnabled(false);
             client.setAccessTokenLifetime(1440);
             client.setRefreshTokenLifetime(43200);
             return client;
         }
 
-        client.setEnable(true);
+        client.setEnabled(true);
         return client;
     }
 

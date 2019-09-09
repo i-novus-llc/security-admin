@@ -46,7 +46,7 @@ public interface ClientService {
     Page<Client> findAll(ClientCriteria criteria);
 
     /**
-     * Magic метод
+     * Создание, обновление или удаление клиента
      *
      * @param clientForm Модель клиента
      * @return Созданного или обновленного клиента или null при удалении
