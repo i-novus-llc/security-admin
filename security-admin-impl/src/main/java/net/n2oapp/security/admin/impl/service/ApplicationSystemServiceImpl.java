@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 /**
- * Реализация сервиса управления приложениями
+ * Реализация сервиса управления приложениями и системами
  */
 @Service
 @Transactional
