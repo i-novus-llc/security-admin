@@ -5,8 +5,7 @@ import net.n2oapp.security.admin.TestApplication;
 import net.n2oapp.security.admin.api.model.AppSystemForm;
 import net.n2oapp.security.admin.api.model.Application;
 import net.n2oapp.security.admin.api.model.Client;
-import net.n2oapp.security.admin.impl.service.AppSystemServiceImpl;
-import net.n2oapp.security.admin.impl.service.ApplicationServiceImpl;
+import net.n2oapp.security.admin.impl.service.ApplicationSystemServiceImpl;
 import net.n2oapp.security.admin.rest.api.ClientRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestClientCriteria;
 import org.junit.Test;
@@ -38,10 +37,7 @@ public class ClientRestTest {
     private ClientRestService clientService;
 
     @Autowired
-    private ApplicationServiceImpl applicationService;
-
-    @Autowired
-    private AppSystemServiceImpl appSystemService;
+    private ApplicationSystemServiceImpl applicationSystemService;
 
     @Test
     public void persistAndGet() {
@@ -55,13 +51,13 @@ public class ClientRestTest {
         appSystem.setCode("test");
         appSystem.setDescription("test");
         appSystem.setName("test");
-        appSystemService.create(appSystem);
+        applicationSystemService.createSystem(appSystem);
 
         Application application = new Application();
         application.setName("test");
         application.setCode("testId");
         application.setSystemCode("test");
-        applicationService.create(application);
+        applicationSystemService.createApplication(application);
 
         Client clientFromCreateMethod = clientService.persist(newClient());
         client = clientService.getOrCreate(newClient().getClientId());
