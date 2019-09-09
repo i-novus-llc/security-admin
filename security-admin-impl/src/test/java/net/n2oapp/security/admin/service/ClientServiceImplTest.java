@@ -6,8 +6,7 @@ import net.n2oapp.security.admin.api.criteria.ClientCriteria;
 import net.n2oapp.security.admin.api.model.AppSystemForm;
 import net.n2oapp.security.admin.api.model.Application;
 import net.n2oapp.security.admin.api.model.Client;
-import net.n2oapp.security.admin.impl.service.AppSystemServiceImpl;
-import net.n2oapp.security.admin.impl.service.ApplicationServiceImpl;
+import net.n2oapp.security.admin.impl.service.ApplicationSystemServiceImpl;
 import net.n2oapp.security.admin.impl.service.ClientServiceImpl;
 import org.junit.After;
 import org.junit.Test;
@@ -33,12 +32,7 @@ public class ClientServiceImplTest {
     private ClientServiceImpl service;
 
     @Autowired
-    private ApplicationServiceImpl applicationService;
-
-    @Autowired
-    private AppSystemServiceImpl appSystemService;
-
-
+    private ApplicationSystemServiceImpl applicationSystemService;
 
     @After
     public void cleanDB() {
@@ -64,13 +58,13 @@ public class ClientServiceImplTest {
         appSystem.setCode("test");
         appSystem.setDescription("test");
         appSystem.setName("test");
-        appSystemService.create(appSystem);
+        applicationSystemService.createSystem(appSystem);
 
         Application application = new Application();
         application.setName("test");
         application.setCode("testId");
         application.setSystemCode("test");
-        applicationService.create(application);
+        applicationSystemService.createApplication(application);
 
         Client clientFromCreateMethod = service.persist(client());
         client = service.getOrCreate(client().getClientId());
