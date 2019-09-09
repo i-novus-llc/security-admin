@@ -18,8 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -71,13 +69,17 @@ public class ClientServiceImpl implements ClientService {
         client.setEnable(true);
         client.setClientId(clientEntity.getClientId());
         client.setClientSecret(clientEntity.getClientSecret());
-        client.setIsClientGrant(clientEntity.getGrantTypes().contains("client_credentials"));
-        client.setIsResourceOwnerPass(clientEntity.getGrantTypes().contains("password"));
-        client.setIsAuthorizationCode(clientEntity.getGrantTypes().contains("authorization_code"));
-        Set<String> redirectUris = new HashSet<>();
-        client.setRedirectUris(clientEntity.getRedirectUris().replace(",", " "));
-        client.setAccessTokenLifetime(clientEntity.getAccessTokenLifetime() / 60);
-        client.setRefreshTokenLifetime(clientEntity.getRefreshTokenLifetime() / 60);
+        if (clientEntity.getGrantTypes() != null) {
+            client.setIsClientGrant(clientEntity.getGrantTypes().contains("client_credentials"));
+            client.setIsResourceOwnerPass(clientEntity.getGrantTypes().contains("password"));
+            client.setIsAuthorizationCode(clientEntity.getGrantTypes().contains("authorization_code"));
+        }
+        if (clientEntity.getRedirectUris() != null)
+            client.setRedirectUris(clientEntity.getRedirectUris().replace(",", " "));
+        if (clientEntity.getAccessTokenLifetime() != null)
+            client.setAccessTokenLifetime(clientEntity.getAccessTokenLifetime() / 60);
+        if (clientEntity.getRefreshTokenLifetime() != null)
+            client.setRefreshTokenLifetime(clientEntity.getRefreshTokenLifetime() / 60);
         client.setLogoutUrl(clientEntity.getLogoutUrl());
         if (clientEntity.getRoleList() != null) {
             client.setRoles(clientEntity.getRoleList().stream().map(this::model).collect(Collectors.toList()));
@@ -98,11 +100,11 @@ public class ClientServiceImpl implements ClientService {
         entity.setRefreshTokenLifetime(client.getRefreshTokenLifetime() * 60);
         entity.setLogoutUrl(client.getLogoutUrl());
         ArrayList<String> authorizedGrantTypes = new ArrayList<>();
-        if (client.getIsClientGrant() != null && client.getIsClientGrant())
+        if (client.getIsClientGrant() == Boolean.TRUE)
             authorizedGrantTypes.add("client_credentials");
-        if (client.getIsAuthorizationCode() != null && client.getIsAuthorizationCode())
+        if (client.getIsAuthorizationCode() == Boolean.TRUE)
             authorizedGrantTypes.add("authorization_code");
-        if (client.getIsResourceOwnerPass() != null && client.getIsResourceOwnerPass())
+        if (client.getIsResourceOwnerPass() == Boolean.TRUE)
             authorizedGrantTypes.add("password");
         entity.setGrantTypes(StringUtils.collectionToCommaDelimitedString(authorizedGrantTypes));
         if (client.getRolesIds() != null)
