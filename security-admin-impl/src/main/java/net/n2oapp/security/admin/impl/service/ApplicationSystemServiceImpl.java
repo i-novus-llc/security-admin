@@ -1,17 +1,16 @@
 package net.n2oapp.security.admin.impl.service;
 
 import net.n2oapp.platform.i18n.UserException;
+import net.n2oapp.security.admin.api.criteria.ApplicationCriteria;
 import net.n2oapp.security.admin.api.criteria.SystemCriteria;
-import net.n2oapp.security.admin.api.model.AppSystem;
 import net.n2oapp.security.admin.api.model.AppSystemForm;
 import net.n2oapp.security.admin.api.model.Application;
-import net.n2oapp.security.admin.api.service.AppSystemService;
+import net.n2oapp.security.admin.api.model.AppSystem;
+import net.n2oapp.security.admin.api.service.ApplicationSystemService;
 import net.n2oapp.security.admin.impl.entity.ApplicationEntity;
 import net.n2oapp.security.admin.impl.entity.SystemEntity;
-import net.n2oapp.security.admin.impl.repository.PermissionRepository;
-import net.n2oapp.security.admin.impl.repository.RoleRepository;
-import net.n2oapp.security.admin.impl.repository.SystemRepository;
-import net.n2oapp.security.admin.impl.repository.UserRepository;
+import net.n2oapp.security.admin.impl.repository.*;
+import net.n2oapp.security.admin.impl.service.specification.ApplicationSpecifications;
 import net.n2oapp.security.admin.impl.service.specification.SystemSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,11 +23,13 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 /**
- * Реализация сервиса управления системами
+ * Реализация сервиса управления приложениями
  */
 @Service
 @Transactional
-public class AppSystemServiceImpl implements AppSystemService {
+public class ApplicationSystemServiceImpl implements ApplicationSystemService {
+    @Autowired
+    private ApplicationRepository applicationRepository;
     @Autowired
     private SystemRepository systemRepository;
     @Autowired
@@ -39,14 +40,53 @@ public class AppSystemServiceImpl implements AppSystemService {
     private PermissionRepository permissionRepository;
 
     @Override
-    public AppSystem create(AppSystemForm system) {
+    public Application createApplication(Application service) {
+        checkServiceUniq(service.getCode());
+        return model(applicationRepository.save(entity(service)));
+    }
+
+    @Override
+    public Application updateApplication(Application service) {
+        return model(applicationRepository.save(entity(service)));
+    }
+
+    @Override
+    public void deleteApplication(String code) {
+        applicationRepository.deleteById(code);
+    }
+
+    @Override
+    public Application getApplicationById(String id) {
+        return model(applicationRepository.findById(id).orElse(null));
+    }
+
+    @Override
+    public Page<Application> findAllApplication(ApplicationCriteria criteria) {
+        Specification<ApplicationEntity> specification = new ApplicationSpecifications(criteria);
+        if (criteria.getOrders() == null) {
+            criteria.setOrders(Arrays.asList(new Sort.Order(Sort.Direction.ASC, "code")));
+        } else {
+            criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "code"));
+        }
+        Page<ApplicationEntity> all = applicationRepository.findAll(specification, criteria);
+        return all.map(this::model);
+    }
+
+    @Override
+    public Boolean isApplicationExist(String code) {
+        return getApplicationById(code) != null;
+    }
+
+
+    @Override
+    public AppSystem createSystem(AppSystemForm system) {
         checkSystemUniq(system.getCode(), null);
         AppSystem result = model(systemRepository.save(entity(system)));
         return result;
     }
 
     @Override
-    public AppSystem update(AppSystemForm system) {
+    public AppSystem updateSystem(AppSystemForm system) {
         SystemEntity entity = systemRepository.getOne(system.getCode());
         entity.setName(system.getName());
         entity.setDescription(system.getDescription());
@@ -54,18 +94,18 @@ public class AppSystemServiceImpl implements AppSystemService {
     }
 
     @Override
-    public void delete(String code) {
+    public void deleteSystem(String code) {
         checkSystemExist(code);
         systemRepository.deleteById(code);
     }
 
     @Override
-    public AppSystem getById(String id) {
+    public AppSystem getSystemById(String id) {
         return model(systemRepository.findById(id).orElse(null));
     }
 
     @Override
-    public Page<AppSystem> findAll(SystemCriteria criteria) {
+    public Page<AppSystem> findAllSystem(SystemCriteria criteria) {
         Specification<SystemEntity> specification = new SystemSpecifications(criteria);
         if (criteria.getOrders() == null) {
             criteria.setOrders(Arrays.asList(new Sort.Order(Sort.Direction.ASC, "code")));
@@ -78,15 +118,26 @@ public class AppSystemServiceImpl implements AppSystemService {
 
     @Override
     public Boolean isSystemExist(String code) {
-        return getById(code) != null;
+        return getSystemById(code) != null;
     }
 
-    private SystemEntity entity(AppSystemForm model) {
+    private Application model(ApplicationEntity entity) {
+        if (entity == null) return null;
+        Application model = new Application();
+        model.setCode(entity.getCode());
+        model.setName(entity.getName());
+        model.setSystemCode(entity.getSystemCode().getCode());
+        model.setSystemName(entity.getSystemCode().getName());
+        model.setOAuth(entity.getClient() != null);
+        return model;
+    }
+
+    private ApplicationEntity entity(Application model) {
         if (model == null) return null;
-        SystemEntity entity = new SystemEntity();
+        ApplicationEntity entity = new ApplicationEntity();
         entity.setName(model.getName());
         entity.setCode(model.getCode());
-        entity.setDescription(model.getDescription());
+        entity.setSystemCode(new SystemEntity(model.getSystemCode()));
         return entity;
     }
 
@@ -100,23 +151,22 @@ public class AppSystemServiceImpl implements AppSystemService {
             model.setApplications(entity.getApplicationList().stream().map(this::model).collect(Collectors.toList()));
         }
         return model;
-
     }
 
-    private Application model(ApplicationEntity entity) {
-        if (entity == null) return null;
-        Application model = new Application();
-        model.setCode(entity.getCode());
-        model.setName(entity.getName());
-        model.setSystemCode(entity.getSystemCode().getCode());
-        return model;
+    private SystemEntity entity(AppSystemForm model) {
+        if (model == null) return null;
+        SystemEntity entity = new SystemEntity();
+        entity.setName(model.getName());
+        entity.setCode(model.getCode());
+        entity.setDescription(model.getDescription());
+        return entity;
     }
 
     /**
      * Валидация на уникальность кода системы при создании
      */
     private Boolean checkSystemUniq(String code, String systemId) {
-        SystemEntity systemEntity= systemRepository.findById(code).orElse(null);
+        SystemEntity systemEntity = systemRepository.findById(code).orElse(null);
         if (systemEntity == null || systemEntity.getCode().equals(systemId)) {
             return true;
         } else {
@@ -133,5 +183,17 @@ public class AppSystemServiceImpl implements AppSystemService {
             return true;
         else
             throw new UserException("exception.roleOrPermissionWithSuchRoleExists");
+    }
+
+    /**
+     * Валидация на уникальность кода приложения при создании
+     */
+    private Boolean checkServiceUniq(String code) {
+        ApplicationEntity applicationEntity = applicationRepository.findById(code).orElse(null);
+        if (applicationEntity == null) {
+            return true;
+        } else {
+            throw new UserException("exception.uniqueApplication");
+        }
     }
 }

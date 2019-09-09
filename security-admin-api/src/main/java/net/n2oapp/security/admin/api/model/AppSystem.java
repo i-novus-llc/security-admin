@@ -16,19 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @ApiModel("Система")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AppSystem {
-
-    @JsonProperty
-    @ApiModelProperty(value = "Код")
-    private String code;
-
-    @JsonProperty
-    @ApiModelProperty(value = "Название")
-    private String name;
-
-    @JsonProperty
-    @ApiModelProperty(value = "Описание")
-    private String description;
+public class AppSystem extends AppSystemForm {
 
     @JsonProperty
     @ApiModelProperty(value = "Приложения")
