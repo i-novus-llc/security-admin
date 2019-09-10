@@ -23,8 +23,8 @@ public class ClientRestServiceImpl implements ClientRestService {
     }
 
     @Override
-    public Client getById(String clientId) {
-        return service.findById(clientId);
+    public Client getByClientId(String clientId) {
+        return service.findByClientId(clientId);
     }
 
     @Override
@@ -41,4 +41,16 @@ public class ClientRestServiceImpl implements ClientRestService {
     public void delete(String clientId) {
         service.delete(clientId);
     }
+
+    @Override
+    public Client persist(Client clientForm) {
+        return service.persist(clientForm);
+    }
+
+    @Override
+    public Client getOrCreate(String clientId) {
+        return service.getOrCreate(clientId);
+    }
+
+
 }

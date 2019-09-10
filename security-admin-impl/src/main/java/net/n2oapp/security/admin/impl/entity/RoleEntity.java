@@ -70,6 +70,8 @@ public class RoleEntity {
     @ManyToMany(mappedBy = "roleList")
     private List<UserEntity> userList;
 
+    @ManyToMany(mappedBy = "roleList")
+    private List<ClientEntity> clientList;
 
     public RoleEntity(Integer id) {
         setId(id);

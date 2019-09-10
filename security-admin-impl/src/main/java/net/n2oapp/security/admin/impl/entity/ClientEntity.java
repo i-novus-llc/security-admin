@@ -67,6 +67,5 @@ public class ClientEntity {
             joinColumns = {@JoinColumn(name = "client_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")}
     )
-    private List<RoleEntity> roles;
-
+    private List<RoleEntity> roleList;
 }

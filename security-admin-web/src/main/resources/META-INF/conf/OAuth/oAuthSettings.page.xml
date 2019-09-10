@@ -1,0 +1,110 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-2.0">
+    <form default-values-query-id="client" object-id="client">
+        <fields>
+            <field id="enableClient" label="Включить OAuth 2.0">
+
+                <controls>
+                    <checkbox id="enableClient" src="Switch"/>
+                </controls>
+            </field>
+            <set>
+                <password description="Cекретный ключ подключаемого приложения (client_secret).
+                                     Именно этот секрет должен использоваться подключенным
+                                     приложением при обращении к Единой подсистеме безопасности и авторизации"
+                          id="clientSecret" label="Секрет" required="true">
+                    <dependencies>
+                        <visibility on="enableClient">
+                            enableClient
+                        </visibility>
+                    </dependencies>
+                </password>
+
+                <input-text id="accessTokenLifetime" label="Максимальное время действия токена (минуты)" required="true"
+                            domain="integer" default-value="1440">
+                    <dependencies>
+                        <visibility on="enableClient">
+                            enableClient
+                        </visibility>
+                    </dependencies>
+                </input-text>
+
+                <input-text id="refreshTokenLifetime" label="Максимальное время действия  refresh токена (минуты)"
+                            required="true"
+                            domain="integer" default-value="14400">
+                    <dependencies>
+                        <visibility on="enableClient">
+                            enableClient
+                        </visibility>
+                    </dependencies>
+                </input-text>
+
+                <field id="isAuthorizationCode" label="Вход через браузер"
+                       description="В терминах спецификации OAuth2.0 означает код авторизации (authorization code). Используется с серверными приложениями (server-side applications)">
+                    <controls>
+                        <checkbox id="isAuthorizationCode" src="Switch"/>
+                    </controls>
+                    <dependencies>
+                        <visibility on="enableClient">
+                            enableClient
+                        </visibility>
+                    </dependencies>
+                </field>
+
+                <field id="isResourceOwnerPass" label="Вход по логину и паролю"
+                       description="В терминах спецификации OAuth2.0 означает поддержку учетных данных владельца ресурса (resource owner password credentials grant). Используется доверенными приложениями, например приложениями, которые являются частью самого сервиса">
+                    <controls>
+                        <checkbox id="isResourceOwnerPass" src="Switch"/>
+                    </controls>
+                    <dependencies>
+                        <visibility on="enableClient">
+                            enableClient
+                        </visibility>
+                    </dependencies>
+                </field>
+
+                <field id="isClientGrant" label="Вход от имени системы"
+                       description="В терминах спецификации OAuth2.0 означает поддержку учетных данных клиента (client credentials grant). Используется при доступе приложения к API">
+                    <controls>
+                        <checkbox id="isClientGrant" src="Switch"/>
+                    </controls>
+                    <dependencies>
+                        <visibility on="enableClient">
+                            enableClient
+                        </visibility>
+                    </dependencies>
+                </field>
+
+                <input-text id="redirectUris" label="Префиксы ссылок возврата"
+                            description="Список URL используется для проверки ссылок возврата (login_redirect_uri). Если в запросе на выход указана ссылка возврата и она не соответствует ни одному из указанных префиксов, то во входе будет отказано"
+                            required="true">
+                    <dependencies>
+                        <visibility on="enableClient">
+                            enableClient
+                        </visibility>
+                    </dependencies>
+                </input-text>
+
+                <input-text id="logoutUrl" label="Ссылка для выхода из системы"
+                            description="На данный URL должен быть направлен запрос, содержащий токен выхода, при выходе из системы"
+                            required="true">
+                    <dependencies>
+                        <visibility on="enableClient">
+                            enableClient
+                        </visibility>
+                    </dependencies>
+                </input-text>
+
+                <input-select id="clientRoles" description="Настройки прав доступа от имени системы (приложения)"
+                              label="Доступ от имени системы" type="multi" cache="false"
+                              query-id="${access.role.query.id}" value-field-id="id">
+                    <dependencies>
+                        <visibility on="enableClient">
+                            enableClient
+                        </visibility>
+                    </dependencies>
+                </input-select>
+            </set>
+        </fields>
+    </form>
+</simple-page>

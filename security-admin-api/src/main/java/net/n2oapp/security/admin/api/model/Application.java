@@ -28,4 +28,7 @@ public class Application {
     @ApiModelProperty("Код системы")
     private String systemCode;
 
+    @JsonProperty
+    @ApiModelProperty("Протокол OAuth 2.0")
+    private Boolean oAuth;
 }

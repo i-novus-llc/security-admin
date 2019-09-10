@@ -22,6 +22,25 @@
             <validations/>
         </operation>
 
+        <operation id="update" success-text="Приложение обновлено">
+            <invocation>
+                <java method="update" class="net.n2oapp.security.admin.api.service.ApplicationService">
+                    <spring/>
+                    <arguments>
+                        <argument type="class" class="net.n2oapp.security.admin.api.model.Application"/>
+                    </arguments>
+                </java>
+            </invocation>
+            <in-parameters>
+                <param id="id" mapping="[0].code" domain="string" required="true"/>
+                <param id="name" mapping="[0].name" domain="string" required="true"/>
+                <param id="systemCode" mapping="[0].systemCode" domain="string" required="true"/>
+            </in-parameters>
+            <out-parameters>
+                <param id="id" mapping="code"/>
+            </out-parameters>
+        </operation>
+
         <operation id="delete"
                    confirm-text="Вы уверены, что хотите удалить приложение?"
                    success-text="Приложение удалено">
