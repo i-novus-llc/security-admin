@@ -1,11 +1,12 @@
 package net.n2oapp.security.admin.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -27,16 +28,19 @@ public class Client {
     @ApiModelProperty("Тип авторизации")
     private Set<String> grantTypes;
 
-    @ApiModelProperty("URI разрешённые для редиректа")
+    @ApiModelProperty("Разрешённые для редиректа URI")
     private Set<String> redirectUris;
 
-    @ApiModelProperty("Время жизни токена")
+    @ApiModelProperty("Время жизни токена доступа")
     private Integer accessTokenLifetime;
 
-    @ApiModelProperty("Время жизни токена для обновления токенов")
+    @ApiModelProperty("Время жизни токена обновления")
     private Integer refreshTokenLifetime;
 
-    @ApiModelProperty("URL для выходы")
+    @ApiModelProperty("URL для выхода")
     private String logoutUrl;
+
+    @ApiModelProperty("Роли")
+    private List<Role> roles;
 
 }
