@@ -49,7 +49,7 @@ public interface ApplicationSystemService {
      * @param criteria Критерии поиска
      * @return Страница найденных приложений
      */
-    Page<Application> findAllApplication(ApplicationCriteria criteria);
+    Page<Application> findAllApplications(ApplicationCriteria criteria);
 
     /**
      * Существует ли приложение с таким кодом
@@ -96,7 +96,7 @@ public interface ApplicationSystemService {
      * @param criteria Критерии поиска
      * @return Страница найденных систем
      */
-    Page<AppSystem> findAllSystem(SystemCriteria criteria);
+    Page<AppSystem> findAllSystems(SystemCriteria criteria);
 
     /**
      * Существует ли система с таким кодом

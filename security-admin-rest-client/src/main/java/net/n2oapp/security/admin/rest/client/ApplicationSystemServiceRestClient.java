@@ -43,13 +43,13 @@ public class ApplicationSystemServiceRestClient implements ApplicationSystemServ
     }
 
     @Override
-    public Page<Application> findAllApplication(ApplicationCriteria criteria) {
+    public Page<Application> findAllApplications(ApplicationCriteria criteria) {
         RestApplicationCriteria serviceCriteria = new RestApplicationCriteria();
         serviceCriteria.setPage(criteria.getPageNumber());
         serviceCriteria.setSize(criteria.getPageSize());
         serviceCriteria.setSystemCode(criteria.getSystemCode());
         serviceCriteria.setOrders(criteria.getOrders());
-        return client.findAllApplication(serviceCriteria);
+        return client.findAllApplications(serviceCriteria);
     }
 
     @Override
@@ -78,14 +78,14 @@ public class ApplicationSystemServiceRestClient implements ApplicationSystemServ
     }
 
     @Override
-    public Page<AppSystem> findAllSystem(SystemCriteria criteria) {
+    public Page<AppSystem> findAllSystems(SystemCriteria criteria) {
         RestSystemCriteria systemCriteria = new RestSystemCriteria();
         systemCriteria.setPage(criteria.getPageNumber());
         systemCriteria.setSize(criteria.getPageSize());
         systemCriteria.setName(criteria.getName());
         systemCriteria.setCode(criteria.getCode());
         systemCriteria.setOrders(criteria.getOrders());
-        return client.findAllSystem(systemCriteria);
+        return client.findAllSystems(systemCriteria);
     }
 
     @Override

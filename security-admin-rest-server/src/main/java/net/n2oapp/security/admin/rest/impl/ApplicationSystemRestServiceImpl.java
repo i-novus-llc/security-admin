@@ -21,8 +21,8 @@ public class ApplicationSystemRestServiceImpl implements ApplicationSystemRestSe
     private ApplicationSystemService service;
 
     @Override
-    public Page<Application> findAllApplication(RestApplicationCriteria criteria) {
-        return service.findAllApplication(criteria);
+    public Page<Application> findAllApplications(RestApplicationCriteria criteria) {
+        return service.findAllApplications(criteria);
     }
 
     @Override
@@ -47,8 +47,8 @@ public class ApplicationSystemRestServiceImpl implements ApplicationSystemRestSe
     }
 
     @Override
-    public Page<AppSystem> findAllSystem(RestSystemCriteria criteria) {
-        return service.findAllSystem(criteria);
+    public Page<AppSystem> findAllSystems(RestSystemCriteria criteria) {
+        return service.findAllSystems(criteria);
     }
 
     @Override

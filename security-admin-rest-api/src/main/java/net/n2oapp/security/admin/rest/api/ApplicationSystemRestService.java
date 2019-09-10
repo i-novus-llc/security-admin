@@ -30,7 +30,7 @@ public interface ApplicationSystemRestService {
     @Path(APPLICATION_PATH + "/")
     @ApiOperation("Найти приложение по критериям поиска")
     @ApiResponse(code = 200, message = "Страница приложений")
-    Page<Application> findAllApplication(@BeanParam RestApplicationCriteria criteria);
+    Page<Application> findAllApplications(@BeanParam RestApplicationCriteria criteria);
 
     @GET
     @Path(APPLICATION_PATH + "/{id}")
@@ -60,7 +60,7 @@ public interface ApplicationSystemRestService {
     @Path(SYSTEM_PATH + "/")
     @ApiOperation("Найти систему по критериям поиска")
     @ApiResponse(code = 200, message = "Страница систем")
-    Page<AppSystem> findAllSystem(@BeanParam RestSystemCriteria criteria);
+    Page<AppSystem> findAllSystems(@BeanParam RestSystemCriteria criteria);
 
     @GET
     @Path(SYSTEM_PATH + "/{id}")
