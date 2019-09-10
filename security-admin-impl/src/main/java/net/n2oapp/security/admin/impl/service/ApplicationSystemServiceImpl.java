@@ -3,9 +3,9 @@ package net.n2oapp.security.admin.impl.service;
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.criteria.ApplicationCriteria;
 import net.n2oapp.security.admin.api.criteria.SystemCriteria;
+import net.n2oapp.security.admin.api.model.AppSystem;
 import net.n2oapp.security.admin.api.model.AppSystemForm;
 import net.n2oapp.security.admin.api.model.Application;
-import net.n2oapp.security.admin.api.model.AppSystem;
 import net.n2oapp.security.admin.api.service.ApplicationSystemService;
 import net.n2oapp.security.admin.impl.entity.ApplicationEntity;
 import net.n2oapp.security.admin.impl.entity.SystemEntity;
@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -80,9 +81,8 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
 
     @Override
     public AppSystem createSystem(AppSystemForm system) {
-        checkSystemUniq(system.getCode(), null);
-        AppSystem result = model(systemRepository.save(entity(system)));
-        return result;
+        checkSystemUniq(system.getCode());
+        return model(systemRepository.save(entity(system)));
     }
 
     @Override
@@ -165,35 +165,27 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     /**
      * Валидация на уникальность кода системы при создании
      */
-    private Boolean checkSystemUniq(String code, String systemId) {
-        SystemEntity systemEntity = systemRepository.findById(code).orElse(null);
-        if (systemEntity == null || systemEntity.getCode().equals(systemId)) {
-            return true;
-        } else {
+    private void checkSystemUniq(String code) {
+        Optional<SystemEntity> system = systemRepository.findById(code);
+        if (system.isPresent() && system.get().getCode() != null)
             throw new UserException("exception.uniqueSystem");
-        }
     }
 
     /**
      * Валидация на удаление системы
      * Запрещено удалять систему, если существует роль или право доступа в такой системе
      */
-    private boolean checkSystemExist(String code) {
-        if (roleRepository.countRolesWithSystemCode(code) == 0 && permissionRepository.countPermissionsWithSystemCode(code) == 0)
-            return true;
-        else
+    private void checkSystemExist(String code) {
+        if (roleRepository.countRolesWithSystemCode(code) != 0 || permissionRepository.countPermissionsWithSystemCode(code) != 0)
             throw new UserException("exception.roleOrPermissionWithSuchRoleExists");
     }
 
     /**
      * Валидация на уникальность кода приложения при создании
      */
-    private Boolean checkServiceUniq(String code) {
-        ApplicationEntity applicationEntity = applicationRepository.findById(code).orElse(null);
-        if (applicationEntity == null) {
-            return true;
-        } else {
+    private void checkServiceUniq(String code) {
+        Optional<ApplicationEntity> application = applicationRepository.findById(code);
+        if (application.isPresent())
             throw new UserException("exception.uniqueApplication");
-        }
     }
 }
