@@ -184,8 +184,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
      * Валидация на уникальность кода приложения при создании
      */
     private void checkServiceUniq(String code) {
-        Optional<ApplicationEntity> application = applicationRepository.findById(code);
-        if (application.isPresent())
+        if (applicationRepository.findById(code).isPresent())
             throw new UserException("exception.uniqueApplication");
     }
 }
