@@ -42,7 +42,7 @@ public class GatewayService implements ClientDetailsService {
         if (apiModel.getIsAuthorizationCode() == Boolean.TRUE) authorizedGrantTypes.add("authorization_code");
         if (apiModel.getIsResourceOwnerPass() == Boolean.TRUE) authorizedGrantTypes.add("password");
         client.setAuthorizedGrantTypes(authorizedGrantTypes);
-        String redirectUris = apiModel.getRedirectUris().replace(" ", ",");
+        String redirectUris = apiModel.getRedirectUris() != null ? apiModel.getRedirectUris().replace(" ", ",") : null;
         client.setRegisteredRedirectUri(StringUtils.commaDelimitedListToSet(redirectUris));
         client.setAccessTokenValiditySeconds(apiModel.getAccessTokenLifetime() * 60);
         client.setRefreshTokenValiditySeconds(apiModel.getRefreshTokenLifetime() * 60);
