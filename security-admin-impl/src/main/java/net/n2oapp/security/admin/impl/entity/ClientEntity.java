@@ -64,7 +64,7 @@ public class ClientEntity {
      */
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(schema = "sec", name = "client_role",
-            joinColumns = {@JoinColumn(name = "client_client_id")},
+            joinColumns = {@JoinColumn(name = "client_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")}
     )
     private List<RoleEntity> roleList;

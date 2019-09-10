@@ -38,16 +38,15 @@ public class GatewayService implements ClientDetailsService {
         client.setClientSecret(apiModel.getClientSecret());
 
         Set<String> authorizedGrantTypes = new HashSet<>();
-        if (apiModel.getIsClientGrant()) authorizedGrantTypes.add("client_credentials");
-        if (apiModel.getIsAuthorizationCode()) authorizedGrantTypes.add("authorization_code");
-        if (apiModel.getIsResourceOwnerPass()) authorizedGrantTypes.add("password");
+        if (apiModel.getIsClientGrant() == Boolean.TRUE) authorizedGrantTypes.add("client_credentials");
+        if (apiModel.getIsAuthorizationCode() == Boolean.TRUE) authorizedGrantTypes.add("authorization_code");
+        if (apiModel.getIsResourceOwnerPass() == Boolean.TRUE) authorizedGrantTypes.add("password");
         client.setAuthorizedGrantTypes(authorizedGrantTypes);
         String redirectUris = apiModel.getRedirectUris().replace(" ", ",");
         client.setRegisteredRedirectUri(StringUtils.commaDelimitedListToSet(redirectUris));
         client.setAccessTokenValiditySeconds(apiModel.getAccessTokenLifetime() * 60);
         client.setRefreshTokenValiditySeconds(apiModel.getRefreshTokenLifetime() * 60);
-        client.setLogoutUrl(apiModel.getLogoutUrl());
-
+        client.setRoles(apiModel.getRoles());
         return client;
 
     }

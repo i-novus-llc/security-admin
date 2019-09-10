@@ -4,10 +4,14 @@ import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.criteria.ClientCriteria;
 import net.n2oapp.security.admin.api.model.Client;
 import net.n2oapp.security.admin.api.model.Role;
+import net.n2oapp.security.admin.api.model.Permission;
+import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.service.ClientService;
 import net.n2oapp.security.admin.impl.entity.ClientEntity;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.repository.ApplicationRepository;
+import net.n2oapp.security.admin.impl.entity.PermissionEntity;
+import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.repository.ClientRepository;
 import net.n2oapp.security.admin.impl.service.specification.ClientSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +23,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.stream.Collectors;
 
 @Service
@@ -112,6 +117,17 @@ public class ClientServiceImpl implements ClientService {
         return entity;
     }
 
+    private Permission permissionModel(PermissionEntity entity) {
+        if (entity == null) return null;
+        Permission model = new Permission();
+        model.setName(entity.getName());
+        model.setCode(entity.getCode());
+        model.setParentCode(entity.getParentCode());
+        model.setHasChildren(entity.getHasChildren());
+        return model;
+    }
+
+
     private void clientNotExists(String id) {
         if (clientRepository.findByClientId(id).isEmpty())
             throw new UserException("exception.clientNotFound");
@@ -124,6 +140,10 @@ public class ClientServiceImpl implements ClientService {
         model.setCode(entity.getCode());
         model.setName(entity.getName());
         model.setDescription(entity.getDescription());
+        if (entity.getPermissionList() != null) {
+            model.setPermissions(entity.getPermissionList().stream().map(this::permissionModel).collect(Collectors.toList()));
+
+        }
         return model;
     }
 
