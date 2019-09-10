@@ -2,8 +2,10 @@ package net.n2oapp.security.admin.api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -40,15 +42,15 @@ public class Client {
     private Boolean isAuthorizationCode;
 
     @JsonProperty
-    @ApiModelProperty("URI разрешённые для редиректа")
+    @ApiModelProperty("Разрешённые для редиректа URI")
     private String redirectUris;
 
     @JsonProperty
-    @ApiModelProperty("Время жизни токена")
+    @ApiModelProperty("Время жизни токена доступа")
     private Integer accessTokenLifetime;
 
     @JsonProperty
-    @ApiModelProperty("Время жизни токена для обновления токенов")
+    @ApiModelProperty("Время жизни токена обновления")
     private Integer refreshTokenLifetime;
 
     @JsonProperty
