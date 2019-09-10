@@ -117,20 +117,6 @@ public class ClientServiceImpl implements ClientService {
         return entity;
     }
 
-    private Role roleModel(RoleEntity entity) {
-        if (entity == null) return null;
-        Role model = new Role();
-        model.setId(entity.getId());
-        model.setCode(entity.getCode());
-        model.setName(entity.getName());
-        model.setDescription(entity.getDescription());
-        if (entity.getPermissionList() != null) {
-            model.setPermissions(entity.getPermissionList().stream().map(this::permissionModel).collect(Collectors.toList()));
-
-        }
-        return model;
-    }
-
     private Permission permissionModel(PermissionEntity entity) {
         if (entity == null) return null;
         Permission model = new Permission();
@@ -154,6 +140,10 @@ public class ClientServiceImpl implements ClientService {
         model.setCode(entity.getCode());
         model.setName(entity.getName());
         model.setDescription(entity.getDescription());
+        if (entity.getPermissionList() != null) {
+            model.setPermissions(entity.getPermissionList().stream().map(this::permissionModel).collect(Collectors.toList()));
+
+        }
         return model;
     }
 

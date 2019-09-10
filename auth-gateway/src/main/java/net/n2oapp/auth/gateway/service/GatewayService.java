@@ -46,12 +46,6 @@ public class GatewayService implements ClientDetailsService {
         client.setRegisteredRedirectUri(StringUtils.commaDelimitedListToSet(redirectUris));
         client.setAccessTokenValiditySeconds(apiModel.getAccessTokenLifetime() * 60);
         client.setRefreshTokenValiditySeconds(apiModel.getRefreshTokenLifetime() * 60);
-        client.setLogoutUrl(apiModel.getLogoutUrl());
-
-        client.setAuthorizedGrantTypes(apiModel.getGrantTypes());
-        client.setRegisteredRedirectUri(apiModel.getRedirectUris());
-        client.setAccessTokenValiditySeconds(apiModel.getAccessTokenLifetime());
-        client.setRefreshTokenValiditySeconds(apiModel.getRefreshTokenLifetime());
         client.setRoles(apiModel.getRoles());
         return client;
 
