@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="create_client" author="aarifullin">
-        <sqlFile path="security/admin/db/changelog/sql/V8_create_client.sql"/>
+    <changeSet id="update_client_role" author="btsyganov">
+        <sqlFile path="security/admin/db/changelog/sql/V13_update_client_role.sql"/>
     </changeSet>
 </databaseChangeLog>

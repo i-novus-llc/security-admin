@@ -28,6 +28,7 @@
     <property name="n2o.security.admin.clientrole.column.role" value="role_id"/>
     <!-- Название колонки, в которой хранится имя клиента в таблице связи клиентов с ролями-->
     <property name="n2o.security.admin.clientrole.column.client" value="client_client_id"/>
+    <property name="n2o.security.admin.clientrole.column.client_id" value="client_id"/>
     <!-- Название внешнего constraint для клиента в таблице связи клиентов с ролями-->
     <property name="n2o.security.admin.clientrole.client.constraint.fk" value="client_role_client_fk"/>
     <!-- Название внешнего constraint для роли в таблице связи клиентов с ролями-->
