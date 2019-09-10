@@ -61,7 +61,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     }
 
     @Override
-    public Page<Application> findAllApplication(ApplicationCriteria criteria) {
+    public Page<Application> findAllApplications(ApplicationCriteria criteria) {
         Specification<ApplicationEntity> specification = new ApplicationSpecifications(criteria);
         if (criteria.getOrders() == null) {
             criteria.setOrders(Arrays.asList(new Sort.Order(Sort.Direction.ASC, "code")));
@@ -105,7 +105,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     }
 
     @Override
-    public Page<AppSystem> findAllSystem(SystemCriteria criteria) {
+    public Page<AppSystem> findAllSystems(SystemCriteria criteria) {
         Specification<SystemEntity> specification = new SystemSpecifications(criteria);
         if (criteria.getOrders() == null) {
             criteria.setOrders(Arrays.asList(new Sort.Order(Sort.Direction.ASC, "code")));
