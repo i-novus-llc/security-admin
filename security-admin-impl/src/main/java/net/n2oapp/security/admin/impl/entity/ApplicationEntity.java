@@ -34,6 +34,10 @@ public class ApplicationEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     private SystemEntity systemCode;
 
+    @OneToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "code", referencedColumnName = "client_id")
+    private ClientEntity client;
+
     public ApplicationEntity(String code) {
         this.code = code;
     }

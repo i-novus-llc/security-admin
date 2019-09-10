@@ -3,7 +3,6 @@ package net.n2oapp.security.admin.impl.service;
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.criteria.ApplicationCriteria;
 import net.n2oapp.security.admin.api.model.Application;
-import net.n2oapp.security.admin.api.model.AppSystem;
 import net.n2oapp.security.admin.api.service.ApplicationService;
 import net.n2oapp.security.admin.impl.entity.ApplicationEntity;
 import net.n2oapp.security.admin.impl.entity.SystemEntity;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
 /**
  * Реализация сервиса управления приложениями
@@ -75,18 +73,6 @@ public class ApplicationServiceImpl implements ApplicationService {
         return entity;
     }
 
-    private AppSystem model(SystemEntity entity) {
-        if (entity == null) return null;
-        AppSystem model = new AppSystem();
-        model.setName(entity.getName());
-        model.setCode(entity.getCode());
-        model.setDescription(entity.getDescription());
-        if (entity.getApplicationList() != null) {
-            model.setApplications(entity.getApplicationList().stream().map(this::model).collect(Collectors.toList()));
-        }
-        return model;
-
-    }
 
     private Application model(ApplicationEntity entity) {
         if (entity == null) return null;
@@ -94,19 +80,20 @@ public class ApplicationServiceImpl implements ApplicationService {
         model.setCode(entity.getCode());
         model.setName(entity.getName());
         model.setSystemCode(entity.getSystemCode().getCode());
+        model.setOAuth(entity.getClient() != null);
         return model;
     }
 
 
     /**
-     * Валидация на уникальность кода системы при создании
+     * Валидация на уникальность кода приложения при создании
      */
     private Boolean checkServiceUniq(String code) {
-        ApplicationEntity systemEntity= applicationRepository.findById(code).orElse(null);
-        if (systemEntity == null) {
+        ApplicationEntity applicationEntity = applicationRepository.findById(code).orElse(null);
+        if (applicationEntity == null) {
             return true;
         } else {
-            throw new UserException("exception.uniqueSystem");
+            throw new UserException("exception.uniqueApplication");
         }
     }
 }

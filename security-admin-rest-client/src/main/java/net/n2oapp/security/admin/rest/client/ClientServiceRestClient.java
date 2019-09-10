@@ -34,8 +34,8 @@ public class ClientServiceRestClient implements ClientService {
     }
 
     @Override
-    public Client findById(String clientId) {
-        return clientService.getById(clientId);
+    public Client findByClientId(String clientId) {
+        return clientService.getByClientId(clientId);
     }
 
     @Override
@@ -45,5 +45,15 @@ public class ClientServiceRestClient implements ClientService {
         clientCriteria.setPage(criteria.getPage());
         clientCriteria.setSize(criteria.getSize());
         return clientService.findAll(clientCriteria);
+    }
+
+    @Override
+    public Client persist(Client clientForm) {
+        return clientService.persist(clientForm);
+    }
+
+    @Override
+    public Client getOrCreate(String id) {
+        return clientService.getOrCreate(id);
     }
 }
