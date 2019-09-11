@@ -40,14 +40,14 @@ public class RoleRestTest {
 
     @Test
     public void search() throws Exception {
-        List<Integer> permissions = new ArrayList<>();
-        permissions.add(1);
+        List<String> permissions = new ArrayList<>();
+        permissions.add("test");
         RestRoleCriteria criteria = new RestRoleCriteria();
         criteria.setPage(0);
         criteria.setSize(4);
         criteria.setName("user");
         criteria.setDescription("description1");
-        criteria.setPermissionIds(permissions);
+        criteria.setPermissionCodes(permissions);
         Page<Role> role = client.findAll(criteria);
         assertEquals(1, role.getTotalElements());
     }
