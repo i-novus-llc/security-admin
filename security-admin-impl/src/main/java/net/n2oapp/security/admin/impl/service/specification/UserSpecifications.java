@@ -29,14 +29,14 @@ public class UserSpecifications implements Specification<UserEntity> {
         if (criteria.getFio() != null) {
             criteria.setFio(criteria.getFio().toLowerCase().replace(" ", ""));
             predicate = builder.and(predicate,
-                    builder.or(
-                            builder.like(builder.lower(builder.trim(root.get(UserEntity_.name))), criteria.getFio() + "%"),
-                            builder.like(builder.lower(builder.trim(root.get(UserEntity_.patronymic))), criteria.getFio() + "%"),
-                            builder.like(builder.concat(builder.coalesce(builder.lower(builder.trim(root.get(UserEntity_.name))), ""),
-                                    builder.coalesce(builder.lower(builder.trim(root.get(UserEntity_.patronymic))), "")), criteria.getFio() + "%"),
-                            builder.like(builder.concat(builder.coalesce(builder.lower(builder.trim(root.get(UserEntity_.surname))), ""),
-                                    builder.concat(builder.coalesce(builder.lower(builder.trim(root.get(UserEntity_.name))), ""),
-                                            builder.coalesce(builder.lower(builder.trim(root.get(UserEntity_.patronymic))), ""))), criteria.getFio() + "%")));
+                builder.or(
+                    builder.like(builder.lower(builder.trim(root.get(UserEntity_.name))), "%" + criteria.getFio() + "%"),
+                    builder.like(builder.lower(builder.trim(root.get(UserEntity_.patronymic))), "%" + criteria.getFio() + "%"),
+                    builder.like(builder.concat(builder.coalesce(builder.lower(builder.trim(root.get(UserEntity_.name))), ""),
+                        builder.coalesce(builder.lower(builder.trim(root.get(UserEntity_.patronymic))), "")), "%" + criteria.getFio() + "%"),
+                    builder.like(builder.concat(builder.coalesce(builder.lower(builder.trim(root.get(UserEntity_.surname))), ""),
+                        builder.concat(builder.coalesce(builder.lower(builder.trim(root.get(UserEntity_.name))), ""),
+                            builder.coalesce(builder.lower(builder.trim(root.get(UserEntity_.patronymic))), ""))), "%" + criteria.getFio() + "%")));
         }
         if (criteria.getIsActive() != null) {
             predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.isActive), criteria.getIsActive()));
@@ -47,7 +47,7 @@ public class UserSpecifications implements Specification<UserEntity> {
             ListJoin<RoleEntity, UserEntity> subUsers = subRoot.join(RoleEntity_.userList);
             sub.select(subRoot.get(RoleEntity_.id));
             sub.where(builder.and(builder.equal(root.get(UserEntity_.id), subUsers.get(UserEntity_.id)),
-                    subRoot.get(RoleEntity_.id).in(criteria.getRoleIds())));
+                subRoot.get(RoleEntity_.id).in(criteria.getRoleIds())));
             predicate = builder.and(predicate, builder.exists(sub));
         }
         return predicate;
