@@ -3,10 +3,13 @@ package net.n2oapp.security.admin.impl.service;
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.criteria.ClientCriteria;
 import net.n2oapp.security.admin.api.model.Client;
+import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.service.ClientService;
 import net.n2oapp.security.admin.impl.entity.ClientEntity;
+import net.n2oapp.security.admin.impl.entity.RoleEntity;
+import net.n2oapp.security.admin.impl.repository.ApplicationRepository;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.repository.ClientRepository;
@@ -18,9 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,10 +33,13 @@ public class ClientServiceImpl implements ClientService {
     @Autowired
     private ClientRepository clientRepository;
 
+    @Autowired
+    private ApplicationRepository applicationRepository;
+
 
     @Override
     public Client create(Client client) {
-        if (clientRepository.findById(client.getClientId()).isPresent())
+        if (clientRepository.findByClientId(client.getClientId()).isPresent())
             throw new UserException("exception.uniqueClient");
         return model(clientRepository.save(entity(client)));
     }
@@ -51,8 +57,8 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Client findById(String clientId) {
-        return model(clientRepository.findById(clientId).orElse(null));
+    public Client findByClientId(String clientId) {
+        return model(clientRepository.findByClientId(clientId).orElse(null));
     }
 
     @Override
@@ -61,54 +67,54 @@ public class ClientServiceImpl implements ClientService {
         return clientRepository.findAll(specification, criteria).map(this::model);
     }
 
-    private Set<String> stringToSet(String string) {
-        return new HashSet<>(Arrays.asList(StringUtils.tokenizeToStringArray(string, ",")));
-    }
 
     private Client model(ClientEntity clientEntity) {
         if (clientEntity == null) return null;
         Client client = new Client();
+        client.setEnabled(true);
         client.setClientId(clientEntity.getClientId());
         client.setClientSecret(clientEntity.getClientSecret());
-        client.setGrantTypes(stringToSet(clientEntity.getGrantTypes()));
-        client.setRedirectUris(stringToSet(clientEntity.getRedirectUris()));
-        client.setAccessTokenLifetime(clientEntity.getAccessTokenLifetime());
-        client.setRefreshTokenLifetime(clientEntity.getRefreshTokenLifetime());
+        if (clientEntity.getGrantTypes() != null) {
+            client.setIsClientGrant(clientEntity.getGrantTypes().contains("client_credentials"));
+            client.setIsResourceOwnerPass(clientEntity.getGrantTypes().contains("password"));
+            client.setIsAuthorizationCode(clientEntity.getGrantTypes().contains("authorization_code"));
+        }
+        if (clientEntity.getRedirectUris() != null)
+            client.setRedirectUris(clientEntity.getRedirectUris().replace(",", " "));
+        if (clientEntity.getAccessTokenLifetime() != null)
+            client.setAccessTokenLifetime(clientEntity.getAccessTokenLifetime() / 60);
+        if (clientEntity.getRefreshTokenLifetime() != null)
+            client.setRefreshTokenLifetime(clientEntity.getRefreshTokenLifetime() / 60);
         client.setLogoutUrl(clientEntity.getLogoutUrl());
-        if (clientEntity.getRoles() != null) {
-            client.setRoles(clientEntity.getRoles().stream().map(this::roleModel).collect(Collectors.toList()));
+        if (clientEntity.getRoleList() != null) {
+            client.setRoles(clientEntity.getRoleList().stream().map(this::model).collect(Collectors.toList()));
+            client.setRolesIds(clientEntity.getRoleList().stream().map(RoleEntity::getId).collect(Collectors.toList()));
         }
         return client;
 
     }
-
 
     private ClientEntity entity(Client client) {
         if (client == null) return null;
         ClientEntity entity = new ClientEntity();
         entity.setClientId(client.getClientId());
         entity.setClientSecret(client.getClientSecret());
-        entity.setGrantTypes(StringUtils.collectionToCommaDelimitedString(client.getGrantTypes()));
-        entity.setRedirectUris(StringUtils.collectionToCommaDelimitedString(client.getRedirectUris()));
-        entity.setAccessTokenLifetime(client.getAccessTokenLifetime());
-        entity.setRefreshTokenLifetime(client.getRefreshTokenLifetime());
+        String[] redirectUris = StringUtils.tokenizeToStringArray(client.getRedirectUris(), " ", true, true);
+        entity.setRedirectUris(StringUtils.arrayToCommaDelimitedString(redirectUris));
+        entity.setAccessTokenLifetime(client.getAccessTokenLifetime() * 60);
+        entity.setRefreshTokenLifetime(client.getRefreshTokenLifetime() * 60);
         entity.setLogoutUrl(client.getLogoutUrl());
-
+        ArrayList<String> authorizedGrantTypes = new ArrayList<>();
+        if (client.getIsClientGrant().equals(Boolean.TRUE))
+            authorizedGrantTypes.add("client_credentials");
+        if (client.getIsAuthorizationCode().equals(Boolean.TRUE))
+            authorizedGrantTypes.add("authorization_code");
+        if (client.getIsResourceOwnerPass().equals(Boolean.TRUE))
+            authorizedGrantTypes.add("password");
+        entity.setGrantTypes(StringUtils.collectionToCommaDelimitedString(authorizedGrantTypes));
+        if (client.getRolesIds() != null)
+            entity.setRoleList(client.getRolesIds().stream().map(RoleEntity::new).collect(Collectors.toList()));
         return entity;
-    }
-
-    private Role roleModel(RoleEntity entity) {
-        if (entity == null) return null;
-        Role model = new Role();
-        model.setId(entity.getId());
-        model.setCode(entity.getCode());
-        model.setName(entity.getName());
-        model.setDescription(entity.getDescription());
-        if (entity.getPermissionList() != null) {
-            model.setPermissions(entity.getPermissionList().stream().map(this::permissionModel).collect(Collectors.toList()));
-
-        }
-        return model;
     }
 
     private Permission permissionModel(PermissionEntity entity) {
@@ -123,8 +129,54 @@ public class ClientServiceImpl implements ClientService {
 
 
     private void clientNotExists(String id) {
-        if (clientRepository.findById(id).isEmpty())
+        if (clientRepository.findByClientId(id).isEmpty())
             throw new UserException("exception.clientNotFound");
+    }
+
+    private Role model(RoleEntity entity) {
+        if (entity == null) return null;
+        Role model = new Role();
+        model.setId(entity.getId());
+        model.setCode(entity.getCode());
+        model.setName(entity.getName());
+        model.setDescription(entity.getDescription());
+        if (entity.getPermissionList() != null) {
+            model.setPermissions(entity.getPermissionList().stream().map(this::permissionModel).collect(Collectors.toList()));
+
+        }
+        return model;
+    }
+
+    @Override
+    public Client persist(Client clientForm) {
+        if (clientForm.getEnabled()) {
+            if (clientRepository.existsById(clientForm.getClientId())) {
+                return update(clientForm);
+            }
+            if (applicationRepository.existsById(clientForm.getClientId())) {
+                return create(clientForm);
+            } else throw new UserException("exception.applicationNotFound");
+        }
+        delete(clientForm.getClientId());
+        return null;
+    }
+
+    @Override
+    public Client getOrCreate(String id) {
+        Client client = findByClientId(id);
+        if (client == null) {
+            client = new Client();
+            client.setClientId(id);
+            client.setClientSecret(UUID.randomUUID().toString());
+            client.setIsAuthorizationCode(true);
+            client.setEnabled(false);
+            client.setAccessTokenLifetime(1440);
+            client.setRefreshTokenLifetime(43200);
+            return client;
+        }
+
+        client.setEnabled(true);
+        return client;
     }
 
 }
