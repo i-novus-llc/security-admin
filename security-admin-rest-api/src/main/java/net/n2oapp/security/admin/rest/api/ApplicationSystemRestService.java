@@ -27,7 +27,7 @@ public interface ApplicationSystemRestService {
     String APPLICATION_PATH = "/applications";
 
     @GET
-    @Path(APPLICATION_PATH + "/")
+    @Path(APPLICATION_PATH)
     @ApiOperation("Найти приложение по критериям поиска")
     @ApiResponse(code = 200, message = "Страница приложений")
     Page<Application> findAllApplications(@BeanParam RestApplicationCriteria criteria);
@@ -36,16 +36,16 @@ public interface ApplicationSystemRestService {
     @Path(APPLICATION_PATH + "/{id}")
     @ApiOperation("Получить приложение по идентификатору")
     @ApiResponse(code = 200, message = "Приложения")
-    Application getApplicationById(@ApiParam(value = "Код приложения") @PathParam("id") String code);
+    Application getApplication(@ApiParam(value = "Код приложения") @PathParam("id") String code);
 
     @POST
-    @Path(APPLICATION_PATH + "/")
+    @Path(APPLICATION_PATH)
     @ApiOperation("Создать приложение")
     @ApiResponse(code = 200, message = "Созданное приложение")
     Application createApplication(@ApiParam(value = "Приложение") Application serviceForm);
 
     @PUT
-    @Path(APPLICATION_PATH + "/")
+    @Path(APPLICATION_PATH)
     @ApiOperation("Изменить приложение")
     @ApiResponse(code = 200, message = "Измененное приложение")
     Application updateApplication(@ApiParam(value = "Приложение") Application serviceForm);
@@ -57,7 +57,7 @@ public interface ApplicationSystemRestService {
     void deleteApplication(@ApiParam(value = "Код приложения") @PathParam("code") String code);
 
     @GET
-    @Path(SYSTEM_PATH + "/")
+    @Path(SYSTEM_PATH)
     @ApiOperation("Найти систему по критериям поиска")
     @ApiResponse(code = 200, message = "Страница систем")
     Page<AppSystem> findAllSystems(@BeanParam RestSystemCriteria criteria);
@@ -66,16 +66,16 @@ public interface ApplicationSystemRestService {
     @Path(SYSTEM_PATH + "/{id}")
     @ApiOperation("Получить систему по идентификатору")
     @ApiResponse(code = 200, message = "Системы")
-    AppSystem getSystemById(@ApiParam(value = "Код") @PathParam("id") String code);
+    AppSystem getSystem(@ApiParam(value = "Код") @PathParam("id") String code);
 
     @POST
-    @Path(SYSTEM_PATH + "/")
+    @Path(SYSTEM_PATH)
     @ApiOperation("Создать систему")
     @ApiResponse(code = 200, message = "Созданная система")
     AppSystem createSystem(@ApiParam(value = "Система") AppSystemForm systemForm);
 
     @PUT
-    @Path(SYSTEM_PATH + "/")
+    @Path(SYSTEM_PATH)
     @ApiOperation("Изменить систему")
     @ApiResponse(code = 200, message = "Измененная система")
     AppSystem updateSystem(@ApiParam(value = "Система") AppSystemForm systemForm);

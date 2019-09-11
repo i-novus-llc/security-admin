@@ -10,7 +10,7 @@
         </java>
     </list>
     <unique result-mapping="#this">
-        <java method="getApplicationById" class="net.n2oapp.security.admin.api.service.ApplicationSystemService">
+        <java method="getApplication" class="net.n2oapp.security.admin.api.service.ApplicationSystemService">
             <spring/>
             <arguments>
                 <argument class="java.lang.String" type="class"/>

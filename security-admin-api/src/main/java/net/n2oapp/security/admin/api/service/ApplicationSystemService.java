@@ -41,7 +41,7 @@ public interface ApplicationSystemService {
      * @param code код приложения
      * @return Модель приложения
      */
-    Application getApplicationById(String code);
+    Application getApplication(String code);
 
     /**
      * Найти все приложения по критериям поиска
@@ -88,7 +88,7 @@ public interface ApplicationSystemService {
      * @param code код системы
      * @return Модель системы
      */
-    AppSystem getSystemById(String code);
+    AppSystem getSystem(String code);
 
     /**
      * Найти все системы по критериям поиска

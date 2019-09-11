@@ -57,7 +57,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     }
 
     @Override
-    public Application getApplicationById(String id) {
+    public Application getApplication(String id) {
         return model(applicationRepository.findById(id).orElse(null));
     }
 
@@ -75,7 +75,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
 
     @Override
     public Boolean isApplicationExist(String code) {
-        return getApplicationById(code) != null;
+        return getApplication(code) != null;
     }
 
 
@@ -100,7 +100,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     }
 
     @Override
-    public AppSystem getSystemById(String id) {
+    public AppSystem getSystem(String id) {
         return model(systemRepository.findById(id).orElse(null));
     }
 
@@ -118,7 +118,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
 
     @Override
     public Boolean isSystemExist(String code) {
-        return getSystemById(code) != null;
+        return getSystem(code) != null;
     }
 
     private Application model(ApplicationEntity entity) {

@@ -26,8 +26,8 @@ public class ApplicationSystemRestServiceImpl implements ApplicationSystemRestSe
     }
 
     @Override
-    public Application getApplicationById(String code) {
-        return service.getApplicationById(code);
+    public Application getApplication(String code) {
+        return service.getApplication(code);
     }
 
     @Override
@@ -52,8 +52,8 @@ public class ApplicationSystemRestServiceImpl implements ApplicationSystemRestSe
     }
 
     @Override
-    public AppSystem getSystemById(String code) {
-        return service.getSystemById(code);
+    public AppSystem getSystem(String code) {
+        return service.getSystem(code);
     }
 
     @Override

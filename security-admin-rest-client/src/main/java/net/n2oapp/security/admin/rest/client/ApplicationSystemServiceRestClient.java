@@ -38,8 +38,8 @@ public class ApplicationSystemServiceRestClient implements ApplicationSystemServ
     }
 
     @Override
-    public Application getApplicationById(String id) {
-        return client.getApplicationById(id);
+    public Application getApplication(String id) {
+        return client.getApplication(id);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class ApplicationSystemServiceRestClient implements ApplicationSystemServ
 
     @Override
     public Boolean isApplicationExist(String code) {
-        return client.getApplicationById(code) != null;
+        return client.getApplication(code) != null;
     }
 
     @Override
@@ -73,8 +73,8 @@ public class ApplicationSystemServiceRestClient implements ApplicationSystemServ
     }
 
     @Override
-    public AppSystem getSystemById(String id) {
-        return client.getSystemById(id);
+    public AppSystem getSystem(String id) {
+        return client.getSystem(id);
     }
 
     @Override
@@ -90,6 +90,6 @@ public class ApplicationSystemServiceRestClient implements ApplicationSystemServ
 
     @Override
     public Boolean isSystemExist(String code) {
-        return client.getSystemById(code) != null;
+        return client.getSystem(code) != null;
     }
 }
