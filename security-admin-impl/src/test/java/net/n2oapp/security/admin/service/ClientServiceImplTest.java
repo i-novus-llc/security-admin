@@ -3,7 +3,11 @@ package net.n2oapp.security.admin.service;
 
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.criteria.ClientCriteria;
+import net.n2oapp.security.admin.api.model.AppSystemForm;
+import net.n2oapp.security.admin.api.model.Application;
 import net.n2oapp.security.admin.api.model.Client;
+import net.n2oapp.security.admin.impl.service.AppSystemServiceImpl;
+import net.n2oapp.security.admin.impl.service.ApplicationServiceImpl;
 import net.n2oapp.security.admin.impl.service.ClientServiceImpl;
 import org.junit.After;
 import org.junit.Test;
@@ -12,9 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -31,6 +32,14 @@ public class ClientServiceImplTest {
     @Autowired
     private ClientServiceImpl service;
 
+    @Autowired
+    private ApplicationServiceImpl applicationService;
+
+    @Autowired
+    private AppSystemServiceImpl appSystemService;
+
+
+
     @After
     public void cleanDB() {
         ClientCriteria criteria = new ClientCriteria();
@@ -44,28 +53,60 @@ public class ClientServiceImplTest {
     }
 
     @Test
+    public void testPersistAndGet() {
+        Client client = service.getOrCreate("notExists");
+        assertEquals(client.getClientId(), "notExists");
+        assertEquals(client.getEnabled(), false);
+        assertEquals(client.getIsAuthorizationCode(), true);
+        assertNotNull(client.getClientSecret());
+
+        AppSystemForm appSystem = new AppSystemForm();
+        appSystem.setCode("test");
+        appSystem.setDescription("test");
+        appSystem.setName("test");
+        appSystemService.create(appSystem);
+
+        Application application = new Application();
+        application.setName("test");
+        application.setCode("testId");
+        application.setSystemCode("test");
+        applicationService.create(application);
+
+        Client clientFromCreateMethod = service.persist(client());
+        client = service.getOrCreate(client().getClientId());
+        compareClient(client, client());
+        compareClient(client, clientFromCreateMethod);
+
+        client.setClientSecret("newSecret");
+        clientFromCreateMethod = service.persist(client);
+        compareClient(client, clientFromCreateMethod);
+        client = service.getOrCreate(client().getClientId());
+        compareClient(client, clientFromCreateMethod);
+
+        client.setEnabled(false);
+        service.persist(client);
+        assertNull(service.findByClientId(client.getClientId()));
+    }
+
+    @Test
     public void testCRUD() {
         service.create(client());
 
         Client clientExample = client();
-        Client clientFromDB = service.findById(clientExample.getClientId());
+        Client clientFromDB = service.findByClientId(clientExample.getClientId());
 
         compareClient(clientFromDB, clientExample);
         clientExample.setClientSecret("newSecret");
         clientExample.setAccessTokenLifetime(69);
         clientExample.setRefreshTokenLifetime(88);
-        Set<String> stringSet = new HashSet<>();
-        stringSet.add("new.uri.1");
-        stringSet.add("new.uri.2");
-        clientExample.setRedirectUris(stringSet);
-        stringSet = new HashSet<>();
-        stringSet.add("newGrantTypes1");
-        stringSet.add("newGrantTypes2");
-        clientExample.setGrantTypes(stringSet);
+        clientExample.setRedirectUris("new.uri.1 new.uri.2");
+        clientExample.setIsResourceOwnerPass(false);
+        clientExample.setIsClientGrant(true);
+        clientExample.setIsAuthorizationCode(false);
         clientExample.setLogoutUrl("newLogout");
 
         service.update(clientExample);
-        clientFromDB = service.findById(clientExample.getClientId());
+        clientFromDB = service.findByClientId(clientExample.getClientId());
 
         Throwable thrown = catchThrowable(() -> {
             clientExample.setClientId("newClientId");
@@ -79,7 +120,7 @@ public class ClientServiceImplTest {
 
         service.delete(clientFromDB.getClientId());
         String clientId = clientFromDB.getClientId();
-        assertNull(service.findById(clientId));
+        assertNull(service.findByClientId(clientId));
 
     }
 
@@ -102,22 +143,21 @@ public class ClientServiceImplTest {
         client.setClientSecret("testSecret");
         client.setAccessTokenLifetime(666);
         client.setRefreshTokenLifetime(667);
-        Set<String> stringSet = new HashSet<>();
-        stringSet.add("test.uri.1");
-        stringSet.add("test.uri.2");
-        client.setRedirectUris(stringSet);
-        stringSet = new HashSet<>();
-        stringSet.add("testGrantTypes1");
-        stringSet.add("testGrantTypes2");
-        client.setGrantTypes(stringSet);
+        client.setRedirectUris("test.uri.1 test.uri.2");
+        client.setIsResourceOwnerPass(true);
+        client.setIsClientGrant(false);
+        client.setIsAuthorizationCode(true);
         client.setLogoutUrl("testLogout");
+        client.setEnabled(true);
         return client;
     }
 
     private void compareClient(Client clientFirst, Client clientSecond) {
         assertEquals(clientFirst.getClientId(), clientSecond.getClientId());
         assertEquals(clientFirst.getAccessTokenLifetime(), clientSecond.getAccessTokenLifetime());
-        assertEquals(clientFirst.getGrantTypes(), clientSecond.getGrantTypes());
+        assertEquals(clientFirst.getIsAuthorizationCode(), clientSecond.getIsAuthorizationCode());
+        assertEquals(clientFirst.getIsResourceOwnerPass(), clientSecond.getIsResourceOwnerPass());
+        assertEquals(clientFirst.getIsClientGrant(), clientSecond.getIsClientGrant());
         assertEquals(clientFirst.getRedirectUris(), clientSecond.getRedirectUris());
         assertEquals(clientFirst.getClientSecret(), clientSecond.getClientSecret());
         assertEquals(clientFirst.getRefreshTokenLifetime(), clientSecond.getRefreshTokenLifetime());

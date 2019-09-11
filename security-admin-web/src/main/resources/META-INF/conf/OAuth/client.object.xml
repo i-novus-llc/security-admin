@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<object xmlns="http://n2oapp.net/framework/config/schema/object-3.0" name="Клиенты">
+    <operations>
+        <operation id="persist">
+            <invocation>
+                <java method="persist" class="net.n2oapp.security.admin.api.service.ClientService">
+                    <spring/>
+                    <arguments>
+                        <argument type="entity" class="net.n2oapp.security.admin.api.model.Client"/>
+                    </arguments>
+                </java>
+            </invocation>
+            <in-parameters>
+                <param id="id" mapping="clientId" domain="string" required="true"/>
+                <param id="clientSecret" mapping="clientSecret" domain="string" required="true"/>
+                <param id="isClientGrant" mapping="isClientGrant" domain="boolean" required="false"/>
+                <param id="isResourceOwnerPass" mapping="isResourceOwnerPass" domain="boolean" required="false"/>
+                <param id="isAuthorizationCode" mapping="isAuthorizationCode" domain="boolean" required="false"/>
+                <param id="accessTokenLifetime" mapping="accessTokenLifetime" domain="integer" required="true"/>
+                <param id="refreshTokenLifetime" mapping="refreshTokenLifetime" domain="integer" required="true"/>
+                <param id="redirectUris" mapping="redirectUris" domain="string[]" required="true"/>
+                <param id="logoutUrl" mapping="logoutUrl" domain="string" required="true"/>
+                <param id="enableClient" mapping="enabled" domain="boolean" required="true"/>
+                <param id="clientRoles*.id" mapping="rolesIds" domain="integer[]" required="false"/>
+            </in-parameters>
+            <validations/>
+        </operation>
+    </operations>
+</object>

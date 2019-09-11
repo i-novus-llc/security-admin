@@ -30,7 +30,7 @@ public interface ClientRestService {
     @Path("/{clientId}")
     @ApiOperation("Получить клиента по идентификатору")
     @ApiResponse(code = 200, message = "Клиенты")
-    Client getById(@ApiParam(value = "Имя клиента") @PathParam("clientId") String clientId);
+    Client getByClientId(@ApiParam(value = "Имя клиента") @PathParam("clientId") String clientId);
 
     @POST
     @Path("/")
@@ -49,4 +49,12 @@ public interface ClientRestService {
     @ApiOperation("Удалить клиента")
     @ApiResponse(code = 204, message = "Клиент удален")
     void delete(@ApiParam(value = "Имя клиента") @PathParam("clientId") String clientId);
+
+    @POST
+    @Path("/persist")
+    Client persist(Client clientForm);
+
+    @GET
+    @Path("/getOrCreate/{clientId}")
+    Client getOrCreate(@PathParam("clientId") String clientId);
 }

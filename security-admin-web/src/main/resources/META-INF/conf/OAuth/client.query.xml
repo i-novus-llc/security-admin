@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0">
+    <unique result-mapping="#this">
+        <java method="getOrCreate" class="net.n2oapp.security.admin.api.service.ClientService">
+            <spring/>
+            <arguments>
+                <argument type="primitive"/>
+            </arguments>
+        </java>
+    </unique>
+
+    <fields>
+        <field id="id" domain="string">
+            <select mapping="clientId"/>
+            <filters>
+                <eq filter-id="id" mapping="[0]"/>
+            </filters>
+        </field>
+        <field id="clientSecret" domain="string">
+            <select mapping="clientSecret"/>
+        </field>
+        <field id="isClientGrant" domain="boolean">
+            <select mapping="isClientGrant"/>
+        </field>
+        <field id="isResourceOwnerPass" domain="boolean">
+            <select mapping="isResourceOwnerPass"/>
+        </field>
+        <field id="isAuthorizationCode" domain="boolean">
+            <select mapping="isAuthorizationCode"/>
+        </field>
+
+        <field id="accessTokenLifetime" domain="integer">
+            <select mapping="accessTokenLifetime"/>
+        </field>
+        <field id="refreshTokenLifetime" domain="integer">
+            <select mapping="refreshTokenLifetime"/>
+        </field>
+        <field id="redirectUris" domain="string[]">
+            <select mapping="redirectUris"/>
+        </field>
+
+        <field id="logoutUrl" domain="string">
+            <select mapping="logoutUrl"/>
+        </field>
+
+        <field id="enableClient" domain="boolean">
+            <select mapping="enabled"/>
+        </field>
+
+        <field id="clientRoles" domain="integer[]" name="Роли">
+            <select mapping="roles"></select>
+            <filters>
+                <in filter-id="roles" domain="integer[]" mapping="roles"/>
+            </filters>
+        </field>
+
+    </fields>
+
+</query>
