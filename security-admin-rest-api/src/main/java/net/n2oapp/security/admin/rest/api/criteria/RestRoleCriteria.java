@@ -41,6 +41,12 @@ public class RestRoleCriteria extends RoleCriteria {
         super.setDescription(description);
     }
 
+    @QueryParam("permissions")
+    @Override
+    public void setPermissionIds(List<Integer> permissionIds) {
+        super.setPermissionIds(permissionIds);
+    }
+
     @QueryParam("permissionCodes")
     @Override
     public void setPermissionCodes(List<String> permissionCodes) {
