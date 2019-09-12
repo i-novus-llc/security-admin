@@ -39,7 +39,11 @@ public class UserSpecifications implements Specification<UserEntity> {
                                             builder.coalesce(builder.lower(builder.trim(root.get(UserEntity_.patronymic))), ""))), criteria.getFio() + "%")));
         }
         if (criteria.getIsActive() != null) {
-            predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.isActive), criteria.getIsActive()));
+            if (criteria.getIsActive().equals("yes")) {
+                predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.isActive), true));
+            } else {
+                predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.isActive), false));
+            }
         }
         if (criteria.getRoleIds() != null && !criteria.getRoleIds().isEmpty()) {
             Subquery sub = criteriaQuery.subquery(Integer.class);

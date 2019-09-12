@@ -29,7 +29,7 @@ public class RestUserCriteria extends UserCriteria {
     @QueryParam("isActive")
     @Override
     @ApiParam(value = "Активный ли пользователь")
-    public void setIsActive(Boolean isActive) {
+    public void setIsActive(String isActive) {
         super.setIsActive(isActive);
     }
 

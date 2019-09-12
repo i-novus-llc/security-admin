@@ -16,49 +16,58 @@
                     <column text-field-id="roleNames" label="Роли">
                         <list label-field-id="name"/>
                     </column>
+                    <column text-field-id="actions" label=" ">
+                        <toolbar>
+                            <button id="delete" icon="fa fa-trash" label="Удалить" confirm="true" confirm-text="Вы действительно хотите удалить пользователя?">
+                                <invoke operation-id="delete"/>
+                            </button>
+                        </toolbar>
+                    </column>
                 </columns>
+                <rows>
+                    <click>
+                        <show-modal page-id="userUpdateForm" submit-operation-id="update" object-id="user"
+                                    detail-field-id="id" route="/:id/update"/>
+                    </click>
+                </rows>
                 <filters>
                     <row>
                         <input-text id="username"/>
                         <input-text id="fio" class="n2o-control-10"/>
-                        <!-- <ctrl:checkbox-group id="activeList" label="Активность" inline="true" css-class="n2o-control-4">
-                             <ctrl:options>
-                                 <ctrl:option>{"id" : "true", "name" :"Да"}</ctrl:option>
-                                 <ctrl:option>{"id" : "false", "name" :"Нет"}</ctrl:option>
-                             </ctrl:options>
-                         </ctrl:checkbox-group>
-
-                         <ctrl:hidden id="isActive">
-                             <ctrl:set-value-expression on="activeList">
-                                 if ((typeof activeList == 'undefined') || (activeList == null) ||
-                                 (activeList.length==0))
-                                 null;
-                                 else if (activeList.length ==2)
-                                 null;
-                                 else if (activeList[0].id == 'true')
-                                 true;
-                                 else false;
-                             </ctrl:set-value-expression>
-                         </ctrl:hidden>-->
-
-                        <input-select id="roles" type="multi" label="Роли" visible="false"
+                        <checkbox-group id="activeList" label="Активность" inline="true">
+                            <options>
+                                <option id="1" name="Да"/>
+                                <option id="2" name="Нет"/>
+                            </options>
+                        </checkbox-group>
+                        <input-select id="roles" type="multi" label="Роли"
                                       query-id="${access.role.query.id}" value-field-id="id"
                                       label-field-id="name">
                         </input-select>
                     </row>
+                    <input-text id="isActive" visible="false">
+                        <dependencies>
+                            <set-value on="activeList" apply-on-init="false">
+                                if ((typeof activeList == 'undefined') || (activeList == null) || (activeList.length==0)) {
+                                return null;
+                                } else if (activeList.length == 2) {
+                                return null;
+                                }else if (activeList[0].id == 1) {
+                                return '';
+                                } else if (activeList[0].id == 2) {
+                                return 'no';
+                                } else {
+                                return null;
+                                }
+                            </set-value>
+                        </dependencies>
+                    </input-text>
                 </filters>
                 <toolbar>
-                    <button id="create" label="Создать">
-                        <show-modal page-id="userForm" submit-operation-id="create" model="filter" object-id="user" upload="defaults" route="create"/>
+                    <button id="create" label="Создать" type="iconAndText" icon="fa fa-plus">
+                        <show-modal page-id="userForm" submit-operation-id="create" model="filter" object-id="user"
+                                    upload="defaults" route="create" />
                     </button>
-                    <button id="update" context="true" label="Изменить">
-                        <show-modal page-id="userUpdateForm" submit-operation-id="update" object-id="user"
-                                    detail-field-id="id" route="/:id/update"/>
-                    </button>
-                    <button id="delete" label="Удалить">
-                        <invoke operation-id="delete"/>
-                    </button>
-
                 </toolbar>
             </table>
         </region>

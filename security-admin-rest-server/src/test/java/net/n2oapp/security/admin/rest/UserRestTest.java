@@ -60,7 +60,7 @@ public class UserRestTest {
         assertThat(user.getContent().stream().map(User::getSurname).collect(Collectors.toList()), hasItem("surname1"));
         criteria.setUsername("test");
         criteria.setFio(" surname1 name1  patronymic1");
-        criteria.setIsActive(true);
+        criteria.setIsActive("yes");
         criteria.setRoleIds(roles);
         user = client.findAll(criteria);
         assertEquals(1, user.getTotalElements());

@@ -60,9 +60,9 @@
         </field>
 
         <field id="isActive" domain="boolean" name="Активность">
-            <select mapping="['isActive']">u.is_active as isActive</select>
+            <select mapping="isActive"/>
             <filters>
-                <eq filter-id="isActive"/>
+                <eq filter-id="isActive" mapping="isActive" domain="string"/>
             </filters>
         </field>
         <field id="fio" domain="string" name="ФИО">
