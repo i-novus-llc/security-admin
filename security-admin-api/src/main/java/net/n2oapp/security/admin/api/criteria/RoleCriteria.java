@@ -15,8 +15,13 @@ public class RoleCriteria extends BaseCriteria {
     private String name;
     private String description;
     private List<Integer> permissionIds;
+    private List<String> permissionCodes;
 
     public void setPermissionIds(List<Integer> permissionIds) {
         this.permissionIds = permissionIds != null ? permissionIds : new ArrayList<>();
+    }
+
+    public void setPermissionCodes(List<String> permissionCodes) {
+        this.permissionCodes = permissionCodes != null ? permissionCodes : new ArrayList<>();
     }
 }
