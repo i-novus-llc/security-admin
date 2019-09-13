@@ -4,7 +4,7 @@
     <operations>
         <operation id="create" success-text="Система сохранена">
             <invocation>
-                <java method="create" class="net.n2oapp.security.admin.api.service.AppSystemService">
+                <java method="createSystem" class="net.n2oapp.security.admin.api.service.ApplicationSystemService">
                     <spring/>
                     <arguments>
                         <argument type="class" class="net.n2oapp.security.admin.api.model.AppSystemForm"/>
@@ -24,7 +24,7 @@
 
         <operation id="update" success-text="Система сохранена">
             <invocation>
-                <java method="update" class="net.n2oapp.security.admin.api.service.AppSystemService">
+                <java method="updateSystem" class="net.n2oapp.security.admin.api.service.ApplicationSystemService">
                     <spring/>
                     <arguments>
                         <argument type="class" class="net.n2oapp.security.admin.api.model.AppSystemForm"/>
@@ -46,7 +46,7 @@
                    confirm-text="Вы уверены, что хотите удалить систему?"
                    success-text="Система удалена">
             <invocation>
-                <java method="delete" class="net.n2oapp.security.admin.api.service.AppSystemService">
+                <java method="deleteSystem" class="net.n2oapp.security.admin.api.service.ApplicationSystemService">
                     <spring/>
                     <arguments>
                         <argument type="primitive"/>
@@ -65,7 +65,7 @@
                     message="Существует система с указанным кодом"
                     result="!(#this)">
             <invocation>
-                <java method="isSystemExist" class="net.n2oapp.security.admin.api.service.AppSystemService">
+                <java method="isSystemExist" class="net.n2oapp.security.admin.api.service.ApplicationSystemService">
                     <spring/>
                     <arguments>
                         <argument type="primitive"/>
