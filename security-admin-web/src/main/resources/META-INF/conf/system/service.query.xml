@@ -2,7 +2,7 @@
 <query xmlns="http://n2oapp.net/framework/config/schema/query-4.0" object-id="service"
        name="Системы">
     <list result-mapping="['content']" count-mapping="['totalElements']">
-        <java method="findAll" class="net.n2oapp.security.admin.api.service.ApplicationService">
+        <java method="findAllApplications" class="net.n2oapp.security.admin.api.service.ApplicationSystemService">
             <spring/>
             <arguments>
                 <argument class="net.n2oapp.security.admin.api.criteria.ApplicationCriteria" type="criteria"/>
@@ -10,7 +10,7 @@
         </java>
     </list>
     <unique result-mapping="#this">
-        <java method="getById" class="net.n2oapp.security.admin.api.service.ApplicationService">
+        <java method="getApplication" class="net.n2oapp.security.admin.api.service.ApplicationSystemService">
             <spring/>
             <arguments>
                 <argument class="java.lang.String" type="class"/>
@@ -34,6 +34,9 @@
             <filters>
                 <eq filter-id="systemCode" mapping="systemCode"/>
             </filters>
+        </field>
+        <field id="systemName" domain="string">
+            <select mapping="systemName"/>
         </field>
         <field id="oAuth" domain="boolean">
             <select mapping="oAuth"/>
