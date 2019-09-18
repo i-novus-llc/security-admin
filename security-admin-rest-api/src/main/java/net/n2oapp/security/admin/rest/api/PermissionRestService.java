@@ -4,7 +4,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
+import net.n2oapp.security.admin.api.criteria.PermissionCriteria;
 import net.n2oapp.security.admin.api.model.Permission;
+import net.n2oapp.security.admin.rest.api.criteria.RestPermissionCriteria;
 import org.springframework.data.domain.Page;
 
 import javax.ws.rs.*;
@@ -24,7 +26,8 @@ public interface PermissionRestService {
     @ApiOperation("Найти все права доступа")
     @ApiResponse(code = 200, message = "Страница прав доступа")
     Page<Permission> getAll(@ApiParam(value = "Код родителя") @QueryParam("parentCode") String parentCode,
-                            @ApiParam(value = "Параметр для получения родительских привелегий") @QueryParam("parentCodeIsNull") Boolean parentIdIsNull);
+                            @ApiParam(value = "Параметр для получения родительских привелегий") @QueryParam("parentCodeIsNull") Boolean parentIdIsNull,
+                            @ApiParam(value = "Критерия поиска") @BeanParam RestPermissionCriteria criteria);
 
 
     @GET

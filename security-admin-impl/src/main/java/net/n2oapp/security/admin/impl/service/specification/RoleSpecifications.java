@@ -1,10 +1,7 @@
 package net.n2oapp.security.admin.impl.service.specification;
 
 import net.n2oapp.security.admin.api.criteria.RoleCriteria;
-import net.n2oapp.security.admin.impl.entity.PermissionEntity;
-import net.n2oapp.security.admin.impl.entity.PermissionEntity_;
-import net.n2oapp.security.admin.impl.entity.RoleEntity;
-import net.n2oapp.security.admin.impl.entity.RoleEntity_;
+import net.n2oapp.security.admin.impl.entity.*;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
@@ -35,6 +32,13 @@ public class RoleSpecifications implements Specification<RoleEntity> {
             sub.where(builder.and(builder.equal(root.get(RoleEntity_.id), subRoles.get(RoleEntity_.id)),
                     subRoot.get(PermissionEntity_.code).in(criteria.getPermissionCodes())));
             predicate = builder.and(predicate, builder.exists(sub));
+        }
+        if (criteria.getSystemCodes() != null && !criteria.getSystemCodes().isEmpty()) {
+            Predicate systemPredicate = builder.or();
+            for (String system : criteria.getSystemCodes()) {
+                systemPredicate = builder.or(systemPredicate, builder.equal(root.get(RoleEntity_.systemCode).get(SystemEntity_.CODE), system));
+            }
+            return builder.and(predicate, systemPredicate);
         }
         return predicate;
     }

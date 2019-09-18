@@ -4,38 +4,8 @@
       name="Роли">
     <regions>
         <region place="single">
-            <table name="Роли" query-id="${access.role.query.id}">
-                <toolbar>
-                    <button label="Создать">
-                        <show-modal page-id="roleForm" submit-operation-id="create" model="filter" object-id="role"/>
-                    </button>
-                    <button label="Изменить">
-                        <show-modal page-id="roleFormUpdate" submit-operation-id="update" object-id="role"
-                                   detail-field-id="id"/>
-                    </button>
-                    <button label="Удалить">
-                        <invoke operation-id="delete"/>
-                    </button>
-                </toolbar>
-                <columns>
-                    <column text-field-id="name"/>
-                    <column text-field-id="description"/>
-                     <column text-field-id="permissionNames" label="Права доступа">
-                         <list label-field-id="name"/>
-                     </column>
-                </columns>
-                <filters>
-                    <row>
-                        <input-text id="name"/>
-                        <input-text id="description"/>
-                        <input-select-tree id="permissions" ajax="false" checkboxes="true" label="Права доступа">
-                            <inheritance-nodes parent-field-id="parentCode" label-field-id="name" value-field-id="id"
-                                               query-id="${access.permission.query.id}"
-                                               has-children-field-id="hasChildren" search-field-id="name">
-                            </inheritance-nodes>
-                        </input-select-tree>
-                    </row>
-                </filters>
+            <table id="roleTable" visible="false" ref-id="roleTableWithoutSystem">
+
             </table>
         </region>
     </regions>

@@ -35,6 +35,10 @@ public class Role {
     private String description;
 
     @JsonProperty
+    @ApiModelProperty(value = "Cистема")
+    private AppSystem system;
+
+    @JsonProperty
     @ApiModelProperty(value = "Права доступа")
     private List<Permission> permissions;
 }
