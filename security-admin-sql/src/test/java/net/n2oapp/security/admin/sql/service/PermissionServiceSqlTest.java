@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.sql.service;
 
+import net.n2oapp.security.admin.api.criteria.PermissionCriteria;
 import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.service.PermissionService;
 import org.junit.Test;
@@ -61,7 +62,7 @@ public class PermissionServiceSqlTest {
 
     @Test
     public void getAll() throws Exception {
-        List<Permission> permissions = service.getAll();
+        List<Permission> permissions = service.getAll(new PermissionCriteria());
         assertEquals(2, permissions.size());
     }
 

@@ -1,8 +1,10 @@
 package net.n2oapp.security.admin.rest.client;
 
+import net.n2oapp.security.admin.api.criteria.PermissionCriteria;
 import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.service.PermissionService;
 import net.n2oapp.security.admin.rest.api.PermissionRestService;
+import net.n2oapp.security.admin.rest.api.criteria.RestPermissionCriteria;
 
 import java.util.List;
 
@@ -38,17 +40,22 @@ public class PermissionServiceRestClient implements PermissionService {
     }
 
     @Override
-    public List<Permission> getAll() {
-        return client.getAll(null, null).getContent();
+    public List<Permission> getAll(PermissionCriteria criteria) {
+        RestPermissionCriteria permissionCriteria = new RestPermissionCriteria();
+        permissionCriteria.setPage(criteria.getPageNumber());
+        permissionCriteria.setSize(criteria.getPageSize());
+        permissionCriteria.setSystemCode(criteria.getSystemCode());
+        permissionCriteria.setOrders(criteria.getOrders());
+        return client.getAll(null, null, permissionCriteria).getContent();
     }
 
     @Override
     public List<Permission> getAllByParentCode(String parentCode) {
-        return client.getAll(parentCode, null).getContent();
+        return client.getAll(parentCode, null, new RestPermissionCriteria()).getContent();
     }
 
     @Override
     public List<Permission> getAllByParentIdIsNull() {
-        return client.getAll(null, true).getContent();
+        return client.getAll(null, true, new RestPermissionCriteria()).getContent();
     }
 }
