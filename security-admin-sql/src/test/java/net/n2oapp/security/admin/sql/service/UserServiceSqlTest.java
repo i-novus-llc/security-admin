@@ -87,7 +87,7 @@ public class UserServiceSqlTest {
         criteria.setSize(4);
         criteria.setUsername("test");
         criteria.setFio("surname1 name1 patronymic1");
-        criteria.setIsActive(true);
+        criteria.setIsActive("yes");
         criteria.setRoleIds(roles);
         Page<User> user = service.findAll(criteria);
         assertEquals(2, user.getTotalElements());
