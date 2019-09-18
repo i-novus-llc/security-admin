@@ -105,11 +105,11 @@ public class ClientServiceImpl implements ClientService {
         entity.setRefreshTokenLifetime(client.getRefreshTokenLifetime() * 60);
         entity.setLogoutUrl(client.getLogoutUrl());
         ArrayList<String> authorizedGrantTypes = new ArrayList<>();
-        if (client.getIsClientGrant() == Boolean.TRUE)
+        if (client.getIsClientGrant().equals(Boolean.TRUE))
             authorizedGrantTypes.add("client_credentials");
-        if (client.getIsAuthorizationCode() == Boolean.TRUE)
+        if (client.getIsAuthorizationCode().equals(Boolean.TRUE))
             authorizedGrantTypes.add("authorization_code");
-        if (client.getIsResourceOwnerPass() == Boolean.TRUE)
+        if (client.getIsResourceOwnerPass().equals(Boolean.TRUE))
             authorizedGrantTypes.add("password");
         entity.setGrantTypes(StringUtils.collectionToCommaDelimitedString(authorizedGrantTypes));
         if (client.getRolesIds() != null)

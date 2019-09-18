@@ -32,7 +32,7 @@
                     </row>
                 </filters>
                 <toolbar>
-                    <button id="create" label="Создать" model="filter">
+                    <button id="create" label="Создать" model="filter" icon="fa fa-plus">
                         <open-page page-id="systemForm" submit-operation-id="create" model="filter"
                                     object-id="system" upload="defaults" route="/create" close-after-submit="true"/>
                     </button>

@@ -15,7 +15,7 @@ import java.util.Objects;
 public class UserCriteria extends BaseCriteria {
     private String username;
     private String fio;
-    private Boolean isActive;
+    private String isActive;
     private List<Integer> roleIds;
     private String password;
 

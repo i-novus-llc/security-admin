@@ -6,22 +6,22 @@
                 <java method="persist" class="net.n2oapp.security.admin.api.service.ClientService">
                     <spring/>
                     <arguments>
-                        <argument type="class" class="net.n2oapp.security.admin.api.model.Client"/>
+                        <argument type="entity" class="net.n2oapp.security.admin.api.model.Client"/>
                     </arguments>
                 </java>
             </invocation>
             <in-parameters>
-                <param id="id" mapping="[0].clientId" domain="string" required="true"/>
-                <param id="clientSecret" mapping="[0].clientSecret" domain="string" required="true"/>
-                <param id="isClientGrant" mapping="[0].isClientGrant" domain="boolean" required="false"/>
-                <param id="isResourceOwnerPass" mapping="[0].isResourceOwnerPass" domain="boolean" required="false"/>
-                <param id="isAuthorizationCode" mapping="[0].isAuthorizationCode" domain="boolean" required="false"/>
-                <param id="accessTokenLifetime" mapping="[0].accessTokenLifetime" domain="integer" required="true"/>
-                <param id="refreshTokenLifetime" mapping="[0].refreshTokenLifetime" domain="integer" required="true"/>
-                <param id="redirectUris" mapping="[0].redirectUris" domain="string[]" required="true"/>
-                <param id="logoutUrl" mapping="[0].logoutUrl" domain="string" required="true"/>
-                <param id="enableClient" mapping="[0].enabled" domain="boolean" required="true"/>
-                <param id="clientRoles*.id" mapping="[0].rolesIds" domain="integer[]" required="false"/>
+                <param id="id" mapping="clientId" domain="string" required="true"/>
+                <param id="clientSecret" mapping="clientSecret" domain="string" required="true"/>
+                <param id="isClientGrant" mapping="isClientGrant" domain="boolean" required="false"/>
+                <param id="isResourceOwnerPass" mapping="isResourceOwnerPass" domain="boolean" required="false"/>
+                <param id="isAuthorizationCode" mapping="isAuthorizationCode" domain="boolean" required="false"/>
+                <param id="accessTokenLifetime" mapping="accessTokenLifetime" domain="integer" required="true"/>
+                <param id="refreshTokenLifetime" mapping="refreshTokenLifetime" domain="integer" required="true"/>
+                <param id="redirectUris" mapping="redirectUris" domain="string[]" required="true"/>
+                <param id="logoutUrl" mapping="logoutUrl" domain="string" required="true"/>
+                <param id="enableClient" mapping="enabled" domain="boolean" required="true"/>
+                <param id="clientRoles*.id" mapping="rolesIds" domain="integer[]" required="false"/>
             </in-parameters>
             <validations/>
         </operation>
