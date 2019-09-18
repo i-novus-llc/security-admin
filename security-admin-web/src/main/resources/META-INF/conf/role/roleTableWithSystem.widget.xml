@@ -4,14 +4,8 @@
         <button label="Создать">
             <show-modal page-id="roleForm" submit-operation-id="create" model="filter" object-id="role"/>
         </button>
-        <button label="Изменить">
-            <show-modal page-id="roleFormUpdate" submit-operation-id="update" object-id="role"
-                        detail-field-id="id"/>
-        </button>
-        <button label="Удалить">
-            <invoke operation-id="delete"/>
-        </button>
     </toolbar>
+
     <columns>
         <column text-field-id="name"/>
         <column text-field-id="description"/>
@@ -19,7 +13,21 @@
         <column text-field-id="permissionNames" label="Права доступа">
             <list label-field-id="name"/>
         </column>
+        <column text-field-id="actions" label=" ">
+            <toolbar>
+                <button id="remove" icon="fa fa-trash" label="Удалить"
+                        confirm="true" confirm-text="Вы действительно хотите удалить роль?">
+                    <invoke operation-id="delete"/>
+                </button>
+            </toolbar>
+        </column>
     </columns>
+    <rows>
+        <click>
+            <show-modal page-id="roleFormUpdate" submit-operation-id="update" object-id="role"
+                        detail-field-id="id"/>
+        </click>
+    </rows>
     <filters>
         <row>
             <input-text id="name"/>
