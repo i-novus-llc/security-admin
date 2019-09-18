@@ -38,9 +38,9 @@ public class GatewayService implements ClientDetailsService {
         client.setClientSecret(apiModel.getClientSecret());
 
         Set<String> authorizedGrantTypes = new HashSet<>();
-        if (apiModel.getIsClientGrant() == Boolean.TRUE) authorizedGrantTypes.add("client_credentials");
-        if (apiModel.getIsAuthorizationCode() == Boolean.TRUE) authorizedGrantTypes.add("authorization_code");
-        if (apiModel.getIsResourceOwnerPass() == Boolean.TRUE) authorizedGrantTypes.add("password");
+        if (apiModel.getIsClientGrant().equals(Boolean.TRUE)) authorizedGrantTypes.add("client_credentials");
+        if (apiModel.getIsAuthorizationCode().equals(Boolean.TRUE)) authorizedGrantTypes.add("authorization_code");
+        if (apiModel.getIsResourceOwnerPass().equals(Boolean.TRUE)) authorizedGrantTypes.add("password");
         client.setAuthorizedGrantTypes(authorizedGrantTypes);
         String redirectUris = apiModel.getRedirectUris() != null ? apiModel.getRedirectUris().replace(" ", ",") : null;
         client.setRegisteredRedirectUri(StringUtils.commaDelimitedListToSet(redirectUris));
