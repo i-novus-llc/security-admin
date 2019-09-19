@@ -86,6 +86,10 @@
             </filters>
         </field>
 
+        <field id="roleNamesWithSystem" domain="string[]" name="Роли">
+            <select mapping="['roles'].![nameWithSystem]"></select>
+        </field>
+
         <field id="roles" domain="object[]" name="Роли">
             <select mapping="['roles']"></select>
             <filters>

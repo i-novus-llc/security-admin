@@ -7,6 +7,7 @@ import net.n2oapp.security.admin.impl.provider.SimpleSsoUserRoleProvider;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.UserServiceImpl;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -24,10 +25,12 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Import(AdminCommonsConfiguration.class)
 public class AdminImplConfiguration {
 
+    @Value("${n2o.system.global:false}")
+    Boolean systemGlobal;
 
     @Bean
     public UserService userService(UserRepository userRepository, RoleRepository roleRepository, SsoUserRoleProvider ssoUserRoleProvider) {
-        return new UserServiceImpl(userRepository, roleRepository, ssoUserRoleProvider);
+        return new UserServiceImpl(systemGlobal, userRepository, roleRepository, ssoUserRoleProvider);
     }
 
     @Bean

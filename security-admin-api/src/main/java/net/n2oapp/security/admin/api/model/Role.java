@@ -41,4 +41,8 @@ public class Role {
     @JsonProperty
     @ApiModelProperty(value = "Права доступа")
     private List<Permission> permissions;
+
+    @JsonProperty
+    @ApiModelProperty(value = "Имя с системой")
+    private String nameWithSystem;
 }
