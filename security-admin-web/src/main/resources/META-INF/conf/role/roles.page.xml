@@ -4,7 +4,7 @@
       name="Роли">
     <regions>
         <region place="single">
-            <table id="roleTable" visible="false" ref-id="roleTableWithoutSystem">
+            <table id="roleTable" visible="false" ref-id="roleTable">
 
             </table>
         </region>
