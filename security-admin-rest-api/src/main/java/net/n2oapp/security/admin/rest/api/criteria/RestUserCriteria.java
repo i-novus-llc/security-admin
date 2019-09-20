@@ -33,6 +33,13 @@ public class RestUserCriteria extends UserCriteria {
         super.setIsActive(isActive);
     }
 
+    @QueryParam("systemCode")
+    @Override
+    @ApiParam(value = "Система роли")
+    public void setSystemCode(String systemCode) {
+        super.setSystemCode(systemCode);
+    }
+
     @QueryParam("roles")
     @Override
     @ApiParam(value = "Список идентификаторов ролей")
