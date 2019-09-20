@@ -41,13 +41,10 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserValidations userValidations;
 
-    private final Boolean systemGlobal;
-
-    public UserServiceImpl(Boolean systemGlobal, UserRepository userRepository, RoleRepository roleRepository, SsoUserRoleProvider provider) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, SsoUserRoleProvider provider) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.provider = provider;
-        this.systemGlobal = systemGlobal;
     }
 
     @Override
@@ -224,11 +221,10 @@ public class UserServiceImpl implements UserService {
         model.setCode(entity.getCode());
         model.setName(entity.getName());
         model.setDescription(entity.getDescription());
-        if (systemGlobal) {
-            model.setNameWithSystem(entity.getName());
-            if (entity.getSystemCode() != null)
-                model.setNameWithSystem(model.getNameWithSystem() + "(" + entity.getSystemCode().getName() + ")");
-        }
+        model.setNameWithSystem(entity.getName());
+        if (entity.getSystemCode() != null)
+            model.setNameWithSystem(model.getNameWithSystem() + "(" + entity.getSystemCode().getName() + ")");
+
         return model;
     }
 }

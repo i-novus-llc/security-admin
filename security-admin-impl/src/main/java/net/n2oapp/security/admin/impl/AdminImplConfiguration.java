@@ -25,12 +25,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Import(AdminCommonsConfiguration.class)
 public class AdminImplConfiguration {
 
-    @Value("${n2o.system.global:false}")
-    Boolean systemGlobal;
 
     @Bean
     public UserService userService(UserRepository userRepository, RoleRepository roleRepository, SsoUserRoleProvider ssoUserRoleProvider) {
-        return new UserServiceImpl(systemGlobal, userRepository, roleRepository, ssoUserRoleProvider);
+        return new UserServiceImpl(userRepository, roleRepository, ssoUserRoleProvider);
     }
 
     @Bean

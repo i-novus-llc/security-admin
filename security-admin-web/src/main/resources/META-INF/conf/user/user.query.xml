@@ -96,5 +96,11 @@
                 <in filter-id="roles*.id" domain="integer[]" mapping="roleIds"/>
             </filters>
         </field>
+
+        <field id="system" domain="object">
+            <filters>
+                <eq filter-id="system.id" domain="string" mapping="systemCode"/>
+            </filters>
+        </field>
     </fields>
 </query>

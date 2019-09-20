@@ -83,11 +83,8 @@
             </filters>
         </field>
 
-        <field id="systemId" domain="string" name="Система">
+        <field id="system.id" domain="string" name="Система">
             <select mapping="system?.code"></select>
-            <filters>
-                <eq filter-id="systemId" domain="string[]" mapping="systemCodes"></eq>
-            </filters>
         </field>
 
         <field id="systemName" domain="string" name="Система">
