@@ -49,12 +49,6 @@ public class PermissionServiceImpl implements PermissionService {
         return model(permissionEntity);
     }
 
-    private final Boolean systemGlobal;
-
-    public PermissionServiceImpl(@Value("${n2o.system.global:false}") Boolean systemGlobal) {
-        this.systemGlobal = systemGlobal;
-    }
-
     @Override
     public List<Permission> getAll(PermissionCriteria criteria) {
         Specification<PermissionEntity> specification = new PermissionSpecifications(criteria);
@@ -82,7 +76,7 @@ public class PermissionServiceImpl implements PermissionService {
         entity.setName(model.getName());
         entity.setCode(model.getCode());
         entity.setParentCode(model.getParentCode());
-        if (systemGlobal)
+        if (model.getSystemCode() != null)
             entity.setSystemCode(new SystemEntity(model.getSystemCode()));
         return entity;
     }
@@ -94,7 +88,7 @@ public class PermissionServiceImpl implements PermissionService {
         model.setCode(entity.getCode());
         model.setParentCode(entity.getParentCode());
         model.setHasChildren(entity.getHasChildren());
-        if (entity.getSystemCode() != null && systemGlobal)
+        if (entity.getSystemCode() != null)
             model.setSystemCode(entity.getSystemCode().getCode());
         return model;
     }
