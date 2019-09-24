@@ -16,6 +16,7 @@ import java.util.List;
 
 /**
  * Сервис для создания, изменения, удаления пользователя в keycloak
+ * https://www.keycloak.org/docs-api/6.0/rest-api/#_users_resource
  */
 public class KeycloakRestUserService {
 
@@ -24,6 +25,8 @@ public class KeycloakRestUserService {
     private static String USER_ROLES = "%s/admin/realms/%s/users/%s/role-mappings/realm";
     private static String EMAIL_ACTIONS = "%s/admin/realms/%s/users/%s/execute-actions-email";
     private static String RESET_PASSWORD = "%s/admin/realms/%s/users/%s/reset-password";
+    private static String SEARCH_USERS = "%s/admin/realms/%s/users%s";
+    private static String USERS_COUNT = "%s/admin/realms/%s/users/count";
 
     private AdminSsoKeycloakProperties properties;
 
@@ -35,6 +38,21 @@ public class KeycloakRestUserService {
 
     public KeycloakRestUserService(AdminSsoKeycloakProperties properties) {
         this.properties = properties;
+    }
+
+    /**
+     * Возвращает количество пользователей
+     */
+    public Integer getUsersCount() {
+        final String serverUrl = String.format(USERS_COUNT, properties.getServerUrl(), properties.getRealm());
+        try {
+            return template.getForObject(serverUrl, Integer.class);
+        } catch (HttpClientErrorException ex) {
+            if (ex.getRawStatusCode() == 404) {
+                return null;
+            }
+            throw ex;
+        }
     }
 
     /**
@@ -50,6 +68,34 @@ public class KeycloakRestUserService {
         } catch (HttpClientErrorException ex) {
             if (ex.getRawStatusCode() == 404) {
                 return null;
+            }
+            throw ex;
+        }
+    }
+
+    /**
+     * Поиск пользователей
+     * @param search - строка поиска (A String contained in username, first or last name, or email)
+     * @param first  - с какого пользователя начать
+     * @param max    - сколько пользователей вернуть
+     * @return -лист пользователей
+     */
+    public List<UserRepresentation> searchUsers(String search, Integer first, Integer max) {
+        String criteria = first == null ? "" : "first=" + first;
+        if (max != null) {
+            criteria += criteria.isEmpty() ? "max=" + max : "&max=" + max;
+        }
+        if (search != null && !search.isEmpty()) {
+            criteria += criteria.isEmpty() ? "search=" + search : "&search=" + search;
+        }
+
+        final String serverUrl = String.format(SEARCH_USERS, properties.getServerUrl(), properties.getRealm(), criteria.isEmpty() ? "" : "?" + criteria);
+        try {
+            ResponseEntity<UserRepresentation[]> response = template.getForEntity(serverUrl, UserRepresentation[].class);
+            return Arrays.asList(response.getBody());
+        } catch (HttpClientErrorException ex) {
+            if (ex.getRawStatusCode() == 404) {
+                return Collections.EMPTY_LIST;
             }
             throw ex;
         }
