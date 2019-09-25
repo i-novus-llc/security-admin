@@ -18,6 +18,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.i_novus.ms.audit.client.AuditClient;
+import ru.i_novus.ms.audit.client.model.AuditClientRequest;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -34,26 +36,32 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     @Autowired
     private SystemRepository systemRepository;
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
     private RoleRepository roleRepository;
     @Autowired
     private PermissionRepository permissionRepository;
+    @Autowired
+    private AuditClient auditClient;
 
     @Override
     public Application createApplication(Application service) {
         checkServiceUniq(service.getCode());
-        return model(applicationRepository.save(entity(service)));
+        Application result = model(applicationRepository.save(entity(service)));
+        return audit("Создание приложения", result);
     }
 
     @Override
     public Application updateApplication(Application service) {
-        return model(applicationRepository.save(entity(service)));
+        Application result = model(applicationRepository.save(entity(service)));
+        return audit("Изменение приложения", result);
     }
 
     @Override
     public void deleteApplication(String code) {
+        ApplicationEntity app = applicationRepository.findById(code).orElse(null);
         applicationRepository.deleteById(code);
+        if (app != null) {
+            audit("Удаление приложения", model(app));
+        }
     }
 
     @Override
@@ -82,7 +90,8 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     @Override
     public AppSystem createSystem(AppSystemForm system) {
         checkSystemUniq(system.getCode());
-        return model(systemRepository.save(entity(system)));
+        AppSystem result = model(systemRepository.save(entity(system)));
+        return audit("Создание системы", result);
     }
 
     @Override
@@ -90,13 +99,18 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
         SystemEntity entity = systemRepository.getOne(system.getCode());
         entity.setName(system.getName());
         entity.setDescription(system.getDescription());
-        return model(systemRepository.save(entity));
+        AppSystem result = model(systemRepository.save(entity));
+        return audit("Изменение системы", result);
     }
 
     @Override
     public void deleteSystem(String code) {
         checkSystemExist(code);
+        SystemEntity sys = systemRepository.findById(code).orElse(null);
         systemRepository.deleteById(code);
+        if (sys != null) {
+            audit("Удаление системы", model(sys));
+        }
     }
 
     @Override
@@ -186,5 +200,29 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     private void checkServiceUniq(String code) {
         if (applicationRepository.findById(code).isPresent())
             throw new UserException("exception.uniqueApplication");
+    }
+
+    private Application audit(String action, Application app) {
+        AuditClientRequest request = new AuditClientRequest();
+        request.setObjectType("Application");
+        request.setObjectId(app.getCode());
+        request.setEventType(action);
+        request.setContext(app.toString());
+        request.setObjectName(app.getName());
+
+        auditClient.add(request);
+        return app;
+    }
+
+    private AppSystem audit(String action, AppSystem appSys) {
+        AuditClientRequest request = new AuditClientRequest();
+        request.setObjectType("AppSystem");
+        request.setObjectId(appSys.getCode());
+        request.setEventType(action);
+        request.setContext(appSys.toString());
+        request.setObjectName(appSys.getName());
+
+        auditClient.add(request);
+        return appSys;
     }
 }
