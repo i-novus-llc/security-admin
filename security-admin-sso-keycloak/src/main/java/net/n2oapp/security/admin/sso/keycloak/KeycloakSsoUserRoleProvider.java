@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 
 public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
 
+    public static final String EXT_SYS = "KEYCLOAK";
+
     private AdminSsoKeycloakProperties properties;
 
     @Autowired
@@ -34,7 +36,7 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
 
     @Override
     public boolean isSupports(String ssoName) {
-        return ssoName == null || "keycloak".equals(ssoName.toLowerCase());
+        return ssoName == null || EXT_SYS.equals(ssoName.toUpperCase());
     }
 
     @Override

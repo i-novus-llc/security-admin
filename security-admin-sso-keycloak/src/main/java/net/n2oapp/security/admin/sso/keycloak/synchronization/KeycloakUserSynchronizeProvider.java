@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static net.n2oapp.security.admin.sso.keycloak.KeycloakSsoUserRoleProvider.EXT_SYS;
+
 /**
  * Синхронизация пользователей с Keycloak
  */
@@ -74,6 +76,7 @@ public class KeycloakUserSynchronizeProvider {
         int pos = 0;
         UserCriteria criteria = new UserCriteria();
         criteria.setPageSize(CHUNK_SIZE);
+        criteria.setExtSys(EXT_SYS);
         final Specification<UserEntity> specification = new UserSpecifications(criteria);
 
         int missings = 0;
@@ -139,7 +142,7 @@ public class KeycloakUserSynchronizeProvider {
             entity = new UserEntity();
         }
         entity.setExtUid(user.getId());
-        entity.setExtSys("keycloak");
+        entity.setExtSys(EXT_SYS);
         entity.setIsActive(user.isEnabled());
         entity.setUsername(user.getUsername());
         entity.setName(user.getFirstName());
@@ -155,6 +158,7 @@ public class KeycloakUserSynchronizeProvider {
                 Objects.equals(urep.getUsername(), ent2.getUsername()) &&
                 Objects.equals(urep.getFirstName(), ent2.getName()) &&
                 Objects.equals(urep.getLastName(), ent2.getSurname()) &&
-                Objects.equals(urep.getEmail(), ent2.getEmail());
+                Objects.equals(urep.getEmail(), ent2.getEmail()) &&
+                Objects.equals(EXT_SYS, ent2.getExtUid());
     }
 }
