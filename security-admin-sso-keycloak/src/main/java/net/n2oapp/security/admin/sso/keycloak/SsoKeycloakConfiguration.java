@@ -5,7 +5,6 @@ import net.n2oapp.security.admin.sso.keycloak.synchronization.UserSynchronizeJob
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.quartz.SchedulerFactoryBeanCustomizer;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +18,6 @@ import org.springframework.security.oauth2.client.token.grant.client.ClientCrede
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import java.util.Map;
 import java.util.Set;
 
 import static org.quartz.CronScheduleBuilder.cronSchedule;
@@ -86,11 +84,9 @@ public class SsoKeycloakConfiguration {
                 .withSchedule(cronSchedule(cronFrequency))
                 .build();
 
-        schedulerFactoryBean.setSchedulerContextAsMap(
-                Map.of(KeycloakUserSynchronizeProvider.class.getSimpleName(), keycloakUserSynchronizeProvider));
-
         Scheduler scheduler = schedulerFactoryBean.getScheduler();
         scheduler.scheduleJob(userSynchronizeJobDetail, Set.of(userSynchronizeJobTrigger), true);
+        scheduler.getContext().put(KeycloakUserSynchronizeProvider.class.getSimpleName(), keycloakUserSynchronizeProvider);
         return scheduler;
     }
 
