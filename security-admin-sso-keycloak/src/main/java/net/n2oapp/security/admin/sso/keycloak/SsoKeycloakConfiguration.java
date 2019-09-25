@@ -32,8 +32,11 @@ public class SsoKeycloakConfiguration {
 
     public static final String USER_SYNCHRONIZE_JOB_DETAIL = "User_Synchronize_Job_Detail";
 
-    @Value("${access.keycloak.sync-cron:0 0 0 1 1 ? 2100}")
+    @Value("${access.keycloak.sync-cron:0 0/30 * * * ? *}")
     private String cronFrequency;
+
+    @Value("${KeycloakUserAutoSynchronize.enabled:false}")
+    private Boolean syncEnabled;
 
     @Autowired
     KeycloakUserSynchronizeProvider keycloakUserSynchronizeProvider;
@@ -72,21 +75,25 @@ public class SsoKeycloakConfiguration {
 
     @Bean
     public Scheduler scheduler(SchedulerFactoryBean schedulerFactoryBean) throws SchedulerException {
-        JobDetail userSynchronizeJobDetail = JobBuilder.newJob().ofType(UserSynchronizeJob.class)
-                .storeDurably()
-                .withIdentity(USER_SYNCHRONIZE_JOB_DETAIL)
-                .usingJobData(new JobDataMap())
-                .build();
-
-        Trigger userSynchronizeJobTrigger = TriggerBuilder.newTrigger()
-                .forJob(userSynchronizeJobDetail)
-                .withIdentity("User_Synchronize_Trigger")
-                .withSchedule(cronSchedule(cronFrequency))
-                .build();
-
         Scheduler scheduler = schedulerFactoryBean.getScheduler();
-        scheduler.scheduleJob(userSynchronizeJobDetail, Set.of(userSynchronizeJobTrigger), true);
-        scheduler.getContext().put(KeycloakUserSynchronizeProvider.class.getSimpleName(), keycloakUserSynchronizeProvider);
+        if (syncEnabled) {
+            JobDetail userSynchronizeJobDetail = JobBuilder.newJob().ofType(UserSynchronizeJob.class)
+                    .storeDurably()
+                    .withIdentity(USER_SYNCHRONIZE_JOB_DETAIL)
+                    .usingJobData(new JobDataMap())
+                    .build();
+
+            Trigger userSynchronizeJobTrigger = TriggerBuilder.newTrigger()
+                    .forJob(userSynchronizeJobDetail)
+                    .withIdentity("User_Synchronize_Trigger")
+                    .withSchedule(cronSchedule(cronFrequency))
+                    .build();
+
+            scheduler.scheduleJob(userSynchronizeJobDetail, Set.of(userSynchronizeJobTrigger), true);
+            scheduler.getContext().put(KeycloakUserSynchronizeProvider.class.getSimpleName(), keycloakUserSynchronizeProvider);
+        } else {
+            scheduler.deleteJob(new JobKey(USER_SYNCHRONIZE_JOB_DETAIL));
+        }
         return scheduler;
     }
 
