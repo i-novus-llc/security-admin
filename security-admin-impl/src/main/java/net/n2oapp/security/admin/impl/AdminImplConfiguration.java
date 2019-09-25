@@ -47,7 +47,7 @@ public class AdminImplConfiguration {
     public RequestConverter requestConverter() {
         return new RequestConverter(
                 () -> new User("UNKNOWN", "UNKNOWN"),   //FIXME
-                () -> "SOURCE_APPLICATION",
+                () -> "Access",
                 () -> "SOURCE_WORKSTATION"
         );
     }
