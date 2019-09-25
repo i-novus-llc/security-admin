@@ -20,6 +20,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
+import ru.i_novus.ms.audit.client.AuditClient;
+import ru.i_novus.ms.audit.client.model.AuditClientRequest;
 
 import java.util.stream.Collectors;
 
@@ -40,6 +42,8 @@ public class UserServiceImpl implements UserService {
     private MailService mailService;
     @Autowired
     private UserValidations userValidations;
+    @Autowired
+    private AuditClient auditClient;
 
 
     public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, SsoUserRoleProvider provider) {
@@ -77,7 +81,7 @@ public class UserServiceImpl implements UserService {
             }
         }
         mailService.sendWelcomeMail(user);
-        return model(savedUser);
+        return audit("Создание пользователя", model(savedUser));
     }
 
     @Override
@@ -104,15 +108,16 @@ public class UserServiceImpl implements UserService {
             }
             provider.updateUser(ssoUser);
         }
-        return model(updatedUser);
+        return audit("Изменение пользователя", model(updatedUser));
     }
 
     @Override
     public void delete(Integer id) {
-        UserEntity user = userRepository.findById(id).orElse(null);
+        User user = model(userRepository.findById(id).orElse(null));
         userRepository.deleteById(id);
-        if (user != null && provider.isSupports(user.getExtSys())) {
-            provider.deleteUser(model(user));
+        if (user != null) {
+            audit("Удаление пользователя", user);
+            if (provider.isSupports(user.getExtSys())) provider.deleteUser(user);
         }
     }
 
@@ -139,14 +144,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User changeActive(Integer id) {
-        UserEntity userEntity = userRepository.findById(id).get();
+        UserEntity userEntity = userRepository.findById(id).orElse(null);
         userEntity.setIsActive(!userEntity.getIsActive());
         User result = model(userRepository.save(userEntity));
         if (provider.isSupports(userEntity.getExtSys())) {
             provider.changeActivity(result);
         }
-        return result;
-
+        return audit("Изменение активности пользователя", result);
     }
 
     @Override
@@ -224,5 +228,17 @@ public class UserServiceImpl implements UserService {
         model.setName(entity.getName());
         model.setDescription(entity.getDescription());
         return model;
+    }
+
+    private User audit(String action, User user) {
+        AuditClientRequest request = new AuditClientRequest();
+        request.setObjectType("User");
+        request.setObjectId("" + user.getId());
+        request.setEventType(action);
+        request.setContext(user.toString());
+        request.setObjectName(user.getUsername());
+
+        auditClient.add(request);
+        return user;
     }
 }
