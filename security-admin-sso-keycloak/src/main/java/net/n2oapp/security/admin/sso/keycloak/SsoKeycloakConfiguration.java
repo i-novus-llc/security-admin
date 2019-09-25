@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Primary;
 
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.security.oauth2.client.OAuth2RestOperations;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
@@ -21,6 +20,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.Map;
+import java.util.Set;
 
 import static org.quartz.CronScheduleBuilder.cronSchedule;
 
@@ -28,14 +28,13 @@ import static org.quartz.CronScheduleBuilder.cronSchedule;
  * Конфигурация модуля взаимодействия с keycloak
  */
 @Configuration
-@EnableScheduling
 @DependsOn("liquibase")
 @EnableConfigurationProperties(AdminSsoKeycloakProperties.class)
 public class SsoKeycloakConfiguration {
 
     public static final String USER_SYNCHRONIZE_JOB_DETAIL = "User_Synchronize_Job_Detail";
 
-    @Value("${access.keycloak.sync-cron:0 0 0 0 0 0}")
+    @Value("${access.keycloak.sync-cron:0 0 0 1 1 ? 2100}")
     private String cronFrequency;
 
     @Autowired
@@ -78,23 +77,21 @@ public class SsoKeycloakConfiguration {
         JobDetail userSynchronizeJobDetail = JobBuilder.newJob().ofType(UserSynchronizeJob.class)
                 .storeDurably()
                 .withIdentity(USER_SYNCHRONIZE_JOB_DETAIL)
+                .usingJobData(new JobDataMap())
                 .build();
 
-        Trigger userSynchronizeJobTrigger = TriggerBuilder.newTrigger().forJob(userSynchronizeJobDetail)
+        Trigger userSynchronizeJobTrigger = TriggerBuilder.newTrigger()
                 .forJob(userSynchronizeJobDetail)
                 .withIdentity("User_Synchronize_Trigger")
                 .withSchedule(cronSchedule(cronFrequency))
                 .build();
 
+        schedulerFactoryBean.setSchedulerContextAsMap(
+                Map.of(KeycloakUserSynchronizeProvider.class.getSimpleName(), keycloakUserSynchronizeProvider));
+
         Scheduler scheduler = schedulerFactoryBean.getScheduler();
-        scheduler.scheduleJob(userSynchronizeJobDetail, userSynchronizeJobTrigger);
+        scheduler.scheduleJob(userSynchronizeJobDetail, Set.of(userSynchronizeJobTrigger), true);
         return scheduler;
     }
 
-    @Bean
-    public SchedulerFactoryBeanCustomizer schedulerContextCustomizer() {
-        return schedulerFactoryBean ->
-                schedulerFactoryBean.setSchedulerContextAsMap(
-                        Map.of(KeycloakUserSynchronizeProvider.class.getSimpleName(), keycloakUserSynchronizeProvider));
-    }
 }
