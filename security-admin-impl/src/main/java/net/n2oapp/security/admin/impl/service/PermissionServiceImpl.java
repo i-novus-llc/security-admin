@@ -1,13 +1,20 @@
 package net.n2oapp.security.admin.impl.service;
 
+import net.n2oapp.security.admin.api.criteria.PermissionCriteria;
 import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.service.PermissionService;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
+import net.n2oapp.security.admin.impl.entity.SystemEntity;
 import net.n2oapp.security.admin.impl.repository.PermissionRepository;
+import net.n2oapp.security.admin.impl.service.specification.PermissionSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,7 +27,6 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Autowired
     private PermissionRepository permissionRepository;
-
 
     @Override
     public Permission create(Permission permission) {
@@ -35,7 +41,6 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     public void delete(String code) {
         permissionRepository.deleteById(code);
-
     }
 
     @Override
@@ -44,9 +49,21 @@ public class PermissionServiceImpl implements PermissionService {
         return model(permissionEntity);
     }
 
+    private final Boolean systemGlobal;
+
+    public PermissionServiceImpl(@Value("${n2o.system.global:false}") Boolean systemGlobal) {
+        this.systemGlobal = systemGlobal;
+    }
+
     @Override
-    public List<Permission> getAll() {
-        return permissionRepository.findAll().stream().map(this::model).collect(Collectors.toList());
+    public List<Permission> getAll(PermissionCriteria criteria) {
+        Specification<PermissionEntity> specification = new PermissionSpecifications(criteria);
+        if (criteria.getOrders() == null) {
+            criteria.setOrders(Arrays.asList(new Sort.Order(Sort.Direction.ASC, "code")));
+        } else {
+            criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "code"));
+        }
+        return permissionRepository.findAll(specification, criteria).stream().map(this::model).collect(Collectors.toList());
     }
 
     @Override
@@ -59,13 +76,14 @@ public class PermissionServiceImpl implements PermissionService {
         return permissionRepository.findByParentCodeIsNull().stream().map(this::model).collect(Collectors.toList());
     }
 
-
     private PermissionEntity entity(Permission model) {
         if (model == null) return null;
         PermissionEntity entity = new PermissionEntity();
         entity.setName(model.getName());
         entity.setCode(model.getCode());
         entity.setParentCode(model.getParentCode());
+        if (systemGlobal)
+            entity.setSystemCode(new SystemEntity(model.getSystemCode()));
         return entity;
     }
 
@@ -76,6 +94,8 @@ public class PermissionServiceImpl implements PermissionService {
         model.setCode(entity.getCode());
         model.setParentCode(entity.getParentCode());
         model.setHasChildren(entity.getHasChildren());
+        if (entity.getSystemCode() != null && systemGlobal)
+            model.setSystemCode(entity.getSystemCode().getCode());
         return model;
     }
 }

@@ -3,6 +3,7 @@ package net.n2oapp.security.admin.rest;
 import net.n2oapp.security.admin.TestApplication;
 import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.rest.api.PermissionRestService;
+import net.n2oapp.security.admin.rest.api.criteria.RestPermissionCriteria;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,21 +32,21 @@ public class PermissionRestTest {
 
     @Test
     public void getAllByParentId() throws Exception {
-        Page<Permission> permissions = client.getAll("test", false);
+        Page<Permission> permissions = client.getAll("test", false, new RestPermissionCriteria());
         assertEquals(1, permissions.getTotalElements());
         assertEquals("test2", permissions.getContent().get(0).getCode());
     }
 
     @Test
     public void getAllParentIsNull() throws Exception {
-        Page<Permission> permissions = client.getAll("test", true);
+        Page<Permission> permissions = client.getAll("test", true, new RestPermissionCriteria());
         assertEquals(1, permissions.getTotalElements());
         assertEquals("test", permissions.getContent().get(0).getCode());
     }
 
     @Test
     public void getAll() throws Exception {
-        Page<Permission> permissions = client.getAll(null, null);
+        Page<Permission> permissions = client.getAll(null, null, new RestPermissionCriteria());
         assertEquals(2, permissions.getTotalElements());
     }
 

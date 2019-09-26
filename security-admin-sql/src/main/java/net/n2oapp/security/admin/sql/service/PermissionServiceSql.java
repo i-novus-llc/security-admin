@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.sql.service;
 
+import net.n2oapp.security.admin.api.criteria.PermissionCriteria;
 import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.service.PermissionService;
 import net.n2oapp.security.admin.sql.util.SqlUtil;
@@ -83,7 +84,7 @@ public class PermissionServiceSql implements PermissionService {
     }
 
     @Override
-    public List<Permission> getAll() {
+    public List<Permission> getAll(PermissionCriteria criteria) {
         return jdbcTemplate.query(SqlUtil.getResourceFileAsString(GET_ALL), new MapSqlParameterSource(), (resultSet,
                                                                                                           i) -> model(resultSet));
     }
