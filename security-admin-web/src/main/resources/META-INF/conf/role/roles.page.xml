@@ -4,8 +4,57 @@
       name="Роли">
     <regions>
         <region place="single">
-            <table id="roleTable" visible="false" ref-id="roleTable">
+            <table name="Роли" query-id="${access.role.query.id}">
+                <toolbar>
+                    <button label="Создать">
+                        <show-modal page-id="roleForm" submit-operation-id="create" model="filter" object-id="role"/>
+                    </button>
+                </toolbar>
 
+                <columns>
+                    <column text-field-id="name"/>
+                    <column text-field-id="description"/>
+                    <column text-field-id="systemName" visible="${sec.admin.system.global}"/>
+                    <column text-field-id="permissionNames" label="Права доступа">
+                        <list label-field-id="name"/>
+                    </column>
+                    <column text-field-id="actions" label=" ">
+                        <toolbar>
+                            <button id="remove" icon="fa fa-trash" label="Удалить"
+                                    confirm="true" confirm-text="Вы действительно хотите удалить роль?">
+                                <invoke operation-id="delete"/>
+                            </button>
+                        </toolbar>
+                    </column>
+                </columns>
+                <rows>
+                    <click>
+                        <show-modal page-id="roleFormUpdate" submit-operation-id="update" object-id="role"
+                                    detail-field-id="id"/>
+                    </click>
+                </rows>
+                <filters>
+                    <row>
+                        <input-text id="name"/>
+                        <input-text id="description"/>
+                        <input-select id="system" label-field-id="name" query-id="system"
+                                      visible="${sec.admin.system.global}"/>
+                        <input-select-tree id="permissions" ajax="false" checkboxes="true" label="Права доступа">
+                            <inheritance-nodes parent-field-id="parentCode" label-field-id="name" value-field-id="id"
+                                               query-id="${access.permission.query.id}"
+                                               has-children-field-id="hasChildren" search-field-id="name">
+                            </inheritance-nodes>
+                            <pre-filters>
+                                <eq field-id="systemCode" value="{system.id}"/>
+                            </pre-filters>
+                            <dependencies>
+                                <set-value on="system" apply-on-init="false">
+                                    return null;
+                                </set-value>
+                            </dependencies>
+                        </input-select-tree>
+                    </row>
+                </filters>
             </table>
         </region>
     </regions>
