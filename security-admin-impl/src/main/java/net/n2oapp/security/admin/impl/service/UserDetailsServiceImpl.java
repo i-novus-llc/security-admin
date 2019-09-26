@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.impl.service;
 
+import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
@@ -50,6 +51,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             }
             userRepository.save(userEntity);
         } else {
+            if (!Objects.equals(userEntity.getExtSys(), userDetails.getExtSys())) {
+                throw new UserException("exception.ssoOtherSystemUser");
+            }
             userEntity.setIsActive(true);
             if (userDetails.getExtUid() != null) {
                 userEntity.setExtUid(userDetails.getExtUid());
