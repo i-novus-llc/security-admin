@@ -42,6 +42,11 @@
             <artifactId>n2o-platform-starter-ms</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>net.n2oapp.platform</groupId>
+            <artifactId>n2o-platform-starter-quartz</artifactId>
+        </dependency>
+
     </dependencies>
 
 
