@@ -3,9 +3,11 @@ package net.n2oapp.auth.gateway;
 import net.n2oapp.auth.gateway.esia.EsiaAccessTokenProvider;
 import net.n2oapp.auth.gateway.esia.EsiaUserInfoTokenServices;
 import net.n2oapp.auth.gateway.esia.Pkcs7Util;
+import net.n2oapp.platform.jaxrs.autoconfigure.EnableJaxRsProxyClient;
 import net.n2oapp.security.admin.api.service.UserDetailsService;
 import net.n2oapp.security.auth.common.AuthoritiesPrincipalExtractor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -30,6 +32,9 @@ import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.filter.CompositeFilter;
+import ru.i_novus.ms.audit.client.AuditClient;
+import ru.i_novus.ms.audit.client.impl.SimpleAuditClientImpl;
+import ru.i_novus.ms.audit.service.api.AuditRest;
 
 import javax.servlet.Filter;
 import javax.servlet.http.HttpServletRequest;
@@ -90,6 +95,19 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
             }
         });
         return registration;
+    }
+
+    @Configuration
+    @EnableJaxRsProxyClient(
+            classes = {AuditRest.class},
+            address = "${audit.service.url}")
+    static class AuditClientConfiguration {
+        @Bean
+        public AuditClient simpleAuditClient(@Qualifier("auditRestJaxRsProxyClient") AuditRest auditRest) {
+            SimpleAuditClientImpl simpleAuditClient = new SimpleAuditClientImpl();
+            simpleAuditClient.setAuditRest(auditRest);
+            return simpleAuditClient;
+        }
     }
 
     @Bean
