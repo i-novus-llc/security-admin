@@ -34,8 +34,8 @@
                     <row>
                         <input-text id="username"/>
                         <input-text id="fio" class="n2o-control-10"/>
-                        <input-select id="system" label="Система" enabled="${n2o.system.global}"
-                                      visible="${n2o.system.global}" query-id="system"/>
+                        <input-select id="system" label="Система" visible="${sec.admin.system.global}"
+                                      query-id="system"/>
                     </row>
                     <row>
                         <input-select id="roles" type="checkboxes" label="Роли"
