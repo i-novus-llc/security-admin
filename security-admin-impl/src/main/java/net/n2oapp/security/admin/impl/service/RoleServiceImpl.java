@@ -37,11 +37,6 @@ public class RoleServiceImpl implements RoleService {
     @Autowired
     private SsoUserRoleProvider provider;
 
-    private final Boolean systemGlobal;
-
-    public RoleServiceImpl(@Value("${n2o.system.global:false}") Boolean systemGlobal) {
-        this.systemGlobal = systemGlobal;
-    }
 
     @Override
     public Role create(RoleForm role) {
@@ -127,7 +122,7 @@ public class RoleServiceImpl implements RoleService {
         model.setId(entity.getId());
         model.setName(entity.getName());
         model.setCode(entity.getCode());
-        if (entity.getSystemCode() != null && systemGlobal)
+        if (entity.getSystemCode() != null)
             model.setSystem(model(entity.getSystemCode()));
         model.setDescription(entity.getDescription());
         if (entity.getPermissionList() != null) {

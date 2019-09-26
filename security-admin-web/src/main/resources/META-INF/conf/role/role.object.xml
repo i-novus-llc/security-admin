@@ -41,7 +41,8 @@
                 <param id="code" mapping="[0].code" domain="string" required="true"/>
                 <param id="description" mapping="[0].description" domain="string"/>
                 <param id="permissions*.id" mapping="[0].permissions" domain="string[]"/>
-                <param id="system.id" mapping="[0].systemCode" required="${n2o.system.global}" domain="string"/>
+                <param id="system.id" mapping="[0].systemCode" required="${n2o.system.global}" domain="string"
+                       mapping-condition="${n2o.system.global}"/>
             </in-parameters>
             <out-parameters>
                 <param id="id" mapping="id"/>
