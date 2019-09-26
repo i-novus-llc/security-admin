@@ -1,14 +1,14 @@
 package net.n2oapp.security.admin.impl.service.specification;
 
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
-import net.n2oapp.security.admin.impl.entity.RoleEntity;
-import net.n2oapp.security.admin.impl.entity.RoleEntity_;
-import net.n2oapp.security.admin.impl.entity.UserEntity;
-import net.n2oapp.security.admin.impl.entity.UserEntity_;
+import net.n2oapp.security.admin.impl.entity.*;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
+import java.util.List;
+import java.util.Objects;
 
+import static java.util.Objects.nonNull;
 
 /**
  * Реализация фильтров для юзера
@@ -53,6 +53,17 @@ public class UserSpecifications implements Specification<UserEntity> {
             sub.where(builder.and(builder.equal(root.get(UserEntity_.id), subUsers.get(UserEntity_.id)),
                     subRoot.get(RoleEntity_.id).in(criteria.getRoleIds())));
             predicate = builder.and(predicate, builder.exists(sub));
+        }
+
+        if (nonNull(criteria.getSystemCode())) {
+            Subquery subquery = criteriaQuery.subquery(String.class);
+            Root subRoot = subquery.from(RoleEntity.class);
+            ListJoin<RoleEntity, UserEntity> listJoin = subRoot.join(RoleEntity_.userList);
+            subquery.select(subRoot.get(RoleEntity_.systemCode));
+            subquery.where(builder.and(builder.equal(root.get(UserEntity_.id), listJoin.get(UserEntity_.id)),
+                    subRoot.get(RoleEntity_.systemCode).get(SystemEntity_.CODE).in(criteria.getSystemCode())));
+            predicate = builder.and(predicate, builder.exists(subquery));
+            builder.and(predicate, root.get(UserEntity_.ROLE_LIST));
         }
         return predicate;
     }
