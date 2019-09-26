@@ -51,6 +51,7 @@
         <module>security-admin-frontend</module>
         <module>keycloak-theme</module>
         <module>doc</module>
+        <module>security-admin-example</module>
     </modules>
 
     <dependencyManagement>
