@@ -41,7 +41,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserValidations userValidations;
 
-
     public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, SsoUserRoleProvider provider) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -146,7 +145,6 @@ public class UserServiceImpl implements UserService {
             provider.changeActivity(result);
         }
         return result;
-
     }
 
     @Override
@@ -223,6 +221,10 @@ public class UserServiceImpl implements UserService {
         model.setCode(entity.getCode());
         model.setName(entity.getName());
         model.setDescription(entity.getDescription());
+        model.setNameWithSystem(entity.getName());
+        if (entity.getSystemCode() != null)
+            model.setNameWithSystem(model.getNameWithSystem() + "(" + entity.getSystemCode().getName() + ")");
+
         return model;
     }
 }
