@@ -2,6 +2,7 @@ package net.n2oapp.security.admin.impl.service;
 
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.criteria.RoleCriteria;
+import net.n2oapp.security.admin.api.model.AppSystem;
 import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.RoleForm;
@@ -9,10 +10,12 @@ import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.RoleService;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
+import net.n2oapp.security.admin.impl.entity.SystemEntity;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.RoleSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -34,12 +37,21 @@ public class RoleServiceImpl implements RoleService {
     @Autowired
     private SsoUserRoleProvider provider;
 
+    private final Boolean systemGlobal;
+
+    public RoleServiceImpl(@Value("${n2o.system.global:false}") Boolean systemGlobal) {
+        this.systemGlobal = systemGlobal;
+    }
+
     @Override
     public Role create(RoleForm role) {
         checkRoleUniq(role.getId(), role.getName());
         Role result = model(roleRepository.save(entity(role)));
         Role providerResult = provider.createRole(result);
         if (providerResult != null) {
+            if (result.getSystem() == null || result.getSystem().getCode() == null)
+                result.setSystem(null);
+            providerResult.setSystem(result.getSystem());
             result = providerResult;
             roleRepository.save(entity(result));
         }
@@ -88,6 +100,7 @@ public class RoleServiceImpl implements RoleService {
         entity.setName(model.getName());
         entity.setCode(model.getCode());
         entity.setDescription(model.getDescription());
+        if (model.getSystemCode() != null) entity.setSystemCode(new SystemEntity(model.getSystemCode()));
         if (model.getPermissions() != null) {
             entity.setPermissionList(model.getPermissions().stream().map(PermissionEntity::new).collect(Collectors.toList()));
         }
@@ -101,6 +114,7 @@ public class RoleServiceImpl implements RoleService {
         entity.setName(model.getName());
         entity.setCode(model.getCode());
         entity.setDescription(model.getDescription());
+        if (model.getSystem() != null) entity.setSystemCode(new SystemEntity(model.getSystem().getCode()));
         if (model.getPermissions() != null) {
             entity.setPermissionList(model.getPermissions().stream().map(this::entity).collect(Collectors.toList()));
         }
@@ -113,12 +127,13 @@ public class RoleServiceImpl implements RoleService {
         model.setId(entity.getId());
         model.setName(entity.getName());
         model.setCode(entity.getCode());
+        if (entity.getSystemCode() != null && systemGlobal)
+            model.setSystem(model(entity.getSystemCode()));
         model.setDescription(entity.getDescription());
         if (entity.getPermissionList() != null) {
             model.setPermissions(entity.getPermissionList().stream().map(this::model).collect(Collectors.toList()));
         }
         return model;
-
     }
 
     private Permission model(PermissionEntity entity) {
@@ -137,6 +152,14 @@ public class RoleServiceImpl implements RoleService {
         return model;
     }
 
+    private AppSystem model(SystemEntity entity) {
+        if (entity == null) return null;
+        AppSystem model = new AppSystem();
+        model.setName(entity.getName());
+        model.setCode(entity.getCode());
+        model.setDescription(entity.getDescription());
+        return model;
+    }
 
     /**
      * Валидация на уникальность названия роли при изменении
