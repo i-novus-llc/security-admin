@@ -28,7 +28,8 @@
             <row>
                 <col size="10">
                     <input-select id="roles" type="multi" label="Роли" cache="false" required="true"
-                                  query-id="${access.role.query.id}" value-field-id="id" label-field-id="name"/>
+                                  query-id="${access.role.query.id}" value-field-id="id" label-field-id="name"
+                                  group-field-id="systemName"/>
                 </col>
                 <col size="2">
                     <checkbox id="isActive" default-value="true"/>

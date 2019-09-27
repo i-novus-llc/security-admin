@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.api.service;
 
+import net.n2oapp.security.admin.api.criteria.PermissionCriteria;
 import net.n2oapp.security.admin.api.model.Permission;
 
 import java.util.List;
@@ -41,11 +42,12 @@ public interface PermissionService {
     Permission getByCode(String code);
 
     /**
-     * Найти все права доступаии поиска
+     * Найти все права доступаии поиска по критериям поиска
      *
+     * @param criteria Критерии поиска
      * @return Страница найденных всех прав доступа
      */
-    List<Permission> getAll();
+    List<Permission> getAll(PermissionCriteria criteria);
 
     /**
      * Найти все права доступаии поиска по идентификатору родительского элемента

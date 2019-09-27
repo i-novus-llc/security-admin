@@ -86,10 +86,20 @@
             </filters>
         </field>
 
+        <field id="roleNamesWithSystem" domain="string[]" name="Роли">
+            <select mapping="['roles'].![nameWithSystem]"></select>
+        </field>
+
         <field id="roles" domain="object[]" name="Роли">
             <select mapping="['roles']"></select>
             <filters>
                 <in filter-id="roles*.id" domain="integer[]" mapping="roleIds"/>
+            </filters>
+        </field>
+
+        <field id="system" domain="object">
+            <filters>
+                <eq filter-id="system.id" domain="string" mapping="systemCode"/>
             </filters>
         </field>
     </fields>
