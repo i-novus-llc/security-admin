@@ -43,7 +43,7 @@ public class ApplicationSystemExportServiceImpl implements ApplicationSystemExpo
     private static final String NAME = "name";
     private static final String DESCRIPTION = "description";
     private static final String OAUTH = "oauth";
-    private static final String SYSTEM_CODE = "systemCode";
+    private static final String SYSTEM_CODE = "system";
 
     @Autowired
     private RefBookService refBookService;
