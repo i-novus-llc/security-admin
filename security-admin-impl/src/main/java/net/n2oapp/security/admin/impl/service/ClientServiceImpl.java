@@ -12,6 +12,7 @@ import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.repository.ClientRepository;
 import net.n2oapp.security.admin.impl.service.specification.ClientSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -37,20 +38,22 @@ public class ClientServiceImpl implements ClientService {
     @Autowired
     private AuditClient auditClient;
 
+    @Autowired
+    private MessageSourceAccessor messageSourceAccessor;
 
     @Override
     public Client create(Client client) {
         if (clientRepository.findByClientId(client.getClientId()).isPresent())
             throw new UserException("exception.uniqueClient");
         Client result = model(clientRepository.save(entity(client)));
-        return audit("Создание клиента", result);
+        return audit("clientCreate", result);
     }
 
     @Override
     public Client update(Client client) {
         clientNotExists(client.getClientId());
         Client result = model(clientRepository.save(entity(client)));
-        return audit("Изменение клиента", result);
+        return audit("clientUpdate", result);
     }
 
     @Override
@@ -58,7 +61,7 @@ public class ClientServiceImpl implements ClientService {
         ClientEntity client = clientRepository.findByClientId(clientId).orElse(null);
         if (client == null) throw new UserException("exception.clientNotFound");
         clientRepository.deleteById(clientId);
-        audit("Удаление клиента", model(client));
+        audit("clientDelete", model(client));
     }
 
     @Override
@@ -187,7 +190,7 @@ public class ClientServiceImpl implements ClientService {
         AuditClientRequest request = new AuditClientRequest();
         request.setObjectType("Client");
         request.setObjectId(client.getClientId());
-        request.setEventType(action);
+        request.setEventType(messageSourceAccessor.getMessage(action));
         request.setContext(client.toString());
         request.setObjectName(client.getClientId());
 

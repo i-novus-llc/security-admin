@@ -15,6 +15,7 @@ import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.UserSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -44,7 +45,8 @@ public class UserServiceImpl implements UserService {
     private UserValidations userValidations;
     @Autowired
     private AuditClient auditClient;
-
+    @Autowired
+    private MessageSourceAccessor messageSourceAccessor;
 
     public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, SsoUserRoleProvider provider) {
         this.userRepository = userRepository;
@@ -81,7 +83,7 @@ public class UserServiceImpl implements UserService {
             }
         }
         mailService.sendWelcomeMail(user);
-        return audit("Создание пользователя", model(savedUser));
+        return audit("userCreate", model(savedUser));
     }
 
     @Override
@@ -108,7 +110,7 @@ public class UserServiceImpl implements UserService {
             }
             provider.updateUser(ssoUser);
         }
-        return audit("Изменение пользователя", model(updatedUser));
+        return audit("userUpdate", model(updatedUser));
     }
 
     @Override
@@ -116,7 +118,7 @@ public class UserServiceImpl implements UserService {
         User user = model(userRepository.findById(id).orElse(null));
         userRepository.deleteById(id);
         if (user != null) {
-            audit("Удаление пользователя", user);
+            audit("userDelete", user);
             if (provider.isSupports(user.getExtSys())) provider.deleteUser(user);
         }
     }
@@ -150,7 +152,7 @@ public class UserServiceImpl implements UserService {
         if (provider.isSupports(userEntity.getExtSys())) {
             provider.changeActivity(result);
         }
-        return audit("Изменение активности пользователя", result);
+        return audit("userChangeActive", result);
     }
 
     @Override
@@ -238,7 +240,7 @@ public class UserServiceImpl implements UserService {
         AuditClientRequest request = new AuditClientRequest();
         request.setObjectType("User");
         request.setObjectId("" + user.getId());
-        request.setEventType(action);
+        request.setEventType(messageSourceAccessor.getMessage(action));
         request.setContext(user.toString());
         request.setObjectName(user.getUsername());
 

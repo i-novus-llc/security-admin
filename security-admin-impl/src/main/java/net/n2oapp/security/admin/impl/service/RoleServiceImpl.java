@@ -15,7 +15,7 @@ import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.RoleSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -40,7 +40,8 @@ public class RoleServiceImpl implements RoleService {
     private SsoUserRoleProvider provider;
     @Autowired
     private AuditClient auditClient;
-
+    @Autowired
+    private MessageSourceAccessor messageSourceAccessor;
 
     @Override
     public Role create(RoleForm role) {
@@ -54,7 +55,7 @@ public class RoleServiceImpl implements RoleService {
             result = providerResult;
             roleRepository.save(entity(result));
         }
-        return audit("Создание роли", result);
+        return audit("roleCreate", result);
     }
 
     @Override
@@ -62,7 +63,7 @@ public class RoleServiceImpl implements RoleService {
         checkRoleUniq(role.getId(), role.getName());
         Role result = model(roleRepository.save(entity(role)));
         provider.updateRole(result);
-        return audit("Изменение роли", result);
+        return audit("roleUpdate", result);
     }
 
     @Override
@@ -71,7 +72,7 @@ public class RoleServiceImpl implements RoleService {
         Role role = model(roleRepository.findById(id).orElse(null));
         roleRepository.deleteById(id);
         if (role != null) {
-            audit("Удаление роли", role);
+            audit("roleDelete", role);
             provider.deleteRole(role);
         }
     }
@@ -189,7 +190,7 @@ public class RoleServiceImpl implements RoleService {
         AuditClientRequest request = new AuditClientRequest();
         request.setObjectType("Role");
         request.setObjectId("" + role.getId());
-        request.setEventType(action);
+        request.setEventType(messageSourceAccessor.getMessage(action));
         request.setContext(role.toString());
         request.setObjectName(role.getName());
 
