@@ -53,4 +53,11 @@ public class RestRoleCriteria extends RoleCriteria {
     public void setPermissionCodes(List<String> permissionCodes) {
         super.setPermissionCodes(permissionCodes);
     }
+
+    @QueryParam("system")
+    @Override
+    @ApiParam(value = "Список кодов систем")
+    public void setSystemCodes(List<String> systemCodes) {
+        super.setSystemCodes(systemCodes);
+    }
 }
