@@ -134,14 +134,14 @@ public class ApplicationSystemExportServiceImpl implements ApplicationSystemExpo
 
     private Application createApplication(RefBookRowValue refBookRowValue) {
         Application application = new Application();
-        if (nonNull(refBookRowValue.getFieldValue(CODE).getValue()))
-            application.setCode(refBookRowValue.getFieldValue(CODE).getValue().toString());
-        if (nonNull(refBookRowValue.getFieldValue(NAME).getValue()))
-            application.setName(refBookRowValue.getFieldValue(NAME).getValue().toString());
-        if (refBookRowValue.getFieldValue(SYSTEM_CODE).getValue() instanceof Reference)
+        if (nonNull(refBookRowValue.getFieldValue(CODE)))
+            application.setCode((String) refBookRowValue.getFieldValue(CODE).getValue());
+        if (nonNull(refBookRowValue.getFieldValue(NAME)))
+            application.setName((String) refBookRowValue.getFieldValue(NAME).getValue());
+        if (nonNull(refBookRowValue.getFieldValue(SYSTEM_CODE)) && refBookRowValue.getFieldValue(SYSTEM_CODE).getValue() instanceof Reference)
             application.setSystemCode(((Reference) refBookRowValue.getFieldValue(SYSTEM_CODE).getValue()).getValue());
-
-        application.setOAuth((Boolean) refBookRowValue.getFieldValue(OAUTH).getValue());
+        if (nonNull(refBookRowValue.getFieldValue(OAUTH)))
+            application.setOAuth((Boolean) refBookRowValue.getFieldValue(OAUTH).getValue());
         return application;
     }
 

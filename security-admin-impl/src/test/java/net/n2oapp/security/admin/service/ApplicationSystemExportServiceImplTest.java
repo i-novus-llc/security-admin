@@ -72,7 +72,7 @@ public class ApplicationSystemExportServiceImplTest {
         StringFieldValue code = new StringFieldValue("code", "testApp");
         StringFieldValue name = new StringFieldValue("name", "testAppName");
         BooleanFieldValue oauth = new BooleanFieldValue("oauth", false);
-        ReferenceFieldValue systemCode = new ReferenceFieldValue("systemCode", new Reference());
+        ReferenceFieldValue systemCode = new ReferenceFieldValue("system", new Reference());
         rowValue.setFieldValues(Arrays.asList(code, name, oauth, systemCode));
 
         mock(refBook, rowValue, page, null);
@@ -103,7 +103,7 @@ public class ApplicationSystemExportServiceImplTest {
         assertThat(versionArgCaptor.getValue(), is(refBook.getId()));
         assertThat(updateDataFirstArgCaptor.getValue(), is(3));
         assertThat(updateDataSecondArgCaptor.getValue().getData().get("code"), is(application.getCode()));
-        assertThat(updateDataSecondArgCaptor.getValue().getData().get("systemCode"), is(application.getSystemCode()));
+        assertThat(updateDataSecondArgCaptor.getValue().getData().get("system"), is(application.getSystemCode()));
         assertThat(updateDataSecondArgCaptor.getValue().getData().get("name"), is(application.getName()));
         assertThat(updateDataSecondArgCaptor.getValue().getData().get("oauth"), is(application.getOAuth()));
         assertThat(publishFirstArgCaptor.getValue(), is(3));
