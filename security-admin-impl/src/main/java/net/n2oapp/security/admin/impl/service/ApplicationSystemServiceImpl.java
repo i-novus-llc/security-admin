@@ -13,6 +13,7 @@ import net.n2oapp.security.admin.impl.repository.*;
 import net.n2oapp.security.admin.impl.service.specification.ApplicationSpecifications;
 import net.n2oapp.security.admin.impl.service.specification.SystemSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -41,18 +42,20 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     private PermissionRepository permissionRepository;
     @Autowired
     private AuditClient auditClient;
+    @Autowired
+    private MessageSourceAccessor messageSourceAccessor;
 
     @Override
     public Application createApplication(Application service) {
         checkServiceUniq(service.getCode());
         Application result = model(applicationRepository.save(entity(service)));
-        return audit("Создание приложения", result);
+        return audit("applicationCreate", result);
     }
 
     @Override
     public Application updateApplication(Application service) {
         Application result = model(applicationRepository.save(entity(service)));
-        return audit("Изменение приложения", result);
+        return audit("applicationUpdate", result);
     }
 
     @Override
@@ -60,7 +63,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
         ApplicationEntity app = applicationRepository.findById(code).orElse(null);
         applicationRepository.deleteById(code);
         if (app != null) {
-            audit("Удаление приложения", model(app));
+            audit("applicationDelete", model(app));
         }
     }
 
@@ -91,7 +94,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     public AppSystem createSystem(AppSystemForm system) {
         checkSystemUniq(system.getCode());
         AppSystem result = model(systemRepository.save(entity(system)));
-        return audit("Создание системы", result);
+        return audit("appSystemCreate", result);
     }
 
     @Override
@@ -100,7 +103,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
         entity.setName(system.getName());
         entity.setDescription(system.getDescription());
         AppSystem result = model(systemRepository.save(entity));
-        return audit("Изменение системы", result);
+        return audit("appSystemUpdate", result);
     }
 
     @Override
@@ -109,7 +112,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
         SystemEntity sys = systemRepository.findById(code).orElse(null);
         systemRepository.deleteById(code);
         if (sys != null) {
-            audit("Удаление системы", model(sys));
+            audit("appSystemDelete", model(sys));
         }
     }
 
@@ -206,7 +209,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
         AuditClientRequest request = new AuditClientRequest();
         request.setObjectType("Application");
         request.setObjectId(app.getCode());
-        request.setEventType(action);
+        request.setEventType(messageSourceAccessor.getMessage(action));
         request.setContext(app.toString());
         request.setObjectName(app.getName());
 
@@ -218,7 +221,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
         AuditClientRequest request = new AuditClientRequest();
         request.setObjectType("AppSystem");
         request.setObjectId(appSys.getCode());
-        request.setEventType(action);
+        request.setEventType(messageSourceAccessor.getMessage(action));
         request.setContext(appSys.toString());
         request.setObjectName(appSys.getName());
 

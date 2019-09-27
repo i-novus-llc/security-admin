@@ -8,16 +8,19 @@ import net.n2oapp.security.admin.impl.provider.SimpleSsoUserRoleProvider;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.UserServiceImpl;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import ru.i_novus.ms.audit.client.impl.converter.RequestConverter;
 import ru.i_novus.ms.audit.client.model.User;
+
+import java.util.Locale;
 
 
 @Configuration
@@ -36,6 +39,11 @@ public class AdminImplConfiguration {
     @Bean
     public SimpleSsoUserRoleProvider simpleSsoUserRoleProvider() {
         return new SimpleSsoUserRoleProvider();
+    }
+
+    @Bean
+    public MessageSourceAccessor messageSourceAccessor(MessageSource messageSource){
+        return new MessageSourceAccessor(messageSource, new Locale("ru"));
     }
 
     @Bean
