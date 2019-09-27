@@ -32,5 +32,7 @@ public class RoleForm {
     @ApiModelProperty(value = "Права доступа")
     private List<String> permissions;
 
+    @ApiModelProperty(value = "Код системы")
+    private String systemCode;
 
 }

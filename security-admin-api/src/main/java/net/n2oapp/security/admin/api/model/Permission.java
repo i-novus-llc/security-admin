@@ -31,4 +31,8 @@ public class Permission {
     @JsonProperty
     @ApiModelProperty(value = "Имеет ли детей")
     private Boolean hasChildren;
+
+    @JsonProperty
+    @ApiModelProperty(value = "Код системы")
+    private String systemCode;
 }
