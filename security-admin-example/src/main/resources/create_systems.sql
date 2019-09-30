@@ -1,0 +1,2 @@
+INSERT INTO sec."system" (code,"name",description) VALUES ('system1','Система 1','Тестовая система №1'),
+                                                          ('system2','Система 2','Тестовая система №2');

@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiParam;
 import net.n2oapp.security.admin.api.criteria.SystemCriteria;
 import org.springframework.data.domain.Sort;
 
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.QueryParam;
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class RestSystemCriteria extends SystemCriteria {
     }
 
     @QueryParam("size")
+    @DefaultValue("10")
     @Override
     @ApiParam(value = "Количество записей на странице")
     public void setSize(int size) {

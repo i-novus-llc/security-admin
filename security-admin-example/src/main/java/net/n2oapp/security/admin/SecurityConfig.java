@@ -1,25 +1,23 @@
 package net.n2oapp.security.admin;
 
-import net.n2oapp.security.admin.api.service.UserDetailsService;
-import net.n2oapp.security.auth.common.AuthoritiesPrincipalExtractor;
-import net.n2oapp.security.auth.oauth2.OpenIdSecurityConfigurerAdapter;
-import org.springframework.context.annotation.Bean;
+import net.n2oapp.security.auth.simple.SimpleSecurityConfigurerAdapter;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 
 @Configuration
 @ComponentScan("net.n2oapp.framework.security.auth.oauth2")
-public class SecurityConfig extends OpenIdSecurityConfigurerAdapter {
+public class SecurityConfig extends SimpleSecurityConfigurerAdapter {
 
-    @Override
-    protected void authorize(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry url) {
-        url.anyRequest().authenticated();
+    public SecurityConfig(DaoAuthenticationProvider daoAuthenticationProvider) {
+        super(daoAuthenticationProvider);
     }
 
-    @Bean
-    public AuthoritiesPrincipalExtractor authoritiesPrincipalExtractor(UserDetailsService userDetailsService) {
-        return new AuthoritiesPrincipalExtractor(userDetailsService);
+    @Override
+    protected void authorize(ExpressionUrlAuthorizationConfigurer<HttpSecurity>
+                                     .ExpressionInterceptUrlRegistry url) {
+        url.anyRequest().authenticated();
     }
 }

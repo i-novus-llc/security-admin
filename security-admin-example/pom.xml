@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>security-admin-example</artifactId>
+    <packaging>jar</packaging>
 
     <properties>
         <maven.deploy.skip>true</maven.deploy.skip>
@@ -43,7 +44,7 @@
 
         <dependency>
             <groupId>net.n2oapp.framework.security</groupId>
-            <artifactId>security-auth-oauth2</artifactId>
+            <artifactId>security-auth-simple</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -93,13 +94,14 @@
             <version>1.5.6</version>
             <scope>test</scope>
         </dependency>
+
         <!-- /TEST -->
 
     </dependencies>
 
 
     <build>
-        <finalName>access-example</finalName>
+        <finalName>security-admin-example</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
