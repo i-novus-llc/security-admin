@@ -15,4 +15,8 @@
         <sqlFile path="create_admin.sql"/>
     </changeSet>
 
+    <changeSet id="create_systems" author="aarifullin">
+        <sqlFile path="create_systems.sql"/>
+    </changeSet>
+
 </databaseChangeLog>
