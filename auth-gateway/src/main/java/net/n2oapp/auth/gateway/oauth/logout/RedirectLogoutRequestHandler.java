@@ -1,4 +1,4 @@
-package net.n2oapp.auth.gateway;
+package net.n2oapp.auth.gateway.oauth.logout;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
