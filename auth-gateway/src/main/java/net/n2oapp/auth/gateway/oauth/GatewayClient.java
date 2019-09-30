@@ -1,4 +1,4 @@
-package net.n2oapp.auth.gateway.model;
+package net.n2oapp.auth.gateway.oauth;
 
 import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.model.Role;

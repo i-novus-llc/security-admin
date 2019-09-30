@@ -1,6 +1,5 @@
-package net.n2oapp.auth.gateway.service;
+package net.n2oapp.auth.gateway.oauth;
 
-import net.n2oapp.auth.gateway.model.GatewayClient;
 import net.n2oapp.security.admin.api.model.Client;
 import net.n2oapp.security.admin.api.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
