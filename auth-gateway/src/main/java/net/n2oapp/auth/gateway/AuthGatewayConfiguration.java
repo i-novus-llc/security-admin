@@ -4,13 +4,18 @@ import net.n2oapp.auth.gateway.esia.EsiaAccessTokenProvider;
 import net.n2oapp.auth.gateway.esia.EsiaUserInfoTokenServices;
 import net.n2oapp.auth.gateway.esia.Pkcs7Util;
 import net.n2oapp.platform.jaxrs.autoconfigure.EnableJaxRsProxyClient;
+import net.n2oapp.auth.gateway.oauth.GatewayAccessTokenConverter;
+import net.n2oapp.auth.gateway.oauth.UserTokenConverter;
+import net.n2oapp.auth.gateway.oauth.logout.BackChannelLogoutHandler;
 import net.n2oapp.security.admin.api.service.UserDetailsService;
 import net.n2oapp.security.auth.common.AuthoritiesPrincipalExtractor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +29,7 @@ import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
 import org.springframework.security.oauth2.client.token.AccessTokenProviderChain;
+import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
@@ -172,6 +178,26 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
         converter.setVerifierKey(verifierKey);
         converter.setAccessTokenConverter(new GatewayAccessTokenConverter(new UserTokenConverter()));
         return converter;
+    }
+
+    /**
+     * Клиенсткие ресурсы для протокола OAuth2
+     */
+    static class ClientResources {
+
+        @NestedConfigurationProperty
+        private AuthorizationCodeResourceDetails client = new AuthorizationCodeResourceDetails();
+
+        @NestedConfigurationProperty
+        private ResourceServerProperties resource = new ResourceServerProperties();
+
+        public AuthorizationCodeResourceDetails getClient() {
+            return client;
+        }
+
+        public ResourceServerProperties getResource() {
+            return resource;
+        }
     }
 
 }

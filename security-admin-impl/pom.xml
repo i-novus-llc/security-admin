@@ -35,6 +35,12 @@
         </dependency>
 
         <dependency>
+            <groupId>ru.inovus.ms.rdm</groupId>
+            <artifactId>rdm-api</artifactId>
+            <version>${rdm.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
