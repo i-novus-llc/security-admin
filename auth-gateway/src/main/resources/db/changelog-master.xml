@@ -16,4 +16,6 @@
         <sqlFile path="create_admin.sql"/>
     </changeSet>
 
+    <include file="quartz-db/changelog/quartz-init.xml"/>
+
 </databaseChangeLog>

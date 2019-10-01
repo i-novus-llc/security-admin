@@ -1,12 +1,17 @@
 package net.n2oapp.security.admin.frontend;
 
+import net.n2oapp.framework.security.auth.oauth2.gateway.GatewayPrincipalExtractor;
+import net.n2oapp.security.admin.api.service.UserDetailsService;
 import net.n2oapp.security.admin.rest.client.AdminRestClientConfiguration;
 import net.n2oapp.security.admin.web.AdminWebConfiguration;
+import net.n2oapp.security.auth.common.AuthoritiesPrincipalExtractor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
 
 @SpringBootApplication
 @Import({AdminWebConfiguration.class, AdminRestClientConfiguration.class})
@@ -18,5 +23,11 @@ public class AdminFrontendApplication extends SpringBootServletInitializer {
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(AdminFrontendApplication.class);
+    }
+
+    @Bean
+    @Primary
+    public AuthoritiesPrincipalExtractor authoritiesPrincipalExtractor(UserDetailsService service) {
+        return new AuthoritiesPrincipalExtractor(service);
     }
 }

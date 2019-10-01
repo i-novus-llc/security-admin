@@ -18,4 +18,8 @@ public enum UserLevel {
     public String getDesc() {
         return desc;
     }
+
+    public String getName() {
+        return name();
+    }
 }

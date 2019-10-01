@@ -53,6 +53,12 @@
                         </checkbox-group>
 
                     </row>
+                    <row>
+                        <input-select id="userLevel" label="Уровень пользователя" query-id="userLevel" visible="${user-level.enabled}"/>
+                        <input-select id="department" label="Департамент" query-id="department" visible="${user-level.enabled}"/>
+                        <input-select id="region" label="Регион" query-id="region" visible="${user-level.enabled}"/>
+                        <input-select id="organization" label="Организация" query-id="organization" visible="${user-level.enabled}"/>
+                    </row>
                     <input-text id="isActive" visible="false">
                         <dependencies>
                             <set-value on="activeList" apply-on-init="false">
