@@ -4,6 +4,9 @@
         <object-access object-id="system" />
         <object-access object-id="service" />
         <object-access object-id="${access.role.object.id}"/>
+        <object-access object-id="region" />
+        <object-access object-id="organization" />
+        <object-access object-id="department" />
     </authenticated>
 
     <permission id="sec.admin.user.read">

@@ -65,6 +65,18 @@ public class UserSpecifications implements Specification<UserEntity> {
             predicate = builder.and(predicate, builder.exists(subquery));
             builder.and(predicate, root.get(UserEntity_.ROLE_LIST));
         }
+        if (criteria.getUserLevel() != null) {
+            predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.userLevel), criteria.getUserLevel().name()));
+        }
+        if (criteria.getRegionId() != null) {
+            predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.region).get(RegionEntity_.id), criteria.getRegionId()));
+        }
+        if (criteria.getDepartmentId() != null) {
+            predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.department).get(DepartmentEntity_.id), criteria.getDepartmentId()));
+        }
+        if (criteria.getOrganizationId() != null) {
+            predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.organization).get(OrganizationEntity_.id), criteria.getOrganizationId()));
+        }
         return predicate;
     }
 }

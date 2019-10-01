@@ -2,6 +2,7 @@ package net.n2oapp.security.admin.impl.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.n2oapp.security.admin.api.model.UserLevel;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -74,6 +75,12 @@ public class UserEntity {
     private Boolean isActive;
 
     /**
+     * Уровень пользователя, для которого предназначена роль
+     */
+    @Column(name = "user_level")
+    private UserLevel userLevel;
+
+    /**
      * Роли пользователя
      */
     @ManyToMany(fetch = FetchType.LAZY)
@@ -88,6 +95,27 @@ public class UserEntity {
      */
     @Column(name = "ext_sys")
     private String extSys;
+
+    /**
+     * Регион пользователя (заполняется для регионального уровня пользователей)
+     */
+    @JoinColumn(name = "region_id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    private RegionEntity region;
+
+    /**
+     * Организация пользователя (заполняется для уровня пользователя - организация)
+     */
+    @JoinColumn(name = "organization_id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    private OrganizationEntity organization;
+
+    /**
+     * Подразделение пользователя (заполняется для федерального уровня пользователя)
+     */
+    @JoinColumn(name = "department_id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    private DepartmentEntity department;
 
 }
 
