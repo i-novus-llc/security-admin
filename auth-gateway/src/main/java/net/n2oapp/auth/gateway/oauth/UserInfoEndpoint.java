@@ -1,4 +1,4 @@
-package net.n2oapp.auth.gateway;
+package net.n2oapp.auth.gateway.oauth;
 
 import net.n2oapp.security.auth.common.User;
 import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
@@ -11,7 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static net.n2oapp.auth.gateway.UserTokenConverter.*;
+import static net.n2oapp.auth.gateway.oauth.UserTokenConverter.*;
 
 
 @RestController
