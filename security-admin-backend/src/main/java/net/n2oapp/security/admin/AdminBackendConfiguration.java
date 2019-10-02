@@ -14,7 +14,7 @@ public class AdminBackendConfiguration {
     @Configuration
     @EnableJaxRsProxyClient(
             classes = {AuditRest.class},
-            address = "${audit.backend.url}")
+            address = "${audit.client.apiUrl}")
     static class AuditClientConfiguration {
         @Bean
         public AuditClient simpleAuditClient(@Qualifier("auditRestJaxRsProxyClient") AuditRest auditRest) {
