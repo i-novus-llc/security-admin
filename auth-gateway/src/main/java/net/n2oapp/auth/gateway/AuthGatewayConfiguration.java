@@ -81,7 +81,7 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.antMatcher("/**").authorizeRequests().antMatchers("/", "/login**", "/api/**", "/css/**", "/icons/**", "/fonts/**", "/public/**", "/static/**", "/webjars/**").permitAll().anyRequest()
+        http.authorizeRequests().antMatchers("/", "/login**", "/css/**", "/icons/**", "/fonts/**", "/public/**", "/static/**", "/webjars/**").permitAll().anyRequest()
                 .authenticated().and().exceptionHandling()
                 .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/")).and().logout()
                 .logoutSuccessUrl("/").logoutSuccessHandler(logoutSuccessHandler).permitAll().and().csrf().disable()
@@ -106,7 +106,7 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
     @Configuration
     @EnableJaxRsProxyClient(
             classes = {AuditRest.class},
-            address = "${audit.backend.url}")
+            address = "${audit.client.apiUrl}")
     static class AuditClientConfiguration {
         @Bean
         public AuditClient simpleAuditClient(@Qualifier("auditRestJaxRsProxyClient") AuditRest auditRest) {
