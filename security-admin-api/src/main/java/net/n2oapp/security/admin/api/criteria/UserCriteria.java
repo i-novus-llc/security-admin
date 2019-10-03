@@ -18,6 +18,7 @@ public class UserCriteria extends BaseCriteria {
     private String isActive;
     private List<Integer> roleIds;
     private String password;
+    private String systemCode;
     private String extSys;
 
     public void setRoleIds(List<Integer> roleIds) {

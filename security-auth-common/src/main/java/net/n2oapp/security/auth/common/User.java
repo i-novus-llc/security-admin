@@ -68,6 +68,9 @@ public class User extends org.springframework.security.core.userdetails.User {
         return name;
     }
 
+    /**
+     * Получение имени пользователя в формате: Фамиилия Имя Отчество
+     */
     public String getUserFullName() {
         List<String> fullNameParts = new LinkedList<>();
         if (!StringUtils.isEmpty(surname))
@@ -79,6 +82,38 @@ public class User extends org.springframework.security.core.userdetails.User {
         if (fullNameParts.isEmpty())
             fullNameParts.add(getUsername());
         return String.join(" ", fullNameParts);
+    }
+
+    /**
+     * Получение имени пользователя в формате: Фамиилия И.О.
+     */
+    public String getUserShortName() {
+        StringBuilder sb = new StringBuilder();
+        if (!StringUtils.isEmpty(surname)) {
+            sb.append(getSurname().trim()).append(' ');
+            if (!StringUtils.isEmpty(name))
+                sb.append(name.trim().toUpperCase().charAt(0)).append('.');
+            if (!StringUtils.isEmpty(patronymic))
+                sb.append(patronymic.trim().toUpperCase().charAt(0)).append('.');
+        } else if (!StringUtils.isEmpty(name))
+            sb.append(getName().trim());
+        else
+            sb.append(getUsername()).append(' ');
+        return sb.toString();
+    }
+
+    /**
+     * Получение имени пользователя в формате: Имя Фамилия
+     */
+    public String getUserNameSurname() {
+        List<String> parts = new LinkedList<>();
+        if (!StringUtils.isEmpty(name))
+            parts.add(name);
+        if (!StringUtils.isEmpty(surname))
+            parts.add(surname);
+        if (parts.isEmpty())
+            parts.add(getUsername());
+        return String.join(" ", parts);
     }
 
     public void setName(String name) {

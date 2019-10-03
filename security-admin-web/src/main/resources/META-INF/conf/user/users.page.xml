@@ -13,7 +13,7 @@
                             <invoke route="/changeUserActive" operation-id="changeUserActive"/>
                         </checkbox>
                     </column>
-                    <column text-field-id="roleNames" label="Роли">
+                    <column text-field-id="roleNamesWithSystem" label="Роли">
                         <list label-field-id="name"/>
                     </column>
                     <column text-field-id="actions" label=" ">
@@ -34,16 +34,24 @@
                     <row>
                         <input-text id="username"/>
                         <input-text id="fio" class="n2o-control-10"/>
+                        <input-select id="system" label="Система" visible="${sec.admin.system.global}"
+                                      query-id="system"/>
+                    </row>
+                    <row>
+                        <input-select id="roles" type="checkboxes" label="Роли"
+                                      query-id="${access.role.query.id}" value-field-id="id"
+                                      label-field-id="name" group-field-id="systemName">
+                            <pre-filters>
+                                <eq field-id="system" value="{system.id}"/>
+                            </pre-filters>
+                        </input-select>
                         <checkbox-group id="activeList" label="Активность" inline="true">
                             <options>
                                 <option id="1" name="Да"/>
                                 <option id="2" name="Нет"/>
                             </options>
                         </checkbox-group>
-                        <input-select id="roles" type="multi" label="Роли"
-                                      query-id="${access.role.query.id}" value-field-id="id"
-                                      label-field-id="name">
-                        </input-select>
+
                     </row>
                     <input-text id="isActive" visible="false">
                         <dependencies>

@@ -5,6 +5,9 @@
     <list count-mapping="#this.size()" result-mapping="#this">
         <java method="getAll" class="net.n2oapp.security.admin.api.service.PermissionService">
             <spring/>
+            <arguments>
+                <argument class="net.n2oapp.security.admin.api.criteria.PermissionCriteria" type="criteria"/>
+            </arguments>
         </java>
     </list>
 
@@ -17,6 +20,12 @@
         </field>
         <field id="parentCode" domain="string">
             <select mapping="parentCode"/>
+        </field>
+        <field id="systemCode" domain="string">
+            <select mapping="systemCode"/>
+            <filters>
+                <eq filter-id="systemCode" domain="string[]" mapping="systemCode"></eq>
+            </filters>
         </field>
     </fields>
 </query>

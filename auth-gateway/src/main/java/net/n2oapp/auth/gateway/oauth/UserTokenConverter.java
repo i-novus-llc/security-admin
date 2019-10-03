@@ -1,4 +1,4 @@
-package net.n2oapp.auth.gateway;
+package net.n2oapp.auth.gateway.oauth;
 
 import net.n2oapp.security.auth.common.User;
 import net.n2oapp.security.auth.common.UserParamsUtil;
