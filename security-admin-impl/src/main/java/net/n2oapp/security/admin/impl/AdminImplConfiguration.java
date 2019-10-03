@@ -5,6 +5,7 @@ import net.n2oapp.platform.jaxrs.autoconfigure.EnableJaxRsProxyClient;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.UserService;
 import net.n2oapp.security.admin.commons.AdminCommonsConfiguration;
+import net.n2oapp.security.admin.impl.audit.AuditHelper;
 import net.n2oapp.security.admin.impl.provider.SimpleSsoUserRoleProvider;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
@@ -15,17 +16,12 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-import ru.i_novus.ms.audit.client.impl.converter.RequestConverter;
+import ru.i_novus.ms.audit.client.UserAccessor;
 
 import java.util.Locale;
 
-import ru.i_novus.ms.audit.client.model.AuditClientRequest;
-import ru.i_novus.ms.audit.model.AuditForm;
 import ru.inovus.ms.rdm.provider.RdmMapperConfigurer;
 import ru.inovus.ms.rdm.service.api.DraftService;
 import ru.inovus.ms.rdm.service.api.PublishService;
@@ -71,31 +67,17 @@ public class AdminImplConfiguration {
     }
 
     @Bean
-    public RequestConverter requestConverter() {
-        return new RequestConverter() {
-            @Override
-            public AuditForm toAuditRequest(AuditClientRequest request) {
-                request.setUsername(getUserName());
-                request.setHostname(getRequestHost());
-                request.setSourceApplication("Access");
-                request.setAuditType((short) 1);
-                return super.toAuditRequest(request);
-            }
+    public AuditHelper getAuditHelper() {
+        return new AuditHelper();
+    }
+
+    @Bean
+    public UserAccessor userAccessor() {
+        return () -> {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            net.n2oapp.security.auth.common.User user = (net.n2oapp.security.auth.common.User) auth.getPrincipal();
+            return new ru.i_novus.ms.audit.client.model.User(user.getEmail(), "UNKNOWN");
         };
     }
 
-    private String getUserName() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        net.n2oapp.security.auth.common.User user = (net.n2oapp.security.auth.common.User)auth.getPrincipal();
-        return user.getEmail();
-    }
-
-    private String getRequestHost() {
-        try {
-            ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-            return attributes.getRequest().getHeader(HttpHeaders.HOST);
-        } catch (Exception e) {
-            return "UNKNOWN";
-        }
-    }
 }

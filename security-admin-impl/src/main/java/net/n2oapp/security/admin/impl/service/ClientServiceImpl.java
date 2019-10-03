@@ -5,6 +5,7 @@ import net.n2oapp.security.admin.api.criteria.ClientCriteria;
 import net.n2oapp.security.admin.api.model.*;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.service.ClientService;
+import net.n2oapp.security.admin.impl.audit.AuditHelper;
 import net.n2oapp.security.admin.impl.entity.ClientEntity;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.repository.ApplicationRepository;
@@ -12,14 +13,11 @@ import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.repository.ClientRepository;
 import net.n2oapp.security.admin.impl.service.specification.ClientSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import ru.i_novus.ms.audit.client.AuditClient;
-import ru.i_novus.ms.audit.client.model.AuditClientRequest;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -36,24 +34,21 @@ public class ClientServiceImpl implements ClientService {
     private ApplicationRepository applicationRepository;
 
     @Autowired
-    private AuditClient auditClient;
-
-    @Autowired
-    private MessageSourceAccessor messageSourceAccessor;
+    private AuditHelper audit;
 
     @Override
     public Client create(Client client) {
         if (clientRepository.findByClientId(client.getClientId()).isPresent())
             throw new UserException("exception.uniqueClient");
         Client result = model(clientRepository.save(entity(client)));
-        return audit("clientCreate", result);
+        return audit("audit.clientCreate", result);
     }
 
     @Override
     public Client update(Client client) {
         clientNotExists(client.getClientId());
         Client result = model(clientRepository.save(entity(client)));
-        return audit("clientUpdate", result);
+        return audit("audit.clientUpdate", result);
     }
 
     @Override
@@ -61,7 +56,7 @@ public class ClientServiceImpl implements ClientService {
         ClientEntity client = clientRepository.findByClientId(clientId).orElse(null);
         if (client == null) throw new UserException("exception.clientNotFound");
         clientRepository.deleteById(clientId);
-        audit("clientDelete", model(client));
+        audit("audit.clientDelete", model(client));
     }
 
     @Override
@@ -187,14 +182,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     private Client audit(String action, Client client) {
-        AuditClientRequest request = new AuditClientRequest();
-        request.setObjectType("Client");
-        request.setObjectId(client.getClientId());
-        request.setEventType(messageSourceAccessor.getMessage(action));
-        request.setContext(client.toString());
-        request.setObjectName(client.getClientId());
-
-        auditClient.add(request);
+        audit.audit(action, client, client.getClientId(), client.getClientId());
         return client;
     }
 }

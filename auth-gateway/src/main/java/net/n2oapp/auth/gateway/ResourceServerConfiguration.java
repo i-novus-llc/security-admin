@@ -12,7 +12,9 @@ import org.springframework.security.web.util.matcher.OrRequestMatcher;
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.requestMatcher(new OrRequestMatcher(new AntPathRequestMatcher("/userinfo"), new AntPathRequestMatcher("/api/**")));
+//        http.requestMatcher(new OrRequestMatcher(new AntPathRequestMatcher("/userinfo"), new AntPathRequestMatcher("/api/**")));
+        http.antMatcher("/userinfo"); //FIXME ^^^ добавляет авторизацию к api
+
         http.authorizeRequests().anyRequest().authenticated();
     }
 }

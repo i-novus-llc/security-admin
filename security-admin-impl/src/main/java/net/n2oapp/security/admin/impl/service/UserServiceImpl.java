@@ -9,20 +9,18 @@ import net.n2oapp.security.admin.api.service.MailService;
 import net.n2oapp.security.admin.api.service.UserService;
 import net.n2oapp.security.admin.commons.util.PasswordGenerator;
 import net.n2oapp.security.admin.commons.util.UserValidations;
+import net.n2oapp.security.admin.impl.audit.AuditHelper;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.UserSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
-import ru.i_novus.ms.audit.client.AuditClient;
-import ru.i_novus.ms.audit.client.model.AuditClientRequest;
 
 import java.util.stream.Collectors;
 
@@ -44,9 +42,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserValidations userValidations;
     @Autowired
-    private AuditClient auditClient;
-    @Autowired
-    private MessageSourceAccessor messageSourceAccessor;
+    private AuditHelper audit;
 
     public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, SsoUserRoleProvider provider) {
         this.userRepository = userRepository;
@@ -83,7 +79,7 @@ public class UserServiceImpl implements UserService {
             }
         }
         mailService.sendWelcomeMail(user);
-        return audit("userCreate", model(savedUser));
+        return audit("audit.userCreate", model(savedUser));
     }
 
     @Override
@@ -110,7 +106,7 @@ public class UserServiceImpl implements UserService {
             }
             provider.updateUser(ssoUser);
         }
-        return audit("userUpdate", model(updatedUser));
+        return audit("audit.userUpdate", model(updatedUser));
     }
 
     @Override
@@ -118,7 +114,7 @@ public class UserServiceImpl implements UserService {
         User user = model(userRepository.findById(id).orElse(null));
         userRepository.deleteById(id);
         if (user != null) {
-            audit("userDelete", user);
+            audit("audit.userDelete", user);
             if (provider.isSupports(user.getExtSys())) provider.deleteUser(user);
         }
     }
@@ -152,7 +148,7 @@ public class UserServiceImpl implements UserService {
         if (provider.isSupports(userEntity.getExtSys())) {
             provider.changeActivity(result);
         }
-        return audit("userChangeActive", result);
+        return audit("audit.userChangeActive", result);
     }
 
     @Override
@@ -237,14 +233,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private User audit(String action, User user) {
-        AuditClientRequest request = new AuditClientRequest();
-        request.setObjectType("User");
-        request.setObjectId("" + user.getId());
-        request.setEventType(messageSourceAccessor.getMessage(action));
-        request.setContext(user.toString());
-        request.setObjectName(user.getUsername());
-
-        auditClient.add(request);
+        audit.audit(action, user, "" + user.getId(), user.getUsername());
         return user;
     }
 }
