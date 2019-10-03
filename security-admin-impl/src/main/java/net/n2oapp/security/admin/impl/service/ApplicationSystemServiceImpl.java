@@ -7,20 +7,18 @@ import net.n2oapp.security.admin.api.model.AppSystem;
 import net.n2oapp.security.admin.api.model.AppSystemForm;
 import net.n2oapp.security.admin.api.model.Application;
 import net.n2oapp.security.admin.api.service.ApplicationSystemService;
+import net.n2oapp.security.admin.impl.audit.AuditHelper;
 import net.n2oapp.security.admin.impl.entity.ApplicationEntity;
 import net.n2oapp.security.admin.impl.entity.SystemEntity;
 import net.n2oapp.security.admin.impl.repository.*;
 import net.n2oapp.security.admin.impl.service.specification.ApplicationSpecifications;
 import net.n2oapp.security.admin.impl.service.specification.SystemSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.i_novus.ms.audit.client.AuditClient;
-import ru.i_novus.ms.audit.client.model.AuditClientRequest;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -41,21 +39,20 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     @Autowired
     private PermissionRepository permissionRepository;
     @Autowired
-    private AuditClient auditClient;
-    @Autowired
-    private MessageSourceAccessor messageSourceAccessor;
+    private AuditHelper audit;
+
 
     @Override
     public Application createApplication(Application service) {
         checkServiceUniq(service.getCode());
         Application result = model(applicationRepository.save(entity(service)));
-        return audit("applicationCreate", result);
+        return audit("audit.applicationCreate", result);
     }
 
     @Override
     public Application updateApplication(Application service) {
         Application result = model(applicationRepository.save(entity(service)));
-        return audit("applicationUpdate", result);
+        return audit("audit.applicationUpdate", result);
     }
 
     @Override
@@ -63,7 +60,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
         ApplicationEntity app = applicationRepository.findById(code).orElse(null);
         applicationRepository.deleteById(code);
         if (app != null) {
-            audit("applicationDelete", model(app));
+            audit("audit.applicationDelete", model(app));
         }
     }
 
@@ -94,7 +91,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     public AppSystem createSystem(AppSystemForm system) {
         checkSystemUniq(system.getCode());
         AppSystem result = model(systemRepository.save(entity(system)));
-        return audit("appSystemCreate", result);
+        return audit("audit.appSystemCreate", result);
     }
 
     @Override
@@ -103,7 +100,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
         entity.setName(system.getName());
         entity.setDescription(system.getDescription());
         AppSystem result = model(systemRepository.save(entity));
-        return audit("appSystemUpdate", result);
+        return audit("audit.appSystemUpdate", result);
     }
 
     @Override
@@ -112,7 +109,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
         SystemEntity sys = systemRepository.findById(code).orElse(null);
         systemRepository.deleteById(code);
         if (sys != null) {
-            audit("appSystemDelete", model(sys));
+            audit("audit.appSystemDelete", model(sys));
         }
     }
 
@@ -206,26 +203,12 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     }
 
     private Application audit(String action, Application app) {
-        AuditClientRequest request = new AuditClientRequest();
-        request.setObjectType("Application");
-        request.setObjectId(app.getCode());
-        request.setEventType(messageSourceAccessor.getMessage(action));
-        request.setContext(app.toString());
-        request.setObjectName(app.getName());
-
-        auditClient.add(request);
+        audit.audit(action, app, app.getCode(), app.getName());
         return app;
     }
 
     private AppSystem audit(String action, AppSystem appSys) {
-        AuditClientRequest request = new AuditClientRequest();
-        request.setObjectType("AppSystem");
-        request.setObjectId(appSys.getCode());
-        request.setEventType(messageSourceAccessor.getMessage(action));
-        request.setContext(appSys.toString());
-        request.setObjectName(appSys.getName());
-
-        auditClient.add(request);
+        audit.audit(action, appSys, appSys.getCode(), appSys.getName());
         return appSys;
     }
 }

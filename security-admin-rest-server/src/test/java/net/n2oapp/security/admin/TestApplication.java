@@ -8,8 +8,6 @@ import net.n2oapp.security.admin.rest.api.RoleRestService;
 import net.n2oapp.security.admin.rest.api.UserRestService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import ru.i_novus.ms.audit.client.AuditClient;
 
 /**
  * Стартовая точка запуска Spring Boot
@@ -20,9 +18,6 @@ import ru.i_novus.ms.audit.client.AuditClient;
         address = "http://localhost:${server.port}/api")
 @EnableEmbeddedPg
 public class TestApplication {
-
-    @MockBean
-    AuditClient auditClient;
 
     public static void main(String[] args) {
         SpringApplication.run(TestApplication.class, args);

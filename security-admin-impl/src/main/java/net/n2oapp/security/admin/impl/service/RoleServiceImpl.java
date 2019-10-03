@@ -8,6 +8,7 @@ import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.RoleForm;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.RoleService;
+import net.n2oapp.security.admin.impl.audit.AuditHelper;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.SystemEntity;
@@ -15,14 +16,11 @@ import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.RoleSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.i_novus.ms.audit.client.AuditClient;
-import ru.i_novus.ms.audit.client.model.AuditClientRequest;
 
 import java.util.stream.Collectors;
 
@@ -39,9 +37,7 @@ public class RoleServiceImpl implements RoleService {
     @Autowired
     private SsoUserRoleProvider provider;
     @Autowired
-    private AuditClient auditClient;
-    @Autowired
-    private MessageSourceAccessor messageSourceAccessor;
+    private AuditHelper audit;
 
     @Override
     public Role create(RoleForm role) {
@@ -55,7 +51,7 @@ public class RoleServiceImpl implements RoleService {
             result = providerResult;
             roleRepository.save(entity(result));
         }
-        return audit("roleCreate", result);
+        return audit("audit.roleCreate", result);
     }
 
     @Override
@@ -63,7 +59,7 @@ public class RoleServiceImpl implements RoleService {
         checkRoleUniq(role.getId(), role.getName());
         Role result = model(roleRepository.save(entity(role)));
         provider.updateRole(result);
-        return audit("roleUpdate", result);
+        return audit("audit.roleUpdate", result);
     }
 
     @Override
@@ -72,7 +68,7 @@ public class RoleServiceImpl implements RoleService {
         Role role = model(roleRepository.findById(id).orElse(null));
         roleRepository.deleteById(id);
         if (role != null) {
-            audit("roleDelete", role);
+            audit("audit.roleDelete", role);
             provider.deleteRole(role);
         }
     }
@@ -187,14 +183,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     private Role audit(String action, Role role) {
-        AuditClientRequest request = new AuditClientRequest();
-        request.setObjectType("Role");
-        request.setObjectId("" + role.getId());
-        request.setEventType(messageSourceAccessor.getMessage(action));
-        request.setContext(role.toString());
-        request.setObjectName(role.getName());
-
-        auditClient.add(request);
+        audit.audit(action, role, ""+role.getId(), role.getName());
         return role;
     }
 }

@@ -6,9 +6,6 @@ import org.apache.cxf.bus.spring.SpringBus;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
-import ru.i_novus.ms.audit.client.AuditClient;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import ru.inovus.ms.rdm.service.api.DraftService;
 import ru.inovus.ms.rdm.service.api.PublishService;
@@ -25,9 +22,6 @@ import ru.inovus.ms.rdm.service.api.VersionService;
         address = "http://localhost:${server.port}/api")
 @EnableEmbeddedPg
 public class TestApplication {
-
-    @MockBean
-    AuditClient auditClient;
 
     @MockBean
     private VersionService versionService;
