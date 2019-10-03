@@ -22,6 +22,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
@@ -36,6 +38,7 @@ import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.filter.CompositeFilter;
+import ru.i_novus.ms.audit.client.UserAccessor;
 
 import javax.servlet.Filter;
 import javax.servlet.http.HttpServletRequest;
@@ -160,6 +163,15 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
         converter.setVerifierKey(verifierKey);
         converter.setAccessTokenConverter(new GatewayAccessTokenConverter(new UserTokenConverter()));
         return converter;
+    }
+
+    @Bean
+    public UserAccessor userAccessor() {
+        return () -> {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            net.n2oapp.security.auth.common.User user = (net.n2oapp.security.auth.common.User) auth.getPrincipal();
+            return new ru.i_novus.ms.audit.client.model.User(user.getEmail(), "UNKNOWN");
+        };
     }
 
     /**

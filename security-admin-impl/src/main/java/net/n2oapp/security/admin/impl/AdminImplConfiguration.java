@@ -16,9 +16,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import ru.i_novus.ms.audit.client.UserAccessor;
 
 import java.util.Locale;
 
@@ -69,15 +66,6 @@ public class AdminImplConfiguration {
     @Bean
     public AuditHelper getAuditHelper() {
         return new AuditHelper();
-    }
-
-    @Bean
-    public UserAccessor userAccessor() {
-        return () -> {
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            net.n2oapp.security.auth.common.User user = (net.n2oapp.security.auth.common.User) auth.getPrincipal();
-            return new ru.i_novus.ms.audit.client.model.User(user.getEmail(), "UNKNOWN");
-        };
     }
 
 }
