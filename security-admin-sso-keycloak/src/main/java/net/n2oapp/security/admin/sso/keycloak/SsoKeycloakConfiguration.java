@@ -1,6 +1,5 @@
 package net.n2oapp.security.admin.sso.keycloak;
 
-import net.n2oapp.security.admin.sso.keycloak.synchronization.KeycloakUserSynchronizeProvider;
 import net.n2oapp.security.admin.sso.keycloak.synchronization.UserSynchronizeJob;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +29,10 @@ import static org.quartz.CronScheduleBuilder.cronSchedule;
 public class SsoKeycloakConfiguration {
 
     public static final String USER_SYNCHRONIZE_JOB_DETAIL = "User_Synchronize_Job_Detail";
+    private static final String USER_SYNCHRONIZE_TRIGGER = "User_Synchronize_Trigger";
 
     @Autowired
     private AdminSsoKeycloakProperties properties;
-
-    @Autowired
-    private KeycloakUserSynchronizeProvider keycloakUserSynchronizeProvider;
 
     @Bean
     @Primary
@@ -80,12 +77,11 @@ public class SsoKeycloakConfiguration {
 
             Trigger userSynchronizeJobTrigger = TriggerBuilder.newTrigger()
                     .forJob(userSynchronizeJobDetail)
-                    .withIdentity("User_Synchronize_Trigger")
+                    .withIdentity(USER_SYNCHRONIZE_TRIGGER)
                     .withSchedule(cronSchedule(properties.getSynchronizeFrequency()))
                     .build();
 
             scheduler.scheduleJob(userSynchronizeJobDetail, Set.of(userSynchronizeJobTrigger), true);
-            scheduler.getContext().put(KeycloakUserSynchronizeProvider.class.getSimpleName(), keycloakUserSynchronizeProvider);
         } else {
             scheduler.deleteJob(new JobKey(USER_SYNCHRONIZE_JOB_DETAIL));
         }

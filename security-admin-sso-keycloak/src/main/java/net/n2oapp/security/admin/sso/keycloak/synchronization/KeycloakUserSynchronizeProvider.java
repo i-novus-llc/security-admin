@@ -49,21 +49,11 @@ public class KeycloakUserSynchronizeProvider {
 
         Integer usersCount = userService.getUsersCount();
         logger.info(usersCount + " users in keycloak");
-        int pos = 0;
+
         List<Integer> syncedUsers = new ArrayList<>();
         List<String> errors = new ArrayList<>();
-        while (pos < usersCount) {
-            try {
-                List<UserRepresentation> users = userService.searchUsers("", pos, properties.getSynchronizeUserCount());
-                syncedUsers.addAll(syncUsers(users, errors));
-            } catch (Exception e) {
-                String message = "Failed search users from:" + pos + " to " + (pos + properties.getSynchronizeUserCount()) + " " + e.getLocalizedMessage();
-                logger.error(message);
-                errors.add(message);
-                break;
-            }
-            pos += properties.getSynchronizeUserCount();
-        }
+        searchUsers(usersCount, syncedUsers, errors);
+
         logger.info(syncedUsers.size() + " users synchronized, " + errors.size() + " errors.");
         if (errors.isEmpty())
             deactivateUsers(usersCount.longValue(), syncedUsers);
@@ -105,6 +95,22 @@ public class KeycloakUserSynchronizeProvider {
         }
     }
 
+    private void searchUsers(Integer usersCount, List<Integer> syncedUsers, List<String> errors) {
+        int pos = 0;
+        while (pos < usersCount) {
+            try {
+                List<UserRepresentation> users = userService.searchUsers("", pos, properties.getSynchronizeUserCount());
+                syncedUsers.addAll(syncUsers(users, errors));
+            } catch (Exception e) {
+                String message = "Failed search users from:" + pos + " to " + (pos + properties.getSynchronizeUserCount()) + " " + e.getLocalizedMessage();
+                logger.error(message);
+                errors.add(message);
+                break;
+            }
+            pos += properties.getSynchronizeUserCount();
+        }
+    }
+
     private List<Integer> syncUsers(List<UserRepresentation> users, List<String> errors) {
         final List<Integer> result = new ArrayList<>();
         for (UserRepresentation user : users) {
@@ -116,12 +122,13 @@ public class KeycloakUserSynchronizeProvider {
                         admEntity = userRepository.findOneByUsernameIgnoreCase(user.getUsername());
                         if (admEntity == null) {
                             admEntity = new UserEntity();
+                            logger.info("User created ExtUid:" + user.getId());
                         }
                         admEntity = userRepository.save(mapUser(user, admEntity));
                     } else if (!isEqual(user, admEntity)) {
                         admEntity = userRepository.save(mapUser(user, admEntity));
                     }
-
+                    logger.info("User updated ID:" + admEntity.getId());
                     result.add(admEntity.getId());
                     return user.getId();
                 });
