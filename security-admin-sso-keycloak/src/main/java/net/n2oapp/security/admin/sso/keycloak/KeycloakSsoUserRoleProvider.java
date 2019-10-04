@@ -36,7 +36,7 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
 
     @Override
     public boolean isSupports(String ssoName) {
-        return ssoName == null || EXT_SYS.equals(ssoName.toUpperCase());
+        return ssoName == null || EXT_SYS.equalsIgnoreCase(ssoName);
     }
 
     @Override
