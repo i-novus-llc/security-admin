@@ -15,6 +15,8 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends JpaRepository<UserEntity, Integer>, JpaSpecificationExecutor<UserEntity> {
     UserEntity findOneByUsername(String username);
 
+    UserEntity findOneByUsernameIgnoreCase(String username);
+    
     UserEntity findOneByExtUid(String extUid);
 
     @Query("select count(u) from UserEntity u join u.roleList r where r.id = :roleId")

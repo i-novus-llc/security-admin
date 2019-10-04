@@ -4,7 +4,6 @@ import net.n2oapp.security.admin.sso.keycloak.synchronization.KeycloakUserSynchr
 import net.n2oapp.security.admin.sso.keycloak.synchronization.UserSynchronizeJob;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,21 +31,17 @@ public class SsoKeycloakConfiguration {
 
     public static final String USER_SYNCHRONIZE_JOB_DETAIL = "User_Synchronize_Job_Detail";
 
-    @Value("${access.keycloak.sync-cron:0 0/30 * * * ? *}")
-    private String cronFrequency;
-
-    @Value("${KeycloakUserAutoSynchronize.enabled:false}")
-    private Boolean syncEnabled;
+    @Autowired
+    private AdminSsoKeycloakProperties properties;
 
     @Autowired
-    KeycloakUserSynchronizeProvider keycloakUserSynchronizeProvider;
+    private KeycloakUserSynchronizeProvider keycloakUserSynchronizeProvider;
 
     @Bean
     @Primary
     KeycloakSsoUserRoleProvider keycloakSsoUserRoleProvider(AdminSsoKeycloakProperties properties) {
         return new KeycloakSsoUserRoleProvider(properties);
     }
-
 
     @Bean
     KeycloakRestRoleService keycloakRestRoleService(AdminSsoKeycloakProperties properties) {
@@ -76,7 +71,7 @@ public class SsoKeycloakConfiguration {
     @Bean
     public Scheduler scheduler(SchedulerFactoryBean schedulerFactoryBean) throws SchedulerException {
         Scheduler scheduler = schedulerFactoryBean.getScheduler();
-        if (syncEnabled) {
+        if (properties.getSynchronizeEnabled()) {
             JobDetail userSynchronizeJobDetail = JobBuilder.newJob().ofType(UserSynchronizeJob.class)
                     .storeDurably()
                     .withIdentity(USER_SYNCHRONIZE_JOB_DETAIL)
@@ -86,7 +81,7 @@ public class SsoKeycloakConfiguration {
             Trigger userSynchronizeJobTrigger = TriggerBuilder.newTrigger()
                     .forJob(userSynchronizeJobDetail)
                     .withIdentity("User_Synchronize_Trigger")
-                    .withSchedule(cronSchedule(cronFrequency))
+                    .withSchedule(cronSchedule(properties.getSynchronizeFrequency()))
                     .build();
 
             scheduler.scheduleJob(userSynchronizeJobDetail, Set.of(userSynchronizeJobTrigger), true);

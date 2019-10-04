@@ -8,7 +8,6 @@ import org.keycloak.representations.idm.UserRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -29,11 +28,7 @@ import static net.n2oapp.security.admin.sso.keycloak.KeycloakSsoUserRoleProvider
  */
 
 @Service
-@EnableConfigurationProperties(AdminSsoKeycloakProperties.class)
 public class KeycloakUserSynchronizeProvider {
-
-    //По сколько пользователей обрабатывать за один раз
-    private static final int CHUNK_SIZE = 100;
 
     private static final Logger logger = LoggerFactory.getLogger(KeycloakUserSynchronizeProvider.class);
 
@@ -43,6 +38,8 @@ public class KeycloakUserSynchronizeProvider {
     private TransactionTemplate transaction;
     @Autowired
     private KeycloakRestUserService userService;
+    @Autowired
+    private AdminSsoKeycloakProperties properties;
 
     /**
      * Запустить синхронизацию
@@ -57,15 +54,15 @@ public class KeycloakUserSynchronizeProvider {
         List<String> errors = new ArrayList<>();
         while (pos < usersCount) {
             try {
-                List<UserRepresentation> users = userService.searchUsers("", pos, CHUNK_SIZE);
+                List<UserRepresentation> users = userService.searchUsers("", pos, properties.getSynchronizeUserCount());
                 syncedUsers.addAll(syncUsers(users, errors));
             } catch (Exception e) {
-                String message = "Failed search users from:" + pos + " to " + (pos + CHUNK_SIZE) + " " + e.getLocalizedMessage();
+                String message = "Failed search users from:" + pos + " to " + (pos + properties.getSynchronizeUserCount()) + " " + e.getLocalizedMessage();
                 logger.error(message);
                 errors.add(message);
                 break;
             }
-            pos += CHUNK_SIZE;
+            pos += properties.getSynchronizeUserCount();
         }
         logger.info(syncedUsers.size() + " users synchronized, " + errors.size() + " errors.");
         if (errors.isEmpty())
@@ -75,12 +72,12 @@ public class KeycloakUserSynchronizeProvider {
     private void deactivateUsers(Long usersCount, List<Integer> syncedUsers) {
         int pos = 0;
         UserCriteria criteria = new UserCriteria();
-        criteria.setPageSize(CHUNK_SIZE);
+        criteria.setPageSize(properties.getSynchronizeUserCount());
         criteria.setExtSys(EXT_SYS);
         final Specification<UserEntity> specification = new UserSpecifications(criteria);
 
         int missings = 0;
-        while (pos * CHUNK_SIZE < usersCount) {
+        while (pos * properties.getSynchronizeUserCount() < usersCount) {
             criteria.setPageNumber(pos);
 
             Page<UserEntity> all = transaction.execute(status -> userRepository.findAll(specification, criteria));
@@ -116,7 +113,7 @@ public class KeycloakUserSynchronizeProvider {
                     UserEntity admEntity = userRepository.findOneByExtUid(user.getId());
 
                     if (admEntity == null) {
-                        admEntity = userRepository.findOneByUsername(user.getUsername());
+                        admEntity = userRepository.findOneByUsernameIgnoreCase(user.getUsername());
                         if (admEntity == null) {
                             admEntity = new UserEntity();
                         }
