@@ -6,7 +6,7 @@
         <region place="single">
             <table name="Системы" query-id="system" route="/">
                 <columns>
-                    <column text-field-id="id" label="Код"/>
+                    <column text-field-id="id" label="Код" sorting-field-id="code"/>
                     <column text-field-id="name" label="Наименование"/>
                     <column text-field-id="services" label="Приложения">
                         <list label-field-id="name"/>
