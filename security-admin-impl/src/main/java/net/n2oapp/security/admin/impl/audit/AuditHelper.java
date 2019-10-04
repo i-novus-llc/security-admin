@@ -1,5 +1,7 @@
 package net.n2oapp.security.admin.impl.audit;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import ru.i_novus.ms.audit.client.AuditClient;
@@ -16,12 +18,18 @@ public class AuditHelper {
     @Autowired
     private MessageSourceAccessor messageSourceAccessor;
 
+    private ObjectMapper mapper = new ObjectMapper();
+
     public void audit(String action, Object object, String objectId, String objectName) {
         AuditClientRequest request = new AuditClientRequest();
         request.setEventType(messageSourceAccessor.getMessage(action));
         request.setObjectType(object.getClass().getSimpleName());
         request.setObjectId(objectId);
-        request.setContext(object.toString());
+        try {
+            request.setContext(mapper.writeValueAsString(object));
+        } catch (JsonProcessingException e) {
+            request.setContext(object.toString());
+        }
         request.setObjectName(objectName);
         request.setSourceApplication("Access");
         request.setAuditType((short) 1);
