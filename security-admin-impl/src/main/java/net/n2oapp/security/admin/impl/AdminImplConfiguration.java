@@ -17,11 +17,11 @@ import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.*;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import ru.inovus.ms.rdm.provider.RdmMapperConfigurer;
-import ru.inovus.ms.rdm.service.api.DraftService;
-import ru.inovus.ms.rdm.service.api.PublishService;
-import ru.inovus.ms.rdm.service.api.RefBookService;
-import ru.inovus.ms.rdm.service.api.VersionService;
+import ru.inovus.ms.rdm.api.provider.RdmMapperConfigurer;
+import ru.inovus.ms.rdm.api.service.DraftService;
+import ru.inovus.ms.rdm.api.service.PublishService;
+import ru.inovus.ms.rdm.api.service.RefBookService;
+import ru.inovus.ms.rdm.api.service.VersionService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +80,8 @@ public class AdminImplConfiguration {
         if (userLevelValueOrg != null && userLevelValueOrg) {
             actualUserLevels.add(UserLevel.ORGANIZATION);
         }
+        if (!actualUserLevels.isEmpty())
+            actualUserLevels.add(UserLevel.NONE);
         return new UserLevelServiceImpl(actualUserLevels);
     }
 

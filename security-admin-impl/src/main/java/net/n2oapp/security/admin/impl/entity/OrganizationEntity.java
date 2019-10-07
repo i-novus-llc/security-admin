@@ -51,4 +51,7 @@ public class OrganizationEntity {
     @Column(name = "full_name")
     private String fullName;
 
+    public OrganizationEntity(Integer id) {
+        this.id = id;
+    }
 }

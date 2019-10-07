@@ -7,6 +7,7 @@
         <object-access object-id="region" />
         <object-access object-id="organization" />
         <object-access object-id="department" />
+        <object-access object-id="userLevel" operations="*"/>
     </authenticated>
 
     <permission id="sec.admin.user.read">

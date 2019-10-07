@@ -20,7 +20,7 @@ public class UserCriteria extends BaseCriteria {
     private List<Integer> roleIds;
     private String password;
     private String systemCode;
-    private UserLevel userLevel;
+    private String userLevel;
     private Integer regionId;
     private Integer organizationId;
     private Integer departmentId;

@@ -33,4 +33,7 @@ public class DepartmentEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
+    public DepartmentEntity(Integer id) {
+        this.id = id;
+    }
 }

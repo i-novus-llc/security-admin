@@ -1,16 +1,13 @@
 package net.n2oapp.security.admin.impl.service;
 
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
-import net.n2oapp.security.admin.api.model.Role;
-import net.n2oapp.security.admin.api.model.User;
-import net.n2oapp.security.admin.api.model.UserForm;
+import net.n2oapp.security.admin.api.model.*;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.MailService;
 import net.n2oapp.security.admin.api.service.UserService;
 import net.n2oapp.security.admin.commons.util.PasswordGenerator;
 import net.n2oapp.security.admin.commons.util.UserValidations;
-import net.n2oapp.security.admin.impl.entity.RoleEntity;
-import net.n2oapp.security.admin.impl.entity.UserEntity;
+import net.n2oapp.security.admin.impl.entity.*;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.UserSpecifications;
@@ -22,6 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Collectors;
+
+import static java.util.Objects.nonNull;
 
 /**
  * Реализация сервиса управления пользователями
@@ -161,6 +160,10 @@ public class UserServiceImpl implements UserService {
         entity.setIsActive(model.getIsActive());
         entity.setExtSys(model.getExtSys());
         entity.setEmail(model.getEmail());
+        entity.setUserLevel(nonNull(model.getUserLevel()) ? UserLevel.valueOf(model.getUserLevel()) : null);
+        entity.setDepartment(nonNull(model.getDepartmentId()) ? new DepartmentEntity(model.getDepartmentId()) : null);
+        entity.setOrganization(nonNull(model.getOrganizationId()) ? new OrganizationEntity(model.getOrganizationId()) : null);
+        entity.setRegion(nonNull(model.getRegionId()) ? new RegionEntity(model.getRegionId()) : null);
         if (model.getRoles() != null)
             entity.setRoleList(model.getRoles().stream().map(RoleEntity::new).collect(Collectors.toList()));
         return entity;
@@ -177,6 +180,13 @@ public class UserServiceImpl implements UserService {
         entity.setIsActive(model.getIsActive());
         entity.setExtSys(model.getExtSys());
         entity.setEmail(model.getEmail());
+        entity.setUserLevel(model.getUserLevel());
+        if (nonNull(model.getDepartment()))
+            entity.setDepartment(new DepartmentEntity(model.getDepartment().getId()));
+        if (nonNull(model.getOrganization()))
+            entity.setOrganization(new OrganizationEntity(model.getOrganization().getId()));
+        if (nonNull(model.getRegion()))
+            entity.setRegion(new RegionEntity(model.getRegion().getId()));
         if (model.getRoles() != null)
             entity.setRoleList(model.getRoles().stream().map(r -> new RoleEntity(r.getId())).collect(Collectors.toList()));
         return entity;
@@ -195,6 +205,10 @@ public class UserServiceImpl implements UserService {
         model.setExtSys(entity.getExtSys());
         model.setEmail(entity.getEmail());
         model.setPasswordHash(entity.getPasswordHash());
+        model.setUserLevel(entity.getUserLevel());
+        model.setDepartment(model(entity.getDepartment()));
+        model.setOrganization(model(entity.getOrganization()));
+        model.setRegion(model(entity.getRegion()));
         StringBuilder builder = new StringBuilder();
         if (entity.getSurname() != null) {
             builder.append(entity.getSurname()).append(" ");
@@ -226,6 +240,37 @@ public class UserServiceImpl implements UserService {
         if (entity.getSystemCode() != null)
             model.setNameWithSystem(model.getNameWithSystem() + "(" + entity.getSystemCode().getName() + ")");
 
+        return model;
+    }
+
+    private Department model(DepartmentEntity entity) {
+        if (entity == null) return null;
+        Department model = new Department();
+        model.setId(entity.getId());
+        model.setName(entity.getName());
+        model.setCode(entity.getCode());
+        return model;
+    }
+
+    private Organization model(OrganizationEntity entity) {
+        if (entity == null) return null;
+        Organization model = new Organization();
+        model.setId(entity.getId());
+        model.setFullName(entity.getFullName());
+        model.setShortName(entity.getShortName());
+        model.setCode(entity.getCode());
+        model.setOgrn(entity.getOgrn());
+        model.setOkpo(entity.getOkpo());
+        return model;
+    }
+
+    private Region model(RegionEntity entity) {
+        if (entity == null) return null;
+        Region model = new Region();
+        model.setId(entity.getId());
+        model.setName(entity.getName());
+        model.setCode(entity.getCode());
+        model.setOkato(entity.getOkato());
         return model;
     }
 }

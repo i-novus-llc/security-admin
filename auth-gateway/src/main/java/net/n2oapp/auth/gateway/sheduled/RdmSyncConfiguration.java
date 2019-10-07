@@ -1,12 +1,15 @@
 package net.n2oapp.auth.gateway.sheduled;
 
+import net.n2oapp.auth.gateway.scheduled.DepartmentSynchronizeJob;
 import net.n2oapp.auth.gateway.scheduled.OrganizationSynchronizeJob;
 import net.n2oapp.auth.gateway.scheduled.RegionSynchronizeJob;
 import org.quartz.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
+import ru.inovus.ms.rdm.sync.rest.RdmSyncRest;
 
 import java.util.Map;
 import java.util.Set;
@@ -14,7 +17,7 @@ import java.util.Set;
 import static org.quartz.CronScheduleBuilder.cronSchedule;
 
 @Configuration
-public class RdmExportConfiguration {
+public class RdmSyncConfiguration {
 
     @Value("${rdm.export.cron}")
     private String cronExpression;
@@ -27,56 +30,60 @@ public class RdmExportConfiguration {
 
     @Value("${department-update.cron-expression}")
     private String departmentUpdateCronExpression;
+    @Autowired
+    private RdmSyncRest rdmSyncRest;
 
     @Bean
     public Map<JobDetail, Set<? extends Trigger>> scheduleJobs() {
-        JobDetail jobDetail = JobBuilder.newJob().ofType(ApplicationSystemExportJob.class)
+        JobDetail appSysExportJobDetail = JobBuilder.newJob().ofType(ApplicationSystemExportJob.class)
                 .storeDurably()
                 .withIdentity("app_sys_export_job")
                 .withDescription("Export Applications and Systems")
                 .usingJobData(new JobDataMap())
                 .build();
-        JobDetail region_job_detail = JobBuilder.newJob().ofType(RegionSynchronizeJob.class)
+        JobDetail regionJobDetail = JobBuilder.newJob().ofType(RegionSynchronizeJob.class)
                 .storeDurably()
-                .withIdentity("Region_Job_Detail")
+                .withIdentity("region_job_detail")
                 .build();
         JobDetail organizationJobDetail = JobBuilder.newJob().ofType(OrganizationSynchronizeJob.class)
                 .storeDurably()
-                .withIdentity("Organization_Job_Detail")
+                .withIdentity("organization_job_detail")
                 .build();
-        /* todo пока отключен
         JobDetail departmentJobDetail = JobBuilder.newJob().ofType(DepartmentSynchronizeJob.class)
                 .storeDurably()
                 .withIdentity("Department_Job_Detail")
-                .build();*/
+                .build();
 
-        Trigger trigger = TriggerBuilder.newTrigger().forJob(jobDetail)
+        Trigger triggerForAppSystemExportJob = TriggerBuilder.newTrigger().forJob(appSysExportJobDetail)
                 .withIdentity("app_sys_export_trigger")
                 .withDescription("Trigger for app_sys_export_job")
-                .withSchedule(cronSchedule(cronExpression))
+                .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
                 .build();
-        CronTrigger regionTrigger = TriggerBuilder.newTrigger().forJob(region_job_detail)
-                .withIdentity("Region_Trigger")
+        CronTrigger regionTrigger = TriggerBuilder.newTrigger().forJob(regionJobDetail)
+                .withIdentity("region_trigger")
                 .withSchedule(cronSchedule(regionUpdateCronExpression))
                 .build();
         CronTrigger organizationTrigger = TriggerBuilder.newTrigger().forJob(organizationJobDetail)
-                .withIdentity("Organization_Trigger")
+                .withIdentity("organization_trigger")
                 .withSchedule(cronSchedule(organizationUpdateCronExpression))
                 .build();
-        /*  todo пока отключен
-            CronTrigger departmentTrigger = TriggerBuilder.newTrigger().forJob(departmentJobDetail)
+        CronTrigger departmentTrigger = TriggerBuilder.newTrigger().forJob(departmentJobDetail)
                 .withIdentity("Department_Trigger")
                 .withSchedule(cronSchedule(departmentUpdateCronExpression))
-                .build();*/
+                .build();
 
-        return Map.of(jobDetail, Set.of(trigger, regionTrigger, organizationTrigger));
+
+        return Map.of(appSysExportJobDetail, Set.of(triggerForAppSystemExportJob),
+                regionJobDetail, Set.of(regionTrigger),
+                organizationJobDetail, Set.of(organizationTrigger),
+                departmentJobDetail, Set.of(departmentTrigger));
     }
 
     @Bean
     public Scheduler scheduler(SchedulerFactoryBean schedulerFactoryBean, Map<JobDetail, Set<? extends Trigger>> scheduleJobs) throws SchedulerException {
         Scheduler scheduler = schedulerFactoryBean.getScheduler();
         scheduler.scheduleJobs(scheduleJobs, true);
+        scheduler.getContext().put(RdmSyncRest.class.getSimpleName(), rdmSyncRest);
         return scheduler;
     }
-
 }

@@ -49,6 +49,7 @@ public class RoleServiceRestClient implements RoleService {
         roleCriteria.setPermissionCodes(criteria.getPermissionCodes());
         roleCriteria.setSystemCodes(criteria.getSystemCodes());
         roleCriteria.setOrders(criteria.getOrders());
+        roleCriteria.setUserLevel(criteria.getUserLevel());
         return client.findAll(roleCriteria);
     }
 

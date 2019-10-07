@@ -38,4 +38,8 @@ public class RegionEntity {
      */
     @Column(name = "OKATO")
     private String okato;
+
+    public RegionEntity(Integer id) {
+        this.id = id;
+    }
 }

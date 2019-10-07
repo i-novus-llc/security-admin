@@ -8,13 +8,14 @@
                 <columns>
                     <column text-field-id="username"/>
                     <column text-field-id="fio"/>
+                    <column text-field-id="userLevel.name"/>
+                    <column text-field-id="roleNamesWithSystem" label="Роли">
+                        <list label-field-id="name"/>
+                    </column>
                     <column text-field-id="isActive">
                         <checkbox>
                             <invoke route="/changeUserActive" operation-id="changeUserActive"/>
                         </checkbox>
-                    </column>
-                    <column text-field-id="roleNamesWithSystem" label="Роли">
-                        <list label-field-id="name"/>
                     </column>
                     <column text-field-id="actions" label=" ">
                         <toolbar>
@@ -55,9 +56,17 @@
                     </row>
                     <row>
                         <input-select id="userLevel" label="Уровень пользователя" query-id="userLevel" visible="${user-level.enabled}"/>
-                        <input-select id="department" label="Департамент" query-id="department" visible="${user-level.enabled}"/>
-                        <input-select id="region" label="Регион" query-id="region" visible="${user-level.enabled}"/>
-                        <input-select id="organization" label="Организация" query-id="organization" visible="${user-level.enabled}"/>
+                        <input-select id="department" label="Департамент" query-id="department"
+                                      visible="${user-level.value.federal}"/>
+                        <input-select id="region" label="Регион" query-id="region">
+                            <dependencies>
+                                <visibility apply-on-init="true">${user-level.value.regional} ||
+                                    ${user-level.value.org}
+                                </visibility>
+                            </dependencies>
+                        </input-select>
+                        <input-select id="organization" label-field-id="shortName" label="Организация"
+                                      query-id="organization" visible="${user-level.value.org}"/>
                     </row>
                     <input-text id="isActive" visible="false">
                         <dependencies>

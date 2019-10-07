@@ -1,10 +1,13 @@
 package net.n2oapp.security.admin.impl.service.specification;
 
 import net.n2oapp.security.admin.api.criteria.RoleCriteria;
+import net.n2oapp.security.admin.api.model.UserLevel;
 import net.n2oapp.security.admin.impl.entity.*;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
+
+import static java.util.Objects.nonNull;
 
 /**
  * Реализация фильтров для ролей пользователя
@@ -19,9 +22,9 @@ public class RoleSpecifications implements Specification<RoleEntity> {
     @Override
     public Predicate toPredicate(Root<RoleEntity> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder builder) {
         Predicate predicate = builder.and();
-        if (criteria.getName() != null)
+        if (nonNull(criteria.getName()))
             predicate = builder.and(predicate, builder.like(root.get(RoleEntity_.name), criteria.getName() + "%"));
-        if (criteria.getDescription() != null)
+        if (nonNull(criteria.getDescription()))
             predicate = builder.and(predicate, builder.like(root.get(RoleEntity_.description),
                     criteria.getDescription() + "%"));
         if (criteria.getPermissionCodes() != null && !criteria.getPermissionCodes().isEmpty()) {
@@ -38,8 +41,14 @@ public class RoleSpecifications implements Specification<RoleEntity> {
             for (String system : criteria.getSystemCodes()) {
                 systemPredicate = builder.or(systemPredicate, builder.equal(root.get(RoleEntity_.systemCode).get(SystemEntity_.CODE), system));
             }
-            return builder.and(predicate, systemPredicate);
+            predicate = builder.and(predicate, systemPredicate);
         }
+
+        if (nonNull(criteria.getUserLevel())) {
+            predicate = builder.and(predicate, builder.equal(root.get(RoleEntity_.userLevel),
+                    UserLevel.valueOf(criteria.getUserLevel())));
+        }
+
         return predicate;
     }
 }

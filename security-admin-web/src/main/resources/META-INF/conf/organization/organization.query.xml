@@ -10,10 +10,10 @@
     </list>
 
     <fields>
-        <field id="name" domain="string" name="Название">
+        <field id="shortName" domain="string" name="Название">
             <select mapping="shortName"/>
             <filters>
-                <like filter-id="name" mapping="name"/>
+                <like filter-id="shortName" mapping="shortName"/>
             </filters>
         </field>
         <field id="id" name="Идентификатор">
