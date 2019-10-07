@@ -2,16 +2,14 @@ package net.n2oapp.security.admin.impl.service;
 
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.criteria.ClientCriteria;
-import net.n2oapp.security.admin.api.model.Client;
-import net.n2oapp.security.admin.api.model.Role;
-import net.n2oapp.security.admin.api.model.Permission;
+import net.n2oapp.security.admin.api.model.*;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.service.ClientService;
+import net.n2oapp.security.admin.impl.audit.AuditHelper;
 import net.n2oapp.security.admin.impl.entity.ClientEntity;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.repository.ApplicationRepository;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
-import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.repository.ClientRepository;
 import net.n2oapp.security.admin.impl.service.specification.ClientSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +22,6 @@ import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -36,24 +33,30 @@ public class ClientServiceImpl implements ClientService {
     @Autowired
     private ApplicationRepository applicationRepository;
 
+    @Autowired
+    private AuditHelper audit;
 
     @Override
     public Client create(Client client) {
         if (clientRepository.findByClientId(client.getClientId()).isPresent())
             throw new UserException("exception.uniqueClient");
-        return model(clientRepository.save(entity(client)));
+        Client result = model(clientRepository.save(entity(client)));
+        return audit("audit.clientCreate", result);
     }
 
     @Override
     public Client update(Client client) {
         clientNotExists(client.getClientId());
-        return model(clientRepository.save(entity(client)));
+        Client result = model(clientRepository.save(entity(client)));
+        return audit("audit.clientUpdate", result);
     }
 
     @Override
     public void delete(String clientId) {
-        clientNotExists(clientId);
+        ClientEntity client = clientRepository.findByClientId(clientId).orElse(null);
+        if (client == null) throw new UserException("exception.clientNotFound");
         clientRepository.deleteById(clientId);
+        audit("audit.clientDelete", model(client));
     }
 
     @Override
@@ -67,6 +70,37 @@ public class ClientServiceImpl implements ClientService {
         return clientRepository.findAll(specification, criteria).map(this::model);
     }
 
+    @Override
+    public Client persist(Client clientForm) {
+        if (clientForm.getEnabled()) {
+            if (clientRepository.existsById(clientForm.getClientId())) {
+                return update(clientForm);
+            }
+            if (applicationRepository.existsById(clientForm.getClientId())) {
+                return create(clientForm);
+            } else throw new UserException("exception.applicationNotFound");
+        }
+        delete(clientForm.getClientId());
+        return null;
+    }
+
+    @Override
+    public Client getOrCreate(String id) {
+        Client client = findByClientId(id);
+        if (client == null) {
+            client = new Client();
+            client.setClientId(id);
+            client.setClientSecret(UUID.randomUUID().toString());
+            client.setIsAuthorizationCode(true);
+            client.setEnabled(false);
+            client.setAccessTokenLifetime(1440);
+            client.setRefreshTokenLifetime(43200);
+            return client;
+        }
+
+        client.setEnabled(true);
+        return client;
+    }
 
     private Client model(ClientEntity clientEntity) {
         if (clientEntity == null) return null;
@@ -147,36 +181,8 @@ public class ClientServiceImpl implements ClientService {
         return model;
     }
 
-    @Override
-    public Client persist(Client clientForm) {
-        if (clientForm.getEnabled()) {
-            if (clientRepository.existsById(clientForm.getClientId())) {
-                return update(clientForm);
-            }
-            if (applicationRepository.existsById(clientForm.getClientId())) {
-                return create(clientForm);
-            } else throw new UserException("exception.applicationNotFound");
-        }
-        delete(clientForm.getClientId());
-        return null;
-    }
-
-    @Override
-    public Client getOrCreate(String id) {
-        Client client = findByClientId(id);
-        if (client == null) {
-            client = new Client();
-            client.setClientId(id);
-            client.setClientSecret(UUID.randomUUID().toString());
-            client.setIsAuthorizationCode(true);
-            client.setEnabled(false);
-            client.setAccessTokenLifetime(1440);
-            client.setRefreshTokenLifetime(43200);
-            return client;
-        }
-
-        client.setEnabled(true);
+    private Client audit(String action, Client client) {
+        audit.audit(action, client, client.getClientId(), client.getClientId());
         return client;
     }
-
 }
