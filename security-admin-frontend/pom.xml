@@ -83,7 +83,7 @@
             <dependencies>
                 <dependency>
                     <groupId>net.n2oapp.framework.security</groupId>
-                    <artifactId>security-auth-oauth2-keycloak</artifactId>
+                    <artifactId>security-auth-common</artifactId>
                     <version>${project.version}</version>
                 </dependency>
             </dependencies>

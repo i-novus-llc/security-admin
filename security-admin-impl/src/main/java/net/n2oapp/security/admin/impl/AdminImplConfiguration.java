@@ -5,14 +5,20 @@ import net.n2oapp.platform.jaxrs.autoconfigure.EnableJaxRsProxyClient;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.UserService;
 import net.n2oapp.security.admin.commons.AdminCommonsConfiguration;
+import net.n2oapp.security.admin.impl.audit.AuditHelper;
 import net.n2oapp.security.admin.impl.provider.SimpleSsoUserRoleProvider;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.UserServiceImpl;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.*;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+
+import java.util.Locale;
+
 import ru.inovus.ms.rdm.provider.RdmMapperConfigurer;
 import ru.inovus.ms.rdm.service.api.DraftService;
 import ru.inovus.ms.rdm.service.api.PublishService;
@@ -50,6 +56,16 @@ public class AdminImplConfiguration {
         public MapperConfigurer cxfObjectMapperConfigurer() {
             return new RdmMapperConfigurer();
         }
+    }
+
+    @Bean
+    public MessageSourceAccessor messageSourceAccessor(MessageSource messageSource){
+        return new MessageSourceAccessor(messageSource, new Locale("ru"));
+    }
+
+    @Bean
+    public AuditHelper getAuditHelper() {
+        return new AuditHelper();
     }
 
 }
