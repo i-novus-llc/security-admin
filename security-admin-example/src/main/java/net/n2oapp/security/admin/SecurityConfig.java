@@ -17,7 +17,7 @@ public class SecurityConfig extends SimpleSecurityConfigurerAdapter {
 
     @Override
     protected void authorize(ExpressionUrlAuthorizationConfigurer<HttpSecurity>
-                                     .ExpressionInterceptUrlRegistry url) {
-        url.anyRequest().authenticated();
+                                     .ExpressionInterceptUrlRegistry url) throws Exception {
+        url.anyRequest().authenticated().and().headers().frameOptions().disable();
     }
 }
