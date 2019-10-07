@@ -48,7 +48,7 @@ public class AdminImplConfiguration {
     @EnableJaxRsProxyClient(
             classes = {RefBookService.class, DraftService.class,
                     PublishService.class, VersionService.class},
-            address = "${rdm.rest.url}"
+            address = "${rdm.backend.path}"
     )
     @SpringBootConfiguration
     public static class RdmProxyConfiguration {
