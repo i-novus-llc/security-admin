@@ -12,6 +12,9 @@
         </field>
         <field id="name" domain="string" name="Название">
             <select mapping="desc"/>
+            <filters>
+                <eq filter-id="name" mapping="[0]"/>
+            </filters>
         </field>
     </fields>
 </query>

@@ -2,10 +2,7 @@ package net.n2oapp.security.admin.impl.service;
 
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.criteria.RoleCriteria;
-import net.n2oapp.security.admin.api.model.AppSystem;
-import net.n2oapp.security.admin.api.model.Permission;
-import net.n2oapp.security.admin.api.model.Role;
-import net.n2oapp.security.admin.api.model.RoleForm;
+import net.n2oapp.security.admin.api.model.*;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.RoleService;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
@@ -15,7 +12,6 @@ import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.RoleSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -23,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Collectors;
+
+import static java.util.Objects.nonNull;
 
 /**
  * Реализация сервиса управления ролями
@@ -36,7 +34,6 @@ public class RoleServiceImpl implements RoleService {
     private UserRepository userRepository;
     @Autowired
     private SsoUserRoleProvider provider;
-
 
     @Override
     public Role create(RoleForm role) {
@@ -95,7 +92,10 @@ public class RoleServiceImpl implements RoleService {
         entity.setName(model.getName());
         entity.setCode(model.getCode());
         entity.setDescription(model.getDescription());
-        if (model.getSystemCode() != null) entity.setSystemCode(new SystemEntity(model.getSystemCode()));
+        if (nonNull(model.getUserLevel()))
+            entity.setUserLevel(UserLevel.valueOf(model.getUserLevel()));
+        if (model.getSystemCode() != null)
+            entity.setSystemCode(new SystemEntity(model.getSystemCode()));
         if (model.getPermissions() != null) {
             entity.setPermissionList(model.getPermissions().stream().map(PermissionEntity::new).collect(Collectors.toList()));
         }
@@ -108,6 +108,7 @@ public class RoleServiceImpl implements RoleService {
         entity.setId(model.getId());
         entity.setName(model.getName());
         entity.setCode(model.getCode());
+        entity.setUserLevel(model.getUserLevel());
         entity.setDescription(model.getDescription());
         if (model.getSystem() != null) entity.setSystemCode(new SystemEntity(model.getSystem().getCode()));
         if (model.getPermissions() != null) {
@@ -122,6 +123,7 @@ public class RoleServiceImpl implements RoleService {
         model.setId(entity.getId());
         model.setName(entity.getName());
         model.setCode(entity.getCode());
+        model.setUserLevel(entity.getUserLevel());
         if (entity.getSystemCode() != null)
             model.setSystem(model(entity.getSystemCode()));
         model.setDescription(entity.getDescription());

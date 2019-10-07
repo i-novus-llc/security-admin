@@ -40,6 +40,7 @@ public class PermissionEntity {
     /**
      * Уровень пользователя,  для которого предназначена привилегия
      */
+    @Enumerated(EnumType.STRING)
     @Column(name = "user_level")
     private UserLevel userLevel;
 

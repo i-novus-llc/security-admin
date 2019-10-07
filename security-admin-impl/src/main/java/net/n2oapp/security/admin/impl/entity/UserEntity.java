@@ -78,6 +78,7 @@ public class UserEntity {
      * Уровень пользователя, для которого предназначена роль
      */
     @Column(name = "user_level")
+    @Enumerated(EnumType.STRING)
     private UserLevel userLevel;
 
     /**

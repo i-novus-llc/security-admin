@@ -46,6 +46,7 @@ public class PermissionServiceRestClient implements PermissionService {
         permissionCriteria.setSize(criteria.getPageSize());
         permissionCriteria.setSystemCode(criteria.getSystemCode());
         permissionCriteria.setOrders(criteria.getOrders());
+        permissionCriteria.setUserLevel(criteria.getUserLevel());
         return client.getAll(null, null, permissionCriteria).getContent();
     }
 

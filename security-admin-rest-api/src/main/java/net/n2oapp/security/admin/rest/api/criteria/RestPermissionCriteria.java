@@ -38,4 +38,11 @@ public class RestPermissionCriteria extends PermissionCriteria {
     public void setSystemCode(String systemCode) {
         super.setSystemCode(systemCode);
     }
+
+    @QueryParam("userLevel")
+    @Override
+    @ApiParam(value = "Код системы")
+    public void setUserLevel(String userLevel) {
+        super.setUserLevel(userLevel);
+    }
 }

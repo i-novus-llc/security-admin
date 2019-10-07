@@ -8,6 +8,7 @@ import lombok.Data;
 @Data
 public class PermissionCriteria extends BaseCriteria {
     private String systemCode;
+    private String userLevel;
 
     public PermissionCriteria() {
 
