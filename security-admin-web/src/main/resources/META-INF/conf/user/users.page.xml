@@ -61,7 +61,7 @@
                                 } else if (activeList.length == 2) {
                                 return null;
                                 }else if (activeList[0].id == 1) {
-                                return '';
+                                return 'yes';
                                 } else if (activeList[0].id == 2) {
                                 return 'no';
                                 } else {
