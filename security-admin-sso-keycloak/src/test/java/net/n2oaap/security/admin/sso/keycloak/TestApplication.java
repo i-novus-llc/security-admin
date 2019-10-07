@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Bean;
 public class TestApplication {
 
     @Bean
-    public AdminSsoKeycloakProperties getAdminSsoKeycloakProperties() {
+    public AdminSsoKeycloakProperties adminSsoKeycloakProperties() {
         return new AdminSsoKeycloakProperties();
     }
 

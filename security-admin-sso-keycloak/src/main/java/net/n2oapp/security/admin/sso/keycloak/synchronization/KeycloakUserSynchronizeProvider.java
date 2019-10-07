@@ -73,13 +73,10 @@ public class KeycloakUserSynchronizeProvider {
             Page<UserEntity> all = transaction.execute(status -> userRepository.findAll(specification, criteria));
             usersCount = all.getTotalElements();
 
-            List<UserEntity> missingUsers = all.get().filter(e -> !syncedUsers.contains(e.getId())).collect(Collectors.toList());
-            if (missingUsers.isEmpty()) {
-                pos++;
-            } else {
-                missings += missingUsers.size();
-                deactivate(missingUsers);
-            }
+            List<UserEntity> missingUsers = all.get().filter(e -> !Boolean.FALSE.equals(e.getIsActive()) && !syncedUsers.contains(e.getId())).collect(Collectors.toList());
+            missings += missingUsers.size();
+            deactivate(missingUsers);
+            pos++;
         }
         logger.info(missings + " users were deactivated");
     }
