@@ -36,7 +36,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public User loadUserDetails(UserDetailsToken userDetails) {
-        UserEntity userEntity = userRepository.findOneByUsername(userDetails.getUsername());
+        UserEntity userEntity = userRepository.findOneByUsernameIgnoreCase(userDetails.getUsername());
         if (userEntity == null) {
             userEntity = new UserEntity();
             userEntity.setUsername(userDetails.getUsername());

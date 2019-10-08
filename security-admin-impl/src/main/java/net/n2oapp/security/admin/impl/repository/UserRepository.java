@@ -13,7 +13,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Integer>, JpaSpecificationExecutor<UserEntity> {
-    UserEntity findOneByUsername(String username);
 
     UserEntity findOneByUsernameIgnoreCase(String username);
     
