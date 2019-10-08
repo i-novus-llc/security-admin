@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User create(UserForm user) {
-        userValidations.checkUsernameUniq(user.getId(), model(userRepository.findOneByUsername(user.getUsername())));
+        userValidations.checkUsernameUniq(user.getId(), model(userRepository.findOneByUsernameIgnoreCase(user.getUsername())));
         userValidations.checkUsername(user.getUsername());
         userValidations.checkEmail(user.getEmail());
         String password = user.getPassword();
@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User update(UserForm user) {
-        userValidations.checkUsernameUniq(user.getId(), model(userRepository.findOneByUsername(user.getUsername())));
+        userValidations.checkUsernameUniq(user.getId(), model(userRepository.findOneByUsernameIgnoreCase(user.getUsername())));
         userValidations.checkUsername(user.getUsername());
         userValidations.checkEmail(user.getEmail());
         if (user.getNewPassword() != null) {
@@ -153,7 +153,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean checkUniqueUsername(String username) {
-        return userRepository.findOneByUsername(username) == null;
+        return userRepository.findOneByUsernameIgnoreCase(username) == null;
     }
 
     private UserEntity entityForm(UserEntity entity, UserForm model) {

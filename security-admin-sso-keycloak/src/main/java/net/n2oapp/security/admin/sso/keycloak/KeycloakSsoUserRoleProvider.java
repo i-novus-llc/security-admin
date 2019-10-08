@@ -7,12 +7,17 @@ import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.quartz.JobKey;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
+
+    public static final String EXT_SYS = "KEYCLOAK";
 
     private AdminSsoKeycloakProperties properties;
 
@@ -22,13 +27,16 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
     @Autowired
     private KeycloakRestUserService userService;
 
+    @Autowired
+    private SchedulerFactoryBean schedulerFactoryBean;
+
     public KeycloakSsoUserRoleProvider(AdminSsoKeycloakProperties properties) {
         this.properties = properties;
     }
 
     @Override
     public boolean isSupports(String ssoName) {
-        return ssoName == null || "keycloak".equals(ssoName.toLowerCase());
+        return ssoName == null || EXT_SYS.equalsIgnoreCase(ssoName);
     }
 
     @Override
@@ -103,6 +111,15 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
     @Override
     public void deleteRole(Role role) {
         roleService.deleteRole(role.getCode());
+    }
+
+    @Override
+    public void startSynchronization() {
+        try {
+            schedulerFactoryBean.getScheduler().triggerJob(new JobKey(SsoKeycloakConfiguration.USER_SYNCHRONIZE_JOB_DETAIL));
+        } catch (SchedulerException e) {
+            throw new UserException("exception.failedSyncStart", e);
+        }
     }
 
     private UserRepresentation map(User user) {
