@@ -26,7 +26,8 @@ import static org.mockito.Mockito.when;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE,
         classes = {TestApplication.class, KeycloakUserSynchronizeProvider.class},
-        properties = {"spring.liquibase.change-log=classpath:changelog.xml"})
+        properties = {"spring.liquibase.change-log=classpath:changelog.xml",
+                "audit.client.apiUrl=Mocked", "audit.client.enabled=false"})
 @EnableJpaRepositories(basePackages = "net.n2oapp.security.admin.impl")
 @EntityScan("net.n2oapp.security.admin.impl")
 public class KeycloakUserSynchronizeProviderTest {
