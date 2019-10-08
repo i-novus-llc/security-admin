@@ -50,6 +50,13 @@
             <artifactId>spring-security-core</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>ru.i-novus.ms.audit</groupId>
+            <artifactId>audit-client-spring-boot-starter</artifactId>
+            <version>${audit.version}</version>
+            <type>pom</type>
+        </dependency>
+
         <!-- liquibase -->
         <dependency>
             <groupId>org.liquibase</groupId>
