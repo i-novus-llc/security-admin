@@ -47,6 +47,12 @@
             <artifactId>n2o-platform-starter-quartz</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>net.n2oapp.framework.security</groupId>
+            <artifactId>security-admin-sso-keycloak</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
     </dependencies>
 
 

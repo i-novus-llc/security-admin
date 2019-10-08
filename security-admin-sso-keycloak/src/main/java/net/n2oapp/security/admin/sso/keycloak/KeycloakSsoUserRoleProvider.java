@@ -44,6 +44,7 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
         UserRepresentation userRepresentation = map(user);
         String userGuid = userService.createUser(userRepresentation);
         user.setExtUid(userGuid);
+        user.setExtSys("KEYCLOAK");
         if (user.getRoles() != null) {
             List<RoleRepresentation> roles = new ArrayList<>();
             List<RoleRepresentation> roleRepresentationList = roleService.getAllRoles();
@@ -74,9 +75,9 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
                 forRemove = effective.stream().filter(e -> !roleNames.contains(e.getName())).collect(Collectors.toList());
             }
             Set<String> effectiveRoleNames = effective == null ? new HashSet<>() :
-                    effective.stream().map(r -> r.getName()).collect(Collectors.toSet());
+                    effective.stream().map(RoleRepresentation::getName).collect(Collectors.toSet());
             userService.addUserRoles(user.getExtUid(), user.getRoles().stream()
-                    .filter(r -> !effectiveRoleNames.contains(r.getCode())).map(r -> map(r)).collect(Collectors.toList()));
+                    .filter(r -> !effectiveRoleNames.contains(r.getCode())).map(this::map).collect(Collectors.toList()));
         }
         userService.deleteUserRoles(user.getExtUid(), forRemove);
         if (user.getPassword() != null) {
