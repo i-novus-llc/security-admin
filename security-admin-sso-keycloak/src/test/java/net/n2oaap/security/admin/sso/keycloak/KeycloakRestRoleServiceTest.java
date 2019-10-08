@@ -22,7 +22,8 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE,
         classes = TestApplication.class,
-        properties = {"access.keycloak.serverUrl=http://127.0.0.1:8590/auth","spring.liquibase.enabled=false"})
+        properties = {"access.keycloak.serverUrl=http://127.0.0.1:8590/auth", "spring.liquibase.enabled=false",
+        "audit.client.apiUrl=Mocked", "audit.client.enabled=false"})
 public class KeycloakRestRoleServiceTest {
 
     @Autowired
