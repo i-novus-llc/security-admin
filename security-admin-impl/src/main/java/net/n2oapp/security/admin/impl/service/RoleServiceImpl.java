@@ -8,6 +8,7 @@ import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.RoleForm;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.RoleService;
+import net.n2oapp.security.admin.impl.audit.AuditHelper;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.SystemEntity;
@@ -15,7 +16,6 @@ import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.RoleSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -36,7 +36,8 @@ public class RoleServiceImpl implements RoleService {
     private UserRepository userRepository;
     @Autowired
     private SsoUserRoleProvider provider;
-
+    @Autowired
+    private AuditHelper audit;
 
     @Override
     public Role create(RoleForm role) {
@@ -50,7 +51,7 @@ public class RoleServiceImpl implements RoleService {
             result = providerResult;
             roleRepository.save(entity(result));
         }
-        return result;
+        return audit("audit.roleCreate", result);
     }
 
     @Override
@@ -58,15 +59,18 @@ public class RoleServiceImpl implements RoleService {
         checkRoleUniq(role.getId(), role.getName());
         Role result = model(roleRepository.save(entity(role)));
         provider.updateRole(result);
-        return result;
+        return audit("audit.roleUpdate", result);
     }
 
     @Override
     public void delete(Integer id) {
-        checkRoleExist(id);
-        RoleEntity roleEntity = roleRepository.findById(id).orElse(null);
+        checkRoleIsUsed(id);
+        Role role = model(roleRepository.findById(id).orElse(null));
         roleRepository.deleteById(id);
-        provider.deleteRole(model(roleEntity));
+        if (role != null) {
+            audit("audit.roleDelete", role);
+            provider.deleteRole(role);
+        }
     }
 
     @Override
@@ -173,10 +177,13 @@ public class RoleServiceImpl implements RoleService {
      * Валидация на удаление ролей
      * Запрещено удалять роль, если существует пользователь с такой ролью
      */
-    private boolean checkRoleExist(Integer roleId) {
-        if (userRepository.countUsersWithRoleId(roleId) == 0)
-            return true;
-        else
+    private void checkRoleIsUsed(Integer roleId) {
+        if (userRepository.countUsersWithRoleId(roleId) != 0)
             throw new UserException("exception.usernameWithSuchRoleExists");
+    }
+
+    private Role audit(String action, Role role) {
+        audit.audit(action, role, ""+role.getId(), role.getName());
+        return role;
     }
 }
