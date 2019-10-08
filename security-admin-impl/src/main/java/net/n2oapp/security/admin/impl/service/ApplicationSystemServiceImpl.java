@@ -7,6 +7,7 @@ import net.n2oapp.security.admin.api.model.AppSystem;
 import net.n2oapp.security.admin.api.model.AppSystemForm;
 import net.n2oapp.security.admin.api.model.Application;
 import net.n2oapp.security.admin.api.service.ApplicationSystemService;
+import net.n2oapp.security.admin.impl.audit.AuditHelper;
 import net.n2oapp.security.admin.impl.entity.ApplicationEntity;
 import net.n2oapp.security.admin.impl.entity.SystemEntity;
 import net.n2oapp.security.admin.impl.repository.*;
@@ -34,26 +35,33 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     @Autowired
     private SystemRepository systemRepository;
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
     private RoleRepository roleRepository;
     @Autowired
     private PermissionRepository permissionRepository;
+    @Autowired
+    private AuditHelper audit;
+
 
     @Override
     public Application createApplication(Application service) {
         checkServiceUniq(service.getCode());
-        return model(applicationRepository.save(entity(service)));
+        Application result = model(applicationRepository.save(entity(service)));
+        return audit("audit.applicationCreate", result);
     }
 
     @Override
     public Application updateApplication(Application service) {
-        return model(applicationRepository.save(entity(service)));
+        Application result = model(applicationRepository.save(entity(service)));
+        return audit("audit.applicationUpdate", result);
     }
 
     @Override
     public void deleteApplication(String code) {
+        ApplicationEntity app = applicationRepository.findById(code).orElse(null);
         applicationRepository.deleteById(code);
+        if (app != null) {
+            audit("audit.applicationDelete", model(app));
+        }
     }
 
     @Override
@@ -82,7 +90,8 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     @Override
     public AppSystem createSystem(AppSystemForm system) {
         checkSystemUniq(system.getCode());
-        return model(systemRepository.save(entity(system)));
+        AppSystem result = model(systemRepository.save(entity(system)));
+        return audit("audit.appSystemCreate", result);
     }
 
     @Override
@@ -90,13 +99,18 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
         SystemEntity entity = systemRepository.getOne(system.getCode());
         entity.setName(system.getName());
         entity.setDescription(system.getDescription());
-        return model(systemRepository.save(entity));
+        AppSystem result = model(systemRepository.save(entity));
+        return audit("audit.appSystemUpdate", result);
     }
 
     @Override
     public void deleteSystem(String code) {
         checkSystemExist(code);
+        SystemEntity sys = systemRepository.findById(code).orElse(null);
         systemRepository.deleteById(code);
+        if (sys != null) {
+            audit("audit.appSystemDelete", model(sys));
+        }
     }
 
     @Override
@@ -186,5 +200,15 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     private void checkServiceUniq(String code) {
         if (applicationRepository.findById(code).isPresent())
             throw new UserException("exception.uniqueApplication");
+    }
+
+    private Application audit(String action, Application app) {
+        audit.audit(action, app, app.getCode(), app.getName());
+        return app;
+    }
+
+    private AppSystem audit(String action, AppSystem appSys) {
+        audit.audit(action, appSys, appSys.getCode(), appSys.getName());
+        return appSys;
     }
 }

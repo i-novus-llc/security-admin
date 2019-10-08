@@ -9,6 +9,7 @@ import net.n2oapp.security.admin.api.service.MailService;
 import net.n2oapp.security.admin.api.service.UserService;
 import net.n2oapp.security.admin.commons.util.PasswordGenerator;
 import net.n2oapp.security.admin.commons.util.UserValidations;
+import net.n2oapp.security.admin.impl.audit.AuditHelper;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
@@ -42,6 +43,8 @@ public class UserServiceImpl implements UserService {
     private MailService mailService;
     @Autowired
     private UserValidations userValidations;
+    @Autowired
+    private AuditHelper audit;
 
     public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, SsoUserRoleProvider provider) {
         this.userRepository = userRepository;
@@ -80,7 +83,7 @@ public class UserServiceImpl implements UserService {
             }
         }
         mailService.sendWelcomeMail(user);
-        return model(savedUser);
+        return audit("audit.userCreate", model(savedUser));
     }
 
     @Override
@@ -109,15 +112,16 @@ public class UserServiceImpl implements UserService {
             }
             provider.updateUser(ssoUser);
         }
-        return model(updatedUser);
+        return audit("audit.userUpdate", model(updatedUser));
     }
 
     @Override
     public void delete(Integer id) {
-        UserEntity user = userRepository.findById(id).orElse(null);
+        User user = model(userRepository.findById(id).orElse(null));
         userRepository.deleteById(id);
-        if (user != null && provider.isSupports(user.getExtSys())) {
-            provider.deleteUser(model(user));
+        if (user != null) {
+            audit("audit.userDelete", user);
+            if (provider.isSupports(user.getExtSys())) provider.deleteUser(user);
         }
     }
 
@@ -144,13 +148,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User changeActive(Integer id) {
-        UserEntity userEntity = userRepository.findById(id).get();
+        UserEntity userEntity = userRepository.findById(id).orElse(null);
         userEntity.setIsActive(!userEntity.getIsActive());
         User result = model(userRepository.save(userEntity));
         if (provider.isSupports(userEntity.getExtSys())) {
             provider.changeActivity(result);
         }
-        return result;
+        return audit("audit.userChangeActive", result);
     }
 
     @Override
@@ -235,5 +239,10 @@ public class UserServiceImpl implements UserService {
             model.setNameWithSystem(model.getNameWithSystem() + "(" + entity.getSystemCode().getName() + ")");
 
         return model;
+    }
+
+    private User audit(String action, User user) {
+        audit.audit(action, user, "" + user.getId(), user.getUsername());
+        return user;
     }
 }
