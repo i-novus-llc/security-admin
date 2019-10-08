@@ -89,5 +89,11 @@ public class UserEntity {
     @Column(name = "ext_sys")
     private String extSys;
 
+    /**
+     * СНИЛС пользователся
+     */
+    @Column(name = "snils")
+    private String snils;
+
 }
 

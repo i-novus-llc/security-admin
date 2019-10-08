@@ -1,13 +1,13 @@
 package net.n2oapp.security.admin.commons.util;
 
-import net.n2oapp.security.admin.api.model.User;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.n2oapp.platform.i18n.UserException;
+import net.n2oapp.security.admin.api.model.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Валидации пользователя
@@ -109,4 +109,33 @@ public class UserValidations {
         }
     }
 
+    public void checkSnils(String snils) {
+        if (snils.length() != 14)
+            throw new UserException("exception.incorrectSnilsFormat");
+
+        if (snils.charAt(3) != '-' || snils.charAt(7) != '-' || snils.charAt(11) != ' ')
+            throw new UserException("exception.incorrectSnilsFormat");
+
+        String snilsNoCheckSum = snils.substring(0, 3) + snils.substring(4, 7) + snils.substring(8, 11);
+        // 001-001-998
+        if (Integer.parseInt(snilsNoCheckSum) > 1001998) {
+            int sum = 0;
+            int multiplier = 9;
+            for (int i = 0; i < 9; i++) {
+                sum = sum + (multiplier - i) * Integer.parseInt(snilsNoCheckSum.substring(i, i + 1));
+            }
+
+            int checksum = Integer.parseInt(snils.substring(12, 14));
+            if (sum > 101)
+                sum = sum % 101;
+            if (sum < 100) {
+                if (!(sum == checksum))
+                    throw new UserException("exception.incorrectSnilsFormat");
+            }
+            if (sum == 100 || sum == 101) {
+                if (!(0 == checksum))
+                    throw new UserException("exception.incorrectSnilsFormat");
+            }
+        }
+    }
 }

@@ -23,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Collectors;
 
+import static java.util.Objects.nonNull;
+
 /**
  * Реализация сервиса управления пользователями
  */
@@ -52,6 +54,8 @@ public class UserServiceImpl implements UserService {
         userValidations.checkUsernameUniq(user.getId(), model(userRepository.findOneByUsername(user.getUsername())));
         userValidations.checkUsername(user.getUsername());
         userValidations.checkEmail(user.getEmail());
+        if (nonNull(user.getSnils()))
+            userValidations.checkSnils(user.getSnils());
         String password = user.getPassword();
         if (password != null)
             userValidations.checkPassword(password, user.getPasswordCheck(), user.getId());
@@ -84,6 +88,8 @@ public class UserServiceImpl implements UserService {
         userValidations.checkUsernameUniq(user.getId(), model(userRepository.findOneByUsername(user.getUsername())));
         userValidations.checkUsername(user.getUsername());
         userValidations.checkEmail(user.getEmail());
+        if (nonNull(user.getSnils()))
+            userValidations.checkSnils(user.getSnils());
         if (user.getNewPassword() != null) {
             userValidations.checkPassword(user.getNewPassword(), user.getPasswordCheck(), user.getId());
         }
@@ -161,6 +167,7 @@ public class UserServiceImpl implements UserService {
         entity.setIsActive(model.getIsActive());
         entity.setExtSys(model.getExtSys());
         entity.setEmail(model.getEmail());
+        entity.setSnils(model.getSnils());
         if (model.getRoles() != null)
             entity.setRoleList(model.getRoles().stream().map(RoleEntity::new).collect(Collectors.toList()));
         return entity;
@@ -177,6 +184,7 @@ public class UserServiceImpl implements UserService {
         entity.setIsActive(model.getIsActive());
         entity.setExtSys(model.getExtSys());
         entity.setEmail(model.getEmail());
+        entity.setSnils(model.getSnils());
         if (model.getRoles() != null)
             entity.setRoleList(model.getRoles().stream().map(r -> new RoleEntity(r.getId())).collect(Collectors.toList()));
         return entity;
@@ -194,6 +202,7 @@ public class UserServiceImpl implements UserService {
         model.setIsActive(entity.getIsActive());
         model.setExtSys(entity.getExtSys());
         model.setEmail(entity.getEmail());
+        model.setSnils(entity.getSnils());
         StringBuilder builder = new StringBuilder();
         if (entity.getSurname() != null) {
             builder.append(entity.getSurname()).append(" ");
