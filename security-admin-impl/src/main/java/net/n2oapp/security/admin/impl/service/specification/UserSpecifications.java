@@ -66,6 +66,9 @@ public class UserSpecifications implements Specification<UserEntity> {
             predicate = builder.and(predicate, builder.exists(subquery));
             builder.and(predicate, root.get(UserEntity_.ROLE_LIST));
         }
+        if (criteria.getExtSys() != null) {
+            predicate = builder.and(predicate, builder.equal(builder.upper(root.get(UserEntity_.extSys)), criteria.getExtSys().toUpperCase()));
+        }
         if (nonNull(criteria.getUserLevel())) {
             predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.userLevel), UserLevel.valueOf(criteria.getUserLevel())));
         }

@@ -7,6 +7,7 @@ import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.UserLevelService;
 import net.n2oapp.security.admin.api.service.UserService;
 import net.n2oapp.security.admin.commons.AdminCommonsConfiguration;
+import net.n2oapp.security.admin.impl.audit.AuditHelper;
 import net.n2oapp.security.admin.impl.provider.SimpleSsoUserRoleProvider;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
@@ -15,8 +16,13 @@ import net.n2oapp.security.admin.impl.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.*;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+
+import java.util.Locale;
+
 import ru.inovus.ms.rdm.api.provider.RdmMapperConfigurer;
 import ru.inovus.ms.rdm.api.service.DraftService;
 import ru.inovus.ms.rdm.api.service.PublishService;
@@ -83,6 +89,16 @@ public class AdminImplConfiguration {
         if (!actualUserLevels.isEmpty())
             actualUserLevels.add(UserLevel.NONE);
         return new UserLevelServiceImpl(actualUserLevels);
+    }
+
+    @Bean
+    public MessageSourceAccessor messageSourceAccessor(MessageSource messageSource){
+        return new MessageSourceAccessor(messageSource, new Locale("ru"));
+    }
+
+    @Bean
+    public AuditHelper getAuditHelper() {
+        return new AuditHelper();
     }
 
 }

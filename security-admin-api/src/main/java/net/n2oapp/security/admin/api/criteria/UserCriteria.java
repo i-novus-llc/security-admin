@@ -24,6 +24,7 @@ public class UserCriteria extends BaseCriteria {
     private Integer regionId;
     private Integer organizationId;
     private Integer departmentId;
+    private String extSys;
 
     public void setRoleIds(List<Integer> roleIds) {
         this.roleIds = roleIds != null ? roleIds : new ArrayList<>();

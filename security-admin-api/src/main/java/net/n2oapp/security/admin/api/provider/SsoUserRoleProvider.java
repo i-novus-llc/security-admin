@@ -58,4 +58,9 @@ public interface SsoUserRoleProvider {
      */
     void deleteRole(Role role);
 
+    /**
+     * Запуск синхронизации пользователей
+     */
+    void startSynchronization();
+
 }

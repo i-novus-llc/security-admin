@@ -48,4 +48,9 @@ public class SimpleSsoUserRoleProvider implements SsoUserRoleProvider {
     public void deleteRole(Role role) {
 
     }
+
+    @Override
+    public void startSynchronization() {
+
+    }
 }
