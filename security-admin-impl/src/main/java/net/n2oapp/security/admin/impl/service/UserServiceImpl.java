@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Collectors;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 /**
@@ -60,9 +61,9 @@ public class UserServiceImpl implements UserService {
         if (nonNull(user.getSnils()))
             userValidations.checkSnils(user.getSnils());
         String password = user.getPassword();
-        if (password != null)
+        if (nonNull(password))
             userValidations.checkPassword(password, user.getPasswordCheck(), user.getId());
-        if (password == null) {
+        if (isNull(password)) {
             password = passwordGenerator.generate();
             user.setPassword(password);
         }
@@ -76,7 +77,7 @@ public class UserServiceImpl implements UserService {
             User ssoUser = model(savedUser);
             ssoUser.setPassword(password);
             ssoUser = provider.createUser(ssoUser);
-            if (ssoUser != null) {
+            if (nonNull(ssoUser)) {
                 UserEntity changedSsoUser = entity(ssoUser);
                 changedSsoUser.setPasswordHash(passwordHash);
                 savedUser = userRepository.save(changedSsoUser);
@@ -93,19 +94,19 @@ public class UserServiceImpl implements UserService {
         userValidations.checkEmail(user.getEmail());
         if (nonNull(user.getSnils()))
             userValidations.checkSnils(user.getSnils());
-        if (user.getNewPassword() != null) {
+        if (nonNull(user.getNewPassword())) {
             userValidations.checkPassword(user.getNewPassword(), user.getPasswordCheck(), user.getId());
         }
         UserEntity entityUser = userRepository.getOne(user.getId());
         entityUser = entityForm(entityUser, user);
         // кодируем пароль перед сохранением в бд если он изменился
-        if (user.getNewPassword() != null)
+        if (nonNull(user.getNewPassword()))
             entityUser.setPasswordHash(passwordEncoder.encode(user.getNewPassword()));
         UserEntity updatedUser = userRepository.save(entityUser);
         //в провайдер отправляем незакодированный пароль, если он изменился, и отправляем null, если не изменялся пароль
         if (provider.isSupports(updatedUser.getExtSys())) {
             User ssoUser = model(updatedUser);
-            if (user.getNewPassword() == null) {
+            if (isNull(user.getNewPassword())) {
                 ssoUser.setPassword(null);
             } else {
                 ssoUser.setPassword(user.getNewPassword());
@@ -119,7 +120,7 @@ public class UserServiceImpl implements UserService {
     public void delete(Integer id) {
         User user = model(userRepository.findById(id).orElse(null));
         userRepository.deleteById(id);
-        if (user != null) {
+        if (nonNull(user)) {
             audit("audit.userDelete", user);
             if (provider.isSupports(user.getExtSys())) provider.deleteUser(user);
         }
@@ -172,7 +173,7 @@ public class UserServiceImpl implements UserService {
         entity.setExtSys(model.getExtSys());
         entity.setEmail(model.getEmail());
         entity.setSnils(model.getSnils());
-        if (model.getRoles() != null)
+        if (nonNull(model.getRoles()))
             entity.setRoleList(model.getRoles().stream().map(RoleEntity::new).collect(Collectors.toList()));
         return entity;
     }
@@ -189,13 +190,13 @@ public class UserServiceImpl implements UserService {
         entity.setExtSys(model.getExtSys());
         entity.setEmail(model.getEmail());
         entity.setSnils(model.getSnils());
-        if (model.getRoles() != null)
+        if (nonNull(model.getRoles()))
             entity.setRoleList(model.getRoles().stream().map(r -> new RoleEntity(r.getId())).collect(Collectors.toList()));
         return entity;
     }
 
     private User model(UserEntity entity) {
-        if (entity == null) return null;
+        if (isNull(entity)) return null;
         User model = new User();
         model.setId(entity.getId());
         model.setExtUid(entity.getExtUid());
@@ -208,17 +209,17 @@ public class UserServiceImpl implements UserService {
         model.setEmail(entity.getEmail());
         model.setSnils(entity.getSnils());
         StringBuilder builder = new StringBuilder();
-        if (entity.getSurname() != null) {
+        if (nonNull(entity.getSurname())) {
             builder.append(entity.getSurname()).append(" ");
         }
-        if (entity.getName() != null) {
+        if (nonNull(entity.getName())) {
             builder.append(entity.getName()).append(" ");
         }
-        if (entity.getPatronymic() != null) {
+        if (nonNull(entity.getPatronymic())) {
             builder.append(entity.getPatronymic());
         }
         model.setFio(builder.toString());
-        if (entity.getRoleList() != null) {
+        if (nonNull(entity.getRoleList())) {
             model.setRoles(entity.getRoleList().stream().map(e -> {
                 RoleEntity re = roleRepository.findById(e.getId()).get();
                 return model(re);
@@ -228,14 +229,14 @@ public class UserServiceImpl implements UserService {
     }
 
     private Role model(RoleEntity entity) {
-        if (entity == null) return null;
+        if (isNull(entity)) return null;
         Role model = new Role();
         model.setId(entity.getId());
         model.setCode(entity.getCode());
         model.setName(entity.getName());
         model.setDescription(entity.getDescription());
         model.setNameWithSystem(entity.getName());
-        if (entity.getSystemCode() != null)
+        if (nonNull(entity.getSystemCode()))
             model.setNameWithSystem(model.getNameWithSystem() + "(" + entity.getSystemCode().getName() + ")");
 
         return model;
