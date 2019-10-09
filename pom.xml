@@ -49,11 +49,12 @@
         <module>security-admin-commons</module>
         <module>security-admin-sql</module>
         <module>security-admin-db</module>
+        <module>security-admin-auth-server</module>
         <module>security-admin-backend</module>
         <module>security-admin-frontend</module>
+        <module>security-admin-example</module>
         <module>keycloak-theme</module>
         <module>doc</module>
-        <module>security-admin-example</module>
     </modules>
 
     <dependencyManagement>
