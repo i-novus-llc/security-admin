@@ -2,7 +2,6 @@ package net.n2oaap.security.admin.sso.keycloak;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import net.n2oapp.security.admin.sso.keycloak.KeycloakRestRoleService;
-import net.n2oapp.security.admin.sso.keycloak.SsoKeycloakConfiguration;
 import net.n2oapp.security.admin.sso.keycloak.AdminSsoKeycloakProperties;
 import org.junit.Before;
 import org.junit.Rule;
@@ -10,7 +9,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
@@ -22,10 +20,10 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
-@SpringBootConfiguration
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, classes = SsoKeycloakConfiguration.class, properties = {
-        "access.keycloak.serverUrl=http://127.0.0.1:8590/auth",
-})
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE,
+        classes = TestApplication.class,
+        properties = {"access.keycloak.serverUrl=http://127.0.0.1:8590/auth", "spring.liquibase.enabled=false",
+        "audit.client.apiUrl=Mocked", "audit.client.enabled=false"})
 public class KeycloakRestRoleServiceTest {
 
     @Autowired

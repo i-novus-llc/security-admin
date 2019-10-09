@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.impl.service;
 
+import liquibase.util.StringUtils;
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.model.Role;
@@ -19,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,7 +36,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public User loadUserDetails(UserDetailsToken userDetails) {
-        UserEntity userEntity = userRepository.findOneByUsername(userDetails.getUsername());
+        UserEntity userEntity = userRepository.findOneByUsernameIgnoreCase(userDetails.getUsername());
         if (userEntity == null) {
             userEntity = new UserEntity();
             userEntity.setUsername(userDetails.getUsername());
@@ -51,7 +51,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             }
             userRepository.save(userEntity);
         } else {
-            if (!Objects.equals(userEntity.getExtSys(), userDetails.getExtSys())) {
+            if (!StringUtils.equalsIgnoreCaseAndEmpty(userEntity.getExtSys(), userDetails.getExtSys())) {
                 throw new UserException("exception.ssoOtherSystemUser");
             }
             userEntity.setIsActive(true);
