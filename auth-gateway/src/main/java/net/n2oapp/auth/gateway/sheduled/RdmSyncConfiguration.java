@@ -19,16 +19,16 @@ import static org.quartz.CronScheduleBuilder.cronSchedule;
 @Configuration
 public class RdmSyncConfiguration {
 
-    @Value("${rdm.export.cron}")
+    @Value("${rdm.cron.export}")
     private String cronExpression;
 
-    @Value("${region-update.cron-expression}")
+    @Value("${rdm.cron.import.region}")
     private String regionUpdateCronExpression;
 
-    @Value("${organization-update.cron-expression}")
+    @Value("${rdm.cron.import.organization}")
     private String organizationUpdateCronExpression;
 
-    @Value("${department-update.cron-expression}")
+    @Value("${rdm.cron.import.department}")
     private String departmentUpdateCronExpression;
     @Autowired
     private RdmSyncRest rdmSyncRest;
