@@ -118,24 +118,28 @@ public class UserValidations {
 
         String snilsNoCheckSum = snils.substring(0, 3) + snils.substring(4, 7) + snils.substring(8, 11);
         // 001-001-998
-        if (Integer.parseInt(snilsNoCheckSum) > 1001998) {
-            int sum = 0;
-            int multiplier = 9;
-            for (int i = 0; i < 9; i++) {
-                sum = sum + (multiplier - i) * Integer.parseInt(snilsNoCheckSum.substring(i, i + 1));
-            }
+        try {
+            if (snilsNoCheckSum.compareTo("001001998") > 0) {
+                int sum = 0;
+                int multiplier = 9;
+                for (int i = 0; i < 9; i++) {
+                    sum = sum + (multiplier - i) * Integer.parseInt(snilsNoCheckSum.substring(i, i + 1));
+                }
 
-            int checksum = Integer.parseInt(snils.substring(12, 14));
-            if (sum > 101)
-                sum = sum % 101;
-            if (sum < 100) {
-                if (!(sum == checksum))
-                    throw new UserException("exception.incorrectSnilsFormat");
+                int checksum = Integer.parseInt(snils.substring(12, 14));
+                if (sum > 101)
+                    sum = sum % 101;
+                if (sum < 100) {
+                    if (!(sum == checksum))
+                        throw new UserException("exception.incorrectSnilsFormat");
+                }
+                if (sum == 100 || sum == 101) {
+                    if (!(0 == checksum))
+                        throw new UserException("exception.incorrectSnilsFormat");
+                }
             }
-            if (sum == 100 || sum == 101) {
-                if (!(0 == checksum))
-                    throw new UserException("exception.incorrectSnilsFormat");
-            }
+        } catch (NumberFormatException e) {
+            throw new UserException("exception.incorrectSnilsFormat");
         }
     }
 }
