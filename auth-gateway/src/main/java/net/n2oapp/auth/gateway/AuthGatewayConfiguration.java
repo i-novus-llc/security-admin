@@ -8,6 +8,7 @@ import net.n2oapp.auth.gateway.oauth.UserTokenConverter;
 import net.n2oapp.auth.gateway.oauth.logout.BackChannelLogoutHandler;
 import net.n2oapp.security.admin.api.service.UserDetailsService;
 import net.n2oapp.security.auth.common.AuthoritiesPrincipalExtractor;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
@@ -44,6 +45,7 @@ import javax.servlet.Filter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.security.Security;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -137,6 +139,7 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     private Filter ssoEsiaFilter(ClientResources client, String path) {
+        Security.addProvider(new BouncyCastleProvider());
         OAuth2ClientAuthenticationProcessingFilter filter = new OAuth2ClientAuthenticationProcessingFilter(path);
         OAuth2RestTemplate template = new OAuth2RestTemplate(client.getClient(), oauth2ClientContext);
         template.setAccessTokenProvider(new AccessTokenProviderChain(Arrays.asList(new EsiaAccessTokenProvider(pkcs7Util))));
