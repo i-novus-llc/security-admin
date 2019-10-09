@@ -1,4 +1,4 @@
-package net.n2oapp.auth.gateway.oauth.logout;
+package net.n2oapp.security.admin.auth.server.logout;
 
 import net.n2oapp.security.admin.api.criteria.ClientCriteria;
 import net.n2oapp.security.admin.api.model.Client;
