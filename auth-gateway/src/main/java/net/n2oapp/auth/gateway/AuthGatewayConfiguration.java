@@ -3,10 +3,10 @@ package net.n2oapp.auth.gateway;
 import net.n2oapp.auth.gateway.esia.EsiaAccessTokenProvider;
 import net.n2oapp.auth.gateway.esia.EsiaUserInfoTokenServices;
 import net.n2oapp.auth.gateway.esia.Pkcs7Util;
-import net.n2oapp.auth.gateway.oauth.GatewayAccessTokenConverter;
-import net.n2oapp.auth.gateway.oauth.UserTokenConverter;
-import net.n2oapp.auth.gateway.oauth.logout.BackChannelLogoutHandler;
 import net.n2oapp.security.admin.api.service.UserDetailsService;
+import net.n2oapp.security.admin.auth.server.GatewayAccessTokenConverter;
+import net.n2oapp.security.admin.auth.server.UserTokenConverter;
+import net.n2oapp.security.admin.auth.server.logout.BackChannelLogoutHandler;
 import net.n2oapp.security.auth.common.AuthoritiesPrincipalExtractor;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +17,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -53,6 +54,7 @@ import java.util.List;
 @Configuration
 @EnableOAuth2Client
 @EnableWebSecurity
+@ComponentScan("net.n2oapp.security.admin.auth.server")
 @Order(200)
 public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
 
