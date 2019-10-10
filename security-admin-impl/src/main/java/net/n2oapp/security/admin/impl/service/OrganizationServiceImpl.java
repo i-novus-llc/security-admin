@@ -5,7 +5,6 @@ import net.n2oapp.security.admin.api.model.Organization;
 import net.n2oapp.security.admin.api.service.OrganizationService;
 import net.n2oapp.security.admin.impl.entity.OrganizationEntity;
 import net.n2oapp.security.admin.impl.repository.OrganizationRepository;
-import net.n2oapp.security.admin.impl.service.specification.OrganizationSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -26,13 +25,12 @@ public class OrganizationServiceImpl implements OrganizationService {
     
     @Override
     public Page<Organization> findAll(OrganizationCriteria criteria){
-        Specification<OrganizationEntity> specification = new OrganizationSpecifications(criteria);
         if (criteria.getOrders() == null) {
             criteria.setOrders(Arrays.asList(new Sort.Order(Sort.Direction.ASC, "id")));
         } else {
             criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "id"));
         }
-        Page<OrganizationEntity> all = regionRepository.findAll(specification, criteria);
+        Page<OrganizationEntity> all = regionRepository.findAll(criteria);
         return all.map(this::model);
     }
 
