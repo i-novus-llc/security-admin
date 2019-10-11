@@ -3,9 +3,9 @@ package net.n2oapp.auth.gateway;
 import net.n2oapp.auth.gateway.esia.EsiaAccessTokenProvider;
 import net.n2oapp.auth.gateway.esia.EsiaUserInfoTokenServices;
 import net.n2oapp.auth.gateway.esia.Pkcs7Util;
+import net.n2oapp.security.admin.api.service.ClientService;
 import net.n2oapp.security.admin.api.service.UserDetailsService;
-import net.n2oapp.security.admin.auth.server.GatewayAccessTokenConverter;
-import net.n2oapp.security.admin.auth.server.UserTokenConverter;
+import net.n2oapp.security.admin.auth.server.OAuthServerConfiguration;
 import net.n2oapp.security.admin.auth.server.logout.BackChannelLogoutHandler;
 import net.n2oapp.security.auth.common.AuthoritiesPrincipalExtractor;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -19,6 +19,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -26,6 +27,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.jwt.crypto.sign.RsaSigner;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
@@ -33,9 +35,7 @@ import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilt
 import org.springframework.security.oauth2.client.token.AccessTokenProviderChain;
 import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
-import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
-import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -47,6 +47,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Security;
+import java.security.interfaces.RSAPrivateKey;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -55,14 +56,10 @@ import java.util.List;
 @EnableOAuth2Client
 @EnableWebSecurity
 @ComponentScan("net.n2oapp.security.admin.auth.server")
+@Import(OAuthServerConfiguration.class)
 @Order(200)
 public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
 
-    @Value("${access.jwt.signing_key}")
-    private String signingKey;
-
-    @Value("${access.jwt.verifier_key}")
-    private String verifierKey;
 
     @Autowired
     private OAuth2ClientContext oauth2ClientContext;
@@ -71,7 +68,13 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
 
     @Autowired
-    private BackChannelLogoutHandler logoutSuccessHandler;
+    private KeyStoreKeyFactory keyStoreKeyFactory;
+
+    @Autowired
+    private ClientService clientService;
+
+    @Value("${access.keycloak.logout-uri}")
+    private String logoutUri;
 
     @Autowired
     private Pkcs7Util pkcs7Util;
@@ -83,10 +86,11 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        RsaSigner signer = new RsaSigner((RSAPrivateKey) keyStoreKeyFactory.getKeyPair("gateway").getPrivate());
         http.authorizeRequests().antMatchers("/", "/login**", "/api/**", "/css/**", "/icons/**", "/fonts/**", "/public/**", "/static/**", "/webjars/**").permitAll().anyRequest()
                 .authenticated().and().exceptionHandling()
                 .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/")).and().logout()
-                .logoutSuccessUrl("/").logoutSuccessHandler(logoutSuccessHandler).permitAll().and().csrf().disable()
+                .logoutSuccessUrl("/").logoutSuccessHandler(new BackChannelLogoutHandler(signer, clientService, logoutUri)).permitAll().and().csrf().disable()
                 .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
     }
 
@@ -156,19 +160,6 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
         return filter;
     }
 
-    @Bean
-    public TokenStore tokenStore(JwtAccessTokenConverter accessTokenConverter) {
-        return new JwtTokenStore(accessTokenConverter);
-    }
-
-    @Bean
-    public JwtAccessTokenConverter jwtAccessTokenConverter() {
-        final JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        converter.setSigningKey(signingKey);
-        converter.setVerifierKey(verifierKey);
-        converter.setAccessTokenConverter(new GatewayAccessTokenConverter(new UserTokenConverter()));
-        return converter;
-    }
 
     @Bean
     public UserAccessor userAccessor() {
