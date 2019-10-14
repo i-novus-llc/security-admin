@@ -1,3 +1,4 @@
+
 = Документация
 :toc:
 :toclevels: 3
@@ -402,7 +403,7 @@ security.oauth2.client.scope=read,write
 #Адрес сервиса аутентификации через браузер
 security.oauth2.client.user-authorization-uri=${security.oauth2.auth-server-uri}/oauth/authorize
 #Адрес сервиса получения токена аутентификации
-security.oauth2.client.access-token-uri=${security.oauth2.auth-server-uri}/oauth2/token
+security.oauth2.client.access-token-uri=${security.oauth2.auth-server-uri}/oauth/token
 #Адрес сервиса получения информации о пользователе
 security.oauth2.resource.user-info-uri=${security.oauth2.auth-server-uri}/userinfo
 #Адрес сервиса единого выхода
@@ -1016,6 +1017,19 @@ insert into sec.permission(name, code) values('Право доступа к мо
 <output-text id="enabled" default-value="#{enabled?}"/>
 ----
 
+== Настройка
+
+В этом разделе рассказывается про настройки которые влияют на работу UI и Системы.
+
+. Задайте следующие настройки в файле `application.properties`:
++
+[source]
+----
+#Отображение систем на UI
+sec.admin.system-enabled=false
+
+----
++
 
 == Кастомизация
 В этом разделе рассказывается как настроить внешний вид страниц администрирования и аутентификации под стиль Вашей системы.

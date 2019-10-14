@@ -1,0 +1,26 @@
+== Настройки
+
+. Задайте следующие настройки в файле `application.properties` или укажите их при запуске:
++
+[source]
+----
+#Отображение систем на UI
+sec.admin.system-enabled=false
+----
+
+== Запуск
+
+[source]
+----
+java -jar security-admin-example.jar
+
+java -jar security-admin-example.jar --sec.admin.system-enabled=false
+----
+
+== Аккаунт администратора
+
+[source]
+----
+логин: admin
+пароль: 123456
+----

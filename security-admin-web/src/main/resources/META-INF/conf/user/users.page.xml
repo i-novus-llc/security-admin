@@ -34,7 +34,7 @@
                     <row>
                         <input-text id="username"/>
                         <input-text id="fio" class="n2o-control-10"/>
-                        <input-select id="system" label="Система" visible="${sec.admin.system.global}"
+                        <input-select id="system" label="Система" visible="${sec.admin.system-enabled}"
                                       query-id="system"/>
                     </row>
                     <row>
