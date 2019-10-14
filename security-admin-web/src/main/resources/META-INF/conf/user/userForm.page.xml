@@ -23,23 +23,58 @@
                           label="Подтвердить пароль" eye="false">
                     <validations white-list="passwordCheckValidation"/>
                     <dependencies>
-                        <enabling on="password">typeof password != 'undefined' &amp;&amp; password != null &amp;&amp; password != ''</enabling>
+                        <enabling on="password">typeof password != 'undefined' &amp;&amp; password != null &amp;&amp;
+                            password != ''
+                        </enabling>
                     </dependencies>
                 </password>
             </row>
             <input-text id="surname" required="${access.user.surname.required}" length="100"/>
             <input-text id="name" required="${access.user.name.required}" length="100"/>
             <input-text id="patronymic" length="100"/>
+            <input-select id="userLevel" query-id="userLevel" label-field-id="name"
+                          visible="${user-level.enabled}" label="Уровень пользователя">
+            </input-select>
             <row>
                 <col size="10">
                     <input-select id="roles" type="multi" label="Роли" cache="false"
-                                  required="true" query-id="${access.role.query.id}"
-                                  value-field-id="id" label-field-id="name" group-field-id="systemName"/>
+                                  required="true" query-id="roleForForm"
+                                  value-field-id="id" label-field-id="name" group-field-id="systemName">
+                        <pre-filters>
+                            <eq field-id="userLevel.id" value="{userLevel.id}"/>
+                        </pre-filters>
+                        <dependencies>
+                            <set-value on="userLevel" apply-on-init="false">return null;</set-value>
+                        </dependencies>
+                    </input-select>
                 </col>
                 <col size="2">
                     <checkbox id="isActive" default-value="true"/>
                 </col>
             </row>
+
+            <input-select id="department" query-id="department" label-field-id="name" label="Департамент">
+                <dependencies>
+                    <visibility on="userLevel">userLevel.id == 'FEDERAL' &amp;&amp; ${user-level.show-department}
+                    </visibility>
+                    <set-value on="userLevel" apply-on-init="false">return null;</set-value>
+                </dependencies>
+            </input-select>
+            <input-select id="region" query-id="region" label-field-id="name" label="Регион">
+                <dependencies>
+                    <requiring on="userLevel">userLevel.id == 'REGIONAL'</requiring>
+                    <visibility on="userLevel">userLevel.id == 'REGIONAL' || userLevel.id == 'ORGANIZATION'</visibility>
+                    <set-value on="userLevel" apply-on-init="false">return null;</set-value>
+                </dependencies>
+            </input-select>
+            <input-select id="organization" query-id="organization" label-field-id="shortName" label="Организация">
+                <dependencies>
+                    <requiring on="userLevel">userLevel.id == 'ORGANIZATION'</requiring>
+                    <visibility on="userLevel">userLevel.id == 'ORGANIZATION'</visibility>
+                    <set-value on="userLevel" apply-on-init="false">return null;</set-value>
+                </dependencies>
+            </input-select>
+
         </fields>
     </form>
 </simple-page>

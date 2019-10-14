@@ -27,5 +27,11 @@
                 <eq filter-id="systemCode" domain="string[]" mapping="systemCode"></eq>
             </filters>
         </field>
+        <field id="userLevel" domain="string">
+            <select mapping="userLevel?.name"/>
+            <filters>
+                <eq filter-id="userLevel" domain="string" mapping="userLevel"></eq>
+            </filters>
+        </field>
     </fields>
 </query>
