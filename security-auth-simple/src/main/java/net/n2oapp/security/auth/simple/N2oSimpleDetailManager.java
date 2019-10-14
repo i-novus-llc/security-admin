@@ -114,6 +114,7 @@ public class N2oSimpleDetailManager implements UserDetailsManager {
         UserCriteria criteria = new UserCriteria();
         criteria.setUsername(username);
         criteria.setSize(1);
+        criteria.setOrders(new ArrayList<>());
         Page<net.n2oapp.security.admin.api.model.User> users = userService.findAll(criteria);
         if (users.getTotalElements() > 1) {
             throw new IncorrectResultSizeDataAccessException(
@@ -127,6 +128,7 @@ public class N2oSimpleDetailManager implements UserDetailsManager {
         UserCriteria criteria = new UserCriteria();
         criteria.setUsername(username);
         criteria.setSize(1);
+        criteria.setOrders(new ArrayList<>());
         Page<net.n2oapp.security.admin.api.model.User> users = userService.findAll(criteria);
         if (users.getTotalElements() == 0) {
             log.debug("Query returned no results for user '" + username + "'");
@@ -152,6 +154,7 @@ public class N2oSimpleDetailManager implements UserDetailsManager {
         userForm.setPatronymic(user.getPatronymic());
         userForm.setEmail(user.getEmail());
         userForm.setIsActive(true);
+        userForm.setPasswordCheck(user.getPassword());
         return userForm;
     }
 
@@ -174,6 +177,7 @@ public class N2oSimpleDetailManager implements UserDetailsManager {
         UserCriteria criteria = new UserCriteria();
         criteria.setUsername(username);
         criteria.setSize(1);
+        criteria.setOrders(new ArrayList<>());
         Page<net.n2oapp.security.admin.api.model.User> users = userService.findAll(criteria);
         if (users.getTotalElements() > 1) {
             throw new IncorrectResultSizeDataAccessException(

@@ -33,7 +33,6 @@ public class SystemEntity {
     /**
      * Описание системы
      */
-    @NotNull
     @Column(name = "description")
     private String description;
 
