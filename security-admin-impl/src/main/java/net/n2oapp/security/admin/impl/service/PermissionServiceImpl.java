@@ -8,15 +8,16 @@ import net.n2oapp.security.admin.impl.entity.SystemEntity;
 import net.n2oapp.security.admin.impl.repository.PermissionRepository;
 import net.n2oapp.security.admin.impl.service.specification.PermissionSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 /**
  * Сервис прав доступа
@@ -68,6 +69,41 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     public List<Permission> getAllByParentIdIsNull() {
         return permissionRepository.findByParentCodeIsNull().stream().map(this::model).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Permission> getAllWithSystem(PermissionCriteria criteria) {
+        Specification<PermissionEntity> specification = new PermissionSpecifications(criteria);
+        if (criteria.getOrders() == null) {
+            criteria.setOrders(Arrays.asList(new Sort.Order(Sort.Direction.ASC, "code")));
+        } else {
+            criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "code"));
+        }
+
+        List<PermissionEntity> permissions = permissionRepository.findAll(specification, criteria).stream().collect(Collectors.toList());
+        Set<SystemEntity> systems = new HashSet<>();
+        List<Permission> modelPermissions = new ArrayList<>();
+        for (int i = 0; i < permissions.size(); i++) {
+            PermissionEntity permission = permissions.get(i);
+            if (isNull(permission.getParentCode())
+                    && nonNull(permission.getSystemCode())) {
+                Permission temp = model(permission);
+                temp.setParentCode("$" + permission.getSystemCode().getCode());
+                modelPermissions.add(temp);
+                permissions.remove(permission);
+                i--;
+                if (!systems.contains(permission.getSystemCode())) {
+                    systems.add(permission.getSystemCode());
+                    Permission pseudoPermission = new Permission();
+                    pseudoPermission.setName(permission.getSystemCode().getName());
+                    pseudoPermission.setCode("$" + permission.getSystemCode().getCode());
+                    pseudoPermission.setHasChildren(true);
+                    modelPermissions.add(pseudoPermission);
+                }
+            }
+        }
+        modelPermissions.addAll(permissions.stream().map(this::model).collect(Collectors.toList()));
+        return modelPermissions;
     }
 
     private PermissionEntity entity(Permission model) {
