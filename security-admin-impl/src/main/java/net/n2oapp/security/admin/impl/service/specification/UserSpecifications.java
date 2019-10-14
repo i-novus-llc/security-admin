@@ -1,6 +1,7 @@
 package net.n2oapp.security.admin.impl.service.specification;
 
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
+import net.n2oapp.security.admin.api.model.UserLevel;
 import net.n2oapp.security.admin.impl.entity.*;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -24,9 +25,9 @@ public class UserSpecifications implements Specification<UserEntity> {
     @Override
     public Predicate toPredicate(Root<UserEntity> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder builder) {
         Predicate predicate = builder.and();
-        if (criteria.getUsername() != null)
+        if (nonNull(criteria.getUsername()))
             predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.username), criteria.getUsername()));
-        if (criteria.getFio() != null) {
+        if (nonNull(criteria.getFio())) {
             criteria.setFio(criteria.getFio().toLowerCase().replace(" ", ""));
             predicate = builder.and(predicate,
                     builder.or(
@@ -38,14 +39,14 @@ public class UserSpecifications implements Specification<UserEntity> {
                                     builder.concat(builder.coalesce(builder.lower(builder.trim(root.get(UserEntity_.name))), ""),
                                             builder.coalesce(builder.lower(builder.trim(root.get(UserEntity_.patronymic))), ""))), criteria.getFio() + "%")));
         }
-        if (criteria.getIsActive() != null) {
+        if (nonNull(criteria.getIsActive())) {
             if (criteria.getIsActive().equals("yes")) {
                 predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.isActive), true));
             } else {
                 predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.isActive), false));
             }
         }
-        if (criteria.getRoleIds() != null && !criteria.getRoleIds().isEmpty()) {
+        if (nonNull(criteria.getRoleIds()) && !criteria.getRoleIds().isEmpty()) {
             Subquery sub = criteriaQuery.subquery(Integer.class);
             Root subRoot = sub.from(RoleEntity.class);
             ListJoin<RoleEntity, UserEntity> subUsers = subRoot.join(RoleEntity_.userList);
@@ -67,6 +68,18 @@ public class UserSpecifications implements Specification<UserEntity> {
         }
         if (criteria.getExtSys() != null) {
             predicate = builder.and(predicate, builder.equal(builder.upper(root.get(UserEntity_.extSys)), criteria.getExtSys().toUpperCase()));
+        }
+        if (nonNull(criteria.getUserLevel())) {
+            predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.userLevel), UserLevel.valueOf(criteria.getUserLevel())));
+        }
+        if (nonNull(criteria.getRegionId())) {
+            predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.region).get(RegionEntity_.id), criteria.getRegionId()));
+        }
+        if (nonNull(criteria.getDepartmentId())) {
+            predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.department).get(DepartmentEntity_.id), criteria.getDepartmentId()));
+        }
+        if (nonNull(criteria.getOrganizationId())) {
+            predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.organization).get(OrganizationEntity_.id), criteria.getOrganizationId()));
         }
         return predicate;
     }

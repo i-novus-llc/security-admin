@@ -21,6 +21,14 @@
                 <param id="passwordCheck" mapping="[0].passwordCheck" domain="string"/>
                 <param id="isActive" mapping="[0].isActive" domain="boolean" default-value="true"/>
                 <param id="roles*.id" mapping="[0].roles" domain="integer[]" required="true"/>
+                <param id="userLevel.id" mapping="[0].userLevel" domain="string"
+                       mapping-condition="${user-level.enabled}"/>
+                <param id="department.id" mapping="[0].departmentId" domain="integer"
+                       mapping-condition="${user-level.enabled}"/>
+                <param id="region.id" mapping="[0].regionId" domain="integer"
+                       mapping-condition="${user-level.enabled}"/>
+                <param id="organization.id" mapping="[0].organizationId" domain="integer"
+                       mapping-condition="${user-level.enabled}"/>
             </in-parameters>
             <out-parameters>
                 <param id="id" mapping="id"/>
@@ -49,6 +57,13 @@
                 <param id="passwordCheck" mapping="[0].passwordCheck" domain="string"/>
                 <param id="isActive" mapping="[0].isActive" domain="boolean" default-value="true"/>
                 <param id="roles*.id" mapping="[0].roles" domain="integer[]" required="true"/>
+                <param id="userLevel.id" mapping="[0].userLevel" domain="string"
+                       mapping-condition="${user-level.enabled}"/>
+                <param id="department.id" mapping="[0].departmentId" domain="string"
+                       mapping-condition="${user-level.enabled}"/>
+                <param id="region.id" mapping="[0].regionId" domain="string" mapping-condition="${user-level.enabled}"/>
+                <param id="organization.id" mapping="[0].organizationId" domain="string"
+                       mapping-condition="${user-level.enabled}"/>
             </in-parameters>
             <out-parameters>
                 <param id="id" mapping="id"/>
