@@ -198,6 +198,7 @@ public class UserServiceImpl implements UserService {
         model.setIsActive(entity.getIsActive());
         model.setExtSys(entity.getExtSys());
         model.setEmail(entity.getEmail());
+        model.setPasswordHash(entity.getPasswordHash());
         StringBuilder builder = new StringBuilder();
         if (entity.getSurname() != null) {
             builder.append(entity.getSurname()).append(" ");

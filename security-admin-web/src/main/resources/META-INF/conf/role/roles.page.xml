@@ -14,7 +14,7 @@
                 <columns>
                     <column text-field-id="name"/>
                     <column text-field-id="description"/>
-                    <column text-field-id="systemName" visible="${sec.admin.system.global}"/>
+                    <column text-field-id="systemName" visible="${sec.admin.system-enabled}"/>
                     <column text-field-id="permissionNames" label="Права доступа">
                         <list label-field-id="name"/>
                     </column>
@@ -38,7 +38,7 @@
                         <input-text id="name"/>
                         <input-text id="description"/>
                         <input-select id="system" label-field-id="name" query-id="system"
-                                      visible="${sec.admin.system.global}"/>
+                                      visible="${sec.admin.system-enabled}"/>
                         <input-select-tree id="permissions" ajax="false" checkboxes="true" label="Права доступа">
                             <inheritance-nodes parent-field-id="parentCode" label-field-id="name" value-field-id="id"
                                                query-id="${access.permission.query.id}"
