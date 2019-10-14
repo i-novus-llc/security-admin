@@ -25,17 +25,20 @@
             <input-text id="surname" required="${access.user.surname.required}" length="100"/>
             <input-text id="name" required="${access.user.name.required}" length="100"/>
             <input-text id="patronymic" length="100"/>
-            <input-select id="userLevel" query-id="userLevel" label-field-id="name" required="${user-level.enabled}"
+            <input-select id="userLevel" query-id="userLevel" label-field-id="name"
                           visible="${user-level.enabled}" label="Уровень пользователя">
             </input-select>
             <row>
                 <col size="10">
                     <input-select id="roles" type="multi" label="Роли" cache="false" required="true"
-                                  query-id="${access.role.query.id}" value-field-id="id" label-field-id="name"
+                                  query-id="roleForForm" value-field-id="id" label-field-id="name"
                                   group-field-id="systemName">
                         <dependencies>
                             <set-value on="userLevel" apply-on-init="false">return null;</set-value>
                         </dependencies>
+                        <pre-filters>
+                            <eq field-id="userLevel.id" value="{userLevel.id}"/>
+                        </pre-filters>
                     </input-select>
                 </col>
                 <col size="2">
@@ -45,8 +48,8 @@
 
             <input-select id="department" query-id="department" label-field-id="name" label="Департамент">
                 <dependencies>
-                    <requiring on="userLevel">userLevel.id == 'FEDERAL'</requiring>
-                    <visibility on="userLevel">userLevel.id == 'FEDERAL'</visibility>
+                    <visibility on="userLevel">userLevel.id == 'FEDERAL' &amp;&amp; ${user-level.show-department}
+                    </visibility>
                     <set-value on="userLevel" apply-on-init="false">return null;</set-value>
                 </dependencies>
             </input-select>

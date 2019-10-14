@@ -9,11 +9,11 @@
             <input-select id="system" label="Система" query-id="system" required="${sec.admin.system-enabled}"
                           visible="${sec.admin.system-enabled}" label-field-id="name"/>
             <input-select id="userLevel" query-id="userLevel" label-field-id="name" visible="${user-level.enabled}"
-                          required="${user-level.enabled}" label="Уровень пользователя">
+                          label="Уровень пользователя">
             </input-select>
             <input-select-tree id="permissions" ajax="false" label="Права доступа" checkboxes="true" required="true">
                 <inheritance-nodes parent-field-id="parentCode" label-field-id="name" value-field-id="id"
-                                   query-id="${access.permission.query.id}" has-children-field-id="hasChildren"
+                                   query-id="permissionForForm" has-children-field-id="hasChildren"
                                    search-field-id="name">
                 </inheritance-nodes>
                 <pre-filters>

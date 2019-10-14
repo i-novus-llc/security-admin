@@ -20,7 +20,7 @@
                 <param id="permissions*.id" mapping="[0].permissions" domain="string[]"/>
                 <param id="system.id" mapping="[0].systemCode" required="${sec.admin.system-enabled}" domain="string"/>
                 <param id="userLevel.id" mapping="[0].userLevel" domain="string"
-                       mapping-condition="${user-level.enabled}" required="${user-level.enabled}"/>
+                       mapping-condition="${user-level.enabled}"/>
             </in-parameters>
             <out-parameters>
                 <param id="id" mapping="id"/>
@@ -44,7 +44,7 @@
                 <param id="description" mapping="[0].description" domain="string"/>
                 <param id="permissions*.id" mapping="[0].permissions" domain="string[]"/>
                 <param id="userLevel.id" mapping="[0].userLevel" domain="string"
-                       mapping-condition="${user-level.enabled}" required="${user-level.enabled}"/>
+                       mapping-condition="${user-level.enabled}"/>
                 <param id="system.id" mapping="[0].systemCode" required="${sec.admin.system-enabled}" domain="string"
                        mapping-condition="${sec.admin.system-enabled}"/>
             </in-parameters>

@@ -12,6 +12,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 public class PermissionSpecifications implements Specification<PermissionEntity> {
@@ -28,9 +29,18 @@ public class PermissionSpecifications implements Specification<PermissionEntity>
             predicate = criteriaBuilder.equal(root.get(PermissionEntity_.systemCode).get(SystemEntity_.CODE),
                     criteria.getSystemCode());
 
-        if (nonNull(criteria.getUserLevel()))
+        if (nonNull(criteria.getUserLevel()) && (isNull(criteria.getForForm()) || Boolean.FALSE.equals(criteria.getForForm()))) {
             predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get(PermissionEntity_.userLevel),
                     UserLevel.valueOf(criteria.getUserLevel())));
+        }
+
+        if (Boolean.TRUE.equals(criteria.getForForm()) && nonNull(criteria.getUserLevel())) {
+            predicate = criteriaBuilder.and(predicate, criteriaBuilder.or(criteriaBuilder.equal(root.get(PermissionEntity_.userLevel),
+                    UserLevel.valueOf(criteria.getUserLevel())), criteriaBuilder.isNull(root.get(PermissionEntity_.USER_LEVEL))));
+        } else if (Boolean.TRUE.equals(criteria.getForForm())) {
+            predicate = criteriaBuilder.and(predicate, criteriaBuilder.isNull(root.get(PermissionEntity_.userLevel)));
+        }
+
 
         return predicate;
     }

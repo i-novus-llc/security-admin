@@ -55,7 +55,7 @@
 
                     </row>
                     <row>
-                        <input-select id="userLevel" label="Уровень пользователя" query-id="userLevel" visible="${user-level.enabled}"/>
+                        <!--                        <input-select id="userLevel" label="Уровень пользователя" query-id="userLevel" visible="${user-level.enabled}"/>-->
                         <input-select id="department" label="Департамент" query-id="department"
                                       visible="${user-level.value.federal}"/>
                         <input-select id="region" label="Регион" query-id="region">

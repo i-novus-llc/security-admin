@@ -9,6 +9,7 @@ import lombok.Data;
 public class PermissionCriteria extends BaseCriteria {
     private String systemCode;
     private String userLevel;
+    private Boolean forForm;
 
     public PermissionCriteria() {
 
