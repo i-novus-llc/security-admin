@@ -35,4 +35,8 @@ public class Permission {
     @JsonProperty
     @ApiModelProperty(value = "Код системы")
     private String systemCode;
+
+    @JsonProperty
+    @ApiModelProperty(value = "Уровень пользователя")
+    private UserLevel userLevel;
 }

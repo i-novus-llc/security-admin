@@ -14,7 +14,8 @@
                 <columns>
                     <column text-field-id="name"/>
                     <column text-field-id="description"/>
-                    <column text-field-id="systemName" visible="${sec.admin.system.global}"/>
+                    <column text-field-id="userLevel.name"/>
+                    <column text-field-id="systemName" visible="${sec.admin.system-enabled}"/>
                     <column text-field-id="permissionNames" label="Права доступа">
                         <list label-field-id="name"/>
                     </column>
@@ -37,15 +38,15 @@
                     <row>
                         <input-text id="name"/>
                         <input-text id="description"/>
-                        <input-select id="system" label-field-id="name" query-id="system"
-                                      visible="${sec.admin.system.global}"/>
-                        <input-select-tree id="permissions" ajax="false" checkboxes="true" label="Права доступа">
+                        <input-select-tree id="permissions" ajax="false" checkboxes="true" label="Права доступа"
+                                           group-field-id="systemCode">
                             <inheritance-nodes parent-field-id="parentCode" label-field-id="name" value-field-id="id"
                                                query-id="${access.permission.query.id}"
                                                has-children-field-id="hasChildren" search-field-id="name">
                             </inheritance-nodes>
                             <pre-filters>
                                 <eq field-id="systemCode" value="{system.id}"/>
+                                <eq field-id="userLevel" value="{userLevel.id}"/>
                             </pre-filters>
                             <dependencies>
                                 <set-value on="system" apply-on-init="false">
@@ -53,6 +54,12 @@
                                 </set-value>
                             </dependencies>
                         </input-select-tree>
+                    </row>
+                    <row>
+                        <input-select id="system" label-field-id="name" query-id="system"
+                                      visible="${sec.admin.system-enabled}"/>
+                        <!--                        <input-select id="userLevel" label-field-id="name" query-id="userLevel"-->
+                        <!--                                      visible="${user-level.enabled}" label="Уровень пользователя"/>-->
                     </row>
                 </filters>
             </table>
