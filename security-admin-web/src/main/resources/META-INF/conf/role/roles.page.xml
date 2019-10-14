@@ -58,8 +58,8 @@
                     <row>
                         <input-select id="system" label-field-id="name" query-id="system"
                                       visible="${sec.admin.system-enabled}"/>
-                        <input-select id="userLevel" label-field-id="name" query-id="userLevel"
-                                      visible="${user-level.enabled}" label="Уровень пользователя"/>
+                        <!--                        <input-select id="userLevel" label-field-id="name" query-id="userLevel"-->
+                        <!--                                      visible="${user-level.enabled}" label="Уровень пользователя"/>-->
                     </row>
                 </filters>
             </table>

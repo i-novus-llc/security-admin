@@ -86,8 +86,6 @@ public class AdminImplConfiguration {
         if (userLevelValueOrg != null && userLevelValueOrg) {
             actualUserLevels.add(UserLevel.ORGANIZATION);
         }
-        if (!actualUserLevels.isEmpty())
-            actualUserLevels.add(UserLevel.NONE);
         return new UserLevelServiceImpl(actualUserLevels);
     }
 

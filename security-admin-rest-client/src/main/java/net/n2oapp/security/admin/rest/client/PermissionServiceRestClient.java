@@ -47,7 +47,13 @@ public class PermissionServiceRestClient implements PermissionService {
         permissionCriteria.setSystemCode(criteria.getSystemCode());
         permissionCriteria.setOrders(criteria.getOrders());
         permissionCriteria.setUserLevel(criteria.getUserLevel());
+        permissionCriteria.setForForm(criteria.getForForm());
         return client.getAll(null, null, permissionCriteria).getContent();
+    }
+
+    public List<Permission> getAllForForm(PermissionCriteria criteria) {
+        criteria.setForForm(true);
+        return getAll(criteria);
     }
 
     @Override

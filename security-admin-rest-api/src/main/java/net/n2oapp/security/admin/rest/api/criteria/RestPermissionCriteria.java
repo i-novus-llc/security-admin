@@ -45,4 +45,10 @@ public class RestPermissionCriteria extends PermissionCriteria {
     public void setUserLevel(String userLevel) {
         super.setUserLevel(userLevel);
     }
+
+    @QueryParam("forForm")
+    @Override
+    public void setForForm(Boolean forForm) {
+        super.setForForm(forForm);
+    }
 }

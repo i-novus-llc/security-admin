@@ -7,6 +7,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 /**
@@ -44,9 +45,16 @@ public class RoleSpecifications implements Specification<RoleEntity> {
             predicate = builder.and(predicate, systemPredicate);
         }
 
-        if (nonNull(criteria.getUserLevel())) {
+        if (nonNull(criteria.getUserLevel()) && (isNull(criteria.getForForm()) || Boolean.FALSE.equals(criteria.getForForm()))) {
             predicate = builder.and(predicate, builder.equal(root.get(RoleEntity_.userLevel),
                     UserLevel.valueOf(criteria.getUserLevel())));
+        }
+
+        if (Boolean.TRUE.equals(criteria.getForForm()) && nonNull(criteria.getUserLevel())) {
+            predicate = builder.and(predicate, builder.or(builder.equal(root.get(RoleEntity_.userLevel),
+                    UserLevel.valueOf(criteria.getUserLevel())), builder.isNull(root.get(RoleEntity_.USER_LEVEL))));
+        } else if (Boolean.TRUE.equals(criteria.getForForm())) {
+            predicate = builder.and(predicate, builder.isNull(root.get(RoleEntity_.USER_LEVEL)));
         }
 
         return predicate;

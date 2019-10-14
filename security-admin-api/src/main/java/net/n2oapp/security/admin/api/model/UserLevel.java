@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
  * Уровень пользователей системы (подсистемы, модуля)
  */
 public enum UserLevel {
-    NONE("Не задан"),
     FEDERAL("Федеральный уровень"),
     REGIONAL("Региональный уровень"),
     ORGANIZATION("Уровень организации");
