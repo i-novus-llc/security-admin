@@ -12,8 +12,4 @@
     <include file="classpath*:/security/admin/db/client/properties.xml"/>
     <include file="classpath*:/quartz-db/changelog/quartz-init.xml"/>
 
-    <changeSet id="create_admin_new" author="rgalina">
-        <sqlFile path="create_admin.sql"/>
-    </changeSet>
-
 </databaseChangeLog>
