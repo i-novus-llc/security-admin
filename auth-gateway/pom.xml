@@ -53,6 +53,11 @@
             <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>net.n2oapp.platform</groupId>
+            <artifactId>n2o-platform-starter-loader-server</artifactId>
+        </dependency>
+
     </dependencies>
 
 
