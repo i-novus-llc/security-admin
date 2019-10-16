@@ -6,6 +6,7 @@ import net.n2oapp.security.admin.TestApplication;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
+import net.n2oapp.security.admin.rest.api.UserDetailRestService;
 import net.n2oapp.security.admin.rest.api.UserRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
 import net.n2oapp.security.admin.rest.api.criteria.RestUserDetailsToken;
@@ -45,6 +46,11 @@ public class UserRestTest {
     @Qualifier("userRestServiceJaxRsProxyClient")
     private UserRestService client;
 
+    @Autowired
+    @Qualifier("userDetailRestServiceJaxRsProxyClient")
+    private UserDetailRestService userDetailRestService;
+
+
     @Test
     public void search() throws Exception {
         List<Integer> roles = new ArrayList<>();
@@ -79,7 +85,7 @@ public class UserRestTest {
         RestUserDetailsToken token = new RestUserDetailsToken();
         token.setUsername("test");
         token.setRoleNames(Arrays.asList("code1", "code2"));
-        User user = client.loadDetails(token);
+        User user = userDetailRestService.loadDetails(token);
         assert user.getUsername().equals("test");
         assert user.getRoles().size() == 2;
         assert user.getRoles().get(0).getPermissions().size() == 2;
@@ -87,7 +93,7 @@ public class UserRestTest {
         token = new RestUserDetailsToken();
         token.setUsername("test");
         token.setRoleNames(Arrays.asList("code1"));
-        user = client.loadDetails(token);
+        user = userDetailRestService.loadDetails(token);
         assert user.getUsername().equals("test");
         assert user.getRoles().size() == 1;
         assert user.getRoles().get(0).getPermissions().size() == 2;
@@ -95,7 +101,7 @@ public class UserRestTest {
         token = new RestUserDetailsToken();
         token.setUsername("test");
         token.setRoleNames(Arrays.asList("code1", "code3"));
-        user = client.loadDetails(token);
+        user = userDetailRestService.loadDetails(token);
         assert user.getUsername().equals("test");
         assert user.getRoles().size() == 2;
         assert user.getRoles().get(0).getPermissions().size() == 2;
