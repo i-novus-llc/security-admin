@@ -1,6 +1,5 @@
-package net.n2oapp.auth.gateway.oauth.logout;
+package net.n2oapp.security.admin.auth.server.logout;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +19,6 @@ public class RedirectLogoutRequestHandler extends SimpleUrlLogoutSuccessHandler 
     @Override
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response) {
         String redirectUri = request.getParameter("redirect_uri");
-        return StringUtils.isNotEmpty(redirectUri) ? targetUrl + "?redirect_uri=" + redirectUri : targetUrl;
+        return redirectUri != null && !redirectUri.isEmpty() ? targetUrl + "?redirect_uri=" + redirectUri : targetUrl;
     }
 }

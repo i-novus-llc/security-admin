@@ -1,4 +1,4 @@
-package net.n2oapp.auth.gateway.oauth;
+package net.n2oapp.security.admin.auth.server;
 
 import net.n2oapp.security.auth.common.authority.PermissionGrantedAuthority;
 import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;

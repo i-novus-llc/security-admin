@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.sso.keycloak;
 
+import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.sso.keycloak.synchronization.UserSynchronizeJob;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +34,7 @@ public class SsoKeycloakConfiguration {
     private AdminSsoKeycloakProperties properties;
 
     @Bean
-    @Primary
-    KeycloakSsoUserRoleProvider keycloakSsoUserRoleProvider(AdminSsoKeycloakProperties properties) {
+    SsoUserRoleProvider ssoUserRoleProvider(AdminSsoKeycloakProperties properties) {
         return new KeycloakSsoUserRoleProvider(properties);
     }
 

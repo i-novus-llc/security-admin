@@ -3,10 +3,10 @@ package net.n2oapp.auth.gateway;
 import net.n2oapp.auth.gateway.esia.EsiaAccessTokenProvider;
 import net.n2oapp.auth.gateway.esia.EsiaUserInfoTokenServices;
 import net.n2oapp.auth.gateway.esia.Pkcs7Util;
-import net.n2oapp.auth.gateway.oauth.GatewayAccessTokenConverter;
-import net.n2oapp.auth.gateway.oauth.UserTokenConverter;
-import net.n2oapp.auth.gateway.oauth.logout.BackChannelLogoutHandler;
 import net.n2oapp.security.admin.api.service.UserDetailsService;
+import net.n2oapp.security.admin.auth.server.GatewayAccessTokenConverter;
+import net.n2oapp.security.admin.auth.server.UserTokenConverter;
+import net.n2oapp.security.admin.auth.server.logout.BackChannelLogoutHandler;
 import net.n2oapp.security.auth.common.AuthoritiesPrincipalExtractor;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +17,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -53,8 +54,12 @@ import java.util.List;
 @Configuration
 @EnableOAuth2Client
 @EnableWebSecurity
+@ComponentScan("net.n2oapp.security.admin.auth.server")
 @Order(200)
 public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
+
+    @Value("${access.auth.login-entry-point:/}")
+    private String loginEntryPoint;
 
     @Value("${access.jwt.signing_key}")
     private String signingKey;
@@ -83,8 +88,8 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests().antMatchers("/", "/login**", "/api/**", "/css/**", "/icons/**", "/fonts/**", "/public/**", "/static/**", "/webjars/**").permitAll().anyRequest()
                 .authenticated().and().exceptionHandling()
-                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/")).and().logout()
-                .logoutSuccessUrl("/").logoutSuccessHandler(logoutSuccessHandler).permitAll().and().csrf().disable()
+                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint(loginEntryPoint)).and().logout()
+                .logoutSuccessUrl(loginEntryPoint).logoutSuccessHandler(logoutSuccessHandler).permitAll().and().csrf().disable()
                 .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
     }
 
@@ -171,9 +176,17 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public UserAccessor userAccessor() {
         return () -> {
+            String userId = "UNKNOWN";
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            net.n2oapp.security.auth.common.User user = (net.n2oapp.security.auth.common.User) auth.getPrincipal();
-            return new ru.i_novus.ms.audit.client.model.User(user.getEmail(), "UNKNOWN");
+            if (auth != null && auth.getPrincipal() != null) {
+                if (auth.getPrincipal() instanceof net.n2oapp.security.auth.common.User) {
+                    net.n2oapp.security.auth.common.User user = (net.n2oapp.security.auth.common.User) auth.getPrincipal();
+                    userId = user.getEmail();
+                } else {
+                    userId = "" + auth.getPrincipal();
+                }
+            }
+            return new ru.i_novus.ms.audit.client.model.User(userId, "UNKNOWN");
         };
     }
 
