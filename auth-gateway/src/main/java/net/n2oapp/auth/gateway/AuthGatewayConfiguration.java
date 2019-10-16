@@ -58,7 +58,7 @@ import java.util.List;
 @Order(200)
 public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
 
-    @Value("${access.login-entry-point:/}")
+    @Value("${access.auth.login-entry-point:/}")
     private String loginEntryPoint;
 
     @Value("${access.jwt.signing_key}")
