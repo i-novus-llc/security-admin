@@ -15,7 +15,7 @@
                     <column text-field-id="name"/>
                     <column text-field-id="description"/>
                     <column text-field-id="userLevel.name"/>
-                    <column text-field-id="systemName" visible="${sec.admin.system-enabled}"/>
+                    <column text-field-id="systemName" visible="${access.admin.system-enabled}"/>
                     <column text-field-id="permissionNames" label="Права доступа">
                         <list label-field-id="name"/>
                     </column>
@@ -57,9 +57,9 @@
                     </row>
                     <row>
                         <input-select id="system" label-field-id="name" query-id="system"
-                                      visible="${sec.admin.system-enabled}"/>
+                                      visible="${access.admin.system-enabled}"/>
                         <!--                        <input-select id="userLevel" label-field-id="name" query-id="userLevel"-->
-                        <!--                                      visible="${user-level.enabled}" label="Уровень пользователя"/>-->
+                        <!--                                      visible="${access.user-level.enabled}" label="Уровень пользователя"/>-->
                     </row>
                 </filters>
             </table>
