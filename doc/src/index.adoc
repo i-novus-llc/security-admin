@@ -1025,7 +1025,7 @@ insert into sec.permission(name, code) values('Право доступа к мо
 [source]
 ----
 #Отображение систем на UI
-sec.admin.system-enabled=false
+access.admin.system-enabled=true
 
 ----
 +
