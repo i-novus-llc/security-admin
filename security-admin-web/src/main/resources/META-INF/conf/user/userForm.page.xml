@@ -32,6 +32,9 @@
             <input-text id="surname" required="${access.user.surname.required}" length="100"/>
             <input-text id="name" required="${access.user.name.required}" length="100"/>
             <input-text id="patronymic" length="100"/>
+            <masked-input id="snils" mask="999-999-999 99">
+                <validations white-list="snilsValidation"/>
+            </masked-input>
             <input-select id="userLevel" query-id="userLevel" label-field-id="name"
                           visible="${user-level.enabled}" label="Уровень пользователя">
             </input-select>
