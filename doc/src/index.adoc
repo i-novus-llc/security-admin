@@ -1,4 +1,3 @@
-
 = Документация
 :toc:
 :toclevels: 3
@@ -1026,7 +1025,7 @@ insert into sec.permission(name, code) values('Право доступа к мо
 |===
 |Код|Тип|Описание
 
-|sec.admin.system-enabled
+|access.system.enabled=true
 |boolean
 |Отображение систем на UI
 

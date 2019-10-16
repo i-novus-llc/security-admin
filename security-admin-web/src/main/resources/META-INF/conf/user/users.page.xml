@@ -35,7 +35,7 @@
                     <row>
                         <input-text id="username"/>
                         <input-text id="fio" class="n2o-control-10"/>
-                        <input-select id="system" label="Система" visible="${sec.admin.system-enabled}"
+                        <input-select id="system" label="Система" visible="${access.system.enabled}"
                                       query-id="system"/>
                     </row>
                     <row>
@@ -55,18 +55,18 @@
 
                     </row>
                     <row>
-                        <!--                        <input-select id="userLevel" label="Уровень пользователя" query-id="userLevel" visible="${user-level.enabled}"/>-->
+                        <!--                        <input-select id="userLevel" label="Уровень пользователя" query-id="userLevel" visible="${access.level.enabled}"/>-->
                         <input-select id="department" label="Департамент" query-id="department"
-                                      visible="${user-level.value.federal}"/>
+                                      visible="${access.level.federal}"/>
                         <input-select id="region" label="Регион" query-id="region">
                             <dependencies>
-                                <visibility apply-on-init="true">${user-level.value.regional} ||
-                                    ${user-level.value.org}
+                                <visibility apply-on-init="true">${access.level.regional} ||
+                                    ${access.level.org}
                                 </visibility>
                             </dependencies>
                         </input-select>
                         <input-select id="organization" label-field-id="shortName" label="Организация"
-                                      query-id="organization" visible="${user-level.value.org}"/>
+                                      query-id="organization" visible="${access.level.org}"/>
                     </row>
                     <input-text id="isActive" visible="false">
                         <dependencies>
