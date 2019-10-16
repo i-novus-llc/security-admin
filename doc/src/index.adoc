@@ -1021,15 +1021,36 @@ insert into sec.permission(name, code) values('Право доступа к мо
 
 В этом разделе рассказывается про настройки которые влияют на работу UI и Системы.
 
-. Задайте следующие настройки в файле `application.properties`:
-+
-[source]
-----
-#Отображение систем на UI
-sec.admin.system-enabled=false
+.Настройки в файле  `application.properties`
+[cols="2,1,4"]
+|===
+|Код|Тип|Описание
 
-----
-+
+|sec.admin.system-enabled
+|boolean
+|Отображение систем на UI
+
+|access.auth.login-entry-point
+|string
+|Адрес точки авторизации
+
+|access.esia.path-to-keystore
+|string
+|Путь к хранилищу ключей ЕСИА
+
+|access.esia.key-alias
+|string
+|Альяс ключа в хранилище ключей ЕСИА
+
+|access.esia.key-store-password
+|string
+|Пароль для доступа к альясу
+
+|audit.client.apiUrl
+|string
+|Адрес сервиса аудита
+
+|===
 
 == Кастомизация
 В этом разделе рассказывается как настроить внешний вид страниц администрирования и аутентификации под стиль Вашей системы.
