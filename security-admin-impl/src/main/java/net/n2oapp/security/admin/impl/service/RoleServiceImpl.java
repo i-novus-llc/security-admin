@@ -101,8 +101,9 @@ public class RoleServiceImpl implements RoleService {
             entity.setUserLevel(UserLevel.valueOf(model.getUserLevel()));
         if (model.getSystemCode() != null)
             entity.setSystemCode(new SystemEntity(model.getSystemCode()));
+
         if (model.getPermissions() != null) {
-            entity.setPermissionList(model.getPermissions().stream().map(PermissionEntity::new).collect(Collectors.toList()));
+            entity.setPermissionList(model.getPermissions().stream().filter(s -> !s.startsWith("$")).map(PermissionEntity::new).collect(Collectors.toList()));
         }
         return entity;
     }
