@@ -6,10 +6,10 @@
             <input-text id="name" label="Название"/>
             <input-text id="code" label="Код" enabled="false"/>
             <input-text id="description" label="Описание"/>
-            <input-select id="system" label="Система" query-id="system" required="${access.admin.system-enabled}"
-                          visible="${access.admin.system-enabled}" label-field-id="name"/>
+            <input-select id="system" label="Система" query-id="system" required="${access.system.enabled}"
+                          visible="${access.system.enabled}" label-field-id="name"/>
             <input-select id="userLevel" query-id="userLevel" label-field-id="name"
-                          visible="${access.user-level.enabled}"
+                          visible="${access.level.enabled}"
                           label="Уровень пользователя">
             </input-select>
             <input-select-tree id="permissions" ajax="false" label="Права доступа" checkboxes="true" required="true">
