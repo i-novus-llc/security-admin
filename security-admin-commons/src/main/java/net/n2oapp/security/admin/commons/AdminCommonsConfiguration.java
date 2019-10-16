@@ -21,9 +21,6 @@ import java.util.Properties;
 @ComponentScan("net.n2oapp.security.admin.commons")
 public class AdminCommonsConfiguration {
 
-    @Value("${sec.password.generate.length}")
-    private Integer passwordGeneratorLength;
-
     @Value("${sec.mail.host}")
     private String mailHost;
 
@@ -45,9 +42,7 @@ public class AdminCommonsConfiguration {
 
     @Bean
     public PasswordGenerator passwordGenerator() {
-        PasswordGenerator passwordGenerator = new PasswordGenerator();
-        passwordGenerator.setLength(passwordGeneratorLength);
-        return passwordGenerator;
+        return new PasswordGenerator();
     }
 
     @Bean
