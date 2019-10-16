@@ -63,4 +63,11 @@ public interface PermissionService {
      * @return Страница найденных корневых прав доступа
      */
     List<Permission> getAllByParentIdIsNull();
+
+    /**
+     * Найти все права доступаии с группировкой по системам
+     *
+     * @return Страница найденных прав доступа
+     */
+    List<Permission> getAllWithSystem(PermissionCriteria criteria);
 }

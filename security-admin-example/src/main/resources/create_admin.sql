@@ -22,6 +22,6 @@ INSERT INTO sec.role_permission(permission_code, role_id) VALUES('sec.admin.syst
 INSERT INTO sec.role_permission(permission_code, role_id) VALUES('sec.admin.system.edit',(SELECT id FROM sec.role WHERE code='sec.admin'));
 INSERT INTO sec.role_permission(permission_code, role_id) VALUES('sec.admin.system',(SELECT id FROM sec.role WHERE code='sec.admin'));
 
-INSERT INTO sec.user (id,username,name,surname,patronymic,email,is_active,password,ext_uid) VALUES (1,'admin','Администратор','Администраторов','Администраторович','aadmin@test.adm',TRUE,'$2a$10$.aw1JNVIJRFl/BUMX2mDO.O7nRxzsxUK3gxbvLr.Lfgzd6xmvYnfq','2ab6fe13-8f05-4c89-a6c8-bcfb9deeccf1');
+INSERT INTO sec.user(id,username,name,email,is_active,password,ext_uid) VALUES (1,'admin','Администратор','aadmin@test.adm',TRUE,'$2a$10$.aw1JNVIJRFl/BUMX2mDO.O7nRxzsxUK3gxbvLr.Lfgzd6xmvYnfq','2ab6fe13-8f05-4c89-a6c8-bcfb9deeccf1');
 
 INSERT INTO sec.user_role (user_id,role_id) VALUES (1,(SELECT id FROM sec.role WHERE code='sec.admin'));

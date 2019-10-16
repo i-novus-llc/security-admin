@@ -21,7 +21,7 @@
 
         <dependency>
             <groupId>net.n2oapp.framework.security</groupId>
-            <artifactId>security-auth-common</artifactId>
+            <artifactId>security-admin-auth-server</artifactId>
             <version>${project.version}</version>
         </dependency>
 

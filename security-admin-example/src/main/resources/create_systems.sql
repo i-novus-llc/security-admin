@@ -1,2 +1,2 @@
-INSERT INTO sec.system (code,name,description) VALUES ('system1','Система 1','Тестовая система №1'),
-                                                          ('system2','Система 2','Тестовая система №2');
+INSERT INTO sec.system (code,name,description) VALUES ('test_system','Тестовая система','Тестовая система'),
+                                                          ('access','Подсистема безопасности и авторизации','Единая подсистема безопасности и авторизации');
