@@ -5,7 +5,7 @@
 [source]
 ----
 #Отображение систем на UI
-access.admin.system-enabled=true
+access.system.enabled=true
 ----
 
 == Запуск
@@ -14,7 +14,7 @@ access.admin.system-enabled=true
 ----
 java -jar security-admin-example.jar
 
-java -jar security-admin-example.jar --access.admin.system-enabled=false
+java -jar security-admin-example.jar --access.system.enabled=false
 ----
 
 == Аккаунт администратора
