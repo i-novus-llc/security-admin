@@ -91,6 +91,13 @@ public class UserServiceImplTest {
         assertThat(thrown).isInstanceOf(UserException.class);
         assertEquals("exception.passwordLength", thrown.getMessage());
         thrown = catchThrowable(() -> {
+            user.setPassword("password ");
+            user.setPasswordCheck("password ");
+            service.update(form(user));
+        });
+        assertThat(thrown).isInstanceOf(UserException.class);
+        assertEquals("exception.wrongSymbols", thrown.getMessage());
+        thrown = catchThrowable(() -> {
             user.setPassword("userpassword");
             user.setPasswordCheck("userpassword");
             service.update(form(user));
