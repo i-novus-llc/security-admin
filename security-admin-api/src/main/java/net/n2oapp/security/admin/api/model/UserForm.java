@@ -40,9 +40,6 @@ public class UserForm {
     private String patronymic;
 
     @ApiModelProperty(value = "Пароль")
-    private String newPassword;
-
-    @ApiModelProperty(value = "Пароль")
     private String password;
 
     @ApiModelProperty(value = "Пароль")
