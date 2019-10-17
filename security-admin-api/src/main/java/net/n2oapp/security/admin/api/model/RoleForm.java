@@ -35,4 +35,7 @@ public class RoleForm {
     @ApiModelProperty(value = "Код системы")
     private String systemCode;
 
+    @ApiModelProperty(value = "Уровень пользователя")
+    private String userLevel;
+
 }

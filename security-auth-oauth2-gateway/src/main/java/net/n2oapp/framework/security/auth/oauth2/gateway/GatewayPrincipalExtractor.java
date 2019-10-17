@@ -29,6 +29,7 @@ public class GatewayPrincipalExtractor implements PrincipalExtractor, Authoritie
 
     @Override
     public Object extractPrincipal(Map<String, Object> map) {
+        //todo учесть что параметры в кейклок могут быть названы по разному, смотри AuthoritiesPrincipalExtractor
         return new User((String) map.get(USERNAME), "N/A", extractAuthorities(map), (String) map.get(SURNAME), (String) map.get(NAME),
                 (String) map.get(PATRONYMIC), (String) map.get(EMAIL));
     }

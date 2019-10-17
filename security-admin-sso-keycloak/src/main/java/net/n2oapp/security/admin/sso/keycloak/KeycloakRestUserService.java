@@ -159,7 +159,12 @@ public class KeycloakRestUserService {
             roles.forEach(r -> {
                if (r.getId() == null) {
                    RoleRepresentation byName = roleService.getByName(r.getName());
-                   r.setId(byName.getId());
+                   if (byName == null) {
+                       String newRoleId = roleService.createRole(r);
+                       r.setId(newRoleId);
+                   } else {
+                       r.setId(byName.getId());
+                   }
                }
             });
             final String serverUrl = String.format(USER_ROLES, properties.getServerUrl(), properties.getRealm(), userGuid);

@@ -3,7 +3,7 @@
        object-id="${access.permission.object.id}"
        name="Права доступа">
     <list count-mapping="#this.size()" result-mapping="#this">
-        <java method="getAll" class="net.n2oapp.security.admin.api.service.PermissionService">
+        <java method="getAllWithSystem" class="net.n2oapp.security.admin.api.service.PermissionService">
             <spring/>
             <arguments>
                 <argument class="net.n2oapp.security.admin.api.criteria.PermissionCriteria" type="criteria"/>
@@ -25,6 +25,12 @@
             <select mapping="systemCode"/>
             <filters>
                 <eq filter-id="systemCode" domain="string[]" mapping="systemCode"></eq>
+            </filters>
+        </field>
+        <field id="userLevel" domain="string">
+            <select mapping="userLevel?.name"/>
+            <filters>
+                <eq filter-id="userLevel" domain="string" mapping="userLevel"></eq>
             </filters>
         </field>
     </fields>

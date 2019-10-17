@@ -67,4 +67,32 @@ public class RestUserCriteria extends UserCriteria {
     public void setOrders(List<Sort.Order> orders) {
         super.setOrders(orders);
     }
+
+    @QueryParam("regionId")
+    @Override
+    @ApiParam(value = "id региона")
+    public void setRegionId(Integer regionId) {
+        super.setRegionId(regionId);
+    }
+
+    @QueryParam("organizationId")
+    @Override
+    @ApiParam(value = "id организации")
+    public void setOrganizationId(Integer organizationId) {
+        super.setOrganizationId(organizationId);
+    }
+
+    @QueryParam("departmentId")
+    @Override
+    @ApiParam(value = "id департамента")
+    public void setDepartmentId(Integer departmentId) {
+        super.setDepartmentId(departmentId);
+    }
+
+    @QueryParam("userLevel")
+    @Override
+    @ApiParam(value = "Уровень пользователя")
+    public void setUserLevel(String userLevel) {
+        super.setUserLevel(userLevel);
+    }
 }

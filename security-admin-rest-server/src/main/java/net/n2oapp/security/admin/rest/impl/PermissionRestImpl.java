@@ -43,4 +43,9 @@ public class PermissionRestImpl implements PermissionRestService {
     public void delete(String code) {
         service.delete(code);
     }
+
+    @Override
+    public Page<Permission> getAllWithSystem(RestPermissionCriteria criteria) {
+        return new PageImpl<>(service.getAllWithSystem(criteria));
+    }
 }

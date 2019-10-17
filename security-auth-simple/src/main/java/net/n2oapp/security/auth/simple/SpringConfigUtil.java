@@ -30,7 +30,7 @@ public class SpringConfigUtil {
 
     public static HttpSecurity configureLogout(LogoutConfigurer<HttpSecurity> logout) throws Exception {
         return logout.logoutUrl("/logout").permitAll()
-                .logoutSuccessUrl("/")
+                .logoutSuccessUrl("/login")
                 .deleteCookies("JSESSIONID")
                 .and().rememberMe().key("uniqueKey").and();
     }
