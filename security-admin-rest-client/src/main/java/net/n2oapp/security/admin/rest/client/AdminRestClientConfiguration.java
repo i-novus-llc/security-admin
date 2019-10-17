@@ -1,7 +1,6 @@
 package net.n2oapp.security.admin.rest.client;
 
 import net.n2oapp.platform.jaxrs.autoconfigure.EnableJaxRsProxyClient;
-import net.n2oapp.security.admin.api.service.UserLevelService;
 import net.n2oapp.security.admin.rest.api.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -10,8 +9,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableJaxRsProxyClient(
         classes = {UserRestService.class, RoleRestService.class, PermissionRestService.class,
-                ApplicationSystemRestService.class, ClientRestService.class, UserLevelRestService.class,
-        RegionRestService.class, OrganizationRestService.class, DepartmentRestService.class},
+                ApplicationSystemRestService.class, ClientRestService.class, UserDetailRestService.class,
+                RegionRestService.class, OrganizationRestService.class, DepartmentRestService.class, UserLevelRestService.class},
         address = "${access.service.url}")
 public class AdminRestClientConfiguration {
 
@@ -21,7 +20,7 @@ public class AdminRestClientConfiguration {
     }
 
     @Bean
-    public UserDetailsServiceRestClient userDetailsService(@Qualifier("userRestServiceJaxRsProxyClient") UserRestService client) {
+    public UserDetailsServiceRestClient userDetailsService(@Qualifier("userDetailRestServiceJaxRsProxyClient") UserDetailRestService client) {
         return new UserDetailsServiceRestClient(client);
     }
 
@@ -39,6 +38,7 @@ public class AdminRestClientConfiguration {
     public DepartmentServiceRestClient departmentService(@Qualifier("departmentRestServiceJaxRsProxyClient") DepartmentRestService client) {
         return new DepartmentServiceRestClient(client);
     }
+
     @Bean
     public OrganizationServiceRestClient organizationService(@Qualifier("organizationRestServiceJaxRsProxyClient") OrganizationRestService client) {
         return new OrganizationServiceRestClient(client);
@@ -64,5 +64,4 @@ public class AdminRestClientConfiguration {
     public ClientServiceRestClient clientService(@Qualifier("clientRestServiceJaxRsProxyClient") ClientRestService client) {
         return new ClientServiceRestClient(client);
     }
-
 }
