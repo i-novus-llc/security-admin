@@ -45,4 +45,8 @@ public class Role {
     @JsonProperty
     @ApiModelProperty(value = "Имя с системой")
     private String nameWithSystem;
+
+    @JsonProperty
+    @ApiModelProperty(value = "Уровень пользователя")
+    private UserLevel userLevel;
 }

@@ -31,6 +31,11 @@
 
         <dependency>
             <groupId>net.n2oapp.platform</groupId>
+            <artifactId>n2o-platform-starter-loader-server</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-i18n-commons</artifactId>
         </dependency>
 
@@ -58,14 +63,8 @@
         </dependency>
 
         <dependency>
-            <groupId>net.n2oapp.platform</groupId>
-            <artifactId>n2o-platform-starter-loader-server</artifactId>
-        </dependency>
-
-        <!-- liquibase -->
-        <dependency>
-            <groupId>org.liquibase</groupId>
-            <artifactId>liquibase-core</artifactId>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
         </dependency>
 
 

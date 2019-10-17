@@ -102,6 +102,11 @@ public class PermissionServiceSql implements PermissionService {
                 new MapSqlParameterSource(), (resultSet, i) -> model(resultSet));
     }
 
+    @Override
+    public List<Permission> getAllWithSystem(PermissionCriteria criteria) {
+        return null;
+    }
+
     private Permission model(ResultSet resultSet) throws SQLException {
         if (resultSet == null) return null;
         Permission permission = new Permission();

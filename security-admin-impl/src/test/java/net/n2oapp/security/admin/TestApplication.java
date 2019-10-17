@@ -7,10 +7,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
-import ru.inovus.ms.rdm.service.api.DraftService;
-import ru.inovus.ms.rdm.service.api.PublishService;
-import ru.inovus.ms.rdm.service.api.RefBookService;
-import ru.inovus.ms.rdm.service.api.VersionService;
+import ru.inovus.ms.rdm.api.service.DraftService;
+import ru.inovus.ms.rdm.api.service.PublishService;
+import ru.inovus.ms.rdm.api.service.RefBookService;
+import ru.inovus.ms.rdm.api.service.VersionService;
 
 /**
  * Стартовая точка запуска Spring Boot

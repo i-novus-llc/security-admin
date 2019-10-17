@@ -1,4 +1,4 @@
-package net.n2oapp.auth.gateway.sheduled;
+package net.n2oapp.auth.gateway.scheduled;
 
 import net.n2oapp.security.admin.api.service.ApplicationSystemExportService;
 import org.quartz.Job;
@@ -26,5 +26,4 @@ public class ApplicationSystemExportJob implements Job {
         service.exportApplications();
         logger.info("Applications export is completed");
     }
-
 }

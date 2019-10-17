@@ -46,7 +46,14 @@ public class PermissionServiceRestClient implements PermissionService {
         permissionCriteria.setSize(criteria.getPageSize());
         permissionCriteria.setSystemCode(criteria.getSystemCode());
         permissionCriteria.setOrders(criteria.getOrders());
+        permissionCriteria.setUserLevel(criteria.getUserLevel());
+        permissionCriteria.setForForm(criteria.getForForm());
         return client.getAll(null, null, permissionCriteria).getContent();
+    }
+
+    public List<Permission> getAllForForm(PermissionCriteria criteria) {
+        criteria.setForForm(true);
+        return getAllWithSystem(criteria);
     }
 
     @Override
@@ -57,5 +64,17 @@ public class PermissionServiceRestClient implements PermissionService {
     @Override
     public List<Permission> getAllByParentIdIsNull() {
         return client.getAll(null, true, new RestPermissionCriteria()).getContent();
+    }
+
+    @Override
+    public List<Permission> getAllWithSystem(PermissionCriteria criteria) {
+        RestPermissionCriteria permissionCriteria = new RestPermissionCriteria();
+        permissionCriteria.setPage(criteria.getPageNumber());
+        permissionCriteria.setSize(criteria.getPageSize());
+        permissionCriteria.setSystemCode(criteria.getSystemCode());
+        permissionCriteria.setOrders(criteria.getOrders());
+        permissionCriteria.setUserLevel(criteria.getUserLevel());
+        permissionCriteria.setForForm(criteria.getForForm());
+        return client.getAllWithSystem(permissionCriteria).getContent();
     }
 }

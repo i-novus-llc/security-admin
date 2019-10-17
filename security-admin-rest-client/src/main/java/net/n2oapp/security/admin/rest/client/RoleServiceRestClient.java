@@ -49,8 +49,16 @@ public class RoleServiceRestClient implements RoleService {
         roleCriteria.setPermissionCodes(criteria.getPermissionCodes());
         roleCriteria.setSystemCodes(criteria.getSystemCodes());
         roleCriteria.setOrders(criteria.getOrders());
+        roleCriteria.setUserLevel(criteria.getUserLevel());
+        roleCriteria.setForForm(criteria.getForForm());
         return client.findAll(roleCriteria);
     }
+
+    public Page<Role> findAllForForm(RoleCriteria criteria) {
+        criteria.setForForm(true);
+        return findAll(criteria);
+    }
+
 
     @Override
     public Integer countUsersWithRole(Integer roleId) {

@@ -60,4 +60,18 @@ public class RestRoleCriteria extends RoleCriteria {
     public void setSystemCodes(List<String> systemCodes) {
         super.setSystemCodes(systemCodes);
     }
+
+    @QueryParam("userLevel")
+    @Override
+    @ApiParam(value = "Уровень пользователя")
+    public void setUserLevel(String userLevel) {
+        super.setUserLevel(userLevel);
+    }
+
+    @QueryParam("forForm")
+    @Override
+    public void setForForm(Boolean forForm) {
+        super.setForForm(forForm);
+    }
+
 }
