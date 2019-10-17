@@ -105,7 +105,7 @@
 
     <validations>
         <condition id="usernameValidation" severity="danger" message="Неверное имя" on="username">
-            <![CDATA[
+                <![CDATA[
                     if (typeof username != 'undefined' && username != null && username != '') {
                         var regex = new RegExp('${sec.validation.username.regexp}');
                         return regex.test(username);
@@ -122,22 +122,56 @@
                 ]]>
         </condition>
 
-        <condition id="passwordValidation" severity="danger" on="password"
-                   message="Неверный формат пароля" field-id="password">
+        <condition id="passwordCorrectSymbolsValidation" severity="danger" on="password"
+                   message="Пароль содержит некорректные символы" field-id="password">
                 <![CDATA[
                     if (typeof password != 'undefined' && password != null && password != '') {
-                        var regex = new RegExp('${sec.validation.password.regexp}');
+                        var regex = new RegExp('^[0-9a-zA-Z@%+\\\\/\'!#$^?:,(){}[\\]~\\-_.]+$');
+                        return regex.test(password)
+                    } else return true;
+                ]]>
+        </condition>
+
+        <condition id="passwordLowerCaseValidation" severity="danger" on="password"
+                   message="Отсутствуют строчные буквы" field-id="password">
+                <![CDATA[
+                    if (typeof password != 'undefined' && password != null && password != '' &&
+                    ${access.password.lower-case-required}) {
+                        var regex = new RegExp('.*[a-z].*');
                         return regex.test(password);
                     } else return true;
                 ]]>
         </condition>
 
-        <condition id="newPasswordValidation" severity="danger" on="newPassword"
-                   message="Неверный формат пароля" field-id="newPassword">
-            <![CDATA[
-                    if (typeof newPassword != 'undefined' && newPassword != null && newPassword != '') {
-                        var regex = new RegExp('${sec.validation.password.regexp}');
-                        return regex.test(newPassword);
+        <condition id="passwordUpperCaseValidation" severity="danger" on="password"
+                   message="Отсутствуют прописные буквы" field-id="password">
+                <![CDATA[
+                    if (typeof password != 'undefined' && password != null && password != '' &&
+                    ${access.password.upper-case-required}) {
+                        var regex = new RegExp('.*[A-Z].*');
+                        return regex.test(password);
+                    } else return true;
+                ]]>
+        </condition>
+
+        <condition id="passwordDigitsValidation" severity="danger" on="password"
+                   message="Отсутствуют цифры" field-id="password">
+                <![CDATA[
+                    if (typeof password != 'undefined' && password != null && password != '' &&
+                    ${access.password.numbers-required}) {
+                        var regex = new RegExp('.*[0-9].*');
+                        return regex.test(password);
+                    } else return true;
+                ]]>
+        </condition>
+
+        <condition id="passwordSpecialSymbolsValidation" severity="danger" on="password"
+                   message="Отсутствуют спецсимволы" field-id="password">
+                <![CDATA[
+                    if (typeof password != 'undefined' && password != null && password != '' &&
+                    ${access.password.special-symbols-required}) {
+                        var regex = new RegExp('.*[@%+\\\\/\'!#$^?:,(){}[\\]~\\-_.].*');
+                        return regex.test(password);
                     } else return true;
                 ]]>
         </condition>
@@ -147,16 +181,7 @@
                    message="Некорректная длина пароля">
                 <![CDATA[
                     if (typeof password != 'undefined' && password != null && password != '') {
-                        return password.length >= ${sec.validation.password.length}
-                     } else return true;
-                ]]>
-        </condition>
-        <condition id="newPasswordLengthValidation" severity="danger"
-                   on="newPassword" field-id="newPassword"
-                   message="Некорректная длина пароля">
-                <![CDATA[
-                    if (typeof newPassword != 'undefined' && newPassword != null && newPassword != '') {
-                        return newPassword.length >= ${sec.validation.password.length}
+                        return password.length >= ${access.password.length}
                      } else return true;
                 ]]>
         </condition>
@@ -168,17 +193,6 @@
                     if (typeof password != 'undefined' && password != null && password != ''
                       && typeof passwordCheck != 'undefined') {
                         return passwordCheck === password;
-                     } else return true;
-                ]]>
-        </condition>
-
-        <condition id="newPasswordCheckValidation" severity="danger"
-                   on="passwordCheck,newPassword" field-id="passwordCheck"
-                   message="Введённые пароли не совпадают">
-                <![CDATA[
-                    if (typeof newPassword != 'undefined' && newPassword != null && newPassword != ''
-                      && typeof passwordCheck != 'undefined') {
-                        return passwordCheck === newPassword;
                      } else return true;
                 ]]>
         </condition>

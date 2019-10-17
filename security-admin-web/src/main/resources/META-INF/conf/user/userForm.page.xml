@@ -15,7 +15,9 @@
                           required="${access.user.password.input}"
                           visible="${access.user.password.input}"
                           label="Пароль" eye="false">
-                    <validations white-list="passwordLengthValidation,passwordValidation"/>
+                    <validations white-list="passwordLengthValidation,passwordCorrectSymbolsValidation,
+                                             passwordLowerCaseValidation, passwordUpperCaseValidation,
+                                             passwordDigitsValidation, passwordSpecialSymbolsValidation"/>
                 </password>
                 <password id="passwordCheck"
                           required="${access.user.password.input}"

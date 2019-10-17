@@ -13,7 +13,7 @@
             <row>
                 <password id="password" label="Новый пароль"
                           visible="${access.user.password.editable}" eye="false">
-                    <validations white-list="newPasswordLengthValidation,newPasswordValidation"/>
+                    <validations white-list="passwordLengthValidation,passwordLowerCaseValidation,passwordUpperCaseValidation,passwordDigitsValidation,passwordSpecialSymbolsValidation,passwordCorrectSymbolsValidation"/>
                 </password>
                 <password id="passwordCheck" label="Подтвердить пароль"
                           visible="${access.user.password.editable}" eye="false">
