@@ -112,8 +112,8 @@ public class UserServiceSql implements UserService {
         userValidations.checkUsernameUniq(user.getId(), getByUsername(user.getUsername()));
         userValidations.checkUsername(user.getUsername());
         userValidations.checkEmail(user.getEmail());
-        if (user.getNewPassword() != null) {
-            userValidations.checkPassword(user.getNewPassword(), user.getPasswordCheck(), user.getId());
+        if (user.getPassword() != null) {
+            userValidations.checkPassword(user.getPassword(), user.getPasswordCheck(), user.getId());
         }
         transactionTemplate.execute(transactionStatus -> {
             MapSqlParameterSource namedParameters =
@@ -125,10 +125,10 @@ public class UserServiceSql implements UserService {
                             .addValue("patronymic", user.getPatronymic())
                             .addValue("isActive", user.getIsActive())
                             .addValue("extUid", user.getExtUid());
-            if (user.getNewPassword() == null) {
+            if (user.getPassword() == null) {
                 jdbcTemplate.update(SqlUtil.getResourceFileAsString(UPDATE_USER_WITHOUT_PASS), namedParameters);
             } else {
-                namedParameters.addValue("password", passwordEncoder.encode(user.getNewPassword()));
+                namedParameters.addValue("password", passwordEncoder.encode(user.getPassword()));
                 jdbcTemplate.update(SqlUtil.getResourceFileAsString(UPDATE_USER), namedParameters);
             }
             jdbcTemplate.update(SqlUtil.getResourceFileAsString(DELETE_USER_ROLE), namedParameters);

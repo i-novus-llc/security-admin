@@ -53,7 +53,7 @@
                 <param id="surname" mapping="[0].surname" domain="string" required="true"/>
                 <param id="name" mapping="[0].name" domain="string" required="true"/>
                 <param id="patronymic" mapping="[0].patronymic" domain="string"/>
-                <param id="newPassword" mapping="[0].newPassword" domain="string"/>
+                <param id="password" mapping="[0].password" domain="string"/>
                 <param id="passwordCheck" mapping="[0].passwordCheck" domain="string"/>
                 <param id="isActive" mapping="[0].isActive" domain="boolean" default-value="true"/>
                 <param id="roles*.id" mapping="[0].roles" domain="integer[]" required="true"/>

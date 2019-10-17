@@ -86,22 +86,22 @@ public class UserServiceImpl implements UserService {
         userValidations.checkUsernameUniq(user.getId(), model(userRepository.findOneByUsernameIgnoreCase(user.getUsername())));
         userValidations.checkUsername(user.getUsername());
         userValidations.checkEmail(user.getEmail());
-        if (user.getNewPassword() != null) {
-            userValidations.checkPassword(user.getNewPassword(), user.getPasswordCheck(), user.getId());
+        if (user.getPassword() != null) {
+            userValidations.checkPassword(user.getPassword(), user.getPasswordCheck(), user.getId());
         }
         UserEntity entityUser = userRepository.getOne(user.getId());
         entityUser = entityForm(entityUser, user);
         // кодируем пароль перед сохранением в бд если он изменился
-        if (user.getNewPassword() != null)
-            entityUser.setPasswordHash(passwordEncoder.encode(user.getNewPassword()));
+        if (user.getPassword() != null)
+            entityUser.setPasswordHash(passwordEncoder.encode(user.getPassword()));
         UserEntity updatedUser = userRepository.save(entityUser);
         //в провайдер отправляем незакодированный пароль, если он изменился, и отправляем null, если не изменялся пароль
         if (provider.isSupports(updatedUser.getExtSys())) {
             User ssoUser = model(updatedUser);
-            if (user.getNewPassword() == null) {
+            if (user.getPassword() == null) {
                 ssoUser.setPassword(null);
             } else {
-                ssoUser.setPassword(user.getNewPassword());
+                ssoUser.setPassword(user.getPassword());
             }
             provider.updateUser(ssoUser);
         }
