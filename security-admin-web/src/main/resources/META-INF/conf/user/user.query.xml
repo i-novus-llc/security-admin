@@ -97,6 +97,10 @@
             </filters>
         </field>
 
+        <field id="snils" domain="string" name="СНИЛС">
+            <select mapping="snils"></select>
+        </field>
+
         <field id="system" domain="object">
             <filters>
                 <eq filter-id="system.id" domain="string" mapping="systemCode"/>
