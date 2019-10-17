@@ -21,8 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Collectors;
 
-import static java.util.Objects.nonNull;
-
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
@@ -76,7 +74,7 @@ public class UserServiceImpl implements UserService {
             User ssoUser = model(savedUser);
             ssoUser.setPassword(password);
             ssoUser = provider.createUser(ssoUser);
-            if (nonNull(ssoUser) {
+            if (nonNull(ssoUser)) {
                 UserEntity changedSsoUser = entityProvider(ssoUser);
                 changedSsoUser.setPasswordHash(passwordHash);
                 savedUser = userRepository.save(changedSsoUser);
