@@ -1049,6 +1049,26 @@ insert into sec.permission(name, code) values('Право доступа к мо
 |string
 |Адрес сервиса аудита
 
+|access.level.enabled
+|boolean
+|Включено ли разделение пользователей по уровням
+
+|access.level.federal
+|boolean
+|Добавление в систему уровня пользователей Федеральный
+
+|access.level.regional
+|boolean
+|Добавление в систему уровня пользователей Региональный
+
+|access.level.org
+|boolean
+|Добавление в систему уровня пользователей Организация
+
+|access.level.department
+|boolean
+|Показывается ли поле департамент при выборе уровня пользвателя федеральный
+
 |===
 
 == Кастомизация
