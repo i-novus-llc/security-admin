@@ -45,13 +45,19 @@ public class UserForm {
     @ApiModelProperty(value = "Пароль")
     private String passwordCheck;
 
+    @ApiModelProperty(value = "Временный пароль")
+    private String temporaryPassword;
+
+    @ApiModelProperty(value = "Идет ли отправка пароля на почту")
+    private Boolean sendOnEmail;
+
     @ApiModelProperty(value = "Активен ли пользователь")
     private Boolean isActive;
 
     @ApiModelProperty(value = "Список идентификаторов ролей")
     private List<Integer> roles;
 
-    @ApiModelProperty(value = "Уровеь пользователя")
+    @ApiModelProperty(value = "Уровень пользователя")
     private String userLevel;
 
     @ApiModelProperty(value = "Код департамента")

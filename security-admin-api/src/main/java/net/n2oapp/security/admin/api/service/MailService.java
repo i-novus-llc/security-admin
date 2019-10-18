@@ -15,5 +15,7 @@ public interface MailService {
      */
 
     void sendWelcomeMail(UserForm user);
+
+    void sendResetPasswordMail(UserForm user);
 }
 

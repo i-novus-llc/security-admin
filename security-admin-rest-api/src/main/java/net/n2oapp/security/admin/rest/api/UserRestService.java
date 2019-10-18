@@ -66,4 +66,15 @@ public interface UserRestService {
     @ApiResponse(code = 200, message = "Страница пользователей")
     User loadDetails(@ApiParam(value = "Информация о пользователе") RestUserDetailsToken token);
 
+    @GET
+    @Path("/simpleDetails")
+    @ApiOperation("Загрузить простейшую информацию о пользователе (имя, почта и временный пароль)")
+    @ApiResponse(code = 200, message = "Временный пароль")
+    User loadSimpleDetails(@ApiParam(value = "Идентификатор") @QueryParam("id") Integer id);
+
+    @PUT
+    @Path("/resetPassword")
+    @ApiOperation("Сбросить пароль")
+    @ApiResponse(code = 200, message = "Пароль сброшен")
+    void resetPassword(@ApiParam(value = "Пользователь") UserForm user);
 }

@@ -4,6 +4,7 @@ import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.api.service.UserDetailsService;
 import net.n2oapp.security.admin.api.service.UserService;
+import net.n2oapp.security.admin.commons.util.PasswordGenerator;
 import net.n2oapp.security.admin.rest.api.UserRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
 import net.n2oapp.security.admin.rest.api.criteria.RestUserDetailsToken;
@@ -21,6 +22,8 @@ public class UserRestServiceImpl implements UserRestService {
     private UserService service;
     @Autowired
     private UserDetailsService userDetailsService;
+    @Autowired
+    private PasswordGenerator passwordGenerator;
 
     @Override
     public Page<User> findAll(RestUserCriteria criteria) {
@@ -56,5 +59,15 @@ public class UserRestServiceImpl implements UserRestService {
     @Override
     public User loadDetails(RestUserDetailsToken token) {
         return userDetailsService.loadUserDetails(token);
+    }
+
+    @Override
+    public User loadSimpleDetails(Integer id) {
+        return service.loadSimpleDetails(id);
+    }
+
+    @Override
+    public void resetPassword(UserForm user) {
+        service.resetPassword(user);
     }
 }
