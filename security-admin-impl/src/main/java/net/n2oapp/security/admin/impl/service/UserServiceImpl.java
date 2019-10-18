@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
             ssoUser.setPassword(password);
             ssoUser = provider.createUser(ssoUser);
             if (ssoUser != null) {
-                UserEntity changedSsoUser = entity(ssoUser);
+                UserEntity changedSsoUser = entityProvider(ssoUser);
                 changedSsoUser.setPasswordHash(passwordHash);
                 savedUser = userRepository.save(changedSsoUser);
             }
@@ -199,13 +199,11 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserEntity entityForm(UserEntity entity, UserForm model) {
-        entity.setExtUid(model.getExtUid());
         entity.setUsername(model.getUsername());
         entity.setName(model.getName());
         entity.setSurname(model.getSurname());
         entity.setPatronymic(model.getPatronymic());
         entity.setIsActive(model.getIsActive());
-        entity.setExtSys(model.getExtSys());
         entity.setEmail(model.getEmail());
         entity.setUserLevel(nonNull(model.getUserLevel()) ? UserLevel.valueOf(model.getUserLevel()) : null);
         entity.setDepartment(nonNull(model.getDepartmentId()) ? new DepartmentEntity(model.getDepartmentId()) : null);
@@ -216,26 +214,26 @@ public class UserServiceImpl implements UserService {
         return entity;
     }
 
-    private UserEntity entity(User model) {
+    private UserEntity entityProvider(User modelFromProvider) {
         UserEntity entity = new UserEntity();
-        entity.setId(model.getId());
-        entity.setExtUid(model.getExtUid());
-        entity.setUsername(model.getUsername());
-        entity.setName(model.getName());
-        entity.setSurname(model.getSurname());
-        entity.setPatronymic(model.getPatronymic());
-        entity.setIsActive(model.getIsActive());
-        entity.setExtSys(model.getExtSys());
-        entity.setEmail(model.getEmail());
-        entity.setUserLevel(model.getUserLevel());
-        if (nonNull(model.getDepartment()))
-            entity.setDepartment(new DepartmentEntity(model.getDepartment().getId()));
-        if (nonNull(model.getOrganization()))
-            entity.setOrganization(new OrganizationEntity(model.getOrganization().getId()));
-        if (nonNull(model.getRegion()))
-            entity.setRegion(new RegionEntity(model.getRegion().getId()));
-        if (model.getRoles() != null)
-            entity.setRoleList(model.getRoles().stream().map(r -> new RoleEntity(r.getId())).collect(Collectors.toList()));
+        entity.setId(modelFromProvider.getId());
+        entity.setExtUid(modelFromProvider.getExtUid());
+        entity.setUsername(modelFromProvider.getUsername());
+        entity.setName(modelFromProvider.getName());
+        entity.setSurname(modelFromProvider.getSurname());
+        entity.setPatronymic(modelFromProvider.getPatronymic());
+        entity.setIsActive(modelFromProvider.getIsActive());
+        entity.setExtSys(modelFromProvider.getExtSys());
+        entity.setEmail(modelFromProvider.getEmail());
+        entity.setUserLevel(modelFromProvider.getUserLevel());
+        if (nonNull(modelFromProvider.getDepartment()))
+            entity.setDepartment(new DepartmentEntity(modelFromProvider.getDepartment().getId()));
+        if (nonNull(modelFromProvider.getOrganization()))
+            entity.setOrganization(new OrganizationEntity(modelFromProvider.getOrganization().getId()));
+        if (nonNull(modelFromProvider.getRegion()))
+            entity.setRegion(new RegionEntity(modelFromProvider.getRegion().getId()));
+        if (modelFromProvider.getRoles() != null)
+            entity.setRoleList(modelFromProvider.getRoles().stream().map(r -> new RoleEntity(r.getId())).collect(Collectors.toList()));
         return entity;
     }
 
