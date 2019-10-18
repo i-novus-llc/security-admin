@@ -19,9 +19,16 @@
                     </column>
                     <column text-field-id="actions" label=" ">
                         <toolbar>
-                            <button id="delete" icon="fa fa-trash" label="Удалить" confirm="true" confirm-text="Вы действительно хотите удалить пользователя?">
-                                <invoke operation-id="delete"/>
-                            </button>
+                            <sub-menu label="Действие">
+                                <menu-item label="Удалить" confirm="true"
+                                           confirm-text="Вы действительно хотите удалить пользователя?">
+                                    <invoke operation-id="delete"/>
+                                </menu-item>
+                                <menu-item label="Сбросить пароль">
+                                    <show-modal page-id="passwordResetForm" upload="defaults" detail-field-id="id"
+                                                object-id="user" submit-operation-id="resetPassword"/>
+                                </menu-item>
+                            </sub-menu>
                         </toolbar>
                     </column>
                 </columns>
@@ -71,7 +78,8 @@
                     <input-text id="isActive" visible="false">
                         <dependencies>
                             <set-value on="activeList" apply-on-init="false">
-                                if ((typeof activeList == 'undefined') || (activeList == null) || (activeList.length==0)) {
+                                if ((typeof activeList == 'undefined') || (activeList == null) ||
+                                (activeList.length==0)) {
                                 return null;
                                 } else if (activeList.length == 2) {
                                 return null;
@@ -87,9 +95,9 @@
                     </input-text>
                 </filters>
                 <toolbar>
-                    <button id="create" label="Создать" type="iconAndText" icon="fa fa-plus">
+                    <button id="create" label="Создать" color="primary">
                         <show-modal page-id="userForm" submit-operation-id="create" model="filter" object-id="user"
-                                    upload="defaults" route="create" />
+                                    upload="defaults" route="create"/>
                     </button>
                 </toolbar>
             </table>

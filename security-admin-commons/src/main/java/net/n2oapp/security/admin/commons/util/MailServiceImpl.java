@@ -34,6 +34,7 @@ public class MailServiceImpl implements MailService {
     @Value("${sec.password.mail.send}")
     private Boolean sendWelcomeEmail;
 
+    // TODO - убрать строчку Пароль: ${password}
     public void sendWelcomeMail(UserForm user) {
         if (sendWelcomeEmail) {
             Map<String, String> data = new HashMap<>();
@@ -41,7 +42,8 @@ public class MailServiceImpl implements MailService {
             data.put("surname", valueOrEmpty(user.getSurname()));
             data.put("name", valueOrEmpty(user.getName()));
             data.put("patronymic", valueOrEmpty(user.getPatronymic()));
-            data.put("password", user.getPassword());
+            if (Boolean.TRUE.equals(user.getSendOnEmail()))
+                data.put("password", user.getPassword() != null ? user.getPassword() : user.getTemporaryPassword());
             data.put("email", user.getEmail());
             String subjectTemplate = mailSubject;
             MimeMessage message = emailSender.createMimeMessage();
@@ -64,6 +66,36 @@ public class MailServiceImpl implements MailService {
             } catch (MessagingException e) {
                 throw new IllegalStateException("Exception while sending mail notification to " + user.getUsername() + "\n", e);
             }
+        }
+    }
+
+    // --TODO переделать сообщение для сброса пароля
+    @Override
+    public void sendResetPasswordMail(UserForm user) {
+        Map<String, String> data = new HashMap<>();
+        data.put("username", user.getUsername());
+        data.put("password", user.getPassword() != null ? user.getPassword() : user.getTemporaryPassword());
+        data.put("email", user.getEmail());
+        String subjectTemplate = mailSubject;
+        MimeMessage message = emailSender.createMimeMessage();
+        String body = null;
+        try (InputStream inputStream = MailServiceImpl.class.getClassLoader().getResourceAsStream(welcomeUserMail);) {
+            body = StrSubstitutor.replace(IOUtils.toString(inputStream, "UTF-8"), data);
+        } catch (IOException e) {
+            throw new IllegalStateException("Exception while opening resource " + welcomeUserMail, e);
+        }
+        String subject = StrSubstitutor.replace(subjectTemplate, data);
+        MimeMessageHelper helper = null;
+        try {
+            helper = new MimeMessageHelper(message, StandardCharsets.UTF_8.name());
+            helper.setTo(user.getEmail());
+            helper.setSubject(subject);
+            helper.setText(body, true);
+            emailSender.send(message);
+        } catch (MailException exception) {
+            throw new IllegalStateException("Exception while sending mail notification to " + user.getUsername() + "\n", exception);
+        } catch (MessagingException e) {
+            throw new IllegalStateException("Exception while sending mail notification to " + user.getUsername() + "\n", e);
         }
     }
 

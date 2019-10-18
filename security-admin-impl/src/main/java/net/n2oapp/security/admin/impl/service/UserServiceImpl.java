@@ -54,8 +54,8 @@ public class UserServiceImpl implements UserService {
         userValidations.checkUsernameUniq(user.getId(), model(userRepository.findOneByUsernameIgnoreCase(user.getUsername())));
         userValidations.checkUsername(user.getUsername());
         userValidations.checkEmail(user.getEmail());
-        String password = user.getPassword();
-        if (password != null)
+        String password = (user.getPassword() != null) ? user.getPassword() : user.getTemporaryPassword();
+        if (user.getPassword() != null)
             userValidations.checkPassword(password, user.getPasswordCheck(), user.getId());
         if (password == null) {
             password = passwordGenerator.generate();
@@ -153,6 +153,49 @@ public class UserServiceImpl implements UserService {
     @Override
     public Boolean checkUniqueUsername(String username) {
         return userRepository.findOneByUsernameIgnoreCase(username) == null;
+    }
+
+    @Override
+    public User loadSimpleDetails(Integer id) {
+        User simpleUser = new User();
+
+        if (id != null) {
+            User user = getById(id);
+
+            if (user != null) {
+                simpleUser.setId(id);
+                simpleUser.setUsername(user.getUsername());
+                simpleUser.setEmail(user.getEmail());
+            }
+        }
+
+        simpleUser.setTemporaryPassword(passwordGenerator.generate());
+        return simpleUser;
+    }
+
+    @Override
+    public void resetPassword(UserForm user) {
+        // используем либо установленный пользователем, либо сгенерированный пароль
+        String password = (user.getPassword() != null) ? user.getPassword() : user.getTemporaryPassword();
+
+        if (user.getId() != null && password != null) {
+            UserEntity userEntity = userRepository.getOne(user.getId());
+
+            if (userEntity != null) {
+                userEntity.setPasswordHash(passwordEncoder.encode(password));
+                UserEntity updatedUser = userRepository.save(userEntity);
+
+                //в провайдер отправляем незакодированный пароль
+                if (provider.isSupports(updatedUser.getExtSys())) {
+                    User ssoUser = model(updatedUser);
+                    ssoUser.setPassword(password);
+                    provider.updateUser(ssoUser);
+                }
+
+                if (Boolean.TRUE.equals(user.getSendOnEmail()))
+                    mailService.sendResetPasswordMail(user);
+            }
+        }
     }
 
     private UserEntity entityForm(UserEntity entity, UserForm model) {
