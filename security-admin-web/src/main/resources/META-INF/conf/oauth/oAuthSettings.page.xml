@@ -21,7 +21,7 @@
                 </password>
 
                 <input-text id="accessTokenLifetime" label="Максимальное время действия токена (минуты)"
-                            domain="integer" default-value="1440">
+                            domain="integer">
                     <dependencies>
                         <visibility on="enableClient">
                             enableClient
@@ -30,7 +30,7 @@
                 </input-text>
 
                 <input-text id="refreshTokenLifetime" label="Максимальное время действия  refresh токена (минуты)"
-                            domain="integer" default-value="14400">
+                            domain="integer">
                     <dependencies>
                         <visibility on="enableClient">
                             enableClient
