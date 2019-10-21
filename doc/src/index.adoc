@@ -1049,6 +1049,14 @@ insert into sec.permission(name, code) values('Право доступа к мо
 |string
 |Адрес сервиса аудита
 
+|access.auth.access-token-lifetime
+|integer
+|Время жизни access токена клиента в минутах
+
+|access.auth.refresh-token-lifetime
+|integer
+|Время жизни refresh токена клиента в минутах
+
 |===
 
 == Кастомизация
