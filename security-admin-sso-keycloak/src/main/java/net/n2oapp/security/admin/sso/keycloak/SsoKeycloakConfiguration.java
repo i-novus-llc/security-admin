@@ -1,13 +1,12 @@
 package net.n2oapp.security.admin.sso.keycloak;
 
+import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.sso.keycloak.synchronization.UserSynchronizeJob;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.*;
 
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.security.oauth2.client.OAuth2RestOperations;
@@ -35,8 +34,7 @@ public class SsoKeycloakConfiguration {
     private AdminSsoKeycloakProperties properties;
 
     @Bean
-    @Primary
-    KeycloakSsoUserRoleProvider keycloakSsoUserRoleProvider(AdminSsoKeycloakProperties properties) {
+    SsoUserRoleProvider ssoUserRoleProvider(AdminSsoKeycloakProperties properties) {
         return new KeycloakSsoUserRoleProvider(properties);
     }
 
@@ -66,6 +64,7 @@ public class SsoKeycloakConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public Scheduler scheduler(SchedulerFactoryBean schedulerFactoryBean) throws SchedulerException {
         Scheduler scheduler = schedulerFactoryBean.getScheduler();
         if (properties.getSynchronizeEnabled()) {

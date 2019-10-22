@@ -11,9 +11,11 @@
     <include file="classpath*:/security/admin/db/client/changelog.xml"/>
     <include file="classpath*:/security/admin/db/client/properties.xml"/>
     <include file="quartz-db/changelog/quartz-init.xml"/>
+    <include file="rdm-sync-db/changelog/201902201337_init.xml"/>
+    <include file="rdm-sync-db/changelog/201910031038_add_mapping_version.xml"/>
 
-    <changeSet id="create_admin_new" author="rgalina">
-        <sqlFile path="create_admin.sql"/>
+    <changeSet id="edit_region_department_organization.sql" author="aarifullin">
+        <sqlFile path="db/sql/edit_region_department_organization.sql"/>
     </changeSet>
 
 </databaseChangeLog>
