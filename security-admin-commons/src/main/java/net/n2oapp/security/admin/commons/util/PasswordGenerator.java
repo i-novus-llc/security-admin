@@ -1,53 +1,69 @@
 package net.n2oapp.security.admin.commons.util;
 
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
+
 import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 /**
- * Генератор паролей
- * https://github.com/spring-projects/spring-security-oauth/blob/master/spring-security-oauth2/src/main/java/org/springframework/security/oauth2/common/util/RandomValueStringGenerator.java
+ * Генератор временных паролей
  */
+@Setter
 public class PasswordGenerator {
-    public static final String LOWERCASE_CHARACTERS = "abcdefghijklmnopqrstuvwxyz";
-    public static final String UPPERCASE_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    public static final String ALPHABETICAL_CHARACTERS = UPPERCASE_CHARACTERS + LOWERCASE_CHARACTERS;
-    public static final String DIGIT_CHARACTERS = "1234567890";
-    public static final String DEFAULT_CHARACTERS = DIGIT_CHARACTERS + ALPHABETICAL_CHARACTERS;
+    private static final String LOWERCASE_CHARACTERS = "abcdefghijklmnopqrstuvwxyz";
+    private static final String UPPERCASE_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final String DIGIT_CHARACTERS = "0123456789";
+    private static final String SPECIAL_CHARACTERS = "@%+\\/'!#$^?:,(){}[]~-_.";
+    private static final String ALL_CHARACTERS = LOWERCASE_CHARACTERS + UPPERCASE_CHARACTERS + DIGIT_CHARACTERS + SPECIAL_CHARACTERS;
 
     private Random random = new SecureRandom();
-    private int length = 6;
-    private String characters = DEFAULT_CHARACTERS;
+
+    @Value("${access.password.length}")
+    private int length;
+
+    @Value("${access.password.numbers-required}")
+    private boolean numbersRequired;
+
+    @Value("${access.password.lower-case-required}")
+    private boolean lowerCaseRequired;
+
+    @Value("${access.password.upper-case-required}")
+    private boolean upperCaseRequired;
+
+    @Value("${access.password.special-symbols-required}")
+    private boolean specialSymbolsRequired;
+
 
     /**
-     * Сгенерировать новый пароль
-     *
-     * @return Пароль
+     * Генерация пароля
+     * @return Пароль, сгенерированный согласно установленной политике паролей
      */
     public String generate() {
-        byte[] verifierBytes = new byte[length];
-        random.nextBytes(verifierBytes);
-        return getAuthorizationCodeString(verifierBytes, characters);
-    }
+        List<Character> password = new ArrayList<>(length);
 
-    protected String getAuthorizationCodeString(byte[] verifierBytes, String characters) {
-        char[] chars = new char[verifierBytes.length];
-        char[] codec = characters.toCharArray();
-        for (int i = 0; i < verifierBytes.length; i++) {
-            chars[i] = codec[((verifierBytes[i] & 0xFF) % codec.length)];
+        if (numbersRequired) {
+            password.add(DIGIT_CHARACTERS.charAt(random.nextInt(DIGIT_CHARACTERS.length())));
         }
-        return new String(chars);
-    }
+        if (lowerCaseRequired) {
+            password.add(LOWERCASE_CHARACTERS.charAt(random.nextInt(LOWERCASE_CHARACTERS.length())));
+        }
+        if (upperCaseRequired) {
+            password.add(UPPERCASE_CHARACTERS.charAt(random.nextInt(UPPERCASE_CHARACTERS.length())));
+        }
+        if (specialSymbolsRequired) {
+            password.add(SPECIAL_CHARACTERS.charAt(random.nextInt(SPECIAL_CHARACTERS.length())));
+        }
+        for (int i = 0, count = length - password.size(); i < count; i++) {
+            password.add(ALL_CHARACTERS.charAt(random.nextInt(ALL_CHARACTERS.length())));
+        }
 
-    public void setRandom(Random random) {
-        this.random = random;
-    }
-
-    public void setCharacters(String characters) {
-        this.characters = characters;
-    }
-
-    public void setLength(int length) {
-        this.length = length;
+        Collections.shuffle(password, random);
+        return password.stream().map(String::valueOf).collect(Collectors.joining());
     }
 }
 

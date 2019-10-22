@@ -19,6 +19,9 @@
                 <param id="patronymic" mapping="[0].patronymic" domain="string"/>
                 <param id="password" mapping="[0].password" domain="string" required="${access.user.password.input}"/>
                 <param id="passwordCheck" mapping="[0].passwordCheck" domain="string"/>
+                <param id="temporaryPassword" mapping="[0].temporaryPassword" domain="string" required="${access.user.password.generate}"/>
+                <param id="sendOnEmail" mapping="[0].sendOnEmail" domain="boolean"
+                       normalize="#this != null ? #this : ${access.user.email-required}"/>
                 <param id="isActive" mapping="[0].isActive" domain="boolean" default-value="true"/>
                 <param id="roles*.id" mapping="[0].roles" domain="integer[]" required="true"/>
                 <param id="userLevel.id" mapping="[0].userLevel" domain="string"
@@ -53,7 +56,7 @@
                 <param id="surname" mapping="[0].surname" domain="string" required="true"/>
                 <param id="name" mapping="[0].name" domain="string" required="true"/>
                 <param id="patronymic" mapping="[0].patronymic" domain="string"/>
-                <param id="newPassword" mapping="[0].newPassword" domain="string"/>
+                <param id="password" mapping="[0].password" domain="string"/>
                 <param id="passwordCheck" mapping="[0].passwordCheck" domain="string"/>
                 <param id="isActive" mapping="[0].isActive" domain="boolean" default-value="true"/>
                 <param id="roles*.id" mapping="[0].roles" domain="integer[]" required="true"/>
@@ -102,6 +105,28 @@
                 <param id="id" mapping="[0]" domain="integer" required="true"/>
             </in-parameters>
         </operation>
+
+        <operation id="resetPassword" success-text="Пароль сброшен">
+            <invocation>
+                <java method="resetPassword" class="net.n2oapp.security.admin.api.service.UserService">
+                    <spring/>
+                    <arguments>
+                        <argument name="userEntity" class="net.n2oapp.security.admin.api.model.UserForm"/>
+                    </arguments>
+                </java>
+            </invocation>
+            <in-parameters>
+                <param id="id" mapping="[0].id" domain="integer" required="true"/>
+                <param id="username" mapping="[0].username" domain="string" required="true"/>
+                <param id="email" mapping="[0].email" domain="string" required="true"/>
+                <param id="password" mapping="[0].password" domain="string" required="${access.user.password.input}"/>
+                <param id="passwordCheck" mapping="[0].passwordCheck" domain="string"/>
+                <param id="temporaryPassword" mapping="[0].temporaryPassword" domain="string" required="${access.user.password.generate}"/>
+                <param id="sendOnEmail" mapping="[0].sendOnEmail" domain="boolean"
+                       normalize="#this != null ? #this : ${access.user.email-required}"/>
+            </in-parameters>
+            <validations/>
+        </operation>
     </operations>
 
     <validations>
@@ -115,7 +140,7 @@
         </condition>
 
         <condition id="emailValidation" severity="danger" message="Неверный email" on="email">
-                <![CDATA[
+            <![CDATA[
                 if (typeof email != 'undefined' && email != null && email != '') {
 	                var regex = new RegExp('${sec.validation.email.regexp}');
                     return regex.test(email);
@@ -123,22 +148,56 @@
                 ]]>
         </condition>
 
-        <condition id="passwordValidation" severity="danger" on="password"
-                   message="Неверный формат пароля" field-id="password">
-                <![CDATA[
+        <condition id="passwordCorrectSymbolsValidation" severity="danger" on="password"
+                   message="Пароль содержит некорректные символы" field-id="password">
+            <![CDATA[
                     if (typeof password != 'undefined' && password != null && password != '') {
-                        var regex = new RegExp('${sec.validation.password.regexp}');
+                        var regex = new RegExp('^[0-9a-zA-Z@%+\\\\/\'!#$^?:,(){}[\\]~\\-_.]+$');
+                        return regex.test(password)
+                    } else return true;
+                ]]>
+        </condition>
+
+        <condition id="passwordLowerCaseValidation" severity="danger" on="password"
+                   message="Отсутствуют строчные буквы" field-id="password">
+            <![CDATA[
+                    if (typeof password != 'undefined' && password != null && password != '' &&
+                    ${access.password.lower-case-required}) {
+                        var regex = new RegExp('.*[a-z].*');
                         return regex.test(password);
                     } else return true;
                 ]]>
         </condition>
 
-        <condition id="newPasswordValidation" severity="danger" on="newPassword"
-                   message="Неверный формат пароля" field-id="newPassword">
+        <condition id="passwordUpperCaseValidation" severity="danger" on="password"
+                   message="Отсутствуют прописные буквы" field-id="password">
             <![CDATA[
-                    if (typeof newPassword != 'undefined' && newPassword != null && newPassword != '') {
-                        var regex = new RegExp('${sec.validation.password.regexp}');
-                        return regex.test(newPassword);
+                    if (typeof password != 'undefined' && password != null && password != '' &&
+                    ${access.password.upper-case-required}) {
+                        var regex = new RegExp('.*[A-Z].*');
+                        return regex.test(password);
+                    } else return true;
+                ]]>
+        </condition>
+
+        <condition id="passwordDigitsValidation" severity="danger" on="password"
+                   message="Отсутствуют цифры" field-id="password">
+            <![CDATA[
+                    if (typeof password != 'undefined' && password != null && password != '' &&
+                    ${access.password.numbers-required}) {
+                        var regex = new RegExp('.*[0-9].*');
+                        return regex.test(password);
+                    } else return true;
+                ]]>
+        </condition>
+
+        <condition id="passwordSpecialSymbolsValidation" severity="danger" on="password"
+                   message="Отсутствуют спецсимволы" field-id="password">
+            <![CDATA[
+                    if (typeof password != 'undefined' && password != null && password != '' &&
+                    ${access.password.special-symbols-required}) {
+                        var regex = new RegExp('.*[@%+\\\\/\'!#$^?:,(){}[\\]~\\-_.].*');
+                        return regex.test(password);
                     } else return true;
                 ]]>
         </condition>
@@ -146,18 +205,9 @@
         <condition id="passwordLengthValidation" severity="danger"
                    on="password" field-id="password"
                    message="Некорректная длина пароля">
-                <![CDATA[
+            <![CDATA[
                     if (typeof password != 'undefined' && password != null && password != '') {
-                        return password.length >= ${sec.validation.password.length}
-                     } else return true;
-                ]]>
-        </condition>
-        <condition id="newPasswordLengthValidation" severity="danger"
-                   on="newPassword" field-id="newPassword"
-                   message="Некорректная длина пароля">
-                <![CDATA[
-                    if (typeof newPassword != 'undefined' && newPassword != null && newPassword != '') {
-                        return newPassword.length >= ${sec.validation.password.length}
+                        return password.length >= ${access.password.length}
                      } else return true;
                 ]]>
         </condition>
@@ -165,21 +215,10 @@
         <condition id="passwordCheckValidation" severity="danger"
                    on="passwordCheck,password" field-id="passwordCheck"
                    message="Введённые пароли не совпадают">
-                <![CDATA[
+            <![CDATA[
                     if (typeof password != 'undefined' && password != null && password != ''
                       && typeof passwordCheck != 'undefined') {
                         return passwordCheck === password;
-                     } else return true;
-                ]]>
-        </condition>
-
-        <condition id="newPasswordCheckValidation" severity="danger"
-                   on="passwordCheck,newPassword" field-id="passwordCheck"
-                   message="Введённые пароли не совпадают">
-                <![CDATA[
-                    if (typeof newPassword != 'undefined' && newPassword != null && newPassword != ''
-                      && typeof passwordCheck != 'undefined') {
-                        return passwordCheck === newPassword;
                      } else return true;
                 ]]>
         </condition>
