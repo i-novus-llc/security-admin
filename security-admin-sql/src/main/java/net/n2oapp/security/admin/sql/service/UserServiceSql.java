@@ -243,9 +243,7 @@ public class UserServiceSql implements UserService {
                     namedParameters.addValue("password", passwordEncoder.encode(password));
                     jdbcTemplate.update(SqlUtil.getResourceFileAsString(UPDATE_USER), namedParameters);
 
-                    if (Boolean.TRUE.equals(user.getSendOnEmail()))
-                        mailService.sendResetPasswordMail(user);
-
+                    mailService.sendResetPasswordMail(user);
                     return model(user);
                 });
             }
