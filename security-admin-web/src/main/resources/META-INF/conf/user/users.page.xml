@@ -56,8 +56,13 @@
                     </row>
                     <row>
                         <!--                        <input-select id="userLevel" label="Уровень пользователя" query-id="userLevel" visible="${access.level.enabled}"/>-->
-                        <input-select id="department" label="Департамент" query-id="department"
-                                      visible="${access.level.federal}"/>
+                        <input-select id="department" label="Департамент" query-id="department">
+                            <dependencies>
+                                <visibility apply-on-init="true">${access.level.federal} &amp;&amp;
+                                    ${access.level.department}
+                                </visibility>
+                            </dependencies>
+                        </input-select>
                         <input-select id="region" label="Регион" query-id="region">
                             <dependencies>
                                 <visibility apply-on-init="true">${access.level.regional} ||
