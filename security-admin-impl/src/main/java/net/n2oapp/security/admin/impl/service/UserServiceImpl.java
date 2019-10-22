@@ -192,8 +192,7 @@ public class UserServiceImpl implements UserService {
                     provider.updateUser(ssoUser);
                 }
 
-                if (Boolean.TRUE.equals(user.getSendOnEmail()))
-                    mailService.sendResetPasswordMail(user);
+                mailService.sendResetPasswordMail(user);
             }
         }
     }

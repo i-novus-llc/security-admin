@@ -1,16 +1,19 @@
 package net.n2oapp.security.admin.commons.util;
 
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
 /**
  * Генератор временных паролей
  */
+@Setter
 public class PasswordGenerator {
     private static final String LOWERCASE_CHARACTERS = "abcdefghijklmnopqrstuvwxyz";
     private static final String UPPERCASE_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -41,7 +44,7 @@ public class PasswordGenerator {
      * @return Пароль, сгенерированный согласно установленной политике паролей
      */
     public String generate() {
-        ArrayList<Character> password = new ArrayList<>(length);
+        List<Character> password = new ArrayList<>(length);
 
         if (numbersRequired) {
             password.add(DIGIT_CHARACTERS.charAt(random.nextInt(DIGIT_CHARACTERS.length())));
