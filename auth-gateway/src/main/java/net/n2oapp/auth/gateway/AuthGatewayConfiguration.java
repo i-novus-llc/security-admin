@@ -60,6 +60,8 @@ import java.util.List;
 @Order(200)
 public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
 
+    @Value("${access.auth.login-entry-point:/}")
+    private String loginEntryPoint;
 
     @Autowired
     private OAuth2ClientContext oauth2ClientContext;
@@ -77,6 +79,9 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
     private String logoutUri;
 
     @Autowired
+    private BackChannelLogoutHandler logoutSuccessHandler;
+
+    @Autowired
     private Pkcs7Util pkcs7Util;
 
     @Override
@@ -89,8 +94,8 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
         RsaSigner signer = new RsaSigner((RSAPrivateKey) keyStoreKeyFactory.getKeyPair("gateway").getPrivate());
         http.authorizeRequests().antMatchers("/", "/login**", "/api/**", "/css/**", "/icons/**", "/fonts/**", "/public/**", "/static/**", "/webjars/**").permitAll().anyRequest()
                 .authenticated().and().exceptionHandling()
-                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/")).and().logout()
-                .logoutSuccessUrl("/").logoutSuccessHandler(new BackChannelLogoutHandler(signer, clientService, logoutUri)).permitAll().and().csrf().disable()
+                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint(loginEntryPoint)).and().logout()
+                .logoutSuccessUrl(loginEntryPoint).logoutSuccessHandler(new BackChannelLogoutHandler(signer, clientService, logoutUri)).permitAll().and().csrf().disable()
                 .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
     }
 

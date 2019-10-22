@@ -53,4 +53,16 @@ public class UserForm {
 
     @ApiModelProperty(value = "Список идентификаторов ролей")
     private List<Integer> roles;
+
+    @ApiModelProperty(value = "Уровеь пользователя")
+    private String userLevel;
+
+    @ApiModelProperty(value = "Код департамента")
+    private Integer departmentId;
+
+    @ApiModelProperty(value = "Код региона")
+    private Integer regionId;
+
+    @ApiModelProperty(value = "Код организации")
+    private Integer organizationId;
 }

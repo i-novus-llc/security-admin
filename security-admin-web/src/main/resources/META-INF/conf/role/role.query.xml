@@ -91,6 +91,16 @@
             <select mapping="system?.name"></select>
         </field>
 
+        <field id="userLevel.name" domain="string" name="Уровень пользователя">
+            <select mapping="userLevel?.desc"></select>
+        </field>
+        <field id="userLevel.id" domain="string" name="Уровень пользователя">
+            <select mapping="userLevel?.name"></select>
+            <filters>
+                <eq filter-id="userLevel.id" domain="string" mapping="userLevel"></eq>
+            </filters>
+        </field>
+
 
     </fields>
 </query>

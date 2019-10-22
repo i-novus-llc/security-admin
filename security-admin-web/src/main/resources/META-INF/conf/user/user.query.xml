@@ -102,5 +102,37 @@
                 <eq filter-id="system.id" domain="string" mapping="systemCode"/>
             </filters>
         </field>
+
+        <field id="userLevel.name" domain="string" name="Уровень пользователя">
+            <select mapping="userLevel?.desc"></select>
+        </field>
+        <field id="userLevel.id" domain="string" name="Уровень пользователя">
+            <select mapping="userLevel?.name"></select>
+            <filters>
+                <eq filter-id="userLevel.id" domain="string" mapping="userLevel"></eq>
+            </filters>
+        </field>
+
+        <field id="department" domain="object">
+            <select mapping="department"></select>
+            <filters>
+                <eq filter-id="department.id" domain="integer" mapping="departmentId"></eq>
+            </filters>
+        </field>
+
+        <field id="region">
+            <select mapping="region"></select>
+            <filters>
+                <eq filter-id="region.id" domain="integer" mapping="regionId"></eq>
+            </filters>
+        </field>
+
+        <field id="organization">
+            <select mapping="organization"></select>
+            <filters>
+                <eq filter-id="organization.id" domain="integer" mapping="organizationId"></eq>
+            </filters>
+        </field>
+
     </fields>
 </query>
