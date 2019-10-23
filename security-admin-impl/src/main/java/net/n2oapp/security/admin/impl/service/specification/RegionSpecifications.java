@@ -24,7 +24,7 @@ public class RegionSpecifications implements Specification<RegionEntity> {
     public Predicate toPredicate(Root<RegionEntity> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder builder) {
         Predicate predicate = builder.and();
         if (criteria.getName() != null)
-            predicate = builder.and(predicate, builder.like(root.get(RegionEntity_.name), "%" + criteria.getName() + "%"));
+            predicate = builder.and(predicate, builder.like(builder.lower(root.get(RegionEntity_.name)), "%" + criteria.getName().toLowerCase() + "%"));
         return predicate;
     }
 }
