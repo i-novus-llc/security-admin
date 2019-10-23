@@ -21,6 +21,10 @@ public class UserTokenConverter implements UserAuthenticationConverter {
     static final String SURNAME = "surname";
     static final String PATRONYMIC = "patronymic";
     static final String SID = "sid";
+    static final String DEPARTMENT = "department";
+    static final String ORGANIZATION = "organization";
+    static final String REGION = "region";
+    static final String USER_LEVEL = "userLevel";
 
     @Override
     public Map<String, ?> convertUserAuthentication(Authentication authentication) {
@@ -29,6 +33,10 @@ public class UserTokenConverter implements UserAuthenticationConverter {
             User user = (User) authentication.getPrincipal();
             response.put(USERNAME, user.getUsername());
             response.put(NAME, user.getName());
+            response.put(DEPARTMENT, user.getDepartment());
+            response.put(ORGANIZATION, user.getOrganization());
+            response.put(USER_LEVEL, user.getUserLevel());
+            response.put(REGION, user.getRegion());
             response.put(SURNAME, user.getSurname());
             response.put(PATRONYMIC, user.getPatronymic());
             response.put(EMAIL, user.getEmail());
@@ -61,8 +69,12 @@ public class UserTokenConverter implements UserAuthenticationConverter {
     public Authentication extractAuthentication(Map<String, ?> map) {
         if (map.containsKey(USERNAME)) {
             Collection<? extends GrantedAuthority> authorities = getAuthorities(map);
-            Object principal = new User((String) map.get(USERNAME), "N/A", authorities, (String) map.get(SURNAME), (String) map.get(NAME),
+            User principal = new User((String) map.get(USERNAME), "N/A", authorities, (String) map.get(SURNAME), (String) map.get(NAME),
                     (String) map.get(PATRONYMIC), (String) map.get(EMAIL));
+            principal.setDepartment((String) map.get(DEPARTMENT));
+            principal.setOrganization((String) map.get(ORGANIZATION));
+            principal.setUserLevel((String) map.get(USER_LEVEL));
+            principal.setRegion((String) map.get(REGION));
             AbstractAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(principal, "N/A", authorities);
             authentication.setDetails(map);
             return authentication;
