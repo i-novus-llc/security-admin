@@ -1,11 +1,13 @@
-package net.n2oapp.auth.gateway;
+package net.n2oapp.security.admin.auth.server;
 
 import net.n2oapp.security.admin.auth.server.GatewayService;
 import net.n2oapp.security.admin.auth.server.RedirectResolverImpl;
+import net.n2oapp.security.admin.sso.keycloak.SsoKeycloakConfiguration;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.security.oauth2.authserver.AuthorizationServerProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.authserver.OAuth2AuthorizationServerConfiguration;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -16,8 +18,8 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 
 @Configuration
 @EnableAuthorizationServer
+@Import(SsoKeycloakConfiguration.class)
 public class AuthServerConfiguration extends OAuth2AuthorizationServerConfiguration {
-
 
     public AuthServerConfiguration(BaseClientDetails details, AuthenticationConfiguration authenticationConfiguration,
                                    ObjectProvider<TokenStore> tokenStore, ObjectProvider<AccessTokenConverter> tokenConverter,

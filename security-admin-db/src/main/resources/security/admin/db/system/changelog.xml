@@ -9,5 +9,6 @@
     <include file="security/admin/db/changelog/V10_update_user_role_permission.xml"/>
     <include file="security/admin/db/changelog/V11_add_ext_sso.xml"/>
     <include file="security/admin/db/changelog/V12_delete_ext_roles.xml"/>
+    <include file="security/admin/db/changelog/V15_update_region_department_organization.xml"/>
 
 </databaseChangeLog>
