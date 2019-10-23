@@ -40,13 +40,17 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
 
     @Override
     public Object extractPrincipal(Map<String, Object> map) {
-        net.n2oapp.security.admin.api.model.User user = getUser(map);
-        if (user == null) {
+        net.n2oapp.security.admin.api.model.User model = getUser(map);
+        if (model == null) {
             return null;
         }
-
-        return new User(user.getUsername(), "N/A", getAuthorities(map, user), user.getSurname(), user.getName(),
-                user.getPatronymic(), user.getEmail());
+        User user = new User(model.getUsername(), "N/A", getAuthorities(map, model), model.getSurname(), model.getName(),
+                model.getPatronymic(), model.getEmail());
+        user.setDepartment(model.getDepartment().getCode());
+        user.setOrganization(model.getOrganization().getCode());
+        user.setRegion(model.getRegion().getCode());
+        user.setUserLevel(model.getUserLevel().toString());
+        return user;
     }
 
     @Override
@@ -86,8 +90,23 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
         token.setName(name);
         token.setEmail(email);
         token.setExtSys(authServer);
+        net.n2oapp.security.admin.api.model.User user = userDetailsService.loadUserDetails(token);
 
-        return userDetailsService.loadUserDetails(token);
+        if (user.getDepartment() != null) {
+            map.put("department", user.getDepartment().getCode());
+        }
+        if (user.getOrganization() != null) {
+            map.put("organization", user.getOrganization().getCode());
+        }
+
+        if (user.getRegion() != null) {
+            map.put("region", user.getRegion().getCode());
+        }
+
+        if (user.getUserLevel() != null) {
+            map.put("userLevel", user.getUserLevel().toString());
+        }
+        return user;
     }
 
     @SuppressWarnings("unchecked")
