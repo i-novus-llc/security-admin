@@ -58,6 +58,9 @@ import java.util.List;
 @Order(200)
 public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
 
+    @Value("${access.auth.login-entry-point:/}")
+    private String loginEntryPoint;
+
     @Value("${access.jwt.signing_key}")
     private String signingKey;
 
@@ -85,8 +88,8 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests().antMatchers("/", "/login**", "/api/**", "/css/**", "/icons/**", "/fonts/**", "/public/**", "/static/**", "/webjars/**").permitAll().anyRequest()
                 .authenticated().and().exceptionHandling()
-                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/")).and().logout()
-                .logoutSuccessUrl("/").logoutSuccessHandler(logoutSuccessHandler).permitAll().and().csrf().disable()
+                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint(loginEntryPoint)).and().logout()
+                .logoutSuccessUrl(loginEntryPoint).logoutSuccessHandler(logoutSuccessHandler).permitAll().and().csrf().disable()
                 .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
     }
 

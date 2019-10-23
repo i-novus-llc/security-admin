@@ -42,13 +42,13 @@ import java.util.List;
 @Import(AdminCommonsConfiguration.class)
 public class AdminImplConfiguration {
 
-    @Value("${user-level.value.federal}")
+    @Value("${access.level.federal}")
     private Boolean userLevelValueFederal;
 
-    @Value("${user-level.value.regional}")
+    @Value("${access.level.regional}")
     private Boolean userLevelValueRegional;
 
-    @Value("${user-level.value.org}")
+    @Value("${access.level.org}")
     private Boolean userLevelValueOrg;
 
     @Bean

@@ -6,9 +6,10 @@
             <input-text id="name" label="Название"/>
             <input-text id="code" label="Код" enabled="false"/>
             <input-text id="description" label="Описание"/>
-            <input-select id="system" label="Система" query-id="system" required="${sec.admin.system-enabled}"
-                          visible="${sec.admin.system-enabled}" label-field-id="name"/>
-            <input-select id="userLevel" query-id="userLevel" label-field-id="name" visible="${user-level.enabled}"
+            <input-select id="system" label="Система" query-id="system" required="${access.system.enabled}"
+                          visible="${access.system.enabled}" label-field-id="name"/>
+            <input-select id="userLevel" query-id="userLevel" label-field-id="name"
+                          visible="${access.level.enabled}"
                           label="Уровень пользователя">
             </input-select>
             <input-select-tree id="permissions" ajax="false" label="Права доступа" checkboxes="true" required="true">
@@ -21,7 +22,7 @@
                     <eq field-id="userLevel" value="{userLevel.id}"/>
                 </pre-filters>
                 <dependencies>
-                    <set-value on="system" apply-on-init="false">
+                    <set-value on="system,userLevel" apply-on-init="false">
                         return null;
                     </set-value>
                 </dependencies>
