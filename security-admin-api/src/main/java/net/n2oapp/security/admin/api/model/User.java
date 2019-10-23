@@ -57,7 +57,7 @@ public class User {
     @ApiModelProperty(value = "Список ролей")
     private List<Role> roles;
 
-    @ApiModelProperty(value = "СНИЛС пользователся")
+    @ApiModelProperty(value = "СНИЛС пользователя")
     private String snils;
 
     @ApiModelProperty(value = "Уровень пользователя, для которого предназначена роль")

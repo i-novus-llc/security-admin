@@ -1,12 +1,12 @@
-package net.n2oapp.security.admin.impl.service;
+package net.n2oapp.security.admin.auth.server;
 
-import liquibase.util.StringUtils;
-import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserDetailsToken;
+import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.UserDetailsService;
+import net.n2oapp.security.admin.impl.exception.UserNotFoundOauthException;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
@@ -14,7 +14,7 @@ import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,29 +27,31 @@ import static java.util.Objects.isNull;
 @Qualifier("EsiaUserDetailServiceImpl")
 public class EsiaUserDetailServiceImpl implements UserDetailsService {
 
+    private Boolean synchronizeFio;
+
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private RoleRepository roleRepository;
 
-    @Value("${access.esia.sync-fio:true}")
-    private Boolean synchronizeFio;
+    @Autowired
+    private SsoUserRoleProvider keycloakSsoUserRoleProvider;
 
     @Override
-    public User loadUserDetails(UserDetailsToken userDetails) {
+    public User loadUserDetails(UserDetailsToken userDetails) throws AuthenticationException {
         UserEntity userEntity = userRepository.findOneBySnilsIgnoreCase(userDetails.getUsername()).orElse(null);
+
         if (isNull(userEntity)) {
-            throw new UserException("exception.userFromEsiaNotFound");
-        } else if (!StringUtils.equalsIgnoreCaseAndEmpty(userEntity.getExtSys(), userDetails.getExtSys())) {
-            throw new UserException("exception.ssoOtherSystemUser");
+            throw new UserNotFoundOauthException("");
         }
-        userEntity.setIsActive(true);
+
         if (synchronizeFio) {
             userEntity.setName(userDetails.getName());
             userEntity.setSurname(userDetails.getSurname());
             userEntity.setPatronymic(userDetails.getPatronymic());
+            keycloakSsoUserRoleProvider.updateUser(model(userRepository.save(userEntity)));
         }
-        return model(userRepository.save(userEntity));
+        return model(userEntity);
     }
 
     private User model(UserEntity entity) {
@@ -101,5 +103,10 @@ public class EsiaUserDetailServiceImpl implements UserDetailsService {
         model.setCode(entity.getCode());
         model.setParentCode(entity.getParentCode());
         return model;
+    }
+
+    public EsiaUserDetailServiceImpl setSynchronizeFio(Boolean synchronizeFio) {
+        this.synchronizeFio = synchronizeFio;
+        return this;
     }
 }
