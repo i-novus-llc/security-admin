@@ -46,10 +46,18 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
         }
         User user = new User(model.getUsername(), "N/A", getAuthorities(map, model), model.getSurname(), model.getName(),
                 model.getPatronymic(), model.getEmail());
-        user.setDepartment(model.getDepartment().getCode());
-        user.setOrganization(model.getOrganization().getCode());
-        user.setRegion(model.getRegion().getCode());
-        user.setUserLevel(model.getUserLevel().toString());
+        if (model.getDepartment() != null) {
+            user.setDepartment(model.getDepartment().getCode());
+        }
+        if (model.getOrganization() != null) {
+            user.setOrganization(model.getOrganization().getCode());
+        }
+        if (model.getRegion() != null) {
+            user.setRegion(model.getRegion().getCode());
+        }
+        if (model.getUserLevel() != null) {
+            user.setUserLevel(model.getUserLevel().toString());
+        }
         return user;
     }
 
