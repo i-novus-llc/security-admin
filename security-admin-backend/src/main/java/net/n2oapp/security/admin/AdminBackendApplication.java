@@ -3,9 +3,9 @@ package net.n2oapp.security.admin;
 import net.n2oapp.security.admin.api.service.UserDetailsService;
 import net.n2oapp.security.admin.impl.AdminImplConfiguration;
 import net.n2oapp.security.admin.impl.service.UserDetailsServiceImpl;
-import net.n2oapp.security.admin.rest.api.UserDetailRestService;
+import net.n2oapp.security.admin.rest.api.UserDetailsRestService;
 import net.n2oapp.security.admin.rest.impl.AdminRestServerConfiguration;
-import net.n2oapp.security.admin.rest.impl.UserDetailRestServiceImpl;
+import net.n2oapp.security.admin.rest.impl.UserDetailsRestServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
@@ -34,7 +34,7 @@ public class AdminBackendApplication extends SpringBootServletInitializer {
     }
 
     @Bean
-    public UserDetailRestService userDetailRestService() {
-        return new UserDetailRestServiceImpl(userDetailsService);
+    public UserDetailsRestService UserDetailsRestService() {
+        return new UserDetailsRestServiceImpl(userDetailsService);
     }
 }

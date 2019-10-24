@@ -11,7 +11,7 @@ public class UserDetailsRestServiceImpl implements UserDetailsRestService {
 
     private UserDetailsService userDetailsService;
 
-    public UserDetailRestServiceImpl(UserDetailsService userDetailsService) {
+    public UserDetailsRestServiceImpl(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
