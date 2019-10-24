@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -37,6 +38,8 @@ public class UserServiceSqlTest {
 
     @Autowired
     private UserService service;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Test
     public void testUp() throws Exception {
@@ -97,6 +100,19 @@ public class UserServiceSqlTest {
     public void testCheckUniqueUsername() {
         assertEquals(false, service.checkUniqueUsername("test2"));
         assertEquals(true, service.checkUniqueUsername("nonExistentUser"));
+    }
+
+    @Test
+    public void testResetPassword() {
+        User user = create(false);
+        String passwordHash = user.getPasswordHash();
+        UserForm userForm = form(user);
+        String password = "111aaaAAA!!!";
+        userForm.setPassword(password);
+        service.resetPassword(userForm);
+        User updatedUser = service.getById(user.getId());
+        assertTrue(passwordEncoder.matches(password, updatedUser.getPasswordHash()));
+        delete(user.getId());
     }
 
     private static UserForm newUser(Boolean generate) {

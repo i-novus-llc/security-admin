@@ -58,4 +58,17 @@ public interface UserService {
      * @return <code>true</code> имя уникально <code>false</code> иначе
      */
     Boolean checkUniqueUsername(String username);
+
+    /**
+     * Загрузить простейшую информацию о пользователе (имя, почта и временный пароль)
+     * @param id Идентификатор
+     * @return Модель пользователя
+     */
+    User loadSimpleDetails(Integer id);
+
+    /**
+     * Сбросить пароль пользователя
+     * @param user Модель пользователя
+     */
+    void resetPassword(UserForm user);
 }

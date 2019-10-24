@@ -77,8 +77,8 @@ public class UserServiceSql implements UserService {
         userValidations.checkUsernameUniq(user.getId(), getByUsername(user.getUsername()));
         userValidations.checkUsername(user.getUsername());
         userValidations.checkEmail(user.getEmail());
-        String password = user.getPassword();
-        if (password != null) {
+        String password = (user.getPassword() != null) ? user.getPassword() : user.getTemporaryPassword();
+        if (user.getPassword() != null) {
             userValidations.checkPassword(password, user.getPasswordCheck(), user.getId());
         }
         if (password == null) {
@@ -112,8 +112,8 @@ public class UserServiceSql implements UserService {
         userValidations.checkUsernameUniq(user.getId(), getByUsername(user.getUsername()));
         userValidations.checkUsername(user.getUsername());
         userValidations.checkEmail(user.getEmail());
-        if (user.getNewPassword() != null) {
-            userValidations.checkPassword(user.getNewPassword(), user.getPasswordCheck(), user.getId());
+        if (user.getPassword() != null) {
+            userValidations.checkPassword(user.getPassword(), user.getPasswordCheck(), user.getId());
         }
         transactionTemplate.execute(transactionStatus -> {
             MapSqlParameterSource namedParameters =
@@ -125,10 +125,10 @@ public class UserServiceSql implements UserService {
                             .addValue("patronymic", user.getPatronymic())
                             .addValue("isActive", user.getIsActive())
                             .addValue("extUid", user.getExtUid());
-            if (user.getNewPassword() == null) {
+            if (user.getPassword() == null) {
                 jdbcTemplate.update(SqlUtil.getResourceFileAsString(UPDATE_USER_WITHOUT_PASS), namedParameters);
             } else {
-                namedParameters.addValue("password", passwordEncoder.encode(user.getNewPassword()));
+                namedParameters.addValue("password", passwordEncoder.encode(user.getPassword()));
                 jdbcTemplate.update(SqlUtil.getResourceFileAsString(UPDATE_USER), namedParameters);
             }
             jdbcTemplate.update(SqlUtil.getResourceFileAsString(DELETE_USER_ROLE), namedParameters);
@@ -201,6 +201,53 @@ public class UserServiceSql implements UserService {
         return jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(CHECK_UNIQUE_USERNAME),
                 new MapSqlParameterSource("username", username),
                 Integer.class) == 0;
+    }
+
+    @Override
+    public User loadSimpleDetails(Integer id) {
+        User simpleUser = new User();
+
+        if (id != null) {
+            User user = getById(id);
+
+            if (user != null) {
+                simpleUser.setId(id);
+                simpleUser.setUsername(user.getUsername());
+                simpleUser.setEmail(user.getEmail());
+            }
+        }
+
+        simpleUser.setTemporaryPassword(passwordGenerator.generate());
+        return simpleUser;
+    }
+
+    @Override
+    public void resetPassword(UserForm user) {
+        // используем либо установленный пользователем, либо сгенерированный пароль
+        String password = (user.getPassword() != null) ? user.getPassword() : user.getTemporaryPassword();
+
+        if (user.getId() != null && password != null) {
+            User updatedUser = getById(user.getId());
+            if (updatedUser != null) {
+                transactionTemplate.execute(transactionStatus -> {
+                    MapSqlParameterSource namedParameters =
+                            new MapSqlParameterSource("id", user.getId())
+                                    .addValue("username", user.getUsername())
+                                    .addValue("email", user.getEmail())
+                                    .addValue("surname", user.getSurname())
+                                    .addValue("name", user.getName())
+                                    .addValue("patronymic", user.getPatronymic())
+                                    .addValue("isActive", user.getIsActive())
+                                    .addValue("extUid", user.getExtUid());
+
+                    namedParameters.addValue("password", passwordEncoder.encode(password));
+                    jdbcTemplate.update(SqlUtil.getResourceFileAsString(UPDATE_USER), namedParameters);
+
+                    mailService.sendResetPasswordMail(user);
+                    return model(user);
+                });
+            }
+        }
     }
 
     private User getByUsername(String username) {
