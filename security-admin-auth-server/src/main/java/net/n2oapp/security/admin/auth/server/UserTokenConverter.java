@@ -21,13 +21,14 @@ public class UserTokenConverter implements UserAuthenticationConverter {
     static final String SURNAME = "surname";
     static final String PATRONYMIC = "patronymic";
     static final String SID = "sid";
+    static final String USER = "username";
 
     @Override
     public Map<String, ?> convertUserAuthentication(Authentication authentication) {
         Map<String, Object> response = new LinkedHashMap<>();
         if (authentication.getPrincipal() instanceof User) {
             User user = (User) authentication.getPrincipal();
-            response.put(USERNAME, user.getUsername());
+            response.put(USER, user.getUsername());
             response.put(NAME, user.getName());
             response.put(SURNAME, user.getSurname());
             response.put(PATRONYMIC, user.getPatronymic());
@@ -38,7 +39,7 @@ public class UserTokenConverter implements UserAuthenticationConverter {
                 response.put(SID, ((OAuth2AuthenticationDetails) authentication.getDetails()).getSessionId());
             }
         } else {
-            response.put(USERNAME, authentication.getName());
+            response.put(USER, authentication.getName());
         }
         if (authentication.getAuthorities() != null && !authentication.getAuthorities().isEmpty()) {
             List<String> roles = new ArrayList<>();
@@ -59,9 +60,9 @@ public class UserTokenConverter implements UserAuthenticationConverter {
 
     @Override
     public Authentication extractAuthentication(Map<String, ?> map) {
-        if (map.containsKey(USERNAME)) {
+        if (map.containsKey(USER)) {
             Collection<? extends GrantedAuthority> authorities = getAuthorities(map);
-            Object principal = new User((String) map.get(USERNAME), "N/A", authorities, (String) map.get(SURNAME), (String) map.get(NAME),
+            Object principal = new User((String) map.get(USER), "N/A", authorities, (String) map.get(SURNAME), (String) map.get(NAME),
                     (String) map.get(PATRONYMIC), (String) map.get(EMAIL));
             AbstractAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(principal, "N/A", authorities);
             authentication.setDetails(map);
