@@ -70,7 +70,7 @@
                                 </visibility>
                             </dependencies>
                         </input-select>
-                        <input-select id="region" label="Регион" query-id="region">
+                        <input-select id="region" label="Регион" query-id="region" label-field-id="name">
                             <dependencies>
                                 <visibility apply-on-init="true">${access.level.regional} ||
                                     ${access.level.org}

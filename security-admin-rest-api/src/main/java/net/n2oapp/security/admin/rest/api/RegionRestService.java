@@ -3,8 +3,8 @@ package net.n2oapp.security.admin.rest.api;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
-import net.n2oapp.security.admin.api.criteria.RegionCriteria;
 import net.n2oapp.security.admin.api.model.Region;
+import net.n2oapp.security.admin.rest.api.criteria.RestRegionCriteria;
 import org.springframework.data.domain.Page;
 
 import javax.ws.rs.*;
@@ -23,5 +23,5 @@ public interface RegionRestService {
     @Path("/")
     @ApiOperation("Найти все регионы")
     @ApiResponse(code = 200, message = "Страница регионов")
-    Page<Region> getAll(@BeanParam RegionCriteria criteria);
+    Page<Region> getAll(@BeanParam RestRegionCriteria criteria);
 }
