@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Configuration;
 public class AdminBackendConfiguration {
 
     @Autowired
-    @Qualifier("UserDetailsServiceImpl")
     UserDetailsService userDetailsService;
 
     @Bean
