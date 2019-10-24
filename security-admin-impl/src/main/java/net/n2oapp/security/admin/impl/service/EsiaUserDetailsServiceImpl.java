@@ -24,8 +24,8 @@ import static java.util.Objects.isNull;
 
 @Service
 @Transactional
-@Qualifier("EsiaUserDetailServiceImpl")
-public class EsiaUserDetailServiceImpl implements UserDetailsService {
+@Qualifier("EsiaUserDetailsServiceImpl")
+public class EsiaUserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;

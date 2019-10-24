@@ -7,7 +7,7 @@ import net.n2oapp.security.admin.api.service.UserDetailsService;
 import net.n2oapp.security.admin.auth.server.GatewayAccessTokenConverter;
 import net.n2oapp.security.admin.auth.server.UserTokenConverter;
 import net.n2oapp.security.admin.auth.server.logout.BackChannelLogoutHandler;
-import net.n2oapp.security.admin.impl.service.EsiaUserDetailServiceImpl;
+import net.n2oapp.security.admin.impl.service.EsiaUserDetailsServiceImpl;
 import net.n2oapp.security.admin.impl.service.UserDetailsServiceImpl;
 import net.n2oapp.security.auth.common.AuthoritiesPrincipalExtractor;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -78,7 +78,7 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
 
     @Autowired
-    @Qualifier("EsiaUserDetailServiceImpl")
+    @Qualifier("EsiaUserDetailsServiceImpl")
     private UserDetailsService esiaUserDetailsService;
 
     @Autowired
