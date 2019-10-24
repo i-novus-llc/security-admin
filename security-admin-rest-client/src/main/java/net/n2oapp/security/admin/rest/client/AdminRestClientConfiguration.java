@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableJaxRsProxyClient(
         classes = {UserRestService.class, RoleRestService.class, PermissionRestService.class,
-                ApplicationSystemRestService.class, ClientRestService.class, UserDetailRestService.class,
+                ApplicationSystemRestService.class, ClientRestService.class, UserDetailsRestService.class,
                 RegionRestService.class, OrganizationRestService.class, DepartmentRestService.class, UserLevelRestService.class},
         address = "${access.service.url}")
 public class AdminRestClientConfiguration {
@@ -20,7 +20,7 @@ public class AdminRestClientConfiguration {
     }
 
     @Bean
-    public UserDetailsServiceRestClient userDetailsService(@Qualifier("userDetailRestServiceJaxRsProxyClient") UserDetailRestService client) {
+    public UserDetailsServiceRestClient userDetailsService(@Qualifier("userDetailRestServiceJaxRsProxyClient") UserDetailsRestService client) {
         return new UserDetailsServiceRestClient(client);
     }
 
