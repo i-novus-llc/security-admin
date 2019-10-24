@@ -53,4 +53,10 @@ public interface PermissionRestService {
     @ApiOperation("Удалить право доступа")
     @ApiResponse(code = 200, message = "Право доступа удалено")
     void delete(@ApiParam(value = "Код") @PathParam("code") String code);
+
+    @GET
+    @Path("/withSystem")
+    @ApiOperation("Найти все права доступа сгрупированные по системам")
+    @ApiResponse(code = 200, message = "Страница прав доступа")
+    Page<Permission> getAllWithSystem(@ApiParam(value = "Критерия поиска") @BeanParam RestPermissionCriteria criteria);
 }

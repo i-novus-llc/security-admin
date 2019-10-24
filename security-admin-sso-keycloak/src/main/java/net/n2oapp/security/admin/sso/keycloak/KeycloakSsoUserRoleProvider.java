@@ -11,7 +11,9 @@ import org.quartz.JobKey;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
+import org.springframework.web.client.HttpClientErrorException;
 
+import javax.ws.rs.BadRequestException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -42,21 +44,25 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
     @Override
     public User createUser(User user) {
         UserRepresentation userRepresentation = map(user);
-        String userGuid = userService.createUser(userRepresentation);
-        user.setExtUid(userGuid);
-        user.setExtSys("KEYCLOAK");
-        if (user.getRoles() != null) {
-            List<RoleRepresentation> roles = new ArrayList<>();
-            List<RoleRepresentation> roleRepresentationList = roleService.getAllRoles();
-            user.getRoles().forEach(r -> {
-                Optional<RoleRepresentation> roleRep = roleRepresentationList.stream().filter(rp -> rp.getName().equals(r.getCode())).findAny();
-                if (roleRep.isPresent()) {
-                    roles.add(roleRep.get());
-                } else {
-                    throw new UserException("exception.ssoRoleNotFound");
-                }
-            });
-            userService.addUserRoles(userGuid, roles);
+        try {
+            String userGuid = userService.createUser(userRepresentation);
+            user.setExtUid(userGuid);
+            user.setExtSys("KEYCLOAK");
+            if (user.getRoles() != null) {
+                List<RoleRepresentation> roles = new ArrayList<>();
+                List<RoleRepresentation> roleRepresentationList = roleService.getAllRoles();
+                user.getRoles().forEach(r -> {
+                    Optional<RoleRepresentation> roleRep = roleRepresentationList.stream().filter(rp -> rp.getName().equals(r.getCode())).findAny();
+                    if (roleRep.isPresent()) {
+                        roles.add(roleRep.get());
+                    } else {
+                        throw new UserException("exception.ssoRoleNotFound");
+                    }
+                });
+                userService.addUserRoles(userGuid, roles);
+            }
+        } catch (HttpClientErrorException e) {
+            throw new IllegalArgumentException(e.getResponseBodyAsString(), e);
         }
         return user;
     }
@@ -64,53 +70,77 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
     @Override
     public void updateUser(User user) {
         UserRepresentation userRepresentation = map(user);
-        userService.updateUser(userRepresentation);
-        List<RoleRepresentation> forRemove = new ArrayList<>();
-        if (user.getRoles() == null || user.getRoles().isEmpty()) {
-            forRemove = userService.getActualUserRoles(user.getExtUid());
-        } else {
-            Set<String> roleNames = user.getRoles().stream().map(Role::getCode).collect(Collectors.toSet());
-            List<RoleRepresentation> effective = userService.getActualUserRoles(user.getExtUid());
-            if (effective != null) {
-                forRemove = effective.stream().filter(e -> !roleNames.contains(e.getName())).collect(Collectors.toList());
+        try {
+            userService.updateUser(userRepresentation);
+            List<RoleRepresentation> forRemove = new ArrayList<>();
+            if (user.getRoles() == null || user.getRoles().isEmpty()) {
+                forRemove = userService.getActualUserRoles(user.getExtUid());
+            } else {
+                Set<String> roleNames = user.getRoles().stream().map(Role::getCode).collect(Collectors.toSet());
+                List<RoleRepresentation> effective = userService.getActualUserRoles(user.getExtUid());
+                if (effective != null) {
+                    forRemove = effective.stream().filter(e -> !roleNames.contains(e.getName())).collect(Collectors.toList());
+                }
+                Set<String> effectiveRoleNames = effective == null ? new HashSet<>() :
+                        effective.stream().map(RoleRepresentation::getName).collect(Collectors.toSet());
+                userService.addUserRoles(user.getExtUid(), user.getRoles().stream()
+                        .filter(r -> !effectiveRoleNames.contains(r.getCode())).map(this::map).collect(Collectors.toList()));
             }
-            Set<String> effectiveRoleNames = effective == null ? new HashSet<>() :
-                    effective.stream().map(RoleRepresentation::getName).collect(Collectors.toSet());
-            userService.addUserRoles(user.getExtUid(), user.getRoles().stream()
-                    .filter(r -> !effectiveRoleNames.contains(r.getCode())).map(this::map).collect(Collectors.toList()));
-        }
-        userService.deleteUserRoles(user.getExtUid(), forRemove);
-        if (user.getPassword() != null) {
-            userService.changePassword(user.getExtUid(), user.getPassword());
+            userService.deleteUserRoles(user.getExtUid(), forRemove);
+            if (user.getPassword() != null) {
+                userService.changePassword(user.getExtUid(), user.getPassword());
+            }
+        } catch (HttpClientErrorException e) {
+            throw new IllegalArgumentException(e.getResponseBodyAsString(), e);
         }
     }
 
     @Override
     public void deleteUser(User user) {
-        userService.deleteUser(user.getExtUid());
+        try {
+            userService.deleteUser(user.getExtUid());
+        } catch (HttpClientErrorException e) {
+            throw new IllegalArgumentException(e.getResponseBodyAsString(), e);
+        }
     }
 
     @Override
     public void changeActivity(User user) {
         UserRepresentation userRepresentation = map(user);
         userRepresentation.setEnabled(user.getIsActive());
-        userService.updateUser(userRepresentation);
+        try {
+            userService.updateUser(userRepresentation);
+        } catch (HttpClientErrorException e) {
+            throw new IllegalArgumentException(e.getResponseBodyAsString(), e);
+        }
     }
 
     @Override
     public Role createRole(Role role) {
-        roleService.createRole(map(role));
+        try {
+            roleService.createRole(map(role));
+        } catch (HttpClientErrorException e) {
+            throw new IllegalArgumentException(e.getResponseBodyAsString(), e);
+        }
         return role;
     }
 
     @Override
     public void updateRole(Role role) {
-        roleService.updateRole(map(role));
+        try {
+            roleService.updateRole(map(role));
+        } catch (HttpClientErrorException e) {
+            throw new IllegalArgumentException(e.getResponseBodyAsString(), e);
+        }
     }
 
     @Override
     public void deleteRole(Role role) {
-        roleService.deleteRole(role.getCode());
+        try {
+            roleService.deleteRole(role.getCode());
+        } catch (HttpClientErrorException e) {
+            throw new IllegalArgumentException(e.getResponseBodyAsString(), e);
+        }
     }
 
     @Override

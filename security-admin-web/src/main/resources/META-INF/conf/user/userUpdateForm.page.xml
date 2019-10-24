@@ -29,7 +29,7 @@
                 <validations white-list="snilsValidation"/>
             </masked-input>
             <input-select id="userLevel" query-id="userLevel" label-field-id="name"
-                          visible="${user-level.enabled}" label="Уровень пользователя">
+                          visible="${access.level.enabled}" label="Уровень пользователя">
             </input-select>
             <row>
                 <col size="10">
@@ -51,7 +51,7 @@
 
             <input-select id="department" query-id="department" label-field-id="name" label="Департамент">
                 <dependencies>
-                    <visibility on="userLevel">userLevel.id == 'FEDERAL' &amp;&amp; ${user-level.show-department}
+                    <visibility on="userLevel">userLevel.id == 'FEDERAL' &amp;&amp; ${access.level.department}
                     </visibility>
                     <set-value on="userLevel" apply-on-init="false">return null;</set-value>
                 </dependencies>
