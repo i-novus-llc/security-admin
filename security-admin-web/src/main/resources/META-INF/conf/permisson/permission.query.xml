@@ -3,7 +3,7 @@
        object-id="${access.permission.object.id}"
        name="Права доступа">
     <list count-mapping="#this.size()" result-mapping="#this">
-        <java method="getAll" class="net.n2oapp.security.admin.api.service.PermissionService">
+        <java method="getAllWithSystem" class="net.n2oapp.security.admin.api.service.PermissionService">
             <spring/>
             <arguments>
                 <argument class="net.n2oapp.security.admin.api.criteria.PermissionCriteria" type="criteria"/>

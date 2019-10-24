@@ -2,14 +2,15 @@ package net.n2oapp.security.admin.impl.service;
 
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.criteria.ClientCriteria;
-import net.n2oapp.security.admin.api.model.*;
+import net.n2oapp.security.admin.api.model.Client;
+import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.service.ClientService;
 import net.n2oapp.security.admin.impl.audit.AuditHelper;
 import net.n2oapp.security.admin.impl.entity.ClientEntity;
+import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.repository.ApplicationRepository;
-import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.repository.ClientRepository;
 import net.n2oapp.security.admin.impl.service.specification.ClientSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,7 +81,8 @@ public class ClientServiceImpl implements ClientService {
                 return create(clientForm);
             } else throw new UserException("exception.applicationNotFound");
         }
-        delete(clientForm.getClientId());
+        if (clientRepository.existsById(clientForm.getClientId()))
+            delete(clientForm.getClientId());
         return null;
     }
 
@@ -125,7 +127,6 @@ public class ClientServiceImpl implements ClientService {
             client.setRolesIds(clientEntity.getRoleList().stream().map(RoleEntity::getId).collect(Collectors.toList()));
         }
         return client;
-
     }
 
     private ClientEntity entity(Client client) {
@@ -139,11 +140,11 @@ public class ClientServiceImpl implements ClientService {
         entity.setRefreshTokenLifetime(client.getRefreshTokenLifetime() * 60);
         entity.setLogoutUrl(client.getLogoutUrl());
         ArrayList<String> authorizedGrantTypes = new ArrayList<>();
-        if (client.getIsClientGrant().equals(Boolean.TRUE))
+        if (Boolean.TRUE.equals(client.getIsClientGrant()))
             authorizedGrantTypes.add("client_credentials");
-        if (client.getIsAuthorizationCode().equals(Boolean.TRUE))
+        if (Boolean.TRUE.equals(client.getIsAuthorizationCode()))
             authorizedGrantTypes.add("authorization_code");
-        if (client.getIsResourceOwnerPass().equals(Boolean.TRUE))
+        if (Boolean.TRUE.equals(client.getIsResourceOwnerPass()))
             authorizedGrantTypes.add("password");
         entity.setGrantTypes(StringUtils.collectionToCommaDelimitedString(authorizedGrantTypes));
         if (client.getRolesIds() != null)
@@ -161,7 +162,6 @@ public class ClientServiceImpl implements ClientService {
         return model;
     }
 
-
     private void clientNotExists(String id) {
         if (clientRepository.findByClientId(id).isEmpty())
             throw new UserException("exception.clientNotFound");
@@ -176,7 +176,6 @@ public class ClientServiceImpl implements ClientService {
         model.setDescription(entity.getDescription());
         if (entity.getPermissionList() != null) {
             model.setPermissions(entity.getPermissionList().stream().map(this::permissionModel).collect(Collectors.toList()));
-
         }
         return model;
     }
