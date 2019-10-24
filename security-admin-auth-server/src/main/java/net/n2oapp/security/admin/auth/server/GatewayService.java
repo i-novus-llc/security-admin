@@ -23,10 +23,10 @@ public class GatewayService implements ClientDetailsService {
     @Autowired
     private ClientService clientService;
 
-    @Value("${access.auth.access-token-lifetime:1440}")
+    @Value("${access.auth.access-token-lifetime:60}")
     private Integer accessTokenLifetime;
 
-    @Value("${access.auth.refresh-token-lifetime:43200}")
+    @Value("${access.auth.refresh-token-lifetime:1440}")
     private Integer refreshTokenLifetime;
 
     @Override
