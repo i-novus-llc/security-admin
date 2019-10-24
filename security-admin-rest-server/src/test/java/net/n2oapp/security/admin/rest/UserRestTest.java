@@ -47,7 +47,7 @@ public class UserRestTest {
     private UserRestService client;
 
     @Autowired
-    @Qualifier("userDetailRestServiceJaxRsProxyClient")
+    @Qualifier("userDetailsRestServiceJaxRsProxyClient")
     private UserDetailsRestService userDetailsRestService;
 
 
