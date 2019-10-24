@@ -22,7 +22,6 @@ import org.springframework.context.annotation.Bean;
 public class TestApplication {
 
     @Autowired
-    @Qualifier("UserDetailsServiceImpl")
     UserDetailsService userDetailsService;
 
     @Bean
