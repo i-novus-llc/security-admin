@@ -70,7 +70,7 @@ public class UserTokenConverter implements UserAuthenticationConverter {
     public Authentication extractAuthentication(Map<String, ?> map) {
         if (map.containsKey(USER)) {
             Collection<? extends GrantedAuthority> authorities = getAuthorities(map);
-            User principal = new User((String) map.get(USERNAME), "N/A", authorities, (String) map.get(SURNAME), (String) map.get(NAME),
+            User principal = new User((String) map.get(USER), "N/A", authorities, (String) map.get(SURNAME), (String) map.get(NAME),
                     (String) map.get(PATRONYMIC), (String) map.get(EMAIL));
             principal.setDepartment((String) map.get(DEPARTMENT));
             principal.setOrganization((String) map.get(ORGANIZATION));
