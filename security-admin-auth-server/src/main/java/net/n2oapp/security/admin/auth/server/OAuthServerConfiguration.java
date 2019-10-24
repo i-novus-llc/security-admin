@@ -1,6 +1,13 @@
 package net.n2oapp.security.admin.auth.server;
 
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.KeyUse;
+import com.nimbusds.jose.jwk.RSAKey;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.authserver.AuthorizationServerProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.authserver.OAuth2AuthorizationServerConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +23,10 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.security.interfaces.RSAPublicKey;
 
 @Configuration
 @EnableAuthorizationServer
@@ -41,7 +52,11 @@ public class OAuthServerConfiguration extends OAuth2AuthorizationServerConfigura
     @Configuration
     static class TokenStoreConfiguration {
 
-        private static final String KEY_STORE_PASSWORD = "lFJhM7YTAoFJWxl7XnMvDuORn17buMb9";
+        @Value("${access.auth.key-store-password}")
+        private String keyStorePassword;
+
+        @Value("${access.auth.key-id}")
+        private String keyId;
 
         @Bean
         public TokenStore tokenStore(JwtAccessTokenConverter accessTokenConverter) {
@@ -50,15 +65,37 @@ public class OAuthServerConfiguration extends OAuth2AuthorizationServerConfigura
 
         @Bean
         public KeyStoreKeyFactory keyStoreKeyFactory() {
-            return new KeyStoreKeyFactory(new ClassPathResource("keystore/gateway.jks"), KEY_STORE_PASSWORD.toCharArray());
+            return new KeyStoreKeyFactory(new ClassPathResource("keystore/gateway.jks"), keyStorePassword.toCharArray());
         }
 
         @Bean
-        public JwtAccessTokenConverter accessTokenConverter(KeyStoreKeyFactory keyStoreKeyFactory) {
-            JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+        public AccessTokenHeaderConverter accessTokenConverter(KeyStoreKeyFactory keyStoreKeyFactory) {
+            AccessTokenHeaderConverter converter = new AccessTokenHeaderConverter();
             converter.setKeyPair(keyStoreKeyFactory.getKeyPair("gateway"));
             converter.setAccessTokenConverter(new GatewayAccessTokenConverter(new UserTokenConverter()));
+            converter.setKid(keyId);
             return converter;
+        }
+
+        @Bean
+        public JWKSet jwkSet(KeyStoreKeyFactory keyStoreKeyFactory) {
+            RSAKey.Builder builder = new RSAKey.Builder((RSAPublicKey) keyStoreKeyFactory.getKeyPair("gateway").getPublic())
+                    .keyUse(KeyUse.SIGNATURE)
+                    .algorithm(JWSAlgorithm.RS256)
+                    .keyID(keyId);
+            return new JWKSet(builder.build());
+        }
+
+        @RestController
+        public static class JwkSetRestController {
+
+            @Autowired
+            private JWKSet jwkSet;
+
+            @GetMapping("/oauth/certs")
+            public JSONObject certs() {
+                return jwkSet.toJSONObject();
+            }
         }
     }
 
