@@ -20,7 +20,7 @@ import javax.ws.rs.core.MediaType;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Api("Информация о пользователе")
-public interface UserDetailRestService {
+public interface UserDetailsRestService {
 
     @POST
     @Path("/details")
