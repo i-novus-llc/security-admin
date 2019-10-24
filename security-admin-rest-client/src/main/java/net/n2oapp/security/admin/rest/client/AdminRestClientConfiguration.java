@@ -20,7 +20,7 @@ public class AdminRestClientConfiguration {
     }
 
     @Bean
-    public UserDetailsServiceRestClient userDetailsService(@Qualifier("userDetailRestServiceJaxRsProxyClient") UserDetailsRestService client) {
+    public UserDetailsServiceRestClient userDetailsService(@Qualifier("userDetailsRestServiceJaxRsProxyClient") UserDetailsRestService client) {
         return new UserDetailsServiceRestClient(client);
     }
 
