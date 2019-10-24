@@ -1,5 +1,7 @@
 package net.n2oapp.auth.gateway;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.n2oapp.auth.gateway.esia.EsiaAccessTokenProvider;
 import net.n2oapp.auth.gateway.esia.EsiaUserInfoTokenServices;
 import net.n2oapp.auth.gateway.esia.Pkcs7Util;
@@ -75,9 +77,6 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private ClientService clientService;
 
-    @Value("${access.keycloak.logout-uri}")
-    private String logoutUri;
-
     @Autowired
     private Pkcs7Util pkcs7Util;
 
@@ -93,7 +92,7 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
                 "/icons/**", "/fonts/**", "/public/**", "/static/**", "/webjars/**").permitAll().anyRequest()
                 .authenticated().and().exceptionHandling()
                 .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint(loginEntryPoint)).and().logout()
-                .logoutSuccessUrl(loginEntryPoint).logoutSuccessHandler(new BackChannelLogoutHandler(signer, clientService, logoutUri)).permitAll().and().csrf().disable()
+                .logoutSuccessUrl(loginEntryPoint).logoutSuccessHandler(new BackChannelLogoutHandler(signer, clientService, keycloak().getLogoutUri())).permitAll().and().csrf().disable()
                 .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
     }
 
@@ -184,6 +183,7 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
     /**
      * Клиенсткие ресурсы для протокола OAuth2
      */
+    @Getter
     static class ClientResources {
 
         @NestedConfigurationProperty
@@ -192,13 +192,9 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
         @NestedConfigurationProperty
         private ResourceServerProperties resource = new ResourceServerProperties();
 
-        public AuthorizationCodeResourceDetails getClient() {
-            return client;
-        }
+        @Setter
+        private String logoutUri;
 
-        public ResourceServerProperties getResource() {
-            return resource;
-        }
     }
 
 }
