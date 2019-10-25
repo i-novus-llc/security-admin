@@ -21,6 +21,10 @@ public class User extends org.springframework.security.core.userdetails.User {
     private String name;
     private String patronymic;
     private String email;
+    private String organization;
+    private String region;
+    private String department;
+    private String userLevel;
 
     public User(String username) {
         super(username, "", Collections.singleton(new RoleGrantedAuthority(DEFAULT_ROLE)));
@@ -134,6 +138,38 @@ public class User extends org.springframework.security.core.userdetails.User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(String organization) {
+        this.organization = organization;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getUserLevel() {
+        return userLevel;
+    }
+
+    public void setUserLevel(String userLevel) {
+        this.userLevel = userLevel;
     }
 
     public List<String> getRoles() {

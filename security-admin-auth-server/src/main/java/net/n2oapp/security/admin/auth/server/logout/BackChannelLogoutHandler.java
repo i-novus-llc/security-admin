@@ -7,26 +7,20 @@ import net.n2oapp.security.auth.common.User;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.jwt.JwtHelper;
-import org.springframework.security.jwt.crypto.sign.RsaSigner;
 import org.springframework.security.jwt.crypto.sign.Signer;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
-import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,12 +35,11 @@ import java.util.stream.Collectors;
 /**
  * Обработчик единого выхода
  */
-@Component
 public class BackChannelLogoutHandler implements LogoutSuccessHandler {
 
     private static final Logger log = LoggerFactory.getLogger(BackChannelLogoutHandler.class);
 
-    private LogoutSuccessHandler logoutSuccessHandler = new SimpleUrlLogoutSuccessHandler();
+    private LogoutSuccessHandler logoutSuccessHandler;
 
     private Signer signer;
 
@@ -54,19 +47,14 @@ public class BackChannelLogoutHandler implements LogoutSuccessHandler {
 
     private ObjectMapper mapper = new ObjectMapper();
 
-    @Value("${access.jwt.signing_key}")
-    private String signingKey;
 
-    @Value("${access.keycloak.logout-uri}")
-    private String logoutUri;
-
-    @Autowired
     private ClientService clientService;
 
-    @PostConstruct
-    public void postConstruct() {
-        signer = new RsaSigner(signingKey);
-        logoutSuccessHandler = new RedirectLogoutRequestHandler(logoutUri);
+
+    public BackChannelLogoutHandler(Signer signer, ClientService clientService, String logoutUri) {
+        this.signer = signer;
+        this.clientService = clientService;
+        this.logoutSuccessHandler = new RedirectLogoutRequestHandler(logoutUri);
     }
 
     @Override

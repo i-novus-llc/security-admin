@@ -38,6 +38,10 @@ public class UserInfoEndpoint {
             map.put(SURNAME, user.getSurname());
             map.put(PATRONYMIC, user.getPatronymic());
             map.put(EMAIL, user.getEmail());
+            map.put(DEPARTMENT, user.getDepartment());
+            map.put(ORGANIZATION, user.getOrganization());
+            map.put(REGION, user.getRegion());
+            map.put(USER_LEVEL, user.getUserLevel());
 
         }
 

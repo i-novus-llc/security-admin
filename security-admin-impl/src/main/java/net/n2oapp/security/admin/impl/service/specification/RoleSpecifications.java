@@ -24,7 +24,7 @@ public class RoleSpecifications implements Specification<RoleEntity> {
     public Predicate toPredicate(Root<RoleEntity> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder builder) {
         Predicate predicate = builder.and();
         if (nonNull(criteria.getName()))
-            predicate = builder.and(predicate, builder.like(root.get(RoleEntity_.name), criteria.getName() + "%"));
+            predicate = builder.and(predicate, builder.like(builder.lower(root.get(RoleEntity_.name)), "%" + criteria.getName().toLowerCase() + "%"));
         if (nonNull(criteria.getDescription()))
             predicate = builder.and(predicate, builder.like(root.get(RoleEntity_.description),
                     criteria.getDescription() + "%"));
