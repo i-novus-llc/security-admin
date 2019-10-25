@@ -30,6 +30,9 @@ public class UserDetailsToken {
     @ApiModelProperty(value = "Фамилия")
     private String surname;
 
+    @ApiModelProperty(value = "Отчество")
+    private String patronymic;
+
     @ApiModelProperty(value = "Электронный адрес")
     private String email;
 
