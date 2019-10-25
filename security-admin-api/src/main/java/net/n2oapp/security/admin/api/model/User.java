@@ -51,6 +51,9 @@ public class User {
     @ApiModelProperty(value = "Пароль")
     private String passwordCheck;
 
+    @ApiModelProperty(value = "Временный пароль")
+    private String temporaryPassword;
+
     @ApiModelProperty(value = "Активен ли пользователь")
     private Boolean isActive;
 

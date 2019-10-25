@@ -60,4 +60,15 @@ public interface UserRestService {
     @ApiResponse(code = 200, message = "Пользователь с измененным статусом")
     User changeActive(@ApiParam(value = "Идентификатор") @PathParam("id") Integer id);
 
+    @GET
+    @Path("/simpleDetails")
+    @ApiOperation("Загрузить простейшую информацию о пользователе (имя, почта и временный пароль)")
+    @ApiResponse(code = 200, message = "Временный пароль")
+    User loadSimpleDetails(@ApiParam(value = "Идентификатор") @QueryParam("id") Integer id);
+
+    @PUT
+    @Path("/resetPassword")
+    @ApiOperation("Сбросить пароль")
+    @ApiResponse(code = 200, message = "Пароль сброшен")
+    void resetPassword(@ApiParam(value = "Пользователь") UserForm user);
 }
