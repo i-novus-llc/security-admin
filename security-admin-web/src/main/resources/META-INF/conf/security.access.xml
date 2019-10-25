@@ -10,29 +10,29 @@
         <object-access object-id="userLevel" operations="*"/>
     </authenticated>
 
-    <permission id="sec.admin.user.read">
+    <permission id="access.admin.user.read">
         <object-access object-id="${access.user.object.id}"/>
         <page-access page-id="users"/>
     </permission>
 
-    <permission id="sec.admin.role.read">
+    <permission id="access.admin.role.read">
         <object-access object-id="${access.role.object.id}"/>
         <page-access page-id="roles"/>
     </permission>
 
-    <permission id="sec.admin.system.read">
+    <permission id="access.admin.system.read">
         <page-access page-id="systems"/>
     </permission>
 
-    <permission id="sec.admin.user.edit">
+    <permission id="access.admin.user.edit">
         <object-access object-id="${access.user.object.id}" operations="*"/>
     </permission>
 
-    <permission id="sec.admin.role.edit">
+    <permission id="access.admin.role.edit">
         <object-access object-id="${access.role.object.id}" operations="*"/>
     </permission>
 
-    <permission id="sec.admin.system.edit">
+    <permission id="access.admin.system.edit">
         <object-access object-id="system" operations="*"/>
         <object-access object-id="service" operations="*"/>
         <object-access object-id="client" operations="*"/>
