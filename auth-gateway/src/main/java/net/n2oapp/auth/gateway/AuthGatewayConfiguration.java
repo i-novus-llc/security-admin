@@ -3,7 +3,7 @@ package net.n2oapp.auth.gateway;
 import net.n2oapp.auth.gateway.esia.EsiaAccessTokenProvider;
 import net.n2oapp.auth.gateway.esia.EsiaUserInfoTokenServices;
 import net.n2oapp.auth.gateway.esia.Pkcs7Util;
-import net.n2oapp.security.admin.auth.server.EsiaUserDetailServiceImpl;
+import net.n2oapp.security.admin.auth.server.EsiaUserDetailsService;
 import net.n2oapp.security.admin.auth.server.GatewayAccessTokenConverter;
 import net.n2oapp.security.admin.auth.server.UserTokenConverter;
 import net.n2oapp.security.admin.auth.server.exception.UserNotFoundOauthExceptionHandler;
@@ -77,10 +77,8 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
     private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    @Qualifier("EsiaUserDetailServiceImpl")
-    private EsiaUserDetailServiceImpl esiaUserDetailsService;
     @Qualifier("EsiaUserDetailsService")
-    private UserDetailsService esiaUserDetailsService;
+    private EsiaUserDetailsService esiaUserDetailsService;
 
     @Autowired
     private BackChannelLogoutHandler logoutSuccessHandler;
@@ -145,7 +143,7 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
         filter.setRestTemplate(template);
         UserInfoTokenServices tokenServices = new UserInfoTokenServices(client.getResource().getUserInfoUri(), client.getClient().getClientId());
         tokenServices.setRestTemplate(template);
-        AuthoritiesPrincipalExtractor extractor = new AuthoritiesPrincipalExtractor(userDetailsService.addDefaultRoles("sec.admin")).setAuthServer("KEYCLOAK");
+        AuthoritiesPrincipalExtractor extractor = new AuthoritiesPrincipalExtractor(userDetailsService).setAuthServer("KEYCLOAK");
         tokenServices.setAuthoritiesExtractor(extractor);
         tokenServices.setPrincipalExtractor(extractor);
         filter.setTokenServices(tokenServices);

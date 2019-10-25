@@ -6,10 +6,10 @@ import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserDetailsToken;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.UserDetailsService;
-import net.n2oapp.security.admin.impl.exception.UserNotFoundOauthException;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
+import net.n2oapp.security.admin.impl.exception.UserNotFoundOauthException;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +24,8 @@ import static java.util.Objects.isNull;
 
 @Service
 @Transactional
-@Qualifier("EsiaUserDetailServiceImpl")
-public class EsiaUserDetailServiceImpl implements UserDetailsService {
+@Qualifier("EsiaUserDetailsService")
+public class EsiaUserDetailsService implements UserDetailsService {
 
     private Boolean synchronizeFio;
 
@@ -105,7 +105,7 @@ public class EsiaUserDetailServiceImpl implements UserDetailsService {
         return model;
     }
 
-    public EsiaUserDetailServiceImpl setSynchronizeFio(Boolean synchronizeFio) {
+    public EsiaUserDetailsService setSynchronizeFio(Boolean synchronizeFio) {
         this.synchronizeFio = synchronizeFio;
         return this;
     }
