@@ -54,19 +54,19 @@ public class OAuthServerConfiguration extends OAuth2AuthorizationServerConfigura
 
     @Getter
     @Setter
-    @ConfigurationProperties(prefix = "access.auth")
-    private static class KeyStoreProperties {
-        private String keyStorePassword;
+    @ConfigurationProperties(prefix = "access.auth.keystore")
+    private static class KeystoreProperties {
+        private String password;
         private String keyId;
     }
 
 
     @Configuration
-    @EnableConfigurationProperties(KeyStoreProperties.class)
+    @EnableConfigurationProperties(KeystoreProperties.class)
     static class TokenStoreConfiguration {
 
         @Autowired
-        private KeyStoreProperties properties;
+        private KeystoreProperties properties;
 
         @Bean
         public TokenStore tokenStore(JwtAccessTokenConverter accessTokenConverter) {
@@ -75,7 +75,7 @@ public class OAuthServerConfiguration extends OAuth2AuthorizationServerConfigura
 
         @Bean
         public KeyStoreKeyFactory keyStoreKeyFactory() {
-            return new KeyStoreKeyFactory(new ClassPathResource("keystore/gateway.jks"), properties.getKeyStorePassword().toCharArray());
+            return new KeyStoreKeyFactory(new ClassPathResource("keystore/gateway.jks"), properties.getPassword().toCharArray());
         }
 
         @Bean
