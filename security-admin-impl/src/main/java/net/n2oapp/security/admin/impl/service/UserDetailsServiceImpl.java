@@ -15,6 +15,7 @@ import org.apache.cxf.interceptor.security.AccessDeniedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-@Qualifier("UserDetailsServiceImpl")
+@Primary
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired

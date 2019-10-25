@@ -1,14 +1,10 @@
 package net.n2oapp.security.admin.validations;
 
-import jdk.jshell.spi.ExecutionControl;
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.commons.util.UserValidations;
 import org.junit.Test;
 
 import java.util.Arrays;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
 
 public class UserValidationsTest {
 
@@ -27,8 +23,11 @@ public class UserValidationsTest {
         snilsArray[1] = "112-233-445 96";
         snilsArray[2] = "112-283-455 22";
         snilsArray[3] = "100-283-455 01";
-        Arrays.stream(snilsArray).map(s -> catchThrowable(() -> {
-            userValidations.checkSnils(s);
-        })).forEach(thrown -> assertThat(thrown).isInstanceOf(UserException.class));
+
+        try {
+            Arrays.stream(snilsArray).forEach(s -> userValidations.checkSnils(s));
+        } catch (UserException ex) {
+
+        }
     }
 }
