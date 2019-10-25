@@ -43,7 +43,7 @@
                         <input-text id="username"/>
                         <input-text id="fio" class="n2o-control-10"/>
                         <input-select id="system" label="Система" visible="${access.system.enabled}"
-                                      query-id="system"/>
+                                      query-id="system" label-field-id="name"/>
                     </row>
                     <row>
                         <input-select id="roles" type="checkboxes" label="Роли"

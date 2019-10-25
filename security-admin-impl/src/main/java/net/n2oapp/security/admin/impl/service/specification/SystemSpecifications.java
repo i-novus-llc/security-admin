@@ -26,7 +26,7 @@ public class SystemSpecifications implements Specification<SystemEntity> {
         if (criteria.getCode() != null)
             predicate = builder.and(predicate, builder.like(root.get(SystemEntity_.code), criteria.getCode() + "%"));
         if (criteria.getName() != null)
-            predicate = builder.and(predicate, builder.like(root.get(SystemEntity_.name), criteria.getName() + "%"));
+            predicate = builder.and(predicate, builder.like(builder.lower(root.get(SystemEntity_.name)), "%" + criteria.getName().toLowerCase() + "%"));
         return predicate;
     }
 }
