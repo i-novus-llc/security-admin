@@ -74,12 +74,13 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
     private OAuth2ClientContext oauth2ClientContext;
 
     @Autowired
-    @Qualifier("UserDetailsServiceImpl")
     private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
     @Qualifier("EsiaUserDetailServiceImpl")
     private EsiaUserDetailServiceImpl esiaUserDetailsService;
+    @Qualifier("EsiaUserDetailsService")
+    private UserDetailsService esiaUserDetailsService;
 
     @Autowired
     private BackChannelLogoutHandler logoutSuccessHandler;
