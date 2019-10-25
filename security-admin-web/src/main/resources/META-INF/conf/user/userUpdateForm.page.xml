@@ -1,24 +1,27 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-2.0" object-id="${access.user.object.id}" name="Изменение пользователя">
+<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-2.0"
+             name="Изменение пользователя" object-id="${access.user.object.id}">
     <form query-id="${access.user.query.id}">
         <fields>
             <row>
                 <input-text id="username" enabled="false"/>
                 <input-text id="email" label="Email"
-                            required="${access.user.email.required}">
+                            required="${access.user.email-required}">
                     <validations white-list="emailValidation"/>
                 </input-text>
             </row>
             <row>
-                <password id="newPassword" label="Новый пароль"
-                          visible="${access.user.password.editable}" eye="false">
-                    <validations white-list="newPasswordLengthValidation,newPasswordValidation"/>
+                <password id="password" label="Новый пароль"
+                          visible="${access.user.password.input}" eye="false">
+                    <validations white-list="passwordLengthValidation,passwordLowerCaseValidation,passwordUpperCaseValidation,passwordDigitsValidation,passwordSpecialSymbolsValidation,passwordCorrectSymbolsValidation"/>
                 </password>
                 <password id="passwordCheck" label="Подтвердить пароль"
-                          visible="${access.user.password.editable}" eye="false">
-                    <validations white-list="newPasswordCheckValidation"/>
+                          visible="${access.user.password.input}" eye="false">
+                    <validations white-list="passwordCheckValidation"/>
                     <dependencies>
-                        <enabling on="newPassword">typeof newPassword != 'undefined' &amp;&amp; newPassword != null &amp;&amp; newPassword != ''</enabling>
+                        <enabling on="password">typeof password != 'undefined' &amp;&amp; password != null &amp;&amp;
+                            password != ''
+                        </enabling>
                     </dependencies>
                 </password>
             </row>

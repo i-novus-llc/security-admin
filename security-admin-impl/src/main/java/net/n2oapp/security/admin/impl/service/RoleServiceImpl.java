@@ -35,8 +35,9 @@ public class RoleServiceImpl implements RoleService {
     private UserRepository userRepository;
     @Autowired
     private SsoUserRoleProvider provider;
-@Autowired
+    @Autowired
     private AuditHelper audit;
+
     @Override
     public Role create(RoleForm role) {
         checkRoleUniq(role.getId(), role.getName());
@@ -187,7 +188,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     private Role audit(String action, Role role) {
-        audit.audit(action, role, ""+role.getId(), role.getName());
+        audit.audit(action, role, "" + role.getId(), role.getName());
         return role;
     }
 }

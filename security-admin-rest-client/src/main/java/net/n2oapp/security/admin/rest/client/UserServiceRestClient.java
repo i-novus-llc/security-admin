@@ -70,4 +70,14 @@ public class UserServiceRestClient implements UserService {
         criteria.setPage(0);
         return client.findAll(criteria).getContent().size() == 0;
     }
+
+    @Override
+    public User loadSimpleDetails(Integer id) {
+        return client.loadSimpleDetails(id);
+    }
+
+    @Override
+    public void resetPassword(UserForm user) {
+        client.resetPassword(user);
+    }
 }

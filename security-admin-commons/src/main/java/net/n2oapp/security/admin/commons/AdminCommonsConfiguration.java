@@ -17,12 +17,9 @@ import java.util.Properties;
  * Конфигурация security-admin-commons
  */
 @Configuration
-@PropertySource("classpath:mail.properties")
+@PropertySource({"classpath:mail.properties", "classpath:password.properties"})
 @ComponentScan("net.n2oapp.security.admin.commons")
 public class AdminCommonsConfiguration {
-
-    @Value("${sec.password.generate.length}")
-    private Integer passwordGeneratorLength;
 
     @Value("${sec.mail.host}")
     private String mailHost;
@@ -45,9 +42,7 @@ public class AdminCommonsConfiguration {
 
     @Bean
     public PasswordGenerator passwordGenerator() {
-        PasswordGenerator passwordGenerator = new PasswordGenerator();
-        passwordGenerator.setLength(passwordGeneratorLength);
-        return passwordGenerator;
+        return new PasswordGenerator();
     }
 
     @Bean

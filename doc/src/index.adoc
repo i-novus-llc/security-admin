@@ -106,6 +106,12 @@ image::images\keycloak3.png[]
 +
 image::images\keycloak4.png[]
 +
+. Задайте маппинг ролей (Client Scopes > roles). На вкладке "Mappers"
+выберите "realm roles". В поле "Token Claim Name" измените значение на "roles".
+Установите переключатель "Add to userinfo" в положение "ON". Нажмите "Save".
++
+image::images\keycloak13.png[]
++
 . Создайте роль "admin" для администрирования системы (Roles > Add role)
 +
 image::images\keycloak8.png[]
@@ -128,7 +134,7 @@ image::images\keycloak11.png[]
 +
 . Создайте клиента для синхронизации с сервисами администрирования (Clients > Create).
 В поле "Client Id" введите "access-service", это значение по умолчанию, которое
-задается настройкой `keycloak.admin-client-id`. Нажмите "Save".
+задается настройкой `access.keycloak.admin-client-id`. Нажмите "Save".
 +
 image::images\keycloak5.png[]
 +
@@ -287,7 +293,6 @@ public class SecurityConfig extends OpenIdSecurityConfigurerAdapter {
 <dependency>
     <groupId>net.n2oapp.framework.security</groupId>
     <artifactId>security-admin-rest-client</artifactId>
-    <!--<artifactId>security-admin-sql</artifactId>-->
     <!--<artifactId>security-admin-impl</artifactId>-->
     <version>${security-admin.version}</version>
 </dependency>
@@ -464,86 +469,6 @@ link:https://openid.net/specs/openid-connect-backchannel-1_0.html[OpenID Connect
 == Схемы развертывания
 В этом разделе рассказывается об установке администрирования доступа в зависимости от выбранной Вами схемы развертывания.
 
-=== Embedded WEB Server + SQL
-Эта схема предусматривает установку WEB интерфейса администрирования внутри вашего прикладного приложения с SQL доступом к Базе Данных.
-
-image::images\deploy1.png[]
-
-Требования к приложению::
-- Spring Boot 2.1
-- N2O Framework 7.3
-
-
-Установка::
-+
-. Добавьте зависимость `security-admin-web`.
-Это встроит в ваше приложение страницы администрирования доступа:
-+
-[source,xml]
-----
-<dependency>
-    <groupId>net.n2oapp.framework.security</groupId>
-    <artifactId>security-admin-web</artifactId>
-    <version>${security-admin.version}</version>
-</dependency>
-----
-+
-. Добавьте зависимость `security-admin-sql`.
-Это добавит в ваше приложение SQL реализацию интерфейсов security-admin-api:
-+
-[source,xml]
-----
-<dependency>
-    <groupId>net.n2oapp.framework.security</groupId>
-    <artifactId>security-admin-sql</artifactId>
-    <version>${security-admin.version}</version>
-</dependency>
-----
-+
-. Подключите бины WEB интерфейса администирования к вашему приложению:
-+
-[source,java]
-----
-@SpringBootApplication
-@Import({AdminWebConfiguration.class, AdminSqlConfiguration.class})
-public class Application {
-  public static void main(String[] args) {
-    SpringApplication.run(Application.class, args);
-  }
-}
-----
-+
-. Добавьте скрипты наката БД в changelog файл liquibase:
-+
-[source,xml]
-----
-<?xml version="1.0" encoding="UTF-8"?>
-<databaseChangeLog>
-  <include file="classpath:/security/admin/db/[granularity]/properties.xml"/>
-    <include file="classpath:/security/admin/db/[granularity]/changelog.xml"/>
-    ...
-</databaseChangeLog>
-----
-+
-Где, `[granularity]` вид link:#_Гранулярность_доступа[гранулярности доступа].
-+
-. Настройте доступ к Базе Данных через jdbc с помощью настроек Spring Boot:
-+
-[listing]
-spring.datasource.url=jdbc:postgresql://localhost:5432/security
-spring.datasource.username=postgres
-spring.datasource.password=postgres
-
-+
-. Создайте базу данных `security`:
-+
-[source,sql]
-----
-CREATE DATABASE security ENCODING = 'UTF8';
-----
-+
-. Запустите ваше приложение
-
 === Embedded WEB Server + JPA
 Эта схема предусматривает установку WEB интерфейса администрирования внутри
 вашего прикладного приложения с JPA доступом к Базе Данных.
@@ -601,7 +526,7 @@ public class Application {
 <?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog>
   <include file="classpath:/security/admin/db/[granularity]/properties.xml"/>
-    <include file="classpath:/security/admin/db/[granularity]/changelog.xml"/>
+  <include file="classpath:/security/admin/db/[granularity]/changelog.xml"/>
     ...
 </databaseChangeLog>
 ----
@@ -872,8 +797,10 @@ access.keycloak.admin-client-secret=
 access.keycloak.temporary-password=true
 #Подтвержден ли email пользователя
 access.keycloak.email-verified=false
+#Включение автоматической синхронизации пользователей
+access.keycloak.synchronize-enabled=true
 #Настройка частоты синхронизации пользователей
-access.keycloak.sync-cron=0 0/17 * * * ? *
+access.keycloak.synchronize-frequency=0 0/30 * * * ? *
 ----
 . Подключите бины синхронизации с Keycloak:
 +
@@ -913,7 +840,7 @@ public class Application {
 
 === Авторизация функций приложения
 
-. Создайте права доступа к dашему приложению через liquibase скрипты:
+. Создайте права доступа к вашему приложению через liquibase скрипты:
 +
 [source,sql]
 ----
@@ -1068,6 +995,14 @@ insert into sec.permission(name, code) values('Право доступа к мо
 |access.level.department
 |boolean
 |Показывается ли поле департамент при выборе уровня пользвателя федеральный
+
+|access.auth.access-token-lifetime
+|integer
+|Время жизни access токена клиента в минутах
+
+|access.auth.refresh-token-lifetime
+|integer
+|Время жизни refresh токена клиента в минутах
 
 |===
 
