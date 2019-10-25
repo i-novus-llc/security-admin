@@ -1,10 +1,13 @@
 package net.n2oapp.security.admin.service;
 
+import com.icegreen.greenmail.junit.GreenMailRule;
+import com.icegreen.greenmail.util.ServerSetup;
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.api.service.UserService;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +35,9 @@ public class UserServiceImplTest {
     @Autowired
     private UserService service;
 
+    @Rule
+    public final GreenMailRule greenMail = new GreenMailRule(new ServerSetup(2525, null, "smtp"));
+
 
     @Test
     public void testUp() throws Exception {
@@ -41,6 +47,7 @@ public class UserServiceImplTest {
     @Test
     public void checkValidations() {
         User user = service.create(newUser());
+        assertTrue(greenMail.waitForIncomingEmail(1000, 1));
         checkValidationEmail(user);
         checkValidationPassword(user);
         checkValidationUsername(user);
@@ -90,6 +97,13 @@ public class UserServiceImplTest {
         });
         assertThat(thrown).isInstanceOf(UserException.class);
         assertEquals("exception.passwordLength", thrown.getMessage());
+        thrown = catchThrowable(() -> {
+            user.setPassword("password ");
+            user.setPasswordCheck("password ");
+            service.update(form(user));
+        });
+        assertThat(thrown).isInstanceOf(UserException.class);
+        assertEquals("exception.wrongSymbols", thrown.getMessage());
         thrown = catchThrowable(() -> {
             user.setPassword("userpassword");
             user.setPasswordCheck("userpassword");
@@ -171,7 +185,7 @@ public class UserServiceImplTest {
         form.setSurname(user.getSurname());
         form.setPatronymic(user.getPatronymic());
         form.setEmail(user.getEmail());
-        form.setNewPassword(user.getPassword());
+        form.setPassword(user.getPassword());
         form.setPasswordCheck(user.getPasswordCheck());
         form.setIsActive(true);
         form.setRoles(user.getRoles().stream().map(Role::getId).collect(Collectors.toList()));

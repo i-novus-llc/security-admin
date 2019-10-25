@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.auth.server;
 
+import net.n2oapp.security.auth.common.User;
 import net.n2oapp.security.auth.common.authority.PermissionGrantedAuthority;
 import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
 import org.springframework.security.core.GrantedAuthority;
@@ -36,6 +37,20 @@ public class GatewayAccessTokenConverter extends DefaultAccessTokenConverter {
                         permissions.add(((PermissionGrantedAuthority) authority).getPermission());
                 }
             }
+        }
+        if (authentication.getUserAuthentication().getPrincipal() instanceof User) {
+            User principal = (User) authentication.getUserAuthentication().getPrincipal();
+            if (principal.getRegion() != null)
+                token.getAdditionalInformation().put("region", principal.getRegion());
+
+            if (principal.getDepartment() != null)
+                token.getAdditionalInformation().put("department", principal.getDepartment());
+
+            if (principal.getOrganization() != null)
+                token.getAdditionalInformation().put("organization", principal.getOrganization());
+
+            if (principal.getUserLevel() != null)
+                token.getAdditionalInformation().put("userLevel", principal.getUserLevel());
         }
         return super.convertAccessToken(token, authentication);
     }

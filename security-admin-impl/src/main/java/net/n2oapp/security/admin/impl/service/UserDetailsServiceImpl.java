@@ -1,9 +1,6 @@
 package net.n2oapp.security.admin.impl.service;
 
-import net.n2oapp.security.admin.api.model.Permission;
-import net.n2oapp.security.admin.api.model.Role;
-import net.n2oapp.security.admin.api.model.User;
-import net.n2oapp.security.admin.api.model.UserDetailsToken;
+import net.n2oapp.security.admin.api.model.*;
 import net.n2oapp.security.admin.api.service.UserDetailsService;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
@@ -33,6 +30,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private RoleRepository roleRepository;
 
@@ -155,6 +153,37 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         } else if (!defaultRoles.isEmpty()) {
             model.setRoles(defaultRoles.stream().map(this::getRoleModel).filter(Objects::nonNull).collect(Collectors.toList()));
         }
+
+
+        if (entity.getDepartment() != null) {
+            Department d = new Department();
+            d.setId(entity.getDepartment().getId());
+            d.setCode(entity.getDepartment().getCode());
+            d.setName(entity.getDepartment().getName());
+            model.setDepartment(d);
+        }
+
+        if (entity.getRegion() != null) {
+            Region r = new Region();
+            r.setId(entity.getRegion().getId());
+            r.setCode(entity.getRegion().getCode());
+            r.setOkato(entity.getRegion().getOkato());
+            r.setName(entity.getRegion().getName());
+            model.setRegion(r);
+        }
+
+        if (entity.getOrganization() != null) {
+            Organization o = new Organization();
+            o.setId(entity.getOrganization().getId());
+            o.setCode(entity.getOrganization().getCode());
+            o.setFullName(entity.getOrganization().getFullName());
+            o.setOgrn(entity.getOrganization().getOgrn());
+            o.setOkpo(entity.getOrganization().getOkpo());
+            o.setShortName(entity.getOrganization().getShortName());
+            model.setOrganization(o);
+        }
+
+        model.setUserLevel(entity.getUserLevel());
         return model;
     }
 

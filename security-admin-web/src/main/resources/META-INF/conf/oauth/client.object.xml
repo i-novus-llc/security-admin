@@ -16,8 +16,8 @@
                 <param id="isClientGrant" mapping="isClientGrant" domain="boolean" required="false"/>
                 <param id="isResourceOwnerPass" mapping="isResourceOwnerPass" domain="boolean" required="false"/>
                 <param id="isAuthorizationCode" mapping="isAuthorizationCode" domain="boolean" required="false"/>
-                <param id="accessTokenLifetime" mapping="accessTokenLifetime" domain="integer" required="true"/>
-                <param id="refreshTokenLifetime" mapping="refreshTokenLifetime" domain="integer" required="true"/>
+                <param id="accessTokenLifetime" mapping="accessTokenLifetime" domain="integer"/>
+                <param id="refreshTokenLifetime" mapping="refreshTokenLifetime" domain="integer"/>
                 <param id="redirectUris" mapping="redirectUris" domain="string[]" required="true"/>
                 <param id="logoutUrl" mapping="logoutUrl" domain="string" required="true"/>
                 <param id="enableClient" mapping="enabled" domain="boolean" required="true"/>

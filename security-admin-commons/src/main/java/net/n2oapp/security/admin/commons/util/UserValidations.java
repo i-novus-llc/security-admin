@@ -18,19 +18,19 @@ public class UserValidations {
     @Value("${sec.validation.username:true}")
     private Boolean validationUsername;
 
-    @Value("${sec.validation.password.length}")
+    @Value("${access.password.length}")
     private Integer validationPasswordLength;
 
-    @Value("${sec.validation.password.upper.case.letters}")
+    @Value("${access.password.upper-case-required}")
     private Boolean validationPasswordUpperCaseLetters;
 
-    @Value("${sec.validation.password.lower.case.letters}")
+    @Value("${access.password.lower-case-required}")
     private Boolean validationPasswordLowerCaseLetters;
 
-    @Value("${sec.validation.password.numbers}")
+    @Value("${access.password.numbers-required}")
     private Boolean validationPasswordNumbers;
 
-    @Value("${sec.validation.password.special.symbols}")
+    @Value("${access.password.special-symbols-required}")
     private Boolean validationPasswordSpecialSymbols;
 
     /**
@@ -76,29 +76,36 @@ public class UserValidations {
         String regexp;
         Pattern pattern;
         Matcher matcher;
+
+        regexp = "[0-9a-zA-Z@%\\+\\/'\\!#\\\\$\\^\\?:,\\(\\)\\{\\}\\[\\]~\\-_\\.]+";
+        pattern = Pattern.compile(regexp);
+        matcher = pattern.matcher(password);
+        if (!matcher.matches())
+            throw new UserException("exception.wrongSymbols");
+
         if (validationPasswordUpperCaseLetters) {
-            regexp = "^(?=.*[A-Z])(?=\\S+$).*$";
+            regexp = ".*[A-Z].*";
             pattern = Pattern.compile(regexp);
             matcher = pattern.matcher(password);
             if (!matcher.matches())
                 throw new UserException("exception.uppercaseLetters");
         }
         if (validationPasswordLowerCaseLetters) {
-            regexp = "^(?=.*[a-z])(?=\\S+$).*$";
+            regexp = ".*[a-z].*";
             pattern = Pattern.compile(regexp);
             matcher = pattern.matcher(password);
             if (!matcher.matches())
                 throw new UserException("exception.lowercaseLetters");
         }
         if (validationPasswordNumbers) {
-            regexp = "^(?=.*[0-9])(?=\\S+$).*$";
+            regexp = ".*[0-9].*";
             pattern = Pattern.compile(regexp);
             matcher = pattern.matcher(password);
             if (!matcher.matches())
                 throw new UserException("exception.numbers");
         }
         if (validationPasswordSpecialSymbols) {
-            regexp = "(?=.*[@#$%^&+=])(?=\\S+$).*$";
+            regexp = ".*[@%\\+\\/'\\!#\\\\$\\^\\?:,\\(\\)\\{\\}\\[\\]~\\-_\\.].*";
             pattern = Pattern.compile(regexp);
             matcher = pattern.matcher(password);
             if (!matcher.matches())

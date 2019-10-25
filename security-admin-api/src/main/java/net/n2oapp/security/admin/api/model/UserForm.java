@@ -40,13 +40,16 @@ public class UserForm {
     private String patronymic;
 
     @ApiModelProperty(value = "Пароль")
-    private String newPassword;
-
-    @ApiModelProperty(value = "Пароль")
     private String password;
 
     @ApiModelProperty(value = "Пароль")
     private String passwordCheck;
+
+    @ApiModelProperty(value = "Временный пароль")
+    private String temporaryPassword;
+
+    @ApiModelProperty(value = "Идет ли отправка пароля на почту")
+    private Boolean sendOnEmail;
 
     @ApiModelProperty(value = "Активен ли пользователь")
     private Boolean isActive;
@@ -57,7 +60,7 @@ public class UserForm {
     @ApiModelProperty(value = "СНИЛС пользователя")
     private String snils;
 
-    @ApiModelProperty(value = "Уровеь пользователя")
+    @ApiModelProperty(value = "Уровень пользователя")
     private String userLevel;
 
     @ApiModelProperty(value = "Код департамента")
