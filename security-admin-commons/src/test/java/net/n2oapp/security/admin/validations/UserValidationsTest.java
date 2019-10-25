@@ -29,6 +29,8 @@ public class UserValidationsTest {
         snilsArray[3] = "100-283-455 01";
         Arrays.stream(snilsArray).map(s -> catchThrowable(() -> {
             userValidations.checkSnils(s);
-        })).forEach(thrown -> assertThat(thrown).isInstanceOf(UserException.class));
+        })).forEach(thrown -> {
+            assert (thrown instanceof UserException);
+        });
     }
 }
