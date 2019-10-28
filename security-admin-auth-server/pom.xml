@@ -37,15 +37,15 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
+            <groupId>net.n2oapp.framework.security</groupId>
+            <artifactId>security-admin-impl</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>net.n2oapp.framework.security</groupId>
-            <artifactId>security-admin-sso-keycloak</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
