@@ -53,7 +53,9 @@ public class UserServiceImpl implements UserService {
     public User create(UserForm user) {
         userValidations.checkUsernameUniq(user.getId(), model(userRepository.findOneByUsernameIgnoreCase(user.getUsername())));
         userValidations.checkUsername(user.getUsername());
-        userValidations.checkEmail(user.getEmail());
+        if (user.getEmail() != null) {
+            userValidations.checkEmail(user.getEmail());
+        }
         String password = (user.getPassword() != null) ? user.getPassword() : user.getTemporaryPassword();
         if (user.getPassword() != null)
             userValidations.checkPassword(password, user.getPasswordCheck(), user.getId());
@@ -77,7 +79,9 @@ public class UserServiceImpl implements UserService {
                 savedUser = userRepository.save(changedSsoUser);
             }
         }
-        mailService.sendWelcomeMail(user);
+        if (Boolean.TRUE.equals(user.getSendOnEmail()) && user.getEmail() != null) {
+            mailService.sendWelcomeMail(user);
+        }
         return audit("audit.userCreate", model(savedUser));
     }
 
@@ -175,8 +179,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void resetPassword(UserForm user) {
+        if (user.getEmail() != null) {
+            userValidations.checkEmail(user.getEmail());
+        }
         // используем либо установленный пользователем, либо сгенерированный пароль
         String password = (user.getPassword() != null) ? user.getPassword() : user.getTemporaryPassword();
+        if (user.getPassword() != null) {
+            userValidations.checkPassword(password, user.getPasswordCheck(), user.getId());
+        }
 
         if (user.getId() != null && password != null) {
             UserEntity userEntity = userRepository.getOne(user.getId());
@@ -192,7 +202,9 @@ public class UserServiceImpl implements UserService {
                     provider.updateUser(ssoUser);
                 }
 
-                mailService.sendResetPasswordMail(user);
+                if (Boolean.TRUE.equals(user.getSendOnEmail()) && user.getEmail() != null) {
+                    mailService.sendResetPasswordMail(user);
+                }
             }
         }
     }

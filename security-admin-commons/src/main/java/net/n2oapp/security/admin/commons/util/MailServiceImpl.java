@@ -65,8 +65,7 @@ public class MailServiceImpl implements MailService {
         data.put("surname", valueOrEmpty(user.getSurname()));
         data.put("name", valueOrEmpty(user.getName()));
         data.put("patronymic", valueOrEmpty(user.getPatronymic()));
-        if (Boolean.TRUE.equals(user.getSendOnEmail()))
-            data.put("password", user.getPassword() != null ? user.getPassword() : user.getTemporaryPassword());
+        data.put("password", user.getPassword() != null ? user.getPassword() : user.getTemporaryPassword());
         data.put("email", user.getEmail());
 
         sendMail(data, welcomeMailSubject, welcomeMailResource);
@@ -80,8 +79,7 @@ public class MailServiceImpl implements MailService {
     public void sendResetPasswordMail(UserForm user) {
         Map<String, Object> data = new HashMap<>();
         data.put("username", user.getUsername());
-        if (Boolean.TRUE.equals(user.getSendOnEmail()))
-            data.put("password", user.getPassword() != null ? user.getPassword() : user.getTemporaryPassword());
+        data.put("password", user.getPassword() != null ? user.getPassword() : user.getTemporaryPassword());
         data.put("email", user.getEmail());
 
         sendMail(data, resetPasswordMailSubject, resetPasswordMailResource);
