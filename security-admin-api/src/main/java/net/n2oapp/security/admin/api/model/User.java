@@ -18,12 +18,6 @@ public class User {
     @ApiModelProperty(value = "Идентификатор")
     private Integer id;
 
-    @ApiModelProperty(value = "Наименование sso")
-    private String extSys;
-
-    @ApiModelProperty(value = "Внешний идентификатор")
-    private String extUid;
-
     @ApiModelProperty(value = "Имя пользователя")
     private String username;
 
@@ -59,6 +53,9 @@ public class User {
 
     @ApiModelProperty(value = "Список ролей")
     private List<Role> roles;
+
+    @ApiModelProperty(value = "СНИЛС пользователя")
+    private String snils;
 
     @ApiModelProperty(value = "Уровень пользователя, для которого предназначена роль")
     private UserLevel userLevel;

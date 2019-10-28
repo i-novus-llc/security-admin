@@ -6,12 +6,15 @@ import net.n2oapp.auth.gateway.esia.EsiaAccessTokenProvider;
 import net.n2oapp.auth.gateway.esia.EsiaUserInfoTokenServices;
 import net.n2oapp.auth.gateway.esia.Pkcs7Util;
 import net.n2oapp.security.admin.api.service.ClientService;
-import net.n2oapp.security.admin.api.service.UserDetailsService;
+import net.n2oapp.security.admin.auth.server.EsiaUserDetailsService;
 import net.n2oapp.security.admin.auth.server.OAuthServerConfiguration;
+import net.n2oapp.security.admin.auth.server.exception.UserNotFoundAuthenticationExceptionHandler;
 import net.n2oapp.security.admin.auth.server.logout.BackChannelLogoutHandler;
+import net.n2oapp.security.admin.impl.service.UserDetailsServiceImpl;
 import net.n2oapp.security.auth.common.AuthoritiesPrincipalExtractor;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
@@ -69,7 +72,11 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
     private OAuth2ClientContext oauth2ClientContext;
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    private UserDetailsServiceImpl userDetailsService;
+
+    @Autowired
+    @Qualifier("esiaUserDetailsService")
+    private EsiaUserDetailsService esiaUserDetailsService;
 
     @Autowired
     private KeyStoreKeyFactory keyStoreKeyFactory;
@@ -139,7 +146,7 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
         filter.setRestTemplate(template);
         UserInfoTokenServices tokenServices = new UserInfoTokenServices(client.getResource().getUserInfoUri(), client.getClient().getClientId());
         tokenServices.setRestTemplate(template);
-        AuthoritiesPrincipalExtractor extractor = new AuthoritiesPrincipalExtractor(userDetailsService).setAuthServer("KEYCLOAK");
+        AuthoritiesPrincipalExtractor extractor = new AuthoritiesPrincipalExtractor(userDetailsService.setExternalSystem("KEYCLOAK"));
         tokenServices.setAuthoritiesExtractor(extractor);
         tokenServices.setPrincipalExtractor(extractor);
         filter.setTokenServices(tokenServices);
@@ -152,10 +159,11 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
         OAuth2RestTemplate template = new OAuth2RestTemplate(client.getClient(), oauth2ClientContext);
         template.setAccessTokenProvider(new AccessTokenProviderChain(Arrays.asList(new EsiaAccessTokenProvider(pkcs7Util))));
         filter.setRestTemplate(template);
+        filter.setAuthenticationFailureHandler(new UserNotFoundAuthenticationExceptionHandler());
         EsiaUserInfoTokenServices tokenServices = new EsiaUserInfoTokenServices(client.getResource().getUserInfoUri(), client.getClient().getClientId());
         tokenServices.setRestTemplate(template);
-        AuthoritiesPrincipalExtractor extractor = new AuthoritiesPrincipalExtractor(userDetailsService)
-                .setAuthServer("ESIA").setPrincipalKeys("snils");   //FIXME поменять на email
+        AuthoritiesPrincipalExtractor extractor = new AuthoritiesPrincipalExtractor(esiaUserDetailsService.setSynchronizeFio(true).setExternalSystem("ESIA"))
+                .setPrincipalKeys("snils");
         tokenServices.setAuthoritiesExtractor(extractor);
         tokenServices.setPrincipalExtractor(extractor);
         filter.setTokenServices(tokenServices);

@@ -98,6 +98,12 @@ public class UserEntity {
     private String extSys;
 
     /**
+     * СНИЛС пользователя
+     */
+    @Column(name = "snils")
+    private String snils;
+
+    /**
      * Регион пользователя (заполняется для регионального уровня пользователей)
      */
     @JoinColumn(name = "region_id")

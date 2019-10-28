@@ -93,8 +93,7 @@ public class UserServiceSql implements UserService {
                             .addValue("surname", user.getSurname())
                             .addValue("name", user.getName())
                             .addValue("patronymic", user.getPatronymic())
-                            .addValue("isActive", true)
-                            .addValue("extUid", user.getExtUid());
+                            .addValue("isActive", true);
             ((MapSqlParameterSource) namedParameters).addValue("password", passwordHash);
             KeyHolder keyHolder = new GeneratedKeyHolder();
             jdbcTemplate.update(SqlUtil.getResourceFileAsString(INSERT_USER), namedParameters, keyHolder, new String[]{"id"});
@@ -123,8 +122,7 @@ public class UserServiceSql implements UserService {
                             .addValue("surname", user.getSurname())
                             .addValue("name", user.getName())
                             .addValue("patronymic", user.getPatronymic())
-                            .addValue("isActive", user.getIsActive())
-                            .addValue("extUid", user.getExtUid());
+                            .addValue("isActive", user.getIsActive());
             if (user.getPassword() == null) {
                 jdbcTemplate.update(SqlUtil.getResourceFileAsString(UPDATE_USER_WITHOUT_PASS), namedParameters);
             } else {
@@ -237,8 +235,7 @@ public class UserServiceSql implements UserService {
                                     .addValue("surname", user.getSurname())
                                     .addValue("name", user.getName())
                                     .addValue("patronymic", user.getPatronymic())
-                                    .addValue("isActive", user.getIsActive())
-                                    .addValue("extUid", user.getExtUid());
+                                    .addValue("isActive", user.getIsActive());
 
                     namedParameters.addValue("password", passwordEncoder.encode(password));
                     jdbcTemplate.update(SqlUtil.getResourceFileAsString(UPDATE_USER), namedParameters);
@@ -272,7 +269,6 @@ public class UserServiceSql implements UserService {
         if (form == null) return null;
         User user = new User();
         user.setId(form.getId());
-        user.setExtUid(form.getExtUid());
         user.setUsername(form.getUsername());
         user.setName(form.getName());
         user.setSurname(form.getSurname());
@@ -291,7 +287,6 @@ public class UserServiceSql implements UserService {
         if (resultSet == null) return null;
         User user = new User();
         user.setId(resultSet.getInt("id"));
-        user.setExtUid(resultSet.getString("ext_uid"));
         user.setUsername(resultSet.getString("username"));
         user.setName(resultSet.getString("name"));
         user.setSurname(resultSet.getString("surname"));

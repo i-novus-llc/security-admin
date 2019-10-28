@@ -35,8 +35,9 @@ import java.security.interfaces.RSAPublicKey;
 @EnableAuthorizationServer
 public class OAuthServerConfiguration extends OAuth2AuthorizationServerConfiguration {
 
-
-    public OAuthServerConfiguration(BaseClientDetails details, AuthenticationConfiguration authenticationConfiguration, ObjectProvider<TokenStore> tokenStore, ObjectProvider<AccessTokenConverter> tokenConverter, AuthorizationServerProperties properties) throws Exception {
+    public OAuthServerConfiguration(BaseClientDetails details, AuthenticationConfiguration authenticationConfiguration,
+                                    ObjectProvider<TokenStore> tokenStore, ObjectProvider<AccessTokenConverter> tokenConverter,
+                                    AuthorizationServerProperties properties) throws Exception {
         super(details, authenticationConfiguration, tokenStore, tokenConverter, properties);
     }
 
@@ -51,7 +52,6 @@ public class OAuthServerConfiguration extends OAuth2AuthorizationServerConfigura
         clients.withClientDetails(new GatewayService());
     }
 
-
     @Getter
     @Setter
     @ConfigurationProperties(prefix = "access.auth.keystore")
@@ -59,7 +59,6 @@ public class OAuthServerConfiguration extends OAuth2AuthorizationServerConfigura
         private String password;
         private String keyId;
     }
-
 
     @Configuration
     @EnableConfigurationProperties(KeystoreProperties.class)
@@ -108,5 +107,4 @@ public class OAuthServerConfiguration extends OAuth2AuthorizationServerConfigura
             }
         }
     }
-
 }

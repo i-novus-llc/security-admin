@@ -1,41 +1,53 @@
 package net.n2oapp.security.admin.impl.service;
 
-import liquibase.util.StringUtils;
-import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.model.*;
 import net.n2oapp.security.admin.api.service.UserDetailsService;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
+import net.n2oapp.security.admin.impl.exception.UserNotFoundAuthenticationException;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@Primary
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    private UserRepository userRepository;
+    protected UserRepository userRepository;
 
     @Autowired
-    private RoleRepository roleRepository;
+    protected RoleRepository roleRepository;
 
     @Value("${access.keycloak.ignore-roles:offline_access,uma_authorization}")
     private String[] ignoreRoles;
 
+    private Boolean createUser = true;
+
+    private List<String> defaultRoles = new ArrayList<>();
+
+    private Boolean updateUser = true;
+
+    private Boolean updateRoles = true;
+
+    private String externalSystem;
+
     @Override
     public User loadUserDetails(UserDetailsToken userDetails) {
         UserEntity userEntity = userRepository.findOneByUsernameIgnoreCase(userDetails.getUsername());
-        if (userEntity == null) {
+        if (userEntity == null && createUser) {
             userEntity = new UserEntity();
             userEntity.setUsername(userDetails.getUsername());
             userEntity.setExtUid(userDetails.getExtUid());
@@ -43,15 +55,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             userEntity.setSurname(userDetails.getSurname());
             userEntity.setName(userDetails.getName());
             userEntity.setIsActive(true);
-            userEntity.setExtSys(userDetails.getExtSys());
-            if (userDetails.getRoleNames() != null) {
+            userEntity.setExtSys(externalSystem);
+            if (userDetails.getRoleNames() != null && !userDetails.getRoleNames().isEmpty()) {
                 userEntity.setRoleList(userDetails.getRoleNames().stream().map(this::getOrCreateRole).filter(Objects::nonNull).collect(Collectors.toList()));
             }
             userRepository.save(userEntity);
-        } else {
-            if (!StringUtils.equalsIgnoreCaseAndEmpty(userEntity.getExtSys(), userDetails.getExtSys())) {
-                throw new UserException("exception.ssoOtherSystemUser");
-            }
+        } else if (userEntity == null && !createUser) {
+            throw new UserNotFoundAuthenticationException("User " + userDetails.getName() + " " + userDetails.getSurname() + " doesn't registered in system");
+        } else if (updateUser) {
             userEntity.setIsActive(true);
             if (userDetails.getExtUid() != null) {
                 userEntity.setExtUid(userDetails.getExtUid());
@@ -59,15 +70,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             if (userDetails.getEmail() != null) {
                 userEntity.setEmail(userDetails.getEmail());
             }
+            if (userDetails.getPatronymic() != null) {
+                userEntity.setPatronymic(userDetails.getPatronymic());
+            }
             if (userDetails.getSurname() != null) {
                 userEntity.setSurname(userDetails.getSurname());
             }
             if (userDetails.getName() != null) {
                 userEntity.setName(userDetails.getName());
             }
-            if (userDetails.getRoleNames() == null) {
+            if (userDetails.getRoleNames() == null && updateRoles) {
                 userEntity.getRoleList().clear();
-            } else {
+            } else if (updateRoles) {
                 List<String> roleNamesCopy = new ArrayList<>(userDetails.getRoleNames());
                 List<RoleEntity> roleForRemove = new ArrayList<>();
                 for (RoleEntity r : userEntity.getRoleList()) {
@@ -105,18 +119,20 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return roleEntity;
     }
 
+    private Role getRoleModel(String code) {
+        return model(roleRepository.findOneByCode(code));
+    }
+
     private User model(UserEntity entity) {
         if (entity == null) return null;
         User model = new User();
         model.setId(entity.getId());
-        model.setExtUid(entity.getExtUid());
         model.setUsername(entity.getUsername());
         model.setName(entity.getName());
         model.setSurname(entity.getSurname());
         model.setPatronymic(entity.getPatronymic());
         model.setIsActive(entity.getIsActive());
         model.setEmail(entity.getEmail());
-        model.setExtSys(entity.getExtSys());
         StringBuilder builder = new StringBuilder();
         if (entity.getSurname() != null) {
             builder.append(entity.getSurname()).append(" ");
@@ -128,8 +144,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             builder.append(entity.getPatronymic());
         }
         model.setFio(builder.toString());
-        if (entity.getRoleList() != null) {
+
+        if (entity.getRoleList() != null && !entity.getRoleList().isEmpty()) {
             model.setRoles(entity.getRoleList().stream().map(this::model).collect(Collectors.toList()));
+        } else if (!defaultRoles.isEmpty()) {
+            model.setRoles(defaultRoles.stream().map(this::getRoleModel).filter(Objects::nonNull).collect(Collectors.toList()));
         }
 
 
@@ -165,7 +184,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return model;
     }
 
-    private Role model(RoleEntity entity) {
+    protected Role model(RoleEntity entity) {
         if (entity == null) return null;
         Role model = new Role();
         model.setId(entity.getId());
@@ -178,7 +197,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return model;
     }
 
-
     private Permission model(PermissionEntity entity) {
         if (entity == null) return null;
         Permission model = new Permission();
@@ -188,4 +206,37 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return model;
     }
 
+    public UserDetailsServiceImpl setCreateUser(Boolean createUser) {
+        this.createUser = createUser;
+        return this;
+    }
+
+    public UserDetailsServiceImpl setDefaultRoles(List<String> defaultRoles) {
+        this.defaultRoles = defaultRoles;
+        return this;
+    }
+
+    public UserDetailsServiceImpl addDefaultRoles(String... role) {
+        this.defaultRoles.addAll(Arrays.asList(role));
+        return this;
+    }
+
+    public UserDetailsServiceImpl setUpdateUser(Boolean updateUser) {
+        this.updateUser = updateUser;
+        return this;
+    }
+
+    public UserDetailsServiceImpl setUpdateRoles(Boolean updateRoles) {
+        this.updateRoles = updateRoles;
+        return this;
+    }
+
+    public String getExternalSystem() {
+        return externalSystem;
+    }
+
+    public UserDetailsServiceImpl setExternalSystem(String externalSystem) {
+        this.externalSystem = externalSystem;
+        return this;
+    }
 }

@@ -10,4 +10,5 @@ import net.n2oapp.security.admin.api.model.UserDetailsToken;
 public interface UserDetailsService {
 
     User loadUserDetails(UserDetailsToken userDetails);
+
 }
