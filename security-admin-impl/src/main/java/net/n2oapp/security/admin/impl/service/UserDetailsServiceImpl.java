@@ -5,15 +5,12 @@ import net.n2oapp.security.admin.api.service.UserDetailsService;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
-import net.n2oapp.security.admin.impl.exception.UserNotFoundOauthException;
+import net.n2oapp.security.admin.impl.exception.UserNotFoundAuthenticationException;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
-import org.apache.cxf.interceptor.security.AccessDeniedException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,7 +59,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             }
             userRepository.save(userEntity);
         } else if (userEntity == null && !createUser) {
-            throw new UserNotFoundOauthException("");
+            throw new UserNotFoundAuthenticationException("User " + userDetails.getName() + " " + userDetails.getSurname() + " doesn't registered in system");
         } else if (updateUser) {
             userEntity.setIsActive(true);
             if (userDetails.getExtUid() != null) {
