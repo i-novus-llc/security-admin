@@ -1,7 +1,7 @@
 package net.n2oapp.security.admin.impl.provider;
 
 import net.n2oapp.security.admin.api.model.Role;
-import net.n2oapp.security.admin.api.model.User;
+import net.n2oapp.security.admin.api.model.SsoUser;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 
 /**
@@ -15,22 +15,22 @@ public class SimpleSsoUserRoleProvider implements SsoUserRoleProvider {
     }
 
     @Override
-    public User createUser(User user) {
+    public SsoUser createUser(SsoUser user) {
         return user;
     }
 
     @Override
-    public void updateUser(User user) {
+    public void updateUser(SsoUser user) {
 
     }
 
     @Override
-    public void deleteUser(User user) {
+    public void deleteUser(SsoUser user) {
 
     }
 
     @Override
-    public void changeActivity(User user) {
+    public void changeActivity(SsoUser user) {
 
     }
 

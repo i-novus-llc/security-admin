@@ -60,12 +60,6 @@ public interface UserRestService {
     @ApiResponse(code = 200, message = "Пользователь с измененным статусом")
     User changeActive(@ApiParam(value = "Идентификатор") @PathParam("id") Integer id);
 
-    @POST
-    @Path("/details")
-    @ApiOperation("Загрузить информацию о пользователе, по его имени и списку ролей")
-    @ApiResponse(code = 200, message = "Страница пользователей")
-    User loadDetails(@ApiParam(value = "Информация о пользователе") RestUserDetailsToken token);
-
     @GET
     @Path("/simpleDetails")
     @ApiOperation("Загрузить простейшую информацию о пользователе (имя, почта и временный пароль)")

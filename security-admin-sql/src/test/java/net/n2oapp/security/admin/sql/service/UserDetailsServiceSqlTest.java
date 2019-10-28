@@ -47,7 +47,6 @@ public class UserDetailsServiceSqlTest {
         User user = service.loadUserDetails(u);
         assertThat(user.getUsername(), is(u.getUsername()));
         assertThat(user.getEmail(), is(u.getEmail()));
-        assertThat(user.getExtUid(), is(u.getExtUid()));
         assertThat(user.getSurname(), is(u.getSurname()));
         assertThat(user.getName(), is(u.getName()));
 
@@ -91,7 +90,6 @@ public class UserDetailsServiceSqlTest {
         u.setEmail("test@example.com");
         u.setSurname("surname1");
         u.setName("name1");
-        u.setExtUid("0c161cec-fbc7-42e4-b0d5-5224f7e5751a");
         u.setRoleNames(Arrays.asList("user", "admin"));
 
         User user = service.loadUserDetails(u);

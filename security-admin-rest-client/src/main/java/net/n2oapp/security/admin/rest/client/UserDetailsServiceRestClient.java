@@ -3,7 +3,7 @@ package net.n2oapp.security.admin.rest.client;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserDetailsToken;
 import net.n2oapp.security.admin.api.service.UserDetailsService;
-import net.n2oapp.security.admin.rest.api.UserRestService;
+import net.n2oapp.security.admin.rest.api.UserDetailsRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestUserDetailsToken;
 
 /**
@@ -11,9 +11,9 @@ import net.n2oapp.security.admin.rest.api.criteria.RestUserDetailsToken;
  */
 public class UserDetailsServiceRestClient implements UserDetailsService {
 
-    private UserRestService client;
+    private UserDetailsRestService client;
 
-    public UserDetailsServiceRestClient(UserRestService client) {
+    public UserDetailsServiceRestClient(UserDetailsRestService client) {
         this.client = client;
     }
 
@@ -22,4 +22,5 @@ public class UserDetailsServiceRestClient implements UserDetailsService {
         RestUserDetailsToken token = new RestUserDetailsToken(userDetails);
         return client.loadDetails(token);
     }
+
 }

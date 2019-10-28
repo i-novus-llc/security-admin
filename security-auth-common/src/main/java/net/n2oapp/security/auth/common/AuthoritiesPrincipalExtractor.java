@@ -26,13 +26,12 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
     private String[] PRINCIPAL_KEYS = new String[]{"username", "preferred_username", "login", "sub"};
     private static final String[] SURNAME_KEYS = new String[]{"surname", "second_name", "family_name", "lastName"};
     private static final String[] NAME_KEYS = new String[]{"first_name", "given_name", "name", "firstName"};
+    private static final String[] PATRONYMIC_KEYS = new String[]{"middleName"};
     private static final String[] EMAIL_KEYS = new String[]{"email", "e-mail", "mail"};
     private static final String[] GUID_KEYS = new String[]{"sub", "oid"};
     private static final String[] AUTHORITIES_KEYS = new String[]{"roles", "authorities", "realm_access.roles", "resource_access.roles"};
 
     private UserDetailsService userDetailsService;
-
-    private String authServer;
 
     public AuthoritiesPrincipalExtractor(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
@@ -66,11 +65,6 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
         return getAuthorities(map, null);
     }
 
-    public AuthoritiesPrincipalExtractor setAuthServer(String sso) {
-        this.authServer = sso;
-        return this;
-    }
-
     public AuthoritiesPrincipalExtractor setPrincipalKeys(String... pKeys) {
         PRINCIPAL_KEYS = pKeys;
         return this;
@@ -89,15 +83,16 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
         String surname = extractFromMap(SURNAME_KEYS, map) == null ? null : (String) extractFromMap(SURNAME_KEYS, map);
         String name = extractFromMap(NAME_KEYS, map) == null ? null : (String) extractFromMap(NAME_KEYS, map);
         String email = extractFromMap(EMAIL_KEYS, map) == null ? null : (String) extractFromMap(EMAIL_KEYS, map);
+        String patronymic = extractFromMap(PATRONYMIC_KEYS, map) == null ? null : (String) extractFromMap(PATRONYMIC_KEYS, map);
 
         UserDetailsToken token = new UserDetailsToken();
         token.setUsername(username);
         token.setRoleNames(roleList);
         token.setExtUid((String) extractFromMap(GUID_KEYS, map));
-        token.setSurname(surname);
         token.setName(name);
+        token.setSurname(surname);
+        token.setPatronymic(patronymic);
         token.setEmail(email);
-        token.setExtSys(authServer);
         net.n2oapp.security.admin.api.model.User user = userDetailsService.loadUserDetails(token);
 
         if (user.getDepartment() != null) {
