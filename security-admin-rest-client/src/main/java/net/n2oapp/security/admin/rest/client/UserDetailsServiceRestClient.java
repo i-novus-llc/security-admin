@@ -23,8 +23,4 @@ public class UserDetailsServiceRestClient implements UserDetailsService {
         return client.loadDetails(token);
     }
 
-    @Override
-    public UserDetailsService setExternalSystem(String externalSystem) {
-        return null;
-    }
 }
