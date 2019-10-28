@@ -46,14 +46,12 @@ public class UserDetailsServiceSql implements UserDetailsService {
         u.setName(token.getName());
         u.setUsername(token.getUsername());
         u.setSurname(token.getSurname());
-        u.setExtUid(token.getExtUid());
         u.setEmail(token.getEmail());
 
         MapSqlParameterSource namedParameters =
                 new MapSqlParameterSource("username", u.getUsername())
                         .addValue("name", u.getSurname())
                         .addValue("surname", u.getName())
-                        .addValue("extUid", u.getExtUid())
                         .addValue("email", u.getEmail())
                         .addValue("isActive", true)
                         .addValue("password", null)
@@ -86,7 +84,7 @@ public class UserDetailsServiceSql implements UserDetailsService {
 
     private User getUser(UserDetailsToken token) {
         MapSqlParameterSource parameters =
-                new MapSqlParameterSource("extUid", token.getExtUid())
+                new MapSqlParameterSource()
                         .addValue("surname", token.getSurname())
                         .addValue("name", token.getName())
                         .addValue("username", token.getUsername())
@@ -143,7 +141,6 @@ public class UserDetailsServiceSql implements UserDetailsService {
         user.setEmail(resultSet.getString("email"));
         user.setPassword(resultSet.getString("password"));
         user.setIsActive(resultSet.getBoolean("is_active"));
-        user.setExtUid(resultSet.getString("ext_uid"));
         user.setSurname(resultSet.getString("surname"));
         user.setName(resultSet.getString("name"));
         user.setPatronymic(resultSet.getString("patronymic"));

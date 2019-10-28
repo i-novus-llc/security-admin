@@ -98,7 +98,7 @@ public class UserEntity {
     private String extSys;
 
     /**
-     * СНИЛС пользователся
+     * СНИЛС пользователя
      */
     @Column(name = "snils")
     private String snils;

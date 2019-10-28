@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
         UserEntity savedUser = userRepository.save(entity);
         // получаем модель для сохранения SSO провайдером, ему надо передать незакодированный пароль
         if (provider.isSupports(savedUser.getExtSys())) {
-            User ssoUser = model(savedUser);
+            SsoUser ssoUser = ssoModel(savedUser);
             ssoUser.setPassword(password);
             ssoUser = provider.createUser(ssoUser);
             if (nonNull(ssoUser)) {
@@ -102,7 +102,7 @@ public class UserServiceImpl implements UserService {
         UserEntity updatedUser = userRepository.save(entityUser);
         //в провайдер отправляем незакодированный пароль, если он изменился, и отправляем null, если не изменялся пароль
         if (provider.isSupports(updatedUser.getExtSys())) {
-            User ssoUser = model(updatedUser);
+            SsoUser ssoUser = ssoModel(updatedUser);
             if (isNull(user.getPassword())) {
                 ssoUser.setPassword(null);
             } else {
@@ -115,7 +115,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(Integer id) {
-        User user = model(userRepository.findById(id).orElse(null));
+        SsoUser user = ssoModel(userRepository.findById(id).orElse(null));
         userRepository.deleteById(id);
         if (nonNull(user)) {
             audit("audit.userDelete", user);
@@ -148,7 +148,7 @@ public class UserServiceImpl implements UserService {
     public User changeActive(Integer id) {
         UserEntity userEntity = userRepository.findById(id).orElse(null);
         userEntity.setIsActive(!userEntity.getIsActive());
-        User result = model(userRepository.save(userEntity));
+        SsoUser result = ssoModel(userRepository.save(userEntity));
         if (provider.isSupports(userEntity.getExtSys())) {
             provider.changeActivity(result);
         }
@@ -192,7 +192,7 @@ public class UserServiceImpl implements UserService {
 
                 //в провайдер отправляем незакодированный пароль
                 if (provider.isSupports(updatedUser.getExtSys())) {
-                    User ssoUser = model(updatedUser);
+                    SsoUser ssoUser = ssoModel(updatedUser);
                     ssoUser.setPassword(password);
                     provider.updateUser(ssoUser);
                 }
@@ -219,7 +219,7 @@ public class UserServiceImpl implements UserService {
         return entity;
     }
 
-    private UserEntity entityProvider(User modelFromProvider) {
+    private UserEntity entityProvider(SsoUser modelFromProvider) {
         UserEntity entity = new UserEntity();
         entity.setId(modelFromProvider.getId());
         entity.setExtUid(modelFromProvider.getExtUid());
@@ -245,15 +245,13 @@ public class UserServiceImpl implements UserService {
 
     private User model(UserEntity entity) {
         if (isNull(entity)) return null;
-        User model = new User();
+        SsoUser model = new SsoUser();
         model.setId(entity.getId());
-        model.setExtUid(entity.getExtUid());
         model.setUsername(entity.getUsername());
         model.setName(entity.getName());
         model.setSurname(entity.getSurname());
         model.setPatronymic(entity.getPatronymic());
         model.setIsActive(entity.getIsActive());
-        model.setExtSys(entity.getExtSys());
         model.setEmail(entity.getEmail());
         model.setSnils(entity.getSnils());
         model.setPasswordHash(entity.getPasswordHash());
@@ -279,6 +277,13 @@ public class UserServiceImpl implements UserService {
             }).collect(Collectors.toList()));
         }
         return model;
+    }
+
+    private SsoUser ssoModel(UserEntity entity) {
+        SsoUser ssoUser = (SsoUser) model(entity);
+        ssoUser.setExtSys(entity.getExtSys());
+        ssoUser.setExtUid(entity.getExtUid());
+        return ssoUser;
     }
 
     private Role model(RoleEntity entity) {

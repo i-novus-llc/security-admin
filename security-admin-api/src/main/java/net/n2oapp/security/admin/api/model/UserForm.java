@@ -57,7 +57,7 @@ public class UserForm {
     @ApiModelProperty(value = "Список идентификаторов ролей")
     private List<Integer> roles;
 
-    @ApiModelProperty(value = "СНИЛС пользователся")
+    @ApiModelProperty(value = "СНИЛС пользователя")
     private String snils;
 
     @ApiModelProperty(value = "Уровень пользователя")

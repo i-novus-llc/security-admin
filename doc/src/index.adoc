@@ -952,7 +952,7 @@ insert into sec.permission(name, code) values('Право доступа к мо
 |===
 |Код|Тип|Описание
 
-|access.system.enabled=true
+|access.system.enabled
 |boolean
 |Отображение систем на UI
 
@@ -975,6 +975,26 @@ insert into sec.permission(name, code) values('Право доступа к мо
 |audit.client.apiUrl
 |string
 |Адрес сервиса аудита
+
+|access.level.enabled
+|boolean
+|Включено ли разделение пользователей по уровням
+
+|access.level.federal
+|boolean
+|Добавление в систему уровня пользователей Федеральный
+
+|access.level.regional
+|boolean
+|Добавление в систему уровня пользователей Региональный
+
+|access.level.org
+|boolean
+|Добавление в систему уровня пользователей Организация
+
+|access.level.department
+|boolean
+|Показывается ли поле департамент при выборе уровня пользвателя федеральный
 
 |access.auth.access-token-lifetime
 |integer

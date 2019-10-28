@@ -1,7 +1,7 @@
 package net.n2oapp.security.admin.api.provider;
 
 import net.n2oapp.security.admin.api.model.Role;
-import net.n2oapp.security.admin.api.model.User;
+import net.n2oapp.security.admin.api.model.SsoUser;
 
 /**
  * Создание, изменение, удаление пользователя и ролей на sso сервере
@@ -19,25 +19,25 @@ public interface SsoUserRoleProvider {
      * @param user  пользователь для создания
      * @return  пользователь с обновленными данными
      */
-    User createUser(User user);
+    SsoUser createUser(SsoUser user);
 
     /**
      * Изменение пользователя
      * @param user  пользователь
      */
-    void updateUser(User user);
+    void updateUser(SsoUser user);
 
     /**
      * Удаление пользователя
      * @param user
      */
-    void deleteUser(User user);
+    void deleteUser(SsoUser user);
 
     /**
      * Изменение активности пользователя
      * @param user
      */
-    void changeActivity(User user);
+    void changeActivity(SsoUser user);
 
     /**
      * Создание роли

@@ -235,8 +235,7 @@
                     var snilsNoCheckSum = snils.slice(0,3) +  snils.slice(4,7) + snils.slice(8,11);
                     var checksum = Number (snils.slice(12,14));
                     var sum = 0;
-                    if((snilsNoCheckSum) > 1001998)
-                    {
+                    if((snilsNoCheckSum) > 1001998){
                        var multiplier = 9;
                        for (var i = 0; i < 9; i++) {
                           sum = sum + (multiplier - i) * (snilsNoCheckSum[i]);
