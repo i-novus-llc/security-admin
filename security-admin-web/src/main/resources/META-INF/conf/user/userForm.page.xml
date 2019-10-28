@@ -52,6 +52,9 @@
             <input-text id="surname" label="Фамилия" required="${access.user.surname.required}" length="100"/>
             <input-text id="name" label="Имя" required="${access.user.name.required}" length="100"/>
             <input-text id="patronymic" label="Отчество" length="100"/>
+            <masked-input id="snils" mask="999-999-999 99" visible="${access.user.snils-visible}">
+                <validations white-list="snilsValidation"/>
+            </masked-input>
             <input-select id="userLevel" query-id="userLevel" label-field-id="name"
                           visible="${access.level.enabled}" label="Уровень пользователя">
             </input-select>
