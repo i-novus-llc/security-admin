@@ -26,10 +26,10 @@ import java.util.stream.Collectors;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    private UserRepository userRepository;
+    protected UserRepository userRepository;
 
     @Autowired
-    private RoleRepository roleRepository;
+    protected RoleRepository roleRepository;
 
     @Value("${access.keycloak.ignore-roles:offline_access,uma_authorization}")
     private String[] ignoreRoles;
@@ -42,6 +42,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private Boolean updateRoles = true;
 
+    private String externalSystem;
+
     @Override
     public User loadUserDetails(UserDetailsToken userDetails) {
         UserEntity userEntity = userRepository.findOneByUsernameIgnoreCase(userDetails.getUsername());
@@ -53,7 +55,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             userEntity.setSurname(userDetails.getSurname());
             userEntity.setName(userDetails.getName());
             userEntity.setIsActive(true);
-            userEntity.setExtSys(userDetails.getExtSys());
+            userEntity.setExtSys(externalSystem);
             if (userDetails.getRoleNames() != null && !userDetails.getRoleNames().isEmpty()) {
                 userEntity.setRoleList(userDetails.getRoleNames().stream().map(this::getOrCreateRole).filter(Objects::nonNull).collect(Collectors.toList()));
             }
@@ -125,14 +127,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (entity == null) return null;
         User model = new User();
         model.setId(entity.getId());
-        model.setExtUid(entity.getExtUid());
         model.setUsername(entity.getUsername());
         model.setName(entity.getName());
         model.setSurname(entity.getSurname());
         model.setPatronymic(entity.getPatronymic());
         model.setIsActive(entity.getIsActive());
         model.setEmail(entity.getEmail());
-        model.setExtSys(entity.getExtSys());
         StringBuilder builder = new StringBuilder();
         if (entity.getSurname() != null) {
             builder.append(entity.getSurname()).append(" ");
@@ -184,7 +184,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return model;
     }
 
-    private Role model(RoleEntity entity) {
+    protected Role model(RoleEntity entity) {
         if (entity == null) return null;
         Role model = new Role();
         model.setId(entity.getId());
@@ -228,6 +228,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     public UserDetailsServiceImpl setUpdateRoles(Boolean updateRoles) {
         this.updateRoles = updateRoles;
+        return this;
+    }
+
+    public String getExternalSystem() {
+        return externalSystem;
+    }
+
+    @Override
+    public UserDetailsServiceImpl setExternalSystem(String externalSystem) {
+        this.externalSystem = externalSystem;
         return this;
     }
 }

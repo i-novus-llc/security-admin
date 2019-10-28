@@ -126,7 +126,6 @@ public class UserServiceSqlTest {
             user.setPassword("userPassword1$");
             user.setPasswordCheck("userPassword1$");
         }
-        user.setExtUid("1708934f-171e-431e-9fa7-b81fe9ee0b54");
         user.setIsActive(true);
         List<Integer> roles = new ArrayList<>();
         roles.add(1);

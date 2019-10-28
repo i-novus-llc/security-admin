@@ -22,4 +22,9 @@ public class UserDetailsServiceRestClient implements UserDetailsService {
         RestUserDetailsToken token = new RestUserDetailsToken(userDetails);
         return client.loadDetails(token);
     }
+
+    @Override
+    public UserDetailsService setExternalSystem(String externalSystem) {
+        return null;
+    }
 }
