@@ -21,8 +21,6 @@ public class UserRestServiceImpl implements UserRestService {
     @Autowired
     private UserService service;
     @Autowired
-    private UserDetailsService userDetailsService;
-    @Autowired
     private PasswordGenerator passwordGenerator;
 
     @Override
@@ -54,11 +52,6 @@ public class UserRestServiceImpl implements UserRestService {
     @Override
     public User changeActive(Integer id) {
         return service.changeActive(id);
-    }
-
-    @Override
-    public User loadDetails(RestUserDetailsToken token) {
-        return userDetailsService.loadUserDetails(token);
     }
 
     @Override
