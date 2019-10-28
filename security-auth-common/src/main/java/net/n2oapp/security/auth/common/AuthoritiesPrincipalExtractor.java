@@ -33,8 +33,6 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
 
     private UserDetailsService userDetailsService;
 
-    private String authServer;
-
     public AuthoritiesPrincipalExtractor(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
@@ -67,11 +65,6 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
         return getAuthorities(map, null);
     }
 
-    public AuthoritiesPrincipalExtractor setAuthServer(String sso) {
-        this.authServer = sso;
-        return this;
-    }
-
     public AuthoritiesPrincipalExtractor setPrincipalKeys(String... pKeys) {
         PRINCIPAL_KEYS = pKeys;
         return this;
@@ -100,7 +93,6 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
         token.setSurname(surname);
         token.setPatronymic(patronymic);
         token.setEmail(email);
-        token.setExtSys(authServer);
         net.n2oapp.security.admin.api.model.User user = userDetailsService.loadUserDetails(token);
 
         if (user.getDepartment() != null) {

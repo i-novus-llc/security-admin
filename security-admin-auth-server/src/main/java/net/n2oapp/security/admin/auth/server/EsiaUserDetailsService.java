@@ -1,17 +1,12 @@
 package net.n2oapp.security.admin.auth.server;
 
-import net.n2oapp.security.admin.api.model.Permission;
-import net.n2oapp.security.admin.api.model.Role;
+import net.n2oapp.security.admin.api.model.SsoUser;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserDetailsToken;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
-import net.n2oapp.security.admin.api.service.UserDetailsService;
-import net.n2oapp.security.admin.impl.entity.PermissionEntity;
-import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
 import net.n2oapp.security.admin.impl.exception.UserNotFoundAuthenticationException;
-import net.n2oapp.security.admin.impl.repository.RoleRepository;
-import net.n2oapp.security.admin.impl.repository.UserRepository;
+import net.n2oapp.security.admin.impl.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
@@ -23,14 +18,9 @@ import static java.util.Objects.isNull;
 
 @Service
 @Transactional
-public class EsiaUserDetailsService implements UserDetailsService {
+public class EsiaUserDetailsService extends UserDetailsServiceImpl {
 
     private Boolean synchronizeFio;
-
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private RoleRepository roleRepository;
 
     @Autowired
     private SsoUserRoleProvider keycloakSsoUserRoleProvider;
@@ -52,9 +42,9 @@ public class EsiaUserDetailsService implements UserDetailsService {
         return model(userEntity);
     }
 
-    private User model(UserEntity entity) {
+    private SsoUser model(UserEntity entity) {
         if (entity == null) return null;
-        User model = new User();
+        SsoUser model = new SsoUser();
         model.setId(entity.getId());
         model.setExtUid(entity.getExtUid());
         model.setUsername(entity.getUsername());
@@ -81,27 +71,6 @@ public class EsiaUserDetailsService implements UserDetailsService {
         return model;
     }
 
-    private Role model(RoleEntity entity) {
-        if (entity == null) return null;
-        Role model = new Role();
-        model.setId(entity.getId());
-        model.setCode(entity.getCode());
-        model.setName(entity.getName());
-        model.setDescription(entity.getDescription());
-        if (entity.getPermissionList() != null) {
-            model.setPermissions(entity.getPermissionList().stream().map(this::model).collect(Collectors.toList()));
-        }
-        return model;
-    }
-
-    private Permission model(PermissionEntity entity) {
-        if (entity == null) return null;
-        Permission model = new Permission();
-        model.setName(entity.getName());
-        model.setCode(entity.getCode());
-        model.setParentCode(entity.getParentCode());
-        return model;
-    }
 
     public EsiaUserDetailsService setSynchronizeFio(Boolean synchronizeFio) {
         this.synchronizeFio = synchronizeFio;
