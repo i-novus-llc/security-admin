@@ -2,7 +2,7 @@ package net.n2oapp.security.admin.sso.keycloak;
 
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.model.Role;
-import net.n2oapp.security.admin.api.model.User;
+import net.n2oapp.security.admin.api.model.SsoUser;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.web.client.HttpClientErrorException;
 
-import javax.ws.rs.BadRequestException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -42,7 +41,7 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
     }
 
     @Override
-    public User createUser(User user) {
+    public SsoUser createUser(SsoUser user) {
         UserRepresentation userRepresentation = map(user);
         try {
             String userGuid = userService.createUser(userRepresentation);
@@ -68,7 +67,7 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
     }
 
     @Override
-    public void updateUser(User user) {
+    public void updateUser(SsoUser user) {
         UserRepresentation userRepresentation = map(user);
         try {
             userService.updateUser(userRepresentation);
@@ -96,7 +95,7 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
     }
 
     @Override
-    public void deleteUser(User user) {
+    public void deleteUser(SsoUser user) {
         try {
             userService.deleteUser(user.getExtUid());
         } catch (HttpClientErrorException e) {
@@ -105,7 +104,7 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
     }
 
     @Override
-    public void changeActivity(User user) {
+    public void changeActivity(SsoUser user) {
         UserRepresentation userRepresentation = map(user);
         userRepresentation.setEnabled(user.getIsActive());
         try {
@@ -152,7 +151,7 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
         }
     }
 
-    private UserRepresentation map(User user) {
+    private UserRepresentation map(SsoUser user) {
         UserRepresentation kUser = new UserRepresentation();
         kUser.setId(user.getExtUid());
         kUser.setEnabled(user.getIsActive());

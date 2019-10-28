@@ -15,10 +15,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDetailsToken {
 
-    @ApiModelProperty(value = "Наименование sso")
-    private String extSys;
-
-    @ApiModelProperty(value = "Идентификатор sso")
+    @ApiModelProperty(value = "Идентификатор в sso провайдере")
     private String extUid;
 
     @ApiModelProperty(value = "Имя пользователя")
