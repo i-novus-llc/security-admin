@@ -41,11 +41,6 @@ public class UserDetailsServiceSql implements UserDetailsService {
         return user != null ? user : createUser(token);
     }
 
-    @Override
-    public UserDetailsService setExternalSystem(String externalSystem) {
-        return null;
-    }
-
     private User createUser(UserDetailsToken token) {
         User u = new User();
         u.setName(token.getName());

@@ -11,5 +11,4 @@ public interface UserDetailsService {
 
     User loadUserDetails(UserDetailsToken userDetails);
 
-    UserDetailsService setExternalSystem(String externalSystem);
 }
