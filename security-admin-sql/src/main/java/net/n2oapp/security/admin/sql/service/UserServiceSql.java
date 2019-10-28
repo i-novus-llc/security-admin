@@ -76,7 +76,9 @@ public class UserServiceSql implements UserService {
     public User create(UserForm user) {
         userValidations.checkUsernameUniq(user.getId(), getByUsername(user.getUsername()));
         userValidations.checkUsername(user.getUsername());
-        userValidations.checkEmail(user.getEmail());
+        if (user.getEmail() != null) {
+            userValidations.checkEmail(user.getEmail());
+        }
         String password = (user.getPassword() != null) ? user.getPassword() : user.getTemporaryPassword();
         if (user.getPassword() != null) {
             userValidations.checkPassword(password, user.getPasswordCheck(), user.getId());
@@ -100,7 +102,9 @@ public class UserServiceSql implements UserService {
             jdbcTemplate.update(SqlUtil.getResourceFileAsString(INSERT_USER), namedParameters, keyHolder, new String[]{"id"});
             user.setId((Integer) keyHolder.getKey());
             saveRoles(user);
-            mailService.sendWelcomeMail(user);
+            if (Boolean.TRUE.equals(user.getSendOnEmail()) && user.getEmail() != null) {
+                mailService.sendWelcomeMail(user);
+            }
             return model(user);
         });
         return model(user);
@@ -223,8 +227,14 @@ public class UserServiceSql implements UserService {
 
     @Override
     public void resetPassword(UserForm user) {
+        if (user.getEmail() != null) {
+            userValidations.checkEmail(user.getEmail());
+        }
         // используем либо установленный пользователем, либо сгенерированный пароль
         String password = (user.getPassword() != null) ? user.getPassword() : user.getTemporaryPassword();
+        if (user.getPassword() != null) {
+            userValidations.checkPassword(password, user.getPasswordCheck(), user.getId());
+        }
 
         if (user.getId() != null && password != null) {
             User updatedUser = getById(user.getId());
@@ -243,7 +253,9 @@ public class UserServiceSql implements UserService {
                     namedParameters.addValue("password", passwordEncoder.encode(password));
                     jdbcTemplate.update(SqlUtil.getResourceFileAsString(UPDATE_USER), namedParameters);
 
-                    mailService.sendResetPasswordMail(user);
+                    if (Boolean.TRUE.equals(user.getSendOnEmail()) && user.getEmail() != null) {
+                        mailService.sendResetPasswordMail(user);
+                    }
                     return model(user);
                 });
             }
