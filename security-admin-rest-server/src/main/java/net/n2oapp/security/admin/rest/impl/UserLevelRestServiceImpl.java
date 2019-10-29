@@ -21,4 +21,9 @@ public class UserLevelRestServiceImpl implements UserLevelRestService {
     public Page<UserLevel> getAll() {
         return new PageImpl<>( service.getAll());
     }
+
+    @Override
+    public Page<UserLevel> getAllForFilter() {
+        return new PageImpl<>( service.getAllForFilter());
+    }
 }
