@@ -106,8 +106,8 @@ image::images\keycloak3.png[]
 +
 image::images\keycloak4.png[]
 +
-. Задайте маппинг ролей (Client Scopes > roles). На вкладке "Mappers"
-выберите "realm roles". В поле "Token Claim Name" измените значение на "roles".
+. Задайте маппинг ролей (Clients > Mappers). Кликните по кнопке "Add Builtin"
+выберите "realm roles" и нажмите "Add selected". В поле "Token Claim Name" измените значение на "roles".
 Установите переключатель "Add to userinfo" в положение "ON". Нажмите "Save".
 +
 image::images\keycloak13.png[]
