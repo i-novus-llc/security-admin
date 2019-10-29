@@ -137,6 +137,7 @@ public class UserRestTest {
         user.setSurname("userSurname");
         user.setPatronymic("userPatronymic");
         user.setEmail("UserEmail@gmail.com");
+        user.setSendOnEmail(true);
         user.setPassword("userPassword1$");
         user.setPasswordCheck("userPassword1$");
         user.setIsActive(true);

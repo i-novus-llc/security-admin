@@ -122,6 +122,7 @@ public class UserServiceSqlTest {
         user.setSurname("userSurname");
         user.setPatronymic("userPatronymic");
         user.setEmail("test@test.com");
+        user.setSendOnEmail(true);
         if (!generate) {
             user.setPassword("userPassword1$");
             user.setPasswordCheck("userPassword1$");
