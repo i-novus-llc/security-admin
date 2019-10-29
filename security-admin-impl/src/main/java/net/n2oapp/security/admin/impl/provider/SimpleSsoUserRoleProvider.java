@@ -50,6 +50,11 @@ public class SimpleSsoUserRoleProvider implements SsoUserRoleProvider {
     }
 
     @Override
+    public void resetPassword(SsoUser user) {
+
+    }
+
+    @Override
     public void startSynchronization() {
 
     }

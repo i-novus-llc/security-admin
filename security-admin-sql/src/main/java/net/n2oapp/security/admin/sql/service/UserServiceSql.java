@@ -229,10 +229,13 @@ public class UserServiceSql implements UserService {
             userValidations.checkEmail(user.getEmail());
         }
         // используем либо установленный пользователем, либо сгенерированный пароль
-        String password = (user.getPassword() != null) ? user.getPassword() : user.getTemporaryPassword();
+        String pswd = (user.getPassword() != null) ? user.getPassword() : user.getTemporaryPassword();
         if (user.getPassword() != null) {
-            userValidations.checkPassword(password, user.getPasswordCheck(), user.getId());
+            userValidations.checkPassword(pswd, user.getPasswordCheck(), user.getId());
+        } if (pswd == null) {
+            pswd = passwordGenerator.generate();
         }
+        String password = pswd;
 
         if (user.getId() != null && password != null) {
             User updatedUser = getById(user.getId());
