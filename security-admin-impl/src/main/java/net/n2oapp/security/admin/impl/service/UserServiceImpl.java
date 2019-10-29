@@ -19,6 +19,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
@@ -74,6 +75,9 @@ public class UserServiceImpl implements UserService {
         if (provider.isSupports(savedUser.getExtSys())) {
             SsoUser ssoUser = ssoModel(savedUser);
             ssoUser.setPassword(password);
+            // если пароль временный, то требуем смены пароля при следующем входе пользователя
+            if (user.getTemporaryPassword() != null)
+                ssoUser.setRequiredActions(Collections.singletonList("UPDATE_PASSWORD"));
             ssoUser = provider.createUser(ssoUser);
             if (nonNull(ssoUser)) {
                 UserEntity changedSsoUser = entityProvider(ssoUser);
@@ -192,8 +196,11 @@ public class UserServiceImpl implements UserService {
         if (nonNull(user.getPassword())) {
             userValidations.checkPassword(password, user.getPasswordCheck(), user.getId());
         }
+        if (isNull(password)) {
+            password = passwordGenerator.generate();
+        }
 
-        if (user.getId() != null && password != null) {
+        if (user.getId() != null) {
             UserEntity userEntity = userRepository.getOne(user.getId());
 
             if (userEntity != null) {
@@ -204,7 +211,10 @@ public class UserServiceImpl implements UserService {
                 if (provider.isSupports(updatedUser.getExtSys())) {
                     SsoUser ssoUser = ssoModel(updatedUser);
                     ssoUser.setPassword(password);
-                    provider.updateUser(ssoUser);
+                    // если пароль временный, то требуем смены пароля при следующем входе пользователя
+                    if (user.getTemporaryPassword() != null)
+                        ssoUser.setRequiredActions(Collections.singletonList("UPDATE_PASSWORD"));
+                    provider.resetPassword(ssoUser);
                 }
 
                 if (Boolean.TRUE.equals(user.getSendOnEmail()) && nonNull(user.getEmail())) {
