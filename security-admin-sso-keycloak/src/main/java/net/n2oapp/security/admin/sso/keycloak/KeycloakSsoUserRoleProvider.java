@@ -11,6 +11,7 @@ import org.quartz.JobKey;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.*;
@@ -43,6 +44,10 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
     @Override
     public SsoUser createUser(SsoUser user) {
         UserRepresentation userRepresentation = map(user);
+        if (!CollectionUtils.isEmpty(user.getRequiredActions())) {
+            userRepresentation.setRequiredActions(user.getRequiredActions());
+        }
+
         try {
             String userGuid = userService.createUser(userRepresentation);
             user.setExtUid(userGuid);
@@ -137,6 +142,20 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
     public void deleteRole(Role role) {
         try {
             roleService.deleteRole(role.getCode());
+        } catch (HttpClientErrorException e) {
+            throw new IllegalArgumentException(e.getResponseBodyAsString(), e);
+        }
+    }
+
+    @Override
+    public void resetPassword(SsoUser user) {
+        UserRepresentation userRepresentation = map(user);
+        if (!CollectionUtils.isEmpty(user.getRequiredActions())) {
+            userRepresentation.setRequiredActions(user.getRequiredActions());
+        }
+
+        try {
+            userService.updateUser(userRepresentation);
         } catch (HttpClientErrorException e) {
             throw new IllegalArgumentException(e.getResponseBodyAsString(), e);
         }
