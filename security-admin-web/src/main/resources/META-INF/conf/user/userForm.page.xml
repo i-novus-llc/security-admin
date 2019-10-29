@@ -6,8 +6,18 @@
                 <input-text id="username" label="Имя пользователя" required="true">
                     <validations white-list="usernameValidation"/>
                 </input-text>
-                <input-text id="email" label="Email" required="${access.user.email-required}">
-                    <validations white-list="emailValidation"/>
+                <input-text id="email" label="Email">
+                    <validations white-list="emailValidation">
+                        <condition id="emailIsRequired" severity="danger" on="sendOnEmail"
+                                   message="Поле обязательно для заполнения" side="client">
+                            <![CDATA[
+                                if (${access.user.choice-send-password} &&
+                                    (typeof sendOnEmail == 'undefined' || sendOnEmail == null || sendOnEmail == false))
+                                    return true;
+                                return email != null;
+                            ]]>
+                        </condition>
+                    </validations>
                 </input-text>
             </row>
 
@@ -24,7 +34,8 @@
                           required="${access.user.password.input}"
                           visible="${access.user.password.input}"
                           label="Пароль" eye="false">
-                    <validations white-list="passwordLengthValidation,passwordCorrectSymbolsValidation,passwordLowerCaseValidation,passwordUpperCaseValidation,passwordDigitsValidation,passwordSpecialSymbolsValidation"/>
+                    <validations
+                            white-list="passwordLengthValidation,passwordCorrectSymbolsValidation,passwordLowerCaseValidation,passwordUpperCaseValidation,passwordDigitsValidation,passwordSpecialSymbolsValidation"/>
                 </password>
                 <password id="passwordCheck"
                           required="${access.user.password.input}"
