@@ -34,7 +34,7 @@
                                     detail-field-id="id"/>
                     </click>
                 </rows>
-                <filters>
+                <filters search-buttons="false">
                     <row>
                         <input-text id="name"/>
                         <input-text id="description"/>
@@ -58,8 +58,9 @@
                     <row>
                         <input-select id="system" label-field-id="name" query-id="system"
                                       visible="${access.system.enabled}"/>
-                        <!--                        <input-select id="userLevel" label-field-id="name" query-id="userLevel"-->
-                        <!--                                      visible="${access.level.enabled}" label="Уровень пользователя"/>-->
+                        <input-select id="userLevel" label-field-id="name" query-id="userLevelForFilter"
+                                      visible="${access.level.enabled}" label="Уровень пользователя"/>
+                        <search-buttons id="searchButtons"/>
                     </row>
                 </filters>
             </table>

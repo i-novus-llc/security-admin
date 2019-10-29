@@ -1,6 +1,5 @@
 package net.n2oapp.security.admin.api.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * Уровень пользователей системы (подсистемы, модуля)
@@ -8,7 +7,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 public enum UserLevel {
     FEDERAL("Федеральный уровень"),
     REGIONAL("Региональный уровень"),
-    ORGANIZATION("Уровень организации");
+    ORGANIZATION("Уровень организации"),
+    NOT_SET("Не задан");
 
     private String desc;
 

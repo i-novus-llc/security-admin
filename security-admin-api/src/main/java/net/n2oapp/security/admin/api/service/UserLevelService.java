@@ -15,4 +15,11 @@ public interface UserLevelService {
      * @return Страница всех уровней пользователя
      */
     List<UserLevel> getAll();
+
+    /**
+     * Найти все уровни пользователя для фильтра (включает значение 'Не задан')
+     *
+     * @return Страница всех уровней пользователя
+     */
+    List<UserLevel> getAllForFilter();
 }
