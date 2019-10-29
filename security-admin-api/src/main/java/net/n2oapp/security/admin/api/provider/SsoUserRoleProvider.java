@@ -59,6 +59,12 @@ public interface SsoUserRoleProvider {
     void deleteRole(Role role);
 
     /**
+     * Сброс пароля
+     * @param user
+     */
+    void resetPassword(SsoUser user);
+
+    /**
      * Запуск синхронизации пользователей
      */
     void startSynchronization();
