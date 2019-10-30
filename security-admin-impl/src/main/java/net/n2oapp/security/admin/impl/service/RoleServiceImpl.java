@@ -14,11 +14,13 @@ import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.RoleSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
@@ -89,6 +91,43 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Integer countUsersWithRole(Integer roleId) {
         return userRepository.countUsersWithRoleId(roleId);
+    }
+
+    @Override
+    public Page<Role> findAllWithSystem(RoleCriteria criteria) {
+        Specification<RoleEntity> specification = new RoleSpecifications(criteria);
+        if (criteria.getOrders() == null) {
+            criteria.setOrders(Arrays.asList(new Sort.Order(Sort.Direction.ASC, "code")));
+        } else {
+            criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "code"));
+        }
+
+        List<RoleEntity> roles = roleRepository.findAll(specification, criteria).stream().collect(Collectors.toList());
+        Set<SystemEntity> systems = new HashSet<>();
+        List<Role> modelRoles = new ArrayList<>();
+        int count = -1;
+        for (int i = 0; i < roles.size(); i++) {
+            RoleEntity role = roles.get(i);
+            if (nonNull(role.getSystemCode())) {
+                if (!systems.contains(role.getSystemCode())) {
+                    systems.add(role.getSystemCode());
+                    Role pseudoRole = new Role();
+                    pseudoRole.setId(count);
+                    pseudoRole.setName(role.getSystemCode().getName());
+                    pseudoRole.setCode(role.getSystemCode().getCode());
+                    modelRoles.add(pseudoRole);
+                    count--;
+                }
+                Role temp = model(role);
+                temp.getSystem().setCode(modelRoles.stream().filter(model -> model.getCode().equals(role.getSystemCode().getCode())).findFirst().get().getId().toString());
+                modelRoles.add(temp);
+                roles.remove(role);
+                i--;
+            }
+        }
+
+        modelRoles.addAll(roles.stream().map(this::model).collect(Collectors.toList()));
+        return new PageImpl<>(modelRoles);
     }
 
     private RoleEntity entity(RoleForm model) {

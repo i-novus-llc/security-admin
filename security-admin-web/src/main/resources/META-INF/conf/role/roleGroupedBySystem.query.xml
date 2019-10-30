@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0"
+       object-id="${access.role.object.id}"
+       name="Роли">
+    <list result-mapping="['content']" count-mapping="['totalElements']">
+        <java method="findAllWithSystem" class="net.n2oapp.security.admin.api.service.RoleService">
+            <spring/>
+            <arguments>
+                <argument class="net.n2oapp.security.admin.api.criteria.RoleCriteria" type="criteria"/>
+            </arguments>
+        </java>
+    </list>
+
+    <fields>
+        <field id="id" domain="integer">
+            <select mapping="id"/>
+            <sorting/>
+            <filters>
+                <eq filter-id="id" mapping="[0]"/>
+            </filters>
+        </field>
+        <field id="name" domain="string" name="Название">
+            <select mapping="name"/>
+            <sorting/>
+            <filters>
+                <eq filter-id="name" mapping="name"/>
+            </filters>
+        </field>
+        <field id="code" domain="string" name="Код">
+            <select mapping="code"/>
+            <filters>
+                <eq filter-id="code" mapping="code"/>
+            </filters>
+        </field>
+        <field id="description" domain="string" name="Описание">
+            <select/>
+            <sorting/>
+            <filters>
+                <eq filter-id="description" mapping="description"/>
+            </filters>
+        </field>
+
+
+        <field id="system" domain="object" name="Система">
+            <select mapping="['system']"></select>
+            <filters>
+                <!--                <in filter-id="system*.id" domain="string" mapping="systemCode"></in>-->
+                <eq filter-id="system.id" domain="string" mapping="systemCodes"></eq>
+            </filters>
+        </field>
+
+        <field id="systemId" domain="string" name="Система">
+            <select mapping="system?.code"></select>
+        </field>
+
+        <field id="systemName" domain="string" name="Система">
+            <select mapping="system?.name"></select>
+        </field>
+
+        <field id="userLevel.name" domain="string" name="Уровень пользователя">
+            <select mapping="userLevel?.desc"></select>
+        </field>
+        <field id="userLevel.id" domain="string" name="Уровень пользователя">
+            <select mapping="userLevel?.name"></select>
+            <filters>
+                <eq filter-id="userLevel.id" domain="string" mapping="userLevel"></eq>
+            </filters>
+        </field>
+
+
+    </fields>
+
+
+</query>

@@ -12,6 +12,7 @@ public interface RoleService {
 
     /**
      * Создать роль
+     *
      * @param role Модель роли для создания
      * @return Созданная роль
      */
@@ -19,6 +20,7 @@ public interface RoleService {
 
     /**
      * Изменить роль
+     *
      * @param role Модель роли для изменения
      * @return Измененная роль
      */
@@ -26,12 +28,14 @@ public interface RoleService {
 
     /**
      * Удалить роль
+     *
      * @param id Идентификатор роли
      */
     void delete(Integer id);
 
     /**
      * Получить роль по идентификатору
+     *
      * @param id Идентификатор роли
      * @return Модель роли
      */
@@ -39,6 +43,7 @@ public interface RoleService {
 
     /**
      * Найти все роли по критериям поиска
+     *
      * @param criteria Критерии поиска
      * @return Страница найденных ролей
      */
@@ -47,8 +52,17 @@ public interface RoleService {
     /**
      * Возвращает количество
      * пользователей с данной ролью
+     *
      * @param roleId - идентификатор роли
      * @return Количество пользователей
      */
     Integer countUsersWithRole(Integer roleId);
+
+    /**
+     * Найти все роли с группировкой по системам
+     *
+     * @param criteria Критерии поиска
+     * @return Страница найденных ролей
+     */
+    Page<Role> findAllWithSystem(RoleCriteria criteria);
 }
