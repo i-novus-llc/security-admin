@@ -46,8 +46,12 @@ public class RoleSpecifications implements Specification<RoleEntity> {
         }
 
         if (nonNull(criteria.getUserLevel()) && (isNull(criteria.getForForm()) || Boolean.FALSE.equals(criteria.getForForm()))) {
-            predicate = builder.and(predicate, builder.equal(root.get(RoleEntity_.userLevel),
-                    UserLevel.valueOf(criteria.getUserLevel())));
+            if (UserLevel.NOT_SET.getName().equalsIgnoreCase(criteria.getUserLevel())) {
+                builder.and(predicate, builder.isNull(root.get(RoleEntity_.userLevel)));
+            } else {
+                predicate = builder.and(predicate, builder.equal(root.get(RoleEntity_.userLevel),
+                        UserLevel.valueOf(criteria.getUserLevel())));
+            }
         }
 
         if (Boolean.TRUE.equals(criteria.getForForm()) && nonNull(criteria.getUserLevel())) {
