@@ -26,4 +26,10 @@ public interface UserLevelRestService {
     @ApiOperation("Найти все уровни пользователя")
     @ApiResponse(code = 200, message = "Страница уровней пользователя")
     Page<UserLevel> getAll();
+
+    @GET
+    @Path("/forFilter")
+    @ApiOperation("Найти все уровни пользователя для фильтра")
+    @ApiResponse(code = 200, message = "Страница уровней пользователя")
+    Page<UserLevel> getAllForFilter();
 }

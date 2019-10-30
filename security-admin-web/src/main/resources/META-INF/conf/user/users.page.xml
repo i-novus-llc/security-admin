@@ -59,6 +59,8 @@
                                 <option id="2" name="Нет"/>
                             </options>
                         </checkbox-group>
+                        <input-select id="userLevel" label-field-id="name" query-id="userLevelForFilter"
+                                      visible="${access.level.enabled}" label="Уровень пользователя"/>
 
                     </row>
                     <row>
