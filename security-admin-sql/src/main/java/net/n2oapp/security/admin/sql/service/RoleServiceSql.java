@@ -147,6 +147,11 @@ public class RoleServiceSql implements RoleService {
                 Integer.class);
     }
 
+    @Override
+    public Page<Role> findAllWithSystem(RoleCriteria criteria) {
+        return null;
+    }
+
     private Role model(ResultSet resultSet) throws SQLException {
         if (resultSet == null) return null;
         Role role = new Role();
