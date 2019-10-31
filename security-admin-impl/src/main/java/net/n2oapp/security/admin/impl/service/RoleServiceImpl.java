@@ -105,25 +105,24 @@ public class RoleServiceImpl implements RoleService {
         List<RoleEntity> roles = roleRepository.findAll(specification, criteria).stream().collect(Collectors.toList());
         Set<SystemEntity> systems = new HashSet<>();
         List<Role> modelRoles = new ArrayList<>();
-        int count = -1;
-        for (int i = 0; i < roles.size(); i++) {
-            RoleEntity role = roles.get(i);
-            if (nonNull(role.getSystemCode())) {
-                if (!systems.contains(role.getSystemCode())) {
-                    systems.add(role.getSystemCode());
-                    Role pseudoRole = new Role();
-                    pseudoRole.setId(count);
-                    pseudoRole.setName(role.getSystemCode().getName());
-                    pseudoRole.setCode(role.getSystemCode().getCode());
-                    modelRoles.add(pseudoRole);
-                    count--;
+        int dummyRoleId = -1;
+        for (int i = 0; i < roles.size(); ) {
+            RoleEntity roleEntity = roles.get(i);
+            if (nonNull(roleEntity.getSystemCode())) {
+                if (!systems.contains(roleEntity.getSystemCode())) {
+                    systems.add(roleEntity.getSystemCode());
+                    Role dummyRole = new Role();
+                    dummyRole.setId(dummyRoleId);
+                    dummyRole.setName(roleEntity.getSystemCode().getName());
+                    dummyRole.setCode(roleEntity.getSystemCode().getCode());
+                    modelRoles.add(dummyRole);
+                    dummyRoleId--;
                 }
-                Role temp = model(role);
-                temp.getSystem().setCode(modelRoles.stream().filter(model -> model.getCode().equals(role.getSystemCode().getCode())).findFirst().get().getId().toString());
-                modelRoles.add(temp);
-                roles.remove(role);
-                i--;
-            }
+                Role role = model(roleEntity);
+                role.getSystem().setCode(modelRoles.stream().filter(model -> model.getCode().equals(roleEntity.getSystemCode().getCode())).findFirst().get().getId().toString());
+                modelRoles.add(role);
+                roles.remove(roleEntity);
+            } else i++;
         }
 
         modelRoles.addAll(roles.stream().map(this::model).collect(Collectors.toList()));
