@@ -149,7 +149,7 @@ public class RoleServiceSql implements RoleService {
 
     @Override
     public Page<Role> findAllWithSystem(RoleCriteria criteria) {
-        return null;
+        throw new UnsupportedOperationException("Sql data provider doesn't support grouping by role");
     }
 
     private Role model(ResultSet resultSet) throws SQLException {

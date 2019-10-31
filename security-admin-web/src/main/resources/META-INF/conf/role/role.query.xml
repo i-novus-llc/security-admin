@@ -78,7 +78,6 @@
         <field id="system" domain="object" name="Система">
             <select mapping="['system']"></select>
             <filters>
-                <!--                <in filter-id="system*.id" domain="string" mapping="systemCode"></in>-->
                 <eq filter-id="system.id" domain="string" mapping="systemCodes"></eq>
             </filters>
         </field>
