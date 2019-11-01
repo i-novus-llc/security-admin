@@ -58,11 +58,4 @@ public interface RoleService {
      */
     Integer countUsersWithRole(Integer roleId);
 
-    /**
-     * Найти все роли с группировкой по системам
-     *
-     * @param criteria Критерии поиска
-     * @return Страница найденных ролей
-     */
-    Page<Role> findAllGroupBySystem(RoleCriteria criteria);
 }

@@ -83,25 +83,21 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Page<Role> findAll(RoleCriteria criteria) {
         Specification<RoleEntity> specification = new RoleSpecifications(criteria);
-        criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "id"));
-        Page<RoleEntity> all = roleRepository.findAll(specification, criteria);
-        return all.map(this::model);
-    }
-
-    @Override
-    public Integer countUsersWithRole(Integer roleId) {
-        return userRepository.countUsersWithRoleId(roleId);
-    }
-
-    @Override
-    public Page<Role> findAllGroupBySystem(RoleCriteria criteria) {
-        Specification<RoleEntity> specification = new RoleSpecifications(criteria);
         if (criteria.getOrders() == null) {
             criteria.setOrders(Arrays.asList(new Sort.Order(Sort.Direction.ASC, "code")));
         } else {
             criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "code"));
         }
+        if (Boolean.TRUE.equals(criteria.getGroupBySystem())) {
+            return this.groupBySystem(specification, criteria);
+        } else {
+            Page<RoleEntity> all = roleRepository.findAll(specification, criteria);
+            return all.map(this::model);
+        }
 
+    }
+
+    private Page<Role> groupBySystem(Specification<RoleEntity> specification, RoleCriteria criteria) {
         List<RoleEntity> roles = roleRepository.findAll(specification, criteria).stream().collect(Collectors.toList());
         Set<SystemEntity> systems = new HashSet<>();
         List<Role> modelRoles = new ArrayList<>();
@@ -127,6 +123,11 @@ public class RoleServiceImpl implements RoleService {
 
         modelRoles.addAll(roles.stream().map(this::model).collect(Collectors.toList()));
         return new PageImpl<>(modelRoles);
+    }
+
+    @Override
+    public Integer countUsersWithRole(Integer roleId) {
+        return userRepository.countUsersWithRoleId(roleId);
     }
 
     private RoleEntity entity(RoleForm model) {
