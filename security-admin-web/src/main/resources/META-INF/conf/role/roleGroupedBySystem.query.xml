@@ -19,7 +19,7 @@
                 <eq filter-id="id" mapping="[0]"/>
             </filters>
         </field>
-        <field id="name" domain="string" name="Назвggkgnnание">
+        <field id="name" domain="string" name="Название">
             <select mapping="name"/>
             <sorting/>
             <filters>
@@ -68,7 +68,7 @@
 
         <field id="groupBySystem" domain="boolean">
             <filters>
-                <contains domain="boolean" mapping="groupBySystem" default-value="true"></contains>
+                <eq domain="boolean" mapping="groupBySystem" default-value="true"></eq>
             </filters>
         </field>
     </fields>
