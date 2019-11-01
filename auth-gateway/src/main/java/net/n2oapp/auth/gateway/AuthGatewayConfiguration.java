@@ -174,17 +174,19 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public UserAccessor userAccessor() {
         return () -> {
-            String userId = "UNKNOWN";
+            String userId, userName;
+            userId = userName = "UNKNOWN";
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             if (auth != null && auth.getPrincipal() != null) {
                 if (auth.getPrincipal() instanceof net.n2oapp.security.auth.common.User) {
                     net.n2oapp.security.auth.common.User user = (net.n2oapp.security.auth.common.User) auth.getPrincipal();
                     userId = user.getEmail();
+                    userName = user.getUsername();
                 } else {
                     userId = "" + auth.getPrincipal();
                 }
             }
-            return new ru.i_novus.ms.audit.client.model.User(userId, "UNKNOWN");
+            return new ru.i_novus.ms.audit.client.model.User(userId, userName);
         };
     }
 
