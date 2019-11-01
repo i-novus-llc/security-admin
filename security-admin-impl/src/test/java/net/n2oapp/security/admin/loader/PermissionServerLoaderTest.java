@@ -6,7 +6,6 @@ import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.loader.PermissionServerLoader;
 import net.n2oapp.security.admin.impl.repository.PermissionRepository;
-import net.n2oapp.security.admin.impl.repository.SystemRepository;
 import net.n2oapp.security.admin.loader.builder.PermissionBuilder;
 import net.n2oapp.security.admin.loader.builder.SystemEntityBuilder;
 import org.junit.Test;
@@ -45,9 +44,6 @@ public class PermissionServerLoaderTest {
 
     @LocalServerPort
     private int port;
-
-    @Autowired
-    private SystemRepository systemRepository;
     
 
     /**
@@ -56,11 +52,14 @@ public class PermissionServerLoaderTest {
     @Test
     public void simpleLoader() {
         BiConsumer<List<Permission>, String> loader = permissionServerLoader::load;
+        repository.removeBySystemCode(SystemEntityBuilder.buildSystemEntity1());
+        repository.removeBySystemCode(SystemEntityBuilder.buildSystemEntity2());
         case1(loader);
         case2(loader);
         case3(loader);
         case4(loader);
         case5(loader);
+        case6(loader);
     }
 
     /**
@@ -69,11 +68,14 @@ public class PermissionServerLoaderTest {
     @Test
     public void repositoryLoader() {
         BiConsumer<List<Permission>, String> loader = repositoryServerLoader::load;
+        repository.deleteInBatch(repository.findBySystemCodeOrderByCodeDesc(SystemEntityBuilder.buildSystemEntity1()));
+        repository.deleteInBatch(repository.findBySystemCodeOrderByCodeDesc(SystemEntityBuilder.buildSystemEntity2()));
         case1(loader);
         case2(loader);
         case3(loader);
         case4(loader);
         case5(loader);
+        case6(loader);
     }
 
     /**
@@ -87,8 +89,8 @@ public class PermissionServerLoaderTest {
         loader.accept(data, "system1");
 
         assertThat(repository.findBySystemCodeOrderByCodeDesc(SystemEntityBuilder.buildSystemEntity1()).size(), is(2));
-        permissionAssertEquals(permission1, repository.findById("code1").get());
-        permissionAssertEquals(permission2, repository.findById("code2").get());
+        permissionAssertEquals(permission1, repository.findById("pcode1").get());
+        permissionAssertEquals(permission2, repository.findById("pcode2").get());
     }
 
     /**
@@ -103,8 +105,8 @@ public class PermissionServerLoaderTest {
         loader.accept(data, "system1");
 
         assertThat(repository.findBySystemCodeOrderByCodeDesc(SystemEntityBuilder.buildSystemEntity1()).size(), is(2));
-        permissionAssertEquals(permission1, repository.findById("code1").get());
-        permissionAssertEquals(permission2, repository.findById("code2").get());
+        permissionAssertEquals(permission1, repository.findById("pcode1").get());
+        permissionAssertEquals(permission2, repository.findById("pcode2").get());
     }
 
     /**
@@ -119,9 +121,9 @@ public class PermissionServerLoaderTest {
         loader.accept(data, "system1");
 
         assertThat(repository.findBySystemCodeOrderByCodeDesc(SystemEntityBuilder.buildSystemEntity1()).size(), is(3));
-        permissionAssertEquals(permission1, repository.findById("code1").get());
-        permissionAssertEquals(permission2, repository.findById("code2").get());
-        permissionAssertEquals(permission3, repository.findById("code3").get());
+        permissionAssertEquals(permission1, repository.findById("pcode1").get());
+        permissionAssertEquals(permission2, repository.findById("pcode2").get());
+        permissionAssertEquals(permission3, repository.findById("pcode3").get());
     }
 
     /**
@@ -135,13 +137,28 @@ public class PermissionServerLoaderTest {
         loader.accept(data, "system1");
 
         assertThat(repository.findBySystemCodeOrderByCodeDesc(SystemEntityBuilder.buildSystemEntity1()).size(), is(1));
-        permissionAssertEquals(permission1, repository.findById("code1").get());
+        permissionAssertEquals(permission1, repository.findById("pcode1").get());
     }
 
     /**
-     * Вставка двух новых записей клиента system2, в БД 1 запись клиента "system1"
+     * Вставка двух записей, в БД одна запись
      */
     private void case5(BiConsumer<List<Permission>, String> loader) {
+        Permission permission1 = PermissionBuilder.buildPermission1();
+        Permission permission2 = PermissionBuilder.buildPermission2();
+        List<Permission> data = Arrays.asList(permission1, permission2);
+
+        loader.accept(data, "system1");
+
+        assertThat(repository.findBySystemCodeOrderByCodeDesc(SystemEntityBuilder.buildSystemEntity1()).size(), is(2));
+        permissionAssertEquals(permission1, repository.findById("pcode1").get());
+        permissionAssertEquals(permission2, repository.findById("pcode2").get());
+    }
+
+    /**
+     * Вставка двух новых записей клиента system2, в БД 2 записи клиента "system1"
+     */
+    private void case6(BiConsumer<List<Permission>, String> loader) {
         Permission permission4 = PermissionBuilder.buildPermission4();
         Permission permission5 = PermissionBuilder.buildPermission5();
         List<Permission> data = Arrays.asList(permission4, permission5);
@@ -149,8 +166,8 @@ public class PermissionServerLoaderTest {
         loader.accept(data, "system2");
 
         assertThat(repository.findBySystemCodeOrderByCodeDesc(SystemEntityBuilder.buildSystemEntity2()).size(), is(2));
-        permissionAssertEquals(permission4, repository.findById("code4").get());
-        permissionAssertEquals(permission5, repository.findById("code5").get());
+        permissionAssertEquals(permission4, repository.findById("pcode4").get());
+        permissionAssertEquals(permission5, repository.findById("pcode5").get());
     }
 
 
