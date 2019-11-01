@@ -3,7 +3,6 @@ package net.n2oapp.security.admin.impl;
 import net.n2oapp.platform.jaxrs.MapperConfigurer;
 import net.n2oapp.platform.jaxrs.autoconfigure.EnableJaxRsProxyClient;
 import net.n2oapp.platform.loader.autoconfigure.ServerLoaderConfigurer;
-import net.n2oapp.platform.loader.server.ServerLoaderRoute;
 import net.n2oapp.platform.loader.server.ServerLoaderRunner;
 import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.model.UserLevel;
@@ -12,7 +11,7 @@ import net.n2oapp.security.admin.api.service.UserLevelService;
 import net.n2oapp.security.admin.api.service.UserService;
 import net.n2oapp.security.admin.commons.AdminCommonsConfiguration;
 import net.n2oapp.security.admin.impl.audit.AuditHelper;
-import net.n2oapp.security.admin.impl.loader.PermissionLoader;
+import net.n2oapp.security.admin.impl.loader.PermissionServerLoader;
 import net.n2oapp.security.admin.impl.provider.SimpleSsoUserRoleProvider;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
@@ -26,9 +25,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-
-import java.util.Locale;
-
 import ru.inovus.ms.rdm.api.provider.RdmMapperConfigurer;
 import ru.inovus.ms.rdm.api.service.DraftService;
 import ru.inovus.ms.rdm.api.service.PublishService;
@@ -37,6 +33,7 @@ import ru.inovus.ms.rdm.api.service.VersionService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 
 @Configuration
@@ -106,13 +103,13 @@ public class AdminImplConfiguration {
         return new AuditHelper();
     }
 
-    @Configuration
-    static class LoadersConfiguration implements ServerLoaderConfigurer {
-
-        @Override
-        public void configure(ServerLoaderRunner runner) {
-            runner.add(ServerLoaderRoute.asIterable("permissions", Permission.class, PermissionLoader.class));
-        }
-    }
+//    @Configuration
+//    static class LoadersConfiguration implements ServerLoaderConfigurer {
+//
+//        @Override
+//        public void configure(ServerLoaderRunner runner) {
+//            runner.add(ServerLoaderRoute.asIterable("permissions", Permission.class, PermissionServerLoader.class));
+//        }
+//    }
 
 }

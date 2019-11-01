@@ -173,7 +173,7 @@ public class UserServiceImplTest {
         user.setPasswordCheck("userPassword1$");
         user.setIsActive(true);
         List<Integer> roles = new ArrayList<>();
-        roles.add(10);
+        roles.add(100);
         user.setRoles(roles);
         return user;
     }

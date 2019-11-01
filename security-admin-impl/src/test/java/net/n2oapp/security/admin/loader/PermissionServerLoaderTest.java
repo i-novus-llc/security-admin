@@ -145,14 +145,14 @@ public class PermissionServerLoaderTest {
      */
     private void case5(BiConsumer<List<Permission>, String> loader) {
         Permission permission1 = PermissionBuilder.buildPermission1();
-        Permission permission2 = PermissionBuilder.buildPermission2();
-        List<Permission> data = Arrays.asList(permission1, permission2);
+        Permission permission3 = PermissionBuilder.buildPermission3();
+        List<Permission> data = Arrays.asList(permission1, permission3);
 
         loader.accept(data, "system1");
 
         assertThat(repository.findBySystemCodeOrderByCodeDesc(SystemEntityBuilder.buildSystemEntity1()).size(), is(2));
         permissionAssertEquals(permission1, repository.findById("pcode1").get());
-        permissionAssertEquals(permission2, repository.findById("pcode2").get());
+        permissionAssertEquals(permission3, repository.findById("pcode3").get());
     }
 
     /**
