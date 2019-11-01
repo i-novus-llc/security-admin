@@ -36,16 +36,18 @@
             </input-select>
             <row>
                 <col size="10">
-                    <input-select id="roles" type="multi" label="Роли" cache="false" required="true"
-                                  query-id="roleForForm" value-field-id="id" label-field-id="name"
-                                  group-field-id="systemName">
+                    <input-select-tree id="roles" ajax="false" label="Роли" checkboxes="true" required="true">
+                        <inheritance-nodes parent-field-id="systemId" label-field-id="name" value-field-id="id"
+                                           query-id="roleGroupedBySystem"
+                                           search-field-id="name">
+                        </inheritance-nodes>
                         <dependencies>
                             <set-value on="userLevel" apply-on-init="false">return null;</set-value>
                         </dependencies>
                         <pre-filters>
                             <eq field-id="userLevel.id" value="{userLevel.id}"/>
                         </pre-filters>
-                    </input-select>
+                    </input-select-tree>
                 </col>
                 <col size="2">
                     <checkbox id="isActive" default-value="true"/>

@@ -147,6 +147,11 @@ public class RoleServiceSql implements RoleService {
                 Integer.class);
     }
 
+    @Override
+    public Page<Role> findAllGroupBySystem(RoleCriteria criteria) {
+        throw new UnsupportedOperationException("Sql data provider doesn't support grouping by role");
+    }
+
     private Role model(ResultSet resultSet) throws SQLException {
         if (resultSet == null) return null;
         Role role = new Role();
