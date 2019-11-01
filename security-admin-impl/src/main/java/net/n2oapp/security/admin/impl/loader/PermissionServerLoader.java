@@ -8,18 +8,13 @@ import net.n2oapp.security.admin.impl.repository.PermissionRepository;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PermissionLoader extends RepositoryServerLoader<Permission, PermissionEntity, String> {
+public class PermissionServerLoader extends RepositoryServerLoader<Permission, PermissionEntity, String> {
 
-    public PermissionLoader(PermissionRepository repository) {
+    public PermissionServerLoader(PermissionRepository repository) {
         super(repository,
-                PermissionLoader::map,
+                PermissionServerLoader::map,
                 systemCode -> repository.findBySystemCodeOrderByCodeDesc(new SystemEntity(systemCode)),
                 PermissionEntity::getCode);
-    }
-
-    @Override
-    public Class<?> getTargetClass() {
-        return PermissionLoader.class;
     }
 
     private static PermissionEntity map(Permission model, String systemCode) {
@@ -28,6 +23,17 @@ public class PermissionLoader extends RepositoryServerLoader<Permission, Permiss
         entity.setCode(model.getCode());
         entity.setParentCode(model.getParentCode());
         entity.setSystemCode(new SystemEntity(systemCode));
+        entity.setUserLevel(model.getUserLevel());
         return entity;
+    }
+
+    @Override
+    public String getTarget() {
+        return "permissions";
+    }
+
+    @Override
+    public Class<Permission> getDataType() {
+        return Permission.class;
     }
 }
