@@ -50,12 +50,6 @@ public interface RoleRestService {
     @ApiOperation("Удалить роль")
     @ApiResponse(code = 200, message = "Роль удалена")
     void delete(@ApiParam(value = "Идентификатор") @PathParam("id") Integer id);
-
-    @GET
-    @Path("/withSystem")
-    @ApiOperation("Найти все права доступа сгрупированные по системам")
-    @ApiResponse(code = 200, message = "Страница прав доступа")
-    Page<Role> findAllGroupBySystem(@ApiParam(value = "Критерия поиска") @BeanParam RestRoleCriteria criteria);
 }
 
 

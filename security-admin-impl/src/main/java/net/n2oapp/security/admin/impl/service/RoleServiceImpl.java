@@ -83,50 +83,47 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Page<Role> findAll(RoleCriteria criteria) {
         Specification<RoleEntity> specification = new RoleSpecifications(criteria);
-        criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "id"));
-        Page<RoleEntity> all = roleRepository.findAll(specification, criteria);
-        return all.map(this::model);
-    }
-
-    @Override
-    public Integer countUsersWithRole(Integer roleId) {
-        return userRepository.countUsersWithRoleId(roleId);
-    }
-
-    @Override
-    public Page<Role> findAllGroupBySystem(RoleCriteria criteria) {
-        Specification<RoleEntity> specification = new RoleSpecifications(criteria);
         if (criteria.getOrders() == null) {
             criteria.setOrders(Arrays.asList(new Sort.Order(Sort.Direction.ASC, "code")));
         } else {
             criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "code"));
         }
+        if (Boolean.TRUE.equals(criteria.getGroupBySystem())) {
+            List<RoleEntity> roles = roleRepository.findAll(specification, criteria).stream().collect(Collectors.toList());
+            Set<SystemEntity> systems = new HashSet<>();
+            List<Role> modelRoles = new ArrayList<>();
+            int dummyRoleId = -1;
+            for (int i = 0; i < roles.size(); ) {
+                RoleEntity roleEntity = roles.get(i);
+                if (nonNull(roleEntity.getSystemCode())) {
+                    if (!systems.contains(roleEntity.getSystemCode())) {
+                        systems.add(roleEntity.getSystemCode());
+                        Role dummyRole = new Role();
+                        dummyRole.setId(dummyRoleId);
+                        dummyRole.setName(roleEntity.getSystemCode().getName());
+                        dummyRole.setCode(roleEntity.getSystemCode().getCode());
+                        modelRoles.add(dummyRole);
+                        dummyRoleId--;
+                    }
+                    Role role = model(roleEntity);
+                    role.getSystem().setCode(modelRoles.stream().filter(model -> model.getCode().equals(roleEntity.getSystemCode().getCode())).findFirst().get().getId().toString());
+                    modelRoles.add(role);
+                    roles.remove(roleEntity);
+                } else i++;
+            }
 
-        List<RoleEntity> roles = roleRepository.findAll(specification, criteria).stream().collect(Collectors.toList());
-        Set<SystemEntity> systems = new HashSet<>();
-        List<Role> modelRoles = new ArrayList<>();
-        int dummyRoleId = -1;
-        for (int i = 0; i < roles.size(); ) {
-            RoleEntity roleEntity = roles.get(i);
-            if (nonNull(roleEntity.getSystemCode())) {
-                if (!systems.contains(roleEntity.getSystemCode())) {
-                    systems.add(roleEntity.getSystemCode());
-                    Role dummyRole = new Role();
-                    dummyRole.setId(dummyRoleId);
-                    dummyRole.setName(roleEntity.getSystemCode().getName());
-                    dummyRole.setCode(roleEntity.getSystemCode().getCode());
-                    modelRoles.add(dummyRole);
-                    dummyRoleId--;
-                }
-                Role role = model(roleEntity);
-                role.getSystem().setCode(modelRoles.stream().filter(model -> model.getCode().equals(roleEntity.getSystemCode().getCode())).findFirst().get().getId().toString());
-                modelRoles.add(role);
-                roles.remove(roleEntity);
-            } else i++;
+            modelRoles.addAll(roles.stream().map(this::model).collect(Collectors.toList()));
+            return new PageImpl<>(modelRoles);
+        } else {
+            Page<RoleEntity> all = roleRepository.findAll(specification, criteria);
+            return all.map(this::model);
         }
 
-        modelRoles.addAll(roles.stream().map(this::model).collect(Collectors.toList()));
-        return new PageImpl<>(modelRoles);
+    }
+
+    @Override
+    public Integer countUsersWithRole(Integer roleId) {
+        return userRepository.countUsersWithRoleId(roleId);
     }
 
     private RoleEntity entity(RoleForm model) {

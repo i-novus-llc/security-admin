@@ -3,7 +3,7 @@
        object-id="${access.role.object.id}"
        name="Роли">
     <list result-mapping="['content']" count-mapping="['totalElements']">
-        <java method="findAllWithSystem" class="net.n2oapp.security.admin.api.service.RoleService">
+        <java method="findAll" class="net.n2oapp.security.admin.api.service.RoleService">
             <spring/>
             <arguments>
                 <argument class="net.n2oapp.security.admin.api.criteria.RoleCriteria" type="criteria"/>
@@ -19,7 +19,7 @@
                 <eq filter-id="id" mapping="[0]"/>
             </filters>
         </field>
-        <field id="name" domain="string" name="Название">
+        <field id="name" domain="string" name="Назвggkgnnание">
             <select mapping="name"/>
             <sorting/>
             <filters>
@@ -66,7 +66,11 @@
             </filters>
         </field>
 
-
+        <field id="groupBySystem" domain="boolean">
+            <filters>
+                <contains domain="boolean" mapping="groupBySystem" default-value="true"></contains>
+            </filters>
+        </field>
     </fields>
 
 
