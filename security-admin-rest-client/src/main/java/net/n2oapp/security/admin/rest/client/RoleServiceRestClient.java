@@ -46,7 +46,7 @@ public class RoleServiceRestClient implements RoleService {
 
     public Page<Role> findAllForForm(RoleCriteria criteria) {
         criteria.setForForm(true);
-        return findAllWithSystem(criteria);
+        return findAllGroupBySystem(criteria);
     }
 
 
@@ -57,8 +57,8 @@ public class RoleServiceRestClient implements RoleService {
     }
 
     @Override
-    public Page<Role> findAllWithSystem(RoleCriteria criteria) {
-        return client.findAllWithSystem(toRestCriteria(criteria));
+    public Page<Role> findAllGroupBySystem(RoleCriteria criteria) {
+        return client.findAllGroupBySystem(toRestCriteria(criteria));
     }
 
     private RestRoleCriteria toRestCriteria(RoleCriteria criteria) {

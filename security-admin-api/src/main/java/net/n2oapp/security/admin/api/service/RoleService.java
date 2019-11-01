@@ -64,5 +64,5 @@ public interface RoleService {
      * @param criteria Критерии поиска
      * @return Страница найденных ролей
      */
-    Page<Role> findAllWithSystem(RoleCriteria criteria);
+    Page<Role> findAllGroupBySystem(RoleCriteria criteria);
 }

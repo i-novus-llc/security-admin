@@ -44,7 +44,7 @@ public class RoleRestServiceImpl implements RoleRestService {
         service.delete(id);
     }
 
-    public Page<Role> findAllWithSystem(RestRoleCriteria criteria) {
-        return service.findAllWithSystem(criteria);
+    public Page<Role> findAllGroupBySystem(RestRoleCriteria criteria) {
+        return service.findAllGroupBySystem(criteria);
     }
 }

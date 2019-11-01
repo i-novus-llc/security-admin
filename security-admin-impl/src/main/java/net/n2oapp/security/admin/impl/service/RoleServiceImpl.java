@@ -94,7 +94,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Page<Role> findAllWithSystem(RoleCriteria criteria) {
+    public Page<Role> findAllGroupBySystem(RoleCriteria criteria) {
         Specification<RoleEntity> specification = new RoleSpecifications(criteria);
         if (criteria.getOrders() == null) {
             criteria.setOrders(Arrays.asList(new Sort.Order(Sort.Direction.ASC, "code")));
