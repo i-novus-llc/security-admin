@@ -148,7 +148,7 @@ public class RoleServiceSql implements RoleService {
     }
 
     @Override
-    public Page<Role> findAllWithSystem(RoleCriteria criteria) {
+    public Page<Role> findAllGroupBySystem(RoleCriteria criteria) {
         throw new UnsupportedOperationException("Sql data provider doesn't support grouping by role");
     }
 

@@ -55,7 +55,7 @@ public interface RoleRestService {
     @Path("/withSystem")
     @ApiOperation("Найти все права доступа сгрупированные по системам")
     @ApiResponse(code = 200, message = "Страница прав доступа")
-    Page<Role> findAllWithSystem(@ApiParam(value = "Критерия поиска") @BeanParam RestRoleCriteria criteria);
+    Page<Role> findAllGroupBySystem(@ApiParam(value = "Критерия поиска") @BeanParam RestRoleCriteria criteria);
 }
 
 
