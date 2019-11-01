@@ -41,6 +41,27 @@ public class RoleServiceRestClient implements RoleService {
 
     @Override
     public Page<Role> findAll(RoleCriteria criteria) {
+        return client.findAll(toRestCriteria(criteria));
+    }
+
+    public Page<Role> findAllForForm(RoleCriteria criteria) {
+        criteria.setForForm(true);
+        return findAllGroupBySystem(criteria);
+    }
+
+
+    @Override
+    public Integer countUsersWithRole(Integer roleId) {
+        //todo Реализовать
+        return 0;
+    }
+
+    @Override
+    public Page<Role> findAllGroupBySystem(RoleCriteria criteria) {
+        return client.findAllGroupBySystem(toRestCriteria(criteria));
+    }
+
+    private RestRoleCriteria toRestCriteria(RoleCriteria criteria) {
         RestRoleCriteria roleCriteria = new RestRoleCriteria();
         roleCriteria.setPage(criteria.getPageNumber());
         roleCriteria.setSize(criteria.getPageSize());
@@ -51,18 +72,6 @@ public class RoleServiceRestClient implements RoleService {
         roleCriteria.setOrders(criteria.getOrders());
         roleCriteria.setUserLevel(criteria.getUserLevel());
         roleCriteria.setForForm(criteria.getForForm());
-        return client.findAll(roleCriteria);
-    }
-
-    public Page<Role> findAllForForm(RoleCriteria criteria) {
-        criteria.setForForm(true);
-        return findAll(criteria);
-    }
-
-
-    @Override
-    public Integer countUsersWithRole(Integer roleId) {
-        //todo Реализовать
-        return 0;
+        return roleCriteria;
     }
 }
