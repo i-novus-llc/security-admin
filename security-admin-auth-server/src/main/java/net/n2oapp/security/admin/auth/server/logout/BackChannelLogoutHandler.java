@@ -47,19 +47,26 @@ public class BackChannelLogoutHandler implements LogoutSuccessHandler {
 
     private ObjectMapper mapper = new ObjectMapper();
 
-
     private ClientService clientService;
 
+    static final String EXT_SYS_ATTR = BackChannelLogoutHandler.class.toString() + "SYSTEM";
 
-    public BackChannelLogoutHandler(Signer signer, ClientService clientService, String logoutUri) {
+
+    public BackChannelLogoutHandler(Signer signer, ClientService clientService, String keycloakLogoutUrl, String esiaLogoutUrl) {
         this.signer = signer;
         this.clientService = clientService;
-        this.logoutSuccessHandler = new RedirectLogoutRequestHandler(logoutUri);
+        this.logoutSuccessHandler = new RedirectLogoutRequestHandler(keycloakLogoutUrl, esiaLogoutUrl);
     }
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-
+        if (authentication instanceof OAuth2Authentication
+                && ((OAuth2Authentication) authentication).getUserAuthentication() != null) {
+            Map<String, Object> details = (Map<String, Object>) ((OAuth2Authentication) authentication).getUserAuthentication().getDetails();
+            if (details != null && details.containsKey("system")) {
+                request.setAttribute(EXT_SYS_ATTR, details.get("system"));
+            }
+        }
         logoutSuccessHandler.onLogoutSuccess(request, response, authentication);
 
         for (Client c : getTargetClients()) {
