@@ -14,6 +14,9 @@ INSERT INTO sec.user_role(user_id, role_id) VALUES (2,1);
 INSERT INTO sec.user_role(user_id, role_id) VALUES (1,2);
 INSERT INTO sec.role_permission (role_id, permission_code) VALUES (1,'test');
 INSERT INTO sec.role_permission (role_id, permission_code) VALUES (1,'test2');
+--SYSTEM
+INSERT INTO sec.system(code, name) VALUES ('system1', 'system1');
+INSERT INTO sec.system(code, name) VALUES ('system2', 'system2');
 
 
 
