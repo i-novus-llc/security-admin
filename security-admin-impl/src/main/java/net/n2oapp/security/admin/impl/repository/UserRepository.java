@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -26,5 +27,5 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer>, JpaS
     Integer countUsersWithRoleId(@Param("roleId") Integer roleId);
 
     @Transactional
-    void deleteByUsername(String username);
+    void deleteByUsernameIn(List<String> usernames);
 }
