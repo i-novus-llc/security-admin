@@ -25,12 +25,16 @@ public class RedirectLogoutRequestHandler extends SimpleUrlLogoutSuccessHandler 
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response) {
         String extSys = (String) request.getAttribute(EXT_SYS_ATTR);
         String redirectUri = request.getParameter("redirect_uri");
+        if ("ESIA".equals(extSys)) {
+            if (!isEmpty(redirectUri)) {
+                redirectUri = "redirectUrl=" + redirectUri;
+                redirectUri = esiaLogoutUrl.contains("?") ? "&" + redirectUri : "?" + redirectUri;
+                return esiaLogoutUrl + redirectUri;
+            } else
+                return esiaLogoutUrl;
+        }
         if (!isEmpty(redirectUri)) {
             redirectUri = "redirect_uri=" + redirectUri;
-        }
-        if ("ESIA".equals(extSys)) {
-            redirectUri = esiaLogoutUrl.contains("?") ? "&" + redirectUri : "?" + redirectUri;
-            return !isEmpty(redirectUri) ? esiaLogoutUrl + redirectUri : esiaLogoutUrl;
         }
         return !isEmpty(redirectUri) ? keycloakLogoutUrl + "?" + redirectUri : keycloakLogoutUrl;
 
