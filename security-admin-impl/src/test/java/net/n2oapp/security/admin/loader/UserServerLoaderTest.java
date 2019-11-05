@@ -55,8 +55,7 @@ public class UserServerLoaderTest {
     @Test
     public void simpleLoader() {
         BiConsumer<List<UserForm>, String> loader = userServerLoader::load;
-        repository.deleteByUsername("username1");
-        repository.deleteByUsername("username2");
+        repository.deleteByUsernameIn(Arrays.asList("username1", "username2", "username3"));
         case1(loader);
         case2(loader);
         case3(loader);
@@ -69,8 +68,7 @@ public class UserServerLoaderTest {
     @Test
     public void repositoryLoader() {
         BiConsumer<List<UserForm>, String> loader = repositoryServerLoader::load;
-        repository.deleteByUsername("username1");
-        repository.deleteByUsername("username2");
+        repository.deleteByUsernameIn(Arrays.asList("username1", "username2", "username3"));
         case1(loader);
         case2(loader);
         case3(loader);
@@ -116,7 +114,7 @@ public class UserServerLoaderTest {
     private void case3(BiConsumer<List<UserForm>, String> loader) {
         UserForm userForm1 = UserFormBuilder.buildUserForm1(userIds.get(0));
         UserForm userForm2 = UserFormBuilder.buildUserForm2(userIds.get(1));
-        UserForm userForm3 = UserFormBuilder.buildUserForm3(userIds.get(2));
+        UserForm userForm3 = UserFormBuilder.buildUserForm3(null);
         List<UserForm> data = Arrays.asList(userForm2, userForm3);
 
         loader.accept(data, "ignored");
