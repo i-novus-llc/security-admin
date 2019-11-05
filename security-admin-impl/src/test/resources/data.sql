@@ -20,6 +20,10 @@ INSERT INTO sec.system(code, name) VALUES ('system1', 'system1');
 INSERT INTO sec.system(code, name) VALUES ('system2', 'system2');
 INSERT INTO sec.permission (code, name, parent_code, user_level, system_code) VALUES ('pcode1', 'name1', null, 'FEDERAL', 'system1');
 INSERT INTO sec.permission (code, name, parent_code, user_level, system_code) VALUES ('pcode3', 'name3', null, 'ORGANIZATION', 'system1');
+INSERT INTO sec.role(id, code, name, description, user_level, system_code) VALUES (101, 'rcode1', 'name1', 'desc1', 'FEDERAL', 'system1');
+INSERT INTO sec.role(id, code, name, description, user_level, system_code) VALUES (102, 'rcode2', 'name2', 'desc2', 'REGIONAL', 'system1');
+INSERT INTO sec.role_permission(role_id, permission_code) VALUES (101, 'pcode1');
+INSERT INTO sec.role_permission(role_id, permission_code) VALUES (102, 'pcode3');
 
 
 
