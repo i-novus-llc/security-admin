@@ -91,8 +91,8 @@ public class RoleServerLoaderTest {
         loader.accept(data, "system1");
 
         assertThat(repository.findBySystemCode(SystemEntityBuilder.buildSystemEntity1()).size(), is(2));
-        roleFormAssertEquals(roleForm1, repository.findOneByCode("rcode1"));
-        roleFormAssertEquals(roleForm2, repository.findOneByCode("rcode2"));
+        roleAssertEquals(roleForm1, repository.findOneByCode("rcode1"));
+        roleAssertEquals(roleForm2, repository.findOneByCode("rcode2"));
     }
 
     /**
@@ -106,8 +106,8 @@ public class RoleServerLoaderTest {
         loader.accept(data, "system1");
 
         assertThat(repository.findBySystemCode(SystemEntityBuilder.buildSystemEntity1()).size(), is(2));
-        roleFormAssertEquals(roleForm1, repository.findOneByCode("rcode1"));
-        roleFormAssertEquals(roleForm2, repository.findOneByCode("rcode2"));
+        roleAssertEquals(roleForm1, repository.findOneByCode("rcode1"));
+        roleAssertEquals(roleForm2, repository.findOneByCode("rcode2"));
     }
 
     /**
@@ -122,9 +122,9 @@ public class RoleServerLoaderTest {
         loader.accept(data, "system1");
 
         assertThat(repository.findBySystemCode(SystemEntityBuilder.buildSystemEntity1()).size(), is(3));
-        roleFormAssertEquals(roleForm1, repository.findOneByCode("rcode1"));
-        roleFormAssertEquals(roleForm2, repository.findOneByCode("rcode2"));
-        roleFormAssertEquals(roleForm3, repository.findOneByCode("rcode3"));
+        roleAssertEquals(roleForm1, repository.findOneByCode("rcode1"));
+        roleAssertEquals(roleForm2, repository.findOneByCode("rcode2"));
+        roleAssertEquals(roleForm3, repository.findOneByCode("rcode3"));
     }
 
     /**
@@ -137,7 +137,7 @@ public class RoleServerLoaderTest {
         loader.accept(data, "system1");
 
         assertThat(repository.findBySystemCode(SystemEntityBuilder.buildSystemEntity1()).size(), is(1));
-        roleFormAssertEquals(roleForm1, repository.findOneByCode("rcode1"));
+        roleAssertEquals(roleForm1, repository.findOneByCode("rcode1"));
     }
 
     /**
@@ -151,8 +151,8 @@ public class RoleServerLoaderTest {
         loader.accept(data, "system1");
 
         assertThat(repository.findBySystemCode(SystemEntityBuilder.buildSystemEntity1()).size(), is(2));
-        roleFormAssertEquals(roleForm1, repository.findOneByCode("rcode1"));
-        roleFormAssertEquals(roleForm2, repository.findOneByCode("rcode2"));
+        roleAssertEquals(roleForm1, repository.findOneByCode("rcode1"));
+        roleAssertEquals(roleForm2, repository.findOneByCode("rcode2"));
     }
 
     /**
@@ -166,12 +166,12 @@ public class RoleServerLoaderTest {
         loader.accept(data, "system2");
 
         assertThat(repository.findBySystemCode(SystemEntityBuilder.buildSystemEntity2()).size(), is(2));
-        roleFormAssertEquals(roleForm4, repository.findOneByCode("rcode4"));
-        roleFormAssertEquals(roleForm5, repository.findOneByCode("rcode5"));
+        roleAssertEquals(roleForm4, repository.findOneByCode("rcode4"));
+        roleAssertEquals(roleForm5, repository.findOneByCode("rcode5"));
     }
 
 
-    private void roleFormAssertEquals(RoleForm expected, RoleEntity actual) {
+    private void roleAssertEquals(RoleForm expected, RoleEntity actual) {
         assertEquals(expected.getCode(), actual.getCode());
         assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getDescription(), actual.getDescription());
