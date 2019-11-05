@@ -13,7 +13,8 @@
                     </column>
                     <column text-field-id="actions" label=" ">
                         <toolbar>
-                            <button id="delete" label="Удалить" icon="fa fa-trash">
+                            <button id="delete" label="Удалить" icon="fa fa-trash" type="icon"
+                                    confirm="true" confirm-text="Вы уверены, что хотите удалить систему?">
                                 <invoke operation-id="delete"/>
                             </button>
                         </toolbar>
@@ -22,17 +23,21 @@
                 <rows>
                     <click>
                         <open-page page-id="systemFormUpdate" submit-operation-id="update" object-id="system"
-                                    detail-field-id="id" route="/:id/update" />
+                                   detail-field-id="id" route="/:id/update"/>
                     </click>
                 </rows>
                 <filters>
                     <row>
-                        <input-text id="code" label="Код системы"/>
-                        <input-text id="name" label="Наименование системы" class="n2o-control-10"/>
+                        <col size="2">
+                            <input-text id="code" label="Код системы"/>
+                        </col>
+                        <col size="2">
+                            <input-text id="name" label="Наименование системы" class="n2o-control-10"/>
+                        </col>
                     </row>
                 </filters>
                 <toolbar>
-                    <button id="create" label="Создать" model="filter" icon="fa fa-plus">
+                    <button id="create" label="Создать" model="filter" color="primary">
                         <open-page page-id="systemForm" submit-operation-id="create" model="filter"
                                    object-id="system" upload="defaults" route="/create" close-after-submit="true"
                                    redirect-url-after-submit="../:id/update"/>
