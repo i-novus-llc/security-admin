@@ -95,6 +95,9 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
         token.setEmail(email);
         net.n2oapp.security.admin.api.model.User user = userDetailsService.loadUserDetails(token);
 
+        if (userDetailsService.getExternalSystem() != null)
+            map.put("system", userDetailsService.getExternalSystem());
+
         if (user.getDepartment() != null) {
             map.put("department", user.getDepartment().getCode());
         }
