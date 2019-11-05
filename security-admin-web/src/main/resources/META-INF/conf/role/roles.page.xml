@@ -6,7 +6,7 @@
         <region place="single">
             <table name="Роли" query-id="${access.role.query.id}">
                 <toolbar>
-                    <button label="Создать">
+                    <button label="Создать" color="primary">
                         <show-modal page-id="roleForm" submit-operation-id="create" model="filter" object-id="role"/>
                     </button>
                 </toolbar>
@@ -21,7 +21,7 @@
                     </column>
                     <column text-field-id="actions" label=" ">
                         <toolbar>
-                            <button id="remove" icon="fa fa-trash" label="Удалить"
+                            <button id="remove" icon="fa fa-trash" label="Удалить" type="icon"
                                     confirm="true" confirm-text="Вы действительно хотите удалить роль?">
                                 <invoke operation-id="delete"/>
                             </button>
