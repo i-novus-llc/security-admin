@@ -99,7 +99,8 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
                 "/icons/**", "/fonts/**", "/public/**", "/static/**", "/webjars/**").permitAll().anyRequest()
                 .authenticated().and().exceptionHandling()
                 .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint(loginEntryPoint)).and().logout()
-                .logoutSuccessUrl(loginEntryPoint).logoutSuccessHandler(new BackChannelLogoutHandler(signer, clientService, keycloak().getLogoutUri())).permitAll().and().csrf().disable()
+                .logoutSuccessUrl(loginEntryPoint).logoutSuccessHandler(new BackChannelLogoutHandler(signer, clientService, keycloak().getLogoutUri(), esia().getLogoutUri())).permitAll()
+                .and().csrf().disable()
                 .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
     }
 
