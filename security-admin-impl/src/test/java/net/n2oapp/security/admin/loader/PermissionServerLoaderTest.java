@@ -52,8 +52,8 @@ public class PermissionServerLoaderTest {
     @Test
     public void simpleLoader() {
         BiConsumer<List<Permission>, String> loader = permissionServerLoader::load;
-        repository.removeBySystemCode(SystemEntityBuilder.buildSystemEntity1());
-        repository.removeBySystemCode(SystemEntityBuilder.buildSystemEntity2());
+        repository.deleteInBatch(repository.findBySystemCodeOrderByCodeDesc(SystemEntityBuilder.buildSystemEntity1()));
+        repository.deleteInBatch(repository.findBySystemCodeOrderByCodeDesc(SystemEntityBuilder.buildSystemEntity2()));
         case1(loader);
         case2(loader);
         case3(loader);
