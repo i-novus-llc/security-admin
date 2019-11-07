@@ -52,7 +52,7 @@
             <in-parameters>
                 <param id="id" mapping="[0].id" domain="integer" required="true"/>
                 <param id="username" mapping="[0].username" domain="string" required="true"/>
-                <param id="email" mapping="[0].email" domain="string" required="true"/>
+                <param id="email" mapping="[0].email" domain="string"/>
                 <param id="surname" mapping="[0].surname" domain="string" required="true"/>
                 <param id="name" mapping="[0].name" domain="string" required="true"/>
                 <param id="patronymic" mapping="[0].patronymic" domain="string"/>
