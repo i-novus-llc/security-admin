@@ -2,9 +2,8 @@ package net.n2oapp.security.admin.impl.service;
 
 import net.n2oapp.security.admin.api.model.UserLevel;
 import net.n2oapp.security.admin.api.service.UserLevelService;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,13 +12,21 @@ import java.util.List;
 public class UserLevelServiceImpl implements UserLevelService {
 
     private List<UserLevel> userLevels;
+    private List<UserLevel> userLevelsForFilter;
 
     public UserLevelServiceImpl(List<UserLevel> userLevels) {
         this.userLevels = userLevels;
+        userLevelsForFilter = new ArrayList<>(userLevels);
+        userLevelsForFilter.add(UserLevel.NOT_SET);
     }
 
     @Override
     public List<UserLevel> getAll() {
         return userLevels;
+    }
+
+    @Override
+    public List<UserLevel> getAllForFilter() {
+        return userLevelsForFilter;
     }
 }
