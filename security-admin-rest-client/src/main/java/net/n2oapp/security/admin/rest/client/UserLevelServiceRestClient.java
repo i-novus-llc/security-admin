@@ -22,4 +22,8 @@ public class UserLevelServiceRestClient implements UserLevelService {
         return client.getAll().getContent();
     }
 
+    @Override
+    public List<UserLevel> getAllForFilter() {
+        return client.getAllForFilter().getContent();
+    }
 }

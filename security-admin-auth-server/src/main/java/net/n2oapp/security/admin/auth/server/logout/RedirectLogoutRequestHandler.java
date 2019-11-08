@@ -5,20 +5,38 @@ import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuc
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static net.n2oapp.security.admin.auth.server.logout.BackChannelLogoutHandler.EXT_SYS_ATTR;
+import static org.apache.commons.lang.StringUtils.isEmpty;
+
 /**
  * Обработчик успешного выхода с редиректом по заданному адресу
  */
 public class RedirectLogoutRequestHandler extends SimpleUrlLogoutSuccessHandler {
 
-    private String targetUrl;
+    private String keycloakLogoutUrl;
+    private String esiaLogoutUrl;
 
-    public RedirectLogoutRequestHandler(String targetUrl) {
-        this.targetUrl = targetUrl;
+    public RedirectLogoutRequestHandler(String keycloakLogoutUrl, String esiaLogoutUrl) {
+        this.keycloakLogoutUrl = keycloakLogoutUrl;
+        this.esiaLogoutUrl = esiaLogoutUrl;
     }
 
     @Override
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response) {
+        String extSys = (String) request.getAttribute(EXT_SYS_ATTR);
         String redirectUri = request.getParameter("redirect_uri");
-        return redirectUri != null && !redirectUri.isEmpty() ? targetUrl + "?redirect_uri=" + redirectUri : targetUrl;
+        if ("ESIA".equals(extSys)) {
+            if (!isEmpty(redirectUri)) {
+                redirectUri = "redirectUrl=" + redirectUri;
+                redirectUri = esiaLogoutUrl.contains("?") ? "&" + redirectUri : "?" + redirectUri;
+                return esiaLogoutUrl + redirectUri;
+            } else
+                return esiaLogoutUrl;
+        }
+        if (!isEmpty(redirectUri)) {
+            redirectUri = "redirect_uri=" + redirectUri;
+        }
+        return !isEmpty(redirectUri) ? keycloakLogoutUrl + "?" + redirectUri : keycloakLogoutUrl;
+
     }
 }

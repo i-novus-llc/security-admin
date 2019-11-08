@@ -6,8 +6,6 @@ import net.n2oapp.security.admin.impl.entity.*;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
-import java.util.List;
-import java.util.Objects;
 
 import static java.util.Objects.nonNull;
 
@@ -70,7 +68,11 @@ public class UserSpecifications implements Specification<UserEntity> {
             predicate = builder.and(predicate, builder.equal(builder.upper(root.get(UserEntity_.extSys)), criteria.getExtSys().toUpperCase()));
         }
         if (nonNull(criteria.getUserLevel())) {
-            predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.userLevel), UserLevel.valueOf(criteria.getUserLevel())));
+            if (UserLevel.NOT_SET.getName().equalsIgnoreCase(criteria.getUserLevel())) {
+                predicate = builder.and(predicate, builder.isNull(root.get(UserEntity_.userLevel)));
+            } else {
+                predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.userLevel), UserLevel.valueOf(criteria.getUserLevel())));
+            }
         }
         if (nonNull(criteria.getRegionId())) {
             predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.region).get(RegionEntity_.id), criteria.getRegionId()));

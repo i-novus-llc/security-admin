@@ -19,16 +19,14 @@
                     </column>
                     <column text-field-id="actions" label=" ">
                         <toolbar>
-                            <sub-menu label="Действие">
-                                <menu-item label="Удалить" confirm="true"
+                                <button label="Удалить" confirm="true" icon="fa fa-trash" type="icon"
                                            confirm-text="Вы действительно хотите удалить пользователя?">
                                     <invoke operation-id="delete"/>
-                                </menu-item>
-                                <menu-item label="Сбросить пароль">
+                                </button>
+                                <button label="Сбросить пароль" icon="fa fa-key" type="icon">
                                     <show-modal page-id="passwordResetForm" upload="defaults" detail-field-id="id"
                                                 object-id="user" submit-operation-id="resetPassword"/>
-                                </menu-item>
-                            </sub-menu>
+                                </button>
                         </toolbar>
                     </column>
                 </columns>
@@ -59,6 +57,8 @@
                                 <option id="2" name="Нет"/>
                             </options>
                         </checkbox-group>
+                        <input-select id="userLevel" label-field-id="name" query-id="userLevelForFilter"
+                                      visible="${access.level.enabled}" label="Уровень пользователя"/>
 
                     </row>
                     <row>
