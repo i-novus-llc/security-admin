@@ -21,7 +21,7 @@
                     </column>
                     <column text-field-id="actions" label=" ">
                         <toolbar>
-                            <button id="remove" icon="fa fa-trash" label="Удалить" type="icon"
+                            <button id="remove" icon="fa fa-trash" label="Удалить"
                                     confirm="true" confirm-text="Вы действительно хотите удалить роль?">
                                 <invoke operation-id="delete"/>
                             </button>
