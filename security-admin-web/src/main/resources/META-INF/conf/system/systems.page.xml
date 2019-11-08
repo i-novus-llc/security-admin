@@ -13,7 +13,7 @@
                     </column>
                     <column text-field-id="actions" label=" ">
                         <toolbar>
-                            <button id="delete" label="Удалить" icon="fa fa-trash" type="icon"
+                            <button id="delete" label="Удалить" icon="fa fa-trash"
                                     confirm="true" confirm-text="Вы уверены, что хотите удалить систему?">
                                 <invoke operation-id="delete"/>
                             </button>
