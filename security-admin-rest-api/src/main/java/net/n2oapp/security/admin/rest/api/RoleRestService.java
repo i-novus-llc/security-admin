@@ -50,7 +50,6 @@ public interface RoleRestService {
     @ApiOperation("Удалить роль")
     @ApiResponse(code = 200, message = "Роль удалена")
     void delete(@ApiParam(value = "Идентификатор") @PathParam("id") Integer id);
-
 }
 
 
