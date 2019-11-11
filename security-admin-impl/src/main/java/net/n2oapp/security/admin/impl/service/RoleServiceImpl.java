@@ -14,11 +14,13 @@ import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.RoleSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
@@ -81,9 +83,46 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Page<Role> findAll(RoleCriteria criteria) {
         Specification<RoleEntity> specification = new RoleSpecifications(criteria);
-        criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "id"));
-        Page<RoleEntity> all = roleRepository.findAll(specification, criteria);
-        return all.map(this::model);
+        if (criteria.getOrders() == null) {
+            criteria.setOrders(Arrays.asList(new Sort.Order(Sort.Direction.ASC, "code")));
+        } else {
+            criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "code"));
+        }
+        if (Boolean.TRUE.equals(criteria.getGroupBySystem())) {
+            return this.groupBySystem(specification, criteria);
+        } else {
+            Page<RoleEntity> all = roleRepository.findAll(specification, criteria);
+            return all.map(this::model);
+        }
+
+    }
+
+    private Page<Role> groupBySystem(Specification<RoleEntity> specification, RoleCriteria criteria) {
+        List<RoleEntity> roles = roleRepository.findAll(specification, criteria).stream().collect(Collectors.toList());
+        Set<SystemEntity> systems = new HashSet<>();
+        List<Role> modelRoles = new ArrayList<>();
+        int dummyRoleId = -1;
+        for (int i = 0; i < roles.size(); ) {
+            RoleEntity roleEntity = roles.get(i);
+            if (nonNull(roleEntity.getSystemCode())) {
+                if (!systems.contains(roleEntity.getSystemCode())) {
+                    systems.add(roleEntity.getSystemCode());
+                    Role dummyRole = new Role();
+                    dummyRole.setId(dummyRoleId);
+                    dummyRole.setName(roleEntity.getSystemCode().getName());
+                    dummyRole.setCode(roleEntity.getSystemCode().getCode());
+                    modelRoles.add(dummyRole);
+                    dummyRoleId--;
+                }
+                Role role = model(roleEntity);
+                role.getSystem().setCode(modelRoles.stream().filter(model -> model.getCode().equals(roleEntity.getSystemCode().getCode())).findFirst().get().getId().toString());
+                modelRoles.add(role);
+                roles.remove(roleEntity);
+            } else i++;
+        }
+
+        modelRoles.addAll(roles.stream().map(this::model).collect(Collectors.toList()));
+        return new PageImpl<>(modelRoles);
     }
 
     @Override

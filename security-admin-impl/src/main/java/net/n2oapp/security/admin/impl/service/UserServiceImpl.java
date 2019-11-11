@@ -139,6 +139,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Page<User> findAll(UserCriteria criteria) {
+        criteria.setRoleIds(criteria.getRoleIds().stream().filter(roleId -> roleId > 0).collect(Collectors.toList()));
         final Specification<UserEntity> specification = new UserSpecifications(criteria);
         if (criteria.getOrders().stream().map(Sort.Order::getProperty).anyMatch("fio"::equals)) {
             Sort.Direction orderFio = criteria.getOrders().stream().filter(o -> o.getProperty().equals("fio")).findAny().get().getDirection();
@@ -237,7 +238,7 @@ public class UserServiceImpl implements UserService {
         entity.setOrganization(nonNull(model.getOrganizationId()) ? new OrganizationEntity(model.getOrganizationId()) : null);
         entity.setRegion(nonNull(model.getRegionId()) ? new RegionEntity(model.getRegionId()) : null);
         if (nonNull(model.getRoles()))
-            entity.setRoleList(model.getRoles().stream().map(RoleEntity::new).collect(Collectors.toList()));
+            entity.setRoleList(model.getRoles().stream().filter(roleId -> roleId > 0).map(RoleEntity::new).collect(Collectors.toList()));
         return entity;
     }
 
