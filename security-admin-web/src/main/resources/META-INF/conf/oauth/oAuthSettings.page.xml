@@ -94,15 +94,19 @@
                     </dependencies>
                 </input-text>
 
-                <input-select id="clientRoles" description="Настройки прав доступа от имени системы (приложения)"
-                              label="Доступ от имени системы" type="multi" cache="false"
-                              query-id="${access.role.query.id}" value-field-id="id">
+                <input-select-tree id="clientRoles" ajax="false"
+                                   label="Настройки прав доступа от имени системы (приложения)" checkboxes="true">
+                    <inheritance-nodes parent-field-id="systemId" label-field-id="name" value-field-id="id"
+                                       query-id="roleGroupedBySystem"
+                                       search-field-id="name">
+                    </inheritance-nodes>
                     <dependencies>
                         <visibility on="enableClient">
                             enableClient
                         </visibility>
                     </dependencies>
-                </input-select>
+                </input-select-tree>
+
             </set>
         </fields>
     </form>

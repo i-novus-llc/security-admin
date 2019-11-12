@@ -151,7 +151,7 @@ public class ClientServiceImpl implements ClientService {
             authorizedGrantTypes.add("password");
         entity.setGrantTypes(StringUtils.collectionToCommaDelimitedString(authorizedGrantTypes));
         if (nonNull(client.getRolesIds()))
-            entity.setRoleList(client.getRolesIds().stream().map(RoleEntity::new).collect(Collectors.toList()));
+            entity.setRoleList(client.getRolesIds().stream().filter(roleId -> roleId > 0).map(RoleEntity::new).collect(Collectors.toList()));
         return entity;
     }
 
