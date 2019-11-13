@@ -28,11 +28,14 @@
                 </rows>
                 <filters>
                     <row>
-                        <col size="2">
+                        <col>
                             <input-text id="code" label="Код системы"/>
                         </col>
-                        <col size="2">
+                        <col>
                             <input-text id="name" label="Наименование системы" class="n2o-control-10"/>
+                        </col>
+                        <col>
+                            <search-buttons id="def"/>
                         </col>
                     </row>
                 </filters>
