@@ -21,7 +21,7 @@
         <rdm.version>1.80</rdm.version>
         <spring.boot.version>2.1.1.RELEASE</spring.boot.version>
         <config.server.enable>false</config.server.enable>
-        <audit.version>2.0</audit.version>
+        <audit.version>2.3.2</audit.version>
         <nimbusds.version>7.8</nimbusds.version>
     </properties>
 
