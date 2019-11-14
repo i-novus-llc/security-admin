@@ -67,7 +67,7 @@ public class KeycloakRestUserServiceTest {
         ArrayList<RoleRepresentation> userRoles = new ArrayList<>();
         RoleRepresentation role1 = new RoleRepresentation();
         role1.setId("a73ffd30-13af-4918-83c9-93000c8c8590");
-        role1.setName("sec.admin");
+        role1.setName("access.admin");
         userRoles.add(role1);
         userService.addUserRoles(userGuid, userRoles);
         List<RoleRepresentation> actualUserRoles = userService.getActualUserRoles(userGuid);
