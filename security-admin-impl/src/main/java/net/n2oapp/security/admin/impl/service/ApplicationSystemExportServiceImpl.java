@@ -27,9 +27,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
-
-import static java.util.Objects.nonNull;
 
 @Service
 public class ApplicationSystemExportServiceImpl implements ApplicationSystemExportService {
@@ -74,6 +73,7 @@ public class ApplicationSystemExportServiceImpl implements ApplicationSystemExpo
         update(systems, SYSTEM_REF_BOOK_CODE);
     }
 
+
     private RefBook findRefBook(String refBookCode) {
         RefBookCriteria refBookCriteria = new RefBookCriteria();
         refBookCriteria.setCode(refBookCode);
@@ -86,90 +86,88 @@ public class ApplicationSystemExportServiceImpl implements ApplicationSystemExpo
         return search.getContent().get(0);
     }
 
-    private void update(Map<String, ?> map, String refBookCode) {
+    private void update(Map<String, ?> source, String refBookCode) {
         RefBook refBook = findRefBook(refBookCode);
-        if (refBook == null || !isDataDifferent(map, refBookCode))
+        if (refBook == null)
             return;
 
-        Draft draft = draftService.createFromVersion(refBook.getId());
-        map.forEach((k, v) -> {
-            if (v instanceof AppSystem)
-                draftService.updateData(draft.getId(), createRow((AppSystem) v));
-            else if (v instanceof Application)
-                draftService.updateData(draft.getId(), createRow((Application) v));
-        });
-        publishService.publish(draft.getId(), null, null, null, false);
+        List<RefBookRowValue> rdmData = pullRdmData(refBookCode);
+
+        Map<String, Object> forCreate = new HashMap<>(source);
+        List<RefBookRowValue> forRemove = new ArrayList<>();
+        Map<Long, Object> forUpdate = new HashMap<>();
+
+        for (RefBookRowValue refBookRowValue : rdmData) {
+            String code = (String) refBookRowValue.getFieldValue(CODE).getValue();
+            if (!source.containsKey(code)) {
+                forRemove.add(refBookRowValue);
+            } else {
+                if (source.get(code) instanceof AppSystem && !checkSystemEquivalence(refBookRowValue, (AppSystem) source.get(code))
+                        || source.get(code) instanceof Application && !checkAppEquivalence(refBookRowValue, (Application) source.get(code))) {
+                    forUpdate.put(refBookRowValue.getSystemId(), source.get(code));
+                }
+            }
+            forCreate.remove(code);
+        }
+
+        publish(refBook, forCreate, forRemove, forUpdate);
     }
 
-    private boolean isDataDifferent(Map<String, ?> source, String code) {
-        Page<RefBookRowValue> page = versionService.search(code, new SearchDataCriteria(0, 10, null));
+    private void publish(RefBook refBook, Map<String, Object> forCreate, List<RefBookRowValue> forRemove, Map<Long, Object> forUpdate) {
+        if (!forCreate.isEmpty() || !forUpdate.isEmpty() || !forRemove.isEmpty()) {
+            Draft draft = draftService.createFromVersion(refBook.getId());
+            forCreate.values().forEach(s -> draftService.updateData(draft.getId(), createRow(s)));
+            forUpdate.forEach((k, v) -> {
+                Row row = createRow(v);
+                row.setSystemId(k);
+                draftService.updateData(draft.getId(), row);
+            });
+            forRemove.forEach(rowValue -> draftService.deleteRow(draft.getId(), rowValue.getSystemId()));
+            publishService.publish(draft.getId(), null, null, null, false);
+        }
+    }
+
+    private List<RefBookRowValue> pullRdmData(String refBookCode) {
+        Page<RefBookRowValue> page = versionService.search(refBookCode, new SearchDataCriteria(0, 10, null));
         List<RefBookRowValue> target = new ArrayList<>(page.getContent());
         for (int i = 0; i < page.getTotalElements() / 10; i++) {
-            target.addAll(versionService.search(code, new SearchDataCriteria(i + 1, 10, null)).getContent());
+            target.addAll(versionService.search(refBookCode, new SearchDataCriteria(i + 1, 10, null)).getContent());
         }
 
-        if (target.size() != source.size())
-            return true;
-
-        for (RefBookRowValue refBookRowValue : target) {
-            if (!checkEquivalence(refBookRowValue, source))
-                return true;
-        }
-        return false;
+        return target;
     }
 
-    private boolean checkEquivalence(RefBookRowValue refBookRowValue, Map<String, ?> source) {
-        String code = refBookRowValue.getFieldValue(CODE).getValue().toString();
-        if (!source.containsKey(code))
-            return false;
-        Object target = null;
-        if (source.get(code) instanceof Application) {
-            target = createApplication(refBookRowValue);
-        } else if (source.get(code) instanceof AppSystem) {
-            target = createAppSystem(refBookRowValue);
-        }
-
-        return source.containsKey(code) && source.get(code).equals(target);
+    private boolean checkSystemEquivalence(RefBookRowValue refBookRowValue, AppSystem system) {
+        return checkEquivalence(system::getDescription, refBookRowValue.getFieldValue(DESCRIPTION)::getValue)
+                && checkEquivalence(system::getName, refBookRowValue.getFieldValue(NAME)::getValue);
     }
 
-    private Application createApplication(RefBookRowValue refBookRowValue) {
-        Application application = new Application();
-        if (nonNull(refBookRowValue.getFieldValue(CODE)))
-            application.setCode((String) refBookRowValue.getFieldValue(CODE).getValue());
-        if (nonNull(refBookRowValue.getFieldValue(NAME)))
-            application.setName((String) refBookRowValue.getFieldValue(NAME).getValue());
-        if (nonNull(refBookRowValue.getFieldValue(SYSTEM_CODE)) && refBookRowValue.getFieldValue(SYSTEM_CODE).getValue() instanceof Reference)
-            application.setSystemCode(((Reference) refBookRowValue.getFieldValue(SYSTEM_CODE).getValue()).getValue());
-        if (nonNull(refBookRowValue.getFieldValue(OAUTH)))
-            application.setOAuth((Boolean) refBookRowValue.getFieldValue(OAUTH).getValue());
-        return application;
+    private boolean checkAppEquivalence(RefBookRowValue refBookRowValue, Application app) {
+        return checkEquivalence(app::getOAuth, refBookRowValue.getFieldValue(OAUTH)::getValue)
+                && checkEquivalence(app::getName, refBookRowValue.getFieldValue(NAME)::getValue)
+                && checkEquivalence(app::getSystemCode, ((Reference) refBookRowValue.getFieldValue(SYSTEM_CODE).getValue())::getValue);
     }
 
-    private AppSystem createAppSystem(RefBookRowValue refBookRowValue) {
-        AppSystem system = new AppSystem();
-        if (nonNull(refBookRowValue.getFieldValue(CODE).getValue()))
-            system.setCode(refBookRowValue.getFieldValue(CODE).getValue().toString());
-        if (nonNull(refBookRowValue.getFieldValue(NAME).getValue()))
-            system.setName(refBookRowValue.getFieldValue(NAME).getValue().toString());
-        if (nonNull(refBookRowValue.getFieldValue(DESCRIPTION).getValue()))
-            system.setDescription(refBookRowValue.getFieldValue(DESCRIPTION).getValue().toString());
-        return system;
+    private boolean checkEquivalence(Supplier val1, Supplier val2) {
+        return (val1.get() == null || val2.get() != null)
+                && (val1.get() != null || val2.get() == null)
+                && (val1.get() == null || val1.get().equals(val2.get()));
     }
 
-    private Row createRow(AppSystem system) {
+    private Row createRow(Object obj) {
         Map<String, Object> data = new HashMap<>();
-        data.put(CODE, system.getCode());
-        data.put(NAME, system.getName());
-        data.put(DESCRIPTION, system.getDescription());
-        return new Row(data);
-    }
-
-    private Row createRow(Application app) {
-        Map<String, Object> data = new HashMap<>();
-        data.put(CODE, app.getCode());
-        data.put(NAME, app.getName());
-        data.put(OAUTH, app.getOAuth());
-        data.put(SYSTEM_CODE, app.getSystemCode());
+        if (obj instanceof Application) {
+            Application app = (Application) obj;
+            data.put(CODE, app.getCode());
+            data.put(NAME, app.getName());
+            data.put(OAUTH, app.getOAuth());
+            data.put(SYSTEM_CODE, app.getSystemCode());
+        } else if (obj instanceof AppSystem) {
+            AppSystem system = (AppSystem) obj;
+            data.put(CODE, system.getCode());
+            data.put(NAME, system.getName());
+            data.put(DESCRIPTION, system.getDescription());
+        }
         return new Row(data);
     }
 
