@@ -1,0 +1,13 @@
+[
+  {
+    "clientId": "admin-web",
+    "clientSecret": "6aebc9fa-3321-4ca4-8a90-b145b2b562e9",
+    "redirectUris": "*",
+    "accessTokenLifetime": 30,
+    "refreshTokenLifetime": 120,
+    "isClientGrant": true,
+    "isResourceOwnerPass": true,
+    "isAuthorizationCode": true,
+    "logoutUrl": "http://localhost:8080/admin"
+  }
+]

@@ -38,6 +38,12 @@
         </dependency>
 
         <dependency>
+            <groupId>net.n2oapp.framework.security</groupId>
+            <artifactId>security-admin-sso-keycloak</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-starter-ms</artifactId>
         </dependency>
@@ -48,9 +54,13 @@
         </dependency>
 
         <dependency>
-            <groupId>net.n2oapp.framework.security</groupId>
-            <artifactId>security-admin-sso-keycloak</artifactId>
-            <version>${project.version}</version>
+            <groupId>net.n2oapp.platform</groupId>
+            <artifactId>n2o-platform-starter-loader-server</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.n2oapp.platform</groupId>
+            <artifactId>n2o-platform-starter-loader-client</artifactId>
         </dependency>
 
         <dependency>

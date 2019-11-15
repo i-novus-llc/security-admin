@@ -1,8 +1,8 @@
 package net.n2oaap.security.admin.sso.keycloak;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import net.n2oapp.security.admin.sso.keycloak.KeycloakRestRoleService;
 import net.n2oapp.security.admin.sso.keycloak.AdminSsoKeycloakProperties;
+import net.n2oapp.security.admin.sso.keycloak.KeycloakRestRoleService;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE,
         classes = TestApplication.class,
         properties = {"access.keycloak.serverUrl=http://127.0.0.1:8590/auth", "spring.liquibase.enabled=false",
-        "audit.service.url=Mocked", "audit.client.enabled=false"})
+                "audit.service.url=Mocked", "audit.client.enabled=false"})
 public class KeycloakRestRoleServiceTest {
 
     @Autowired
@@ -36,8 +36,7 @@ public class KeycloakRestRoleServiceTest {
 
     @Before
     public void setUp() throws IOException {
-        roleService = new KeycloakRestRoleService(properties);
-        roleService.setTemplate(new RestTemplate());
+        roleService = new KeycloakRestRoleService(properties, new RestTemplate());
         wireMockRule.stubFor(post(urlPathMatching("/auth/admin/realms/master/roles/"))
                 .willReturn(aResponse()
                         .withStatus(200)
@@ -55,14 +54,14 @@ public class KeycloakRestRoleServiceTest {
     }
 
     @Test
-    public void testCRUDRole(){
+    public void testCRUDRole() {
         RoleRepresentation role = new RoleRepresentation();
         String name = "test.role";
         role.setName(name);
         role.setComposite(false);
         role.setDescription("test composite role");
         String roleGuid = roleService.createRole(role);
-        assertEquals(roleGuid,"1b59b5e4-06c1-4352-bcd7-0097ea066d90");
+        assertEquals(roleGuid, "1b59b5e4-06c1-4352-bcd7-0097ea066d90");
         RoleRepresentation roleByName = roleService.getByName(name);
         assertEquals(roleByName.getDescription(), "test composite role");
         roleService.deleteRole(name);
