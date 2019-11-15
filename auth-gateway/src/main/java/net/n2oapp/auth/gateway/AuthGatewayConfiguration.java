@@ -5,7 +5,6 @@ import lombok.Setter;
 import net.n2oapp.auth.gateway.esia.EsiaAccessTokenProvider;
 import net.n2oapp.auth.gateway.esia.EsiaUserInfoTokenServices;
 import net.n2oapp.auth.gateway.esia.Pkcs7Util;
-import net.n2oapp.auth.gateway.loader.ClientLoaderImpl;
 import net.n2oapp.platform.loader.autoconfigure.ClientLoaderConfigurer;
 import net.n2oapp.platform.loader.client.ClientLoaderRunner;
 import net.n2oapp.security.admin.api.service.ClientService;
@@ -13,6 +12,7 @@ import net.n2oapp.security.admin.auth.server.EsiaUserDetailsService;
 import net.n2oapp.security.admin.auth.server.OAuthServerConfiguration;
 import net.n2oapp.security.admin.auth.server.exception.UserNotFoundAuthenticationExceptionHandler;
 import net.n2oapp.security.admin.auth.server.logout.BackChannelLogoutHandler;
+import net.n2oapp.security.admin.impl.loader.client.ClientLoaderImpl;
 import net.n2oapp.security.admin.impl.service.UserDetailsServiceImpl;
 import net.n2oapp.security.auth.common.AuthoritiesPrincipalExtractor;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -215,7 +215,10 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
     public static class LoaderConfiguration implements ClientLoaderConfigurer {
         @Override
         public void configure(ClientLoaderRunner clientLoaderRunner) {
-            clientLoaderRunner.add("", "sec", "clients", "data/clients.json", ClientLoaderImpl.class);
+            clientLoaderRunner
+                    .add("", "sec", "clients", "data/clients.json", ClientLoaderImpl.class)
+                    .add("", "sec", "systems", "data/systems.json", ClientLoaderImpl.class)
+                    .add("", "sec", "applications", "data/systems.json", ClientLoaderImpl.class);
         }
     }
 }

@@ -35,6 +35,16 @@
         </dependency>
 
         <dependency>
+            <groupId>net.n2oapp.platform</groupId>
+            <artifactId>n2o-platform-starter-loader-server</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.n2oapp.platform</groupId>
+            <artifactId>n2o-platform-starter-loader-client</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>ru.inovus.ms.rdm</groupId>
             <artifactId>rdm-api</artifactId>
             <version>${rdm.version}</version>

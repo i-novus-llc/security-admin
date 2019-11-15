@@ -1,6 +1,5 @@
-package net.n2oapp.auth.gateway.loader;
+package net.n2oapp.security.admin.impl.loader;
 
-import net.n2oapp.platform.loader.server.repository.LoaderMapper;
 import net.n2oapp.platform.loader.server.repository.RepositoryServerLoader;
 import net.n2oapp.security.admin.api.model.Client;
 import net.n2oapp.security.admin.impl.entity.ClientEntity;
@@ -10,7 +9,6 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 
-
 /**
  * Загрузчик Oauth2 клиентов
  */
@@ -18,22 +16,7 @@ import java.util.ArrayList;
 public class OauthClientLoader extends RepositoryServerLoader<Client, ClientEntity, String> {
 
     public OauthClientLoader(CrudRepository<ClientEntity, String> repository) {
-        super(repository, new ClientMapper());
-    }
-
-    @Override
-    public String getTarget() {
-        return "clients";
-    }
-
-    @Override
-    public Class<Client> getDataType() {
-        return Client.class;
-    }
-
-    private static class ClientMapper implements LoaderMapper<Client, ClientEntity> {
-        @Override
-        public ClientEntity map(Client model, String subject) {
+        super(repository, (model, subject) -> {
             if (model == null) return null;
             ClientEntity client = new ClientEntity();
             client.setClientId(model.getClientId());
@@ -53,6 +36,16 @@ public class OauthClientLoader extends RepositoryServerLoader<Client, ClientEnti
             client.setGrantTypes(StringUtils.collectionToCommaDelimitedString(authorizedGrantTypes));
 
             return client;
-        }
+        });
+    }
+
+    @Override
+    public String getTarget() {
+        return "clients";
+    }
+
+    @Override
+    public Class<Client> getDataType() {
+        return Client.class;
     }
 }

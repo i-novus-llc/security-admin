@@ -218,7 +218,7 @@ Content-Type: application/json
   "registeredRedirectUrl" : ["http://localhost:8080/web"]
 }
 ----
-Или же добавить клиента в файл `data/clients.json`. По умолчанию доступен следующий клиент:
+Или же добавить клиента в файл `data/clients.json`. Пример json:
 +
 ----
 [

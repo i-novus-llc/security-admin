@@ -1,4 +1,4 @@
-package net.n2oapp.auth.gateway.loader;
+package net.n2oapp.security.admin.impl.loader.client;
 
 import net.n2oapp.platform.loader.client.ClientLoader;
 import net.n2oapp.platform.loader.server.ServerLoaderRunner;

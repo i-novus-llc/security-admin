@@ -1,0 +1,9 @@
+[
+  {
+    "clientId": "test",
+    "clientSecret": "test_secret",
+    "isClientGrant": true,
+    "redirectUris": "a,b",
+    "accessTokenLifetime": 10
+  }
+]
