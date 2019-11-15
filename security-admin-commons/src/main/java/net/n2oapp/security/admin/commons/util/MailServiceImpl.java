@@ -56,7 +56,7 @@ public class MailServiceImpl implements MailService {
     /**
      * Почтовый ящик отправителя
      */
-    @Value("${sec.mail.message.from}")
+    @Value("${sec.password.mail.message.from}")
     private String mailMessageFrom;
 
     /**
