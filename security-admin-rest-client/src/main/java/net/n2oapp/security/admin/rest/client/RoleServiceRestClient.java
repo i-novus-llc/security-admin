@@ -41,17 +41,7 @@ public class RoleServiceRestClient implements RoleService {
 
     @Override
     public Page<Role> findAll(RoleCriteria criteria) {
-        RestRoleCriteria roleCriteria = new RestRoleCriteria();
-        roleCriteria.setPage(criteria.getPageNumber());
-        roleCriteria.setSize(criteria.getPageSize());
-        roleCriteria.setName(criteria.getName());
-        roleCriteria.setDescription(criteria.getDescription());
-        roleCriteria.setPermissionCodes(criteria.getPermissionCodes());
-        roleCriteria.setSystemCodes(criteria.getSystemCodes());
-        roleCriteria.setOrders(criteria.getOrders());
-        roleCriteria.setUserLevel(criteria.getUserLevel());
-        roleCriteria.setForForm(criteria.getForForm());
-        return client.findAll(roleCriteria);
+        return client.findAll(toRestCriteria(criteria));
     }
 
     public Page<Role> findAllForForm(RoleCriteria criteria) {
@@ -64,5 +54,20 @@ public class RoleServiceRestClient implements RoleService {
     public Integer countUsersWithRole(Integer roleId) {
         //todo Реализовать
         return 0;
+    }
+
+    private RestRoleCriteria toRestCriteria(RoleCriteria criteria) {
+        RestRoleCriteria roleCriteria = new RestRoleCriteria();
+        roleCriteria.setPage(criteria.getPageNumber());
+        roleCriteria.setSize(criteria.getPageSize());
+        roleCriteria.setName(criteria.getName());
+        roleCriteria.setDescription(criteria.getDescription());
+        roleCriteria.setPermissionCodes(criteria.getPermissionCodes());
+        roleCriteria.setSystemCodes(criteria.getSystemCodes());
+        roleCriteria.setOrders(criteria.getOrders());
+        roleCriteria.setUserLevel(criteria.getUserLevel());
+        roleCriteria.setForForm(criteria.getForForm());
+        roleCriteria.setGroupBySystem(criteria.getGroupBySystem());
+        return roleCriteria;
     }
 }

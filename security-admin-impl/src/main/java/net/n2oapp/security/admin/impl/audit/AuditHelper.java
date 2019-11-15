@@ -31,7 +31,6 @@ public class AuditHelper {
             request.setContext(object.toString());
         }
         request.setObjectName(objectName);
-        request.setSourceApplication("access");
         request.setAuditType((short) 1);
 
         auditClient.add(request);

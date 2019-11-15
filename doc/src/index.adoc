@@ -972,7 +972,7 @@ insert into sec.permission(name, code) values('Право доступа к мо
 |string
 |Пароль для доступа к альясу
 
-|audit.client.apiUrl
+|audit.service.url
 |string
 |Адрес сервиса аудита
 
