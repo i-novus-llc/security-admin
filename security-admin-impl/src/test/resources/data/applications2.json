@@ -1,0 +1,12 @@
+[
+  {
+    "code": "insteadTest",
+    "name": "testName",
+    "systemCode": "testSystem"
+  },
+  {
+    "code": "test2",
+    "name": "test2Name",
+    "systemCode": "testSystem2"
+  }
+]
