@@ -218,7 +218,7 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
             clientLoaderRunner
                     .add("", "sec", "clients", "data/clients.json", ClientLoaderImpl.class)
                     .add("", "sec", "systems", "data/systems.json", ClientLoaderImpl.class)
-                    .add("", "sec", "applications", "data/systems.json", ClientLoaderImpl.class);
+                    .add("", "sec", "applications", "data/applications.json", ClientLoaderImpl.class);
         }
     }
 }
