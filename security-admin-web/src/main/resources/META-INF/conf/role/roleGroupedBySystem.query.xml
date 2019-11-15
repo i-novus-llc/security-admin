@@ -10,14 +10,6 @@
             </arguments>
         </java>
     </list>
-    <unique result-mapping="#this">
-        <java method="getById" class="net.n2oapp.security.admin.api.service.RoleService">
-            <spring/>
-            <arguments>
-                <argument type="primitive"/>
-            </arguments>
-        </java>
-    </unique>
 
     <fields>
         <field id="id" domain="integer">
@@ -48,32 +40,6 @@
             </filters>
         </field>
 
-        <field id="permissionIds" domain="string[]" name="Права">
-            <select mapping="['permissions'].![code]"></select>
-            <filters>
-                <in mapping="['permissionIds']" filter-id="permissionIds"></in>
-            </filters>
-        </field>
-
-        <field id="permissionNames" domain="string[]" name="Права">
-            <select mapping="['permissions'].![name]"></select>
-        </field>
-
-
-        <field id="permissions" domain="object[]" name="Права">
-            <select mapping="['permissions']"/>
-            <filters>
-                <in filter-id="permissions*.id" domain="string[]" mapping="permissionCodes"/>
-            </filters>
-        </field>
-
-
-        <field id="permissions*.id">
-            <select mapping="permissions.![code]"></select>
-        </field>
-        <field id="permissions*.name" >
-            <select mapping="permissions.![name]"></select>
-        </field>
 
         <field id="system" domain="object" name="Система">
             <select mapping="['system']"></select>
@@ -82,7 +48,7 @@
             </filters>
         </field>
 
-        <field id="system.id" domain="string" name="Система">
+        <field id="systemId" domain="string" name="Система">
             <select mapping="system?.code"></select>
         </field>
 
@@ -100,6 +66,12 @@
             </filters>
         </field>
 
-
+        <field id="groupBySystem" domain="boolean">
+            <filters>
+                <eq domain="boolean" mapping="groupBySystem" default-value="true"></eq>
+            </filters>
+        </field>
     </fields>
+
+
 </query>

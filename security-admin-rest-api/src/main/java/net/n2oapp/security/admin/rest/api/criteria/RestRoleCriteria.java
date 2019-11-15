@@ -74,4 +74,9 @@ public class RestRoleCriteria extends RoleCriteria {
         super.setForForm(forForm);
     }
 
+    @QueryParam("groupBySystem")
+    @Override
+    public void setGroupBySystem(Boolean groupBySystem) {
+        super.setGroupBySystem(groupBySystem);
+    }
 }

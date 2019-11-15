@@ -11,17 +11,17 @@
     <parent>
         <groupId>net.n2oapp.platform</groupId>
         <artifactId>n2o-platform-parent</artifactId>
-        <version>2.18</version>
+        <version>2.19</version>
         <relativePath/>
     </parent>
 
     <properties>
         <java.version>11</java.version>
-        <n2o.version>7.3.24</n2o.version>
+        <n2o.version>7.4.5</n2o.version>
         <rdm.version>1.80</rdm.version>
         <spring.boot.version>2.1.1.RELEASE</spring.boot.version>
         <config.server.enable>false</config.server.enable>
-        <audit.version>2.0</audit.version>
+        <audit.version>2.3.2</audit.version>
         <nimbusds.version>7.8</nimbusds.version>
     </properties>
 
