@@ -5,6 +5,9 @@ import lombok.Setter;
 import net.n2oapp.auth.gateway.esia.EsiaAccessTokenProvider;
 import net.n2oapp.auth.gateway.esia.EsiaUserInfoTokenServices;
 import net.n2oapp.auth.gateway.esia.Pkcs7Util;
+import net.n2oapp.auth.gateway.loader.ClientLoaderImpl;
+import net.n2oapp.platform.loader.autoconfigure.ClientLoaderConfigurer;
+import net.n2oapp.platform.loader.client.ClientLoaderRunner;
 import net.n2oapp.security.admin.api.service.ClientService;
 import net.n2oapp.security.admin.auth.server.EsiaUserDetailsService;
 import net.n2oapp.security.admin.auth.server.OAuthServerConfiguration;
@@ -208,6 +211,13 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
 
     }
 
+    @Configuration
+    public static class LoaderConfiguration implements ClientLoaderConfigurer {
+        @Override
+        public void configure(ClientLoaderRunner clientLoaderRunner) {
+            clientLoaderRunner.add("", "sec", "clients", "data/clients.json", ClientLoaderImpl.class);
+        }
+    }
 }
 
 
