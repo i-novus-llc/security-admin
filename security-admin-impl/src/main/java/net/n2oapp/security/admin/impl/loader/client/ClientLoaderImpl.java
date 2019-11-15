@@ -13,7 +13,7 @@ import java.net.URI;
  * Загрузчик справочных данных в json формате
  */
 @Component
-public class ClientLoaderImpl<T> implements ClientLoader {
+public class ClientLoaderImpl implements ClientLoader {
 
     @Autowired
     private ServerLoaderRunner loaderRunner;
