@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,6 +26,5 @@ public interface PermissionRepository extends JpaRepository<PermissionEntity, St
     @Query("select count(r) from PermissionEntity r where r.systemCode.code = :systemCode")
     Integer countPermissionsWithSystemCode(@Param("systemCode") String systemCode);
 
-    @Transactional
     void removeBySystemCode(SystemEntity systemEntity);
 }

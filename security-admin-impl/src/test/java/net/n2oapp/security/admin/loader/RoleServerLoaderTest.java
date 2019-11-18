@@ -5,7 +5,6 @@ import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
 import net.n2oapp.security.admin.api.model.RoleForm;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
-import net.n2oapp.security.admin.impl.loader.RoleServerLoader;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.loader.builder.RoleFormBuilder;
 import net.n2oapp.security.admin.loader.builder.SystemEntityBuilder;
@@ -13,7 +12,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -34,9 +32,6 @@ import static org.junit.Assert.assertThat;
 @TestPropertySource("classpath:test.properties")
 @EnableEmbeddedPg
 public class RoleServerLoaderTest {
-    
-    @Autowired
-    private RoleServerLoader roleServerLoader;
 
     @Autowired
     private RepositoryServerLoader<RoleForm, RoleEntity, Integer> repositoryServerLoader;
@@ -44,25 +39,6 @@ public class RoleServerLoaderTest {
     @Autowired
     private RoleRepository repository;
 
-    @LocalServerPort
-    private int port;
-
-
-    /**
-     * Тест {@link RoleServerLoader}
-     */
-    @Test
-    public void simpleLoader() {
-        BiConsumer<List<RoleForm>, String> loader = roleServerLoader::load;
-        repository.deleteBySystemCode(SystemEntityBuilder.buildSystemEntity1());
-        repository.deleteBySystemCode(SystemEntityBuilder.buildSystemEntity2());
-        case1(loader);
-        case2(loader);
-        case3(loader);
-        case4(loader);
-        case5(loader);
-        case6(loader);
-    }
 
     /**
      * Тест {@link RepositoryServerLoader}
@@ -70,8 +46,8 @@ public class RoleServerLoaderTest {
     @Test
     public void repositoryLoader() {
         BiConsumer<List<RoleForm>, String> loader = repositoryServerLoader::load;
-        repository.deleteBySystemCode(SystemEntityBuilder.buildSystemEntity1());
-        repository.deleteBySystemCode(SystemEntityBuilder.buildSystemEntity2());
+        repository.removeBySystemCode(SystemEntityBuilder.buildSystemEntity1());
+        repository.removeBySystemCode(SystemEntityBuilder.buildSystemEntity2());
         case1(loader);
         case2(loader);
         case3(loader);
