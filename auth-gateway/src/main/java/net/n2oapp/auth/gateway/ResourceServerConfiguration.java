@@ -12,7 +12,18 @@ import org.springframework.security.web.util.matcher.OrRequestMatcher;
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.requestMatcher(new OrRequestMatcher(new AntPathRequestMatcher("/userinfo"), new AntPathRequestMatcher("/api/**")))
-                .authorizeRequests().anyRequest().authenticated();
+        http.requestMatcher(new OrRequestMatcher(
+                new AntPathRequestMatcher("/userinfo"),
+                new AntPathRequestMatcher("/api/systems/**"),
+                new AntPathRequestMatcher("/api/applications/**"),
+                new AntPathRequestMatcher("/api/clients/**"),
+                new AntPathRequestMatcher("/api/department/**"),
+                new AntPathRequestMatcher("/api/organization/**"),
+                new AntPathRequestMatcher("/api/permissions/**"),
+                new AntPathRequestMatcher("/api/region/**"),
+                new AntPathRequestMatcher("/api/roles/**"),
+                new AntPathRequestMatcher("/api/userLevels/**"),
+                new AntPathRequestMatcher("/api/users/**")
+        )).authorizeRequests().anyRequest().authenticated();
     }
 }
