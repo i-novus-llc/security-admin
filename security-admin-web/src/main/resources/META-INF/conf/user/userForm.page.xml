@@ -6,7 +6,7 @@
                 <input-text id="username" label="Имя пользователя" required="true">
                     <validations white-list="usernameValidation"/>
                 </input-text>
-                <input-text id="email" label="Email">
+                <input-text id="email" label="e-mail">
                     <validations white-list="emailValidation">
                         <condition id="emailIsRequired" severity="danger" on="sendOnEmail"
                                    message="Поле обязательно для заполнения" side="client">
@@ -73,7 +73,7 @@
                         </dependencies>
                     </input-select-tree>
                 </col>
-                <col size="2">
+                <col size="2" class="d-flex align-items-end">
                     <checkbox id="isActive" label="Активность" default-value="true"/>
                 </col>
             </row>
