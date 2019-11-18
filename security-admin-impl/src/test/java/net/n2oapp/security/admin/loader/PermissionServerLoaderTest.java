@@ -34,33 +34,11 @@ import static org.junit.Assert.assertThat;
 public class PermissionServerLoaderTest {
 
     @Autowired
-    private PermissionServerLoader permissionServerLoader;
-
-    @Autowired
     private RepositoryServerLoader<Permission, PermissionEntity, String> repositoryServerLoader;
 
     @Autowired
     private PermissionRepository repository;
 
-    @LocalServerPort
-    private int port;
-    
-
-    /**
-     * Тест {@link PermissionServerLoader}
-     */
-    @Test
-    public void simpleLoader() {
-        BiConsumer<List<Permission>, String> loader = permissionServerLoader::load;
-        repository.deleteInBatch(repository.findBySystemCodeOrderByCodeDesc(SystemEntityBuilder.buildSystemEntity1()));
-        repository.deleteInBatch(repository.findBySystemCodeOrderByCodeDesc(SystemEntityBuilder.buildSystemEntity2()));
-        case1(loader);
-        case2(loader);
-        case3(loader);
-        case4(loader);
-        case5(loader);
-        case6(loader);
-    }
 
     /**
      * Тест {@link RepositoryServerLoader}

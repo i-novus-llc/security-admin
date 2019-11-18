@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,6 +23,5 @@ public interface RoleRepository extends JpaRepository<RoleEntity, Integer>, JpaS
 
     List<RoleEntity> findBySystemCode(SystemEntity systemEntity);
 
-    @Transactional
-    void deleteBySystemCode(SystemEntity systemEntity);
+    void removeBySystemCode(SystemEntity systemEntity);
 }

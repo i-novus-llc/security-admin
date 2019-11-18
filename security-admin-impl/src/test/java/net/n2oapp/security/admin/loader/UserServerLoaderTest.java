@@ -5,14 +5,12 @@ import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
 import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
-import net.n2oapp.security.admin.impl.loader.UserServerLoader;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.loader.builder.UserFormBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -35,32 +33,13 @@ import static org.junit.Assert.fail;
 public class UserServerLoaderTest {
 
     @Autowired
-    private UserServerLoader userServerLoader;
-
-    @Autowired
     private RepositoryServerLoader<UserForm, UserEntity, Integer> repositoryServerLoader;
 
     @Autowired
     private UserRepository repository;
 
-    @LocalServerPort
-    private int port;
-
-
     private List<Integer> userIds = new ArrayList<>();
 
-    /**
-     * Тест {@link UserServerLoader}
-     */
-    @Test
-    public void simpleLoader() {
-        BiConsumer<List<UserForm>, String> loader = userServerLoader::load;
-        repository.deleteByUsernameIn(Arrays.asList("username1", "username2", "username3"));
-        case1(loader);
-        case2(loader);
-        case3(loader);
-        case4(loader);
-    }
 
     /**
      * Тест {@link RepositoryServerLoader}
@@ -68,7 +47,7 @@ public class UserServerLoaderTest {
     @Test
     public void repositoryLoader() {
         BiConsumer<List<UserForm>, String> loader = repositoryServerLoader::load;
-        repository.deleteByUsernameIn(Arrays.asList("username1", "username2", "username3"));
+        repository.removeByUsernameIn(Arrays.asList("username1", "username2", "username3"));
         case1(loader);
         case2(loader);
         case3(loader);
