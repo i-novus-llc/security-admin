@@ -125,7 +125,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(Integer id) {
-        String contextUsername = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        String contextUsername = isNull(SecurityContextHolder.getContext().getAuthentication()) ? null : ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         SsoUser user = ssoModel(userRepository.findById(id).orElse(null));
         if (isNull(user) || !user.getUsername().equals(contextUsername)) {
             userRepository.deleteById(id);
