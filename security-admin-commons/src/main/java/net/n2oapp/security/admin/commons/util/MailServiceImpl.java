@@ -53,6 +53,11 @@ public class MailServiceImpl implements MailService {
     @Value("${sec.password.mail.reset-password.subject}")
     private String resetPasswordMailSubject;
 
+    /**
+     * Почтовый ящик отправителя
+     */
+    @Value("${sec.password.mail.message.from}")
+    private String mailMessageFrom;
 
     /**
      * Отправка сообщения на почту при успешном создании пользователя
@@ -100,6 +105,7 @@ public class MailServiceImpl implements MailService {
         MimeMessageHelper helper = null;
         try {
             helper = new MimeMessageHelper(message, StandardCharsets.UTF_8.name());
+            helper.setFrom(mailMessageFrom);
             helper.setTo((String) data.get("email"));
             helper.setSubject(subject);
             helper.setText(body, true);
