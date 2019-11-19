@@ -60,7 +60,7 @@ public class RoleEntity {
     /**
      * Права доступа роли
      */
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "role_permission", schema = "sec",
             joinColumns = {@JoinColumn(name = "role_id")},
             inverseJoinColumns = {@JoinColumn(name = "permission_code")}
