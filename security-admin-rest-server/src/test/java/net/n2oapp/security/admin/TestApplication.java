@@ -6,17 +6,19 @@ import net.n2oapp.security.admin.api.service.UserDetailsService;
 import net.n2oapp.security.admin.rest.api.*;
 import net.n2oapp.security.admin.rest.impl.UserDetailsRestServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import ru.inovus.ms.rdm.api.service.RefBookService;
+import ru.inovus.ms.rdm.api.service.VersionService;
 
 /**
  * Стартовая точка запуска Spring Boot
  */
 @SpringBootApplication
 @EnableJaxRsProxyClient(
-        classes = {UserRestService.class, RoleRestService.class, PermissionRestService.class, ClientRestService.class, UserDetailsRestService.class},
+        classes = {RefBookService.class, VersionService.class, UserRestService.class, RoleRestService.class,
+                PermissionRestService.class, ClientRestService.class, UserDetailsRestService.class},
         address = "http://localhost:${server.port}/api")
 @EnableEmbeddedPg
 public class TestApplication {
