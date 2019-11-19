@@ -249,7 +249,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private String getContextUserName() {
-        return ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        return isNull(SecurityContextHolder.getContext().getAuthentication()) ? null : ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
     }
 
     private UserEntity entityProvider(SsoUser modelFromProvider) {
