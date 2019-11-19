@@ -48,6 +48,11 @@
         </dependency>
 
         <dependency>
+            <groupId>net.n2oapp.platform</groupId>
+            <artifactId>n2o-platform-starter-loader-server</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>net.n2oapp.framework.security</groupId>
             <artifactId>security-admin-sso-keycloak</artifactId>
             <version>${project.version}</version>
