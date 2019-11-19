@@ -21,17 +21,13 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-
-import java.util.Locale;
-
 import ru.inovus.ms.rdm.api.provider.RdmMapperConfigurer;
 import ru.inovus.ms.rdm.api.service.DraftService;
 import ru.inovus.ms.rdm.api.service.PublishService;
-import ru.inovus.ms.rdm.api.service.RefBookService;
-import ru.inovus.ms.rdm.api.service.VersionService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 
 @Configuration
@@ -63,11 +59,9 @@ public class AdminImplConfiguration {
     }
 
     @EnableJaxRsProxyClient(
-            classes = {RefBookService.class, DraftService.class,
-                    PublishService.class, VersionService.class},
-            address = "${rdm.backend.path}"
+            classes = {DraftService.class, PublishService.class},
+            address = "${rdm.client.export.url}"
     )
-
     @SpringBootConfiguration
     public static class RdmProxyConfiguration {
         @Bean
