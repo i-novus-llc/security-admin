@@ -125,9 +125,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(Integer id) {
-        String contextUsername = isNull(SecurityContextHolder.getContext().getAuthentication()) ? null : ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         SsoUser user = ssoModel(userRepository.findById(id).orElse(null));
-        if (isNull(user) || !user.getUsername().equals(contextUsername)) {
+        if (isNull(user) || !user.getUsername().equals(getContextUserName())) {
             userRepository.deleteById(id);
             if (nonNull(user)) {
                 audit("audit.userDelete", user);
@@ -161,12 +160,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public User changeActive(Integer id) {
         UserEntity userEntity = userRepository.findById(id).orElse(null);
-        userEntity.setIsActive(!userEntity.getIsActive());
-        SsoUser result = ssoModel(userRepository.save(userEntity));
-        if (provider.isSupports(userEntity.getExtSys())) {
-            provider.changeActivity(result);
-        }
-        return audit("audit.userChangeActive", result);
+        if (isNull(userEntity) || !userEntity.getUsername().equals(getContextUserName())) {
+            userEntity.setIsActive(!userEntity.getIsActive());
+            SsoUser result = ssoModel(userRepository.save(userEntity));
+            if (provider.isSupports(userEntity.getExtSys())) {
+                provider.changeActivity(result);
+            }
+            return audit("audit.userChangeActive", result);
+        } else throw new UserException("exception.selfChangeActivity");
     }
 
     @Override
@@ -245,6 +246,10 @@ public class UserServiceImpl implements UserService {
         if (nonNull(model.getRoles()))
             entity.setRoleList(model.getRoles().stream().filter(roleId -> roleId > 0).map(RoleEntity::new).collect(Collectors.toList()));
         return entity;
+    }
+
+    private String getContextUserName() {
+        return ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
     }
 
     private UserEntity entityProvider(SsoUser modelFromProvider) {
