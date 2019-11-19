@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.impl.service;
 
+import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import net.n2oapp.security.admin.api.model.*;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -123,12 +125,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(Integer id) {
+        String contextUsername = isNull(SecurityContextHolder.getContext().getAuthentication()) ? null : ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         SsoUser user = ssoModel(userRepository.findById(id).orElse(null));
-        userRepository.deleteById(id);
-        if (nonNull(user)) {
-            audit("audit.userDelete", user);
-            if (provider.isSupports(user.getExtSys())) provider.deleteUser(user);
-        }
+        if (isNull(user) || !user.getUsername().equals(contextUsername)) {
+            userRepository.deleteById(id);
+            if (nonNull(user)) {
+                audit("audit.userDelete", user);
+                if (provider.isSupports(user.getExtSys())) provider.deleteUser(user);
+            }
+        } else throw new UserException("exception.selfDelete");
     }
 
     @Override
@@ -304,8 +309,10 @@ public class UserServiceImpl implements UserService {
 
     private SsoUser ssoModel(UserEntity entity) {
         SsoUser ssoUser = (SsoUser) model(entity);
-        ssoUser.setExtSys(entity.getExtSys());
-        ssoUser.setExtUid(entity.getExtUid());
+        if (nonNull(entity)) {
+            ssoUser.setExtSys(entity.getExtSys());
+            ssoUser.setExtUid(entity.getExtUid());
+        }
         return ssoUser;
     }
 
