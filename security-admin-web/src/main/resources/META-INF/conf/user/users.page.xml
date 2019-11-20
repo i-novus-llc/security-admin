@@ -13,7 +13,7 @@
                         <list label-field-id="name"/>
                     </column>
                     <column text-field-id="isActive">
-                        <checkbox>
+                        <checkbox enabled="${access.users.change-activity-enabled}">
                             <invoke route="/changeUserActive" operation-id="changeUserActive"/>
                         </checkbox>
                     </column>

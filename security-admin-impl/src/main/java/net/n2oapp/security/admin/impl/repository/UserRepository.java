@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -23,4 +24,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer>, JpaS
 
     @Query("select count(u) from UserEntity u join u.roleList r where r.id = :roleId")
     Integer countUsersWithRoleId(@Param("roleId") Integer roleId);
+
+    void removeByUsernameIn(List<String> usernames);
 }

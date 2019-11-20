@@ -1022,6 +1022,10 @@ insert into sec.permission(name, code) values('Право доступа к мо
 |integer
 |Время жизни refresh токена клиента в минутах
 
+|access.users.change-activity-enabled=true
+|boolean
+|Возможность изменения активности на списке пользователей
+
 |===
 
 == Кастомизация
