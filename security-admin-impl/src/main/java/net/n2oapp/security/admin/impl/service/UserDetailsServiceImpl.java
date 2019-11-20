@@ -20,6 +20,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+
 @Service
 @Transactional
 @Primary
@@ -47,7 +50,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public User loadUserDetails(UserDetailsToken userDetails) {
         UserEntity userEntity = userRepository.findOneByUsernameIgnoreCase(userDetails.getUsername());
-        if (userEntity == null && createUser) {
+        if (isNull(userEntity) && createUser) {
             userEntity = new UserEntity();
             userEntity.setUsername(userDetails.getUsername());
             userEntity.setExtUid(userDetails.getExtUid());
@@ -56,30 +59,30 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             userEntity.setName(userDetails.getName());
             userEntity.setIsActive(true);
             userEntity.setExtSys(externalSystem);
-            if (userDetails.getRoleNames() != null && !userDetails.getRoleNames().isEmpty()) {
+            if (nonNull(userDetails.getRoleNames()) && !userDetails.getRoleNames().isEmpty()) {
                 userEntity.setRoleList(userDetails.getRoleNames().stream().map(this::getOrCreateRole).filter(Objects::nonNull).collect(Collectors.toList()));
             }
             userRepository.save(userEntity);
-        } else if (userEntity == null && !createUser) {
+        } else if (isNull(userEntity) && !createUser) {
             throw new UserNotFoundAuthenticationException("User " + userDetails.getName() + " " + userDetails.getSurname() + " doesn't registered in system");
         } else if (updateUser) {
             userEntity.setIsActive(true);
-            if (userDetails.getExtUid() != null) {
+            if (nonNull(userDetails.getExtUid())) {
                 userEntity.setExtUid(userDetails.getExtUid());
             }
-            if (userDetails.getEmail() != null) {
+            if (nonNull(userDetails.getEmail())) {
                 userEntity.setEmail(userDetails.getEmail());
             }
-            if (userDetails.getPatronymic() != null) {
+            if (nonNull(userDetails.getPatronymic())) {
                 userEntity.setPatronymic(userDetails.getPatronymic());
             }
-            if (userDetails.getSurname() != null) {
+            if (nonNull(userDetails.getSurname())) {
                 userEntity.setSurname(userDetails.getSurname());
             }
-            if (userDetails.getName() != null) {
+            if (nonNull(userDetails.getName())) {
                 userEntity.setName(userDetails.getName());
             }
-            if (userDetails.getRoleNames() == null && updateRoles) {
+            if (isNull(userDetails.getRoleNames()) && updateRoles) {
                 userEntity.getRoleList().clear();
             } else if (updateRoles) {
                 List<String> roleNamesCopy = new ArrayList<>(userDetails.getRoleNames());
@@ -110,7 +113,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             if (s.equals(name)) return null;
         }
         RoleEntity roleEntity = roleRepository.findOneByCode(name);
-        if (roleEntity == null) {
+        if (isNull(roleEntity)) {
             roleEntity = new RoleEntity();
             roleEntity.setName(name);
             roleEntity.setCode(name);
@@ -124,7 +127,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     private User model(UserEntity entity) {
-        if (entity == null) return null;
+        if (isNull(entity)) return null;
         User model = new User();
         model.setId(entity.getId());
         model.setUsername(entity.getUsername());
@@ -134,25 +137,25 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         model.setIsActive(entity.getIsActive());
         model.setEmail(entity.getEmail());
         StringBuilder builder = new StringBuilder();
-        if (entity.getSurname() != null) {
+        if (nonNull(entity.getSurname())) {
             builder.append(entity.getSurname()).append(" ");
         }
-        if (entity.getName() != null) {
+        if (nonNull(entity.getName())) {
             builder.append(entity.getName()).append(" ");
         }
-        if (entity.getPatronymic() != null) {
+        if (nonNull(entity.getPatronymic())) {
             builder.append(entity.getPatronymic());
         }
         model.setFio(builder.toString());
 
-        if (entity.getRoleList() != null && !entity.getRoleList().isEmpty()) {
+        if (nonNull(entity.getRoleList()) && !entity.getRoleList().isEmpty()) {
             model.setRoles(entity.getRoleList().stream().map(this::model).collect(Collectors.toList()));
         } else if (!defaultRoles.isEmpty()) {
             model.setRoles(defaultRoles.stream().map(this::getRoleModel).filter(Objects::nonNull).collect(Collectors.toList()));
         }
 
 
-        if (entity.getDepartment() != null) {
+        if (nonNull(entity.getDepartment())) {
             Department d = new Department();
             d.setId(entity.getDepartment().getId());
             d.setCode(entity.getDepartment().getCode());
@@ -160,7 +163,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             model.setDepartment(d);
         }
 
-        if (entity.getRegion() != null) {
+        if (nonNull(entity.getRegion())) {
             Region r = new Region();
             r.setId(entity.getRegion().getId());
             r.setCode(entity.getRegion().getCode());
@@ -169,7 +172,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             model.setRegion(r);
         }
 
-        if (entity.getOrganization() != null) {
+        if (nonNull(entity.getOrganization())) {
             Organization o = new Organization();
             o.setId(entity.getOrganization().getId());
             o.setCode(entity.getOrganization().getCode());
@@ -185,23 +188,27 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     protected Role model(RoleEntity entity) {
-        if (entity == null) return null;
+        if (isNull(entity)) return null;
         Role model = new Role();
         model.setId(entity.getId());
         model.setCode(entity.getCode());
         model.setName(entity.getName());
         model.setDescription(entity.getDescription());
-        if (entity.getPermissionList() != null) {
+        if (nonNull(entity.getSystemCode()))
+            model.setSystem(new AppSystem(entity.getSystemCode().getCode()));
+        if (nonNull(entity.getPermissionList())) {
             model.setPermissions(entity.getPermissionList().stream().map(this::model).collect(Collectors.toList()));
         }
         return model;
     }
 
     private Permission model(PermissionEntity entity) {
-        if (entity == null) return null;
+        if (isNull(entity)) return null;
         Permission model = new Permission();
         model.setName(entity.getName());
         model.setCode(entity.getCode());
+        if (nonNull(entity.getSystemCode()))
+            model.setSystemCode(entity.getSystemCode().getCode());
         model.setParentCode(entity.getParentCode());
         return model;
     }

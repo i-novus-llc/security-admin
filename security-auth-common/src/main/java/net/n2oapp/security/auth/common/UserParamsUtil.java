@@ -2,6 +2,7 @@ package net.n2oapp.security.auth.common;
 
 import net.n2oapp.security.auth.common.authority.PermissionGrantedAuthority;
 import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
+import net.n2oapp.security.auth.common.authority.SystemGrantedAuthority;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,6 +24,7 @@ public class UserParamsUtil {
 
     private static final String ROLES = "roles";
     private static final String PERMISSIONS = "permissions";
+    private static final String SYSTEMS = "systems";
 
     /**
      * Получение текущей сессии пользователя по контексту {@link SecurityContextHolder}
@@ -181,7 +183,7 @@ public class UserParamsUtil {
      * @param map Информация о пользователе
      * @return Список полномочий
      */
-    public static List<GrantedAuthority> extractRolesAndPermissions(Map<String, ?> map) {
+    public static List<GrantedAuthority> extractAuthority(Map<String, ?> map) {
         List<GrantedAuthority> authorities = new ArrayList<>();
         if (map.containsKey(ROLES)) {
             for (String role : (List<String>) map.get(ROLES)) {
@@ -189,8 +191,13 @@ public class UserParamsUtil {
             }
         }
         if (map.containsKey(PERMISSIONS)) {
-            for (String role : (List<String>) map.get(PERMISSIONS)) {
-                authorities.add(new PermissionGrantedAuthority(role));
+            for (String permission : (List<String>) map.get(PERMISSIONS)) {
+                authorities.add(new PermissionGrantedAuthority(permission));
+            }
+        }
+        if (map.containsKey(SYSTEMS)) {
+            for (String system : (List<String>) map.get(SYSTEMS)) {
+                authorities.add(new SystemGrantedAuthority(system));
             }
         }
         return authorities;

@@ -24,7 +24,7 @@ public class GatewayPrincipalExtractor implements PrincipalExtractor, Authoritie
 
     @Override
     public List<GrantedAuthority> extractAuthorities(Map<String, Object> map) {
-        return UserParamsUtil.extractRolesAndPermissions(map);
+        return UserParamsUtil.extractAuthority(map);
     }
 
     @Override

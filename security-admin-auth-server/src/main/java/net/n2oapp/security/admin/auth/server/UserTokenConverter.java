@@ -2,7 +2,9 @@ package net.n2oapp.security.admin.auth.server;
 
 import net.n2oapp.security.auth.common.User;
 import net.n2oapp.security.auth.common.UserParamsUtil;
+import net.n2oapp.security.auth.common.authority.PermissionGrantedAuthority;
 import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
+import net.n2oapp.security.auth.common.authority.SystemGrantedAuthority;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,6 +28,7 @@ public class UserTokenConverter implements UserAuthenticationConverter {
     static final String ORGANIZATION = "organization";
     static final String REGION = "region";
     static final String USER_LEVEL = "userLevel";
+    static final String SYSTEMS = "systems";
 
     @Override
     public Map<String, ?> convertUserAuthentication(Authentication authentication) {
@@ -52,16 +55,21 @@ public class UserTokenConverter implements UserAuthenticationConverter {
         if (authentication.getAuthorities() != null && !authentication.getAuthorities().isEmpty()) {
             List<String> roles = new ArrayList<>();
             List<String> permissions = new ArrayList<>();
+            List<String> systems = new ArrayList<>();
             for (GrantedAuthority authority : authentication.getAuthorities()) {
                 if (authority instanceof RoleGrantedAuthority)
                     roles.add(((RoleGrantedAuthority) authority).getRole());
-                else
+                else if (authority instanceof PermissionGrantedAuthority)
                     permissions.add(authority.getAuthority());
+                else if (authority instanceof SystemGrantedAuthority)
+                    systems.add(((SystemGrantedAuthority) authority).getSystem());
             }
             if (!roles.isEmpty())
                 response.put(ROLES, roles);
             if (!permissions.isEmpty())
                 response.put(PERMISSIONS, permissions);
+            if (!systems.isEmpty())
+                response.put(SYSTEMS, systems);
         }
         return response;
     }
@@ -84,6 +92,6 @@ public class UserTokenConverter implements UserAuthenticationConverter {
     }
 
     private Collection<? extends GrantedAuthority> getAuthorities(Map<String, ?> map) {
-        return UserParamsUtil.extractRolesAndPermissions(map);
+        return UserParamsUtil.extractAuthority(map);
     }
 }

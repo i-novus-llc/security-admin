@@ -1,7 +1,9 @@
 package net.n2oapp.security.admin.auth.server;
 
 import net.n2oapp.security.auth.common.User;
+import net.n2oapp.security.auth.common.authority.PermissionGrantedAuthority;
 import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
+import net.n2oapp.security.auth.common.authority.SystemGrantedAuthority;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,7 +15,6 @@ import java.util.Map;
 
 import static net.n2oapp.security.admin.auth.server.UserTokenConverter.*;
 
-
 @RestController
 public class UserInfoEndpoint {
 
@@ -23,12 +24,15 @@ public class UserInfoEndpoint {
     public Map<String, Object> user(OAuth2Authentication authentication) {
         List<String> roles = new ArrayList<>();
         List<String> permissions = new ArrayList<>();
+        List<String> systems = new ArrayList<>();
 
         authentication.getAuthorities().forEach(authority -> {
             if (authority instanceof RoleGrantedAuthority)
                 roles.add(((RoleGrantedAuthority) authority).getRole());
-            else
+            else if (authority instanceof PermissionGrantedAuthority)
                 permissions.add(authority.getAuthority());
+            else if (authority instanceof SystemGrantedAuthority)
+                systems.add(((SystemGrantedAuthority) authority).getSystem());
         });
 
         Map<String, Object> map = new LinkedHashMap<>();
@@ -42,12 +46,12 @@ public class UserInfoEndpoint {
             map.put(ORGANIZATION, user.getOrganization());
             map.put(REGION, user.getRegion());
             map.put(USER_LEVEL, user.getUserLevel());
-
         }
 
         map.put(USERNAME, authentication.getName());
         map.put(ROLES, roles);
         map.put(PERMISSIONS, permissions);
+        map.put(SYSTEMS, systems);
         if (authentication.getUserAuthentication() != null)
             map.put(SID, ((Map<String, Object>) authentication.getUserAuthentication().getDetails()).get(SID));
         return map;
