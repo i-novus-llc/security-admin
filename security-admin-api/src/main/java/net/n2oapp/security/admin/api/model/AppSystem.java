@@ -23,4 +23,8 @@ public class AppSystem extends AppSystemForm {
     @JsonProperty
     @ApiModelProperty(value = "Приложения")
     private List<Application> applications;
+
+    public AppSystem(String code) {
+        super(code);
+    }
 }

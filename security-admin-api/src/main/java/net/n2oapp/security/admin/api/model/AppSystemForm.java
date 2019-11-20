@@ -28,4 +28,7 @@ public class AppSystemForm {
     @ApiModelProperty(value = "Описание")
     private String description;
 
+    public AppSystemForm(String code) {
+        this.code = code;
+    }
 }
