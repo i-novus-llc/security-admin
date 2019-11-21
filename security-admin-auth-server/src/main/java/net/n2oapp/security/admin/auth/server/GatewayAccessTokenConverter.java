@@ -38,7 +38,7 @@ public class GatewayAccessTokenConverter extends DefaultAccessTokenConverter {
                 }
             }
         }
-        if (authentication.getUserAuthentication().getPrincipal() instanceof User) {
+        if (authentication.getUserAuthentication() != null && authentication.getUserAuthentication().getPrincipal() instanceof User) {
             User principal = (User) authentication.getUserAuthentication().getPrincipal();
             if (principal.getRegion() != null)
                 token.getAdditionalInformation().put("region", principal.getRegion());
