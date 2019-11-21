@@ -202,7 +202,7 @@ UserInfo endpoint: /userinfo
 Admin API: /api/info
 
 . Зарегистрируйте клиентов OAuth2. Клиент - это приложение, которое будет аутентифицироваться в Auth Gateway.
-Сделать это можно двумя способами. С помощью REST сервиса:
+Сделать это можно с помощью REST сервиса:
 +
 ----
 POST /api/clients
@@ -218,24 +218,6 @@ Content-Type: application/json
   "registeredRedirectUrl" : ["http://localhost:8080/web"]
 }
 ----
-Или же добавить клиента в файл `data/clients.json`. Пример json:
-+
-----
-[
-  {
-    "clientId": "admin-web",
-    "clientSecret": "6aebc9fa-3321-4ca4-8a90-b145b2b562e9",
-    "redirectUris": "*",
-    "accessTokenLifetime": 30,
-    "refreshTokenLifetime": 120,
-    "isClientGrant": true,
-    "isResourceOwnerPass": true,
-    "isAuthorizationCode": true,
-    "logoutUrl": "http://localhost:8080/admin"
-  }
-]
-----
-
 
 == OAuth2 OpenId Connect
 В этом разделе рассказывается как подключить к вашему приложению авторизацию
