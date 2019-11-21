@@ -236,7 +236,8 @@ public class UserServiceImpl implements UserService {
         entity.setName(model.getName());
         entity.setSurname(model.getSurname());
         entity.setPatronymic(model.getPatronymic());
-        entity.setIsActive(model.getIsActive());
+        if (entity.getUsername().equals(getContextUserName()))
+            entity.setIsActive(model.getIsActive());
         entity.setEmail(model.getEmail());
         entity.setSnils(model.getSnils());
         entity.setUserLevel(nonNull(model.getUserLevel()) ? UserLevel.valueOf(model.getUserLevel()) : null);
