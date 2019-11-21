@@ -92,6 +92,6 @@ public class UserTokenConverter implements UserAuthenticationConverter {
     }
 
     private Collection<? extends GrantedAuthority> getAuthorities(Map<String, ?> map) {
-        return UserParamsUtil.extractAuthority(map);
+        return UserParamsUtil.extractAuthorities(map);
     }
 }

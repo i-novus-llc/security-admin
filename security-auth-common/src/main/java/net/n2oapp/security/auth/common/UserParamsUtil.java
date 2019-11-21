@@ -183,7 +183,7 @@ public class UserParamsUtil {
      * @param map Информация о пользователе
      * @return Список полномочий
      */
-    public static List<GrantedAuthority> extractAuthority(Map<String, ?> map) {
+    public static List<GrantedAuthority> extractAuthorities(Map<String, ?> map) {
         List<GrantedAuthority> authorities = new ArrayList<>();
         if (map.containsKey(ROLES)) {
             for (String role : (List<String>) map.get(ROLES)) {
