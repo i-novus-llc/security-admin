@@ -232,7 +232,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserEntity entityForm(UserEntity entity, UserForm model) {
-        if (entity.getUsername().equals(getContextUserName()) && !entity.getIsActive().equals(model.getIsActive()))
+        if (nonNull(entity.getUsername()) && entity.getUsername().equals(getContextUserName()) && !entity.getIsActive().equals(model.getIsActive()))
             throw new UserException("exception.selfChangeActivity");
         entity.setUsername(model.getUsername());
         entity.setName(model.getName());
