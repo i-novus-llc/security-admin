@@ -1,14 +1,10 @@
 package net.n2oapp.security.admin.rest.api;
 
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.*;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
-import net.n2oapp.security.admin.rest.api.criteria.RestUserDetailsToken;
 import org.springframework.data.domain.Page;
 
 import javax.ws.rs.*;
@@ -20,7 +16,7 @@ import javax.ws.rs.core.MediaType;
 @Path("/users")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@Api("Пользователи")
+@Api(value = "Пользователи", authorizations = @Authorization(value = "oauth2"))
 public interface UserRestService {
 
     @GET
