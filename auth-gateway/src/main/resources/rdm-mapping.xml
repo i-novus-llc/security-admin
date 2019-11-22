@@ -10,7 +10,7 @@
     <refbook code="S002" sys-table="sec.region" unique-sys-field="code" deleted-field="is_deleted" mapping-version="1">
         <field sys-field="code" sys-data-type="varchar" rdm-field="code"/>
         <field sys-field="name" sys-data-type="varchar" rdm-field="name"/>
-        <field sys-field="okato" sys-data-type="varchar" rdm-field="OKATO"/>
+        <field sys-field="okato" sys-data-type="varchar" rdm-field="okato"/>
     </refbook>
 
     <refbook code="S003" sys-table="sec.organization" unique-sys-field="code" deleted-field="is_deleted"
