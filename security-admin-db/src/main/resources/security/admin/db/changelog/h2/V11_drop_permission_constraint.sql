@@ -1,12 +1,12 @@
-ALTER TABLE ${n2o.security.admin.schema}.${n2o.security.admin.rolepermission.table} DROP CONSTRAINT ${n2o.security.admin.rolepermission.permission.constraint.fk};
+ALTER TABLE sec.role_permission DROP CONSTRAINT role_permission_permission_fk;
 
-ALTER TABLE ${n2o.security.admin.schema}.${n2o.security.admin.rolepermission.table} DROP CONSTRAINT role_permission_pk;
+ALTER TABLE sec.role_permission DROP CONSTRAINT role_permission_pk;
 
-ALTER TABLE ${n2o.security.admin.schema}.${n2o.security.admin.permission.table} DROP CONSTRAINT ${n2o.security.admin.permission.parent.constraint.fk};
+ALTER TABLE sec.permission DROP CONSTRAINT permission_parent_fk;
 
-ALTER TABLE ${n2o.security.admin.schema}.${n2o.security.admin.permission.table} DROP CONSTRAINT CONSTRAINT_F;
+ALTER TABLE sec.permission DROP CONSTRAINT CONSTRAINT_F;
 
-ALTER TABLE ${n2o.security.admin.schema}.${n2o.security.admin.permission.table} DROP CONSTRAINT SEC.CONSTRAINT_9;
+ALTER TABLE sec.permission DROP CONSTRAINT SEC.CONSTRAINT_9;
 
 
 

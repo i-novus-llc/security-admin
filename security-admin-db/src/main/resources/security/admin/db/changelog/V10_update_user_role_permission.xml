@@ -5,6 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="update_permission" author="rbarysheva" dbms="postgresql">
+        <validCheckSum>8:0871014708a6c9093fa2e7be01b4343c</validCheckSum>
         <sqlFile path="security/admin/db/changelog/sql/V10_update_permission.sql"/>
     </changeSet>
     <changeSet id="update_permission" author="rbarysheva" dbms="h2">
@@ -12,6 +13,7 @@
     </changeSet>
 
     <changeSet id="update_role" author="rbarysheva" dbms="postgresql">
+        <validCheckSum>8:c35fb658518eb21fa101e407379e3f2d</validCheckSum>
         <sqlFile path="security/admin/db/changelog/sql/V10_update_role.sql"/>
     </changeSet>
     <changeSet id="update_role" author="rbarysheva" dbms="h2">
@@ -19,6 +21,7 @@
     </changeSet>
 
     <changeSet id="update_user" author="rbarysheva" dbms="postgresql">
+        <validCheckSum>8:b95adea9c95873f50a946fba1a0a58cc</validCheckSum>
         <sqlFile path="security/admin/db/changelog/sql/V10_update_user.sql"/>
     </changeSet>
     <changeSet id="update_user" author="rbarysheva" dbms="h2">
@@ -26,6 +29,7 @@
     </changeSet>
 
     <changeSet id="update_user_constraint" author="rbarysheva" dbms="postgresql">
+        <validCheckSum>8:30195fc1f82b8ed5e00325031ea0a766</validCheckSum>
         <sqlFile path="security/admin/db/changelog/sql/V10_update_user_constraint.sql"/>
     </changeSet>
     <changeSet id="update_user_constraint" author="rbarysheva" dbms="h2">

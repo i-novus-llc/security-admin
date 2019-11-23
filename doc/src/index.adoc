@@ -15,7 +15,6 @@
 - Различные схемы развертывания (Embedded, Standalone)
 - Быстрое подключение провайдера аутентификации (Basic, OAuth2)
 - Интеграция со сторонними серверами SSO (Keycloak, ESIA)
-- Настраиваемая гранулярность доступа (user-role, user-role-permission)
 - Настраиваемый пользовательский интерфейс
 
 == Simple Auth
@@ -525,14 +524,11 @@ public class Application {
 ----
 <?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog>
-  <include file="classpath:/security/admin/db/[granularity]/properties.xml"/>
-  <include file="classpath:/security/admin/db/[granularity]/changelog.xml"/>
+  <include file="classpath:/security/admin/db/properties.xml"/>
+  <include file="classpath:/security/admin/db/changelog-master.xml"/>
     ...
 </databaseChangeLog>
 ----
-+
-Где, `[granularity]` вид link:#_Гранулярность_доступа[гранулярности доступа].
-+
 . Настройте доступ к Базе Данных через jdbc с помощью настроек Spring Boot:
 +
 [listing]
@@ -686,14 +682,12 @@ public class Application {
 ----
 <?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog>
-  <include file="classpath:/security/admin/db/[granularity]/properties.xml"/>
-    <include file="classpath:/security/admin/db/[granularity]/changelog.xml"/>
+    <include file="classpath:/security/admin/db/properties.xml"/>
+    <include file="classpath:/security/admin/db/changelog-master.xml"/>
     ...
 </databaseChangeLog>
 ----
-+
-Где, `[granularity]` вид link:#_Гранулярность_доступа[гранулярности доступа].
-+
+
 . Настройте доступ к Базе Данных через jdbc с помощью настроек Spring Boot:
 +
 [listing]
@@ -817,26 +811,6 @@ public class Application {
 
 == Авторизация
 В этом разделе рассказывается как настроить доступ к функциям вашего приложения и к функциям администрирования.
-
-=== Гранулярность доступа
-В зависимости от масштаба системы доступ к её функциям можно разрешать по ролям, правам доступа, группам и т.д.
-
-.Виды гранулярности доступа
-[cols="1,2,4"]
-|===
-|Вид|Описание|Таблицы БД
-
-|ur
-|user-role
-|sec.user, sec.role, sec.user_role
-
-|urp
-|user-role-permission
-|sec.user, sec.role, sec.permission, sec.user_role, sec.role_permission
-
-|===
-
-От выбранной гранулярности зависит структура БД, интерфейс и сервисы администрирования.
 
 === Авторизация функций приложения
 

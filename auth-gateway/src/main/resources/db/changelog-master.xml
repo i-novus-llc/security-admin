@@ -5,11 +5,9 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <include file="classpath*:/security/admin/db/urp/properties.xml"/>
-    <include file="classpath*:/security/admin/db/urp/changelog.xml"/>
-    <include file="classpath*:/security/admin/db/system/changelog.xml"/>
-    <include file="classpath*:/security/admin/db/client/changelog.xml"/>
-    <include file="classpath*:/security/admin/db/client/properties.xml"/>
+    <include file="classpath*:/security/admin/db/properties.xml"/>
+    <include file="classpath*:/security/admin/db/changelog-master.xml"/>
+    <include file="classpath*:/security/admin/db/properties.xml"/>
     <include file="quartz-db/changelog/quartz-init.xml"/>
     <include file="rdm-sync-db/changelog/201902201337_init.xml"/>
     <include file="rdm-sync-db/changelog/201910031038_add_mapping_version.xml"/>

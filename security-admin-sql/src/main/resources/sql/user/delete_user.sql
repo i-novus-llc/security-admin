@@ -1,1 +1,0 @@
-delete from sec.user where id = :id;

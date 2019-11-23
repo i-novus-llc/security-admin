@@ -5,6 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="create_users" author="rgalina" dbms="postgresql">
+        <validCheckSum>8:63512f27d3b66af27d53e00cc814040e</validCheckSum>
         <sqlFile path="security/admin/db/changelog/sql/V2_users.sql"/>
     </changeSet>
     <changeSet id="create_users" author="rgalina" dbms="h2">
