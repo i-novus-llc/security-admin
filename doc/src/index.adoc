@@ -524,7 +524,6 @@ public class Application {
 ----
 <?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog>
-  <include file="classpath:/security/admin/db/properties.xml"/>
   <include file="classpath:/security/admin/db/changelog-master.xml"/>
     ...
 </databaseChangeLog>
@@ -682,7 +681,6 @@ public class Application {
 ----
 <?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog>
-    <include file="classpath:/security/admin/db/properties.xml"/>
     <include file="classpath:/security/admin/db/changelog-master.xml"/>
     ...
 </databaseChangeLog>

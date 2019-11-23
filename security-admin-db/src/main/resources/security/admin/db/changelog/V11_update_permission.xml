@@ -20,7 +20,7 @@
     </changeSet>
 
     <changeSet id="permission_index" author="aarifullin" dbms="postgresql">
-        <validCheckSum>8:8:117933722ca97f74a2f321c357b32eb1</validCheckSum>
+        <validCheckSum>8:117933722ca97f74a2f321c357b32eb1</validCheckSum>
         <sqlFile path="security/admin/db/changelog/sql/V11_permission_index.sql"/>
     </changeSet>
 
