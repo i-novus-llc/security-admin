@@ -7,7 +7,6 @@
 
 
     <include file="classpath*:/security/admin/db/changelog-master.xml"/>
-    <include file="classpath*:/security/admin/db/client/properties.xml"/>
     <include file="classpath*:/quartz-db/changelog/quartz-init.xml"/>
 
 </databaseChangeLog>
