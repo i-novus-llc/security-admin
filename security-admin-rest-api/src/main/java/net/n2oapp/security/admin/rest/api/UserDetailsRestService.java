@@ -1,9 +1,6 @@
 package net.n2oapp.security.admin.rest.api;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.*;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.rest.api.criteria.RestUserDetailsToken;
 
@@ -19,7 +16,7 @@ import javax.ws.rs.core.MediaType;
 @Path("/users")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@Api("Информация о пользователе")
+@Api(value = "Информация о пользователе", authorizations = @Authorization(value = "oauth2"))
 public interface UserDetailsRestService {
 
     @POST

@@ -1,9 +1,6 @@
 package net.n2oapp.security.admin.rest.api;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.*;
 import net.n2oapp.security.admin.api.model.Client;
 import net.n2oapp.security.admin.rest.api.criteria.RestClientCriteria;
 import org.springframework.data.domain.Page;
@@ -17,7 +14,7 @@ import javax.ws.rs.core.MediaType;
 @Path("/clients")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@Api("Клиенты")
+@Api(value = "Клиенты", authorizations = @Authorization(value = "oauth2"))
 public interface ClientRestService {
 
     @GET

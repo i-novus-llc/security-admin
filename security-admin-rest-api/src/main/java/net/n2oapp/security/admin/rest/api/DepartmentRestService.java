@@ -3,6 +3,7 @@ package net.n2oapp.security.admin.rest.api;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.Authorization;
 import net.n2oapp.security.admin.api.criteria.DepartmentCriteria;
 import net.n2oapp.security.admin.api.model.Department;
 import org.springframework.data.domain.Page;
@@ -16,7 +17,7 @@ import javax.ws.rs.core.MediaType;
 @Path("/department")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@Api("Департаменты")
+@Api(value = "Департаменты", authorizations = @Authorization(value = "oauth2"))
 public interface DepartmentRestService {
 
     @GET
