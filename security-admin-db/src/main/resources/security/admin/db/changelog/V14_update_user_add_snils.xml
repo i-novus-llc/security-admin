@@ -6,6 +6,7 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="update_user_add_snils" author="aarifullin">
+        <validCheckSum>8:946fc6ee9b8da79c1e6d891227ea010d</validCheckSum>
         <sqlFile path="security/admin/db/changelog/sql/V14_update_user_add_snils.sql"/>
     </changeSet>
 </databaseChangeLog>

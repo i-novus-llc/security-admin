@@ -1,3 +1,3 @@
-CREATE SCHEMA IF NOT EXISTS ${n2o.security.admin.schema};
+CREATE SCHEMA IF NOT EXISTS sec;
 
-COMMENT ON SCHEMA ${n2o.security.admin.schema} IS 'Схема управления доступом';
+COMMENT ON SCHEMA sec IS 'Схема управления доступом';

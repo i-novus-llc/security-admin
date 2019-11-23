@@ -1,1 +1,0 @@
-select id from sec.role where name in (:names)
