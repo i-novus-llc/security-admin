@@ -3,6 +3,7 @@ package net.n2oapp.security.admin.rest.api;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.Authorization;
 import net.n2oapp.security.admin.api.model.UserLevel;
 import org.springframework.data.domain.Page;
 
@@ -18,7 +19,7 @@ import javax.ws.rs.core.MediaType;
 @Path("/userLevels")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@Api("Уровни пользователя")
+@Api(value = "Уровни пользователя", authorizations = @Authorization(value = "oauth2"))
 public interface UserLevelRestService {
 
     @GET
