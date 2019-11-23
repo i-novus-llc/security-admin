@@ -1,10 +1,6 @@
 package net.n2oapp.security.admin.rest.api;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import net.n2oapp.security.admin.api.criteria.PermissionCriteria;
+import io.swagger.annotations.*;
 import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.rest.api.criteria.RestPermissionCriteria;
 import org.springframework.data.domain.Page;
@@ -18,7 +14,7 @@ import javax.ws.rs.core.MediaType;
 @Path("/permissions")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@Api("Права доступа")
+@Api(value = "Права доступа", authorizations = @Authorization(value = "oauth2"))
 public interface PermissionRestService {
 
     @GET

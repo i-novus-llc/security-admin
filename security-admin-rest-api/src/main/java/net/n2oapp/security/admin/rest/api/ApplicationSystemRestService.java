@@ -1,9 +1,6 @@
 package net.n2oapp.security.admin.rest.api;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.*;
 import net.n2oapp.security.admin.api.model.AppSystem;
 import net.n2oapp.security.admin.api.model.AppSystemForm;
 import net.n2oapp.security.admin.api.model.Application;
@@ -20,7 +17,7 @@ import javax.ws.rs.core.MediaType;
 @Path("/")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@Api("Приложения и Системы")
+@Api(value = "Приложения и Системы", authorizations = @Authorization(value = "oauth2"))
 public interface ApplicationSystemRestService {
 
     String SYSTEM_PATH = "/systems";

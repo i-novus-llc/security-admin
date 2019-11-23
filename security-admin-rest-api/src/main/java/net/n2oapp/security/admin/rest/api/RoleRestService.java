@@ -1,9 +1,6 @@
 package net.n2oapp.security.admin.rest.api;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.*;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.RoleForm;
 import net.n2oapp.security.admin.rest.api.criteria.RestRoleCriteria;
@@ -18,7 +15,7 @@ import javax.ws.rs.core.MediaType;
 @Path("/roles")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@Api("Роли")
+@Api(value = "Роли", authorizations = @Authorization(value = "oauth2"))
 public interface RoleRestService {
 
     @GET
