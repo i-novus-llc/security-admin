@@ -1,5 +1,7 @@
 package net.n2oapp.security.admin.sso.keycloak;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.SsoUser;
@@ -14,6 +16,7 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,6 +34,10 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
 
     @Autowired
     private SchedulerFactoryBean schedulerFactoryBean;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
 
     public KeycloakSsoUserRoleProvider(AdminSsoKeycloakProperties properties) {
         this.properties = properties;
@@ -66,7 +73,7 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
                 userService.addUserRoles(userGuid, roles);
             }
         } catch (HttpClientErrorException e) {
-            throw new IllegalArgumentException(e.getResponseBodyAsString(), e);
+            throwUserException(e);
         }
         return user;
     }
@@ -167,6 +174,15 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
             schedulerFactoryBean.getScheduler().triggerJob(new JobKey(SsoKeycloakConfiguration.USER_SYNCHRONIZE_JOB_DETAIL));
         } catch (SchedulerException e) {
             throw new UserException("exception.failedSyncStart", e);
+        }
+    }
+
+    private void throwUserException(HttpClientErrorException exception) {
+        try {
+            Map<String, String> map = objectMapper.readValue(exception.getResponseBodyAsString(), new TypeReference<Map<String, String>>() {});
+            throw new UserException("exception." + map.get("errorMessage").toLowerCase().replaceAll(" ", "-"));
+        } catch (IOException e) {
+            throw new IllegalArgumentException(exception);
         }
     }
 
