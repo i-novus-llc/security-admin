@@ -24,4 +24,8 @@ public interface RoleRepository extends JpaRepository<RoleEntity, Integer>, JpaS
     List<RoleEntity> findBySystemCode(SystemEntity systemEntity);
 
     void removeBySystemCode(SystemEntity systemEntity);
+
+    @Query("SELECT CASE WHEN (COUNT(r) > 0) THEN false ELSE true END " +
+            "FROM RoleEntity r WHERE r.id != :id AND (r.name = :name OR r.code = :code)")
+    Boolean checkRoleUniq(@Param("id") Integer id, @Param("name") String name, @Param("code") String code);
 }
