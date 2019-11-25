@@ -3,8 +3,6 @@ package net.n2oapp.security.auth.common.authority;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.util.Assert;
 
-import java.util.Objects;
-
 /**
  * Полномочие, основанное на доступе к определенной системе
  */
@@ -29,16 +27,21 @@ public class SystemGrantedAuthority implements GrantedAuthority {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof SystemGrantedAuthority)) return false;
-        SystemGrantedAuthority that = (SystemGrantedAuthority) o;
-        return Objects.equals(system, that.system);
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj instanceof SystemGrantedAuthority) {
+            return system.equals(((SystemGrantedAuthority) obj).system);
+        }
+
+        return false;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(DEFAULT_SYSTEM_PREFIX, system);
+        return this.system.hashCode();
     }
 
     @Override
