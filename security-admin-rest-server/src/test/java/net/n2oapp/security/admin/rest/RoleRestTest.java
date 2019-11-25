@@ -81,8 +81,8 @@ public class RoleRestTest {
 
     private static RoleForm newRole() {
         RoleForm role = new RoleForm();
-        role.setName("user1");
-        role.setCode("code1");
+        role.setName("test-name");
+        role.setCode("test-code");
         role.setDescription("description1");
         List<String> permissions = new ArrayList<>();
         permissions.add("test");
