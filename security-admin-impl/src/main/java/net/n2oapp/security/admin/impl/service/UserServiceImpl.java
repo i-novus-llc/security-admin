@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
         UserEntity savedUser = userRepository.save(entity);
         // получаем модель для сохранения SSO провайдером, ему надо передать незакодированный пароль
         if (provider.isSupports(savedUser.getExtSys())) {
-            SsoUser ssoUser = ssoModel(savedUser);
+            SsoUser ssoUser = model(savedUser);
             ssoUser.setPassword(password);
             // если пароль временный, то требуем смены пароля при следующем входе пользователя
             if (user.getTemporaryPassword() != null)
@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService {
         UserEntity updatedUser = userRepository.save(entityUser);
         //в провайдер отправляем незакодированный пароль, если он изменился, и отправляем null, если не изменялся пароль
         if (provider.isSupports(updatedUser.getExtSys())) {
-            SsoUser ssoUser = ssoModel(updatedUser);
+            SsoUser ssoUser = model(updatedUser);
             if (isNull(user.getPassword())) {
                 ssoUser.setPassword(null);
             } else {
@@ -125,14 +125,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(Integer id) {
-        SsoUser user = ssoModel(userRepository.findById(id).orElse(null));
-        if (isNull(user) || !user.getUsername().equals(getContextUserName())) {
+        SsoUser user = model(userRepository.findById(id).orElse(null));
+        if (nonNull(user) && user.getUsername().equals(getContextUserName())) {
+            throw new UserException("exception.selfDelete");
+        } else {
             userRepository.deleteById(id);
             if (nonNull(user)) {
                 audit("audit.userDelete", user);
                 if (provider.isSupports(user.getExtSys())) provider.deleteUser(user);
             }
-        } else throw new UserException("exception.selfDelete");
+        }
     }
 
     @Override
@@ -160,14 +162,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public User changeActive(Integer id) {
         UserEntity userEntity = userRepository.findById(id).orElse(null);
-        if (isNull(userEntity) || !userEntity.getUsername().equals(getContextUserName())) {
+        if (nonNull(userEntity) && userEntity.getUsername().equals(getContextUserName())) {
+            throw new UserException("exception.selfChangeActivity");
+        } else {
             userEntity.setIsActive(!userEntity.getIsActive());
-            SsoUser result = ssoModel(userRepository.save(userEntity));
+            SsoUser result = model(userRepository.save(userEntity));
             if (provider.isSupports(userEntity.getExtSys())) {
                 provider.changeActivity(result);
             }
             return audit("audit.userChangeActive", result);
-        } else throw new UserException("exception.selfChangeActivity");
+        }
     }
 
     @Override
@@ -216,7 +220,7 @@ public class UserServiceImpl implements UserService {
 
                 //в провайдер отправляем незакодированный пароль
                 if (provider.isSupports(updatedUser.getExtSys())) {
-                    SsoUser ssoUser = ssoModel(updatedUser);
+                    SsoUser ssoUser = model(updatedUser);
                     ssoUser.setPassword(password);
                     // если пароль временный, то требуем смены пароля при следующем входе пользователя
                     if (user.getTemporaryPassword() != null)
@@ -252,7 +256,11 @@ public class UserServiceImpl implements UserService {
     }
 
     private String getContextUserName() {
-        return isNull(SecurityContextHolder.getContext().getAuthentication()) ? null : ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        if (isNull(SecurityContextHolder.getContext())) return null;
+        if (isNull(SecurityContextHolder.getContext().getAuthentication())) return null;
+        else if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof org.springframework.security.core.userdetails.User)
+            return ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        return null;
     }
 
     private UserEntity entityProvider(SsoUser modelFromProvider) {
@@ -279,7 +287,7 @@ public class UserServiceImpl implements UserService {
         return entity;
     }
 
-    private User model(UserEntity entity) {
+    private SsoUser model(UserEntity entity) {
         if (isNull(entity)) return null;
         SsoUser model = new SsoUser();
         model.setId(entity.getId());
@@ -295,6 +303,8 @@ public class UserServiceImpl implements UserService {
         model.setDepartment(model(entity.getDepartment()));
         model.setOrganization(model(entity.getOrganization()));
         model.setRegion(model(entity.getRegion()));
+        model.setExtSys(entity.getExtSys());
+        model.setExtUid(entity.getExtUid());
         StringBuilder builder = new StringBuilder();
         if (nonNull(entity.getSurname())) {
             builder.append(entity.getSurname()).append(" ");
@@ -313,15 +323,6 @@ public class UserServiceImpl implements UserService {
             }).collect(Collectors.toList()));
         }
         return model;
-    }
-
-    private SsoUser ssoModel(UserEntity entity) {
-        SsoUser ssoUser = (SsoUser) model(entity);
-        if (nonNull(entity)) {
-            ssoUser.setExtSys(entity.getExtSys());
-            ssoUser.setExtUid(entity.getExtUid());
-        }
-        return ssoUser;
     }
 
     private Role model(RoleEntity entity) {
