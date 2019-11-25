@@ -13,6 +13,7 @@ import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.UserSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -20,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
@@ -44,6 +46,12 @@ public class UserServiceImpl implements UserService {
     private UserValidations userValidations;
     @Autowired
     private AuditHelper audit;
+
+    @Value("${access.user.send-mail-delete-user:false}")
+    private Boolean sendMailDelete;
+
+    @Value("${access.user.send-mail-activate-user:false}")
+    private Boolean sendMailActivate;
 
     public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, SsoUserRoleProvider provider) {
         this.userRepository = userRepository;
@@ -103,6 +111,7 @@ public class UserServiceImpl implements UserService {
             userValidations.checkPassword(user.getPassword(), user.getPasswordCheck(), user.getId());
         }
         UserEntity entityUser = userRepository.getOne(user.getId());
+        boolean isActiveChanged = !Objects.equals(entityUser.getIsActive(), user.getIsActive());
         entityUser = entityForm(entityUser, user);
         // кодируем пароль перед сохранением в бд если он изменился
         if (nonNull(user.getPassword()))
@@ -118,14 +127,22 @@ public class UserServiceImpl implements UserService {
             }
             provider.updateUser(ssoUser);
         }
-        return audit("audit.userUpdate", model(updatedUser));
+        User result = model(updatedUser);
+        if (sendMailActivate && isActiveChanged) {
+            mailService.sendChangeActivateMail(result);
+        }
+        return audit("audit.userUpdate", result);
     }
 
     @Override
     public void delete(Integer id) {
-        SsoUser user = ssoModel(userRepository.findById(id).orElse(null));
+        UserEntity userEntity = userRepository.findById(id).orElse(null);
+        SsoUser user = ssoModel(userEntity);
         userRepository.deleteById(id);
         if (nonNull(user)) {
+            if (sendMailDelete) {
+                mailService.sendUserDeletedMail(model(userEntity));
+            }
             audit("audit.userDelete", user);
             if (provider.isSupports(user.getExtSys())) provider.deleteUser(user);
         }
@@ -160,6 +177,9 @@ public class UserServiceImpl implements UserService {
         SsoUser result = ssoModel(userRepository.save(userEntity));
         if (provider.isSupports(userEntity.getExtSys())) {
             provider.changeActivity(result);
+        }
+        if (sendMailActivate) {
+            mailService.sendChangeActivateMail(model(userEntity));
         }
         return audit("audit.userChangeActive", result);
     }
