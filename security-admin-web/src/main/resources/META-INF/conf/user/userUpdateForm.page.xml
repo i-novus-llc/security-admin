@@ -5,8 +5,7 @@
         <fields>
             <row>
                 <input-text id="username" enabled="false"/>
-                <input-text id="email" label="e-mail"
-                            required="${access.user.email-required}">
+                <input-text id="email" label="e-mail" required="${access.user.email-required}">
                     <validations white-list="emailValidation"/>
                 </input-text>
             </row>
