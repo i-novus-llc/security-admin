@@ -46,7 +46,6 @@ public class ApplicationServerLoaderTest {
         Application app1 = new Application();
         app1.setCode("testApp1");
         app1.setName("testAppName1");
-        app1.setSystemCode("forAppTest");
         List<Application> apps = new ArrayList<>();
         apps.add(app1);
 
@@ -58,7 +57,6 @@ public class ApplicationServerLoaderTest {
         Application app2 = new Application();
         app2.setCode("testApp2");
         app2.setName("testAppName2");
-        app2.setSystemCode("forAppTest");
         apps.add(app2);
 
         appLoader.load(apps, "forAppTest");
