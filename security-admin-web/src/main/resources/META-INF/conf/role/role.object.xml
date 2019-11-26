@@ -4,7 +4,7 @@
 
     <operations>
         <operation id="create"
-                   success-text="Роль сохранена">
+                   success-text="Данные о роли сохранены">
             <invocation>
                 <java method="create" class="net.n2oapp.security.admin.api.service.RoleService">
                     <spring/>
@@ -29,7 +29,7 @@
         </operation>
 
         <operation id="update"
-                   success-text="Роль сохранена">
+                   success-text="Данные о роли сохранены">
             <invocation>
                 <java method="update" class="net.n2oapp.security.admin.api.service.RoleService">
                     <spring/>

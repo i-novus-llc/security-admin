@@ -2,7 +2,7 @@
 <object xmlns="http://n2oapp.net/framework/config/schema/object-3.0" name="Пользователи">
 
     <operations>
-        <operation id="create" success-text="Пользователь сохранен">
+        <operation id="create" success-text="Данные о пользователе сохранены">
             <invocation>
                 <java method="create" class="net.n2oapp.security.admin.api.service.UserService">
                     <spring/>
@@ -40,7 +40,7 @@
             <validations/>
         </operation>
 
-        <operation id="update" success-text="Пользователь сохранен">
+        <operation id="update" success-text="Данные о пользователе сохранены">
             <invocation>
                 <java method="update" class="net.n2oapp.security.admin.api.service.UserService">
                     <spring/>
