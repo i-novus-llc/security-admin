@@ -19,8 +19,8 @@ public class ApplicationLoader extends RepositoryServerLoader<Application, Appli
             ApplicationEntity app = new ApplicationEntity();
             app.setCode(model.getCode());
             app.setName(model.getName());
-            if (model.getSystemCode() != null) {
-                app.setSystemCode(new SystemEntity(model.getSystemCode()));
+            if (subject != null) {
+                app.setSystemCode(new SystemEntity(subject));
             }
             return app;
         }, (systemCode -> repository.findBySystemCode(new SystemEntity(systemCode))), ApplicationEntity::getCode);
