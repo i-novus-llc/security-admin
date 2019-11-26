@@ -1,6 +1,7 @@
 package net.n2oapp.security.admin.api.service;
 
 
+import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
 
 /**
@@ -17,5 +18,10 @@ public interface MailService {
     void sendWelcomeMail(UserForm user);
 
     void sendResetPasswordMail(UserForm user);
+
+    void sendChangeActivateMail(User user);
+
+    void sendUserDeletedMail(User user);
+
 }
 

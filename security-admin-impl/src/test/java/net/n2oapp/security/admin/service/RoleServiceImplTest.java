@@ -43,6 +43,7 @@ public class RoleServiceImplTest {
     public void checkRoleValidations() {
         Role role = service.create(newRole());
         checkValidationRoleName(role);
+        checkValidationRoleCode(role);
         checkValidationRoleExists(1);
     }
 
@@ -56,17 +57,40 @@ public class RoleServiceImplTest {
 
     private void checkValidationRoleName(Role role) {
         Throwable thrown = catchThrowable(() -> {
+            RoleForm roleForm = newRole();
+            roleForm.setCode("newCode");
             service.create(newRole());
         });
         assertThat(thrown).isInstanceOf(UserException.class);
         assertEquals("exception.uniqueRole", thrown.getMessage());
+
         thrown = catchThrowable(() -> {
             role.setName("user");
             service.update(form(role));
         });
         assertThat(thrown).isInstanceOf(UserException.class);
         assertEquals("exception.uniqueRole", thrown.getMessage());
-        role.setName("adminAdmin");
+
+        role.setName("test-name");
+    }
+
+    private void checkValidationRoleCode(Role role) {
+        Throwable thrown = catchThrowable(() -> {
+            RoleForm roleForm = newRole();
+            roleForm.setName("newName");
+            service.create(roleForm);
+        });
+        assertThat(thrown).isInstanceOf(UserException.class);
+        assertEquals("exception.uniqueRole", thrown.getMessage());
+
+        thrown = catchThrowable(() -> {
+            role.setCode("test");
+            service.update(form(role));
+        });
+        assertThat(thrown).isInstanceOf(UserException.class);
+        assertEquals("exception.uniqueRole", thrown.getMessage());
+
+        role.setCode("test-code");
     }
 
     private void checkValidationRoleExists(Integer id) {
@@ -79,9 +103,9 @@ public class RoleServiceImplTest {
 
     private static RoleForm newRole() {
         RoleForm role = new RoleForm();
-        role.setName("user1");
-        role.setCode("code1");
-        role.setDescription("description1");
+        role.setName("test-name");
+        role.setCode("test-code");
+        role.setDescription("test-desc");
         List<String> permissions = new ArrayList<>();
         permissions.add("test");
         role.setPermissions(permissions);
