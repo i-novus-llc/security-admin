@@ -4,7 +4,7 @@
     <form query-id="${access.role.query.id}">
         <fields>
             <input-text id="name" label="Название"/>
-            <input-text id="code" label="Код" enabled="false"/>
+            <input-text id="code" label="Код" enabled="false" visible="${access.role.code.visible}"/>
             <input-text id="description" label="Описание"/>
             <input-select id="system" label="Система" query-id="system" required="${access.system.enabled}"
                           visible="${access.system.enabled}" label-field-id="name"/>
