@@ -144,21 +144,14 @@ public class UserServiceImpl implements UserService {
         } else {
             userRepository.deleteById(id);
             if (nonNull(user)) {
+                if (sendMailDelete) {
+                    mailService.sendUserDeletedMail(user);
+                }
                 audit("audit.userDelete", user);
                 if (provider.isSupports(user.getExtSys())) provider.deleteUser(user);
             }
-
-
-        UserEntity userEntity = userRepository.findById(id).orElse(null);
-        SsoUser user = ssoModel(userEntity);
-        userRepository.deleteById(id);
-        if (nonNull(user)) {
-            if (sendMailDelete) {
-                mailService.sendUserDeletedMail(model(userEntity));
-            }
-            audit("audit.userDelete", user);
-            if (provider.isSupports(user.getExtSys())) provider.deleteUser(user);
         }
+
     }
 
     @Override
@@ -195,8 +188,9 @@ public class UserServiceImpl implements UserService {
                 provider.changeActivity(result);
             }
             if (sendMailActivate) {
-            mailService.sendChangeActivateMail(model(userEntity));
-        }return audit("audit.userChangeActive", result);
+                mailService.sendChangeActivateMail(model(userEntity));
+            }
+            return audit("audit.userChangeActive", result);
         }
     }
 
