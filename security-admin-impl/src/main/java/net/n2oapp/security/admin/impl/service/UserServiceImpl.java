@@ -141,17 +141,15 @@ public class UserServiceImpl implements UserService {
         SsoUser user = model(userRepository.findById(id).orElse(null));
         if (nonNull(user) && user.getUsername().equals(getContextUserName())) {
             throw new UserException("exception.selfDelete");
-        } else {
-            userRepository.deleteById(id);
-            if (nonNull(user)) {
-                if (sendMailDelete) {
-                    mailService.sendUserDeletedMail(user);
-                }
-                audit("audit.userDelete", user);
-                if (provider.isSupports(user.getExtSys())) provider.deleteUser(user);
-            }
         }
-
+        userRepository.deleteById(id);
+        if (nonNull(user)) {
+            if (sendMailDelete) {
+                mailService.sendUserDeletedMail(user);
+            }
+            audit("audit.userDelete", user);
+            if (provider.isSupports(user.getExtSys())) provider.deleteUser(user);
+        }
     }
 
     @Override
@@ -181,17 +179,16 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userRepository.findById(id).orElse(null);
         if (nonNull(userEntity) && userEntity.getUsername().equals(getContextUserName())) {
             throw new UserException("exception.selfChangeActivity");
-        } else {
-            userEntity.setIsActive(!userEntity.getIsActive());
-            SsoUser result = model(userRepository.save(userEntity));
-            if (provider.isSupports(userEntity.getExtSys())) {
-                provider.changeActivity(result);
-            }
-            if (sendMailActivate) {
-                mailService.sendChangeActivateMail(model(userEntity));
-            }
-            return audit("audit.userChangeActive", result);
         }
+        userEntity.setIsActive(!userEntity.getIsActive());
+        SsoUser result = model(userRepository.save(userEntity));
+        if (provider.isSupports(userEntity.getExtSys())) {
+            provider.changeActivity(result);
+        }
+        if (sendMailActivate) {
+            mailService.sendChangeActivateMail(model(userEntity));
+        }
+        return audit("audit.userChangeActive", result);
     }
 
     @Override
