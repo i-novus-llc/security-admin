@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService {
         if (Boolean.TRUE.equals(user.getSendOnEmail()) && user.getEmail() != null) {
             mailService.sendWelcomeMail(user);
         }
-        savedUser.setRoleCount(savedUser.getRoleList().size());
+        savedUser.setRoleCount(nonNull(savedUser.getRoleList()) ? savedUser.getRoleList().size() : 0);
         return audit("audit.userCreate", model(savedUser));
     }
 
@@ -119,7 +119,7 @@ public class UserServiceImpl implements UserService {
             }
             provider.updateUser(ssoUser);
         }
-        updatedUser.setRoleCount(updatedUser.getRoleList().size());
+        updatedUser.setRoleCount(nonNull(updatedUser.getRoleList()) ? updatedUser.getRoleList().size() : 0);
 
         return audit("audit.userUpdate", model(updatedUser));
     }
