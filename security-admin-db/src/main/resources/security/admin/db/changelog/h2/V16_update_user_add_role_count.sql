@@ -1,1 +1,0 @@
-ALTER TABLE  sec.user ADD COLUMN IF NOT EXISTS role_count INTEGER;
