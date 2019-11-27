@@ -58,6 +58,7 @@
 
         <field id="isActive" domain="boolean" name="Активность">
             <select mapping="isActive"/>
+            <sorting/>
             <filters>
                 <eq filter-id="isActive" mapping="isActive" domain="string"/>
             </filters>
@@ -84,6 +85,7 @@
         </field>
 
         <field id="roleNamesWithSystem" domain="string[]" name="Роли">
+            <sorting/>
             <select mapping="['roles'].![nameWithSystem]"></select>
         </field>
 
@@ -105,6 +107,7 @@
         </field>
 
         <field id="userLevel.name" domain="string" name="Уровень пользователя">
+            <sorting/>
             <select mapping="userLevel?.desc"></select>
         </field>
         <field id="userLevel.id" domain="string" name="Уровень пользователя">

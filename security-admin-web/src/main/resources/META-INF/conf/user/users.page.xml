@@ -8,8 +8,8 @@
                 <columns>
                     <column text-field-id="username"/>
                     <column text-field-id="fio"/>
-                    <column text-field-id="userLevel.name"/>
-                    <column text-field-id="roleNamesWithSystem" label="Роли">
+                    <column text-field-id="userLevel.name" sorting-field-id="userLevel"/>
+                    <column text-field-id="roleNamesWithSystem" label="Роли" sorting-field-id="roleCount">
                         <list label-field-id="name"/>
                     </column>
                     <column text-field-id="isActive">

@@ -92,6 +92,13 @@ public class UserEntity {
     private List<RoleEntity> roleList;
 
     /**
+     * Количество ролей у пользователя
+     */
+    @Column(name = "role_Count")
+    private Integer roleCount;
+
+
+    /**
      * внешний SSO сервер
      */
     @Column(name = "ext_sys")
