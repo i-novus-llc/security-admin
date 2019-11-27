@@ -94,7 +94,7 @@ public class UserEntity {
     /**
      * Количество ролей у пользователя
      */
-    @Column(name = "role_Count")
+    @Column(name = "role_count")
     private Integer roleCount;
 
 

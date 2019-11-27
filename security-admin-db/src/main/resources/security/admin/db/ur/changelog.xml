@@ -10,6 +10,6 @@
     <include file="security/admin/db/changelog/V5_create_user_role_index.xml"/>
     <include file="security/admin/db/changelog/V7_add_column_user_guid.xml"/>
     <include file="security/admin/db/changelog/V14_update_user_add_snils.xml"/>
-    <include file="security/admin/db/changelog/V16_update_user.xml"/>
+    <include file="security/admin/db/changelog/V16_update_user_add_role_count.xml"/>
 
 </databaseChangeLog>
