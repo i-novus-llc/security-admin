@@ -273,10 +273,14 @@ public class UserServiceImpl implements UserService {
     }
 
     private String getContextUserName() {
-        if (isNull(SecurityContextHolder.getContext())) return null;
-        if (isNull(SecurityContextHolder.getContext().getAuthentication())) return null;
-        else if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof org.springframework.security.core.userdetails.User)
-            return ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        if (nonNull(SecurityContextHolder.getContext()) &&
+                nonNull(SecurityContextHolder.getContext().getAuthentication()) &&
+                SecurityContextHolder.getContext().getAuthentication().getPrincipal()
+                        instanceof org.springframework.security.core.userdetails.User) {
+            return ((org.springframework.security.core.userdetails.User)
+                    SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        }
+
         return null;
     }
 
