@@ -30,6 +30,16 @@ public class UserTokenConverter implements UserAuthenticationConverter {
     static final String USER_LEVEL = "userLevel";
     static final String SYSTEMS = "systems";
 
+    public UserTokenConverter(List<String> tokenInclude) {
+        roleInclude = tokenInclude.contains("role");
+        permissionInclude = tokenInclude.contains("permissions");
+        systemInclude = tokenInclude.contains("system");
+    }
+
+    private Boolean roleInclude;
+    private Boolean permissionInclude;
+    private Boolean systemInclude;
+
     @Override
     public Map<String, ?> convertUserAuthentication(Authentication authentication) {
         Map<String, Object> response = new LinkedHashMap<>();
@@ -64,11 +74,11 @@ public class UserTokenConverter implements UserAuthenticationConverter {
                 else if (authority instanceof SystemGrantedAuthority)
                     systems.add(((SystemGrantedAuthority) authority).getSystem());
             }
-            if (!roles.isEmpty())
+            if (!roles.isEmpty() && roleInclude)
                 response.put(ROLES, roles);
-            if (!permissions.isEmpty())
+            if (!permissions.isEmpty() && permissionInclude)
                 response.put(PERMISSIONS, permissions);
-            if (!systems.isEmpty())
+            if (!systems.isEmpty() && systemInclude)
                 response.put(SYSTEMS, systems);
         }
         return response;
