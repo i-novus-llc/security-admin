@@ -8,4 +8,7 @@
     <changeSet id="V16_update_user_add_role_count.sql" author="aarifullin" dbms="postgresql">
         <sqlFile path="security/admin/db/changelog/sql/V16_update_user_add_role_count.sql"/>
     </changeSet>
+    <changeSet id="V16_update_user_add_role_count.sql" author="aarifullin" dbms="h2">
+        <sqlFile path="security/admin/db/changelog/h2/V16_update_user_add_role_count.sql"/>
+    </changeSet>
 </databaseChangeLog>
