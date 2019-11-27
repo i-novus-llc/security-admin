@@ -18,17 +18,24 @@ import java.util.Map;
  */
 public class GatewayAccessTokenConverter extends DefaultAccessTokenConverter {
 
-    public GatewayAccessTokenConverter(UserAuthenticationConverter userAuthenticationConverter) {
+    public GatewayAccessTokenConverter(UserAuthenticationConverter userAuthenticationConverter, List<String> tokenInclude) {
         setUserTokenConverter(userAuthenticationConverter);
+        roleInclude = tokenInclude.contains("role");
+        permissionInclude = tokenInclude.contains("permissions");
     }
+
+    private Boolean roleInclude;
+    private Boolean permissionInclude;
 
     @Override
     public Map<String, ?> convertAccessToken(OAuth2AccessToken token, OAuth2Authentication authentication) {
         if (authentication.isClientOnly()) {
             List<String> roles = new ArrayList<>();
             List<String> permissions = new ArrayList<>();
-            token.getAdditionalInformation().put("roles", roles);
-            token.getAdditionalInformation().put("permissions", permissions);
+            if (roleInclude)
+                token.getAdditionalInformation().put("roles", roles);
+            if (permissionInclude)
+                token.getAdditionalInformation().put("permissions", permissions);
             if (authentication.getAuthorities() != null) {
                 for (GrantedAuthority authority : authentication.getAuthorities()) {
                     if (authority instanceof RoleGrantedAuthority)

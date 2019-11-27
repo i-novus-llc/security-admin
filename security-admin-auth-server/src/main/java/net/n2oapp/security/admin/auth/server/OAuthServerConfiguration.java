@@ -9,6 +9,7 @@ import lombok.Setter;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.authserver.AuthorizationServerProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.authserver.OAuth2AuthorizationServerConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -36,6 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.security.interfaces.RSAPublicKey;
+import java.util.List;
 
 @Configuration
 @EnableAuthorizationServer
@@ -70,6 +72,9 @@ public class OAuthServerConfiguration extends OAuth2AuthorizationServerConfigura
     @EnableConfigurationProperties(KeystoreProperties.class)
     static class TokenStoreConfiguration {
 
+        @Value("${access.token-include:}")
+        private List<String> tokenInclude;
+
         @Autowired
         private KeystoreProperties properties;
 
@@ -87,7 +92,7 @@ public class OAuthServerConfiguration extends OAuth2AuthorizationServerConfigura
         public AccessTokenHeaderConverter accessTokenConverter(KeyStoreKeyFactory keyStoreKeyFactory) {
             AccessTokenHeaderConverter converter = new AccessTokenHeaderConverter();
             converter.setKeyPair(keyStoreKeyFactory.getKeyPair("gateway"));
-            converter.setAccessTokenConverter(new GatewayAccessTokenConverter(new UserTokenConverter()));
+            converter.setAccessTokenConverter(new GatewayAccessTokenConverter(new UserTokenConverter(tokenInclude), tokenInclude));
             converter.setKid(properties.getKeyId());
             return converter;
         }
@@ -130,6 +135,5 @@ public class OAuthServerConfiguration extends OAuth2AuthorizationServerConfigura
                 return mv;
             }
         }
-
     }
 }
