@@ -31,14 +31,14 @@ public class UserTokenConverter implements UserAuthenticationConverter {
     static final String SYSTEMS = "systems";
 
     public UserTokenConverter(List<String> tokenInclude) {
-        roleInclude = tokenInclude.contains("role");
-        permissionInclude = tokenInclude.contains("permissions");
-        systemInclude = tokenInclude.contains("system");
+        rolesInclude = tokenInclude.contains("roles");
+        permissionsInclude = tokenInclude.contains("permissions");
+        systemsInclude = tokenInclude.contains("systems");
     }
 
-    private Boolean roleInclude;
-    private Boolean permissionInclude;
-    private Boolean systemInclude;
+    private Boolean rolesInclude;
+    private Boolean permissionsInclude;
+    private Boolean systemsInclude;
 
     @Override
     public Map<String, ?> convertUserAuthentication(Authentication authentication) {
@@ -74,11 +74,11 @@ public class UserTokenConverter implements UserAuthenticationConverter {
                 else if (authority instanceof SystemGrantedAuthority)
                     systems.add(((SystemGrantedAuthority) authority).getSystem());
             }
-            if (!roles.isEmpty() && roleInclude)
+            if (!roles.isEmpty() && rolesInclude)
                 response.put(ROLES, roles);
-            if (!permissions.isEmpty() && permissionInclude)
+            if (!permissions.isEmpty() && permissionsInclude)
                 response.put(PERMISSIONS, permissions);
-            if (!systems.isEmpty() && systemInclude)
+            if (!systems.isEmpty() && systemsInclude)
                 response.put(SYSTEMS, systems);
         }
         return response;

@@ -1009,9 +1009,9 @@ insert into sec.permission(name, code) values('Право доступа к мо
 |Возможность изменения активности на списке пользователей
 
 |access.token-include
-|role,
+|roles,
 permissions,
-system
+systems
 |Наполнение токена различными данными. Указать одно или несколько значений через запятую.
 
 |===
