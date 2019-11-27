@@ -132,10 +132,8 @@ public class UserServiceImpl implements UserService {
         if (sendMailActivate && isActiveChanged) {
             mailService.sendChangeActivateMail(result);
         }
-        return audit("audit.userUpdate", result);
         updatedUser.setRoleCount(nonNull(updatedUser.getRoleList()) ? updatedUser.getRoleList().size() : 0);
-
-        return audit("audit.userUpdate", model(updatedUser));
+        return audit("audit.userUpdate", result);
     }
 
     @Override
