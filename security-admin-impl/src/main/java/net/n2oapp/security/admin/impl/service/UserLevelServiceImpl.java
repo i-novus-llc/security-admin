@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.isNull;
+
 /**
  * Сервис уровней пользователя
  */
@@ -28,6 +30,8 @@ public class UserLevelServiceImpl implements UserLevelService {
 
     @Override
     public List<UserLevel> getAllForFilter(String name) {
+        if (isNull(name))
+            return userLevelsForFilter;
         List<UserLevel> result = new ArrayList<>();
         result.addAll(userLevelsForFilter.stream().filter(userLevel -> userLevel.getDesc().toLowerCase().contains(name.toLowerCase())).collect(Collectors.toList()));
         return result;

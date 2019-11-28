@@ -4,7 +4,7 @@
         <java method="getAllForFilter" class="net.n2oapp.security.admin.api.service.UserLevelService">
             <spring/>
             <arguments>
-                <argument class="java.lang.String" type="class"/>
+                <argument type="primitive"/>
             </arguments>
         </java>
     </list>
