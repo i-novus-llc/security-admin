@@ -5,7 +5,7 @@ import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuc
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static net.n2oapp.security.admin.auth.server.logout.BackChannelLogoutHandler.EXT_SYS_ATTR;
+import static net.n2oapp.security.admin.auth.server.logout.LogoutSuccessHandlerImpl.EXT_SYS_ATTR;
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
 /**
