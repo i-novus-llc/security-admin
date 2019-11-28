@@ -13,12 +13,12 @@ import net.n2oapp.security.admin.impl.entity.*;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.UserSpecifications;
+import net.n2oapp.security.auth.common.UserParamsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -139,7 +139,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(Integer id) {
         SsoUser user = model(userRepository.findById(id).orElse(null));
-        if (nonNull(user) && user.getUsername().equals(getContextUserName())) {
+        if (nonNull(user) && user.getUsername().equals(UserParamsUtil.getUsername())) {
             throw new UserException("exception.selfDelete");
         }
         userRepository.deleteById(id);
@@ -177,7 +177,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User changeActive(Integer id) {
         UserEntity userEntity = userRepository.findById(id).orElse(null);
-        if (nonNull(userEntity) && userEntity.getUsername().equals(getContextUserName())) {
+        if (nonNull(userEntity) && userEntity.getUsername().equals(UserParamsUtil.getUsername())) {
             throw new UserException("exception.selfChangeActivity");
         }
         userEntity.setIsActive(!userEntity.getIsActive());
@@ -254,7 +254,7 @@ public class UserServiceImpl implements UserService {
 
     private UserEntity entityForm(UserEntity entity, UserForm model) {
         entity.setIsActive(Boolean.TRUE.equals(entity.getIsActive()));
-        if (nonNull(entity.getUsername()) && entity.getUsername().equals(getContextUserName()) && !entity.getIsActive().equals(model.getIsActive()))
+        if (entity.getUsername().equals(UserParamsUtil.getUsername()) && !entity.getIsActive().equals(model.getIsActive()))
             throw new UserException("exception.selfChangeActivity");
         entity.setUsername(model.getUsername());
         entity.setName(model.getName());
@@ -272,17 +272,6 @@ public class UserServiceImpl implements UserService {
         return entity;
     }
 
-    private String getContextUserName() {
-        if (nonNull(SecurityContextHolder.getContext()) &&
-                nonNull(SecurityContextHolder.getContext().getAuthentication()) &&
-                SecurityContextHolder.getContext().getAuthentication().getPrincipal()
-                        instanceof org.springframework.security.core.userdetails.User) {
-            return ((org.springframework.security.core.userdetails.User)
-                    SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-        }
-
-        return null;
-    }
 
     private UserEntity entityProvider(SsoUser modelFromProvider) {
         UserEntity entity = new UserEntity();

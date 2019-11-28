@@ -35,6 +35,13 @@
         </dependency>
 
         <dependency>
+            <groupId>net.n2oapp.framework.security</groupId>
+            <artifactId>security-auth-common</artifactId>
+            <version>4.2-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
             <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-i18n-commons</artifactId>
         </dependency>
