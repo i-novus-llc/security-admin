@@ -5,6 +5,7 @@ import net.n2oapp.security.admin.api.service.UserLevelService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Сервис уровней пользователя
@@ -26,7 +27,9 @@ public class UserLevelServiceImpl implements UserLevelService {
     }
 
     @Override
-    public List<UserLevel> getAllForFilter() {
-        return userLevelsForFilter;
+    public List<UserLevel> getAllForFilter(String name) {
+        List<UserLevel> result = new ArrayList<>();
+        result.addAll(userLevelsForFilter.stream().filter(userLevel -> userLevel.getDesc().toLowerCase().contains(name.toLowerCase())).collect(Collectors.toList()));
+        return result;
     }
 }

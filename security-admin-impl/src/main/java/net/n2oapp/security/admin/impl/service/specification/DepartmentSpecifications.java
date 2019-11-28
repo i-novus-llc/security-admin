@@ -24,7 +24,7 @@ public class DepartmentSpecifications implements Specification<DepartmentEntity>
     public Predicate toPredicate(Root<DepartmentEntity> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder builder) {
         Predicate predicate = builder.and();
         if (criteria.getName() != null)
-            predicate = builder.and(predicate, builder.like(root.get(DepartmentEntity_.name), criteria.getName() + "%"));
+            predicate = builder.and(predicate, builder.like(builder.lower(root.get(DepartmentEntity_.name)), "%" + criteria.getName().toLowerCase() + "%"));
         return predicate;
     }
 }

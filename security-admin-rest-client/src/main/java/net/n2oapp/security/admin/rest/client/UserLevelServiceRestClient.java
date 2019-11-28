@@ -23,7 +23,7 @@ public class UserLevelServiceRestClient implements UserLevelService {
     }
 
     @Override
-    public List<UserLevel> getAllForFilter() {
-        return client.getAllForFilter().getContent();
+    public List<UserLevel> getAllForFilter(String name) {
+        return client.getAllForFilter(name).getContent();
     }
 }
