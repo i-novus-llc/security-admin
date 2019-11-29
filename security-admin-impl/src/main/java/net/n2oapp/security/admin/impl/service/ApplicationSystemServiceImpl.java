@@ -10,7 +10,10 @@ import net.n2oapp.security.admin.api.service.ApplicationSystemService;
 import net.n2oapp.security.admin.impl.audit.AuditHelper;
 import net.n2oapp.security.admin.impl.entity.ApplicationEntity;
 import net.n2oapp.security.admin.impl.entity.SystemEntity;
-import net.n2oapp.security.admin.impl.repository.*;
+import net.n2oapp.security.admin.impl.repository.ApplicationRepository;
+import net.n2oapp.security.admin.impl.repository.PermissionRepository;
+import net.n2oapp.security.admin.impl.repository.RoleRepository;
+import net.n2oapp.security.admin.impl.repository.SystemRepository;
 import net.n2oapp.security.admin.impl.service.specification.ApplicationSpecifications;
 import net.n2oapp.security.admin.impl.service.specification.SystemSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static java.util.Objects.isNull;
 
 /**
  * Реализация сервиса управления приложениями и системами
@@ -41,10 +46,10 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     @Autowired
     private AuditHelper audit;
 
-
     @Override
     public Application createApplication(Application service) {
         checkServiceUniq(service.getCode());
+        checkSystemExists(service.getSystemCode());
         Application result = model(applicationRepository.save(entity(service)));
         return audit("audit.applicationCreate", result);
     }
@@ -58,10 +63,10 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     @Override
     public void deleteApplication(String code) {
         ApplicationEntity app = applicationRepository.findById(code).orElse(null);
+        if (isNull(app))
+            throw new UserException("exception.applicationNotFound");
         applicationRepository.deleteById(code);
-        if (app != null) {
-            audit("audit.applicationDelete", model(app));
-        }
+        audit("audit.applicationDelete", model(app));
     }
 
     @Override
@@ -86,7 +91,6 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
         return getApplication(code) != null;
     }
 
-
     @Override
     public AppSystem createSystem(AppSystemForm system) {
         checkSystemUniq(system.getCode());
@@ -105,7 +109,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
 
     @Override
     public void deleteSystem(String code) {
-        checkSystemExist(code);
+        checkRolesOrPermissionsInSystemExist(code);
         SystemEntity sys = systemRepository.findById(code).orElse(null);
         systemRepository.deleteById(code);
         if (sys != null) {
@@ -189,7 +193,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
      * Валидация на удаление системы
      * Запрещено удалять систему, если существует роль или право доступа в такой системе
      */
-    private void checkSystemExist(String code) {
+    private void checkRolesOrPermissionsInSystemExist(String code) {
         if (roleRepository.countRolesWithSystemCode(code) != 0 || permissionRepository.countPermissionsWithSystemCode(code) != 0)
             throw new UserException("exception.roleOrPermissionWithSuchRoleExists");
     }
@@ -200,6 +204,11 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     private void checkServiceUniq(String code) {
         if (applicationRepository.findById(code).isPresent())
             throw new UserException("exception.uniqueApplication");
+    }
+
+    private void checkSystemExists(String code) {
+        if (!systemRepository.existsById(code))
+            throw new UserException("exception.systemNotExists");
     }
 
     private Application audit(String action, Application app) {
