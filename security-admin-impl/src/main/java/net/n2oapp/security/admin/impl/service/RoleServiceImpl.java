@@ -42,8 +42,11 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role create(RoleForm role) {
-        checkRoleUniq(role.getId(), role.getName());
+        checkRoleUniq(role);
         Role result = model(roleRepository.save(entity(role)));
+        // если отстутствует код роли, то устанавливаем
+        if (result.getCode() == null)
+            result.setCode("ROLE_" + result.getId());
         Role providerResult = provider.createRole(result);
         if (providerResult != null) {
             if (result.getSystem() == null || result.getSystem().getCode() == null)
@@ -57,7 +60,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role update(RoleForm role) {
-        checkRoleUniq(role.getId(), role.getName());
+        checkRoleUniq(role);
         Role result = model(roleRepository.save(entity(role)));
         provider.updateRole(result);
         return audit("audit.roleUpdate", result);
@@ -205,16 +208,11 @@ public class RoleServiceImpl implements RoleService {
     }
 
     /**
-     * Валидация на уникальность названия роли при изменении
+     * Валидация на уникальность названия и кода роли при изменении
      */
-    private Boolean checkRoleUniq(Integer id, String name) {
-        RoleEntity roleEntity = roleRepository.findOneByName(name);
-        Boolean result = id == null ? roleEntity == null : ((roleEntity == null) || (roleEntity.getId().equals(id)));
-        if (result) {
-            return true;
-        } else {
+    private void checkRoleUniq(RoleForm role) {
+        if (!roleRepository.checkRoleUniq(role.getId() == null ? -1 : role.getId(), role.getName(), role.getCode()))
             throw new UserException("exception.uniqueRole");
-        }
     }
 
     /**
