@@ -30,7 +30,7 @@ public class UserInfoEndpoint {
             if (authority instanceof RoleGrantedAuthority)
                 roles.add(((RoleGrantedAuthority) authority).getRole());
             else if (authority instanceof PermissionGrantedAuthority)
-                permissions.add(authority.getAuthority());
+                permissions.add(((PermissionGrantedAuthority) authority).getPermission());
             else if (authority instanceof SystemGrantedAuthority)
                 systems.add(((SystemGrantedAuthority) authority).getSystem());
         });

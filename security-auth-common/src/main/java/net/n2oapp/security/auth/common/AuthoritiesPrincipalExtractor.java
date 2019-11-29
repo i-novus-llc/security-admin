@@ -36,8 +36,11 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
 
     private UserDetailsService userDetailsService;
 
-    public AuthoritiesPrincipalExtractor(UserDetailsService userDetailsService) {
+    private final String externalSystem;
+
+    public AuthoritiesPrincipalExtractor(UserDetailsService userDetailsService, String externalSystem) {
         this.userDetailsService = userDetailsService;
+        this.externalSystem = externalSystem;
     }
 
     @Override
@@ -96,25 +99,10 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
         token.setSurname(surname);
         token.setPatronymic(patronymic);
         token.setEmail(email);
+        token.setExternalSystem(externalSystem);
         net.n2oapp.security.admin.api.model.User user = userDetailsService.loadUserDetails(token);
+        map.put("system", externalSystem);
 
-        if (nonNull(userDetailsService.getExternalSystem()))
-            map.put("system", userDetailsService.getExternalSystem());
-
-        if (nonNull(user.getDepartment())) {
-            map.put("department", user.getDepartment().getCode());
-        }
-        if (nonNull(user.getOrganization())) {
-            map.put("organization", user.getOrganization().getCode());
-        }
-
-        if (nonNull(user.getRegion())) {
-            map.put("region", user.getRegion().getCode());
-        }
-
-        if (nonNull(user.getUserLevel())) {
-            map.put("userLevel", user.getUserLevel().toString());
-        }
         return user;
     }
 

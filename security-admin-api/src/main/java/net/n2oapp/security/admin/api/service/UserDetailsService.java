@@ -11,11 +11,4 @@ public interface UserDetailsService {
 
     User loadUserDetails(UserDetailsToken userDetails);
 
-    /**
-     * Получить наименование SSO сревера
-     */
-    default String getExternalSystem() {
-        return null;
-    }
-
 }
