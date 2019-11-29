@@ -18,6 +18,9 @@ public class UserDetailsToken {
     @ApiModelProperty(value = "Идентификатор в sso провайдере")
     private String extUid;
 
+    @ApiModelProperty(value = "SSO провайдер")
+    private String externalSystem;
+
     @ApiModelProperty(value = "Имя пользователя")
     private String username;
 
