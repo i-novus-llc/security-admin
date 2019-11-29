@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.ws.rs.NotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -99,6 +100,22 @@ public class RoleServiceImplTest {
         });
         assertThat(thrown).isInstanceOf(UserException.class);
         assertEquals("exception.usernameWithSuchRoleExists", thrown.getMessage());
+    }
+
+    /**
+     * Проверка, что получение роли по несуществующему идентификатору приводит к NotFoundException
+     */
+    @Test(expected = NotFoundException.class)
+    public void getRoleByNotExistsId() {
+        service.getById(-1);
+    }
+
+    /**
+     * Проверка, что удаление роли по несуществующему идентификатору приводит к NotFoundException
+     */
+    @Test(expected = NotFoundException.class)
+    public void deleteRoleByNotExistsId() {
+        service.delete(-1);
     }
 
     private static RoleForm newRole() {
