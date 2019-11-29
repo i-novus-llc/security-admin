@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.QueryParam;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -13,7 +15,9 @@ import java.util.stream.StreamSupport;
  */
 public class BaseCriteria implements Pageable {
     private int page;
-    private int size = 10;
+    @QueryParam("size")
+    @DefaultValue("10")
+    private int size;
     private List<Sort.Order> orders;
 
     public BaseCriteria() {
