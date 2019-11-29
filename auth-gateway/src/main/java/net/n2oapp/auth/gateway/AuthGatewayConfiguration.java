@@ -5,6 +5,7 @@ import lombok.Setter;
 import net.n2oapp.auth.gateway.esia.EsiaAccessTokenProvider;
 import net.n2oapp.auth.gateway.esia.EsiaUserInfoTokenServices;
 import net.n2oapp.auth.gateway.esia.Pkcs7Util;
+import net.n2oapp.auth.gateway.filter.GatewayOAuth2ClientAuthenticationProcessingFilter;
 import net.n2oapp.security.admin.auth.server.EsiaUserDetailsService;
 import net.n2oapp.security.admin.auth.server.OAuthServerConfiguration;
 import net.n2oapp.security.admin.auth.server.exception.UserNotFoundAuthenticationExceptionHandler;
@@ -144,8 +145,7 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     private Filter ssoKeycloakFilter(ClientResources client, String path) {
-        OAuth2ClientAuthenticationProcessingFilter filter = new OAuth2ClientAuthenticationProcessingFilter(
-                path);
+        OAuth2ClientAuthenticationProcessingFilter filter = new GatewayOAuth2ClientAuthenticationProcessingFilter(path);
         OAuth2RestTemplate template = new OAuth2RestTemplate(client.getClient(), oauth2ClientContext);
         filter.setRestTemplate(template);
         UserInfoTokenServices tokenServices = new UserInfoTokenServices(client.getResource().getUserInfoUri(), client.getClient().getClientId());
@@ -159,7 +159,7 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
 
     private Filter ssoEsiaFilter(ClientResources client, String path) {
         Security.addProvider(new BouncyCastleProvider());
-        OAuth2ClientAuthenticationProcessingFilter filter = new OAuth2ClientAuthenticationProcessingFilter(path);
+        OAuth2ClientAuthenticationProcessingFilter filter = new GatewayOAuth2ClientAuthenticationProcessingFilter(path);
         OAuth2RestTemplate template = new OAuth2RestTemplate(client.getClient(), oauth2ClientContext);
         template.setAccessTokenProvider(new AccessTokenProviderChain(Arrays.asList(new EsiaAccessTokenProvider(pkcs7Util))));
         filter.setRestTemplate(template);
