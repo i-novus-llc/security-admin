@@ -70,7 +70,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public void delete(Integer id) {
         checkRoleIsUsed(id);
-        Role role = model(roleRepository.findById(id).orElseThrow(() -> new NotFoundException()));
+        Role role = model(roleRepository.findById(id).orElseThrow(NotFoundException::new));
         roleRepository.deleteById(id);
         if (role != null) {
             audit("audit.roleDelete", role);
@@ -80,7 +80,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role getById(Integer id) {
-        RoleEntity roleEntity = roleRepository.findById(id).orElseThrow(() -> new NotFoundException());
+        RoleEntity roleEntity = roleRepository.findById(id).orElseThrow(NotFoundException::new);
         return model(roleEntity);
     }
 
