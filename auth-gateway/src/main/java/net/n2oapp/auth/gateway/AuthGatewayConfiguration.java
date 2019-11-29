@@ -6,13 +6,13 @@ import net.n2oapp.auth.gateway.esia.EsiaAccessTokenProvider;
 import net.n2oapp.auth.gateway.esia.EsiaUserInfoTokenServices;
 import net.n2oapp.auth.gateway.esia.Pkcs7Util;
 import net.n2oapp.auth.gateway.filter.GatewayOAuth2ClientAuthenticationProcessingFilter;
-import net.n2oapp.security.admin.api.service.ClientService;
 import net.n2oapp.security.admin.auth.server.EsiaUserDetailsService;
 import net.n2oapp.security.admin.auth.server.OAuthServerConfiguration;
 import net.n2oapp.security.admin.auth.server.exception.UserNotFoundAuthenticationExceptionHandler;
-import net.n2oapp.security.admin.auth.server.logout.BackChannelLogoutHandler;
+import net.n2oapp.security.admin.auth.server.logout.OAuth2ProviderRedirectLogoutSuccessHandler;
 import net.n2oapp.security.admin.impl.service.UserDetailsServiceImpl;
 import net.n2oapp.security.auth.common.AuthoritiesPrincipalExtractor;
+import net.n2oapp.security.auth.common.LogoutHandler;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -83,7 +83,7 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
     private KeyStoreKeyFactory keyStoreKeyFactory;
 
     @Autowired
-    private ClientService clientService;
+    private List<LogoutHandler> logoutHandlers;
 
     @Autowired
     private Pkcs7Util pkcs7Util;
@@ -95,12 +95,14 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        RsaSigner signer = new RsaSigner((RSAPrivateKey) keyStoreKeyFactory.getKeyPair("gateway").getPrivate());
         http.authorizeRequests().antMatchers("/", "/login**", "/api/**", "/oauth/certs", "/css/**",
                 "/icons/**", "/fonts/**", "/public/**", "/static/**", "/webjars/**").permitAll().anyRequest()
                 .authenticated().and().exceptionHandling()
                 .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint(loginEntryPoint)).and().logout()
-                .logoutSuccessUrl(loginEntryPoint).logoutSuccessHandler(new BackChannelLogoutHandler(signer, clientService, keycloak().getLogoutUri(), esia().getLogoutUri())).permitAll()
+                .logoutSuccessUrl(loginEntryPoint)
+                .logoutSuccessHandler(
+                        new OAuth2ProviderRedirectLogoutSuccessHandler(logoutHandlers,
+                                keycloak().getLogoutUri(), esia().getLogoutUri())).permitAll()
                 .and().csrf().disable()
                 .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
     }
