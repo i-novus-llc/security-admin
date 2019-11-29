@@ -7,6 +7,9 @@ import com.nimbusds.jose.jwk.RSAKey;
 import lombok.Getter;
 import lombok.Setter;
 import net.minidev.json.JSONObject;
+import net.n2oapp.security.admin.api.service.ClientService;
+import net.n2oapp.security.admin.auth.server.logout.OIDCBackChannelLogoutHandler;
+import net.n2oapp.security.auth.common.LogoutHandler;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.authserver.AuthorizationServerProperties;
@@ -19,6 +22,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.jwt.crypto.sign.RsaSigner;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
@@ -35,6 +39,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
 @Configuration
@@ -56,6 +61,12 @@ public class OAuthServerConfiguration extends OAuth2AuthorizationServerConfigura
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.withClientDetails(new GatewayService());
+    }
+
+    @Bean
+    public LogoutHandler logoutHandler(KeyStoreKeyFactory keyStoreKeyFactory, ClientService clientService) {
+        RsaSigner signer = new RsaSigner((RSAPrivateKey) keyStoreKeyFactory.getKeyPair("gateway").getPrivate());
+        return new OIDCBackChannelLogoutHandler(signer, clientService);
     }
 
     @Getter

@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.commons.util;
 
+import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.api.service.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,42 @@ public class MailServiceImpl implements MailService {
     private String resetPasswordMailSubject;
 
     /**
+     * Тема сообщения при изменении признака активности
+     */
+    @Value("${sec.user.mail.change-activate.subject}")
+    private String changeActivateMailSubject;
+
+    /**
+     * Имя ресурса при изменении признака активности
+     */
+    @Value("${sec.user.mail.change-activate.resource.name}")
+    private String changeActivateMailResource;
+
+    /**
+     * Тема сообщения при удалении пользователя
+     */
+    @Value("${sec.user.mail.deleted.subject}")
+    private String deletedMailSubject;
+
+    /**
+     * Имя ресурса при удалении пользователя
+     */
+    @Value("${sec.user.mail.deleted.resource.name}")
+    private String deletedMailResource;
+
+    /**
+     * Слово "Да"
+     */
+    @Value("${sec.mail.value-yes}")
+    private String valueYes;
+
+    /**
+     * Слово "Нет"
+     */
+    @Value("${sec.mail.value-no}")
+    private String valueNo;
+
+    /**
      * Почтовый ящик отправителя
      */
     @Value("${sec.password.mail.message.from}")
@@ -91,6 +128,39 @@ public class MailServiceImpl implements MailService {
     }
 
     /**
+     * Отправка сообщения на почту при блокировании/разблокировании
+     * @param user Пользователь
+     */
+    @Override
+    public void sendChangeActivateMail(User user) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("username", user.getUsername());
+        data.put("surname", valueOrEmpty(user.getSurname()));
+        data.put("name", valueOrEmpty(user.getName()));
+        data.put("patronymic", valueOrEmpty(user.getPatronymic()));
+        data.put("email", user.getEmail());
+
+        data.put("isActive", user.getIsActive() ? valueYes : valueNo);
+        sendMail(data, changeActivateMailSubject, changeActivateMailResource);
+    }
+
+    /**
+     * Отправка сообщения на почту при удалении
+     * @param user Пользователь
+     */
+    @Override
+    public void sendUserDeletedMail(User user) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("username", user.getUsername());
+        data.put("surname", valueOrEmpty(user.getSurname()));
+        data.put("name", valueOrEmpty(user.getName()));
+        data.put("patronymic", valueOrEmpty(user.getPatronymic()));
+        data.put("email", user.getEmail());
+
+        sendMail(data, deletedMailSubject, deletedMailResource);
+    }
+
+    /**
      * Отправка сообщений
      * @param data Список атрибутов, передаваемых в тело сообщения
      * @param subject Тема сообщения
@@ -102,17 +172,14 @@ public class MailServiceImpl implements MailService {
         String body = templateEngine.process(resource, context);
 
         MimeMessage message = emailSender.createMimeMessage();
-        MimeMessageHelper helper = null;
+        MimeMessageHelper helper = new MimeMessageHelper(message, StandardCharsets.UTF_8.name());
         try {
-            helper = new MimeMessageHelper(message, StandardCharsets.UTF_8.name());
             helper.setFrom(mailMessageFrom);
             helper.setTo((String) data.get("email"));
             helper.setSubject(subject);
             helper.setText(body, true);
-            emailSender.send(message);
-        } catch (MailException e) {
-            throw new IllegalStateException("Exception while sending mail notification to " + data.get("username") + "\n", e);
-        } catch (MessagingException e) {
+            emailSender.send(helper.getMimeMessage());
+        } catch (MailException | MessagingException e) {
             throw new IllegalStateException("Exception while sending mail notification to " + data.get("username") + "\n", e);
         }
     }

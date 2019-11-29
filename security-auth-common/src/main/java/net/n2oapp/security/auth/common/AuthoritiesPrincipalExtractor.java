@@ -4,6 +4,7 @@ import net.n2oapp.security.admin.api.model.UserDetailsToken;
 import net.n2oapp.security.admin.api.service.UserDetailsService;
 import net.n2oapp.security.auth.common.authority.PermissionGrantedAuthority;
 import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
+import net.n2oapp.security.auth.common.authority.SystemGrantedAuthority;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.AuthoritiesExtractor;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,6 +15,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static java.util.Objects.nonNull;
 
 /**
  * Создание объекта пользователя из информации в SSO сервере
@@ -45,16 +48,16 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
         }
         User user = new User(model.getUsername(), "N/A", getAuthorities(map, model), model.getSurname(), model.getName(),
                 model.getPatronymic(), model.getEmail());
-        if (model.getDepartment() != null) {
+        if (nonNull(model.getDepartment())) {
             user.setDepartment(model.getDepartment().getCode());
         }
-        if (model.getOrganization() != null) {
+        if (nonNull(model.getOrganization())) {
             user.setOrganization(model.getOrganization().getCode());
         }
-        if (model.getRegion() != null) {
+        if (nonNull(model.getRegion())) {
             user.setRegion(model.getRegion().getCode());
         }
-        if (model.getUserLevel() != null) {
+        if (nonNull(model.getUserLevel())) {
             user.setUserLevel(model.getUserLevel().toString());
         }
         return user;
@@ -95,21 +98,21 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
         token.setEmail(email);
         net.n2oapp.security.admin.api.model.User user = userDetailsService.loadUserDetails(token);
 
-        if (userDetailsService.getExternalSystem() != null)
+        if (nonNull(userDetailsService.getExternalSystem()))
             map.put("system", userDetailsService.getExternalSystem());
 
-        if (user.getDepartment() != null) {
+        if (nonNull(user.getDepartment())) {
             map.put("department", user.getDepartment().getCode());
         }
-        if (user.getOrganization() != null) {
+        if (nonNull(user.getOrganization())) {
             map.put("organization", user.getOrganization().getCode());
         }
 
-        if (user.getRegion() != null) {
+        if (nonNull(user.getRegion())) {
             map.put("region", user.getRegion().getCode());
         }
 
-        if (user.getUserLevel() != null) {
+        if (nonNull(user.getUserLevel())) {
             map.put("userLevel", user.getUserLevel().toString());
         }
         return user;
@@ -125,11 +128,15 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
         }
 
         List<GrantedAuthority> authorities = new ArrayList<>();
-        if (user != null && user.getRoles() != null) {
+        if (nonNull(user) && nonNull(user.getRoles())) {
             authorities.addAll(user.getRoles().stream().map(r -> new RoleGrantedAuthority(r.getCode())).collect(Collectors.toList()));
-            authorities.addAll(user.getRoles().stream().filter(r -> r.getPermissions() != null).flatMap(r -> r.getPermissions().stream())
+            authorities.addAll(user.getRoles().stream().filter(r -> nonNull(r.getPermissions())).flatMap(r -> r.getPermissions().stream())
                     .map(p -> new PermissionGrantedAuthority(p.getCode())).collect(Collectors.toList()));
-
+            authorities.addAll(user.getRoles().stream().filter(role -> nonNull(role.getSystem())).
+                    map(role -> new SystemGrantedAuthority(role.getSystem().getCode())).collect(Collectors.toList()));
+            authorities.addAll(user.getRoles().stream().filter(r -> nonNull(r.getPermissions())).flatMap(r -> r.getPermissions().stream())
+                    .filter(permission -> nonNull(permission.getSystemCode())).map(p -> new SystemGrantedAuthority(p.getSystemCode())).collect(Collectors.toList()));
+            authorities = authorities.stream().distinct().collect(Collectors.toList());
             map.put(GRANTED_AUTHORITY_KEY, authorities);
         }
         return authorities;

@@ -2,7 +2,7 @@
 <object xmlns="http://n2oapp.net/framework/config/schema/object-3.0" name="Пользователи">
 
     <operations>
-        <operation id="create" success-text="Пользователь сохранен">
+        <operation id="create" success-text="Данные о пользователе сохранены">
             <invocation>
                 <java method="create" class="net.n2oapp.security.admin.api.service.UserService">
                     <spring/>
@@ -13,7 +13,7 @@
             </invocation>
             <in-parameters>
                 <param id="username" mapping="[0].username" domain="string" required="true"/>
-                <param id="email" mapping="[0].email" domain="string"/>
+                <param id="email" mapping="[0].email" domain="string" required="${access.user.email-required}"/>
                 <param id="surname" mapping="[0].surname" domain="string" required="${access.user.surname.required}"/>
                 <param id="name" mapping="[0].name" domain="string" required="${access.user.name.required}"/>
                 <param id="patronymic" mapping="[0].patronymic" domain="string"/>
@@ -21,7 +21,7 @@
                 <param id="passwordCheck" mapping="[0].passwordCheck" domain="string"/>
                 <param id="temporaryPassword" mapping="[0].temporaryPassword" domain="string" required="${access.user.password.generate}"/>
                 <param id="sendOnEmail" mapping="[0].sendOnEmail" domain="boolean"
-                       normalize="#this != null ? #this : ${access.user.email-required}"/>
+                       normalize="#this != null ? #this : ${access.user.choice-send-password}"/>
                 <param id="isActive" mapping="[0].isActive" domain="boolean" default-value="true"/>
                 <param id="roles*.id" mapping="[0].roles" domain="integer[]" required="true"/>
                 <param id="snils" mapping="[0].snils" domain="string"/>
@@ -40,7 +40,7 @@
             <validations/>
         </operation>
 
-        <operation id="update" success-text="Пользователь сохранен">
+        <operation id="update" success-text="Данные о пользователе сохранены">
             <invocation>
                 <java method="update" class="net.n2oapp.security.admin.api.service.UserService">
                     <spring/>
@@ -52,7 +52,7 @@
             <in-parameters>
                 <param id="id" mapping="[0].id" domain="integer" required="true"/>
                 <param id="username" mapping="[0].username" domain="string" required="true"/>
-                <param id="email" mapping="[0].email" domain="string"/>
+                <param id="email" mapping="[0].email" domain="string" required="${access.user.email-required}"/>
                 <param id="surname" mapping="[0].surname" domain="string" required="true"/>
                 <param id="name" mapping="[0].name" domain="string" required="true"/>
                 <param id="patronymic" mapping="[0].patronymic" domain="string"/>
@@ -119,12 +119,12 @@
             <in-parameters>
                 <param id="id" mapping="[0].id" domain="integer" required="true"/>
                 <param id="username" mapping="[0].username" domain="string" required="true"/>
-                <param id="email" mapping="[0].email" domain="string"/>
+                <param id="email" mapping="[0].email" domain="string" required="${access.user.email-required}"/>
                 <param id="password" mapping="[0].password" domain="string" required="${access.user.password.input}"/>
                 <param id="passwordCheck" mapping="[0].passwordCheck" domain="string"/>
                 <param id="temporaryPassword" mapping="[0].temporaryPassword" domain="string" required="${access.user.password.generate}"/>
                 <param id="sendOnEmail" mapping="[0].sendOnEmail" domain="boolean"
-                       normalize="#this != null ? #this : ${access.user.email-required}"/>
+                       normalize="#this != null ? #this : ${access.user.choice-send-password}"/>
             </in-parameters>
             <validations/>
         </operation>
