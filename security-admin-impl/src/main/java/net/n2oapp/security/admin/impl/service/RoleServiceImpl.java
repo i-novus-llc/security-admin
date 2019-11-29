@@ -20,6 +20,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.ws.rs.NotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -69,7 +70,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public void delete(Integer id) {
         checkRoleIsUsed(id);
-        Role role = model(roleRepository.findById(id).orElse(null));
+        Role role = model(roleRepository.findById(id).orElseThrow(() -> new NotFoundException()));
         roleRepository.deleteById(id);
         if (role != null) {
             audit("audit.roleDelete", role);
@@ -79,7 +80,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role getById(Integer id) {
-        RoleEntity roleEntity = roleRepository.findById(id).orElse(null);
+        RoleEntity roleEntity = roleRepository.findById(id).orElseThrow(() -> new NotFoundException());
         return model(roleEntity);
     }
 
