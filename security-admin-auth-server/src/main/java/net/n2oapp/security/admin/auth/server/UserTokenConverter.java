@@ -30,10 +30,10 @@ public class UserTokenConverter implements UserAuthenticationConverter {
     static final String USER_LEVEL = "userLevel";
     static final String SYSTEMS = "systems";
 
-    public UserTokenConverter(List<String> tokenInclude) {
-        rolesInclude = tokenInclude.contains("roles");
-        permissionsInclude = tokenInclude.contains("permissions");
-        systemsInclude = tokenInclude.contains("systems");
+    public UserTokenConverter(List<String> tokenIncludeClaims) {
+        rolesInclude = tokenIncludeClaims.contains("roles");
+        permissionsInclude = tokenIncludeClaims.contains("permissions");
+        systemsInclude = tokenIncludeClaims.contains("systems");
     }
 
     private Boolean rolesInclude;

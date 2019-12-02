@@ -72,8 +72,8 @@ public class OAuthServerConfiguration extends OAuth2AuthorizationServerConfigura
     @EnableConfigurationProperties(KeystoreProperties.class)
     static class TokenStoreConfiguration {
 
-        @Value("${access.token-include:}")
-        private List<String> tokenInclude;
+        @Value("${access.token.include-claims:}")
+        private List<String> tokenIncludeClaims;
 
         @Autowired
         private KeystoreProperties properties;
@@ -92,7 +92,7 @@ public class OAuthServerConfiguration extends OAuth2AuthorizationServerConfigura
         public AccessTokenHeaderConverter accessTokenConverter(KeyStoreKeyFactory keyStoreKeyFactory) {
             AccessTokenHeaderConverter converter = new AccessTokenHeaderConverter();
             converter.setKeyPair(keyStoreKeyFactory.getKeyPair("gateway"));
-            converter.setAccessTokenConverter(new GatewayAccessTokenConverter(new UserTokenConverter(tokenInclude), tokenInclude));
+            converter.setAccessTokenConverter(new GatewayAccessTokenConverter(new UserTokenConverter(tokenIncludeClaims), tokenIncludeClaims));
             converter.setKid(properties.getKeyId());
             return converter;
         }
