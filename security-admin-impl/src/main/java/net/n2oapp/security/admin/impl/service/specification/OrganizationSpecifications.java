@@ -28,23 +28,3 @@ public class OrganizationSpecifications implements Specification<OrganizationEnt
         return predicate;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
