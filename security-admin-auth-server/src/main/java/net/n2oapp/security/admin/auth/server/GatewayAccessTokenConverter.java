@@ -18,10 +18,10 @@ import java.util.Map;
  */
 public class GatewayAccessTokenConverter extends DefaultAccessTokenConverter {
 
-    public GatewayAccessTokenConverter(UserAuthenticationConverter userAuthenticationConverter, List<String> tokenInclude) {
+    public GatewayAccessTokenConverter(UserAuthenticationConverter userAuthenticationConverter, List<String> tokenIncludeClaims) {
         setUserTokenConverter(userAuthenticationConverter);
-        rolesInclude = tokenInclude.contains("roles");
-        permissionsInclude = tokenInclude.contains("permissions");
+        rolesInclude = tokenIncludeClaims.contains("roles");
+        permissionsInclude = tokenIncludeClaims.contains("permissions");
     }
 
     private Boolean rolesInclude;

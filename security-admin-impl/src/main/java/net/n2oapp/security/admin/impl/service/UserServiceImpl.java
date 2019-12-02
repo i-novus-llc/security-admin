@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User create(UserForm user) {
-        userValidations.checkUsernameUniq(user.getId(), model(userRepository.findOneByUsernameIgnoreCase(user.getUsername())));
+        userValidations.checkUsernameUniq(user.getId(), model(userRepository.findOneByUsernameIgnoreCase(user.getUsername()), false));
         userValidations.checkUsername(user.getUsername());
         if (nonNull(user.getEmail()))
             userValidations.checkEmail(user.getEmail());
@@ -96,12 +96,12 @@ public class UserServiceImpl implements UserService {
         if (Boolean.TRUE.equals(user.getSendOnEmail()) && user.getEmail() != null) {
             mailService.sendWelcomeMail(user);
         }
-        return audit("audit.userCreate", model(savedUser));
+        return audit("audit.userCreate", model(savedUser, false));
     }
 
     @Override
     public User update(UserForm user) {
-        userValidations.checkUsernameUniq(user.getId(), model(userRepository.findOneByUsernameIgnoreCase(user.getUsername())));
+        userValidations.checkUsernameUniq(user.getId(), model(userRepository.findOneByUsernameIgnoreCase(user.getUsername()), false));
         userValidations.checkUsername(user.getUsername());
         if (nonNull(user.getEmail()))
             userValidations.checkEmail(user.getEmail());
@@ -127,7 +127,7 @@ public class UserServiceImpl implements UserService {
             }
             provider.updateUser(ssoUser);
         }
-        User result = model(updatedUser);
+        User result = model(updatedUser, false);
         if (sendMailActivate && isActiveChanged) {
             mailService.sendChangeActivateMail(result);
         }
@@ -141,7 +141,7 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
         if (nonNull(user)) {
             if (sendMailDelete) {
-                mailService.sendUserDeletedMail(model(userEntity));
+                mailService.sendUserDeletedMail(model(userEntity, false));
             }
             audit("audit.userDelete", user);
             if (provider.isSupports(user.getExtSys())) provider.deleteUser(user);
@@ -151,7 +151,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getById(Integer id) {
         UserEntity entity = userRepository.findById(id).orElse(null);
-        return model(entity);
+        return model(entity, false);
     }
 
     @Override
@@ -167,7 +167,7 @@ public class UserServiceImpl implements UserService {
         }
         criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "id"));
         final Page<UserEntity> all = userRepository.findAll(specification, criteria);
-        return all.map(this::model);
+        return all.map(userEntity -> model(userEntity, Boolean.TRUE.equals(criteria.getMapPermissionAndSystem())));
     }
 
     @Override
@@ -179,7 +179,7 @@ public class UserServiceImpl implements UserService {
             provider.changeActivity(result);
         }
         if (sendMailActivate) {
-            mailService.sendChangeActivateMail(model(userEntity));
+            mailService.sendChangeActivateMail(model(userEntity, false));
         }
         return audit("audit.userChangeActive", result);
     }
@@ -286,7 +286,7 @@ public class UserServiceImpl implements UserService {
         return entity;
     }
 
-    private User model(UserEntity entity) {
+    private User model(UserEntity entity, Boolean mapPermissionAndSystem) {
         if (isNull(entity)) return null;
         SsoUser model = new SsoUser();
         model.setId(entity.getId());
@@ -316,20 +316,20 @@ public class UserServiceImpl implements UserService {
         if (nonNull(entity.getRoleList())) {
             model.setRoles(entity.getRoleList().stream().map(e -> {
                 RoleEntity re = roleRepository.findById(e.getId()).get();
-                return model(re);
+                return model(re, mapPermissionAndSystem);
             }).collect(Collectors.toList()));
         }
         return model;
     }
 
     private SsoUser ssoModel(UserEntity entity) {
-        SsoUser ssoUser = (SsoUser) model(entity);
+        SsoUser ssoUser = (SsoUser) model(entity, false);
         ssoUser.setExtSys(entity.getExtSys());
         ssoUser.setExtUid(entity.getExtUid());
         return ssoUser;
     }
 
-    private Role model(RoleEntity entity) {
+    private Role model(RoleEntity entity, Boolean mapPermissionAndSystem) {
         if (isNull(entity)) return null;
         Role model = new Role();
         model.setId(entity.getId());
@@ -337,9 +337,23 @@ public class UserServiceImpl implements UserService {
         model.setName(entity.getName());
         model.setDescription(entity.getDescription());
         model.setNameWithSystem(entity.getName());
-        if (nonNull(entity.getSystemCode()))
+        if (nonNull(entity.getSystemCode())) {
             model.setNameWithSystem(model.getNameWithSystem() + "(" + entity.getSystemCode().getName() + ")");
-
+            if (mapPermissionAndSystem)
+                model.setSystem(new AppSystem(entity.getSystemCode().getCode()));
+        }
+        if (mapPermissionAndSystem && entity.getPermissionList() != null) {
+            model.setPermissions(entity.getPermissionList().stream().map(p -> {
+                Permission permission = new Permission();
+                permission.setName(p.getName());
+                permission.setCode(p.getCode());
+                permission.setParentCode(p.getParentCode());
+                permission.setHasChildren(p.getHasChildren());
+                if (p.getSystemCode() != null)
+                    permission.setSystemCode(p.getSystemCode().getCode());
+                return permission;
+            }).collect(Collectors.toList()));
+        }
         return model;
     }
 
