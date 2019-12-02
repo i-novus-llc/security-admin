@@ -3,6 +3,7 @@ package net.n2oapp.security.admin.impl.entity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.n2oapp.security.admin.api.model.UserLevel;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -92,6 +93,12 @@ public class UserEntity {
     private List<RoleEntity> roleList;
 
     /**
+     * Количество ролей у пользователя
+     */
+    @Formula("(select count(*) from sec.user_role ur where ur.user_id = id)")
+    private Integer roleCount;
+
+    /**
      * внешний SSO сервер
      */
     @Column(name = "ext_sys")
@@ -123,6 +130,5 @@ public class UserEntity {
     @JoinColumn(name = "department_id")
     @ManyToOne(fetch = FetchType.EAGER)
     private DepartmentEntity department;
-
 }
 

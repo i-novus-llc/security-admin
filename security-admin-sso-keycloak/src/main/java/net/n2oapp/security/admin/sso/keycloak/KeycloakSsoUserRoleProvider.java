@@ -102,7 +102,7 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
                 userService.changePassword(user.getExtUid(), user.getPassword());
             }
         } catch (HttpClientErrorException e) {
-            throw new IllegalArgumentException(e.getResponseBodyAsString(), e);
+            throwUserException(e);
         }
     }
 
@@ -111,7 +111,7 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
         try {
             userService.deleteUser(user.getExtUid());
         } catch (HttpClientErrorException e) {
-            throw new IllegalArgumentException(e.getResponseBodyAsString(), e);
+            throwUserException(e);
         }
     }
 
@@ -122,7 +122,7 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
         try {
             userService.updateUser(userRepresentation);
         } catch (HttpClientErrorException e) {
-            throw new IllegalArgumentException(e.getResponseBodyAsString(), e);
+            throwUserException(e);
         }
     }
 
@@ -131,7 +131,7 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
         try {
             roleService.createRole(map(role));
         } catch (HttpClientErrorException e) {
-            throw new IllegalArgumentException(e.getResponseBodyAsString(), e);
+            throwUserException(e);
         }
         return role;
     }
@@ -141,7 +141,7 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
         try {
             roleService.updateRole(map(role));
         } catch (HttpClientErrorException e) {
-            throw new IllegalArgumentException(e.getResponseBodyAsString(), e);
+            throwUserException(e);
         }
     }
 
@@ -150,7 +150,7 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
         try {
             roleService.deleteRole(role.getCode());
         } catch (HttpClientErrorException e) {
-            throw new IllegalArgumentException(e.getResponseBodyAsString(), e);
+            throwUserException(e);
         }
     }
 
@@ -164,7 +164,7 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
         try {
             userService.updateUser(userRepresentation);
         } catch (HttpClientErrorException e) {
-            throw new IllegalArgumentException(e.getResponseBodyAsString(), e);
+            throwUserException(e);
         }
     }
 
