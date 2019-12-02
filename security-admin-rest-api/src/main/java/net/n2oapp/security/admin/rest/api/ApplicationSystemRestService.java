@@ -39,8 +39,8 @@ public interface ApplicationSystemRestService {
     @Path(APPLICATION_PATH)
     @ApiOperation("Создать приложение")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Создать приложение"),
-            @ApiResponse(code = 400, message = "Не корректные данные")
+            @ApiResponse(code = 200, message = "Созданное приложение"),
+            @ApiResponse(code = 400, message = "Некорректный запрос")
     })
     Application createApplication(@ApiParam(value = "Приложение") Application serviceForm);
 
@@ -54,8 +54,8 @@ public interface ApplicationSystemRestService {
     @Path(APPLICATION_PATH + "/{code}")
     @ApiOperation("Удалить приложение")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Приложение удалена"),
-            @ApiResponse(code = 400, message = "Приложения с таким идентификатором не сущетсвует")
+            @ApiResponse(code = 200, message = "Приложение удалено"),
+            @ApiResponse(code = 400, message = "Некорректный запрос")
     })
     void deleteApplication(@ApiParam(value = "Код приложения") @PathParam("code") String code);
 
@@ -88,7 +88,6 @@ public interface ApplicationSystemRestService {
     @ApiOperation("Удалить систему")
     @ApiResponse(code = 200, message = "Система удалена")
     void deleteSystem(@ApiParam(value = "Код системы") @PathParam("code") String code);
-
 }
 
 
