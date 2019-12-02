@@ -7,11 +7,14 @@ import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.api.service.UserService;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -22,7 +25,6 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.Assert.*;
-
 
 /**
  * Тест сервиса управления пользователями
@@ -38,10 +40,16 @@ public class UserServiceImplTest {
     @Rule
     public final GreenMailRule greenMail = new GreenMailRule(new ServerSetup(2525, null, "smtp"));
 
-
     @Test
     public void testUp() throws Exception {
         assertNotNull(service);
+    }
+
+    @BeforeClass
+    public static void setUp() {
+        org.springframework.security.core.userdetails.User contextUser = new org.springframework.security.core.userdetails.User("SelfDelete", "pass", new ArrayList<>());
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(contextUser, new Object());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     @Test
@@ -54,11 +62,23 @@ public class UserServiceImplTest {
     }
 
     @Test
+    public void selfDelete() {
+        UserForm user = newUser();
+        user.setUsername("SelfDelete");
+        user.setEmail("SelfDelete@gmail.com");
+
+        Throwable thrown = catchThrowable(() -> {
+            service.delete(service.create(user).getId());
+        });
+        assertThat(thrown).isInstanceOf(UserException.class);
+        assertEquals("exception.selfDelete", thrown.getMessage());
+    }
+
+    @Test
     public void testCheckUniqueUsername() {
         assertFalse(service.checkUniqueUsername("test2"));
         assertTrue(service.checkUniqueUsername("nonExistentUser"));
     }
-
 
     private void checkValidationEmail(User user) {
 
@@ -160,7 +180,6 @@ public class UserServiceImplTest {
         user.setUsername("userName4");
     }
 
-
     private static UserForm newUser() {
         UserForm user = new UserForm();
         user.setUsername("userName2");
@@ -192,6 +211,4 @@ public class UserServiceImplTest {
         form.setRoles(user.getRoles().stream().map(Role::getId).collect(Collectors.toList()));
         return form;
     }
-
-
 }

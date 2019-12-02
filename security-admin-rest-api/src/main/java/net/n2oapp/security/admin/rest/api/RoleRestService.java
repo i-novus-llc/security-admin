@@ -27,7 +27,10 @@ public interface RoleRestService {
     @GET
     @Path("/{id}")
     @ApiOperation("Получить роль по идентификатору")
-    @ApiResponse(code = 200, message = "Роли")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Роль"),
+            @ApiResponse(code = 404, message = "Роль не найдена")
+    })
     Role getById(@ApiParam(value = "Идентификатор") @PathParam("id") Integer id);
 
     @POST
@@ -45,7 +48,10 @@ public interface RoleRestService {
     @DELETE
     @Path("/{id}")
     @ApiOperation("Удалить роль")
-    @ApiResponse(code = 200, message = "Роль удалена")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Роль удалена"),
+            @ApiResponse(code = 404, message = "Роль не найдена")
+    })
     void delete(@ApiParam(value = "Идентификатор") @PathParam("id") Integer id);
 }
 
