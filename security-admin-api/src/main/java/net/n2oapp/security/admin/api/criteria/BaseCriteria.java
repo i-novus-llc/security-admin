@@ -14,13 +14,19 @@ import java.util.stream.StreamSupport;
  * Базовая модель фильтрации данных в таблице
  */
 public class BaseCriteria implements Pageable {
+    @QueryParam("page")
+    @DefaultValue("0")
     private int page;
+
     @QueryParam("size")
     @DefaultValue("10")
     private int size;
+
     private List<Sort.Order> orders;
 
     public BaseCriteria() {
+        this.page = 0;
+        this.size = 10;
     }
 
     public BaseCriteria(int page, int size, Sort sort) {
