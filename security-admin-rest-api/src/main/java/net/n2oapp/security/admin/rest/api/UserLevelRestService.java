@@ -7,10 +7,7 @@ import io.swagger.annotations.Authorization;
 import net.n2oapp.security.admin.api.model.UserLevel;
 import org.springframework.data.domain.Page;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -32,5 +29,5 @@ public interface UserLevelRestService {
     @Path("/forFilter")
     @ApiOperation("Найти все уровни пользователя для фильтра")
     @ApiResponse(code = 200, message = "Страница уровней пользователя")
-    Page<UserLevel> getAllForFilter();
+    Page<UserLevel> getAllForFilter(@QueryParam("name") String name);
 }
