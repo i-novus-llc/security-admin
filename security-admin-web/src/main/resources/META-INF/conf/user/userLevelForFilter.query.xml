@@ -3,6 +3,9 @@
     <list count-mapping="#this.size()" result-mapping="#this">
         <java method="getAllForFilter" class="net.n2oapp.security.admin.api.service.UserLevelService">
             <spring/>
+            <arguments>
+                <argument type="primitive"/>
+            </arguments>
         </java>
     </list>
 

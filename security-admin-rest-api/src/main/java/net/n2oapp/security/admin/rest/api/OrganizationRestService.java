@@ -4,8 +4,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.Authorization;
-import net.n2oapp.security.admin.api.criteria.OrganizationCriteria;
 import net.n2oapp.security.admin.api.model.Organization;
+import net.n2oapp.security.admin.rest.api.criteria.RestOrganizationCriteria;
 import org.springframework.data.domain.Page;
 
 import javax.ws.rs.*;
@@ -24,5 +24,5 @@ public interface OrganizationRestService {
     @Path("/")
     @ApiOperation("Найти все организации")
     @ApiResponse(code = 200, message = "Страница организации")
-    Page<Organization> getAll(@BeanParam OrganizationCriteria criteria);
+    Page<Organization> getAll(@BeanParam RestOrganizationCriteria criteria);
 }

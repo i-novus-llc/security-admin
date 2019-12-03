@@ -7,5 +7,5 @@ import lombok.Data;
  */
 @Data
 public class OrganizationCriteria extends BaseCriteria {
-    private String name;
+    private String shortName;
 }
