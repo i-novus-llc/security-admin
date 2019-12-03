@@ -109,7 +109,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
 
     @Override
     public void deleteSystem(String code) {
-        checkRolesOrPermissionsInSystemExist(code);
+        checkSystemWithAuthorities(code);
         SystemEntity sys = systemRepository.findById(code).orElse(null);
         systemRepository.deleteById(code);
         if (sys != null) {
@@ -193,7 +193,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
      * Валидация на удаление системы
      * Запрещено удалять систему, если существует роль или право доступа в такой системе
      */
-    private void checkRolesOrPermissionsInSystemExist(String code) {
+    private void checkSystemWithAuthorities(String code) {
         if (roleRepository.countRolesWithSystemCode(code) != 0 || permissionRepository.countPermissionsWithSystemCode(code) != 0)
             throw new UserException("exception.roleOrPermissionWithSuchRoleExists");
     }
