@@ -42,7 +42,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
-import java.util.List;
+import java.util.Set;
 
 @Configuration
 @EnableAuthorizationServer
@@ -84,7 +84,7 @@ public class OAuthServerConfiguration extends OAuth2AuthorizationServerConfigura
     static class TokenStoreConfiguration {
 
         @Value("${access.token.include-claims:}")
-        private List<String> tokenIncludeClaims;
+        private Set<String> tokenIncludeClaims;
 
         @Autowired
         private KeystoreProperties properties;
@@ -103,7 +103,10 @@ public class OAuthServerConfiguration extends OAuth2AuthorizationServerConfigura
         public AccessTokenHeaderConverter accessTokenConverter(KeyStoreKeyFactory keyStoreKeyFactory) {
             AccessTokenHeaderConverter converter = new AccessTokenHeaderConverter();
             converter.setKeyPair(keyStoreKeyFactory.getKeyPair("gateway"));
-            converter.setAccessTokenConverter(new GatewayAccessTokenConverter(new UserTokenConverter(tokenIncludeClaims), tokenIncludeClaims));
+            Boolean includeRoles = tokenIncludeClaims.contains("roles");
+            Boolean includePermissions = tokenIncludeClaims.contains("permissions");
+            Boolean includeSystems = tokenIncludeClaims.contains("systems");
+            converter.setAccessTokenConverter(new GatewayAccessTokenConverter(includeRoles, includePermissions, includeSystems));
             converter.setKid(properties.getKeyId());
             return converter;
         }
