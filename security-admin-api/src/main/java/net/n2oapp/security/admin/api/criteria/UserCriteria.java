@@ -23,7 +23,6 @@ public class UserCriteria extends BaseCriteria {
     private Integer organizationId;
     private Integer departmentId;
     private String extSys;
-    private Boolean mapPermissionAndSystem;
 
     public void setRoleIds(List<Integer> roleIds) {
         this.roleIds = roleIds != null ? roleIds : new ArrayList<>();

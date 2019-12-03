@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User create(UserForm user) {
-        userValidations.checkUsernameUniq(user.getId(), model(userRepository.findOneByUsernameIgnoreCase(user.getUsername()), false));
+        userValidations.checkUsernameUniq(user.getId(), model(userRepository.findOneByUsernameIgnoreCase(user.getUsername())));
         userValidations.checkUsername(user.getUsername());
         if (nonNull(user.getEmail()))
             userValidations.checkEmail(user.getEmail());
@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
         UserEntity savedUser = userRepository.save(entity);
         // получаем модель для сохранения SSO провайдером, ему надо передать незакодированный пароль
         if (provider.isSupports(savedUser.getExtSys())) {
-            SsoUser ssoUser = model(savedUser, false);
+            SsoUser ssoUser = model(savedUser);
             ssoUser.setPassword(password);
             // если пароль временный, то требуем смены пароля при следующем входе пользователя
             if (user.getTemporaryPassword() != null)
@@ -98,12 +98,12 @@ public class UserServiceImpl implements UserService {
         if (Boolean.TRUE.equals(user.getSendOnEmail()) && user.getEmail() != null) {
             mailService.sendWelcomeMail(user);
         }
-        return audit("audit.userCreate", model(savedUser, false));
+        return audit("audit.userCreate", model(savedUser));
     }
 
     @Override
     public User update(UserForm user) {
-        userValidations.checkUsernameUniq(user.getId(), model(userRepository.findOneByUsernameIgnoreCase(user.getUsername()), false));
+        userValidations.checkUsernameUniq(user.getId(), model(userRepository.findOneByUsernameIgnoreCase(user.getUsername())));
         userValidations.checkUsername(user.getUsername());
         if (nonNull(user.getEmail()))
             userValidations.checkEmail(user.getEmail());
@@ -124,7 +124,7 @@ public class UserServiceImpl implements UserService {
         UserEntity updatedUser = userRepository.save(entityUser);
         //в провайдер отправляем незакодированный пароль, если он изменился, и отправляем null, если не изменялся пароль
         if (provider.isSupports(updatedUser.getExtSys())) {
-            SsoUser ssoUser = model(updatedUser, false);
+            SsoUser ssoUser = model(updatedUser);
             if (isNull(user.getPassword())) {
                 ssoUser.setPassword(null);
             } else {
@@ -132,7 +132,7 @@ public class UserServiceImpl implements UserService {
             }
             provider.updateUser(ssoUser);
         }
-        User result = model(updatedUser, false);
+        User result = model(updatedUser);
         if (sendMailActivate && isActiveChanged) {
             mailService.sendChangeActivateMail(result);
         }
@@ -141,7 +141,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(Integer id) {
-        SsoUser user = model(userRepository.findById(id).orElse(null), false);
+        SsoUser user = model(userRepository.findById(id).orElse(null));
         if (nonNull(user) && user.getUsername().equals(getContextUserName())) {
             throw new UserException("exception.selfDelete");
         }
@@ -158,7 +158,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getById(Integer id) {
         UserEntity entity = userRepository.findById(id).orElse(null);
-        return model(entity, false);
+        return model(entity);
     }
 
     @Override
@@ -174,7 +174,7 @@ public class UserServiceImpl implements UserService {
         }
         criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "id"));
         final Page<UserEntity> all = userRepository.findAll(specification, criteria);
-        return all.map(userEntity -> model(userEntity, Boolean.TRUE.equals(criteria.getMapPermissionAndSystem())));
+        return all.map(this::model);
     }
 
     @Override
@@ -184,12 +184,12 @@ public class UserServiceImpl implements UserService {
             throw new UserException("exception.selfChangeActivity");
         }
         userEntity.setIsActive(!userEntity.getIsActive());
-        SsoUser result = model(userRepository.save(userEntity), false);
+        SsoUser result = model(userRepository.save(userEntity));
         if (provider.isSupports(userEntity.getExtSys())) {
             provider.changeActivity(result);
         }
         if (sendMailActivate) {
-            mailService.sendChangeActivateMail(model(userEntity, false));
+            mailService.sendChangeActivateMail(model(userEntity));
         }
         return audit("audit.userChangeActive", result);
     }
@@ -240,7 +240,7 @@ public class UserServiceImpl implements UserService {
 
                 //в провайдер отправляем незакодированный пароль
                 if (provider.isSupports(updatedUser.getExtSys())) {
-                    SsoUser ssoUser = model(updatedUser, false);
+                    SsoUser ssoUser = model(updatedUser);
                     ssoUser.setPassword(password);
                     // если пароль временный, то требуем смены пароля при следующем входе пользователя
                     if (user.getTemporaryPassword() != null)
@@ -256,7 +256,6 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserEntity entityForm(UserEntity entity, UserForm model) {
-        entity.setIsActive(Boolean.TRUE.equals(entity.getIsActive()));
         entity.setUsername(model.getUsername());
         entity.setName(model.getName());
         entity.setSurname(model.getSurname());
@@ -272,7 +271,6 @@ public class UserServiceImpl implements UserService {
             entity.setRoleList(model.getRoles().stream().filter(roleId -> roleId > 0).map(RoleEntity::new).collect(Collectors.toList()));
         return entity;
     }
-
 
     private UserEntity entityProvider(SsoUser modelFromProvider) {
         UserEntity entity = new UserEntity();
@@ -310,8 +308,7 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
-
-    private SsoUser model(UserEntity entity, Boolean mapPermissionAndSystem) {
+    private SsoUser model(UserEntity entity) {
         if (isNull(entity)) return null;
         SsoUser model = new SsoUser();
         model.setId(entity.getId());
@@ -343,20 +340,13 @@ public class UserServiceImpl implements UserService {
         if (nonNull(entity.getRoleList())) {
             model.setRoles(entity.getRoleList().stream().map(e -> {
                 RoleEntity re = roleRepository.findById(e.getId()).get();
-                return model(re, mapPermissionAndSystem);
+                return model(re);
             }).collect(Collectors.toList()));
         }
         return model;
     }
 
-    private SsoUser ssoModel(UserEntity entity) {
-        SsoUser ssoUser = (SsoUser) model(entity, false);
-        ssoUser.setExtSys(entity.getExtSys());
-        ssoUser.setExtUid(entity.getExtUid());
-        return ssoUser;
-    }
-
-    private Role model(RoleEntity entity, Boolean mapPermissionAndSystem) {
+    private Role model(RoleEntity entity) {
         if (isNull(entity)) return null;
         Role model = new Role();
         model.setId(entity.getId());
@@ -364,23 +354,9 @@ public class UserServiceImpl implements UserService {
         model.setName(entity.getName());
         model.setDescription(entity.getDescription());
         model.setNameWithSystem(entity.getName());
-        if (nonNull(entity.getSystemCode())) {
+        if (nonNull(entity.getSystemCode()))
             model.setNameWithSystem(model.getNameWithSystem() + "(" + entity.getSystemCode().getName() + ")");
-            if (mapPermissionAndSystem)
-                model.setSystem(new AppSystem(entity.getSystemCode().getCode()));
-        }
-        if (mapPermissionAndSystem && entity.getPermissionList() != null) {
-            model.setPermissions(entity.getPermissionList().stream().map(p -> {
-                Permission permission = new Permission();
-                permission.setName(p.getName());
-                permission.setCode(p.getCode());
-                permission.setParentCode(p.getParentCode());
-                permission.setHasChildren(p.getHasChildren());
-                if (p.getSystemCode() != null)
-                    permission.setSystemCode(p.getSystemCode().getCode());
-                return permission;
-            }).collect(Collectors.toList()));
-        }
+
         return model;
     }
 
