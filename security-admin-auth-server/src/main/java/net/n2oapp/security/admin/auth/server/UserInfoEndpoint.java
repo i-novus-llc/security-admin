@@ -24,7 +24,7 @@ public class UserInfoEndpoint {
     private static final String USERNAME = "username";
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @RequestMapping(value = "/userinfo")
     @Transactional
