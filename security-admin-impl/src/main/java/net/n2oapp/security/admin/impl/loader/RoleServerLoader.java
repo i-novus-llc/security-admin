@@ -8,7 +8,9 @@ import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.SystemEntity;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
@@ -16,11 +18,14 @@ import static java.util.Objects.nonNull;
 @Component
 public class RoleServerLoader extends RepositoryServerLoader<RoleForm, RoleEntity, Integer> {
 
+    private RoleRepository roleRepository;
+
     public RoleServerLoader(RoleRepository repository) {
         super(repository,
                 RoleServerLoader::map,
                 systemCode -> repository.findBySystemCode(new SystemEntity(systemCode)),
                 RoleEntity::getId);
+        roleRepository = repository;
     }
 
     private static RoleEntity map(RoleForm form, String systemCode) {
@@ -38,6 +43,24 @@ public class RoleServerLoader extends RepositoryServerLoader<RoleForm, RoleEntit
         if (nonNull(form.getUserLevel()))
             entity.setUserLevel(UserLevel.valueOf(form.getUserLevel()));
         return entity;
+    }
+
+    @Override
+    @Transactional
+    public void load(List<RoleForm> data, String subject) {
+        List<RoleEntity> fresh = map(data, subject);
+        save(fresh);
+        delete(fresh, subject);
+    }
+
+    @Override
+    protected void save(List<RoleEntity> fresh) {
+        for (RoleEntity role : fresh) {
+            RoleEntity entity = roleRepository.findOneByCode(role.getCode());
+            if (entity == null) {
+                roleRepository.save(role);
+            } else role.setId(entity.getId());
+        }
     }
 
     @Override
