@@ -8,6 +8,7 @@ import net.n2oapp.security.admin.impl.loader.model.AppModel;
 import net.n2oapp.security.admin.impl.repository.ApplicationRepository;
 import net.n2oapp.security.admin.impl.repository.ClientRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ public class ApplicationServerLoader implements ServerLoader<AppModel> {
     }
 
     @Override
+    @Transactional
     public void load(List<AppModel> data, String subject) {
         List<ClientEntity> clients = new ArrayList<>();
         List<ApplicationEntity> apps = new ArrayList<>();
