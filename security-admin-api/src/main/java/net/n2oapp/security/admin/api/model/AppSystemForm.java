@@ -28,6 +28,26 @@ public class AppSystemForm {
     @ApiModelProperty(value = "Описание")
     private String description;
 
+    @JsonProperty
+    @ApiModelProperty(value = "Краткое наименование")
+    private String shortName;
+
+    @JsonProperty
+    @ApiModelProperty(value = "Иконка")
+    private String icon;
+
+    @JsonProperty
+    @ApiModelProperty(value = "Адрес")
+    private String url;
+
+    @JsonProperty
+    @ApiModelProperty(value = "Признак работы в режиме без авторизации")
+    private Boolean publicAccess;
+
+    @JsonProperty
+    @ApiModelProperty(value = "Порядок отображения подсистемы")
+    private Integer viewOrder;
+
     public AppSystemForm(String code) {
         this.code = code;
     }

@@ -168,6 +168,11 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
         if (entity.getApplicationList() != null) {
             model.setApplications(entity.getApplicationList().stream().map(this::model).collect(Collectors.toList()));
         }
+        model.setShortName(entity.getShortName());
+        model.setIcon(entity.getIcon());
+        model.setUrl(entity.getUrl());
+        model.setPublicAccess(entity.getPublicAccess());
+        model.setViewOrder(entity.getViewOrder());
         return model;
     }
 
