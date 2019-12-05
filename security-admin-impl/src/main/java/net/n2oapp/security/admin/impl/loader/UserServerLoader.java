@@ -1,6 +1,6 @@
 package net.n2oapp.security.admin.impl.loader;
 
-import net.n2oapp.platform.loader.server.repository.RepositoryServerLoader;
+import net.n2oapp.platform.loader.server.ServerLoader;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.impl.entity.DepartmentEntity;
 import net.n2oapp.security.admin.impl.entity.OrganizationEntity;
@@ -19,23 +19,30 @@ import java.util.stream.Collectors;
 import static java.util.Objects.nonNull;
 
 @Component
-public class UserServerLoader extends RepositoryServerLoader<User, UserEntity, Integer> {
+public class UserServerLoader implements ServerLoader<User> {
 
     @Autowired
     private RoleRepository roleRepository;
 
+    @Autowired
     private UserRepository userRepository;
 
-    public UserServerLoader(UserRepository repository) {
-        super(repository, null);
-        userRepository = repository;
+    @Override
+    @Transactional
+    public void load(List<User> data, String subject) {
+        List<UserEntity> fresh = map(data);
+        userRepository.saveAll(fresh);
     }
 
-    protected List<UserEntity> map(List<User> data, String subject) {
-        List<UserEntity> fresh = new ArrayList<>();
-        for (User model : data) {
+    private List<UserEntity> map(List<User> uploadedUsers) {
+        List<UserEntity> freshUsers = new ArrayList<>();
+        List<UserEntity> oldUsers = userRepository.findByUsernameIn(uploadedUsers.stream().map(user -> user.getUsername()).collect(Collectors.toList()));
+        for (User model : uploadedUsers) {
+            UserEntity oldUser = oldUsers.stream().filter(userEntity -> userEntity.getUsername().equals(model.getUsername())).findFirst().orElse(null);
             UserEntity userEntity = new UserEntity();
-            userEntity.setId(model.getId());
+            if (oldUser != null) {
+                userEntity = oldUser;
+            }
             userEntity.setUsername(model.getUsername());
             userEntity.setName(model.getName());
             userEntity.setSurname(model.getSurname());
@@ -49,26 +56,9 @@ public class UserServerLoader extends RepositoryServerLoader<User, UserEntity, I
             userEntity.setRegion(nonNull(model.getRegion()) ? new RegionEntity(model.getRegion().getId()) : null);
             if (nonNull(model.getRoles()))
                 userEntity.setRoleList(model.getRoles().stream().map(role -> roleRepository.findOneByCode(role.getCode())).collect(Collectors.toList()));
-            fresh.add(userEntity);
+            freshUsers.add(userEntity);
         }
-        return fresh;
-    }
-
-    @Override
-    @Transactional
-    public void load(List<User> data, String subject) {
-        List<UserEntity> fresh = map(data, subject);
-        save(fresh);
-        delete(fresh, subject);
-    }
-
-    protected void save(List<UserEntity> fresh) {
-        for (UserEntity user : fresh) {
-            UserEntity entity = userRepository.findOneByUsernameIgnoreCase(user.getUsername());
-            if (entity == null) {
-                userRepository.save(user);
-            } else user.setId(entity.getId());
-        }
+        return freshUsers;
     }
 
     @Override

@@ -18,10 +18,10 @@ INSERT INTO sec.role_permission (role_id, permission_code) VALUES (1,'test2');
 --for testing loaders
 INSERT INTO sec.system(code, name) VALUES ('system1', 'system1');
 INSERT INTO sec.system(code, name) VALUES ('system2', 'system2');
-INSERT INTO sec.permission (code, name, parent_code, user_level) VALUES ('test-code1', 'name1', null, 'FEDERAL');
-INSERT INTO sec.permission (code, name, parent_code, user_level) VALUES ('test-code2', 'name2', null, 'ORGANIZATION');
-INSERT INTO sec.role(id, code, name, description, user_level) VALUES (101, 'test-code1', 'name1', 'desc1', 'FEDERAL');
-INSERT INTO sec.role(id, code, name, description, user_level) VALUES (102, 'test-code2', 'name2', 'desc2', 'REGIONAL');
+INSERT INTO sec.permission (code, name, parent_code, user_level) VALUES ('test-code1', 'name1', NULL, 'FEDERAL');
+INSERT INTO sec.permission (code, name, parent_code, user_level) VALUES ('test-code2', 'name2', NULL, 'ORGANIZATION');
+INSERT INTO sec.role(id, code, name, description, user_level) VALUES (101, '101', 'name1', 'desc1', 'FEDERAL');
+INSERT INTO sec.role(id, code, name, description, user_level) VALUES (102, '102', 'name2', 'desc2', 'REGIONAL');
 INSERT INTO sec.role_permission(role_id, permission_code) VALUES (101, 'test-code1');
 INSERT INTO sec.role_permission(role_id, permission_code) VALUES (102, 'test-code2');
 
