@@ -1,12 +1,15 @@
 package net.n2oapp.security.admin.loader;
 
+import net.n2oapp.platform.loader.server.ServerLoader;
 import net.n2oapp.platform.loader.server.repository.RepositoryServerLoader;
 import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
-import net.n2oapp.security.admin.api.model.UserForm;
+import net.n2oapp.security.admin.api.model.Role;
+import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
+import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
-import net.n2oapp.security.admin.loader.builder.UserFormBuilder;
+import net.n2oapp.security.admin.loader.builder.UserBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +24,6 @@ import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /**
  * Тесты лоадера пользователей
@@ -33,108 +35,88 @@ import static org.junit.Assert.fail;
 public class UserServerLoaderTest {
 
     @Autowired
-    private RepositoryServerLoader<UserForm, UserEntity, Integer> repositoryServerLoader;
+    private ServerLoader<User> serverLoader;
 
     @Autowired
-    private UserRepository repository;
+    private UserRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     private List<Integer> userIds = new ArrayList<>();
-
 
     /**
      * Тест {@link RepositoryServerLoader}
      */
     @Test
     public void repositoryLoader() {
-        BiConsumer<List<UserForm>, String> loader = repositoryServerLoader::load;
-        repository.removeByUsernameIn(Arrays.asList("username1", "username2", "username3"));
+        BiConsumer<List<User>, String> loader = serverLoader::load;
+        userRepository.removeByUsernameIn(Arrays.asList("username1", "username2", "username3"));
         case1(loader);
         case2(loader);
         case3(loader);
-        case4(loader);
     }
 
     /**
      * Вставка двух новых записей, в БД нет записей
      */
-    private void case1(BiConsumer<List<UserForm>, String> loader) {
-        UserForm userForm1 = UserFormBuilder.buildUserForm1(null);
-        UserForm userForm2 = UserFormBuilder.buildUserForm2(null);
-        List<UserForm> data = Arrays.asList(userForm1, userForm2);
+    private void case1(BiConsumer<List<User>, String> loader) {
+        User User1 = UserBuilder.buildUser1();
+        User User2 = UserBuilder.buildUser2();
+        List<User> data = Arrays.asList(User1, User2);
+
 
         loader.accept(data, "ignored");
 
-        UserEntity userEntity1 = repository.findOneByUsernameIgnoreCase(userForm1.getUsername());
-        UserEntity userEntity2 = repository.findOneByUsernameIgnoreCase(userForm2.getUsername());
+        UserEntity userEntity1 = userRepository.findOneByUsernameIgnoreCase(User1.getUsername());
+        UserEntity userEntity2 = userRepository.findOneByUsernameIgnoreCase(User2.getUsername());
         userIds.add(userEntity1.getId());
         userIds.add(userEntity2.getId());
 
-        userAssertEquals(userForm1, userEntity1);
-        userAssertEquals(userForm2, userEntity2);
+        userAssertEquals(User1, userEntity1);
+        userAssertEquals(User2, userEntity2);
     }
 
     /**
      * Вставка двух записей, обе есть в БД, но одна будет обновлена
      */
-    private void case2(BiConsumer<List<UserForm>, String> loader) {
-        UserForm userForm1 = UserFormBuilder.buildUserForm1(userIds.get(0));
-        UserForm userForm2 = UserFormBuilder.buildUserForm2Updated(userIds.get(1));
-        List<UserForm> data = Arrays.asList(userForm1, userForm2);
+    private void case2(BiConsumer<List<User>, String> loader) {
+        User User1 = UserBuilder.buildUser1();
+        User User2 = UserBuilder.buildUser2Updated();
+        List<User> data = Arrays.asList(User1, User2);
+
 
         loader.accept(data, "ignored");
 
-        userAssertEquals(userForm1, repository.findOneByUsernameIgnoreCase(userForm1.getUsername()));
-        userAssertEquals(userForm2, repository.findOneByUsernameIgnoreCase(userForm2.getUsername()));
+        userAssertEquals(User1, userRepository.findOneByUsernameIgnoreCase(User1.getUsername()));
+        userAssertEquals(User2, userRepository.findOneByUsernameIgnoreCase(User2.getUsername()));
     }
 
     /**
      * Вставка двух записей, две есть в БД, одна будет обновлена, одна добавлена
      */
-    private void case3(BiConsumer<List<UserForm>, String> loader) {
-        UserForm userForm1 = UserFormBuilder.buildUserForm1(userIds.get(0));
-        UserForm userForm2 = UserFormBuilder.buildUserForm2(userIds.get(1));
-        UserForm userForm3 = UserFormBuilder.buildUserForm3(null);
-        List<UserForm> data = Arrays.asList(userForm2, userForm3);
+    private void case3(BiConsumer<List<User>, String> loader) {
+        User User1 = UserBuilder.buildUser1();
+        User User2 = UserBuilder.buildUser2();
+        User User3 = UserBuilder.buildUser3();
+        List<User> data = Arrays.asList(User2, User3);
 
         loader.accept(data, "ignored");
 
-        UserEntity userEntity3 = repository.findOneByUsernameIgnoreCase(userForm3.getUsername());
+        UserEntity userEntity3 = userRepository.findOneByUsernameIgnoreCase(User3.getUsername());
         userIds.add(userEntity3.getId());
 
-        userAssertEquals(userForm1, repository.findOneByUsernameIgnoreCase(userForm1.getUsername()));
-        userAssertEquals(userForm2, repository.findOneByUsernameIgnoreCase(userForm2.getUsername()));
-        userAssertEquals(userForm3, userEntity3);
+        userAssertEquals(User1, userRepository.findOneByUsernameIgnoreCase(User1.getUsername()));
+        userAssertEquals(User2, userRepository.findOneByUsernameIgnoreCase(User2.getUsername()));
+        userAssertEquals(User3, userEntity3);
     }
 
-    /**
-     * Вставка новой записи с неуникальным username
-     * Проверка, что добавления не будет и другие записи не будут повреждены
-     */
-    private void case4(BiConsumer<List<UserForm>, String> loader) {
-        UserForm userForm1 = UserFormBuilder.buildUserForm1(userIds.get(0));
-        UserForm userForm2 = UserFormBuilder.buildUserForm2(userIds.get(1));
-        UserForm userForm3 = UserFormBuilder.buildUserForm3(userIds.get(2));
-        UserForm invalidUserForm = UserFormBuilder.buildUserForm2Updated(999);
-        invalidUserForm.setUsername(userForm2.getUsername());
-
-        List<UserForm> data = Arrays.asList(invalidUserForm);
-
-        try {
-            loader.accept(data, "ignored");
-            fail("Method should throw exception, but he didn't!");
-        } catch (Exception ignored) {}
-
-        userAssertEquals(userForm1, repository.findOneByUsernameIgnoreCase(userForm1.getUsername()));
-        userAssertEquals(userForm2, repository.findOneByUsernameIgnoreCase(userForm2.getUsername()));
-        userAssertEquals(userForm3, repository.findOneByUsernameIgnoreCase(userForm3.getUsername()));
-    }
-
-
-    private void userAssertEquals(UserForm expected, UserEntity actual) {
+    private void userAssertEquals(User expected, UserEntity actual) {
         assertEquals(expected.getUsername(), actual.getUsername());
         assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getEmail(), actual.getEmail());
-        assertEquals(expected.getUserLevel(), actual.getUserLevel().toString());
-        assertEquals(expected.getRoles(), actual.getRoleList().stream().mapToInt(RoleEntity::getId).boxed().collect(Collectors.toList()));
+        assertEquals(expected.getUserLevel().getName(), actual.getUserLevel().toString());
+        assertEquals(expected.getRoles().stream().map(Role::getCode).collect(Collectors.toList()),
+                actual.getRoleList().stream().map(RoleEntity::getCode).collect(Collectors.toList()));
     }
 }
