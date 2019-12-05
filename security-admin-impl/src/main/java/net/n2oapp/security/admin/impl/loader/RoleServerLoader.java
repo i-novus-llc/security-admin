@@ -51,7 +51,8 @@ public class RoleServerLoader implements ServerLoader<RoleForm> {
         entity.setCode(form.getCode());
         entity.setName(form.getName());
         entity.setDescription(form.getDescription());
-        entity.setUserLevel(UserLevel.valueOf(form.getUserLevel()));
+        if (form.getUserLevel() != null)
+            entity.setUserLevel(UserLevel.valueOf(form.getUserLevel()));
         entity.setSystemCode(new SystemEntity(systemCode));
         if (form.getPermissions() != null) {
             entity.setPermissionList(form.getPermissions().stream()
