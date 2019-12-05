@@ -88,6 +88,21 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private Pkcs7Util pkcs7Util;
 
+    @Configuration
+    public static class UserDetailsServiceConfiguration {
+        @Bean
+        public UserDetailsServiceImpl userDetailsService() {
+            return new UserDetailsServiceImpl();
+        }
+
+        @Bean
+        public EsiaUserDetailsService esiaUserDetailsService() {
+            EsiaUserDetailsService esiaUserDetailsService = new EsiaUserDetailsService();
+            esiaUserDetailsService.setSynchronizeFio(true);
+            return esiaUserDetailsService;
+        }
+    }
+
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().mvcMatchers("/css/**", "/icons/**", "/fonts/**", "/public/**", "/static/**", "/webjars/**");
@@ -163,7 +178,7 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
         filter.setAuthenticationFailureHandler(new UserNotFoundAuthenticationExceptionHandler());
         EsiaUserInfoTokenServices tokenServices = new EsiaUserInfoTokenServices(client.getResource().getUserInfoUri(), client.getClient().getClientId());
         tokenServices.setRestTemplate(template);
-        AuthoritiesPrincipalExtractor extractor = new AuthoritiesPrincipalExtractor(esiaUserDetailsService.setSynchronizeFio(true), "ESIA")
+        AuthoritiesPrincipalExtractor extractor = new AuthoritiesPrincipalExtractor(esiaUserDetailsService, "ESIA")
                 .setPrincipalKeys("snils");
         tokenServices.setAuthoritiesExtractor(extractor);
         tokenServices.setPrincipalExtractor(extractor);
