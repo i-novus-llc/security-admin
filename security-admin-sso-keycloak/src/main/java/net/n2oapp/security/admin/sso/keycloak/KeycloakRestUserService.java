@@ -4,7 +4,6 @@ import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.ErrorRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestOperations;
@@ -29,15 +28,13 @@ public class KeycloakRestUserService {
     private static String USERS_COUNT = "%s/admin/realms/%s/users/count";
 
     private AdminSsoKeycloakProperties properties;
-
-    @Autowired
     private RestOperations template;
-
-    @Autowired
     private KeycloakRestRoleService roleService;
 
-    public KeycloakRestUserService(AdminSsoKeycloakProperties properties) {
+    public KeycloakRestUserService(AdminSsoKeycloakProperties properties, RestOperations template, KeycloakRestRoleService roleService) {
         this.properties = properties;
+        this.template = template;
+        this.roleService = roleService;
     }
 
     /**
@@ -57,8 +54,9 @@ public class KeycloakRestUserService {
 
     /**
      * Получение пользователя по guid
-     * @param userGuid  guid пользователя
-     * @return          данные пользователя
+     *
+     * @param userGuid guid пользователя
+     * @return данные пользователя
      */
     public UserRepresentation getById(String userGuid) {
         final String serverUrl = String.format(USER_BY_ID, properties.getServerUrl(), properties.getRealm(), userGuid);
@@ -75,6 +73,7 @@ public class KeycloakRestUserService {
 
     /**
      * Поиск пользователей
+     *
      * @param search - строка поиска (A String contained in username, first or last name, or email)
      * @param first  - с какого пользователя начать
      * @param max    - сколько пользователей вернуть
@@ -103,8 +102,9 @@ public class KeycloakRestUserService {
 
     /**
      * Добавление пользователя
-     * @param user  данные пользователя
-     * @return      giud пользователя в keycloak
+     *
+     * @param user данные пользователя
+     * @return giud пользователя в keycloak
      */
     public String createUser(UserRepresentation user) {
         final String serverUrl = String.format(USERS, properties.getServerUrl(), properties.getRealm());
@@ -121,7 +121,8 @@ public class KeycloakRestUserService {
 
     /**
      * Изменение пользователя
-     * @param user    данные пользователя
+     *
+     * @param user данные пользователя
      */
     public void updateUser(UserRepresentation user) {
         final String serverUrl = String.format(USER_BY_ID, properties.getServerUrl(), properties.getRealm(), user.getId());
@@ -136,6 +137,7 @@ public class KeycloakRestUserService {
 
     /**
      * Удаление пользователя
+     *
      * @param guid giud пользователя keycloak
      */
     public void deleteUser(String guid) {
@@ -151,21 +153,22 @@ public class KeycloakRestUserService {
 
     /**
      * Добавление пользователю ролей
-     * @param userGuid  giud пользователя
-     * @param roles     список ролей
+     *
+     * @param userGuid giud пользователя
+     * @param roles    список ролей
      */
     public void addUserRoles(String userGuid, List<RoleRepresentation> roles) {
         if (roles != null && !roles.isEmpty()) {
             roles.forEach(r -> {
-               if (r.getId() == null) {
-                   RoleRepresentation byName = roleService.getByName(r.getName());
-                   if (byName == null) {
-                       String newRoleId = roleService.createRole(r);
-                       r.setId(newRoleId);
-                   } else {
-                       r.setId(byName.getId());
-                   }
-               }
+                if (r.getId() == null) {
+                    RoleRepresentation byName = roleService.getByName(r.getName());
+                    if (byName == null) {
+                        String newRoleId = roleService.createRole(r);
+                        r.setId(newRoleId);
+                    } else {
+                        r.setId(byName.getId());
+                    }
+                }
             });
             final String serverUrl = String.format(USER_ROLES, properties.getServerUrl(), properties.getRealm(), userGuid);
             HttpHeaders headers = new HttpHeaders();
@@ -179,8 +182,9 @@ public class KeycloakRestUserService {
 
     /**
      * Получение актуальных ролей пользователя
-     * @param userGuid      giud пользователя
-     * @return              список ролей
+     *
+     * @param userGuid giud пользователя
+     * @return список ролей
      */
     public List<RoleRepresentation> getActualUserRoles(String userGuid) {
         final String serverUrl = String.format(USER_ROLES, properties.getServerUrl(), properties.getRealm(), userGuid);
@@ -197,8 +201,9 @@ public class KeycloakRestUserService {
 
     /**
      * Удаление ролей у пользователя
-     * @param userGuid  guid пользователя
-     * @param roles     список ролей
+     *
+     * @param userGuid guid пользователя
+     * @param roles    список ролей
      */
     public void deleteUserRoles(String userGuid, List<RoleRepresentation> roles) {
         if (roles != null && !roles.isEmpty()) {
@@ -214,8 +219,9 @@ public class KeycloakRestUserService {
 
     /**
      * Изменние пароля
-     * @param userGuid      giud пользователя
-     * @param newPassword   новый пароль
+     *
+     * @param userGuid    giud пользователя
+     * @param newPassword новый пароль
      */
     public void changePassword(String userGuid, String newPassword) {
         CredentialRepresentation passwordCred = new CredentialRepresentation();

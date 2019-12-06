@@ -256,7 +256,6 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserEntity entityForm(UserEntity entity, UserForm model) {
-        entity.setIsActive(Boolean.TRUE.equals(entity.getIsActive()));
         entity.setUsername(model.getUsername());
         entity.setName(model.getName());
         entity.setSurname(model.getSurname());
@@ -272,7 +271,6 @@ public class UserServiceImpl implements UserService {
             entity.setRoleList(model.getRoles().stream().filter(roleId -> roleId > 0).map(RoleEntity::new).collect(Collectors.toList()));
         return entity;
     }
-
 
     private UserEntity entityProvider(SsoUser modelFromProvider) {
         UserEntity entity = new UserEntity();
@@ -309,7 +307,6 @@ public class UserServiceImpl implements UserService {
 
         return null;
     }
-
 
     private SsoUser model(UserEntity entity) {
         if (isNull(entity)) return null;
