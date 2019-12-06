@@ -6,21 +6,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.keycloak.representations.idm.ErrorRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestOperations;
 
 import javax.ws.rs.core.Response;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -32,13 +23,12 @@ public class KeycloakRestRoleService {
     private static String ROLES = "%s/admin/realms/%s/roles/";
     private static String ROLE_COMPOSITES = "%s/admin/realms/%s/roles/%s/composites";
 
-    @Autowired
+    private AdminSsoKeycloakProperties properties;
     private RestOperations template;
 
-    private AdminSsoKeycloakProperties properties;
-
-    public KeycloakRestRoleService(AdminSsoKeycloakProperties properties) {
+    public KeycloakRestRoleService(AdminSsoKeycloakProperties properties, RestOperations template) {
         this.properties = properties;
+        this.template = template;
     }
 
     public void setTemplate(RestOperations template) {
@@ -47,8 +37,9 @@ public class KeycloakRestRoleService {
 
     /**
      * Получение роли по уникальному имени(коду)
+     *
      * @param roleName имя роля
-     * @return  роль
+     * @return роль
      */
     public RoleRepresentation getByName(String roleName) {
         final String serverUrl = String.format(ROLE_BY_NAME, properties.getServerUrl(), properties.getRealm(), roleName);
@@ -56,7 +47,7 @@ public class KeycloakRestRoleService {
             ResponseEntity<RoleRepresentation> response = template.getForEntity(serverUrl, RoleRepresentation.class);
             return response.getBody();
         } catch (HttpClientErrorException ex) {
-            if (ex.getRawStatusCode() == 404){
+            if (ex.getRawStatusCode() == 404) {
                 return null;
             }
             throw ex;
@@ -65,9 +56,10 @@ public class KeycloakRestRoleService {
 
     /**
      * Получение всех ролей realm уровня из keycloak
-     * @return  список ролей
+     *
+     * @return список ролей
      */
-    public List<RoleRepresentation> getAllRoles(){
+    public List<RoleRepresentation> getAllRoles() {
         final String serverUrl = String.format(ROLES, properties.getServerUrl(), properties.getRealm());
         try {
             ResponseEntity<RoleRepresentation[]> response = template.getForEntity(serverUrl, RoleRepresentation[].class);
@@ -82,8 +74,9 @@ public class KeycloakRestRoleService {
 
     /**
      * Создать роль
-     * @param role  данные новой роли
-     * @return      идентификатор новой роли
+     *
+     * @param role данные новой роли
+     * @return идентификатор новой роли
      */
     public String createRole(RoleRepresentation role) {
         final String serverUrl = String.format(ROLES, properties.getServerUrl(), properties.getRealm());
@@ -96,14 +89,14 @@ public class KeycloakRestRoleService {
             if (role.getComposites() != null) {
                 Set<IdObject> composites = new HashSet<>();
                 if (role.getComposites().getRealm() != null) {
-                  composites.addAll(role.getComposites().getRealm().stream().map(r -> new IdObject(r)).collect(Collectors.toSet()));
+                    composites.addAll(role.getComposites().getRealm().stream().map(r -> new IdObject(r)).collect(Collectors.toSet()));
                 }
                 if (role.getComposites().getClient() != null) {
                     composites.addAll(role.getComposites().getClient().values().stream().filter(r -> r != null)
                             .flatMap(r -> r.stream()).map(r -> new IdObject(r)).collect(Collectors.toSet()));
                 }
                 ResponseEntity<Response> compositesResponse = template
-                              .postForEntity(roleCompositesServerUrl, new HttpEntity<>(composites, headers), Response.class);
+                        .postForEntity(roleCompositesServerUrl, new HttpEntity<>(composites, headers), Response.class);
                 if (compositesResponse.getStatusCodeValue() < 200 || compositesResponse.getStatusCodeValue() > 300) {
                     throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
                 }
@@ -116,7 +109,8 @@ public class KeycloakRestRoleService {
 
     /**
      * Изменить роль
-     * @param role  данные роли
+     *
+     * @param role данные роли
      */
     public void updateRole(RoleRepresentation role) {
         final String serverUrl = String.format(ROLE_BY_NAME, properties.getServerUrl(), properties.getRealm(), role.getName());
@@ -169,8 +163,9 @@ public class KeycloakRestRoleService {
 
     /**
      * Получение содержимого роли, в случае если она композитная
-     * @param roleName  имя роли
-     * @return      список ролей
+     *
+     * @param roleName имя роли
+     * @return список ролей
      */
     public RoleRepresentation[] getRoleComposites(String roleName) {
         final String roleCompositesServerUrl = String.format(ROLE_COMPOSITES, properties.getServerUrl(), properties.getRealm(), roleName);
@@ -179,7 +174,8 @@ public class KeycloakRestRoleService {
 
     /**
      * Удаление роли
-     * @param roleName  имя роли
+     *
+     * @param roleName имя роли
      */
     public void deleteRole(String roleName) {
         final String serverUrl = String.format(ROLE_BY_NAME, properties.getServerUrl(), properties.getRealm(), roleName);

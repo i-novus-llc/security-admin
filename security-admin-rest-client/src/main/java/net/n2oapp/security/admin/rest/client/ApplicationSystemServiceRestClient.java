@@ -85,6 +85,8 @@ public class ApplicationSystemServiceRestClient implements ApplicationSystemServ
         systemCriteria.setName(criteria.getName());
         systemCriteria.setCode(criteria.getCode());
         systemCriteria.setOrders(criteria.getOrders());
+        systemCriteria.setCodeList(criteria.getCodeList());
+        systemCriteria.setPublicAccess(criteria.getPublicAccess());
         return client.findAllSystems(systemCriteria);
     }
 

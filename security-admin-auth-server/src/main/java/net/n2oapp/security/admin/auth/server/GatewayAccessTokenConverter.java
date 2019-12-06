@@ -7,7 +7,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
-import org.springframework.security.oauth2.provider.token.UserAuthenticationConverter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +17,13 @@ import java.util.Map;
  */
 public class GatewayAccessTokenConverter extends DefaultAccessTokenConverter {
 
-    public GatewayAccessTokenConverter(UserAuthenticationConverter userAuthenticationConverter) {
-        setUserTokenConverter(userAuthenticationConverter);
+    private Boolean includeRoles;
+    private Boolean includePermissions;
+
+    public GatewayAccessTokenConverter(Boolean includeRoles, Boolean includePermissions, Boolean includeSystems) {
+        setUserTokenConverter(new UserTokenConverter(includeRoles, includePermissions, includeSystems));
+        this.includeRoles = includeRoles;
+        this.includePermissions = includePermissions;
     }
 
     @Override
@@ -27,8 +31,10 @@ public class GatewayAccessTokenConverter extends DefaultAccessTokenConverter {
         if (authentication.isClientOnly()) {
             List<String> roles = new ArrayList<>();
             List<String> permissions = new ArrayList<>();
-            token.getAdditionalInformation().put("roles", roles);
-            token.getAdditionalInformation().put("permissions", permissions);
+            if (includeRoles)
+                token.getAdditionalInformation().put("roles", roles);
+            if (includePermissions)
+                token.getAdditionalInformation().put("permissions", permissions);
             if (authentication.getAuthorities() != null) {
                 for (GrantedAuthority authority : authentication.getAuthorities()) {
                     if (authority instanceof RoleGrantedAuthority)
