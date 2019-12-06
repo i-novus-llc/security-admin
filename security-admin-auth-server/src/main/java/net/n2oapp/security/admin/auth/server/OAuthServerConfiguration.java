@@ -12,6 +12,7 @@ import net.n2oapp.security.admin.auth.server.logout.OIDCBackChannelLogoutHandler
 import net.n2oapp.security.auth.common.LogoutHandler;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.authserver.AuthorizationServerProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.authserver.OAuth2AuthorizationServerConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -41,6 +42,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.util.Set;
 
 @Configuration
 @EnableAuthorizationServer
@@ -81,6 +83,9 @@ public class OAuthServerConfiguration extends OAuth2AuthorizationServerConfigura
     @EnableConfigurationProperties(KeystoreProperties.class)
     static class TokenStoreConfiguration {
 
+        @Value("${access.token.include-claims:}")
+        private Set<String> tokenIncludeClaims;
+
         @Autowired
         private KeystoreProperties properties;
 
@@ -98,7 +103,10 @@ public class OAuthServerConfiguration extends OAuth2AuthorizationServerConfigura
         public AccessTokenHeaderConverter accessTokenConverter(KeyStoreKeyFactory keyStoreKeyFactory) {
             AccessTokenHeaderConverter converter = new AccessTokenHeaderConverter();
             converter.setKeyPair(keyStoreKeyFactory.getKeyPair("gateway"));
-            converter.setAccessTokenConverter(new GatewayAccessTokenConverter(new UserTokenConverter()));
+            Boolean includeRoles = tokenIncludeClaims.contains("roles");
+            Boolean includePermissions = tokenIncludeClaims.contains("permissions");
+            Boolean includeSystems = tokenIncludeClaims.contains("systems");
+            converter.setAccessTokenConverter(new GatewayAccessTokenConverter(includeRoles, includePermissions, includeSystems));
             converter.setKid(properties.getKeyId());
             return converter;
         }
@@ -141,6 +149,5 @@ public class OAuthServerConfiguration extends OAuth2AuthorizationServerConfigura
                 return mv;
             }
         }
-
     }
 }
