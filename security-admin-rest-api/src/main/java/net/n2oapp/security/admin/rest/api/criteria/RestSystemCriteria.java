@@ -49,4 +49,17 @@ public class RestSystemCriteria extends SystemCriteria {
         super.setCode(code);
     }
 
+    @QueryParam("publicAccess")
+    @Override
+    @ApiParam(value = "Код системы")
+    public void setPublicAccess(Boolean publicAccess) {
+        super.setPublicAccess(publicAccess);
+    }
+
+    @QueryParam("codeList")
+    @Override
+    @ApiParam(value = "Код системы")
+    public void setCodeList(List<String> codeList) {
+        super.setCodeList(codeList);
+    }
 }
