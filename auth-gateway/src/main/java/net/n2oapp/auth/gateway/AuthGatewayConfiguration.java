@@ -209,7 +209,6 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
         private String logoutUri;
 
     }
-
 }
 
 
