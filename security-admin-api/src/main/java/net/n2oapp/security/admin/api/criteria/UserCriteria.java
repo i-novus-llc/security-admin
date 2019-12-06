@@ -2,11 +2,9 @@ package net.n2oapp.security.admin.api.criteria;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.n2oapp.security.admin.api.model.UserLevel;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Критерий фильтрации пользователей

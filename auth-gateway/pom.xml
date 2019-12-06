@@ -6,7 +6,7 @@
     <parent>
         <artifactId>security-admin</artifactId>
         <groupId>net.n2oapp.framework.security</groupId>
-        <version>4.2-SNAPSHOT</version>
+        <version>4.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>auth-gateway</artifactId>
@@ -36,6 +36,12 @@
         </dependency>
 
         <dependency>
+            <groupId>net.n2oapp.framework.security</groupId>
+            <artifactId>security-admin-sso-keycloak</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-starter-ms</artifactId>
         </dependency>
@@ -48,12 +54,6 @@
         <dependency>
             <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-starter-loader-server</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>net.n2oapp.framework.security</groupId>
-            <artifactId>security-admin-sso-keycloak</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>

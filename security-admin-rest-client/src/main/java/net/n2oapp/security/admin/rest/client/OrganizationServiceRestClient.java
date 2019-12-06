@@ -4,6 +4,7 @@ import net.n2oapp.security.admin.api.criteria.OrganizationCriteria;
 import net.n2oapp.security.admin.api.model.Organization;
 import net.n2oapp.security.admin.api.service.OrganizationService;
 import net.n2oapp.security.admin.rest.api.OrganizationRestService;
+import net.n2oapp.security.admin.rest.api.criteria.RestOrganizationCriteria;
 import org.springframework.data.domain.Page;
 
 /**
@@ -19,7 +20,12 @@ public class OrganizationServiceRestClient implements OrganizationService {
 
     @Override
     public Page<Organization> findAll(OrganizationCriteria criteria) {
-        return client.getAll(criteria);
+        RestOrganizationCriteria restOrganizationCriteria = new RestOrganizationCriteria();
+        restOrganizationCriteria.setShortName(criteria.getShortName());
+        restOrganizationCriteria.setPage(criteria.getPage());
+        restOrganizationCriteria.setOrders(criteria.getOrders());
+        restOrganizationCriteria.setSize(criteria.getSize());
+        return client.getAll(restOrganizationCriteria);
     }
 
 }

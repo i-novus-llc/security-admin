@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.ws.rs.NotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -74,8 +75,10 @@ public class RoleRestTest {
 
     private void delete(Integer id) {
         client.delete(id);
-        Role role = client.getById(id);
-        assertNull(role);
+        try {
+            client.getById(id);
+            fail("Method should throw exception, but he didn't!");
+        } catch (NotFoundException ignored) {}
     }
 
 
