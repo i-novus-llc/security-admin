@@ -8,4 +8,11 @@
     <changeSet id="update_system.sql" author="agolodnaya">
         <sqlFile path="security/admin/db/changelog/sql/V16_update_system.sql"/>
     </changeSet>
+
+    <changeSet id="system_public_access_boolean_type" author="dbilalov">
+        <sql>
+            ALTER TABLE sec.system DROP COLUMN public_access;
+            ALTER TABLE sec.system ADD COLUMN public_access BOOLEAN;
+        </sql>
+    </changeSet>
 </databaseChangeLog>
