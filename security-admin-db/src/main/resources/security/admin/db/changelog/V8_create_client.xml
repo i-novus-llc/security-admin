@@ -6,7 +6,6 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="create_client" author="aarifullin">
-        <validCheckSum>8:3eb13ee36e7bfee7ae195e68eb0ab3fb</validCheckSum>
         <sqlFile path="security/admin/db/changelog/sql/V8_create_client.sql"/>
     </changeSet>
 </databaseChangeLog>

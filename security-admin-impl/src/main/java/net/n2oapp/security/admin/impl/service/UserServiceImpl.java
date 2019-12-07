@@ -163,7 +163,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Page<User> findAll(UserCriteria criteria) {
-        criteria.setRoleIds(criteria.getRoleIds().stream().filter(roleId -> roleId > 0).collect(Collectors.toList()));
+        if (nonNull(criteria.getRoleIds()))
+            criteria.setRoleIds(criteria.getRoleIds().stream().filter(roleId -> roleId > 0).collect(Collectors.toList()));
         final Specification<UserEntity> specification = new UserSpecifications(criteria);
         if (criteria.getOrders().stream().map(Sort.Order::getProperty).anyMatch("fio"::equals)) {
             Sort.Direction orderFio = criteria.getOrders().stream().filter(o -> o.getProperty().equals("fio")).findAny().get().getDirection();

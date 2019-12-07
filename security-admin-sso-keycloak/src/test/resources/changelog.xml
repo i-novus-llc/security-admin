@@ -6,6 +6,6 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
 
-    <include file="classpath*:/security/admin/db/changelog-master.xml"/>
+    <include file="classpath*:access/db/changelog/changelog-master.xml"/>
 
 </databaseChangeLog>

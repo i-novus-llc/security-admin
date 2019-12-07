@@ -5,7 +5,6 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="create_client_index" author="aarifullin" dbms="postgresql">
-        <validCheckSum>8:b2a322ba93819f420d10fbb3f41ed6ce</validCheckSum>
         <sqlFile path="security/admin/db/changelog/sql/V9_create_client_index.sql"/>
     </changeSet>
 

@@ -1,9 +1,9 @@
-CREATE UNIQUE INDEX user_username_idx_uniq
-ON sec.user USING btree(username);
+CREATE UNIQUE INDEX ${n2o.security.admin.user.username.index}
+ON ${n2o.security.admin.schema}.${n2o.security.admin.user.table} USING btree(${n2o.security.admin.user.login});
 
-CREATE INDEX user_role_user_idx
-ON sec.user_role USING btree(user_id);
+CREATE INDEX ${n2o.security.admin.userrole.user.index}
+ON ${n2o.security.admin.schema}.${n2o.security.admin.userrole.table} USING btree(${n2o.security.admin.userrole.column.user});
 
-CREATE INDEX user_role_role_idx
-ON sec.user_role USING btree(role_id);
+CREATE INDEX ${n2o.security.admin.userrole.role.index}
+ON ${n2o.security.admin.schema}.${n2o.security.admin.userrole.table} USING btree(${n2o.security.admin.userrole.column.role});
 
