@@ -8,7 +8,7 @@ CREATE TABLE sec.role
     user_level character varying(50),
     CONSTRAINT role_pkey PRIMARY KEY (id),
     CONSTRAINT role_system_code_fk FOREIGN KEY (system_code)
-        REFERENCES sec.system (code) MATCH SIMPLE
+        REFERENCES sec.system (code)
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 );

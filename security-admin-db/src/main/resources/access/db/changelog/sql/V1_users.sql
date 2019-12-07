@@ -18,15 +18,15 @@ CREATE TABLE sec."user"
     ext_uid character varying,
     CONSTRAINT user_pkey PRIMARY KEY (id),
     CONSTRAINT user_department_fk FOREIGN KEY (department_id)
-        REFERENCES sec.department (id) MATCH SIMPLE
+        REFERENCES sec.department (id)
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
     CONSTRAINT user_organization_fk FOREIGN KEY (organization_id)
-        REFERENCES sec.organization (id) MATCH SIMPLE
+        REFERENCES sec.organization (id)
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
     CONSTRAINT user_region_fk FOREIGN KEY (region_id)
-        REFERENCES sec.region (id) MATCH SIMPLE
+        REFERENCES sec.region (id)
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 );
@@ -82,11 +82,11 @@ CREATE TABLE sec.user_role
     role_id integer NOT NULL,
     CONSTRAINT user_role_pk PRIMARY KEY (user_id, role_id),
     CONSTRAINT user_role_role_fk FOREIGN KEY (role_id)
-        REFERENCES sec.role (id) MATCH SIMPLE
+        REFERENCES sec.role (id)
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
     CONSTRAINT user_role_user_fk FOREIGN KEY (user_id)
-        REFERENCES sec."user" (id) MATCH SIMPLE
+        REFERENCES sec."user" (id)
         ON UPDATE RESTRICT
         ON DELETE CASCADE
 );

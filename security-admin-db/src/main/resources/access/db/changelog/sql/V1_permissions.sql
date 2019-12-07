@@ -7,11 +7,11 @@ CREATE TABLE sec.permission
     user_level character varying(50),
     CONSTRAINT permission_pkey PRIMARY KEY (code),
     CONSTRAINT permission_parent_fk FOREIGN KEY (parent_code)
-        REFERENCES sec.permission (code) MATCH SIMPLE
+        REFERENCES sec.permission (code)
         ON UPDATE RESTRICT
         ON DELETE CASCADE,
     CONSTRAINT permission_system_code_fk FOREIGN KEY (system_code)
-        REFERENCES sec.system (code) MATCH SIMPLE
+        REFERENCES sec.system (code)
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 );
@@ -39,14 +39,14 @@ CREATE INDEX permission_parent_idx
 CREATE TABLE sec.role_permission
 (
     role_id integer NOT NULL,
-    permission_code character varying(100) NOT NULL,
+    permission_code character VARYING(100) NOT NULL,
     CONSTRAINT role_permission_pk PRIMARY KEY (role_id, permission_code),
     CONSTRAINT role_permission_permission_fk FOREIGN KEY (permission_code)
-        REFERENCES sec.permission (code) MATCH SIMPLE
+        REFERENCES sec.permission (code)
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
     CONSTRAINT role_permission_role_fk FOREIGN KEY (role_id)
-        REFERENCES sec.role (id) MATCH SIMPLE
+        REFERENCES sec.role (id)
         ON UPDATE RESTRICT
         ON DELETE CASCADE
 );
