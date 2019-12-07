@@ -51,14 +51,14 @@ public class RestSystemCriteria extends SystemCriteria {
 
     @QueryParam("publicAccess")
     @Override
-    @ApiParam(value = "Код системы")
+    @ApiParam(value = "Признак работы в режиме без авторизации")
     public void setPublicAccess(Boolean publicAccess) {
         super.setPublicAccess(publicAccess);
     }
 
     @QueryParam("codeList")
     @Override
-    @ApiParam(value = "Код системы")
+    @ApiParam(value = "Список кодов систем")
     public void setCodeList(List<String> codeList) {
         super.setCodeList(codeList);
     }
