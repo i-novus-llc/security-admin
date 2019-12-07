@@ -41,11 +41,11 @@ CREATE TABLE sec.client_role
     role_id integer NOT NULL,
     CONSTRAINT client_role_pkey PRIMARY KEY (client_id, role_id),
     CONSTRAINT client_role_client_fk FOREIGN KEY (client_id)
-        REFERENCES sec.client (client_id) MATCH SIMPLE
+        REFERENCES sec.client (client_id)
         ON UPDATE RESTRICT
         ON DELETE CASCADE,
     CONSTRAINT client_role_role_fk FOREIGN KEY (role_id)
-        REFERENCES sec.role (id) MATCH SIMPLE
+        REFERENCES sec.role (id)
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 );
@@ -68,7 +68,7 @@ CREATE TABLE sec.application
     system_code character varying(50) NOT NULL,
     CONSTRAINT application_pkey PRIMARY KEY (code),
     CONSTRAINT application_system_code_fk FOREIGN KEY (system_code)
-        REFERENCES sec.system (code) MATCH SIMPLE
+        REFERENCES sec.system (code)
         ON UPDATE RESTRICT
         ON DELETE CASCADE
 );
