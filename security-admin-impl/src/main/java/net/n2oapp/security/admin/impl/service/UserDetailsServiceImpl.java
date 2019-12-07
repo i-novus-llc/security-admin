@@ -45,8 +45,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private Boolean updateRoles = true;
 
-    private String externalSystem;
-
     @Override
     public User loadUserDetails(UserDetailsToken userDetails) {
         UserEntity userEntity = userRepository.findOneByUsernameIgnoreCase(userDetails.getUsername());
@@ -58,7 +56,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             userEntity.setSurname(userDetails.getSurname());
             userEntity.setName(userDetails.getName());
             userEntity.setIsActive(true);
-            userEntity.setExtSys(externalSystem);
+            userEntity.setExtSys(userDetails.getExternalSystem());
             if (nonNull(userDetails.getRoleNames()) && !userDetails.getRoleNames().isEmpty()) {
                 userEntity.setRoleList(userDetails.getRoleNames().stream().map(this::getOrCreateRole).filter(Objects::nonNull).collect(Collectors.toList()));
             }
@@ -235,15 +233,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     public UserDetailsServiceImpl setUpdateRoles(Boolean updateRoles) {
         this.updateRoles = updateRoles;
-        return this;
-    }
-
-    public String getExternalSystem() {
-        return externalSystem;
-    }
-
-    public UserDetailsServiceImpl setExternalSystem(String externalSystem) {
-        this.externalSystem = externalSystem;
         return this;
     }
 }

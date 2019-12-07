@@ -16,7 +16,7 @@ public class N2oSecurityPermissionEvaluator implements PermissionEvaluator {
         if (!(o1 instanceof String)) return false;
         for (GrantedAuthority authority : authentication.getAuthorities()) {
             if (authority instanceof PermissionGrantedAuthority) {
-                if (authority.getAuthority().equals(o1)) {
+                if (((PermissionGrantedAuthority) authority).getPermission().equals(o1)) {
                     return true;
                 }
             }

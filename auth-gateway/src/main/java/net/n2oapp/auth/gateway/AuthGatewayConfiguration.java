@@ -22,10 +22,7 @@ import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoT
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.*;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -33,7 +30,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.jwt.crypto.sign.RsaSigner;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
@@ -53,7 +49,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Security;
-import java.security.interfaces.RSAPrivateKey;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -73,7 +68,7 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
     private OAuth2ClientContext oauth2ClientContext;
 
     @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+    private UserDetailsServiceImpl gatewayUserDetailsService;
 
     @Autowired
     @Qualifier("esiaUserDetailsService")
@@ -105,6 +100,19 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
                                 keycloak().getLogoutUri(), esia().getLogoutUri())).permitAll()
                 .and().csrf().disable()
                 .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
+    }
+
+    @Bean
+    @Primary
+    public UserDetailsServiceImpl gatewayUserDetailsService() {
+        return new UserDetailsServiceImpl();
+    }
+
+    @Bean
+    public EsiaUserDetailsService esiaUserDetailsService() {
+        EsiaUserDetailsService esiaUserDetailsService = new EsiaUserDetailsService();
+        esiaUserDetailsService.setSynchronizeFio(true);
+        return esiaUserDetailsService;
     }
 
     @Bean
@@ -149,7 +157,7 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
         filter.setRestTemplate(template);
         UserInfoTokenServices tokenServices = new UserInfoTokenServices(client.getResource().getUserInfoUri(), client.getClient().getClientId());
         tokenServices.setRestTemplate(template);
-        AuthoritiesPrincipalExtractor extractor = new AuthoritiesPrincipalExtractor(userDetailsService.setExternalSystem("KEYCLOAK"));
+        AuthoritiesPrincipalExtractor extractor = new AuthoritiesPrincipalExtractor(gatewayUserDetailsService, "KEYCLOAK");
         tokenServices.setAuthoritiesExtractor(extractor);
         tokenServices.setPrincipalExtractor(extractor);
         filter.setTokenServices(tokenServices);
@@ -165,14 +173,13 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
         filter.setAuthenticationFailureHandler(new UserNotFoundAuthenticationExceptionHandler());
         EsiaUserInfoTokenServices tokenServices = new EsiaUserInfoTokenServices(client.getResource().getUserInfoUri(), client.getClient().getClientId());
         tokenServices.setRestTemplate(template);
-        AuthoritiesPrincipalExtractor extractor = new AuthoritiesPrincipalExtractor(esiaUserDetailsService.setSynchronizeFio(true).setExternalSystem("ESIA"))
+        AuthoritiesPrincipalExtractor extractor = new AuthoritiesPrincipalExtractor(esiaUserDetailsService, "ESIA")
                 .setPrincipalKeys("snils");
         tokenServices.setAuthoritiesExtractor(extractor);
         tokenServices.setPrincipalExtractor(extractor);
         filter.setTokenServices(tokenServices);
         return filter;
     }
-
 
     @Bean
     public UserAccessor userAccessor() {
@@ -207,7 +214,6 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
 
         @Setter
         private String logoutUri;
-
     }
 }
 
