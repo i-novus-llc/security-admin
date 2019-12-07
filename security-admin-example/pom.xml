@@ -68,9 +68,14 @@
         <!--/spring-->
 
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>runtime</scope>
+            <groupId>net.n2oapp.platform</groupId>
+            <artifactId>n2o-platform-test-autoconfigure</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.inovus.ms.rdm</groupId>
+            <artifactId>rdm-sync-spring-boot-starter</artifactId>
+            <version>${rdm.version}</version>
         </dependency>
 
     </dependencies>

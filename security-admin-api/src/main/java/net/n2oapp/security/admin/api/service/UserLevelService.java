@@ -21,5 +21,5 @@ public interface UserLevelService {
      *
      * @return Страница всех уровней пользователя
      */
-    List<UserLevel> getAllForFilter();
+    List<UserLevel> getAllForFilter(String name);
 }

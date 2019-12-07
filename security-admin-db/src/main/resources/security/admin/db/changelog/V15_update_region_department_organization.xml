@@ -6,7 +6,6 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="update_region_department_organization.sql" author="aarifullin">
-        <validCheckSum>8:ac4820258ae4dcc6f1c3d77aabb478db</validCheckSum>
         <sqlFile path="security/admin/db/changelog/sql/V15_update_region_department_organization.sql"/>
     </changeSet>
 </databaseChangeLog>

@@ -4,6 +4,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
+    <include file="security/admin/db/changelog/properties.xml"/>
     <include file="security/admin/db/changelog/V1_create_schemasec.xml"/>
     <include file="security/admin/db/changelog/V2_create_user.xml"/>
     <include file="security/admin/db/changelog/V3_create_roles.xml"/>
@@ -23,5 +24,6 @@
     <include file="security/admin/db/changelog/V14_update_user_add_snils.xml"/>
     <include file="security/admin/db/changelog/V14_permission_parent_delete_cascade.xml"/>
     <include file="security/admin/db/changelog/V15_update_region_department_organization.xml"/>
+    <include file="security/admin/db/changelog/V16_update_system.xml"/>
 
 </databaseChangeLog>

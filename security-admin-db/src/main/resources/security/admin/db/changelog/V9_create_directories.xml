@@ -5,7 +5,6 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="create_region" author="rbarysheva" dbms="postgresql">
-        <validCheckSum>8:1fcd609fd34b63de330f71fa0ef8b959</validCheckSum>
         <sqlFile path="security/admin/db/changelog/sql/V9_region.sql"/>
     </changeSet>
     <changeSet id="create_region" author="rbarysheva" dbms="h2">
@@ -13,7 +12,6 @@
     </changeSet>
 
     <changeSet id="create_organization" author="rbarysheva" dbms="postgresql">
-        <validCheckSum>8:07b3d48e306ccba8cc5bc0a192648180</validCheckSum>
         <sqlFile path="security/admin/db/changelog/sql/V9_organization.sql"/>
     </changeSet>
     <changeSet id="create_organization" author="rbarysheva" dbms="h2">
@@ -21,7 +19,6 @@
     </changeSet>
 
     <changeSet id="create_department" author="rbarysheva" dbms="postgresql">
-        <validCheckSum>8:916c52fd353bce6b1915e237afe06053</validCheckSum>
         <sqlFile path="security/admin/db/changelog/sql/V9_department.sql"/>
     </changeSet>
     <changeSet id="create_system" author="rbarysheva" dbms="h2">

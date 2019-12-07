@@ -5,7 +5,6 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="permission_parent_delete_cascade" author="iryabov" dbms="postgresql">
-        <validCheckSum>8:d54194646d711c2dc546d624b4f59ea9</validCheckSum>
         <sqlFile path="security/admin/db/changelog/sql/V14_permission_parent_delete_cascade.sql"/>
     </changeSet>
 

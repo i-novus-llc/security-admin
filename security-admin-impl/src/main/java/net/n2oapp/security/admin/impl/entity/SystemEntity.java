@@ -37,6 +37,36 @@ public class SystemEntity {
     private String description;
 
     /**
+     * Краткое наименование системы
+     */
+    @Column(name = "short_name ")
+    private String shortName;
+
+    /**
+     * Иконка системы
+     */
+    @Column(name = "icon")
+    private String icon;
+
+    /**
+     * Адрес системы
+     */
+    @Column(name = "url")
+    private String url;
+
+    /**
+     * Признак работы в режиме без авторизации
+     */
+    @Column(name = "public_access")
+    private Boolean publicAccess;
+
+    /**
+     * Порядок отображения подсистемы
+     */
+    @Column(name = "view_order")
+    private Integer viewOrder;
+
+    /**
      * Приложения системы
      */
     @OneToMany(mappedBy = "systemCode", fetch = FetchType.LAZY)

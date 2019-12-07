@@ -1,6 +1,6 @@
-CREATE TABLE IF NOT EXISTS sec.user (
+CREATE TABLE IF NOT EXISTS ${n2o.security.admin.schema}.${n2o.security.admin.user.table} (
   id SERIAL PRIMARY KEY,
-  username VARCHAR(100) NOT NULL,
+  ${n2o.security.admin.user.login} VARCHAR(100) NOT NULL,
   email VARCHAR(100),
   surname VARCHAR(100),
   name VARCHAR(100),
@@ -9,11 +9,11 @@ CREATE TABLE IF NOT EXISTS sec.user (
   is_active boolean
 );
 
-COMMENT ON TABLE sec.user IS 'Пользователи';
-COMMENT ON COLUMN sec.user.username IS 'login пользователя';
-COMMENT ON COLUMN sec.user.email IS 'E-mail';
-COMMENT ON COLUMN sec.user.surname IS 'Фамилия';
-COMMENT ON COLUMN sec.user.name IS 'Имя';
-COMMENT ON COLUMN sec.user.patronymic IS 'Отчество';
-COMMENT ON COLUMN sec.user.password IS 'Пароль';
-COMMENT ON COLUMN sec.user.is_active IS 'Активность учетной записи';
+COMMENT ON TABLE ${n2o.security.admin.schema}.${n2o.security.admin.user.table} IS 'Пользователи';
+COMMENT ON COLUMN ${n2o.security.admin.schema}.${n2o.security.admin.user.table}.${n2o.security.admin.user.login} IS 'login пользователя';
+COMMENT ON COLUMN ${n2o.security.admin.schema}.${n2o.security.admin.user.table}.email IS 'E-mail';
+COMMENT ON COLUMN ${n2o.security.admin.schema}.${n2o.security.admin.user.table}.surname IS 'Фамилия';
+COMMENT ON COLUMN ${n2o.security.admin.schema}.${n2o.security.admin.user.table}.name IS 'Имя';
+COMMENT ON COLUMN ${n2o.security.admin.schema}.${n2o.security.admin.user.table}.patronymic IS 'Отчество';
+COMMENT ON COLUMN ${n2o.security.admin.schema}.${n2o.security.admin.user.table}.password IS 'Пароль';
+COMMENT ON COLUMN ${n2o.security.admin.schema}.${n2o.security.admin.user.table}.is_active IS 'Активность учетной записи';

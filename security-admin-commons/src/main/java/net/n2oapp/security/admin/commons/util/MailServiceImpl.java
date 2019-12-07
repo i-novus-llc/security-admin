@@ -3,6 +3,8 @@ package net.n2oapp.security.admin.commons.util;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.api.service.MailService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
@@ -23,6 +25,8 @@ import java.util.Map;
  */
 @Service
 public class MailServiceImpl implements MailService {
+
+    private final static Logger log = LoggerFactory.getLogger(MailServiceImpl.class);
 
     @Autowired
     private JavaMailSender emailSender;
@@ -98,6 +102,7 @@ public class MailServiceImpl implements MailService {
 
     /**
      * Отправка сообщения на почту при успешном создании пользователя
+     *
      * @param user Пользователь
      */
     @Override
@@ -115,6 +120,7 @@ public class MailServiceImpl implements MailService {
 
     /**
      * Отправка сообщения на почту при сбросе пароля
+     *
      * @param user Пользователь
      */
     @Override
@@ -129,6 +135,7 @@ public class MailServiceImpl implements MailService {
 
     /**
      * Отправка сообщения на почту при блокировании/разблокировании
+     *
      * @param user Пользователь
      */
     @Override
@@ -146,6 +153,7 @@ public class MailServiceImpl implements MailService {
 
     /**
      * Отправка сообщения на почту при удалении
+     *
      * @param user Пользователь
      */
     @Override
@@ -162,8 +170,9 @@ public class MailServiceImpl implements MailService {
 
     /**
      * Отправка сообщений
-     * @param data Список атрибутов, передаваемых в тело сообщения
-     * @param subject Тема сообщения
+     *
+     * @param data     Список атрибутов, передаваемых в тело сообщения
+     * @param subject  Тема сообщения
      * @param resource Имя ресурса, в котором формируется тело сообщения
      */
     private void sendMail(Map<String, Object> data, String subject, String resource) {
@@ -180,12 +189,13 @@ public class MailServiceImpl implements MailService {
             helper.setText(body, true);
             emailSender.send(helper.getMimeMessage());
         } catch (MailException | MessagingException e) {
-            throw new IllegalStateException("Exception while sending mail notification to " + data.get("username") + "\n", e);
+            log.error("Exception while sending mail notification to " + data.get("username") + "\n");
         }
     }
 
     /**
      * Предобработка входных атрибутов
+     *
      * @param param Атрибут
      * @return Если атрибут не равен null, то возвращается искомое значение атрибута, иначе - пустая строка
      */
