@@ -44,15 +44,10 @@ public class ApplicationSystemExportServiceImpl implements ApplicationSystemExpo
     private static final String OAUTH = "oauth";
     private static final String SYSTEM_CODE = "system";
 
-    @Autowired
     private RefBookService refBookService;
-    @Autowired
     private ApplicationSystemService applicationSystemService;
-    @Autowired
     private DraftService draftService;
-    @Autowired
     private PublishService publishService;
-    @Autowired
     private VersionService versionService;
 
     @Override
@@ -87,6 +82,10 @@ public class ApplicationSystemExportServiceImpl implements ApplicationSystemExpo
     }
 
     private void update(Map<String, ?> source, String refBookCode) {
+        if (draftService == null || publishService == null || refBookService == null || versionService == null) {
+            log.warn("Export to the RDM disabled, please set 'rdm.client.export.url' property.");
+            return;
+        }
         RefBook refBook = findRefBook(refBookCode);
         if (refBook == null)
             return;
@@ -171,4 +170,28 @@ public class ApplicationSystemExportServiceImpl implements ApplicationSystemExpo
         return new Row(data);
     }
 
+    @Autowired(required = false)
+    public void setRefBookService(RefBookService refBookService) {
+        this.refBookService = refBookService;
+    }
+
+    @Autowired
+    public void setApplicationSystemService(ApplicationSystemService applicationSystemService) {
+        this.applicationSystemService = applicationSystemService;
+    }
+
+    @Autowired(required = false)
+    public void setDraftService(DraftService draftService) {
+        this.draftService = draftService;
+    }
+
+    @Autowired(required = false)
+    public void setPublishService(PublishService publishService) {
+        this.publishService = publishService;
+    }
+
+    @Autowired(required = false)
+    public void setVersionService(VersionService versionService) {
+        this.versionService = versionService;
+    }
 }

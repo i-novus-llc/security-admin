@@ -2,16 +2,12 @@ package net.n2oapp.security.admin.impl;
 
 import net.n2oapp.platform.jaxrs.MapperConfigurer;
 import net.n2oapp.platform.jaxrs.autoconfigure.EnableJaxRsProxyClient;
-import net.n2oapp.platform.loader.autoconfigure.ServerLoaderConfigurer;
-import net.n2oapp.platform.loader.server.ServerLoaderRunner;
-import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.model.UserLevel;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.UserLevelService;
 import net.n2oapp.security.admin.api.service.UserService;
 import net.n2oapp.security.admin.commons.AdminCommonsConfiguration;
 import net.n2oapp.security.admin.impl.audit.AuditHelper;
-import net.n2oapp.security.admin.impl.loader.PermissionServerLoader;
 import net.n2oapp.security.admin.impl.provider.SimpleSsoUserRoleProvider;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
@@ -20,6 +16,7 @@ import net.n2oapp.security.admin.impl.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.*;
@@ -62,6 +59,7 @@ public class AdminImplConfiguration {
         return new SimpleSsoUserRoleProvider();
     }
 
+    @ConditionalOnProperty(name = "rdm.client.export.url")
     @EnableJaxRsProxyClient(
             classes = {DraftService.class, PublishService.class},
             address = "${rdm.client.export.url}"
