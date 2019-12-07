@@ -163,7 +163,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Page<User> findAll(UserCriteria criteria) {
-        criteria.setRoleIds(criteria.getRoleIds().stream().filter(roleId -> roleId > 0).collect(Collectors.toList()));
+        if (nonNull(criteria.getRoleIds()))
+            criteria.setRoleIds(criteria.getRoleIds().stream().filter(roleId -> roleId > 0).collect(Collectors.toList()));
         final Specification<UserEntity> specification = new UserSpecifications(criteria);
         if (criteria.getOrders().stream().map(Sort.Order::getProperty).anyMatch("fio"::equals)) {
             Sort.Direction orderFio = criteria.getOrders().stream().filter(o -> o.getProperty().equals("fio")).findAny().get().getDirection();
@@ -256,7 +257,6 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserEntity entityForm(UserEntity entity, UserForm model) {
-        entity.setIsActive(Boolean.TRUE.equals(entity.getIsActive()));
         entity.setUsername(model.getUsername());
         entity.setName(model.getName());
         entity.setSurname(model.getSurname());
@@ -272,7 +272,6 @@ public class UserServiceImpl implements UserService {
             entity.setRoleList(model.getRoles().stream().filter(roleId -> roleId > 0).map(RoleEntity::new).collect(Collectors.toList()));
         return entity;
     }
-
 
     private UserEntity entityProvider(SsoUser modelFromProvider) {
         UserEntity entity = new UserEntity();
@@ -309,7 +308,6 @@ public class UserServiceImpl implements UserService {
 
         return null;
     }
-
 
     private SsoUser model(UserEntity entity) {
         if (isNull(entity)) return null;

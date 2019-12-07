@@ -31,12 +31,12 @@
 
         <dependency>
             <groupId>net.n2oapp.platform</groupId>
-            <artifactId>n2o-platform-starter-loader-server</artifactId>
+            <artifactId>n2o-platform-i18n-commons</artifactId>
         </dependency>
 
         <dependency>
             <groupId>net.n2oapp.platform</groupId>
-            <artifactId>n2o-platform-i18n-commons</artifactId>
+            <artifactId>n2o-platform-starter-loader-server</artifactId>
         </dependency>
 
         <dependency>

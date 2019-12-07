@@ -5,7 +5,6 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="create_user_role_index" author="rgalina" dbms="postgresql">
-        <validCheckSum>8:de7a6c5fe7128182070402766ece6db3</validCheckSum>
         <sqlFile path="security/admin/db/changelog/sql/V5_user_role_index.sql"/>
     </changeSet>
     <changeSet id="create_user_role_index" author="rgalina" dbms="h2">

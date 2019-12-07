@@ -1,29 +1,29 @@
-CREATE TABLE IF NOT EXISTS sec.permission (
+CREATE TABLE IF NOT EXISTS ${n2o.security.admin.schema}.${n2o.security.admin.permission.table} (
   id SERIAL PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
   code VARCHAR(100) NOT NULL,
   parent_id INTEGER,
-  CONSTRAINT permission_parent_fk FOREIGN KEY ( parent_id )
-  REFERENCES sec.permission( id )
+  CONSTRAINT ${n2o.security.admin.permission.parent.constraint.fk} FOREIGN KEY ( parent_id )
+  REFERENCES ${n2o.security.admin.schema}.${n2o.security.admin.permission.table}( id )
 );
 
-CREATE TABLE IF NOT EXISTS sec.role_permission (
-  role_id INTEGER NOT NULL,
-  permission_id INTEGER NOT NULL,
-  PRIMARY KEY (role_id, permission_id),
-  CONSTRAINT role_permission_pk UNIQUE (role_id, permission_id),
-  CONSTRAINT role_permission_permission_fk FOREIGN KEY (permission_id)
-  REFERENCES sec.permission (id),
-  CONSTRAINT role_permission_role_fk FOREIGN KEY (role_id)
-  REFERENCES sec.role (id) ON DELETE CASCADE ON UPDATE RESTRICT
+CREATE TABLE IF NOT EXISTS ${n2o.security.admin.schema}.${n2o.security.admin.rolepermission.table} (
+  ${n2o.security.admin.rolepermission.column.role} INTEGER NOT NULL,
+  ${n2o.security.admin.rolepermission.column.permission} INTEGER NOT NULL,
+  PRIMARY KEY (${n2o.security.admin.rolepermission.column.role}, ${n2o.security.admin.rolepermission.column.permission}),
+  CONSTRAINT ${n2o.security.admin.rolepermission.constraint.pk} UNIQUE (${n2o.security.admin.rolepermission.column.role}, ${n2o.security.admin.rolepermission.column.permission}),
+  CONSTRAINT ${n2o.security.admin.rolepermission.permission.constraint.fk} FOREIGN KEY (${n2o.security.admin.rolepermission.column.permission})
+  REFERENCES ${n2o.security.admin.schema}.${n2o.security.admin.permission.table} (id),
+  CONSTRAINT ${n2o.security.admin.rolepermission.role.constraint.fk} FOREIGN KEY (${n2o.security.admin.rolepermission.column.role})
+  REFERENCES ${n2o.security.admin.schema}.${n2o.security.admin.role.table} (id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
 
 
-COMMENT ON TABLE sec.permission IS 'Права доступа';
-COMMENT ON COLUMN sec.permission.name IS 'Название';
-COMMENT ON COLUMN sec.permission.code IS 'Код';
+COMMENT ON TABLE ${n2o.security.admin.schema}.${n2o.security.admin.permission.table} IS 'Права доступа';
+COMMENT ON COLUMN ${n2o.security.admin.schema}.${n2o.security.admin.permission.table}.name IS 'Название';
+COMMENT ON COLUMN ${n2o.security.admin.schema}.${n2o.security.admin.permission.table}.code IS 'Код';
 
-COMMENT ON TABLE sec.role_permission IS 'Таблица связи прав доступа с ролями';
-COMMENT ON COLUMN sec.role_permission.permission_id IS 'Идентификатор права доступа';
-COMMENT ON COLUMN sec.role_permission.role_id IS 'Идентификатор роли';
+COMMENT ON TABLE ${n2o.security.admin.schema}.${n2o.security.admin.rolepermission.table} IS 'Таблица связи прав доступа с ролями';
+COMMENT ON COLUMN ${n2o.security.admin.schema}.${n2o.security.admin.rolepermission.table}.${n2o.security.admin.rolepermission.column.permission} IS 'Идентификатор права доступа';
+COMMENT ON COLUMN ${n2o.security.admin.schema}.${n2o.security.admin.rolepermission.table}.${n2o.security.admin.rolepermission.column.role} IS 'Идентификатор роли';
