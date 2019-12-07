@@ -6,7 +6,6 @@
 
 
     <changeSet id="create_schema" author="rgalina" dbms="postgresql">
-        <validCheckSum>8:2ddba1ab6b104a77f63f514d995183ba</validCheckSum>
         <sqlFile path="security/admin/db/changelog/sql/V1_create_schema_sec.sql"/>
     </changeSet>
 

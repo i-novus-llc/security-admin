@@ -6,7 +6,6 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="update_client_role" author="btsyganov">
-        <validCheckSum>8:fc0b3e1d9e2d972182af4eae7bbb84af</validCheckSum>
         <sqlFile path="security/admin/db/changelog/sql/V13_update_client_role.sql"/>
     </changeSet>
 </databaseChangeLog>

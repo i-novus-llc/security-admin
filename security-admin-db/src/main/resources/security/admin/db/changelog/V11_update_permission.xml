@@ -5,22 +5,18 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="drop_permission_constraint" author="aarifullin" dbms="postgresql">
-        <validCheckSum>8:56d9bfd021fab52695d75b05b7021c23</validCheckSum>
         <sqlFile path="security/admin/db/changelog/sql/V11_drop_permission_constraint.sql"/>
     </changeSet>
 
     <changeSet id="update_permission" author="aarifullin" dbms="postgresql">
-        <validCheckSum>8:4b460835acc988650c841e49ffef279d</validCheckSum>
         <sqlFile path="security/admin/db/changelog/sql/V11_update_permission.sql"/>
     </changeSet>
 
     <changeSet id="update_permission_constraint" author="aarifullin" dbms="postgresql">
-        <validCheckSum>8:73027738bc6dea8146b837abb60f8b9c</validCheckSum>
         <sqlFile path="security/admin/db/changelog/sql/V11_update_permission_constraint.sql"/>
     </changeSet>
 
     <changeSet id="permission_index" author="aarifullin" dbms="postgresql">
-        <validCheckSum>8:117933722ca97f74a2f321c357b32eb1</validCheckSum>
         <sqlFile path="security/admin/db/changelog/sql/V11_permission_index.sql"/>
     </changeSet>
 
