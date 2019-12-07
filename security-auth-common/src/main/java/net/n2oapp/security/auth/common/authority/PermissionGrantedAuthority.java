@@ -8,6 +8,8 @@ import org.springframework.util.Assert;
  */
 public class PermissionGrantedAuthority implements GrantedAuthority {
 
+    private static final String DEFAULT_PERMISSION_PREFIX = "PERMISSION_";
+
     private final String permission;
 
     public PermissionGrantedAuthority(String permission) {
@@ -16,7 +18,7 @@ public class PermissionGrantedAuthority implements GrantedAuthority {
     }
 
     public String getAuthority() {
-        return permission;
+        return DEFAULT_PERMISSION_PREFIX + permission;
     }
 
     public String getPermission() {

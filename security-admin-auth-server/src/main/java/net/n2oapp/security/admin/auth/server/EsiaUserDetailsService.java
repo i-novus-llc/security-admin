@@ -9,14 +9,13 @@ import net.n2oapp.security.admin.impl.exception.UserNotFoundAuthenticationExcept
 import net.n2oapp.security.admin.impl.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 
-@Service
+
 @Transactional
 public class EsiaUserDetailsService extends UserDetailsServiceImpl {
 
@@ -71,9 +70,7 @@ public class EsiaUserDetailsService extends UserDetailsServiceImpl {
         return model;
     }
 
-
-    public EsiaUserDetailsService setSynchronizeFio(Boolean synchronizeFio) {
+    public void setSynchronizeFio(Boolean synchronizeFio) {
         this.synchronizeFio = synchronizeFio;
-        return this;
     }
 }

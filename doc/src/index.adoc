@@ -944,9 +944,17 @@ insert into sec.permission(name, code) values('Право доступа к мо
 |string
 |Пароль для доступа к альясу
 
+|audit.client.enabled=false
+|boolean
+|Опция включения аудита
+
 |audit.service.url
 |string
 |Адрес сервиса аудита
+
+|audit.client.sourceApplication=access
+|string
+|Система в логах аудита
 
 |access.level.enabled
 |boolean
@@ -985,6 +993,18 @@ insert into sec.permission(name, code) values('Право доступа к мо
 permissions,
 systems
 |Наполнение токена ролями, пермишенами и системами. Указать одно или несколько значений через запятую.
+
+|access.user.send-mail-delete-user=false
+|boolean
+|Отправлять уведомление пользователю об удалении учетной записи
+
+|access.user.send-mail-activate-user=false
+|boolean
+|Отправлять уведомление пользователю о блокировке
+
+|rdm.client.export.url
+|string
+|Адрес сервиса RDM для экспорта Приложений и Систем в сервис НСИ
 
 |===
 
