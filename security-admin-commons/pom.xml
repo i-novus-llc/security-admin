@@ -6,7 +6,7 @@
     <parent>
         <artifactId>security-admin</artifactId>
         <groupId>net.n2oapp.framework.security</groupId>
-        <version>4.3</version>
+        <version>4.4-SNAPSHOT</version>
     </parent>
 
     <artifactId>security-admin-commons</artifactId>
