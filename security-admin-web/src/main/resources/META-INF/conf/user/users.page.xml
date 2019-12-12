@@ -103,7 +103,7 @@
                     </input-text>
                 </filters>
                 <toolbar>
-                    <button id="create" label="Создать" color="primary">
+                    <button id="create" label="Создать" color="primary" model="filter">
                         <show-modal page-id="userForm" submit-operation-id="create" model="filter" object-id="user"
                                     upload="defaults" route="create"/>
                     </button>
