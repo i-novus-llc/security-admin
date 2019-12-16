@@ -25,24 +25,22 @@ public class RoleServerLoader implements ServerLoader<RoleForm> {
     @Transactional
     public void load(List<RoleForm> uploadedData, String subject) {
         List<RoleEntity> old = roleRepository.findBySystemCode(new SystemEntity(subject));
-        List<RoleEntity> fresh = sort(uploadedData, subject, old);
+        List<RoleEntity> fresh = getFresh(uploadedData, subject, old);
         roleRepository.saveAll(fresh);
         delete(old);
     }
 
-    private List<RoleEntity> sort(List<RoleForm> fresh, String systemCode, List<RoleEntity> oldEntities) {
+    private List<RoleEntity> getFresh(List<RoleForm> fresh, String systemCode, List<RoleEntity> old) {
         List<RoleEntity> freshEntities = new ArrayList<>(fresh.size());
         for (RoleForm form : fresh) {
-            RoleEntity oldEntity = oldEntities.stream().filter(roleEntity -> roleEntity.getCode().equals(form.getCode())).findFirst().orElse(null);
-            if (oldEntity != null) {
-                oldEntities.remove(oldEntity);
-                map(form, systemCode, oldEntity);
-                freshEntities.add(oldEntity);
-            } else {
-                RoleEntity freshEntity = new RoleEntity();
-                map(form, systemCode, freshEntity);
-                freshEntities.add(freshEntity);
-            }
+            RoleEntity roleEntity = old.stream().filter(r -> r.getCode().equals(form.getCode())).findFirst().orElse(null);
+            if (roleEntity == null)
+                roleEntity = new RoleEntity();
+            else
+                old.remove(roleEntity);
+
+            map(form, systemCode, roleEntity);
+            freshEntities.add(roleEntity);
         }
         return freshEntities;
     }
