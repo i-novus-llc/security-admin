@@ -8,7 +8,7 @@
         <sqlFile path="access/db/changelog/sql/V1_create_shema_sec.sql"/>
         <sqlFile path="access/db/changelog/sql/V1_systems.sql"/>
         <sqlFile path="access/db/changelog/sql/V1_roles.sql"/>
-        <sqlFile path="access/db/changelog/sql/V1_application_and_client.sql"/>
+        <sqlFile path="access/db/changelog/sql/V1_applications_and_clients.sql"/>
         <sqlFile path="access/db/changelog/sql/V1_department_organization_region.sql"/>
         <sqlFile path="access/db/changelog/sql/V1_permissions.sql"/>
         <sqlFile path="access/db/changelog/sql/V1_users.sql"/>
