@@ -9,8 +9,4 @@
         <sqlFile path="security/admin/db/changelog/sql/V1_create_schema_sec.sql"/>
     </changeSet>
 
-    <changeSet id="create_schema" author="rgalina" dbms="h2">
-        <sqlFile path="security/admin/db/changelog/sql/V1_create_schema_sec.sql"/>
-    </changeSet>
-
 </databaseChangeLog>

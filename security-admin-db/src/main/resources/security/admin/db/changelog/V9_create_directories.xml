@@ -7,21 +7,12 @@
     <changeSet id="create_region" author="rbarysheva" dbms="postgresql">
         <sqlFile path="security/admin/db/changelog/sql/V9_region.sql"/>
     </changeSet>
-    <changeSet id="create_region" author="rbarysheva" dbms="h2">
-        <sqlFile path="security/admin/db/changelog/sql/V9_region.sql"/>
-    </changeSet>
 
     <changeSet id="create_organization" author="rbarysheva" dbms="postgresql">
         <sqlFile path="security/admin/db/changelog/sql/V9_organization.sql"/>
     </changeSet>
-    <changeSet id="create_organization" author="rbarysheva" dbms="h2">
-        <sqlFile path="security/admin/db/changelog/sql/V9_organization.sql"/>
-    </changeSet>
 
     <changeSet id="create_department" author="rbarysheva" dbms="postgresql">
-        <sqlFile path="security/admin/db/changelog/sql/V9_department.sql"/>
-    </changeSet>
-    <changeSet id="create_system" author="rbarysheva" dbms="h2">
         <sqlFile path="security/admin/db/changelog/sql/V9_department.sql"/>
     </changeSet>
 
