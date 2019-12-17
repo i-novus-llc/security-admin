@@ -6,7 +6,7 @@
         <region place="single">
             <table name="Роли" query-id="${access.role.query.id}">
                 <toolbar>
-                    <button label="Создать" color="primary">
+                    <button label="Создать" color="primary" model="filter">
                         <show-modal page-id="roleForm" submit-operation-id="create" model="filter" object-id="role"/>
                     </button>
                 </toolbar>

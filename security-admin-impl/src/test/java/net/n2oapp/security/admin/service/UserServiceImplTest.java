@@ -3,6 +3,7 @@ package net.n2oapp.security.admin.service;
 import com.icegreen.greenmail.junit.GreenMailRule;
 import com.icegreen.greenmail.util.ServerSetup;
 import net.n2oapp.platform.i18n.UserException;
+import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
@@ -210,5 +211,16 @@ public class UserServiceImplTest {
         form.setIsActive(true);
         form.setRoles(user.getRoles().stream().map(Role::getId).collect(Collectors.toList()));
         return form;
+    }
+
+    /**
+     * Проверка, что при некорректно введеном уровне пользователя в критерии, не последует ошибки
+     * и при этом возвращаемый список пользователей будет пуст
+     */
+    @Test
+    public void findAllUsersWithBadUserLevelTest() {
+        UserCriteria userCriteria = new UserCriteria();
+        userCriteria.setUserLevel("wrong");
+        assertTrue(service.findAll(userCriteria).isEmpty());
     }
 }

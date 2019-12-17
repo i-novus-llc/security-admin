@@ -22,6 +22,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -163,9 +164,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Page<User> findAll(UserCriteria criteria) {
-        if (nonNull(criteria.getRoleIds()))
+        if (criteria.getRoleIds() != null)
             criteria.setRoleIds(criteria.getRoleIds().stream().filter(roleId -> roleId > 0).collect(Collectors.toList()));
         final Specification<UserEntity> specification = new UserSpecifications(criteria);
+        if (criteria.getOrders() == null)
+            criteria.setOrders(new ArrayList<>());
         if (criteria.getOrders().stream().map(Sort.Order::getProperty).anyMatch("fio"::equals)) {
             Sort.Direction orderFio = criteria.getOrders().stream().filter(o -> o.getProperty().equals("fio")).findAny().get().getDirection();
             criteria.getOrders().add(new Sort.Order(orderFio, "surname"));
