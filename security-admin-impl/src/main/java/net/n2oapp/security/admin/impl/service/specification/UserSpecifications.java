@@ -6,6 +6,7 @@ import net.n2oapp.security.admin.impl.entity.*;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
+import java.util.Arrays;
 
 import static java.util.Objects.nonNull;
 
@@ -68,10 +69,15 @@ public class UserSpecifications implements Specification<UserEntity> {
             predicate = builder.and(predicate, builder.equal(builder.upper(root.get(UserEntity_.extSys)), criteria.getExtSys().toUpperCase()));
         }
         if (nonNull(criteria.getUserLevel())) {
-            if (UserLevel.NOT_SET.getName().equalsIgnoreCase(criteria.getUserLevel())) {
+            String userLevel = criteria.getUserLevel().toUpperCase();
+            // если userLevel не существует, то возвращаем false-предикат
+            if (Arrays.stream(UserLevel.values()).map(UserLevel::getName).noneMatch(u -> u.equals(userLevel))) {
+                return builder.disjunction();
+            }
+            if (UserLevel.NOT_SET.getName().equalsIgnoreCase(userLevel)) {
                 predicate = builder.and(predicate, builder.isNull(root.get(UserEntity_.userLevel)));
             } else {
-                predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.userLevel), UserLevel.valueOf(criteria.getUserLevel())));
+                predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.userLevel), UserLevel.valueOf(userLevel)));
             }
         }
         if (nonNull(criteria.getRegionId())) {
