@@ -2,16 +2,12 @@ package net.n2oapp.security.admin.impl;
 
 import net.n2oapp.platform.jaxrs.MapperConfigurer;
 import net.n2oapp.platform.jaxrs.autoconfigure.EnableJaxRsProxyClient;
-import net.n2oapp.platform.loader.autoconfigure.ServerLoaderConfigurer;
-import net.n2oapp.platform.loader.server.ServerLoaderRunner;
-import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.model.UserLevel;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.UserLevelService;
 import net.n2oapp.security.admin.api.service.UserService;
 import net.n2oapp.security.admin.commons.AdminCommonsConfiguration;
 import net.n2oapp.security.admin.impl.audit.AuditHelper;
-import net.n2oapp.security.admin.impl.loader.PermissionServerLoader;
 import net.n2oapp.security.admin.impl.provider.SimpleSsoUserRoleProvider;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
@@ -32,7 +28,6 @@ import ru.inovus.ms.rdm.api.service.PublishService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
 
 @Configuration
 @PropertySource("classpath:security.properties")
@@ -90,7 +85,7 @@ public class AdminImplConfiguration {
     }
 
     @Bean
-    public MessageSourceAccessor messageSourceAccessor(MessageSource messageSource){
+    public MessageSourceAccessor messageSourceAccessor(MessageSource messageSource) {
         return new MessageSourceAccessor(messageSource, new Locale("ru"));
     }
 
@@ -107,5 +102,4 @@ public class AdminImplConfiguration {
 //            runner.add(ServerLoaderRoute.asIterable("permissions", Permission.class, PermissionServerLoader.class));
 //        }
 //    }
-
 }
