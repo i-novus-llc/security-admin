@@ -1,6 +1,6 @@
 
-INSERT INTO sec.permission (name, code)VALUES ('test','test');
-INSERT INTO sec.permission (name, code, parent_code)VALUES ('test2','test2','test');
+INSERT INTO sec.permission (name, code, user_level)VALUES ('test','test', 'FEDERAL');
+INSERT INTO sec.permission (name, code, parent_code, user_level)VALUES ('test2','test2','test', 'ORGANIZATION');
 --for search
 --ROLE
 INSERT INTO sec.role(id, name, code, description) VALUES (10, 'test','test','test');
