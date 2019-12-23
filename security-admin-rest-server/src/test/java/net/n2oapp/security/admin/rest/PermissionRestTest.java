@@ -50,4 +50,26 @@ public class PermissionRestTest {
         assertEquals(2, permissions.getTotalElements());
     }
 
+    /**
+     * Проверка, что при некорректно введеном уровне пользователя в критерии, не последует ошибки
+     * и при этом возвращаемый список прав доступа будет пуст
+     */
+    @Test
+    public void findAllPermissionsWithBadUserLevelTest() {
+        RestPermissionCriteria criteria = new RestPermissionCriteria();
+        criteria.setUserLevel("wrong");
+        assertEquals(true, client.getAll(null, null, criteria).isEmpty());
+    }
+
+    /**
+     * Проверка, что при заданном критерии по уровню пользователя, будет возвращено корректное число прав доступа
+     * Также проверяется, что поиск не чувствителен к регистру
+     */
+    @Test
+    public void findAllPermissionsByUserLevel() {
+        RestPermissionCriteria criteria = new RestPermissionCriteria();
+        criteria.setUserLevel("federal");
+        assertEquals(1, client.getAll(null, null, criteria).getTotalElements());
+    }
+
 }
