@@ -219,8 +219,19 @@ public class UserServiceImplTest {
      */
     @Test
     public void findAllUsersWithBadUserLevelTest() {
-        UserCriteria userCriteria = new UserCriteria();
-        userCriteria.setUserLevel("wrong");
-        assertTrue(service.findAll(userCriteria).isEmpty());
+        UserCriteria criteria = new UserCriteria();
+        criteria.setUserLevel("wrong");
+        assertTrue(service.findAll(criteria).isEmpty());
+    }
+
+    /**
+     * Проверка, что при заданном критерии по уровню пользователя, будет возвращено корректное число пользователей
+     * Также проверяется, что поиск не чувствителен к регистру
+     */
+    @Test
+    public void findAllUsersByUserLevel() {
+        UserCriteria criteria = new UserCriteria();
+        criteria.setUserLevel("federal");
+        assertThat(service.findAll(criteria).getTotalElements()).isEqualTo(1);
     }
 }
