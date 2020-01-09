@@ -26,4 +26,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer>, JpaS
     Integer countUsersWithRoleId(@Param("roleId") Integer roleId);
 
     void removeByUsernameIn(List<String> usernames);
+
+    List<UserEntity> findByUsernameIn(List<String> usernames);
 }
