@@ -3,13 +3,16 @@ package net.n2oaap.security.admin.sso.keycloak;
 import net.n2oapp.security.admin.sso.keycloak.AdminSsoKeycloakProperties;
 import org.apache.cxf.bus.spring.SpringBus;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import ru.inovus.ms.rdm.sync.RdmClientSyncAutoConfiguration;
 
 /**
  * Стартовая точка запуска Spring Boot
  */
 @SpringBootApplication
+@EnableAutoConfiguration(exclude = RdmClientSyncAutoConfiguration.class)
 public class TestApplication {
 
     @Bean
