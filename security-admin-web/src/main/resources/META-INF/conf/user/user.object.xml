@@ -134,7 +134,7 @@
         <condition id="usernameValidation" severity="danger" message="Неверное имя" on="username">
             <![CDATA[
                     if (typeof username != 'undefined' && username != null && username != '') {
-                        var regex = new RegExp('${sec.validation.username.regexp}');
+                        var regex = new RegExp('${access.user.username.regexp}');
                         return regex.test(username);
                      } else return true;
                 ]]>
@@ -143,7 +143,7 @@
         <condition id="emailValidation" severity="danger" message="Неверный email" on="email">
             <![CDATA[
                 if (typeof email != 'undefined' && email != null && email != '') {
-	                var regex = new RegExp('${sec.validation.email.regexp}');
+	                var regex = new RegExp('${access.user.email.regexp}');
                     return regex.test(email);
                 } else return true;
                 ]]>
