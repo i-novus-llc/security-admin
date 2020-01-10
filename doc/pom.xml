@@ -9,7 +9,7 @@
     <parent>
         <artifactId>security-admin</artifactId>
         <groupId>net.n2oapp.framework.security</groupId>
-        <version>4.4.sync-SNAPSHOT</version>
+        <version>4.4.RDM-698</version>
         <relativePath>..</relativePath>
     </parent>
 
