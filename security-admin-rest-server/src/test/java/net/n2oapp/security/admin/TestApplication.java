@@ -7,7 +7,6 @@ import net.n2oapp.security.admin.rest.api.*;
 import net.n2oapp.security.admin.rest.impl.UserDetailsRestServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
@@ -19,13 +18,12 @@ import ru.inovus.ms.rdm.sync.service.change_data.RdmChangeDataClient;
 /**
  * Стартовая точка запуска Spring Boot
  */
-@SpringBootApplication
+@SpringBootApplication(exclude = RdmClientSyncAutoConfiguration.class)
 @EnableJaxRsProxyClient(
         classes = {RefBookService.class, VersionService.class, UserRestService.class, RoleRestService.class,
                 PermissionRestService.class, ClientRestService.class, UserDetailsRestService.class},
         address = "http://localhost:${server.port}/api")
 @EnableEmbeddedPg
-@EnableAutoConfiguration(exclude= RdmClientSyncAutoConfiguration.class)
 public class TestApplication {
 
     @Autowired
