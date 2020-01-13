@@ -6,7 +6,6 @@ import net.n2oapp.security.admin.impl.entity.*;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
-
 import java.util.Arrays;
 
 import static java.util.Objects.isNull;
@@ -54,7 +53,7 @@ public class RoleSpecifications implements Specification<RoleEntity> {
                 return builder.disjunction();
             }
             if (UserLevel.NOT_SET.getName().equals(userLevel)) {
-                builder.and(predicate, builder.isNull(root.get(RoleEntity_.userLevel)));
+                predicate = builder.and(predicate, builder.isNull(root.get(RoleEntity_.userLevel)));
             } else {
                 predicate = builder.and(predicate, builder.equal(root.get(RoleEntity_.userLevel),
                         UserLevel.valueOf(userLevel)));
