@@ -1,6 +1,6 @@
 package net.n2oapp.security.admin.loader;
 
-import net.n2oapp.platform.loader.server.repository.RepositoryServerLoader;
+import net.n2oapp.platform.loader.server.ServerLoader;
 import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
 import net.n2oapp.security.admin.api.model.RoleForm;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
@@ -34,18 +34,17 @@ import static org.junit.Assert.assertThat;
 public class RoleServerLoaderTest {
 
     @Autowired
-    private RepositoryServerLoader<RoleForm, RoleEntity, Integer> repositoryServerLoader;
+    private ServerLoader<RoleForm> serverLoader;
 
     @Autowired
     private RoleRepository repository;
 
-
     /**
-     * Тест {@link RepositoryServerLoader}
+     * Тест {@link ServerLoader}
      */
     @Test
     public void repositoryLoader() {
-        BiConsumer<List<RoleForm>, String> loader = repositoryServerLoader::load;
+        BiConsumer<List<RoleForm>, String> loader = serverLoader::load;
         repository.removeBySystemCode(SystemEntityBuilder.buildSystemEntity1());
         repository.removeBySystemCode(SystemEntityBuilder.buildSystemEntity2());
         case1(loader);
@@ -145,7 +144,6 @@ public class RoleServerLoaderTest {
         roleAssertEquals(roleForm4, repository.findOneByCode("rcode4"));
         roleAssertEquals(roleForm5, repository.findOneByCode("rcode5"));
     }
-
 
     private void roleAssertEquals(RoleForm expected, RoleEntity actual) {
         assertEquals(expected.getCode(), actual.getCode());

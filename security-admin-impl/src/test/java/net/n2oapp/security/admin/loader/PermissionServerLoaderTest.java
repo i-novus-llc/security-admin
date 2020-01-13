@@ -1,10 +1,10 @@
 package net.n2oapp.security.admin.loader;
 
+import net.n2oapp.platform.loader.server.ServerLoader;
 import net.n2oapp.platform.loader.server.repository.RepositoryServerLoader;
 import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
 import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
-import net.n2oapp.security.admin.impl.loader.PermissionServerLoader;
 import net.n2oapp.security.admin.impl.repository.PermissionRepository;
 import net.n2oapp.security.admin.loader.builder.PermissionBuilder;
 import net.n2oapp.security.admin.loader.builder.SystemEntityBuilder;
@@ -12,7 +12,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -34,7 +33,7 @@ import static org.junit.Assert.assertThat;
 public class PermissionServerLoaderTest {
 
     @Autowired
-    private RepositoryServerLoader<Permission, PermissionEntity, String> repositoryServerLoader;
+    private ServerLoader<Permission> serverLoader;
 
     @Autowired
     private PermissionRepository repository;
@@ -45,7 +44,7 @@ public class PermissionServerLoaderTest {
      */
     @Test
     public void repositoryLoader() {
-        BiConsumer<List<Permission>, String> loader = repositoryServerLoader::load;
+        BiConsumer<List<Permission>, String> loader = serverLoader::load;
         repository.deleteInBatch(repository.findBySystemCodeOrderByCodeDesc(SystemEntityBuilder.buildSystemEntity1()));
         repository.deleteInBatch(repository.findBySystemCodeOrderByCodeDesc(SystemEntityBuilder.buildSystemEntity2()));
         case1(loader);

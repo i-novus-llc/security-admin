@@ -74,7 +74,7 @@ public class UserSpecifications implements Specification<UserEntity> {
             if (Arrays.stream(UserLevel.values()).map(UserLevel::getName).noneMatch(u -> u.equals(userLevel))) {
                 return builder.disjunction();
             }
-            if (UserLevel.NOT_SET.getName().equalsIgnoreCase(userLevel)) {
+            if (UserLevel.NOT_SET.getName().equals(userLevel)) {
                 predicate = builder.and(predicate, builder.isNull(root.get(UserEntity_.userLevel)));
             } else {
                 predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.userLevel), UserLevel.valueOf(userLevel)));

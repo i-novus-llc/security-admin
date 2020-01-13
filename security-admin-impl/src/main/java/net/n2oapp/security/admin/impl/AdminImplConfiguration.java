@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-
 @Configuration
 @PropertySource("classpath:security.properties")
 @EnableJpaRepositories(basePackages = "net.n2oapp.security.admin.impl")
@@ -88,7 +87,7 @@ public class AdminImplConfiguration {
     }
 
     @Bean
-    public MessageSourceAccessor messageSourceAccessor(MessageSource messageSource){
+    public MessageSourceAccessor messageSourceAccessor(MessageSource messageSource) {
         return new MessageSourceAccessor(messageSource, new Locale("ru"));
     }
 
@@ -105,5 +104,4 @@ public class AdminImplConfiguration {
 //            runner.add(ServerLoaderRoute.asIterable("permissions", Permission.class, PermissionServerLoader.class));
 //        }
 //    }
-
 }
