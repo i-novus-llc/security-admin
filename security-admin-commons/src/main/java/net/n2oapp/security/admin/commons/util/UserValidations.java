@@ -15,8 +15,6 @@ import java.util.regex.Pattern;
 @Component
 @PropertySource("classpath:validation.properties")
 public class UserValidations {
-    @Value("${sec.validation.username:true}")
-    private Boolean validationUsername;
 
     @Value("${access.password.length}")
     private Integer validationPasswordLength;
@@ -33,6 +31,12 @@ public class UserValidations {
     @Value("${access.password.special-symbols-required}")
     private Boolean validationPasswordSpecialSymbols;
 
+    @Value("${access.user.username.regexp}")
+    private String usernameRegexp;
+
+    @Value("${access.user.email.regexp}")
+    private String emailRegexp;
+
     /**
      * Валидация на уникальность имени пользователя
      */
@@ -46,10 +50,7 @@ public class UserValidations {
      * Валидация на ввод имени пользователя согласно формату
      */
     public void checkUsername(String username) {
-        if (!validationUsername)
-            return;
-        String regexp = "^[a-zA-Z][a-zA-Z0-9]+$";
-        Pattern pattern = Pattern.compile(regexp);
+        Pattern pattern = Pattern.compile(usernameRegexp);
         Matcher matcher = pattern.matcher(username);
         if (!matcher.matches())
             throw new UserException("exception.wrongUsername");
@@ -59,9 +60,7 @@ public class UserValidations {
      * Валидация на ввод email согласно формату
      */
     public void checkEmail(String email) {
-        String regexp = "[A-Za-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[A-Za-z0-9!#$%&\'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9]" +
-                "(?:[A-Za-z0-9-]*[A-Za-z0-9])?\\.)+[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?";
-        Pattern pattern = Pattern.compile(regexp);
+        Pattern pattern = Pattern.compile(emailRegexp);
         Matcher matcher = pattern.matcher(email);
         if (!matcher.matches())
             throw new UserException("exception.wrongEmail");
