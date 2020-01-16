@@ -7,6 +7,8 @@ import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
 
+import java.util.Arrays;
+
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
@@ -46,11 +48,16 @@ public class RoleSpecifications implements Specification<RoleEntity> {
         }
 
         if (nonNull(criteria.getUserLevel()) && (isNull(criteria.getForForm()) || Boolean.FALSE.equals(criteria.getForForm()))) {
-            if (UserLevel.NOT_SET.getName().equalsIgnoreCase(criteria.getUserLevel())) {
+            String userLevel = criteria.getUserLevel().toUpperCase();
+            // если userLevel не существует, то возвращаем false-предикат
+            if (Arrays.stream(UserLevel.values()).map(UserLevel::getName).noneMatch(u -> u.equals(userLevel))) {
+                return builder.disjunction();
+            }
+            if (UserLevel.NOT_SET.getName().equals(userLevel)) {
                 builder.and(predicate, builder.isNull(root.get(RoleEntity_.userLevel)));
             } else {
                 predicate = builder.and(predicate, builder.equal(root.get(RoleEntity_.userLevel),
-                        UserLevel.valueOf(criteria.getUserLevel())));
+                        UserLevel.valueOf(userLevel)));
             }
         }
 

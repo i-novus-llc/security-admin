@@ -1,6 +1,7 @@
 package net.n2oapp.security.admin.service;
 
 import net.n2oapp.platform.i18n.UserException;
+import net.n2oapp.security.admin.api.criteria.RoleCriteria;
 import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.RoleForm;
@@ -19,8 +20,7 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * Тест сервиса управления ролями пользователя
@@ -116,6 +116,28 @@ public class RoleServiceImplTest {
     @Test(expected = NotFoundException.class)
     public void deleteRoleByNotExistsId() {
         service.delete(-1);
+    }
+
+    /**
+     * Проверка, что при некорректно введеном уровне пользователя в критерии, не последует ошибки
+     * и при этом возвращаемый список ролей будет пуст
+     */
+    @Test
+    public void findAllRolesWithBadUserLevelTest() {
+        RoleCriteria criteria = new RoleCriteria();
+        criteria.setUserLevel("wrong");
+        assertTrue(service.findAll(criteria).isEmpty());
+    }
+
+    /**
+     * Проверка, что при заданном критерии по уровню пользователя, будет возвращено корректное число ролей
+     * Также проверяется, что поиск не чувствителен к регистру
+     */
+    @Test
+    public void findAllRolesByUserLevel() {
+        RoleCriteria criteria = new RoleCriteria();
+        criteria.setUserLevel("federal");
+        assertThat(service.findAll(criteria).getTotalElements()).isEqualTo(1);
     }
 
     private static RoleForm newRole() {
