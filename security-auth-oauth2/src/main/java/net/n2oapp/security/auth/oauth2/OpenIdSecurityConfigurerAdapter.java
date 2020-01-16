@@ -1,17 +1,22 @@
 package net.n2oapp.security.auth.oauth2;
 
+import net.n2oapp.framework.access.data.SecurityProvider;
+import net.n2oapp.framework.api.MetadataEnvironment;
 import net.n2oapp.security.auth.N2oSecurityConfigurerAdapter;
+import net.n2oapp.security.auth.N2oUrlFilter;
 import net.n2oapp.security.auth.context.SpringSecurityUserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2SsoProperties;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,14 +30,28 @@ public abstract class OpenIdSecurityConfigurerAdapter extends N2oSecurityConfigu
 
     @Value("${security.oauth2.sso.logout-uri}")
     private String ssoLogoutUri;
+
+    @Value("${n2o.access.schema.id}")
+    private String schemaId;
+    @Value("${n2o.access.deny_urls}")
+    private Boolean defaultUrlAccessDenied;
+
+    @Lazy
+    @Autowired
+    private MetadataEnvironment environment;
+    @Autowired
+    private SecurityProvider securityProvider;
+
     @Autowired
     private OAuth2SsoProperties sso;
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         authorize(beforeAuthorize(http));
         configureExceptionHandling(http.exceptionHandling());
         configureLogout(http.logout());
+        http.addFilterAfter(new N2oUrlFilter(schemaId, defaultUrlAccessDenied, environment, securityProvider), FilterSecurityInterceptor.class);
         http.csrf().disable();
     }
 
