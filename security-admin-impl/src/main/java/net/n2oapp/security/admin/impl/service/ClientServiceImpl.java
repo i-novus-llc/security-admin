@@ -160,7 +160,8 @@ public class ClientServiceImpl implements ClientService {
         Permission model = new Permission();
         model.setName(entity.getName());
         model.setCode(entity.getCode());
-        model.setParentCode(entity.getParentCode());
+        if (nonNull(entity.getParentPermission()))
+            model.setParent(permissionModel(entity.getParentPermission()));
         model.setHasChildren(entity.getHasChildren());
         return model;
     }
