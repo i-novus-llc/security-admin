@@ -23,6 +23,7 @@ import java.util.Map;
 /**
  * Реализация сервиса предоставления информации о пользователе (ролей/пермишенов)
  */
+
 @Service
 public class UserDetailsServiceSql implements UserDetailsService {
 
@@ -115,7 +116,7 @@ public class UserDetailsServiceSql implements UserDetailsService {
             Permission p = new Permission();
             p.setName((String) row.get("p_name"));
             p.setCode((String) row.get("p_code"));
-            p.setParentCode((String) row.get("p_parent_code"));
+            p.setParent(new Permission((String) row.get("p_parent_code")));
             Integer roleId = (Integer) row.get("r_id");
             if (!roleId.equals(currentRoleId)) {
                 currentRoleId = roleId;

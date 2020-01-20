@@ -17,9 +17,7 @@ import java.util.List;
 @Repository
 public interface PermissionRepository extends JpaRepository<PermissionEntity, String>,
         JpaSpecificationExecutor<PermissionEntity> {
-    List<PermissionEntity> findByParentCode(String parentCode);
-
-    List<PermissionEntity> findByParentCodeIsNull();
+    List<PermissionEntity> findByParentPermission(PermissionEntity entity);
 
     List<PermissionEntity> findBySystemCodeOrderByCodeDesc(SystemEntity system);
 

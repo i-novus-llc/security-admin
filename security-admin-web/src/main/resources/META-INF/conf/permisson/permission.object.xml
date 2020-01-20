@@ -1,5 +1,55 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <object xmlns="http://n2oapp.net/framework/config/schema/object-3.0"
         name="Права доступа">
-
+    <operations>
+        <operation id="create" success-text="Данные о праве доступа сохранены">
+            <invocation>
+                <java method="create" class="net.n2oapp.security.admin.api.service.PermissionService">
+                    <spring/>
+                    <arguments>
+                        <argument name="permission" class="net.n2oapp.security.admin.api.model.Permission"/>
+                    </arguments>
+                </java>
+            </invocation>
+            <in-parameters>
+                <param id="id" mapping="[0].code" domain="string" required="true"/>
+                <param id="name" mapping="[0].name" domain="string" required="true"/>
+                <param id="parent.id" mapping="[0].parent.code" domain="string"/>
+                <param id="system.id" domain="string" mapping="[0].system.code"
+                       required="${access.system.enabled}" mapping-condition="${access.system.enabled}"/>
+                <param id="userLevel.id" mapping="[0].userLevel" domain="string"
+                       mapping-condition="${access.level.enabled}"/>
+            </in-parameters>
+        </operation>
+        <operation id="update" success-text="Данные о праве доступа сохранены">
+            <invocation>
+                <java method="update" class="net.n2oapp.security.admin.api.service.PermissionService">
+                    <spring/>
+                    <arguments>
+                        <argument name="permission" class="net.n2oapp.security.admin.api.model.PermissionUpdateForm"/>
+                    </arguments>
+                </java>
+            </invocation>
+            <in-parameters>
+                <param id="id" mapping="[0].code" domain="string" required="true"/>
+                <param id="name" mapping="[0].name" domain="string" required="true"/>
+                <param id="parent.id" mapping="[0].parent.code" domain="string"/>
+            </in-parameters>
+        </operation>
+        <operation id="delete"
+                   confirm-text="Вы уверены, что хотите удалить право доступа?"
+                   success-text="Право доступа удалена">
+            <invocation>
+                <java method="delete" class="net.n2oapp.security.admin.api.service.PermissionService">
+                    <spring/>
+                    <arguments>
+                        <argument type="primitive"/>
+                    </arguments>
+                </java>
+            </invocation>
+            <in-parameters>
+                <param id="id" mapping="[0]" domain="string" required="true"/>
+            </in-parameters>
+        </operation>
+    </operations>
 </object>
