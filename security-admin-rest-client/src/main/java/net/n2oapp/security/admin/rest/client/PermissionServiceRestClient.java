@@ -2,9 +2,11 @@ package net.n2oapp.security.admin.rest.client;
 
 import net.n2oapp.security.admin.api.criteria.PermissionCriteria;
 import net.n2oapp.security.admin.api.model.Permission;
+import net.n2oapp.security.admin.api.model.PermissionUpdateForm;
 import net.n2oapp.security.admin.api.service.PermissionService;
 import net.n2oapp.security.admin.rest.api.PermissionRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestPermissionCriteria;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -25,7 +27,7 @@ public class PermissionServiceRestClient implements PermissionService {
     }
 
     @Override
-    public Permission update(Permission permission) {
+    public Permission update(PermissionUpdateForm permission) {
         return client.update(permission);
     }
 
@@ -40,41 +42,23 @@ public class PermissionServiceRestClient implements PermissionService {
     }
 
     @Override
-    public List<Permission> getAll(PermissionCriteria criteria) {
+    public Page<Permission> getAll(PermissionCriteria criteria) {
         RestPermissionCriteria permissionCriteria = new RestPermissionCriteria();
+        permissionCriteria.setName(criteria.getName());
+        permissionCriteria.setCode(criteria.getCode());
         permissionCriteria.setPage(criteria.getPageNumber());
         permissionCriteria.setSize(criteria.getPageSize());
         permissionCriteria.setSystemCode(criteria.getSystemCode());
         permissionCriteria.setOrders(criteria.getOrders());
         permissionCriteria.setUserLevel(criteria.getUserLevel());
         permissionCriteria.setForForm(criteria.getForForm());
-        return client.getAll(null, null, permissionCriteria).getContent();
-    }
-
-    public List<Permission> getAllForForm(PermissionCriteria criteria) {
-        criteria.setForForm(true);
-        return getAllWithSystem(criteria);
+        permissionCriteria.setWithSystem(criteria.getWithSystem());
+        permissionCriteria.setWithoutParent(criteria.getWithoutParent());
+        return client.getAll(null, permissionCriteria);
     }
 
     @Override
     public List<Permission> getAllByParentCode(String parentCode) {
-        return client.getAll(parentCode, null, new RestPermissionCriteria()).getContent();
-    }
-
-    @Override
-    public List<Permission> getAllByParentIdIsNull() {
-        return client.getAll(null, true, new RestPermissionCriteria()).getContent();
-    }
-
-    @Override
-    public List<Permission> getAllWithSystem(PermissionCriteria criteria) {
-        RestPermissionCriteria permissionCriteria = new RestPermissionCriteria();
-        permissionCriteria.setPage(criteria.getPageNumber());
-        permissionCriteria.setSize(criteria.getPageSize());
-        permissionCriteria.setSystemCode(criteria.getSystemCode());
-        permissionCriteria.setOrders(criteria.getOrders());
-        permissionCriteria.setUserLevel(criteria.getUserLevel());
-        permissionCriteria.setForForm(criteria.getForForm());
-        return client.getAllWithSystem(permissionCriteria).getContent();
+        return client.getAll(parentCode, new RestPermissionCriteria()).getContent();
     }
 }

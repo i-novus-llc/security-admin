@@ -123,7 +123,7 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
             authorities.addAll(user.getRoles().stream().filter(role -> nonNull(role.getSystem())).
                     map(role -> new SystemGrantedAuthority(role.getSystem().getCode())).collect(Collectors.toList()));
             authorities.addAll(user.getRoles().stream().filter(r -> nonNull(r.getPermissions())).flatMap(r -> r.getPermissions().stream())
-                    .filter(permission -> nonNull(permission.getSystemCode())).map(p -> new SystemGrantedAuthority(p.getSystemCode())).collect(Collectors.toList()));
+                    .filter(permission -> nonNull(permission.getSystem())).map(p -> new SystemGrantedAuthority(p.getSystem().getCode())).collect(Collectors.toList()));
             authorities = authorities.stream().distinct().collect(Collectors.toList());
             map.put(GRANTED_AUTHORITY_KEY, authorities);
         }

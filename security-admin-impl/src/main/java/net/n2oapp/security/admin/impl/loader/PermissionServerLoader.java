@@ -35,7 +35,8 @@ public class PermissionServerLoader implements ServerLoader<Permission> {
         PermissionEntity entity = new PermissionEntity();
         entity.setName(model.getName());
         entity.setCode(model.getCode());
-        entity.setParentCode(model.getParentCode());
+        if (model.getParent() != null && model.getParent().getCode() != null)
+            entity.setParentPermission(new PermissionEntity(model.getParent().getCode()));
         entity.setSystemCode(new SystemEntity(systemCode));
         entity.setUserLevel(model.getUserLevel());
         return entity;

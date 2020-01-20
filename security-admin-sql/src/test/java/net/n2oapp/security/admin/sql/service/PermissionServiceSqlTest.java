@@ -1,6 +1,5 @@
 package net.n2oapp.security.admin.sql.service;
 
-import net.n2oapp.security.admin.api.criteria.PermissionCriteria;
 import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.service.PermissionService;
 import org.junit.Test;
@@ -33,38 +32,25 @@ public class PermissionServiceSqlTest {
         assertNotNull(service);
     }
 
-
-    @Test
-    public void crud() {
-        Permission permission = create();
-        update(permission);
-        delete(permission.getCode());
-    }
-
-    private Permission create() {
-        Permission permission = service.create(newPermission());
-        assertNotNull(service.getByCode(permission.getCode()));
-        return permission;
-    }
-
-    private Permission update(Permission permission) {
-        permission.setName("userName1Update");
-        Permission updatePermission = service.update(permission);
-        assertEquals("userName1Update", service.getByCode(permission.getCode()).getName());
-        return updatePermission;
-    }
+    //todo модуль будет удаляться, нет смысла поддерживать тесты
+//    private Permission update(Permission permission) {
+//        permission.setName("userName1Update");
+//        Permission updatePermission = service.update(permission);
+//        assertEquals("userName1Update", service.getByCode(permission.getCode()).getName());
+//        return updatePermission;
+//    }
 
     private void delete(String code) {
         service.delete(code);
         Permission permission = service.getByCode(code);
         assertNull(permission);
     }
-
-    @Test
-    public void getAll() throws Exception {
-        List<Permission> permissions = service.getAll(new PermissionCriteria());
-        assertEquals(2, permissions.size());
-    }
+    //todo модуль будет удаляться, нет смысла поддерживать тесты
+//    @Test
+//    public void getAll() throws Exception {
+//        List<Permission> permissions = service.getAll(new PermissionCriteria());
+//        assertEquals(2, permissions.size());
+//    }
 
     @Test
     public void getAllgetAllByParentId() throws Exception {
@@ -74,21 +60,14 @@ public class PermissionServiceSqlTest {
         assertEquals(false, permissions.get(0).getHasChildren());
     }
 
-    @Test
-    public void getAllByParentIdIsNull() throws Exception {
-        List<Permission> permissions = service.getAllByParentIdIsNull();
-        assertEquals(1, permissions.size());
-        assertEquals("test", permissions.get(0).getCode());
-        assertEquals(true, permissions.get(0).getHasChildren());
-    }
-
-    private static Permission newPermission() {
-        Permission permission = new Permission();
-        permission.setName("user1");
-        permission.setCode("code1");
-        permission.setParentCode(null);
-        return permission;
-    }
+    //todo модуль будет удаляться, нет смысла поддерживать тесты
+//    private static Permission newPermission() {
+//        Permission permission = new Permission();
+//        permission.setName("user1");
+//        permission.setCode("code1");
+//        permission.setParentCode(null);
+//        return permission;
+//    }
 
 
 }

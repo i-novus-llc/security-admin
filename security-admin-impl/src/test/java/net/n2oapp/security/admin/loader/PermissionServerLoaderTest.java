@@ -38,7 +38,6 @@ public class PermissionServerLoaderTest {
     @Autowired
     private PermissionRepository repository;
 
-
     /**
      * Тест {@link RepositoryServerLoader}
      */
@@ -76,7 +75,7 @@ public class PermissionServerLoaderTest {
     private void case2(BiConsumer<List<Permission>, String> loader) {
         Permission permission1 = PermissionBuilder.buildPermission1();
         Permission permission2 = PermissionBuilder.buildPermission2Updated();
-        permission2.setParentCode(permission1.getCode());
+        permission2.setParent(permission1);
         List<Permission> data = Arrays.asList(permission1, permission2);
 
         loader.accept(data, "system1");
@@ -147,11 +146,11 @@ public class PermissionServerLoaderTest {
         permissionAssertEquals(permission5, repository.findById("pcode5").get());
     }
 
-
     private void permissionAssertEquals(Permission expected, PermissionEntity actual) {
         assertEquals(expected.getCode(), actual.getCode());
         assertEquals(expected.getName(), actual.getName());
-        assertEquals(expected.getParentCode(), actual.getParentCode());
+        if (expected.getParent() != null || actual.getParentPermission() != null)
+            assertEquals(expected.getParent().getCode(), actual.getParentPermission().getCode());
         assertEquals(expected.getUserLevel(), actual.getUserLevel());
     }
 }

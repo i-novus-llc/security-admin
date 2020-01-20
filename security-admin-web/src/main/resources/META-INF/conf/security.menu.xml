@@ -3,4 +3,5 @@
     <page page-id="systems" label="Системы"/>
     <page page-id="users" label="Пользователи"/>
     <page page-id="roles" label="Роли"/>
+    <page page-id="permissions" label="Права доступа"/>
 </nav>

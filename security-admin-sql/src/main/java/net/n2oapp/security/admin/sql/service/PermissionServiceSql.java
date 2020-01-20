@@ -2,10 +2,13 @@ package net.n2oapp.security.admin.sql.service;
 
 import net.n2oapp.security.admin.api.criteria.PermissionCriteria;
 import net.n2oapp.security.admin.api.model.Permission;
+import net.n2oapp.security.admin.api.model.PermissionUpdateForm;
 import net.n2oapp.security.admin.api.service.PermissionService;
 import net.n2oapp.security.admin.sql.util.SqlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -44,7 +47,7 @@ public class PermissionServiceSql implements PermissionService {
             SqlParameterSource namedParameters =
                     new MapSqlParameterSource("name", permission.getName())
                             .addValue("code", permission.getCode())
-                            .addValue("parent_code", permission.getParentCode());
+                            .addValue("parent_code", permission.getParent().getCode());
             jdbcTemplate.update(SqlUtil.getResourceFileAsString(INSERT_PERMISSION), namedParameters);
             return permission;
         });
@@ -52,18 +55,23 @@ public class PermissionServiceSql implements PermissionService {
     }
 
     @Override
-    public Permission update(Permission permission) {
-        transactionTemplate.execute(transactionStatus -> {
-            SqlParameterSource namedParameters =
-                    new MapSqlParameterSource()
-                            .addValue("name", permission.getName())
-                            .addValue("code", permission.getCode())
-                            .addValue("parent_code", permission.getParentCode());
-            jdbcTemplate.update(SqlUtil.getResourceFileAsString(UPDATE_PERMISSION), namedParameters);
-            return permission;
-        });
-        return permission;
+    public Permission update(PermissionUpdateForm permissionUpdateForm) {
+        return null;
     }
+    //todo модуль будет удаляться, нет смысла поддерживать
+//    @Override
+//    public Permission update(Permission permission) {
+//        transactionTemplate.execute(transactionStatus -> {
+//            SqlParameterSource namedParameters =
+//                    new MapSqlParameterSource()
+//                            .addValue("name", permission.getName())
+//                            .addValue("code", permission.getCode())
+//                            .addValue("parent_code", permission.getParent().getCode());
+//            jdbcTemplate.update(SqlUtil.getResourceFileAsString(UPDATE_PERMISSION), namedParameters);
+//            return permission;
+//        });
+//        return permission;
+//    }
 
     @Override
     public void delete(String code) {
@@ -84,9 +92,10 @@ public class PermissionServiceSql implements PermissionService {
     }
 
     @Override
-    public List<Permission> getAll(PermissionCriteria criteria) {
-        return jdbcTemplate.query(SqlUtil.getResourceFileAsString(GET_ALL), new MapSqlParameterSource(), (resultSet,
-                                                                                                          i) -> model(resultSet));
+    public Page<Permission> getAll(PermissionCriteria criteria) {
+        return new PageImpl<>(jdbcTemplate.query(SqlUtil.getResourceFileAsString(GET_ALL), new MapSqlParameterSource(), (resultSet,
+                                                                                                                         i) -> model(resultSet)));
+
     }
 
     @Override
@@ -96,23 +105,13 @@ public class PermissionServiceSql implements PermissionService {
 
     }
 
-    @Override
-    public List<Permission> getAllByParentIdIsNull() {
-        return jdbcTemplate.query(SqlUtil.getResourceFileAsString(GET_ALL_BY_PARENT_ID_IS_NULL),
-                new MapSqlParameterSource(), (resultSet, i) -> model(resultSet));
-    }
-
-    @Override
-    public List<Permission> getAllWithSystem(PermissionCriteria criteria) {
-        return null;
-    }
 
     private Permission model(ResultSet resultSet) throws SQLException {
         if (resultSet == null) return null;
         Permission permission = new Permission();
         permission.setName(resultSet.getString("name"));
         permission.setCode(resultSet.getString("code"));
-        permission.setParentCode(resultSet.getString("parent_code"));
+        permission.setParent(new Permission(resultSet.getString("parent_code")));
         permission.setHasChildren(jdbcTemplate.queryForObject(SqlUtil.getResourceFileAsString(HAS_CHILDREN),
                 new MapSqlParameterSource("code", permission.getCode()), Boolean.class));
         return permission;

@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-2.0">
+    <form query-id="${access.permission.query.id}">
+        <fields>
+            <input-select id="system" label="Система" query-id="system" required="${access.system.enabled}"
+                          visible="${access.system.enabled}" label-field-id="name" enabled="false"/>
+            <input-text id="name" required="true"/>
+            <input-text id="id" required="true" enabled="false"/>
+            <input-select id="parent" ajax="false" label="Родительское право доступа" checkboxes="true"
+                          query-id="permission" size="100">
+                <pre-filters>
+                    <eq field-id="userLevel.id" value="{userLevel.id}"/>
+                    <eq field-id="systemCode" value="{system.code}"/>
+                    <eq field-id="withoutParent" value="true"/>
+                    <like field-id="id" value="{id}"/>
+                </pre-filters>
+                <dependencies>
+                    <set-value on="system" apply-on-init="false">
+                        return null;
+                    </set-value>
+                </dependencies>
+            </input-select>
+            <input-select id="userLevel" query-id="userLevel" visible="${access.level.enabled}"
+                          label="Уровень пользователя" enabled="false">
+            </input-select>
+        </fields>
+    </form>
+</simple-page>
