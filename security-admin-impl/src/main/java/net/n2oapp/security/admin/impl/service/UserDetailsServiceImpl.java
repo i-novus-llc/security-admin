@@ -206,8 +206,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         model.setName(entity.getName());
         model.setCode(entity.getCode());
         if (nonNull(entity.getSystemCode()))
-            model.setSystemCode(entity.getSystemCode().getCode());
-        model.setParentCode(entity.getParentCode());
+            model.setSystem(new AppSystem(entity.getSystemCode().getCode()));
+        if (nonNull(entity.getParentPermission()))
+            model.setParent(model(entity.getParentPermission()));
         return model;
     }
 

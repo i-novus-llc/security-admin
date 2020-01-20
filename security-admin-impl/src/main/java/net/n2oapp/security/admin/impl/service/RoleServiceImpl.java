@@ -191,12 +191,12 @@ public class RoleServiceImpl implements RoleService {
         return model;
     }
 
-    private PermissionEntity entity(Permission entity) {
-        if (entity == null) return null;
-        PermissionEntity model = new PermissionEntity();
-        model.setCode(entity.getCode());
-        model.setName(entity.getName());
-        return model;
+    private PermissionEntity entity(Permission model) {
+        if (model == null) return null;
+        PermissionEntity permissionEntity = new PermissionEntity();
+        permissionEntity.setCode(model.getCode());
+        permissionEntity.setName(model.getName());
+        return permissionEntity;
     }
 
     private AppSystem model(SystemEntity entity) {
