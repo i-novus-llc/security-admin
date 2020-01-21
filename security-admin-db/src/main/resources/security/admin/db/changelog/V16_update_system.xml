@@ -15,7 +15,7 @@
             ALTER TABLE sec.system ADD COLUMN public_access BOOLEAN;
         </sql>
     </changeSet>
-    <changeSet id="update_system_alter_type_and_add_column" author="aarifullin">
+    <changeSet id="update_system_alter_type_and_add_column" author="aarifullin" dbms="postgresql">
         <sql>
             ALTER TABLE sec.system ALTER COLUMN view_order TYPE integer USING (view_order::integer);
             ALTER TABLE sec.system ADD COLUMN show_on_interface BOOLEAN;
