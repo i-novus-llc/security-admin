@@ -39,8 +39,24 @@
                 <eq filter-id="description" mapping="description"/>
             </filters>
         </field>
+        <field id="shortName" domain="string" name="Короткое наименование">
+            <select mapping="shortName"/>
+        </field>
+        <field id="url" domain="string" name="Адрес">
+            <select mapping="url"/>
+        </field>
+        <field id="publicAccess" domain="boolean" name="Допускается работа в системе без авторизации">
+            <select mapping="publicAccess"/>
+        </field>
+        <field id="viewOrder" domain="integer" name="Порядок отображения системы">
+            <select mapping="viewOrder"/>
+        </field>
+        <field id="showOnInterface" domain="boolean" name="Включить отображение системы в едином интерфейсе">
+            <select mapping="showOnInterface"/>
+        </field>
         <field id="services" domain="object[]" name="Приложения">
             <select mapping="applications"></select>
         </field>
+
     </fields>
 </query>

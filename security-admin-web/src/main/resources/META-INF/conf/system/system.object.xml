@@ -15,6 +15,11 @@
                 <param id="id" mapping="[0].code" domain="string" required="true"/>
                 <param id="name" mapping="[0].name" domain="string" required="true"/>
                 <param id="description" mapping="[0].description" domain="string"/>
+                <param id="shortName" mapping="[0].shortName" domain="string"/>
+                <param id="url" mapping="[0].url" domain="string"/>
+                <param id="publicAccess" mapping="[0].publicAccess" domain="boolean"/>
+                <param id="viewOrder" mapping="[0].viewOrder" domain="integer"/>
+                <param id="showOnInterface" mapping="[0].showOnInterface" domain="boolean"/>
             </in-parameters>
             <out-parameters>
                 <param id="id" mapping="code"/>
@@ -35,6 +40,11 @@
                 <param id="id" mapping="[0].code" domain="string" required="true"/>
                 <param id="name" mapping="[0].name" domain="string" required="true"/>
                 <param id="description" mapping="[0].description" domain="string"/>
+                <param id="shortName" mapping="[0].shortName" domain="string"/>
+                <param id="url" mapping="[0].url" domain="string"/>
+                <param id="publicAccess" mapping="[0].publicAccess" domain="boolean"/>
+                <param id="viewOrder" mapping="[0].viewOrder" domain="integer"/>
+                <param id="showOnInterface" mapping="[0].showOnInterface" domain="boolean"/>
             </in-parameters>
             <out-parameters>
                 <param id="id" mapping="code"/>
