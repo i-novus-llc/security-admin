@@ -48,6 +48,10 @@ public class AppSystemForm {
     @ApiModelProperty(value = "Порядок отображения подсистемы")
     private Integer viewOrder;
 
+    @JsonProperty
+    @ApiModelProperty(value = "Отображение системы в едином интерфейсе")
+    private Boolean showOnInterface;
+
     public AppSystemForm(String code) {
         this.code = code;
     }

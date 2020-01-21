@@ -72,6 +72,12 @@ public class SystemEntity {
     @OneToMany(mappedBy = "systemCode", fetch = FetchType.LAZY)
     private List<ApplicationEntity> applicationList;
 
+    /**
+     * Отображение системы в едином интерфейсе
+     */
+    @Column(name = "show_on_interface")
+    private Boolean showOnInterface;
+
 
     public SystemEntity(@NotNull String code) {
         this.code = code;
