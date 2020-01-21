@@ -40,11 +40,10 @@
                         <input-text id="name"/>
                         <input-text id="description"/>
                         <input-select-tree id="permissions" ajax="false" checkboxes="true" label="Права доступа"
-                                           group-field-id="systemCode">
-                            <inheritance-nodes parent-field-id="parentCode" label-field-id="name" value-field-id="id"
-                                               query-id="${access.permission.query.id}"
-                                               has-children-field-id="hasChildren" search-field-id="name">
-                            </inheritance-nodes>
+                                           group-field-id="systemCode" parent-field-id="parentCode"
+                                           query-id="${access.permission.query.id}"
+                                           has-children-field-id="hasChildren" search-field-id="name"
+                                           value-field-id="id">
                             <pre-filters>
                                 <eq field-id="systemCode" value="{system.id}"/>
                                 <eq field-id="userLevel.id" value="{userLevel.id}"/>
