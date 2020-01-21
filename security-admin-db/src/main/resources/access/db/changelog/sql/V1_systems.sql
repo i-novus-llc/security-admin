@@ -6,8 +6,9 @@ CREATE TABLE sec.system
     short_name character varying,
     icon character varying,
     url character varying,
-    public_access character varying,
-    view_order character varying,
+    public_access boolean,
+    view_order integer,
+    showOnInterface boolean,
     CONSTRAINT system_pkey PRIMARY KEY (code)
 );
 
