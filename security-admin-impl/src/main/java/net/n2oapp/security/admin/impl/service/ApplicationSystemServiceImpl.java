@@ -100,10 +100,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
 
     @Override
     public AppSystem updateSystem(AppSystemForm system) {
-        SystemEntity entity = systemRepository.getOne(system.getCode());
-        entity.setName(system.getName());
-        entity.setDescription(system.getDescription());
-        AppSystem result = model(systemRepository.save(entity));
+        AppSystem result = model(systemRepository.save(entity(system)));
         return audit("audit.appSystemUpdate", result);
     }
 
@@ -169,6 +166,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
             model.setApplications(entity.getApplicationList().stream().map(this::model).collect(Collectors.toList()));
         }
         model.setShortName(entity.getShortName());
+        model.setShowOnInterface(entity.getShowOnInterface());
         model.setIcon(entity.getIcon());
         model.setUrl(entity.getUrl());
         model.setPublicAccess(entity.getPublicAccess());
@@ -182,6 +180,14 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
         entity.setName(model.getName());
         entity.setCode(model.getCode());
         entity.setDescription(model.getDescription());
+        if (Boolean.TRUE.equals(model.getShowOnInterface())) {
+            entity.setShowOnInterface(model.getShowOnInterface());
+            entity.setShortName(model.getShortName());
+            entity.setIcon(model.getIcon());
+            entity.setUrl(model.getUrl());
+            entity.setPublicAccess(model.getPublicAccess());
+            entity.setViewOrder(model.getViewOrder());
+        }
         return entity;
     }
 

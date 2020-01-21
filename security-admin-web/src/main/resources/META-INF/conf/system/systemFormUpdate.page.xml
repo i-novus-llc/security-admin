@@ -9,6 +9,46 @@
                     <input-text id="name" label="Наименование" required="true"/>
                     <input-text id="id" label="Код" required="true" enabled="false"/>
                     <text-area id="description" label="Описание"/>
+                    <field id="showOnInterface" label="Включить отображение системы в едином интерфейсе"
+                           visible="${access.system.showOnInterface}">
+                        <controls>
+                            <checkbox id="showOnInterface" src="Switch"/>
+                        </controls>
+                    </field>
+                    <input-text id="shortName" label="Короткое наименование">
+                        <dependencies>
+                            <visibility on="showOnInterface" reset="false">
+                                showOnInterface
+                            </visibility>
+                            <requiring on="showOnInterface">
+                                showOnInterface
+                            </requiring>
+                        </dependencies>
+                    </input-text>
+                    <input-text id="url" label="Адрес">
+                        <dependencies>
+                            <visibility on="showOnInterface" reset="false">
+                                showOnInterface
+                            </visibility>
+                            <requiring on="showOnInterface">
+                                showOnInterface
+                            </requiring>
+                        </dependencies>
+                    </input-text>
+                    <checkbox id="publicAccess" label="Допускается работа в системе без авторизации">
+                        <dependencies>
+                            <visibility on="showOnInterface" reset="false">
+                                showOnInterface
+                            </visibility>
+                        </dependencies>
+                    </checkbox>
+                    <input-text id="viewOrder" domain="integer" label="Порядок отображения системы">
+                        <dependencies>
+                            <visibility on="showOnInterface" reset="false">
+                                showOnInterface
+                            </visibility>
+                        </dependencies>
+                    </input-text>
                 </fields>
             </form>
         </region>
