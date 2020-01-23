@@ -30,13 +30,15 @@ import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.emptyMap;
+
 @Service
 public class ApplicationSystemExportServiceImpl implements ApplicationSystemExportService {
 
     private static final Logger log = LoggerFactory.getLogger(ApplicationSystemExportServiceImpl.class);
 
-    private static final String SYSTEM_REF_BOOK_CODE = "SYS001";
-    private static final String APPLICATION_REF_BOOK_CODE = "APP001";
+    static final String SYSTEM_REF_BOOK_CODE = "SYS001";
+    static final String APPLICATION_REF_BOOK_CODE = "APP001";
 
     private static final String CODE = "code";
     private static final String NAME = "name";
@@ -121,7 +123,7 @@ public class ApplicationSystemExportServiceImpl implements ApplicationSystemExpo
                 row.setSystemId(k);
                 draftService.updateData(draft.getId(), row);
             });
-            forRemove.forEach(rowValue -> draftService.deleteRow(draft.getId(), rowValue.getSystemId()));
+            forRemove.forEach(rowValue -> draftService.deleteRow(draft.getId(), new Row(rowValue.getSystemId(), emptyMap())));
             publishService.publish(draft.getId(), null, null, null, false);
         }
     }

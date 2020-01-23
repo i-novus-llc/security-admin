@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 /**
  * Приложение
  */
@@ -16,7 +18,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(exclude = "systemName")
 @ApiModel("Приложение")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Application {
+public class Application implements Serializable {
 
     @JsonProperty
     @ApiModelProperty("Код")
