@@ -22,12 +22,17 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.inovus.ms.rdm.sync.service.change_data.RdmChangeDataClient;
 
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static java.util.Objects.isNull;
+import static net.n2oapp.security.admin.impl.service.ApplicationSystemExportServiceImpl.APPLICATION_REF_BOOK_CODE;
+import static net.n2oapp.security.admin.impl.service.ApplicationSystemExportServiceImpl.SYSTEM_REF_BOOK_CODE;
 
 /**
  * Реализация сервиса управления приложениями и системами
@@ -35,6 +40,7 @@ import static java.util.Objects.isNull;
 @Service
 @Transactional
 public class ApplicationSystemServiceImpl implements ApplicationSystemService {
+
     @Autowired
     private ApplicationRepository applicationRepository;
     @Autowired
@@ -45,18 +51,22 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     private PermissionRepository permissionRepository;
     @Autowired
     private AuditHelper audit;
+    @Autowired
+    private RdmChangeDataClient rdmChangeDataClient;
 
     @Override
     public Application createApplication(Application service) {
         checkServiceUniq(service.getCode());
         checkSystemExists(service.getSystemCode());
         Application result = model(applicationRepository.save(entity(service)));
+        rdmChangeDataClient.changeData(APPLICATION_REF_BOOK_CODE, singletonList(result), emptyList());
         return audit("audit.applicationCreate", result);
     }
 
     @Override
     public Application updateApplication(Application service) {
         Application result = model(applicationRepository.save(entity(service)));
+        rdmChangeDataClient.changeData(APPLICATION_REF_BOOK_CODE, singletonList(result), emptyList());
         return audit("audit.applicationUpdate", result);
     }
 
@@ -66,7 +76,9 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
         if (isNull(app))
             throw new UserException("exception.applicationNotFound");
         applicationRepository.deleteById(code);
-        audit("audit.applicationDelete", model(app));
+        Application model = model(app);
+        rdmChangeDataClient.changeData(APPLICATION_REF_BOOK_CODE, emptyList(), singletonList(model));
+        audit("audit.applicationDelete", model);
     }
 
     @Override
@@ -95,12 +107,14 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     public AppSystem createSystem(AppSystemForm system) {
         checkSystemUniq(system.getCode());
         AppSystem result = model(systemRepository.save(entity(system)));
+        rdmChangeDataClient.changeData(SYSTEM_REF_BOOK_CODE, singletonList(result), emptyList());
         return audit("audit.appSystemCreate", result);
     }
 
     @Override
     public AppSystem updateSystem(AppSystemForm system) {
         AppSystem result = model(systemRepository.save(entity(system)));
+        rdmChangeDataClient.changeData(SYSTEM_REF_BOOK_CODE, singletonList(result), emptyList());
         return audit("audit.appSystemUpdate", result);
     }
 
@@ -110,7 +124,9 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
         SystemEntity sys = systemRepository.findById(code).orElse(null);
         systemRepository.deleteById(code);
         if (sys != null) {
-            audit("audit.appSystemDelete", model(sys));
+            AppSystem model = model(sys);
+            rdmChangeDataClient.changeData(SYSTEM_REF_BOOK_CODE, emptyList(), singletonList(model));
+            audit("audit.appSystemDelete", model);
         }
     }
 

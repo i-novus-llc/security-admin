@@ -7,6 +7,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 /**
  * Система
  */
@@ -14,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @ApiModel("Система")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AppSystemForm {
+public class AppSystemForm implements Serializable {
 
     @JsonProperty
     @ApiModelProperty(value = "Код")
