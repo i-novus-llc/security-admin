@@ -3,7 +3,7 @@
              name="Создание карточки роли">
     <form upload="defaults" query-id="${access.role.query.id}">
         <fields>
-            <input-text id="name" label="Название" required="true"/>
+            <input-text id="name" label="Наименование" required="true"/>
             <input-text id="code" label="Код" required="${access.role.code.required}" visible="${access.role.code.visible}"/>
             <input-text id="description" label="Описание"/>
             <input-select id="system" label="Система" query-id="system" required="${access.system.enabled}"
