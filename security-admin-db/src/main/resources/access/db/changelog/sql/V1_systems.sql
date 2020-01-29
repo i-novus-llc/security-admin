@@ -8,7 +8,7 @@ CREATE TABLE sec.system
     url character varying,
     public_access boolean,
     view_order integer,
-    showOnInterface boolean,
+    show_on_interface boolean,
     CONSTRAINT system_pkey PRIMARY KEY (code)
 );
 
