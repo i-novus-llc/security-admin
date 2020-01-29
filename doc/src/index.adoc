@@ -681,7 +681,7 @@ public class Application {
 ----
 <?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog>
-    <include file="classpath:/security/admin/db/changelog-master.xml"/>
+    <include file="classpath:/access/db/changelog/changelog-master.xml"/>
     ...
 </databaseChangeLog>
 ----
