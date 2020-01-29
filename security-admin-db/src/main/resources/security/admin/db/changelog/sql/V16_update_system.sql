@@ -10,6 +10,7 @@ COMMENT ON COLUMN sec.system.short_name IS 'Иконка';
 COMMENT ON COLUMN sec.system.short_name IS 'Адрес подсистемы';
 COMMENT ON COLUMN sec.system.short_name IS 'Признак работы в режиме без авторизации';
 COMMENT ON COLUMN sec.system.short_name IS 'Порядок отображения подсистемы';
+COMMENT ON COLUMN sec.system.show_on_interface IS 'Отображение систем в едином интерфейсе';
 
 
 
