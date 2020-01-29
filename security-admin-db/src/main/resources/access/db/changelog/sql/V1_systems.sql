@@ -26,3 +26,6 @@ COMMENT ON COLUMN sec.system.description
 
 COMMENT ON COLUMN sec.system.short_name
     IS 'Порядок отображения подсистемы';
+
+COMMENT ON COLUMN sec.system.show_on_interface
+    IS 'Отображение систем в едином интерфейсе';
