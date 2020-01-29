@@ -10,7 +10,7 @@
                     <input-text id="id" label="Код" required="true" enabled="false"/>
                     <text-area id="description" label="Описание"/>
                     <field id="showOnInterface" label="Включить отображение системы в едином интерфейсе"
-                           visible="${access.system.showOnInterface}">
+                           visible="${access.system.show-on-interface}">
                         <controls>
                             <checkbox id="showOnInterface" src="Switch"/>
                         </controls>
