@@ -3,7 +3,7 @@
              name="Изменение карточки роли">
     <form query-id="${access.role.query.id}">
         <fields>
-            <input-text id="name" label="Название"/>
+            <input-text id="name" label="Наименование"/>
             <input-text id="code" label="Код" enabled="false" visible="${access.role.code.visible}"/>
             <input-text id="description" label="Описание"/>
             <input-select id="system" label="Система" query-id="system" required="${access.system.enabled}"
