@@ -6,7 +6,7 @@
     <parent>
         <artifactId>security-admin</artifactId>
         <groupId>net.n2oapp.framework.security</groupId>
-        <version>4.4-SNAPSHOT</version>
+        <version>4.5-SNAPSHOT</version>
     </parent>
 
     <artifactId>auth-gateway</artifactId>
@@ -60,6 +60,11 @@
             <groupId>ru.inovus.ms.rdm</groupId>
             <artifactId>rdm-sync-spring-boot-starter</artifactId>
             <version>${rdm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-activemq</artifactId>
         </dependency>
 
     </dependencies>
