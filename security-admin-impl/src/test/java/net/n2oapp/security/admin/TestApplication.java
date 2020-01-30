@@ -11,11 +11,13 @@ import ru.inovus.ms.rdm.api.service.DraftService;
 import ru.inovus.ms.rdm.api.service.PublishService;
 import ru.inovus.ms.rdm.api.service.RefBookService;
 import ru.inovus.ms.rdm.api.service.VersionService;
+import ru.inovus.ms.rdm.sync.RdmClientSyncAutoConfiguration;
+import ru.inovus.ms.rdm.sync.service.change_data.RdmChangeDataClient;
 
 /**
  * Стартовая точка запуска Spring Boot
  */
-@SpringBootApplication
+@SpringBootApplication(exclude = RdmClientSyncAutoConfiguration.class)
 @EnableJaxRsProxyClient(
         classes = {RefBookService.class, DraftService.class,
                 PublishService.class, VersionService.class},
@@ -31,6 +33,8 @@ public class TestApplication {
     private DraftService draftService;
     @MockBean
     private PublishService publishService;
+    @MockBean
+    private RdmChangeDataClient rdmChangeDataClient;
 
     public static void main(String[] args) {
         SpringApplication.run(TestApplication.class, args);
