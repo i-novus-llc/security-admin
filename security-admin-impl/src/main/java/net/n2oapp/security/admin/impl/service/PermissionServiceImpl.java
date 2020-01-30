@@ -44,6 +44,7 @@ public class PermissionServiceImpl implements PermissionService {
     public Permission update(PermissionUpdateForm permission) {
         PermissionEntity permissionForUpdate = permissionRepository.getOne(permission.getCode());
         permissionForUpdate.setName(permission.getName());
+        permissionForUpdate.setUserLevel(permission.getUserLevel());
         if (permission.getParent() != null && permission.getParent().getCode() != null) {
             checkParent(permission);
             permissionForUpdate.setParentPermission(new PermissionEntity(permission.getParent().getCode()));
@@ -154,6 +155,7 @@ public class PermissionServiceImpl implements PermissionService {
         model.setName(entity.getName());
         model.setCode(entity.getCode());
         model.setHasChildren(entity.getHasChildren());
+        model.setUsedInRole(entity.getRoleList() != null && !entity.getRoleList().isEmpty());
         model.setUserLevel(entity.getUserLevel());
         if (entity.getParentPermission() != null) {
             model.setParent(model(entity.getParentPermission()));

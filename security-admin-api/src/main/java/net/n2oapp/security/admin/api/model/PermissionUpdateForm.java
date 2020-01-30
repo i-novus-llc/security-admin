@@ -27,4 +27,9 @@ public class PermissionUpdateForm {
     @JsonProperty
     @ApiModelProperty(value = "Код родителя")
     private Permission parent;
+
+    @JsonProperty
+    @ApiModelProperty(value = "Уровень пользователя")
+    private UserLevel userLevel;
+
 }

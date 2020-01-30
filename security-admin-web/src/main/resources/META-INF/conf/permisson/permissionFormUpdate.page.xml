@@ -6,6 +6,16 @@
                           visible="${access.system.enabled}" label-field-id="name" enabled="false"/>
             <input-text id="name" required="true"/>
             <input-text id="id" required="true" enabled="false"/>
+            <output-text id="alert" class="text-danger" visible="false" no-label="true">
+                <dependencies>
+                    <set-value>
+                        "Редактирование атрибутов запрещено. Право доступа используется в роли/является родительским"
+                    </set-value>
+                    <visibility>
+                        hasChildren || usedInRole
+                    </visibility>
+                </dependencies>
+            </output-text>
             <input-select id="parent" ajax="false" label="Родительское право доступа" checkboxes="true"
                           query-id="permission" size="100">
                 <pre-filters>
@@ -18,10 +28,39 @@
                     <set-value on="system" apply-on-init="false">
                         return null;
                     </set-value>
+                    <enabling>
+                        !hasChildren &amp;&amp; !usedInRole
+                    </enabling>
                 </dependencies>
             </input-select>
             <input-select id="userLevel" query-id="userLevel" visible="${access.level.enabled}"
                           label="Уровень пользователя" enabled="false">
+                <dependencies>
+                    <set-value on="parent" apply-on-init="false">
+                        <![CDATA[
+                                if(typeof parent === 'undefined' ||
+                                parent === null ||
+                                parent.userLevel === null ||
+                                typeof parent.userLevel === 'undefined'){
+                                return null;
+                            }else{
+                                return parent.userLevel;
+                            }
+                            ]]>
+                    </set-value>
+                    <enabling on="parent">
+                        <![CDATA[
+                            if((!hasChildren && !usedInRole) && (typeof parent === 'undefined' ||
+                                parent === null ||
+                                parent.userLevel === null ||
+                                typeof parent.userLevel === 'undefined')){
+                                return true;
+                            }else{
+                                return false;
+                            }
+                            ]]>
+                    </enabling>
+                </dependencies>
             </input-select>
         </fields>
     </form>
