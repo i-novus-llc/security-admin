@@ -33,6 +33,10 @@ public class Permission {
     private Boolean hasChildren;
 
     @JsonProperty
+    @ApiModelProperty(value = "Используется ли в роли")
+    private Boolean usedInRole;
+
+    @JsonProperty
     @ApiModelProperty(value = "Код системы")
     private AppSystem system;
 

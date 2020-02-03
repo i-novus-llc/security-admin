@@ -81,5 +81,12 @@
                 <eq filter-id="withoutParent" domain="boolean" mapping="withoutParent"></eq>
             </filters>
         </field>
+        <field id="hasChildren">
+            <select mapping="hasChildren"/>
+        </field>
+        <field id="usedInRole">
+            <select mapping="usedInRole"/>
+        </field>
+
     </fields>
 </query>
