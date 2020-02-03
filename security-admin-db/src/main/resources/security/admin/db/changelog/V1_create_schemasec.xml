@@ -4,11 +4,8 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="create_schema" author="rgalina" dbms="postgresql">
-        <sqlFile path="security/admin/db/changelog/sql/V1_create_schema_sec.sql"/>
-    </changeSet>
 
-    <changeSet id="create_schema" author="rgalina" dbms="h2">
+    <changeSet id="create_schema" author="rgalina" dbms="postgresql">
         <sqlFile path="security/admin/db/changelog/sql/V1_create_schema_sec.sql"/>
     </changeSet>
 

@@ -7,8 +7,5 @@
     <changeSet id="create_permission_index" author="rgalina" dbms="postgresql">
         <sqlFile path="security/admin/db/changelog/sql/V6_permission_index.sql"/>
     </changeSet>
-    <changeSet id="create_permission_index" author="rgalina" dbms="h2">
-        <sqlFile path="security/admin/db/changelog/h2/V6_permission_index.sql"/>
-    </changeSet>
 
 </databaseChangeLog>
