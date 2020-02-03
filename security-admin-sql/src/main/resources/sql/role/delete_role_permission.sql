@@ -1,1 +1,0 @@
-delete from sec.role_permission where role_id = :id;

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!-- Название таблицы с клиентами -->
+    <property name="n2o.security.admin.client.table" value="client"/>
+    <!-- Название колонки в таблице клиентов, в которой хранится id(имя) клиента -->
+    <property name="n2o.security.admin.client.column.client_id" value="client_id"/>
+    <!-- Название колонки в таблице клиентов, в которой хранится секрет клиента -->
+    <property name="n2o.security.admin.client.column.client_secret" value="client_secret"/>
+    <!-- Название колонки в таблице клиентов, в которой хранится тип авторизации клиента -->
+    <property name="n2o.security.admin.client.column.grant_types" value="grant_types"/>
+    <!-- Название колонки в таблице клиентов, в которой хранятся URI разрешённые для редиректа клиента -->
+    <property name="n2o.security.admin.client.column.redirect" value="redirect_uris"/>
+    <!-- Название колонки в таблице клиентов, в которой хранится время жизни токена-->
+    <property name="n2o.security.admin.client.column.token_time" value="access_token_lifetime"/>
+    <!-- Название колонки в таблице клиентов, в которой хранится время жизни refresh токена-->
+    <property name="n2o.security.admin.client.column.refresh_token_time" value="refresh_token_lifetime"/>
+    <!-- Название колонки в таблице клиентов, в которой хранится URL для выхода-->
+    <property name="n2o.security.admin.client.column.logout" value="logout_url"/>
+    <!-- Название индекса для для поля с id клиента -->
+    <property name="n2o.security.admin.client.id.index" value="client_idx"/>
+    <!-- Название таблицы связи клиентов с ролями -->
+    <property name="n2o.security.admin.clientrole.table" value="client_role"/>
+    <!-- Название колонки, в которой хранится id роли в таблице связи клиентов с ролями-->
+    <property name="n2o.security.admin.clientrole.column.role" value="role_id"/>
+    <!-- Название колонки, в которой хранится имя клиента в таблице связи клиентов с ролями-->
+    <property name="n2o.security.admin.clientrole.column.client" value="client_client_id"/>
+    <property name="n2o.security.admin.clientrole.column.client_id" value="client_id"/>
+    <!-- Название внешнего constraint для клиента в таблице связи клиентов с ролями-->
+    <property name="n2o.security.admin.clientrole.client.constraint.fk" value="client_role_client_fk"/>
+    <!-- Название внешнего constraint для роли в таблице связи клиентов с ролями-->
+    <property name="n2o.security.admin.clientrole.role.constraint.fk" value="client_role_role_fk"/>
+    <!-- Название индекса для клиента в таблице связи клиентов с ролями-->
+    <property name="n2o.security.admin.clientrole.client.index" value="client_role_client_idx"/>
+    <!-- Название индекса для роли в таблице связи клиентов с ролями-->
+    <property name="n2o.security.admin.clientrole.role.index" value="client_role_role_idx"/>
+
+
+    <!-- Название схемы управления доступом -->
+    <property name="n2o.security.admin.schema" value="sec"/>
+
+    <!-- Название таблицы с пользователями -->
+    <property name="n2o.security.admin.user.table" value="user"/>
+    <!-- Название колонки в таблице пользователей, в которой хранится логин -->
+    <property name="n2o.security.admin.user.login" value="username"/>
+    <!-- Название индекса для поля c логином-->
+    <property name="n2o.security.admin.user.username.index" value="user_username_idx_uniq"/>
+
+    <!-- Название таблицы с ролями -->
+    <property name="n2o.security.admin.role.table" value="role"/>
+    <!-- Название таблицы связи пользователей с ролями -->
+    <property name="n2o.security.admin.userrole.table" value="user_role"/>
+    <!-- Название колонки, в которой хранится id роли в таблице связи пользователей с ролями-->
+    <property name="n2o.security.admin.userrole.column.role" value="role_id"/>
+    <!-- Название колонки, в которой хранится id пользователя в таблице связи пользователей с ролями-->
+    <property name="n2o.security.admin.userrole.column.user" value="user_id"/>
+    <!-- Название constraint для таблицы связи пользователей с ролями-->
+    <property name="n2o.security.admin.userrole.constraint.pk" value="user_role_pk"/>
+    <!-- Название внешнего constraint для пользователя в таблице связи пользователей с ролями-->
+    <property name="n2o.security.admin.userrole.user.constraint.fk" value="user_role_user_fk"/>
+    <!-- Название внешнего constraint для роли в таблице связи пользователей с ролями-->
+    <property name="n2o.security.admin.userrole.role.constraint.fk" value="user_role_role_fk"/>
+    <!-- Название индекса для пользователя в таблице связи пользователей с ролями-->
+    <property name="n2o.security.admin.userrole.user.index" value="user_role_user_idx"/>
+    <!-- Название индекса для роли в таблице связи пользователей с ролями-->
+    <property name="n2o.security.admin.userrole.role.index" value="user_role_role_idx"/>
+
+    <!-- Название таблицы с правами доступа -->
+    <property name="n2o.security.admin.permission.table" value="permission"/>
+    <!-- Название таблицы связи прав доступа с ролями -->
+    <property name="n2o.security.admin.rolepermission.table" value="role_permission"/>
+    <!-- Название колонки, в которой хранится id роли в таблице связи прав доступа с ролями-->
+    <property name="n2o.security.admin.rolepermission.column.role" value="role_id"/>
+    <!-- Название колонки, в которой хранится id права доступа в таблице связи прав доступа с ролями-->
+    <property name="n2o.security.admin.rolepermission.column.permission" value="permission_id"/>
+    <!-- Название constraint для таблицы связи прав доступа с ролями-->
+    <property name="n2o.security.admin.rolepermission.constraint.pk" value="role_permission_pk"/>
+    <!-- Название внешнего constraint для права доступа в таблице связи прав доступа с ролями-->
+    <property name="n2o.security.admin.rolepermission.permission.constraint.fk" value="role_permission_permission_fk"/>
+    <!-- Название внешнего constraint для права доступа в таблице связи прав доступа с ролями-->
+    <property name="n2o.security.admin.rolepermission.role.constraint.fk" value="role_permission_role_fk"/>
+    <!-- Название внешнего constraint для роли в таблице связи прав доступа с ролями-->
+    <property name="n2o.security.admin.permission.parent.constraint.fk" value="permission_parent_fk"/>
+    <!-- Название индекса для права доступа в таблице связи прав доступа с ролями-->
+    <property name="n2o.security.admin.rolepermission.permission.index" value="role_permission_permission_idx"/>
+    <!-- Название индекса для права доступа в таблице связи прав доступа с ролями-->
+    <property name="n2o.security.admin.rolepermission.role.index" value="role_permission_role_idx"/>
+    <!-- Название индекса для роли в таблице связи прав доступа с ролями-->
+    <property name="n2o.security.admin.permission.parent.index" value="permission_parent_idx"/>
+
+</databaseChangeLog>
