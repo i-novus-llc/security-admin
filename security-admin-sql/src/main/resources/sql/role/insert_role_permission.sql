@@ -1,1 +1,0 @@
-INSERT INTO sec.role_permission(role_id, permission_code) VALUES(:roleId, :permissionCode);

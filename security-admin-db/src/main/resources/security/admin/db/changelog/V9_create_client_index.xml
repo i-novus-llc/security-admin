@@ -7,8 +7,4 @@
     <changeSet id="create_client_index" author="aarifullin" dbms="postgresql">
         <sqlFile path="security/admin/db/changelog/sql/V9_create_client_index.sql"/>
     </changeSet>
-
-    <changeSet id="create_client_index" author="aarifullin" dbms="h2">
-        <sqlFile path="security/admin/db/changelog/h2/V9_create_client_index.sql"/>
-    </changeSet>
 </databaseChangeLog>

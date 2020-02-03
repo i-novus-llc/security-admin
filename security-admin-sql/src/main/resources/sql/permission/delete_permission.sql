@@ -1,1 +1,0 @@
-delete from sec.permission where code = :code;
