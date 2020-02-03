@@ -1,1 +1,0 @@
-delete from sec.role where id = :id;

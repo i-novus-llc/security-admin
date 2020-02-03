@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <include file="security/admin/db/changelog/properties.xml"/>
+    <include file="security/admin/db/changelog/V1_create_schemasec.xml"/>
+    <include file="security/admin/db/changelog/V2_create_user.xml"/>
+    <include file="security/admin/db/changelog/V3_create_roles.xml"/>
+    <include file="classpath:/security/admin/db/changelog/V4_create_permissions.xml"/>
+    <include file="security/admin/db/changelog/V5_create_user_role_index.xml"/>
+    <include file="classpath:/security/admin/db/changelog/V6_create_user_permission_index.xml"/>
+    <include file="security/admin/db/changelog/V7_add_column_user_guid.xml"/>
+    <include file="security/admin/db/changelog/V8_create_client.xml"/>
+    <include file="security/admin/db/changelog/V8_create_system_and_application.xml"/>
+    <include file="security/admin/db/changelog/V9_create_directories.xml"/>
+    <include file="security/admin/db/changelog/V9_create_client_index.xml"/>
+    <include file="security/admin/db/changelog/V10_update_user_role_permission.xml"/>
+    <include file="security/admin/db/changelog/V11_add_ext_sso.xml"/>
+    <include file="security/admin/db/changelog/V11_update_permission.xml"/>
+    <include file="security/admin/db/changelog/V12_delete_ext_roles.xml"/>
+    <include file="security/admin/db/changelog/V13_update_client.xml"/>
+    <include file="security/admin/db/changelog/V14_update_user_add_snils.xml"/>
+    <include file="security/admin/db/changelog/V14_permission_parent_delete_cascade.xml"/>
+    <include file="security/admin/db/changelog/V15_update_region_department_organization.xml"/>
+    <include file="security/admin/db/changelog/V16_update_system.xml"/>
+    <include file="security/admin/db/changelog/V17_update_system.xml"/>
+
+</databaseChangeLog>

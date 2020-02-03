@@ -20,26 +20,4 @@
         <sqlFile path="security/admin/db/changelog/sql/V11_permission_index.sql"/>
     </changeSet>
 
-
-
-
-
-
-    <changeSet id="drop_permission_constraint" author="aarifullin" dbms="h2">
-        <sqlFile path="security/admin/db/changelog/h2/V11_drop_permission_constraint.sql"/>
-    </changeSet>
-
-    <changeSet id="update_permission" author="aarifullin" dbms="h2">
-        <sqlFile path="security/admin/db/changelog/h2/V11_update_permission.sql"/>
-    </changeSet>
-
-    <changeSet id="update_permission_constraint" author="aarifullin" dbms="h2">
-        <sqlFile path="security/admin/db/changelog/h2/V11_update_permission_constraint.sql"/>
-    </changeSet>
-
-    <changeSet id="permission_index" author="aarifullin" dbms="h2">
-        <sqlFile path="security/admin/db/changelog/h2/V11_permission_index.sql"/>
-    </changeSet>
-
-
 </databaseChangeLog>

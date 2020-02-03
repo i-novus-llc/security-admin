@@ -5,11 +5,8 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <include file="classpath*:/security/admin/db/urp/properties.xml"/>
-    <include file="classpath*:/security/admin/db/urp/changelog.xml"/>
-    <include file="classpath*:/security/admin/db/system/changelog.xml"/>
-    <include file="classpath*:/security/admin/db/client/changelog.xml"/>
-    <include file="classpath*:/security/admin/db/client/properties.xml"/>
+
+    <include file="classpath*:access/db/changelog/changelog-master.xml"/>
 
     <changeSet id="test" author="iryabov">
         <sqlFile path="data.sql"/>
