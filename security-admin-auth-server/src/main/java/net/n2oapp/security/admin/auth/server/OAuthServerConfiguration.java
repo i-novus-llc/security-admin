@@ -139,7 +139,7 @@ public class OAuthServerConfiguration extends OAuth2AuthorizationServerConfigura
         @Controller
         public static class IndexController {
 
-            @Value("${access.auth.redirect:#{null}}")
+            @Value("${access.auth.authenticated-user-redirect-url}")
             String redirectTo;
 
             @RequestMapping("/")
@@ -148,7 +148,7 @@ public class OAuthServerConfiguration extends OAuth2AuthorizationServerConfigura
                 SecurityContext sc = SecurityContextHolder.getContext();
                 if (sc != null && sc.getAuthentication() instanceof OAuth2Authentication)
                     mv.setViewName("forward:alreadyLogged.html");
-                else if (redirectTo != null && !redirectTo.isEmpty())
+                else if (!redirectTo.equals("/"))
                     mv.setViewName("redirect:" + redirectTo);
                 else
                     mv.setViewName("forward:index.html");
