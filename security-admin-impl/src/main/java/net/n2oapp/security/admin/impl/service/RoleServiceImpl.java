@@ -43,9 +43,9 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role create(RoleForm role) {
-        checkRoleUniq(role);
+        checkRoleUnique(role);
         Role result = model(roleRepository.save(entity(role)));
-        // если отстутствует код роли, то устанавливаем
+        // если отсутствует код роли, то устанавливаем
         if (result.getCode() == null)
             result.setCode("ROLE_" + result.getId());
         Role providerResult = provider.createRole(result);
@@ -61,7 +61,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role update(RoleForm role) {
-        checkRoleUniq(role);
+        checkRoleUnique(role);
         Role result = model(roleRepository.save(entity(role)));
         provider.updateRole(result);
         return audit("audit.roleUpdate", result);
@@ -211,8 +211,8 @@ public class RoleServiceImpl implements RoleService {
     /**
      * Валидация на уникальность названия и кода роли при изменении
      */
-    private void checkRoleUniq(RoleForm role) {
-        if (!roleRepository.checkRoleUniq(role.getId() == null ? -1 : role.getId(), role.getName(), role.getCode()))
+    private void checkRoleUnique(RoleForm role) {
+        if (!roleRepository.checkRoleUnique(role.getId() == null ? -1 : role.getId(), role.getName(), role.getCode()))
             throw new UserException("exception.uniqueRole");
     }
 
@@ -226,7 +226,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     private Role audit(String action, Role role) {
-        audit.audit(action, role, "" + role.getId(), role.getName());
+        audit.audit(action, role, "" + role.getCode(), role.getName());
         return role;
     }
 }
