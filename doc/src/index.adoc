@@ -932,6 +932,10 @@ insert into sec.permission(name, code) values('Право доступа к мо
 |string
 |Адрес точки авторизации
 
+|access.auth.authenticated-user-redirect-url
+|string
+|Переадресация авторизованного пользователя на указанный путь, вместо index.html
+
 |access.esia.path-to-keystore
 |string
 |Путь к хранилищу ключей ЕСИА
