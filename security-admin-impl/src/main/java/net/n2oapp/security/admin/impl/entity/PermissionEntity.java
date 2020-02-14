@@ -31,7 +31,7 @@ public class PermissionEntity {
     private String name;
 
     @JoinColumn(name = "parent_code")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private PermissionEntity parentPermission;
 
     @Formula("(SELECT count(*) != 0 from sec.permission c where c.parent_code = code)")
