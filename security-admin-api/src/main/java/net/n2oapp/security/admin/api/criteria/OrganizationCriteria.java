@@ -8,4 +8,6 @@ import lombok.Data;
 @Data
 public class OrganizationCriteria extends BaseCriteria {
     private String shortName;
+    private String name;
+    private String ogrn;
 }
