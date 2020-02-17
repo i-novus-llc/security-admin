@@ -36,6 +36,9 @@
         <field id="parent" domain="object">
             <select mapping="parent"/>
         </field>
+        <field id="parent.id" domain="string">
+            <select mapping="parent?.code"/>
+        </field>
         <field id="parentCode" domain="string">
             <select mapping="parent?.code"/>
         </field>
@@ -45,13 +48,13 @@
         <field id="system" domain="object">
             <select mapping="system"/>
             <filters>
-                <eq filter-id="system.id" domain="string" mapping="systemCode"></eq>
+                <eq filter-id="system.id" domain="string" mapping="systemCode"/>
             </filters>
         </field>
         <field id="systemCode" domain="string">
             <select mapping="system?.code"/>
             <filters>
-                <eq filter-id="systemCode" domain="string[]" mapping="systemCode"></eq>
+                <eq filter-id="systemCode" domain="string[]" mapping="systemCode"/>
             </filters>
         </field>
         <field id="systemName" domain="string" name="Система">
@@ -59,26 +62,26 @@
         </field>
         <field id="withSystem">
             <filters>
-                <eq filter-id="withSystem" domain="boolean" mapping="withSystem"></eq>
+                <eq filter-id="withSystem" domain="boolean" mapping="withSystem"/>
             </filters>
         </field>
         <field id="forForm">
             <filters>
-                <eq filter-id="forForm" domain="boolean" mapping="forForm"></eq>
+                <eq filter-id="forForm" domain="boolean" mapping="forForm"/>
             </filters>
         </field>
         <field id="userLevel.name" domain="string" name="Уровень пользователя">
-            <select mapping="userLevel?.desc"></select>
+            <select mapping="userLevel?.desc"/>
         </field>
         <field id="userLevel.id" domain="string" name="Уровень пользователя">
-            <select mapping="userLevel?.name"></select>
+            <select mapping="userLevel?.name"/>
             <filters>
-                <eq filter-id="userLevel.id" domain="string" mapping="userLevel"></eq>
+                <eq filter-id="userLevel.id" domain="string" mapping="userLevel"/>
             </filters>
         </field>
         <field id="withoutParent">
             <filters>
-                <eq filter-id="withoutParent" domain="boolean" mapping="withoutParent"></eq>
+                <eq filter-id="withoutParent" domain="boolean" mapping="withoutParent"/>
             </filters>
         </field>
         <field id="hasChildren">
