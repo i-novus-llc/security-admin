@@ -8,8 +8,22 @@ import javax.ws.rs.QueryParam;
 public class RestOrganizationCriteria extends OrganizationCriteria {
     @QueryParam("shortName")
     @Override
-    @ApiParam(value = "Наименование организации")
+    @ApiParam(value = "Краткое наименование организации")
     public void setShortName(String shortName) {
         super.setShortName(shortName);
+    }
+
+    @QueryParam("name")
+    @Override
+    @ApiParam(value = "Полное или краткое наименование организации")
+    public void setName(String name) {
+        super.setName(name);
+    }
+
+    @QueryParam("ogrn")
+    @Override
+    @ApiParam(value = "ОГРН организации")
+    public void setOgrn(String ogrn) {
+        super.setOgrn(ogrn);
     }
 }

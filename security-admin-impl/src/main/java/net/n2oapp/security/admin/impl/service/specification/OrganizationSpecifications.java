@@ -25,6 +25,14 @@ public class OrganizationSpecifications implements Specification<OrganizationEnt
         Predicate predicate = builder.and();
         if (criteria.getShortName() != null)
             predicate = builder.and(predicate, builder.like(builder.lower(root.get(OrganizationEntity_.shortName)), "%" + criteria.getShortName().toLowerCase() + "%"));
+
+        if (criteria.getName() != null)
+            predicate = builder.and(predicate, builder.or(builder.like(builder.lower(root.get(OrganizationEntity_.shortName)), "%" + criteria.getName().toLowerCase() + "%"),
+                    builder.like(builder.lower(root.get(OrganizationEntity_.fullName)), "%" + criteria.getName().toLowerCase() + "%")));
+
+        if (criteria.getOgrn() != null)
+            predicate = builder.and(predicate, builder.like(builder.lower(root.get(OrganizationEntity_.ogrn)), "%" + criteria.getOgrn().toLowerCase() + "%"));
+
         return predicate;
     }
 }
