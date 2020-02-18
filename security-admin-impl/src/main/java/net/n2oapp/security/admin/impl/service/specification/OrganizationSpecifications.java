@@ -29,13 +29,13 @@ public class OrganizationSpecifications implements Specification<OrganizationEnt
         if (criteria.getOgrn() != null)
             predicate = builder.and(predicate, builder.like(builder.lower(root.get(OrganizationEntity_.ogrn)), "%" + criteria.getOgrn().toLowerCase() + "%"));
 
-        if (criteria.getSystemCode() != null) {
+        if (criteria.getSystemCodes() != null && !criteria.getSystemCodes().isEmpty()) {
             Subquery subquery = criteriaQuery.subquery(String.class);
             Root subRoot = subquery.from(RoleEntity.class);
             ListJoin<RoleEntity, UserEntity> listJoin = subRoot.join(RoleEntity_.userList);
             subquery.select(subRoot.get(RoleEntity_.systemCode));
             subquery.where(builder.and(builder.equal(root.get(OrganizationEntity_.id), listJoin.get(UserEntity_.organization)),
-                    subRoot.get(RoleEntity_.systemCode).get(SystemEntity_.CODE).in(criteria.getSystemCode())));
+                    subRoot.get(RoleEntity_.systemCode).get(SystemEntity_.CODE).in(criteria.getSystemCodes())));
             predicate = builder.and(predicate, builder.exists(subquery));
         }
         return predicate;
