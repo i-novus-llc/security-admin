@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiParam;
 import net.n2oapp.security.admin.api.criteria.OrganizationCriteria;
 
 import javax.ws.rs.QueryParam;
+import java.util.List;
 
 public class RestOrganizationCriteria extends OrganizationCriteria {
     @QueryParam("shortName")
@@ -27,10 +28,10 @@ public class RestOrganizationCriteria extends OrganizationCriteria {
         super.setOgrn(ogrn);
     }
 
-    @QueryParam("systemCode")
+    @QueryParam("systemCodes")
     @Override
-    @ApiParam(value = "Код системы")
-    public void setSystemCode(String systemCode) {
-        super.setSystemCode(systemCode);
+    @ApiParam(value = "Коды систем")
+    public void setSystemCodes(List<String> systemCodes) {
+        super.setSystemCodes(systemCodes);
     }
 }
