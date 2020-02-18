@@ -26,4 +26,11 @@ public class RestOrganizationCriteria extends OrganizationCriteria {
     public void setOgrn(String ogrn) {
         super.setOgrn(ogrn);
     }
+
+    @QueryParam("systemCode")
+    @Override
+    @ApiParam(value = "Код системы")
+    public void setSystemCode(String systemCode) {
+        super.setSystemCode(systemCode);
+    }
 }

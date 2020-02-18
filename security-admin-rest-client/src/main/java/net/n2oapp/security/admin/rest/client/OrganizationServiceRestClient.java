@@ -27,6 +27,7 @@ public class OrganizationServiceRestClient implements OrganizationService {
         restOrganizationCriteria.setSize(criteria.getSize());
         restOrganizationCriteria.setName(criteria.getName());
         restOrganizationCriteria.setOgrn(criteria.getOgrn());
+        restOrganizationCriteria.setSystemCode(criteria.getSystemCode());
         return client.getAll(restOrganizationCriteria);
     }
 

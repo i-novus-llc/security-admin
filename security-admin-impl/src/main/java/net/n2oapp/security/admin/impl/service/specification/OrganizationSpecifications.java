@@ -1,14 +1,10 @@
 package net.n2oapp.security.admin.impl.service.specification;
 
 import net.n2oapp.security.admin.api.criteria.OrganizationCriteria;
-import net.n2oapp.security.admin.impl.entity.OrganizationEntity;
-import net.n2oapp.security.admin.impl.entity.OrganizationEntity_;
+import net.n2oapp.security.admin.impl.entity.*;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 
 /**
  * Реализация фильтров для организаций
@@ -33,6 +29,15 @@ public class OrganizationSpecifications implements Specification<OrganizationEnt
         if (criteria.getOgrn() != null)
             predicate = builder.and(predicate, builder.like(builder.lower(root.get(OrganizationEntity_.ogrn)), "%" + criteria.getOgrn().toLowerCase() + "%"));
 
+        if (criteria.getSystemCode() != null) {
+            Subquery subquery = criteriaQuery.subquery(String.class);
+            Root subRoot = subquery.from(RoleEntity.class);
+            ListJoin<RoleEntity, UserEntity> listJoin = subRoot.join(RoleEntity_.userList);
+            subquery.select(subRoot.get(RoleEntity_.systemCode));
+            subquery.where(builder.and(builder.equal(root.get(OrganizationEntity_.id), listJoin.get(UserEntity_.organization)),
+                    subRoot.get(RoleEntity_.systemCode).get(SystemEntity_.CODE).in(criteria.getSystemCode())));
+            predicate = builder.and(predicate, builder.exists(subquery));
+        }
         return predicate;
     }
 }
