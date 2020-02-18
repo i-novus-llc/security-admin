@@ -51,6 +51,30 @@ public class OrganizationEntity {
     @Column(name = "full_name")
     private String fullName;
 
+    /**
+     * ИНН организации
+     */
+    @Column(name = "inn")
+    private String inn;
+
+    /**
+     * КПП организации
+     */
+    @Column(name = "kpp")
+    private String kpp;
+
+    /**
+     * Юридический адрес
+     */
+    @Column(name = "legal_address")
+    private String legalAddress;
+
+    /**
+     * Электронная почта
+     */
+    @Column(name = "email")
+    private String email;
+
     public OrganizationEntity(Integer id) {
         this.id = id;
     }

@@ -14,5 +14,8 @@
         <sqlFile path="access/db/changelog/sql/V1_users.sql"/>
     </changeSet>
 
+    <changeSet id="update_organization" author="btsyganov" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/V2_update_organization.sql"/>
+    </changeSet>
 
 </databaseChangeLog>
