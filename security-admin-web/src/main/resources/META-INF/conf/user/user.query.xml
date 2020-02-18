@@ -102,7 +102,7 @@
 
         <field id="system" domain="object">
             <filters>
-                <eq filter-id="system.id" domain="string" mapping="systemCode"/>
+                <eq filter-id="system.id" domain="string[]" mapping="systems"/>
             </filters>
         </field>
 
@@ -134,7 +134,7 @@
         <field id="organization">
             <select mapping="organization"></select>
             <filters>
-                <eq filter-id="organization.id" domain="integer" mapping="organizationId"></eq>
+                <eq filter-id="organization.id" domain="integer[]" mapping="organizations"></eq>
             </filters>
         </field>
 
