@@ -10,4 +10,5 @@ public class OrganizationCriteria extends BaseCriteria {
     private String shortName;
     private String name;
     private String ogrn;
+    private String systemCode;
 }
