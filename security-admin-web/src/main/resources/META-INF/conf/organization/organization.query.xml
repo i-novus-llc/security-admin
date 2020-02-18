@@ -13,7 +13,7 @@
         <field id="shortName" domain="string" name="Название">
             <select mapping="shortName"/>
             <filters>
-                <like filter-id="shortName" mapping="name"/>
+                <like filter-id="shortName" mapping="shortName"/>
             </filters>
         </field>
         <field id="id" name="Идентификатор">
