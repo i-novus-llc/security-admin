@@ -4,7 +4,6 @@ import io.swagger.annotations.ApiParam;
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import org.springframework.data.domain.Sort;
 
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.QueryParam;
 import java.util.List;
 
@@ -33,11 +32,11 @@ public class RestUserCriteria extends UserCriteria {
         super.setIsActive(isActive);
     }
 
-    @QueryParam("systemCode")
+    @QueryParam("systems")
     @Override
-    @ApiParam(value = "Система роли")
-    public void setSystemCode(String systemCode) {
-        super.setSystemCode(systemCode);
+    @ApiParam(value = "Список кодов систем")
+    public void setSystems(List<String> systems) {
+        super.setSystems(systems);
     }
 
     @QueryParam("roles")
@@ -75,11 +74,11 @@ public class RestUserCriteria extends UserCriteria {
         super.setRegionId(regionId);
     }
 
-    @QueryParam("organizationId")
+    @QueryParam("organizations")
     @Override
-    @ApiParam(value = "id организации")
-    public void setOrganizationId(Integer organizationId) {
-        super.setOrganizationId(organizationId);
+    @ApiParam(value = "Список идентификаторов организаций")
+    public void setOrganizations(List<Integer> organizations) {
+        super.setOrganizations(organizations);
     }
 
     @QueryParam("departmentId")
