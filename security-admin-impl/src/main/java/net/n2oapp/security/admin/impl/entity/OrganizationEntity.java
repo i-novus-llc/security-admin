@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Сущность Организация
@@ -74,6 +75,16 @@ public class OrganizationEntity {
      */
     @Column(name = "email")
     private String email;
+
+    /**
+     * Категории организации
+     */
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "assigned_org_category", schema = "sec",
+            joinColumns = {@JoinColumn(name = "org_code")},
+            inverseJoinColumns = {@JoinColumn(name = "org_category_code")}
+    )
+    private List<OrgCategoryEntity> categories;
 
     public OrganizationEntity(Integer id) {
         this.id = id;

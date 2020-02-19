@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 @Table(name = "org_category", schema = "sec")
-public class OrganizationCategoryEntity {
+public class OrgCategoryEntity {
     /**
      * Уникальный идентификатор записи
      */
