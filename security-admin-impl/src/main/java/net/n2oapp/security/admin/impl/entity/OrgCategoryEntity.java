@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * Сущность категория организации
@@ -12,7 +14,7 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 @Table(name = "org_category", schema = "sec")
-public class OrgCategoryEntity {
+public class OrgCategoryEntity implements Serializable {
     /**
      * Уникальный идентификатор записи
      */
@@ -38,4 +40,7 @@ public class OrgCategoryEntity {
      */
     @Column(name = "description")
     private String description;
+
+    @ManyToMany(mappedBy = "categories")
+    private List<OrganizationEntity> organizationList;
 }

@@ -3,6 +3,7 @@ package net.n2oapp.security.admin.impl.service.specification;
 import net.n2oapp.security.admin.api.criteria.OrganizationCriteria;
 import net.n2oapp.security.admin.impl.entity.*;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.util.CollectionUtils;
 
 import javax.persistence.criteria.*;
 
@@ -29,13 +30,26 @@ public class OrganizationSpecifications implements Specification<OrganizationEnt
         if (criteria.getOgrn() != null)
             predicate = builder.and(predicate, builder.like(builder.lower(root.get(OrganizationEntity_.ogrn)), "%" + criteria.getOgrn().toLowerCase() + "%"));
 
-        if (criteria.getSystemCodes() != null && !criteria.getSystemCodes().isEmpty()) {
+        if (criteria.getInn() != null)
+            predicate = builder.and(predicate, builder.like(builder.lower(root.get(OrganizationEntity_.inn)), "%" + criteria.getInn().toLowerCase() + "%"));
+
+        if (!CollectionUtils.isEmpty(criteria.getSystemCodes())) {
             Subquery subquery = criteriaQuery.subquery(String.class);
             Root subRoot = subquery.from(RoleEntity.class);
             ListJoin<RoleEntity, UserEntity> listJoin = subRoot.join(RoleEntity_.userList);
             subquery.select(subRoot.get(RoleEntity_.systemCode));
             subquery.where(builder.and(builder.equal(root.get(OrganizationEntity_.id), listJoin.get(UserEntity_.organization)),
                     subRoot.get(RoleEntity_.systemCode).get(SystemEntity_.CODE).in(criteria.getSystemCodes())));
+            predicate = builder.and(predicate, builder.exists(subquery));
+        }
+
+        if (!CollectionUtils.isEmpty(criteria.getCategoryCodes())) {
+            Subquery subquery = criteriaQuery.subquery(Integer.class);
+            Root subRoot = subquery.from(OrgCategoryEntity.class);
+            ListJoin<OrgCategoryEntity, OrganizationEntity> listJoin = subRoot.join(OrgCategoryEntity_.organizationList);
+            subquery.select(subRoot.get(OrgCategoryEntity_.code));
+            subquery.where(builder.and(builder.equal(root.get(OrganizationEntity_.id), listJoin.get(OrganizationEntity_.id)),
+                    subRoot.get(OrgCategoryEntity_.code).in(criteria.getCategoryCodes())));
             predicate = builder.and(predicate, builder.exists(subquery));
         }
         return predicate;
