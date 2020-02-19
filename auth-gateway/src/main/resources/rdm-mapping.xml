@@ -14,12 +14,16 @@
     </refbook>
 
     <refbook code="S003" sys-table="sec.organization" unique-sys-field="code" deleted-field="is_deleted"
-             mapping-version="1">
+             mapping-version="2">
         <field sys-field="code" sys-data-type="varchar" rdm-field="code"/>
         <field sys-field="short_name" sys-data-type="varchar" rdm-field="short_name"/>
         <field sys-field="ogrn" sys-data-type="varchar" rdm-field="ogrn"/>
         <field sys-field="okpo" sys-data-type="varchar" rdm-field="okpo"/>
         <field sys-field="full_name" sys-data-type="varchar" rdm-field="full_name"/>
+        <field sys-field="inn" sys-data-type="varchar" rdm-field="inn"/>
+        <field sys-field="kpp" sys-data-type="varchar" rdm-field="kpp"/>
+        <field sys-field="legal_address" sys-data-type="varchar" rdm-field="legal_address"/>
+        <field sys-field="email" sys-data-type="varchar" rdm-field="email"/>
     </refbook>
 
 </mapping>
