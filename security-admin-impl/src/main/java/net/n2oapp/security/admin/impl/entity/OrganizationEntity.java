@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -13,7 +14,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @Table(name = "organization", schema = "sec")
-public class OrganizationEntity {
+public class OrganizationEntity implements Serializable {
     /**
      * Уникальный идентификатор записи
      */
@@ -81,8 +82,8 @@ public class OrganizationEntity {
      */
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "assigned_org_category", schema = "sec",
-            joinColumns = {@JoinColumn(name = "org_code")},
-            inverseJoinColumns = {@JoinColumn(name = "org_category_code")}
+            joinColumns = {@JoinColumn(name = "org_code", referencedColumnName = "code")},
+            inverseJoinColumns = {@JoinColumn(name = "org_category_code", referencedColumnName = "code")}
     )
     private List<OrgCategoryEntity> categories;
 
