@@ -71,7 +71,7 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public Page<Client> findAll(ClientCriteria criteria) {
         Specification<ClientEntity> specification = new ClientSpecifications(criteria);
-        return clientRepository.findAll(specification, criteria).map(this::model);
+        return clientRepository.findAll(specification, criteria).map(ClientServiceImpl::model);
     }
 
     @Override
@@ -105,7 +105,7 @@ public class ClientServiceImpl implements ClientService {
         return client;
     }
 
-    private Client model(ClientEntity clientEntity) {
+    public static Client model(ClientEntity clientEntity) {
         if (isNull(clientEntity)) return null;
         Client client = new Client();
         client.setEnabled(true);
@@ -124,13 +124,13 @@ public class ClientServiceImpl implements ClientService {
             client.setRefreshTokenLifetime(clientEntity.getRefreshTokenLifetime() / 60);
         client.setLogoutUrl(clientEntity.getLogoutUrl());
         if (nonNull(clientEntity.getRoleList())) {
-            client.setRoles(clientEntity.getRoleList().stream().map(this::model).collect(Collectors.toList()));
+            client.setRoles(clientEntity.getRoleList().stream().map(ClientServiceImpl::model).collect(Collectors.toList()));
             client.setRolesIds(clientEntity.getRoleList().stream().map(RoleEntity::getId).collect(Collectors.toList()));
         }
         return client;
     }
 
-    private ClientEntity entity(Client client) {
+    public static ClientEntity entity(Client client) {
         if (isNull(client)) return null;
         ClientEntity entity = new ClientEntity();
         entity.setClientId(client.getClientId());
@@ -155,7 +155,7 @@ public class ClientServiceImpl implements ClientService {
         return entity;
     }
 
-    private Permission permissionModel(PermissionEntity entity) {
+    private static Permission permissionModel(PermissionEntity entity) {
         if (isNull(entity)) return null;
         Permission model = new Permission();
         model.setName(entity.getName());
@@ -170,7 +170,7 @@ public class ClientServiceImpl implements ClientService {
             throw new UserException("exception.clientNotFound");
     }
 
-    private Role model(RoleEntity entity) {
+    private static Role model(RoleEntity entity) {
         if (isNull(entity)) return null;
         Role model = new Role();
         model.setId(entity.getId());
@@ -178,7 +178,7 @@ public class ClientServiceImpl implements ClientService {
         model.setName(entity.getName());
         model.setDescription(entity.getDescription());
         if (nonNull(entity.getPermissionList())) {
-            model.setPermissions(entity.getPermissionList().stream().map(this::permissionModel).collect(Collectors.toList()));
+            model.setPermissions(entity.getPermissionList().stream().map(ClientServiceImpl::permissionModel).collect(Collectors.toList()));
         }
         return model;
     }
