@@ -226,7 +226,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     private Role audit(String action, Role role) {
-        audit.audit(action, role, "" + role.getCode(), role.getName());
+        audit.audit(action, role, "" + role.getCode(), "audit.role");
         return role;
     }
 }
