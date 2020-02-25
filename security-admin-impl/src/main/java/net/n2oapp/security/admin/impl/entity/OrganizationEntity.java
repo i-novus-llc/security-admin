@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * Сущность Организация
@@ -12,7 +14,7 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 @Table(name = "organization", schema = "sec")
-public class OrganizationEntity {
+public class OrganizationEntity implements Serializable {
     /**
      * Уникальный идентификатор записи
      */
@@ -50,6 +52,40 @@ public class OrganizationEntity {
      */
     @Column(name = "full_name")
     private String fullName;
+
+    /**
+     * ИНН организации
+     */
+    @Column(name = "inn")
+    private String inn;
+
+    /**
+     * КПП организации
+     */
+    @Column(name = "kpp")
+    private String kpp;
+
+    /**
+     * Юридический адрес
+     */
+    @Column(name = "legal_address")
+    private String legalAddress;
+
+    /**
+     * Электронная почта
+     */
+    @Column(name = "email")
+    private String email;
+
+    /**
+     * Категории организации
+     */
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "assigned_org_category", schema = "sec",
+            joinColumns = {@JoinColumn(name = "org_code", referencedColumnName = "code")},
+            inverseJoinColumns = {@JoinColumn(name = "org_category_code", referencedColumnName = "code")}
+    )
+    private List<OrgCategoryEntity> categories;
 
     public OrganizationEntity(Integer id) {
         this.id = id;

@@ -4,6 +4,7 @@ import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import net.n2oapp.security.admin.api.model.UserLevel;
 import net.n2oapp.security.admin.impl.entity.*;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.util.CollectionUtils;
 
 import javax.persistence.criteria.*;
 import java.util.Arrays;
@@ -45,7 +46,7 @@ public class UserSpecifications implements Specification<UserEntity> {
                 predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.isActive), false));
             }
         }
-        if (nonNull(criteria.getRoleIds()) && !criteria.getRoleIds().isEmpty()) {
+        if (!CollectionUtils.isEmpty(criteria.getRoleIds())) {
             Subquery sub = criteriaQuery.subquery(Integer.class);
             Root subRoot = sub.from(RoleEntity.class);
             ListJoin<RoleEntity, UserEntity> subUsers = subRoot.join(RoleEntity_.userList);
@@ -55,15 +56,14 @@ public class UserSpecifications implements Specification<UserEntity> {
             predicate = builder.and(predicate, builder.exists(sub));
         }
 
-        if (nonNull(criteria.getSystemCode())) {
+        if (!CollectionUtils.isEmpty(criteria.getSystems())) {
             Subquery subquery = criteriaQuery.subquery(String.class);
             Root subRoot = subquery.from(RoleEntity.class);
             ListJoin<RoleEntity, UserEntity> listJoin = subRoot.join(RoleEntity_.userList);
             subquery.select(subRoot.get(RoleEntity_.systemCode));
             subquery.where(builder.and(builder.equal(root.get(UserEntity_.id), listJoin.get(UserEntity_.id)),
-                    subRoot.get(RoleEntity_.systemCode).get(SystemEntity_.CODE).in(criteria.getSystemCode())));
+                    subRoot.get(RoleEntity_.systemCode).get(SystemEntity_.CODE).in(criteria.getSystems())));
             predicate = builder.and(predicate, builder.exists(subquery));
-            builder.and(predicate, root.get(UserEntity_.ROLE_LIST));
         }
         if (criteria.getExtSys() != null) {
             predicate = builder.and(predicate, builder.equal(builder.upper(root.get(UserEntity_.extSys)), criteria.getExtSys().toUpperCase()));
@@ -86,8 +86,10 @@ public class UserSpecifications implements Specification<UserEntity> {
         if (nonNull(criteria.getDepartmentId())) {
             predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.department).get(DepartmentEntity_.id), criteria.getDepartmentId()));
         }
-        if (nonNull(criteria.getOrganizationId())) {
-            predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.organization).get(OrganizationEntity_.id), criteria.getOrganizationId()));
+        if (!CollectionUtils.isEmpty(criteria.getOrganizations())) {
+            CriteriaBuilder.In<Integer> in = builder.in(root.get(UserEntity_.organization).get(OrganizationEntity_.id));
+            criteria.getOrganizations().forEach(in::value);
+            predicate = builder.and(predicate, in);
         }
         return predicate;
     }

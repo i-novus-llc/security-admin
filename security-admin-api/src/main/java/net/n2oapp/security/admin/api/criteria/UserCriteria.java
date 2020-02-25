@@ -17,10 +17,10 @@ public class UserCriteria extends BaseCriteria {
     private String isActive;
     private List<Integer> roleIds;
     private String password;
-    private String systemCode;
+    private List<String> systems;
     private String userLevel;
     private Integer regionId;
-    private Integer organizationId;
+    private List<Integer> organizations;
     private Integer departmentId;
     private String extSys;
 

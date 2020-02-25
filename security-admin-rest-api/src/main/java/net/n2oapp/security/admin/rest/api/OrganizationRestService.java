@@ -4,7 +4,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.Authorization;
+import net.n2oapp.security.admin.api.model.OrgCategory;
 import net.n2oapp.security.admin.api.model.Organization;
+import net.n2oapp.security.admin.rest.api.criteria.RestOrgCategoryCriteria;
 import net.n2oapp.security.admin.rest.api.criteria.RestOrganizationCriteria;
 import org.springframework.data.domain.Page;
 
@@ -14,15 +16,21 @@ import javax.ws.rs.core.MediaType;
 /**
  * REST сервис организациями
  */
-@Path("/organization")
+@Path("/")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Api(value = "Организации", authorizations = @Authorization(value = "oauth2"))
 public interface OrganizationRestService {
 
     @GET
-    @Path("/")
+    @Path("/organizations")
     @ApiOperation("Найти все организации")
     @ApiResponse(code = 200, message = "Страница организации")
     Page<Organization> getAll(@BeanParam RestOrganizationCriteria criteria);
+
+    @GET
+    @Path("/orgCategories")
+    @ApiOperation("Найти все категории организаций")
+    @ApiResponse(code = 200, message = "Страница категорий организаций")
+    Page<OrgCategory> getAllCategories(@BeanParam RestOrgCategoryCriteria criteria);
 }
