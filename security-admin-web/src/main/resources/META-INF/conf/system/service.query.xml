@@ -38,8 +38,43 @@
         <field id="systemName" domain="string">
             <select mapping="systemName"/>
         </field>
-        <field id="oAuth" domain="boolean">
+
+        <field id="enableClient" domain="boolean">
             <select mapping="oAuth"/>
+        </field>
+
+        <field id="clientSecret" domain="string">
+            <select mapping="client?.clientSecret"/>
+        </field>
+        <field id="isClientGrant" domain="boolean">
+            <select mapping="client?.isClientGrant"/>
+        </field>
+        <field id="isResourceOwnerPass" domain="boolean">
+            <select mapping="client?.isResourceOwnerPass"/>
+        </field>
+        <field id="isAuthorizationCode" domain="boolean">
+            <select mapping="client?.isAuthorizationCode"/>
+        </field>
+
+        <field id="accessTokenLifetime" domain="integer">
+            <select mapping="client?.accessTokenLifetime"/>
+        </field>
+        <field id="refreshTokenLifetime" domain="integer">
+            <select mapping="client?.refreshTokenLifetime"/>
+        </field>
+        <field id="redirectUris" domain="string[]">
+            <select mapping="client?.redirectUris"/>
+        </field>
+
+        <field id="logoutUrl" domain="string">
+            <select mapping="client?.logoutUrl"/>
+        </field>
+
+        <field id="clientRoles" domain="integer[]" name="Роли">
+            <select mapping="client?.roles"></select>
+            <filters>
+                <in filter-id="roles" domain="integer[]" mapping="roles"/>
+            </filters>
         </field>
     </fields>
 </query>

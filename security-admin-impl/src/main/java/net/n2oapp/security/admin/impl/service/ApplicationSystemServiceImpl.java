@@ -7,6 +7,7 @@ import net.n2oapp.security.admin.api.model.AppSystem;
 import net.n2oapp.security.admin.api.model.AppSystemForm;
 import net.n2oapp.security.admin.api.model.Application;
 import net.n2oapp.security.admin.api.service.ApplicationSystemService;
+import net.n2oapp.security.admin.api.service.ClientService;
 import net.n2oapp.security.admin.impl.audit.AuditHelper;
 import net.n2oapp.security.admin.impl.entity.ApplicationEntity;
 import net.n2oapp.security.admin.impl.entity.SystemEntity;
@@ -53,6 +54,8 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     private AuditHelper audit;
     @Autowired
     private RdmChangeDataClient rdmChangeDataClient;
+    @Autowired
+    private ClientService clientService;
 
     @Override
     public Application createApplication(Application service) {
@@ -65,6 +68,11 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
 
     @Override
     public Application updateApplication(Application service) {
+        if (!service.getOAuth()) {
+            service.getClient().setEnabled(false);
+            service.getClient().setClientId(service.getCode());
+            clientService.persist(service.getClient());
+        }
         Application result = model(applicationRepository.save(entity(service)));
         rdmChangeDataClient.changeData(APPLICATION_REF_BOOK_CODE, singletonList(result), emptyList());
         return audit("audit.applicationUpdate", result);
@@ -160,6 +168,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
         model.setSystemCode(entity.getSystemCode().getCode());
         model.setSystemName(entity.getSystemCode().getName());
         model.setOAuth(entity.getClient() != null);
+        model.setClient(entity.getClient() == null ? null : ClientServiceImpl.model(entity.getClient()));
         return model;
     }
 
@@ -169,6 +178,10 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
         entity.setName(model.getName());
         entity.setCode(model.getCode());
         entity.setSystemCode(new SystemEntity(model.getSystemCode()));
+        if (Boolean.TRUE.equals(model.getOAuth())) {
+            model.getClient().setClientId(model.getCode());
+            entity.setClient(ClientServiceImpl.entity(model.getClient()));
+        }
         return entity;
     }
 
