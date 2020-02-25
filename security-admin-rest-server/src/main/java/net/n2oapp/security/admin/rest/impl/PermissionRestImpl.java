@@ -1,6 +1,7 @@
 package net.n2oapp.security.admin.rest.impl;
 
 import net.n2oapp.security.admin.api.model.Permission;
+import net.n2oapp.security.admin.api.model.PermissionUpdateForm;
 import net.n2oapp.security.admin.api.service.PermissionService;
 import net.n2oapp.security.admin.rest.api.PermissionRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestPermissionCriteria;
@@ -18,10 +19,8 @@ public class PermissionRestImpl implements PermissionRestService {
     private PermissionService service;
 
     @Override
-    public Page<Permission> getAll(String parentCode, Boolean parentIdIsNull, RestPermissionCriteria criteria) {
-        if (Boolean.TRUE.equals(parentIdIsNull))
-            return new PageImpl<>(service.getAllByParentIdIsNull());
-        return new PageImpl<>(parentCode != null ? service.getAllByParentCode(parentCode) : service.getAll(criteria));
+    public Page<Permission> getAll(String parentCode, RestPermissionCriteria criteria) {
+        return parentCode != null ? new PageImpl<>(service.getAllByParentCode(parentCode)) : service.getAll(criteria);
     }
 
     @Override
@@ -35,17 +34,12 @@ public class PermissionRestImpl implements PermissionRestService {
     }
 
     @Override
-    public Permission update(Permission permission) {
+    public Permission update(PermissionUpdateForm permission) {
         return service.update(permission);
     }
 
     @Override
     public void delete(String code) {
         service.delete(code);
-    }
-
-    @Override
-    public Page<Permission> getAllWithSystem(RestPermissionCriteria criteria) {
-        return new PageImpl<>(service.getAllWithSystem(criteria));
     }
 }

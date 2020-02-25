@@ -9,7 +9,7 @@ public class PermissionBuilder {
         Permission permission = new Permission();
         permission.setCode("pcode1");
         permission.setName("name1");
-        permission.setParentCode(null);
+        permission.setParent(null);
         permission.setUserLevel(UserLevel.FEDERAL);
         return permission;
     }
@@ -18,7 +18,7 @@ public class PermissionBuilder {
         Permission permission = new Permission();
         permission.setCode("pcode2");
         permission.setName("name2");
-        permission.setParentCode("pcode1");
+        permission.setParent(new Permission("pcode1"));
         permission.setUserLevel(UserLevel.REGIONAL);
         return permission;
     }
@@ -27,7 +27,7 @@ public class PermissionBuilder {
         Permission permission = new Permission();
         permission.setCode("pcode2");
         permission.setName("name2-new");
-        permission.setParentCode("pcode3");
+        permission.setParent(new Permission("pcode3"));
         permission.setUserLevel(UserLevel.ORGANIZATION);
         return permission;
     }
@@ -36,7 +36,7 @@ public class PermissionBuilder {
         Permission permission = new Permission();
         permission.setCode("pcode3");
         permission.setName("name3");
-        permission.setParentCode(null);
+        permission.setParent(null);
         permission.setUserLevel(UserLevel.FEDERAL);
         return permission;
     }
@@ -45,7 +45,7 @@ public class PermissionBuilder {
         Permission permission = new Permission();
         permission.setCode("pcode4");
         permission.setName("name4");
-        permission.setParentCode(null);
+        permission.setParent(null);
         permission.setUserLevel(UserLevel.FEDERAL);
         return permission;
     }
@@ -54,7 +54,7 @@ public class PermissionBuilder {
         Permission permission = new Permission();
         permission.setCode("pcode5");
         permission.setName("name5");
-        permission.setParentCode("pcode4");
+        permission.setParent(new Permission("pcode4"));
         permission.setUserLevel(UserLevel.REGIONAL);
         return permission;
     }

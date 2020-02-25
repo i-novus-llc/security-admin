@@ -11,6 +11,21 @@ import java.util.List;
  * Модель фильтрации прав доступа для rest вызовов
  */
 public class RestPermissionCriteria extends PermissionCriteria {
+
+    @QueryParam("name")
+    @Override
+    @ApiParam(value = "Название права доступа")
+    public void setName(String name) {
+        super.setName(name);
+    }
+
+    @QueryParam("code")
+    @Override
+    @ApiParam(value = "Код права доступа")
+    public void setCode(String code) {
+        super.setCode(code);
+    }
+
     @QueryParam("page")
     @Override
     @ApiParam(value = "Номер страницы")
@@ -50,5 +65,17 @@ public class RestPermissionCriteria extends PermissionCriteria {
     @Override
     public void setForForm(Boolean forForm) {
         super.setForForm(forForm);
+    }
+
+    @QueryParam("withSystem")
+    @Override
+    public void setWithSystem(Boolean withSystem) {
+        super.setWithSystem(withSystem);
+    }
+
+    @QueryParam("withoutParent")
+    @Override
+    public void setWithoutParent(Boolean withoutParent) {
+        super.setWithoutParent(withoutParent);
     }
 }
