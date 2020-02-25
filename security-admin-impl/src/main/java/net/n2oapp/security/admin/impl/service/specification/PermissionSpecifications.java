@@ -11,7 +11,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-
 import java.util.Arrays;
 
 import static java.util.Objects.isNull;
@@ -27,9 +26,18 @@ public class PermissionSpecifications implements Specification<PermissionEntity>
     @Override
     public Predicate toPredicate(Root<PermissionEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         Predicate predicate = criteriaBuilder.and();
+        if (nonNull(criteria.getName()))
+            predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(criteriaBuilder.lower(root.get(PermissionEntity_.name)), "%" + criteria.getName().toLowerCase() + "%"));
+
+        if (nonNull(criteria.getCode()) && Boolean.TRUE.equals(criteria.getWithoutParent()))
+            predicate = criteriaBuilder.and(predicate, criteriaBuilder.notLike(criteriaBuilder.lower(root.get(PermissionEntity_.code)), criteria.getCode().toLowerCase()));
+        else if (nonNull(criteria.getCode()))
+            predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(criteriaBuilder.lower(root.get(PermissionEntity_.code)), "%" + criteria.getCode().toLowerCase() + "%"));
+
+
         if (nonNull(criteria.getSystemCode()))
-            predicate = criteriaBuilder.equal(root.get(PermissionEntity_.systemCode).get(SystemEntity_.CODE),
-                    criteria.getSystemCode());
+            predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get(PermissionEntity_.systemCode).get(SystemEntity_.CODE),
+                    criteria.getSystemCode()));
 
         if (nonNull(criteria.getUserLevel()) && (isNull(criteria.getForForm()) || Boolean.FALSE.equals(criteria.getForForm()))) {
             String userLevel = criteria.getUserLevel().toUpperCase();
@@ -37,8 +45,11 @@ public class PermissionSpecifications implements Specification<PermissionEntity>
             if (Arrays.stream(UserLevel.values()).map(UserLevel::getName).noneMatch(u -> u.equals(userLevel))) {
                 return criteriaBuilder.disjunction();
             }
-            predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get(PermissionEntity_.userLevel),
-                    UserLevel.valueOf(userLevel)));
+            if (UserLevel.NOT_SET.getName().equals(userLevel))
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.isNull(root.get(PermissionEntity_.userLevel)));
+            else
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get(PermissionEntity_.userLevel),
+                        UserLevel.valueOf(userLevel)));
         }
 
         if (Boolean.TRUE.equals(criteria.getForForm()) && nonNull(criteria.getUserLevel())) {

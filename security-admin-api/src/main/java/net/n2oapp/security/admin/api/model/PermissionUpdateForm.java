@@ -8,13 +8,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Право доступа
+ * Форма для обновления права доступа
  */
 @Data
 @NoArgsConstructor
 @ApiModel("Право доступа")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Permission {
+public class PermissionUpdateForm {
 
     @JsonProperty
     @ApiModelProperty(value = "Название")
@@ -29,22 +29,7 @@ public class Permission {
     private Permission parent;
 
     @JsonProperty
-    @ApiModelProperty(value = "Имеет ли детей")
-    private Boolean hasChildren;
-
-    @JsonProperty
-    @ApiModelProperty(value = "Используется ли в роли")
-    private Boolean usedInRole;
-
-    @JsonProperty
-    @ApiModelProperty(value = "Код системы")
-    private AppSystem system;
-
-    @JsonProperty
     @ApiModelProperty(value = "Уровень пользователя")
     private UserLevel userLevel;
 
-    public Permission(String code) {
-        this.code = code;
-    }
 }
