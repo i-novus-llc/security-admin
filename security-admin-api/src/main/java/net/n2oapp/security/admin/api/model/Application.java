@@ -39,4 +39,10 @@ public class Application implements Serializable {
     @JsonProperty
     @ApiModelProperty("Протокол OAuth 2.0")
     private Boolean oAuth;
+
+
+    @JsonProperty
+    @ApiModelProperty("Клиент(Приложение)")
+    private Client client;
+
 }
