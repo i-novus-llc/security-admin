@@ -6,6 +6,47 @@
             <input-text id="name" label="Наименование" required="true"/>
             <input-text id="id" label="Код" required="true"/>
             <text-area id="description" label="Описание"/>
+            <field id="showOnInterface" label="Включить отображение системы в едином интерфейсе"
+                   visible="${access.system.show-on-interface}">
+                <controls>
+                    <checkbox id="showOnInterface" src="Switch" default-value="false"/>
+                </controls>
+            </field>
+            <input-text id="shortName" label="Короткое наименование" visible="false">
+                <dependencies>
+                    <visibility on="showOnInterface">
+                        showOnInterface
+                    </visibility>
+                    <requiring on="showOnInterface">
+                        showOnInterface
+                    </requiring>
+                </dependencies>
+            </input-text>
+            <input-text id="url" label="Адрес" visible="false">
+                <dependencies>
+                    <visibility on="showOnInterface">
+                        showOnInterface
+                    </visibility>
+                    <requiring on="showOnInterface">
+                        showOnInterface
+                    </requiring>
+                </dependencies>
+            </input-text>
+            <checkbox id="publicAccess" label="Допускается работа в системе без авторизации" visible="false">
+                <dependencies>
+                    <visibility on="showOnInterface">
+                        showOnInterface
+                    </visibility>
+
+                </dependencies>
+            </checkbox>
+            <input-text id="viewOrder" domain="integer" label="Порядок отображения системы" visible="false">
+                <dependencies>
+                    <visibility on="showOnInterface">
+                        showOnInterface
+                    </visibility>
+                </dependencies>
+            </input-text>
         </fields>
     </form>
 </simple-page>
