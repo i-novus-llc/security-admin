@@ -239,12 +239,12 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     }
 
     private Application audit(String action, Application app) {
-        audit.audit(action, app, app.getCode(), app.getName());
+        audit.audit(action, app, app.getCode(), "audit.application");
         return app;
     }
 
     private AppSystem audit(String action, AppSystem appSys) {
-        audit.audit(action, appSys, appSys.getCode(), appSys.getName());
+        audit.audit(action, appSys, appSys.getCode(), "audit.system");
         return appSys;
     }
 }
