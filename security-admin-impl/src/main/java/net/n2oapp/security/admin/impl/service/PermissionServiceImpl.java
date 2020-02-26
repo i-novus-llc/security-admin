@@ -72,8 +72,7 @@ public class PermissionServiceImpl implements PermissionService {
     public Page<Permission> getAll(PermissionCriteria criteria) {
         Specification<PermissionEntity> specification = new PermissionSpecifications(criteria);
         if (criteria.getOrders() == null) {
-            criteria.setOrders(Arrays.asList(new Sort.Order(Sort.Direction.ASC, "code")));
-        } else {
+            criteria.setOrders(new ArrayList<>());
             criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "code"));
         }
 
