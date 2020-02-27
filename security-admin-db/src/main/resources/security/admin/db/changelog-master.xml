@@ -25,6 +25,5 @@
     <include file="security/admin/db/changelog/V14_permission_parent_delete_cascade.xml"/>
     <include file="security/admin/db/changelog/V15_update_region_department_organization.xml"/>
     <include file="security/admin/db/changelog/V16_update_system.xml"/>
-    <include file="security/admin/db/changelog/V17_update_system.xml"/>
 
 </databaseChangeLog>
