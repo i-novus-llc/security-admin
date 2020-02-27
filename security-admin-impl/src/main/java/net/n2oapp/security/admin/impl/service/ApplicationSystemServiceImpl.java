@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.inovus.ms.rdm.sync.service.change_data.RdmChangeDataClient;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -98,8 +98,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     public Page<Application> findAllApplications(ApplicationCriteria criteria) {
         Specification<ApplicationEntity> specification = new ApplicationSpecifications(criteria);
         if (criteria.getOrders() == null) {
-            criteria.setOrders(Arrays.asList(new Sort.Order(Sort.Direction.ASC, "code")));
-        } else {
+            criteria.setOrders(new ArrayList<>());
             criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "code"));
         }
         Page<ApplicationEntity> all = applicationRepository.findAll(specification, criteria);
@@ -147,8 +146,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     public Page<AppSystem> findAllSystems(SystemCriteria criteria) {
         Specification<SystemEntity> specification = new SystemSpecifications(criteria);
         if (criteria.getOrders() == null) {
-            criteria.setOrders(Arrays.asList(new Sort.Order(Sort.Direction.ASC, "code")));
-        } else {
+            criteria.setOrders(new ArrayList<>());
             criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "code"));
         }
         Page<SystemEntity> all = systemRepository.findAll(specification, criteria);

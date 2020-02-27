@@ -88,8 +88,7 @@ public class RoleServiceImpl implements RoleService {
     public Page<Role> findAll(RoleCriteria criteria) {
         Specification<RoleEntity> specification = new RoleSpecifications(criteria);
         if (criteria.getOrders() == null) {
-            criteria.setOrders(Arrays.asList(new Sort.Order(Sort.Direction.ASC, "code")));
-        } else {
+            criteria.setOrders(new ArrayList<>());
             criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "code"));
         }
         if (Boolean.TRUE.equals(criteria.getGroupBySystem())) {

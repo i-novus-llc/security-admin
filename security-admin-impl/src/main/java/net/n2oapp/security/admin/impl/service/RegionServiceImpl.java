@@ -13,7 +13,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 
 /**
  * Реализация сервиса управления ролями
@@ -28,8 +28,7 @@ public class RegionServiceImpl implements RegionService {
     public Page<Region> findAll(RegionCriteria criteria) {
         Specification<RegionEntity> specification = new RegionSpecifications(criteria);
         if (criteria.getOrders() == null) {
-            criteria.setOrders(Arrays.asList(new Sort.Order(Sort.Direction.ASC, "id")));
-        } else {
+            criteria.setOrders(new ArrayList<>());
             criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "id"));
         }
         Page<RegionEntity> all = regionRepository.findAll(specification, criteria);

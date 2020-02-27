@@ -18,7 +18,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 
 /**
  * Реализация сервиса управления ролями
@@ -37,8 +37,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     public Page<Organization> findAll(OrganizationCriteria criteria) {
         Specification<OrganizationEntity> specification = new OrganizationSpecifications(criteria);
         if (criteria.getOrders() == null) {
-            criteria.setOrders(Arrays.asList(new Sort.Order(Sort.Direction.ASC, "id")));
-        } else {
+            criteria.setOrders(new ArrayList<>());
             criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "id"));
         }
         Page<OrganizationEntity> all = organizationRepository.findAll(specification, criteria);
@@ -49,8 +48,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     public Page<OrgCategory> findAllCategories(OrgCategoryCriteria criteria) {
         Specification<OrgCategoryEntity> specification = new OrgCategorySpecifications(criteria);
         if (criteria.getOrders() == null) {
-            criteria.setOrders(Arrays.asList(new Sort.Order(Sort.Direction.ASC, "id")));
-        } else {
+            criteria.setOrders(new ArrayList<>());
             criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "id"));
         }
         Page<OrgCategoryEntity> categories = orgCategoryRepository.findAll(specification, criteria);
