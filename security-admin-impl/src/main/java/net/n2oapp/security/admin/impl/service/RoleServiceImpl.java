@@ -13,6 +13,7 @@ import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.RoleSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Sort;
@@ -21,7 +22,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.ws.rs.NotFoundException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
@@ -32,6 +36,10 @@ import static java.util.Objects.nonNull;
 @Service
 @Transactional
 public class RoleServiceImpl implements RoleService {
+
+    @Value("${access.permission.enabled}")
+    private Boolean permissionEnabled;
+
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
@@ -176,7 +184,7 @@ public class RoleServiceImpl implements RoleService {
         if (entity.getSystemCode() != null)
             model.setSystem(model(entity.getSystemCode()));
         model.setDescription(entity.getDescription());
-        if (entity.getPermissionList() != null) {
+        if (permissionEnabled && entity.getPermissionList() != null) {
             model.setPermissions(entity.getPermissionList().stream().map(this::model).collect(Collectors.toList()));
         }
         return model;
