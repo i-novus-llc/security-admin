@@ -37,6 +37,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Value("${access.keycloak.ignore-roles:offline_access,uma_authorization}")
     private String[] ignoreRoles;
 
+    @Value("${access.permission.enabled}")
+    private Boolean permissionEnabled;
+
     private Boolean createUser = true;
 
     private List<String> defaultRoles = new ArrayList<>();
@@ -194,7 +197,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         model.setDescription(entity.getDescription());
         if (nonNull(entity.getSystemCode()))
             model.setSystem(new AppSystem(entity.getSystemCode().getCode()));
-        if (nonNull(entity.getPermissionList())) {
+        if (permissionEnabled && nonNull(entity.getPermissionList())) {
             model.setPermissions(entity.getPermissionList().stream().map(this::model).collect(Collectors.toList()));
         }
         return model;
