@@ -25,7 +25,7 @@ public class UserInfoEndpoint {
     private static final String USERNAME = "username";
 
     @Value("${access.permission.enabled}")
-    private Boolean permissionEnabled;
+    private boolean permissionEnabled;
 
     @Autowired
     private UserRepository userRepository;

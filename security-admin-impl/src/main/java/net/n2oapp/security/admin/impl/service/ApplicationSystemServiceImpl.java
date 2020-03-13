@@ -170,7 +170,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
         model.setSystemCode(entity.getSystemCode().getCode());
         model.setSystemName(entity.getSystemCode().getName());
         model.setOAuth(entity.getClient() != null);
-        model.setClient(entity.getClient() == null ? null : ClientServiceImpl.model(entity.getClient()));
+        model.setClient(entity.getClient() == null ? null : ClientServiceImpl.model(entity.getClient(), permissionEnabled));
         return model;
     }
 
