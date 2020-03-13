@@ -11,6 +11,7 @@ import net.n2oapp.security.admin.impl.entity.SystemEntity;
 import net.n2oapp.security.admin.impl.repository.PermissionRepository;
 import net.n2oapp.security.admin.impl.service.specification.PermissionSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Sort;
@@ -29,6 +30,7 @@ import static java.util.Objects.nonNull;
  */
 @Service
 @Transactional
+@ConditionalOnProperty(name = "access.permission.enabled", havingValue = "true")
 public class PermissionServiceImpl implements PermissionService {
 
     @Autowired

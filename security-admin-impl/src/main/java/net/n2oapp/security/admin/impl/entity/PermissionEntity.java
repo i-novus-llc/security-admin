@@ -58,6 +58,4 @@ public class PermissionEntity {
     public PermissionEntity(String id) {
         setCode(id);
     }
-
-
 }

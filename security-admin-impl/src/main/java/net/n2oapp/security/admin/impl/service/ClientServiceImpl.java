@@ -14,6 +14,7 @@ import net.n2oapp.security.admin.impl.repository.ApplicationRepository;
 import net.n2oapp.security.admin.impl.repository.ClientRepository;
 import net.n2oapp.security.admin.impl.service.specification.ClientSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,13 @@ public class ClientServiceImpl implements ClientService {
 
     @Autowired
     private AuditHelper audit;
+
+    private static Boolean permissionEnabled;
+
+    @Value("${access.permission.enabled}")
+    private void initPermissionEnabled(Boolean permissionEnabled) {
+        this.permissionEnabled = permissionEnabled;
+    }
 
     @Override
     public Client create(Client client) {
@@ -178,7 +186,7 @@ public class ClientServiceImpl implements ClientService {
         model.setCode(entity.getCode());
         model.setName(entity.getName());
         model.setDescription(entity.getDescription());
-        if (nonNull(entity.getPermissionList())) {
+        if (permissionEnabled && nonNull(entity.getPermissionList())) {
             model.setPermissions(entity.getPermissionList().stream().map(ClientServiceImpl::permissionModel).collect(Collectors.toList()));
         }
         return model;

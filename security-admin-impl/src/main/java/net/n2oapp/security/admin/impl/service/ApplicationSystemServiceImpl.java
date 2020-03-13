@@ -18,6 +18,7 @@ import net.n2oapp.security.admin.impl.repository.SystemRepository;
 import net.n2oapp.security.admin.impl.service.specification.ApplicationSpecifications;
 import net.n2oapp.security.admin.impl.service.specification.SystemSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -48,7 +49,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     private SystemRepository systemRepository;
     @Autowired
     private RoleRepository roleRepository;
-    @Autowired
+    @Autowired(required = false)
     private PermissionRepository permissionRepository;
     @Autowired
     private AuditHelper audit;
@@ -56,6 +57,9 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     private RdmChangeDataClient rdmChangeDataClient;
     @Autowired
     private ClientService clientService;
+
+    @Value("${access.permission.enabled}")
+    private boolean permissionEnabled;
 
     @Override
     public Application createApplication(Application service) {
@@ -232,7 +236,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
      * Запрещено удалять систему, если существует роль или право доступа в такой системе
      */
     private void checkSystemWithAuthorities(String code) {
-        if (roleRepository.countRolesWithSystemCode(code) != 0 || permissionRepository.countPermissionsWithSystemCode(code) != 0)
+        if (roleRepository.countRolesWithSystemCode(code) != 0 || (permissionEnabled && permissionRepository.countPermissionsWithSystemCode(code) != 0))
             throw new UserException("exception.roleOrPermissionWithSuchRoleExists");
     }
 
