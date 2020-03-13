@@ -72,12 +72,6 @@
         </dependency>
         <!--/spring-->
 
-        <dependency>
-            <groupId>net.n2oapp.framework.security</groupId>
-            <artifactId>security-auth-oauth2-gateway</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
     </dependencies>
 
     <profiles>
