@@ -8,6 +8,7 @@ import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.SystemEntity;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,9 @@ public class RoleServerLoader implements ServerLoader<RoleForm> {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Value("${access.permission.enabled}")
+    private Boolean permissionEnabled;
 
     @Override
     @Transactional
@@ -52,7 +56,8 @@ public class RoleServerLoader implements ServerLoader<RoleForm> {
         if (form.getUserLevel() != null)
             entity.setUserLevel(UserLevel.valueOf(form.getUserLevel()));
         entity.setSystemCode(new SystemEntity(systemCode));
-        if (form.getPermissions() != null) {
+
+        if (permissionEnabled && form.getPermissions() != null) {
             entity.setPermissionList(form.getPermissions().stream()
                     .map(PermissionEntity::new)
                     .collect(Collectors.toList()));
