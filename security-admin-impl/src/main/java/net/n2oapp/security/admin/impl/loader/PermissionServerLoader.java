@@ -6,6 +6,7 @@ import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.entity.SystemEntity;
 import net.n2oapp.security.admin.impl.repository.PermissionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@ConditionalOnProperty(name = "access.permission.enabled", havingValue = "true")
 public class PermissionServerLoader implements ServerLoader<Permission> {
 
     @Autowired

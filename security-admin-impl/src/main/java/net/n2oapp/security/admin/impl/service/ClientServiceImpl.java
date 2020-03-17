@@ -14,6 +14,7 @@ import net.n2oapp.security.admin.impl.repository.ApplicationRepository;
 import net.n2oapp.security.admin.impl.repository.ClientRepository;
 import net.n2oapp.security.admin.impl.service.specification.ClientSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -40,18 +41,21 @@ public class ClientServiceImpl implements ClientService {
     @Autowired
     private AuditHelper audit;
 
+    @Value("${access.permission.enabled}")
+    private Boolean permissionEnabled;
+
     @Override
     public Client create(Client client) {
         if (clientRepository.findByClientId(client.getClientId()).isPresent())
             throw new UserException("exception.uniqueClient");
-        Client result = model(clientRepository.save(entity(client)));
+        Client result = model(clientRepository.save(entity(client)), permissionEnabled);
         return audit("audit.clientCreate", result);
     }
 
     @Override
     public Client update(Client client) {
         clientNotExists(client.getClientId());
-        Client result = model(clientRepository.save(entity(client)));
+        Client result = model(clientRepository.save(entity(client)), permissionEnabled);
         return audit("audit.clientUpdate", result);
     }
 
@@ -60,18 +64,18 @@ public class ClientServiceImpl implements ClientService {
         ClientEntity client = clientRepository.findByClientId(clientId).orElse(null);
         if (isNull(client)) throw new UserException("exception.clientNotFound");
         clientRepository.deleteById(clientId);
-        audit("audit.clientDelete", model(client));
+        audit("audit.clientDelete", model(client, permissionEnabled));
     }
 
     @Override
     public Client findByClientId(String clientId) {
-        return model(clientRepository.findByClientId(clientId).orElse(null));
+        return model(clientRepository.findByClientId(clientId).orElse(null), permissionEnabled);
     }
 
     @Override
     public Page<Client> findAll(ClientCriteria criteria) {
         Specification<ClientEntity> specification = new ClientSpecifications(criteria);
-        return clientRepository.findAll(specification, criteria).map(ClientServiceImpl::model);
+        return clientRepository.findAll(specification, criteria).map(c -> ClientServiceImpl.model(c, permissionEnabled));
     }
 
     @Override
@@ -105,7 +109,7 @@ public class ClientServiceImpl implements ClientService {
         return client;
     }
 
-    public static Client model(ClientEntity clientEntity) {
+    public static Client model(ClientEntity clientEntity, boolean permissionEnabled) {
         if (isNull(clientEntity)) return null;
         Client client = new Client();
         client.setEnabled(true);
@@ -124,7 +128,7 @@ public class ClientServiceImpl implements ClientService {
             client.setRefreshTokenLifetime(clientEntity.getRefreshTokenLifetime() / 60);
         client.setLogoutUrl(clientEntity.getLogoutUrl());
         if (nonNull(clientEntity.getRoleList())) {
-            client.setRoles(clientEntity.getRoleList().stream().map(ClientServiceImpl::model).collect(Collectors.toList()));
+            client.setRoles(clientEntity.getRoleList().stream().map(r -> ClientServiceImpl.model(r, permissionEnabled)).collect(Collectors.toList()));
             client.setRolesIds(clientEntity.getRoleList().stream().map(RoleEntity::getId).collect(Collectors.toList()));
         }
         return client;
@@ -171,14 +175,14 @@ public class ClientServiceImpl implements ClientService {
             throw new UserException("exception.clientNotFound");
     }
 
-    private static Role model(RoleEntity entity) {
+    private static Role model(RoleEntity entity, boolean permissionEnabled) {
         if (isNull(entity)) return null;
         Role model = new Role();
         model.setId(entity.getId());
         model.setCode(entity.getCode());
         model.setName(entity.getName());
         model.setDescription(entity.getDescription());
-        if (nonNull(entity.getPermissionList())) {
+        if (permissionEnabled && nonNull(entity.getPermissionList())) {
             model.setPermissions(entity.getPermissionList().stream().map(ClientServiceImpl::permissionModel).collect(Collectors.toList()));
         }
         return model;
