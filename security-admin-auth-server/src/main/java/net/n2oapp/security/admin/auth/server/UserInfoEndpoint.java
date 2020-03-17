@@ -4,6 +4,7 @@ import net.n2oapp.security.admin.impl.entity.UserEntity;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.auth.common.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +23,9 @@ import static net.n2oapp.security.admin.auth.server.UserTokenConverter.*;
 public class UserInfoEndpoint {
 
     private static final String USERNAME = "username";
+
+    @Value("${access.permission.enabled}")
+    private boolean permissionEnabled;
 
     @Autowired
     private UserRepository userRepository;
@@ -46,12 +50,14 @@ public class UserInfoEndpoint {
             map.put(USER_LEVEL, user.getUserLevel());
             if (nonNull(user.getRoleList())) {
                 roles.addAll(user.getRoleList().stream().map(r -> r.getCode()).collect(Collectors.toList()));
-                permissions.addAll(user.getRoleList().stream().filter(r -> nonNull(r.getPermissionList())).flatMap(r -> r.getPermissionList().stream())
-                        .map(p -> p.getCode()).collect(Collectors.toList()));
+                if (permissionEnabled) {
+                    permissions.addAll(user.getRoleList().stream().filter(r -> nonNull(r.getPermissionList())).flatMap(r -> r.getPermissionList().stream())
+                            .map(p -> p.getCode()).collect(Collectors.toList()));
+                    systems.addAll(user.getRoleList().stream().filter(r -> nonNull(r.getPermissionList())).flatMap(r -> r.getPermissionList().stream())
+                            .filter(permission -> nonNull(permission.getSystemCode())).map(p -> p.getSystemCode().getCode()).collect(Collectors.toList()));
+                }
                 systems.addAll(user.getRoleList().stream().filter(role -> nonNull(role.getSystemCode())).
                         map(role -> (role.getSystemCode().getCode())).collect(Collectors.toList()));
-                systems.addAll(user.getRoleList().stream().filter(r -> nonNull(r.getPermissionList())).flatMap(r -> r.getPermissionList().stream())
-                        .filter(permission -> nonNull(permission.getSystemCode())).map(p -> p.getSystemCode().getCode()).collect(Collectors.toList()));
                 systems = systems.stream().distinct().collect(Collectors.toList());
             }
         }

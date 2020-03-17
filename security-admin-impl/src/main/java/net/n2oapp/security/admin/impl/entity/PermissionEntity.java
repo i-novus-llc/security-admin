@@ -54,10 +54,7 @@ public class PermissionEntity {
     @ManyToMany(mappedBy = "permissionList")
     private List<RoleEntity> roleList;
 
-
     public PermissionEntity(String id) {
         setCode(id);
     }
-
-
 }
