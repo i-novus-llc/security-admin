@@ -1,1 +1,0 @@
-ALTER TABLE ${n2o.security.admin.schema}.${n2o.security.admin.user.table} ADD COLUMN guid UUID;
