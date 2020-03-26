@@ -23,4 +23,8 @@
         <sqlFile path="access/db/changelog/sql/V2_update_organization.sql"/>
     </changeSet>
 
+    <changeSet id="update_permissions" author="aarifullin" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/v2_update_permissions.sql"/>
+    </changeSet>
+
 </databaseChangeLog>
