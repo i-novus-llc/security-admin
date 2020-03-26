@@ -1,3 +1,0 @@
-ALTER TABLE  sec.department ADD COLUMN IF NOT EXISTS is_deleted BOOLEAN;
-ALTER TABLE sec.organization ADD COLUMN IF NOT EXISTS is_deleted BOOLEAN;
-ALTER TABLE sec.region ADD COLUMN IF NOT EXISTS is_deleted BOOLEAN;
