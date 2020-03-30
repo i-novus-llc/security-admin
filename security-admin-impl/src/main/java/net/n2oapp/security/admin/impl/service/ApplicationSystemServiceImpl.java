@@ -7,6 +7,7 @@ import net.n2oapp.security.admin.api.model.AppSystem;
 import net.n2oapp.security.admin.api.model.AppSystemForm;
 import net.n2oapp.security.admin.api.model.Application;
 import net.n2oapp.security.admin.api.service.ApplicationSystemService;
+import net.n2oapp.security.admin.api.service.ClientService;
 import net.n2oapp.security.admin.impl.audit.AuditHelper;
 import net.n2oapp.security.admin.impl.entity.ApplicationEntity;
 import net.n2oapp.security.admin.impl.entity.SystemEntity;
@@ -17,6 +18,7 @@ import net.n2oapp.security.admin.impl.repository.SystemRepository;
 import net.n2oapp.security.admin.impl.service.specification.ApplicationSpecifications;
 import net.n2oapp.security.admin.impl.service.specification.SystemSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -24,7 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.inovus.ms.rdm.sync.service.change_data.RdmChangeDataClient;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -47,12 +49,17 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     private SystemRepository systemRepository;
     @Autowired
     private RoleRepository roleRepository;
-    @Autowired
+    @Autowired(required = false)
     private PermissionRepository permissionRepository;
     @Autowired
     private AuditHelper audit;
     @Autowired
     private RdmChangeDataClient rdmChangeDataClient;
+    @Autowired
+    private ClientService clientService;
+
+    @Value("${access.permission.enabled}")
+    private boolean permissionEnabled;
 
     @Override
     public Application createApplication(Application service) {
@@ -65,6 +72,11 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
 
     @Override
     public Application updateApplication(Application service) {
+        if (!service.getOAuth()) {
+            service.getClient().setEnabled(false);
+            service.getClient().setClientId(service.getCode());
+            clientService.persist(service.getClient());
+        }
         Application result = model(applicationRepository.save(entity(service)));
         rdmChangeDataClient.changeData(APPLICATION_REF_BOOK_CODE, singletonList(result), emptyList());
         return audit("audit.applicationUpdate", result);
@@ -90,8 +102,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     public Page<Application> findAllApplications(ApplicationCriteria criteria) {
         Specification<ApplicationEntity> specification = new ApplicationSpecifications(criteria);
         if (criteria.getOrders() == null) {
-            criteria.setOrders(Arrays.asList(new Sort.Order(Sort.Direction.ASC, "code")));
-        } else {
+            criteria.setOrders(new ArrayList<>());
             criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "code"));
         }
         Page<ApplicationEntity> all = applicationRepository.findAll(specification, criteria);
@@ -113,10 +124,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
 
     @Override
     public AppSystem updateSystem(AppSystemForm system) {
-        SystemEntity entity = systemRepository.getOne(system.getCode());
-        entity.setName(system.getName());
-        entity.setDescription(system.getDescription());
-        AppSystem result = model(systemRepository.save(entity));
+        AppSystem result = model(systemRepository.save(entity(system)));
         rdmChangeDataClient.changeData(SYSTEM_REF_BOOK_CODE, singletonList(result), emptyList());
         return audit("audit.appSystemUpdate", result);
     }
@@ -142,8 +150,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     public Page<AppSystem> findAllSystems(SystemCriteria criteria) {
         Specification<SystemEntity> specification = new SystemSpecifications(criteria);
         if (criteria.getOrders() == null) {
-            criteria.setOrders(Arrays.asList(new Sort.Order(Sort.Direction.ASC, "code")));
-        } else {
+            criteria.setOrders(new ArrayList<>());
             criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "code"));
         }
         Page<SystemEntity> all = systemRepository.findAll(specification, criteria);
@@ -163,6 +170,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
         model.setSystemCode(entity.getSystemCode().getCode());
         model.setSystemName(entity.getSystemCode().getName());
         model.setOAuth(entity.getClient() != null);
+        model.setClient(entity.getClient() == null ? null : ClientServiceImpl.model(entity.getClient(), permissionEnabled));
         return model;
     }
 
@@ -172,6 +180,10 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
         entity.setName(model.getName());
         entity.setCode(model.getCode());
         entity.setSystemCode(new SystemEntity(model.getSystemCode()));
+        if (Boolean.TRUE.equals(model.getOAuth())) {
+            model.getClient().setClientId(model.getCode());
+            entity.setClient(ClientServiceImpl.entity(model.getClient()));
+        }
         return entity;
     }
 
@@ -185,6 +197,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
             model.setApplications(entity.getApplicationList().stream().map(this::model).collect(Collectors.toList()));
         }
         model.setShortName(entity.getShortName());
+        model.setShowOnInterface(entity.getShowOnInterface());
         model.setIcon(entity.getIcon());
         model.setUrl(entity.getUrl());
         model.setPublicAccess(entity.getPublicAccess());
@@ -198,6 +211,14 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
         entity.setName(model.getName());
         entity.setCode(model.getCode());
         entity.setDescription(model.getDescription());
+        if (Boolean.TRUE.equals(model.getShowOnInterface())) {
+            entity.setShowOnInterface(model.getShowOnInterface());
+            entity.setShortName(model.getShortName());
+            entity.setIcon(model.getIcon());
+            entity.setUrl(model.getUrl());
+            entity.setPublicAccess(model.getPublicAccess());
+            entity.setViewOrder(model.getViewOrder());
+        }
         return entity;
     }
 
@@ -215,7 +236,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
      * Запрещено удалять систему, если существует роль или право доступа в такой системе
      */
     private void checkSystemWithAuthorities(String code) {
-        if (roleRepository.countRolesWithSystemCode(code) != 0 || permissionRepository.countPermissionsWithSystemCode(code) != 0)
+        if (roleRepository.countRolesWithSystemCode(code) != 0 || (permissionEnabled && permissionRepository.countPermissionsWithSystemCode(code) != 0))
             throw new UserException("exception.roleOrPermissionWithSuchRoleExists");
     }
 
@@ -233,12 +254,12 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     }
 
     private Application audit(String action, Application app) {
-        audit.audit(action, app, app.getCode(), app.getName());
+        audit.audit(action, app, app.getCode(), "audit.application");
         return app;
     }
 
     private AppSystem audit(String action, AppSystem appSys) {
-        audit.audit(action, appSys, appSys.getCode(), appSys.getName());
+        audit.audit(action, appSys, appSys.getCode(), "audit.system");
         return appSys;
     }
 }

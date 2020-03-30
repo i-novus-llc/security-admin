@@ -396,7 +396,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private User audit(String action, User user) {
-        audit.audit(action, user, "" + user.getId(), user.getUsername());
+        audit.audit(action, user, "" + user.getId(), "audit.user");
         return user;
     }
 }

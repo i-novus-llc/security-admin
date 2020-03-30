@@ -1,1 +1,0 @@
-update sec.permission set name = :name, code = :code, parent_code = :parent_code where code = :code;

@@ -30,9 +30,9 @@ public class PermissionEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
-
-    @Column(name = "parent_code")
-    private String parentCode;
+    @JoinColumn(name = "parent_code")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private PermissionEntity parentPermission;
 
     @Formula("(SELECT count(*) != 0 from sec.permission c where c.parent_code = code)")
     private Boolean hasChildren;
@@ -54,10 +54,7 @@ public class PermissionEntity {
     @ManyToMany(mappedBy = "permissionList")
     private List<RoleEntity> roleList;
 
-
     public PermissionEntity(String id) {
         setCode(id);
     }
-
-
 }

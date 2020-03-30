@@ -1,1 +1,0 @@
-delete from sec.user_role where user_id = :id;

@@ -2,6 +2,8 @@ package net.n2oapp.security.admin.api.service;
 
 import net.n2oapp.security.admin.api.criteria.PermissionCriteria;
 import net.n2oapp.security.admin.api.model.Permission;
+import net.n2oapp.security.admin.api.model.PermissionUpdateForm;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -19,12 +21,12 @@ public interface PermissionService {
     Permission create(Permission permission);
 
     /**
-     * Изменить право доступа
+     * Изменить имя права доступа
      *
-     * @param permission Модель права доступа
+     * @param permissionUpdateForm форма обновления права доступа
      * @return Измененное право доступа
      */
-    Permission update(Permission permission);
+    Permission update(PermissionUpdateForm permissionUpdateForm);
 
     /**
      * Удалить право доступа
@@ -42,12 +44,12 @@ public interface PermissionService {
     Permission getByCode(String code);
 
     /**
-     * Найти все права доступаии поиска по критериям поиска
+     * Найти все права доступа по критериям поиска
      *
      * @param criteria Критерии поиска
      * @return Страница найденных всех прав доступа
      */
-    List<Permission> getAll(PermissionCriteria criteria);
+    Page<Permission> getAll(PermissionCriteria criteria);
 
     /**
      * Найти все права доступаии поиска по идентификатору родительского элемента
@@ -56,18 +58,4 @@ public interface PermissionService {
      * @return Страница найденных дочерних прав доступа
      */
     List<Permission> getAllByParentCode(String parentCode);
-
-    /**
-     * Найти все права доступаии поиска по идентификатору родительского элемента
-     *
-     * @return Страница найденных корневых прав доступа
-     */
-    List<Permission> getAllByParentIdIsNull();
-
-    /**
-     * Найти все права доступаии с группировкой по системам
-     *
-     * @return Страница найденных прав доступа
-     */
-    List<Permission> getAllWithSystem(PermissionCriteria criteria);
 }

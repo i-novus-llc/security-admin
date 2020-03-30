@@ -26,17 +26,25 @@ public class Permission {
 
     @JsonProperty
     @ApiModelProperty(value = "Код родителя")
-    private String parentCode;
+    private Permission parent;
 
     @JsonProperty
     @ApiModelProperty(value = "Имеет ли детей")
     private Boolean hasChildren;
 
     @JsonProperty
+    @ApiModelProperty(value = "Используется ли в роли")
+    private Boolean usedInRole;
+
+    @JsonProperty
     @ApiModelProperty(value = "Код системы")
-    private String systemCode;
+    private AppSystem system;
 
     @JsonProperty
     @ApiModelProperty(value = "Уровень пользователя")
     private UserLevel userLevel;
+
+    public Permission(String code) {
+        this.code = code;
+    }
 }

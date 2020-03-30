@@ -9,6 +9,46 @@
                     <input-text id="name" label="Наименование" required="true"/>
                     <input-text id="id" label="Код" required="true" enabled="false"/>
                     <text-area id="description" label="Описание"/>
+                    <field id="showOnInterface" label="Включить отображение системы в едином интерфейсе"
+                           visible="${access.system.show-on-interface}">
+                        <controls>
+                            <checkbox id="showOnInterface" src="Switch"/>
+                        </controls>
+                    </field>
+                    <input-text id="shortName" label="Короткое наименование">
+                        <dependencies>
+                            <visibility on="showOnInterface" reset="false">
+                                showOnInterface
+                            </visibility>
+                            <requiring on="showOnInterface">
+                                showOnInterface
+                            </requiring>
+                        </dependencies>
+                    </input-text>
+                    <input-text id="url" label="Адрес">
+                        <dependencies>
+                            <visibility on="showOnInterface" reset="false">
+                                showOnInterface
+                            </visibility>
+                            <requiring on="showOnInterface">
+                                showOnInterface
+                            </requiring>
+                        </dependencies>
+                    </input-text>
+                    <checkbox id="publicAccess" label="Допускается работа в системе без авторизации">
+                        <dependencies>
+                            <visibility on="showOnInterface" reset="false">
+                                showOnInterface
+                            </visibility>
+                        </dependencies>
+                    </checkbox>
+                    <input-text id="viewOrder" domain="integer" label="Порядок отображения системы">
+                        <dependencies>
+                            <visibility on="showOnInterface" reset="false">
+                                showOnInterface
+                            </visibility>
+                        </dependencies>
+                    </input-text>
                 </fields>
             </form>
         </region>
@@ -18,19 +58,11 @@
                 <columns>
                     <column text-field-id="id" label="Код"/>
                     <column text-field-id="name" label="Наименование"/>
-                    <column text-field-id="oAuth" label="OAuth 2.0">
+                    <column text-field-id="enableClient" label="OAuth 2.0">
                         <checkbox enabled="false"/>
                     </column>
                     <column text-field-id="actions" label=" ">
                         <toolbar>
-                            <button id="oAuth" icon="fa fa-exchange" type="icon" label="Протокол OAuth 2.0">
-                                <show-modal page-id="oAuthSettings" submit-operation-id="persist"
-                                            route="/client/:code/persist"
-                                            object-id="client" master-field-id="id" detail-field-id="id"
-                                            upload="defaults"
-                                            page-name="Настройка протокола Oauth2.0 для {name}(Код: {id})">
-                                </show-modal>
-                            </button>
                             <button id="delete" label="Удалить" type="icon" icon="fa fa-trash">
                                 <invoke operation-id="delete"/>
                             </button>
@@ -39,20 +71,20 @@
                 </columns>
                 <rows>
                     <click>
-                        <show-modal page-id="serviceUpdateForm" submit-operation-id="update" route="/:code/update"
+                        <open-page page-id="serviceUpdateForm" submit-operation-id="update" route="/:code/update"
                                     object-id="service"
                                     detail-field-id="id">
-                        </show-modal>
+                        </open-page>
                     </click>
                 </rows>
                 <toolbar>
                     <button id="createService" label="Создать" model="filter">
-                        <show-modal page-id="serviceForm" submit-operation-id="create" model="filter"
+                        <open-page page-id="serviceForm" submit-operation-id="create" model="filter"
                                     object-id="service" upload="defaults" route="/create" close-after-submit="true">
                             <pre-filters>
                                 <eq field-id="systemCode" ref-widget-id="main" ref-model="resolve" value="{id}"/>
                             </pre-filters>
-                        </show-modal>
+                        </open-page>
                     </button>
                 </toolbar>
             </table>

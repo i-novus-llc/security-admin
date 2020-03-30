@@ -13,6 +13,7 @@ import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.RoleSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Sort;
@@ -21,7 +22,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.ws.rs.NotFoundException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
@@ -32,6 +36,10 @@ import static java.util.Objects.nonNull;
 @Service
 @Transactional
 public class RoleServiceImpl implements RoleService {
+
+    @Value("${access.permission.enabled}")
+    private Boolean permissionEnabled;
+
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
@@ -43,9 +51,9 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role create(RoleForm role) {
-        checkRoleUniq(role);
+        checkRoleUnique(role);
         Role result = model(roleRepository.save(entity(role)));
-        // если отстутствует код роли, то устанавливаем
+        // если отсутствует код роли, то устанавливаем
         if (result.getCode() == null)
             result.setCode("ROLE_" + result.getId());
         Role providerResult = provider.createRole(result);
@@ -61,7 +69,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role update(RoleForm role) {
-        checkRoleUniq(role);
+        checkRoleUnique(role);
         Role result = model(roleRepository.save(entity(role)));
         provider.updateRole(result);
         return audit("audit.roleUpdate", result);
@@ -88,8 +96,7 @@ public class RoleServiceImpl implements RoleService {
     public Page<Role> findAll(RoleCriteria criteria) {
         Specification<RoleEntity> specification = new RoleSpecifications(criteria);
         if (criteria.getOrders() == null) {
-            criteria.setOrders(Arrays.asList(new Sort.Order(Sort.Direction.ASC, "code")));
-        } else {
+            criteria.setOrders(new ArrayList<>());
             criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "code"));
         }
         if (Boolean.TRUE.equals(criteria.getGroupBySystem())) {
@@ -177,7 +184,7 @@ public class RoleServiceImpl implements RoleService {
         if (entity.getSystemCode() != null)
             model.setSystem(model(entity.getSystemCode()));
         model.setDescription(entity.getDescription());
-        if (entity.getPermissionList() != null) {
+        if (permissionEnabled && entity.getPermissionList() != null) {
             model.setPermissions(entity.getPermissionList().stream().map(this::model).collect(Collectors.toList()));
         }
         return model;
@@ -191,12 +198,12 @@ public class RoleServiceImpl implements RoleService {
         return model;
     }
 
-    private PermissionEntity entity(Permission entity) {
-        if (entity == null) return null;
-        PermissionEntity model = new PermissionEntity();
-        model.setCode(entity.getCode());
-        model.setName(entity.getName());
-        return model;
+    private PermissionEntity entity(Permission model) {
+        if (model == null) return null;
+        PermissionEntity permissionEntity = new PermissionEntity();
+        permissionEntity.setCode(model.getCode());
+        permissionEntity.setName(model.getName());
+        return permissionEntity;
     }
 
     private AppSystem model(SystemEntity entity) {
@@ -211,8 +218,8 @@ public class RoleServiceImpl implements RoleService {
     /**
      * Валидация на уникальность названия и кода роли при изменении
      */
-    private void checkRoleUniq(RoleForm role) {
-        if (!roleRepository.checkRoleUniq(role.getId() == null ? -1 : role.getId(), role.getName(), role.getCode()))
+    private void checkRoleUnique(RoleForm role) {
+        if (!roleRepository.checkRoleUnique(role.getId() == null ? -1 : role.getId(), role.getName(), role.getCode()))
             throw new UserException("exception.uniqueRole");
     }
 
@@ -226,7 +233,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     private Role audit(String action, Role role) {
-        audit.audit(action, role, "" + role.getId(), role.getName());
+        audit.audit(action, role, "" + role.getCode(), "audit.role");
         return role;
     }
 }
