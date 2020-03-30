@@ -4,12 +4,48 @@ import io.swagger.annotations.ApiParam;
 import net.n2oapp.security.admin.api.criteria.OrganizationCriteria;
 
 import javax.ws.rs.QueryParam;
+import java.util.List;
 
 public class RestOrganizationCriteria extends OrganizationCriteria {
     @QueryParam("shortName")
     @Override
-    @ApiParam(value = "Наименование организации")
+    @ApiParam(value = "Краткое наименование организации")
     public void setShortName(String shortName) {
         super.setShortName(shortName);
+    }
+
+    @QueryParam("name")
+    @Override
+    @ApiParam(value = "Полное или краткое наименование организации")
+    public void setName(String name) {
+        super.setName(name);
+    }
+
+    @QueryParam("ogrn")
+    @Override
+    @ApiParam(value = "ОГРН организации")
+    public void setOgrn(String ogrn) {
+        super.setOgrn(ogrn);
+    }
+
+    @QueryParam("systemCodes")
+    @Override
+    @ApiParam(value = "Коды систем")
+    public void setSystemCodes(List<String> systemCodes) {
+        super.setSystemCodes(systemCodes);
+    }
+
+    @QueryParam("inn")
+    @Override
+    @ApiParam(value = "ИНН организации")
+    public void setInn(String inn) {
+        super.setInn(inn);
+    }
+
+    @QueryParam("categoryCodes")
+    @Override
+    @ApiParam(value = "Коды категорий организаций")
+    public void setCategoryCodes(List<String> categoryCodes) {
+        super.setCategoryCodes(categoryCodes);
     }
 }

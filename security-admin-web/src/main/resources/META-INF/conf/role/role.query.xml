@@ -27,7 +27,7 @@
                 <eq filter-id="id" mapping="[0]"/>
             </filters>
         </field>
-        <field id="name" domain="string" name="Название">
+        <field id="name" domain="string" name="Наименование">
             <select mapping="name"/>
             <sorting/>
             <filters>

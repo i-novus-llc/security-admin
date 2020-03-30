@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="init_db" author="aarifullin" dbms="postgresql">
+        <preConditions onFail="CONTINUE" onError="CONTINUE">
+            <sqlCheck expectedResult="0">SELECT COUNT(schema_name) FROM information_schema.schemata where schema_name =
+                'sec'
+            </sqlCheck>
+        </preConditions>
+        <sqlFile path="access/db/changelog/sql/V1_create_shema_sec.sql"/>
+        <sqlFile path="access/db/changelog/sql/V1_systems.sql"/>
+        <sqlFile path="access/db/changelog/sql/V1_roles.sql"/>
+        <sqlFile path="access/db/changelog/sql/V1_applications_and_clients.sql"/>
+        <sqlFile path="access/db/changelog/sql/V1_department_organization_region.sql"/>
+        <sqlFile path="access/db/changelog/sql/V1_permissions.sql"/>
+        <sqlFile path="access/db/changelog/sql/V1_users.sql"/>
+    </changeSet>
+
+    <changeSet id="update_organization" author="btsyganov" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/V2_update_organization.sql"/>
+    </changeSet>
+
+    <changeSet id="update_permissions" author="aarifullin" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/v2_update_permissions.sql"/>
+    </changeSet>
+
+</databaseChangeLog>

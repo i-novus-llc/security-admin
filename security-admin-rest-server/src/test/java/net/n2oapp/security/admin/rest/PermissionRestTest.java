@@ -32,21 +32,14 @@ public class PermissionRestTest {
 
     @Test
     public void getAllByParentId() throws Exception {
-        Page<Permission> permissions = client.getAll("test", false, new RestPermissionCriteria());
+        Page<Permission> permissions = client.getAll("test", new RestPermissionCriteria());
         assertEquals(1, permissions.getTotalElements());
         assertEquals("test2", permissions.getContent().get(0).getCode());
     }
 
     @Test
-    public void getAllParentIsNull() throws Exception {
-        Page<Permission> permissions = client.getAll("test", true, new RestPermissionCriteria());
-        assertEquals(1, permissions.getTotalElements());
-        assertEquals("test", permissions.getContent().get(0).getCode());
-    }
-
-    @Test
     public void getAll() throws Exception {
-        Page<Permission> permissions = client.getAll(null, null, new RestPermissionCriteria());
+        Page<Permission> permissions = client.getAll(null, new RestPermissionCriteria());
         assertEquals(2, permissions.getTotalElements());
     }
 
@@ -58,7 +51,7 @@ public class PermissionRestTest {
     public void findAllPermissionsWithBadUserLevelTest() {
         RestPermissionCriteria criteria = new RestPermissionCriteria();
         criteria.setUserLevel("wrong");
-        assertEquals(true, client.getAll(null, null, criteria).isEmpty());
+        assertEquals(true, client.getAll(null, criteria).isEmpty());
     }
 
     /**
@@ -69,7 +62,7 @@ public class PermissionRestTest {
     public void findAllPermissionsByUserLevel() {
         RestPermissionCriteria criteria = new RestPermissionCriteria();
         criteria.setUserLevel("federal");
-        assertEquals(1, client.getAll(null, null, criteria).getTotalElements());
+        assertEquals(1, client.getAll(null, criteria).getTotalElements());
     }
 
 }
