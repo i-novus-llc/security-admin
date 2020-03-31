@@ -52,6 +52,8 @@ public class OrganizationSpecifications implements Specification<OrganizationEnt
                     subRoot.get(OrgCategoryEntity_.code).in(criteria.getCategoryCodes())));
             predicate = builder.and(predicate, builder.exists(subquery));
         }
+
+        predicate = builder.and(predicate, builder.equal(root.get(OrganizationEntity_.isDeleted), Boolean.FALSE));
         return predicate;
     }
 }
