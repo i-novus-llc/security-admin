@@ -53,7 +53,7 @@ public class OrganizationSpecifications implements Specification<OrganizationEnt
             predicate = builder.and(predicate, builder.exists(subquery));
         }
 
-        predicate = builder.and(predicate, builder.equal(root.get(OrganizationEntity_.isDeleted), Boolean.FALSE));
+        predicate = builder.and(predicate, builder.or(builder.equal(root.get(OrganizationEntity_.isDeleted), Boolean.FALSE), builder.isNull(root.get(OrganizationEntity_.isDeleted))));
         return predicate;
     }
 }

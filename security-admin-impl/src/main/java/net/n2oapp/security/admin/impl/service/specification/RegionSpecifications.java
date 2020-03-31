@@ -26,7 +26,7 @@ public class RegionSpecifications implements Specification<RegionEntity> {
         if (criteria.getName() != null)
             predicate = builder.and(predicate, builder.like(builder.lower(root.get(RegionEntity_.name)), "%" + criteria.getName().toLowerCase() + "%"));
 
-        predicate = builder.and(predicate, builder.equal(root.get(RegionEntity_.isDeleted), Boolean.FALSE));
+        predicate = builder.and(predicate, builder.or(builder.equal(root.get(RegionEntity_.isDeleted), Boolean.FALSE), builder.isNull(root.get(RegionEntity_.isDeleted))));
         return predicate;
     }
 }
