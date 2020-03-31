@@ -87,6 +87,12 @@ public class OrganizationEntity implements Serializable {
     )
     private List<OrgCategoryEntity> categories;
 
+    /**
+     * Признак что запись была удалена из справочника
+     */
+    @Column(name = "is_deleted")
+    private Boolean isDeleted;
+
     public OrganizationEntity(Integer id) {
         this.id = id;
     }
