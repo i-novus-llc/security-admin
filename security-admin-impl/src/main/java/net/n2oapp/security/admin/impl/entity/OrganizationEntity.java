@@ -80,7 +80,7 @@ public class OrganizationEntity implements Serializable {
     /**
      * Категории организации
      */
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "assigned_org_category", schema = "sec",
             joinColumns = {@JoinColumn(name = "org_code", referencedColumnName = "code")},
             inverseJoinColumns = {@JoinColumn(name = "org_category_code", referencedColumnName = "code")}
