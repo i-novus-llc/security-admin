@@ -43,4 +43,10 @@ public class OrgCategoryEntity implements Serializable {
 
     @ManyToMany(mappedBy = "categories")
     private List<OrganizationEntity> organizationList;
+
+    /**
+     * Признак что запись была удалена из справочника
+     */
+    @Column(name = "is_deleted")
+    private Boolean isDeleted;
 }
