@@ -189,7 +189,7 @@ public class MailServiceImpl implements MailService {
             helper.setText(body, true);
             emailSender.send(helper.getMimeMessage());
         } catch (MailException | MessagingException e) {
-            log.error("Exception while sending mail notification to " + data.get("username") + "\n");
+            log.error("Exception while sending mail notification to " + data.get("username") + "\n" + e.toString() + "\n");
         }
     }
 
