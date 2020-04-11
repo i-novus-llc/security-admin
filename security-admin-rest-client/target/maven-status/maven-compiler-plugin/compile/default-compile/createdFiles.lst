@@ -1,0 +1,11 @@
+net/n2oapp/security/admin/rest/client/UserDetailsServiceRestClient.class
+net/n2oapp/security/admin/rest/client/RegionServiceRestClient.class
+net/n2oapp/security/admin/rest/client/PermissionServiceRestClient.class
+net/n2oapp/security/admin/rest/client/OrganizationServiceRestClient.class
+net/n2oapp/security/admin/rest/client/RoleServiceRestClient.class
+net/n2oapp/security/admin/rest/client/UserLevelServiceRestClient.class
+net/n2oapp/security/admin/rest/client/AdminRestClientConfiguration.class
+net/n2oapp/security/admin/rest/client/ApplicationSystemServiceRestClient.class
+net/n2oapp/security/admin/rest/client/ClientServiceRestClient.class
+net/n2oapp/security/admin/rest/client/UserServiceRestClient.class
+net/n2oapp/security/admin/rest/client/DepartmentServiceRestClient.class
