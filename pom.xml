@@ -60,6 +60,7 @@
                 <config.server.enable>true</config.server.enable>
             </properties>
         </profile>
+
         <profile>
             <id>build-all-modules</id>
             <activation>
