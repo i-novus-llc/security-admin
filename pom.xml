@@ -33,6 +33,8 @@
 
     <modules>
         <module>security-admin-api</module>
+        <module>security-admin-rest-api</module>
+        <module>security-admin-rest-client</module>
     </modules>
 
     <dependencyManagement>
@@ -76,10 +78,8 @@
                 <module>security-auth-oauth2-gateway</module>
                 <module>security-admin-impl</module>
                 <module>security-admin-web</module>
-                <module>security-admin-rest-api</module>
                 <module>security-admin-rest-server</module>
                 <module>security-admin-sso-keycloak</module>
-                <module>security-admin-rest-client</module>
                 <module>security-admin-commons</module>
                 <module>security-admin-db</module>
                 <module>security-admin-auth-server</module>
@@ -119,12 +119,6 @@
                                 <goals>
                                     <goal>sign</goal>
                                 </goals>
-                                <configuration>
-                                    <gpgArguments>
-                                        <arg>--pinentry-mode</arg>
-                                        <arg>loopback</arg>
-                                    </gpgArguments>
-                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
