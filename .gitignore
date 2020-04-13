@@ -1,0 +1,34 @@
+# Windows
+Thumbs.db
+
+# Java
+*.class
+*.classpath
+*.project
+
+# Package Files
+*.jar
+*.war
+*.ear
+
+# Maven
+target
+report
+*.versionsBackup
+*.releaseBackup
+
+# Intellij Idea
+.idea
+*.iml
+*.iws
+*.ipr
+temp
+
+# Gradle
+.gradle
+build
+out
+user.gradle
+
+# Git merge
+*.orig
