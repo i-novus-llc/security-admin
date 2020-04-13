@@ -90,7 +90,6 @@
                 <module>doc</module>
             </modules>
         </profile>
-
         <profile>
             <id>release</id>
             <activation>
