@@ -11,6 +11,10 @@
 
     <artifactId>security-admin-auth-server</artifactId>
 
+    <properties>
+        <jacoco.skip>false</jacoco.skip>
+    </properties>
+
     <dependencies>
 
         <dependency>

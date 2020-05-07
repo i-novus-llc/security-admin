@@ -9,6 +9,7 @@ import net.n2oapp.security.admin.api.service.PermissionService;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.entity.SystemEntity;
 import net.n2oapp.security.admin.impl.repository.PermissionRepository;
+import net.n2oapp.security.admin.impl.repository.SystemRepository;
 import net.n2oapp.security.admin.impl.service.specification.PermissionSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -35,6 +36,10 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Autowired
     private PermissionRepository permissionRepository;
+    @Autowired
+    private SystemRepository systemRepository;
+
+    private static final String SYSTEM_PREFIX = "$";
 
     @Override
     public Permission create(Permission permission) {
@@ -66,6 +71,9 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public Permission getByCode(String code) {
+        if (code.startsWith(SYSTEM_PREFIX)) {
+            return model(systemRepository.findOneByCode(code.replace(SYSTEM_PREFIX, "")));
+        }
         PermissionEntity permissionEntity = permissionRepository.findById(code).get();
         return model(permissionEntity);
     }
@@ -102,17 +110,13 @@ public class PermissionServiceImpl implements PermissionService {
             if (isNull(permission.getParentPermission())
                     && nonNull(permission.getSystemCode())) {
                 Permission temp = model(permission);
-                temp.setParent(new Permission("$" + permission.getSystemCode().getCode()));
+                temp.setParent(new Permission(SYSTEM_PREFIX + permission.getSystemCode().getCode()));
                 modelPermissions.add(temp);
                 permissions.remove(permission);
                 i--;
                 if (!systems.contains(permission.getSystemCode())) {
                     systems.add(permission.getSystemCode());
-                    Permission pseudoPermission = new Permission();
-                    pseudoPermission.setName(permission.getSystemCode().getName());
-                    pseudoPermission.setCode("$" + permission.getSystemCode().getCode());
-                    pseudoPermission.setHasChildren(true);
-                    modelPermissions.add(pseudoPermission);
+                    modelPermissions.add(model(permission.getSystemCode()));
                 }
             }
         }
@@ -160,12 +164,24 @@ public class PermissionServiceImpl implements PermissionService {
         model.setUserLevel(entity.getUserLevel());
         if (entity.getParentPermission() != null) {
             model.setParent(model(entity.getParentPermission()));
+        } else {
+            model.setParent(model(entity.getSystemCode()));
         }
         if (entity.getSystemCode() != null) {
             model.setSystem(new AppSystem(entity.getSystemCode().getCode()));
             model.getSystem().setName(entity.getSystemCode().getName());
         }
         return model;
+    }
+
+    private Permission model(SystemEntity entity) {
+        if (entity == null) return null;
+
+        Permission permission = new Permission();
+        permission.setName(entity.getName());
+        permission.setCode(SYSTEM_PREFIX + entity.getCode());
+        permission.setHasChildren(true);
+        return permission;
     }
 
     /**
