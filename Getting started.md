@@ -1,65 +1,76 @@
 # Getting started
 
-[[_TOC_]]
+1. [ Шаг первый - настройка Keycloak. ](#step1)
+    - [Установка](#step1install)
+    - [Изменить порт на 8888](#port)
+2. [Шаг второй - настройка Auth Gateway](#step2)
+    - [Установка](#step2install)
+3. [Шаг третий - подключение клиента к Auth Gateway](#step3)
+    - [Схема SSO аутентификации](#schema)
+    - [Требования к приложению](#specs)
+    - [Установка](#step3install)
 
+<a name="step1"></a>
 # Шаг первый - настройка Keycloak
 
 Keycloak это открытый сервер SSO аутентификации, разворачиваемый на базе Wildfly.
 
+<a name="step1install"></a>
 ## Установка
 
 1. Скачайте Keycloak в варианте [Standalone server](https://www.keycloak.org/downloads)
 
-2. Запустите команду `/bin/standalone` (сервер поднимется по порту 8080, рекомендуется [изменить этот порт на 8888](#Изменить-порт-на-8888))
+2. Запустите команду `/bin/standalone` (сервер поднимется по порту 8080, рекомендуется [изменить этот порт на 8888](#port))
 
 3. Перейдите по адресу http://localhost:8888/auth
 
 4. Создайте нового администратора для консоли Keycloak.
 
-   ![](doc\src\images\new\registerNewInitialAdmin.png)
+   ![](doc/src/images/new/registerNewInitialAdmin.png)
 
 5. Перейдите по ссылке "Administration Console" и войдите в консоль администрирования.
 
 6. Создайте домен системы (Add realm).
 
-   ![](doc\src\images\new\addRealm.png)
+   ![](doc/src/images/new/addRealm.png)
 
 7. Создайте клиент OAuth2 (Clients > Create). Клиент - это приложение, которое будет аутентифицироваться в Keycloak. В поле "Client ID" задаётся идентификатор клиента. 
 
-   ![](doc\src\images\new\client1.png)
+   ![](doc/src/images/new/client1.png)
 
 8. Нажмите "Save", откроется форма редактирования клиента. В поле "Access Type" выберите "confidential", чтобы никто не смог войти в Keycloak с помощью вашего клиента. Убедитесь, что поле "Standard Flow Enabled" находится в положении "ON". Этот режим позволяет входить в ваше приложение через браузер. В поле "Valid Redirect URIs" укажите правильные префиксы адресов, на которые возможна переадресация после успешного входа. Снова нажмите "Save".
 
-   ![](doc\src\images\new\client2.png)
+   ![](doc/src/images/new/client2.png)
 
 9. На вкладке "Credentials" будет информация о секретном слове (поле "Secret"). Скопируйте его и используйте <a href="#secretField"> в настройках OAuth2 аутентификации вашего приложения </a>.
 
-   ![](doc\src\images\new\client3.png)
+   ![](doc/src/images/new/client3.png)
 
 10. Задайте маппинг ролей (Clients > Ваш клиент > Mappers). Кликните по кнопке "Add Builtin" выберите "realm roles" и нажмите "Add selected". Нажмите кнопку Edit у появившегося маппера. В поле "Token Claim Name" измените значение на "roles". Установите переключатель "Add to userinfo" в положение "ON". Нажмите "Save".
 
-    ![](doc\src\images\new\roles.png)
+    ![](doc/src/images/new/roles.png)
 
 11. Создайте роль "admin" для администрирования системы (Roles > Add role).
 
-    ![](doc\src\images\new\role2.png)
+    ![](doc/src/images/new/role2.png)
 
 12. Создайте пользователя "admin", под которым Вы будете входить в модуль администрирования доступа (Users > Add user). Задайте "Email" и установите переключатель "Email Verified" в положение "ON". Нажмите "Save".
 
-    ![](doc\src\images\new\user1.png)
+    ![](doc/src/images/new/user1.png)
 
 13. На вкладке "Role Mappings" добавьте роль "admin".
 
-    ![](doc\src\images\new\user2.png)
+    ![](doc/src/images/new/user2.png)
 
 14. На вкладке "Credentials" дважды введите пароль пользователя. И переключите поле "Temporary" в положение "OFF". Нажмите "Set Password".
 
-    ![](doc\src\images\new\user3.png)
+    ![](doc/src/images/new/user3.png)
 
 15. Для корректной отправки сообщений пользователю (с напоминанием пароля, подтверждением учетных данных и тд.) из Keycloak пропишите найстройки вашего Email сервера (Realm settings > Email).
 
-    ![](doc\src\images\new\mail.png)
+    ![](doc/src/images/new/mail.png)
 
+<a name="port"></a>
 ## Изменить порт на 8888
 
 1. Перейдите в `/standalone/configuration/` и откройте файл standalone.xml
@@ -70,10 +81,12 @@ Keycloak это открытый сервер SSO аутентификации, 
    <socket-binding name="http" port="${jboss.http.port:8888}"/>
    ```
 
+<a name="step2"></a>
 # Шаг второй - настройка Auth Gateway
 
 Auth Gateway - это SSO сервер, построенный на базе Spring Cloud Security, интегрируемый с любыми другими серверами аутентификации по протоколу OAuth2 OpenId Connect, например, с Keycloak или ЕСИА.
 
+<a name="step2install"></a>
 ## Установка
 
 1. Соберите Auth Gateway выполнив команду `mvn clean package`.
@@ -109,12 +122,13 @@ Auth Gateway - это SSO сервер, построенный на базе Spr
    UserInfo endpoint: /userinfo
    Admin API: /api/info
    ```
-
+<a name="step3"></a>
 # Шаг третий - подключение клиента к Auth Gateway
 
+<a name="schema"></a>
 ## Схема SSO аутентификации
 
-![](doc\src\images\new\oauth2.png)
+![](doc/src/images/new/oauth2.png)
 
 1. Запросы неавторизованных пользователей перенаправляют на Auth Gateway сервер.
 2. Auth Gateway сервер пренаправляет пользователя на Keycloak.
@@ -123,14 +137,16 @@ Auth Gateway - это SSO сервер, построенный на базе Spr
 5. Приложение получает Auth Gateway токен пользователя GET запросом `/token` к Auth Gateway.
 6. Приложение получает информацию о пользователе выполняя авторизованный GET запрос `/userinfo` к Auth Gateway.
 
+<a name="specs"></a>
 ## Требования к приложению
 
 1. Spring Boot 2.1
 2. N2O Framework 7.3
 
+<a name="step3install"></a>
 ## Установка
 
-1. Выполните [настройку Auth Gateway](#Шаг-второй---настройка-Auth-Gateway).
+1. Выполните [настройку Auth Gateway](#step2).
 
 2. Добавьте зависимость `security-auth-oauth2`. Она содержит класс `OpenIdSecurityConfigurerAdapter` и транзитивные зависимости от `spring-security-oauth2`:
 
@@ -198,6 +214,4 @@ Auth Gateway - это SSO сервер, построенный на базе Spr
    # access_token_lifetime - время жизни токена
    # refresh_token_lifetime - время жизни refresh токена
    # logout_url - URL для выхода
-   ```
-
-   
+   ```   
