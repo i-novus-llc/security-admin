@@ -1,6 +1,6 @@
 # Getting started
 
-[toc]
+[[_TOC_]]
 
 # Шаг первый - настройка Keycloak
 
