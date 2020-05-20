@@ -5,8 +5,8 @@
     - [Изменить порт на 8888](#port)
 2. [Шаг второй - настройка Auth Gateway](#step2)
     - [Установка](#step2install)
-3. [Шаг третий - подключение клиента к Auth Gateway](#step3)
-    - [Схема SSO аутентификации](#schema)
+3. [Шаг третий - подключение клиентского приложения к Auth Gateway](#step3)
+    - [Принцип работы SSO аутентификации](#schema)
     - [Требования к приложению](#specs)
     - [Установка](#step3install)
 
@@ -19,56 +19,21 @@ Keycloak это открытый сервер SSO аутентификации, 
 ## Установка
 
 1. Скачайте Keycloak в варианте [Standalone server](https://www.keycloak.org/downloads)
-
 2. Запустите команду `/bin/standalone` (сервер поднимется по порту 8080, рекомендуется [изменить этот порт на 8888](#port))
-
 3. Перейдите по адресу http://localhost:8888/auth
-
 4. Создайте нового администратора для консоли Keycloak.
-
-   ![](doc/src/images/new/registerNewInitialAdmin.png)
-
 5. Перейдите по ссылке "Administration Console" и войдите в консоль администрирования.
-
-6. Создайте домен системы (Add realm).
-
-   ![](doc/src/images/new/addRealm.png)
-
-7. Создайте клиент OAuth2 (Clients > Create). Клиент - это приложение, которое будет аутентифицироваться в Keycloak. В поле "Client ID" задаётся идентификатор клиента. 
-
-   ![](doc/src/images/new/client1.png)
-
-8. Нажмите "Save", откроется форма редактирования клиента. В поле "Access Type" выберите "confidential", чтобы никто не смог войти в Keycloak с помощью вашего клиента. Убедитесь, что поле "Standard Flow Enabled" находится в положении "ON". Этот режим позволяет входить в ваше приложение через браузер. В поле "Valid Redirect URIs" укажите правильные префиксы адресов, на которые возможна переадресация после успешного входа. Снова нажмите "Save".
-
-   ![](doc/src/images/new/client2.png)
-
-9. На вкладке "Credentials" будет информация о секретном слове (поле "Secret"). Скопируйте его и используйте <a href="#secretField"> в настройках OAuth2 аутентификации вашего приложения </a>.
-
-   ![](doc/src/images/new/client3.png)
-
-10. Задайте маппинг ролей (Clients > Ваш клиент > Mappers). Кликните по кнопке "Add Builtin" выберите "realm roles" и нажмите "Add selected". Нажмите кнопку Edit у появившегося маппера. В поле "Token Claim Name" измените значение на "roles". Установите переключатель "Add to userinfo" в положение "ON". Нажмите "Save".
-
-    ![](doc/src/images/new/roles.png)
-
-11. Создайте роль "admin" для администрирования системы (Roles > Add role).
-
-    ![](doc/src/images/new/role2.png)
-
-12. Создайте пользователя "admin", под которым Вы будете входить в модуль администрирования доступа (Users > Add user). Задайте "Email" и установите переключатель "Email Verified" в положение "ON". Нажмите "Save".
-
-    ![](doc/src/images/new/user1.png)
-
-13. На вкладке "Role Mappings" добавьте роль "admin".
-
-    ![](doc/src/images/new/user2.png)
-
-14. На вкладке "Credentials" дважды введите пароль пользователя. И переключите поле "Temporary" в положение "OFF". Нажмите "Set Password".
-
-    ![](doc/src/images/new/user3.png)
-
-15. Для корректной отправки сообщений пользователю (с напоминанием пароля, подтверждением учетных данных и тд.) из Keycloak пропишите найстройки вашего Email сервера (Realm settings > Email).
-
-    ![](doc/src/images/new/mail.png)
+6. Создайте новый домен системы (Add realm), рекомендуется назвать его security-admin.
+7. Создайте клиент OAuth2 (Clients > Create). В данном случае клиентом будет являться сервер авторизации Auth Gateway. В поле "Client ID" придумайте и укажите id клиента, рекомендуется назвать его auth-gateway. 
+8. Нажмите "Save", откроется форма редактирования клиента. В поле "Access Type" выберите "confidential". В положении "ON" должно быть 3 поля: "Standard Flow Enabled", "Direct Access Grants Enabled" и "Service Accounts Enabled" . В поле "Valid Redirect URIs" укажите правильные префиксы адресов, на которые возможна переадресация после успешного входа  (по умолчанию сервис Auth Gateway имеет api по адресу http://localhost:9999/*). Снова нажмите "Save".
+9. Перейдите на вкладку "Service Account Roles". В строке Client Roles найдите "realm-management". Добавьте "manage-realm" и "manage-users" в столбец "Assigned Roles".
+10. На вкладке "Credentials" будет информация о секретном слове (поле "Secret"). Скопируйте его и используйте позже <a href="#secretField"> в настройках OAuth2 аутентификации сервиса Auth Gateway </a>.
+11. Перейдите на вкладку Mappers. Кликните по кнопке "Add Builtin" выберите "realm roles" и нажмите "Add selected". Нажмите кнопку Edit у появившегося маппера. В поле "Token Claim Name" измените значение на "roles". Установите переключатель "Add to userinfo" в положение "ON". Нажмите "Save".
+12. Создайте роль "access.admin" для администрирования системы (Roles > Add role).
+13. Создайте пользователя "admin", под которым Вы будете входить в модуль администрирования доступа (Users > Add user). Задайте "Email" и установите переключатель "Email Verified" в положение "ON". Нажмите "Save".
+14. На вкладке "Role Mappings" добавьте данному пользователю роль "access.admin".
+15. На вкладке "Credentials" укажите пароль пользователя. Переключите поле "Temporary" в положение "OFF". Нажмите "Set Password".
+16. Для корректной отправки сообщений пользователю (с напоминанием пароля, подтверждением учетных данных и тд.) из Keycloak пропишите найстройки вашего Email сервера (Realm settings > Email).
 
 <a name="port"></a>
 ## Изменить порт на 8888
@@ -96,15 +61,24 @@ Auth Gateway - это SSO сервер, построенный на базе Spr
    ```
    #Базовый адрес сервера Keycloak 
    access.keycloak.server-url=http://localhost:8888/auth
-   #Название домена (реалма), в случае примера myproject
-   access.keycloak.realm=myproject 
-   #Идентификатор клиента Auth Gateway в Keycloak, в случае примера auth_gateway
-   access.keycloak.client.client-id=auth_gateway 
-   #Секретное слово клиента Auth Gateway в Keycloak, в случае примера d66b696c-a547-4493-a5bb-ad20f1b97bc2
-   access.keycloak.client.client-secret=d66b696c-a547-4493-a5bb-ad20f1b97bc2
+   #Название домена (реалма), который вы создали в Keycloak в первом шаге
+   access.keycloak.realm=security-admin 
+   #Идентификатор клиента Auth Gateway в Keycloak, который вы указали в первом шаге
+   access.keycloak.client.client-id=auth-gateway 
+   #Секретное слово клиента Auth Gateway в Keycloak (см. шаг 1 пункт 9)
+   access.keycloak.client.client-secret=
    ```
 
-3. Создайте базу данных под названием `security`. Настройки по умолчанию для базы данных сервера auth-gateway:
+3. Перейдите в модуль `security-admin-sso-keycloak`. В классе `AdminSsoKeycloakProperties` задайте настройки для модуля взаимодействия с Keycloak:
+
+   ```
+   # serverUrl - адрес сервера keycloak (в случае примера -  http://localhost:8888/auth)
+   # realm - название домена (в случае примера - security-admin)
+   # adminClientId - идентификатор клиента для синхронизации (в случае примера - auth-gateway)
+   # adminClientSecret - секретное слово клиента для синхронизации (секретное слово клиента auth-gateway в keycloak)
+   ```
+
+4. Создайте базу данных под названием `security`. Настройки по умолчанию для базы данных сервера auth-gateway:
 
    ```
    spring.datasource.url=jdbc:postgresql://localhost:5432/security
@@ -112,9 +86,13 @@ Auth Gateway - это SSO сервер, построенный на базе Spr
    spring.datasource.password=postgres
    ```
 
-4. Запустите сервер командой `java -jar auth-gateway.jar`
+5. Запустите сервер командой `java -jar auth-gateway.jar`
 
-5. Согласно протоколу OAuth2 шлюзовой сервер аутентификации открывает следующие эндпоинты, проверьте их доступность:
+6. Внесите запись в таблицу "system". В поле code укажите "access".
+
+7. Запустите скрипты `create_admin.sql`, которые расположены в папке resources модуля auth-gateway.
+
+8. Согласно протоколу OAuth2 шлюзовой сервер аутентификации открывает следующие эндпоинты, проверьте их доступность:
 
    ```
    Authorization endpoint: /oauth/authorize
@@ -122,13 +100,11 @@ Auth Gateway - это SSO сервер, построенный на базе Spr
    UserInfo endpoint: /userinfo
    Admin API: /api/info
    ```
-<a name="step3"></a>
-# Шаг третий - подключение клиента к Auth Gateway
+   <a name="step3"></a>
+# Шаг третий - подключение клиентского приложения к Auth Gateway
 
 <a name="schema"></a>
-## Схема SSO аутентификации
-
-![](doc/src/images/new/oauth2.png)
+## Принцип работы SSO аутентификации
 
 1. Запросы неавторизованных пользователей перенаправляют на Auth Gateway сервер.
 2. Auth Gateway сервер пренаправляет пользователя на Keycloak.
@@ -144,11 +120,12 @@ Auth Gateway - это SSO сервер, построенный на базе Spr
 2. N2O Framework 7.3
 
 <a name="step3install"></a>
+
 ## Установка
 
 1. Выполните [настройку Auth Gateway](#step2).
 
-2. Добавьте зависимость `security-auth-oauth2`. Она содержит класс `OpenIdSecurityConfigurerAdapter` и транзитивные зависимости от `spring-security-oauth2`:
+2. Добавьте зависимость `security-auth-oauth2`:
 
    ```
    <dependency>
@@ -173,7 +150,7 @@ Auth Gateway - это SSO сервер, построенный на базе Spr
    }
    ```
 
-4. Добавьте зависимость `security-auth-oauth2-gateway`. В ней находится реализация интерфейса `PrincipalExtractor` с помощью которой будут получены атрибуты пользователя из Auth Gateway:
+4. Добавьте зависимость `security-auth-oauth2-gateway`:
 
    ```
    <dependency>
@@ -183,15 +160,15 @@ Auth Gateway - это SSO сервер, построенный на базе Spr
    </dependency>
    ```
 
-5. Для соединения с Auth Gateway сервером задайте следующие настройки в файле `application.properties` клиента:
+5. Для соединения с Auth Gateway сервером задайте следующие настройки в файле `application.properties` клиентского приложения:
 
    ```
-   #Базовый адрес сервиса аутентификации Auth Gateway
+   #Адрес по которому расположен сервис Auth Gateway
    security.oauth2.auth-server-uri=http://localhost:9999
-   #Идентификатор клиента OAuth2 OpenId Connect (придумывается вами)
+   #Идентификатор клиента OAuth2 OpenId Connect
    security.oauth2.client.client-id=myapp
-   #Секретное слово клиента OAuth2 OpenId Connect (генерируется вами)
-   security.oauth2.client.client-secret=711991d0-bb60-4d33-9d90-fffc44571e2e
+   #Секретное слово клиента OAuth2 OpenId Connect
+   security.oauth2.client.client-secret=12345-12345-12345-12345
    #Запрашиваемый уровень доступа
    security.oauth2.client.scope=read,write
    #Адрес сервиса аутентификации через браузер
@@ -208,10 +185,13 @@ Auth Gateway - это SSO сервер, построенный на базе Spr
 
    ```
    # client_id - id клиента, который будет обращаться к серверу auth-gateway, в случае этого примера - myapp.
-   # client_secret - секретное слово клиента, который будет обращаться к серверу auth-gateway, в случае этого примера - 711991d0-bb60-4d33-9d90-fffc44571e2e. 
+   # client_secret - секретное слово клиента, который будет обращаться к серверу auth-gateway
    # grant_types - типы авторизации (допустим client_credentials,authorization_code)
    # redirect_uris - URI разрешенные для редиректа после авторизации
    # access_token_lifetime - время жизни токена
    # refresh_token_lifetime - время жизни refresh токена
    # logout_url - URL для выхода
-   ```   
+   ```
+   
+7. Запустите ваше приложение. При открытии любой страницы через браузер должна
+   произойти переадресация на страницу входа Auth Gateway.
