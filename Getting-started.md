@@ -130,7 +130,7 @@ Auth Gateway - это SSO сервер, построенный на базе Spr
 <a name="specs"></a>
 ## Требования к приложению
 
-1. maven
+1. maven 3+
 2. jdk 11
 
 <a name="step3install"></a>
