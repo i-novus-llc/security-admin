@@ -92,7 +92,21 @@ Auth Gateway - это SSO сервер, построенный на базе Spr
 
 7. Запустите скрипты `create_admin.sql`, которые расположены в папке resources модуля auth-gateway.
 
-8. Согласно протоколу OAuth2 шлюзовой сервер аутентификации открывает следующие эндпоинты, проверьте их доступность:
+8. <a name="oauth"></a>Зарегистрируйте клиента OAuth2, который будет аутентифицироваться в Auth Gateway. Для этого вам нужно добавить информацию о клиенте в таблицу "client", которая находится в базе данных security, схема sec. Необходимо указать:
+
+   ```
+   # client_id - id клиента, который будет обращаться к серверу auth-gateway, в случае этого примера - myapp.
+   # client_secret - секретное слово клиента, который будет обращаться к серверу auth-gateway
+   # grant_types - типы авторизации (допустим client_credentials,authorization_code)
+   # redirect_uris - URI разрешенные для редиректа после авторизации
+   # access_token_lifetime - время жизни токена
+   # refresh_token_lifetime - время жизни refresh токена
+   # logout_url - URL для выхода
+   ```
+
+   
+
+9. Согласно протоколу OAuth2 шлюзовой сервер аутентификации открывает следующие эндпоинты, проверьте их доступность:
 
    ```
    Authorization endpoint: /oauth/authorize
@@ -116,8 +130,8 @@ Auth Gateway - это SSO сервер, построенный на базе Spr
 <a name="specs"></a>
 ## Требования к приложению
 
-1. Spring Boot 2.1
-2. N2O Framework 7.3
+1. maven
+2. jdk 11
 
 <a name="step3install"></a>
 
@@ -181,17 +195,7 @@ Auth Gateway - это SSO сервер, построенный на базе Spr
    security.oauth2.sso.logout-uri=${security.oauth2.auth-server-uri}/logout?redirect_uri=
    ```
 
-6. Зарегистрируйте клиента OAuth2, который будет аутентифицироваться в Auth Gateway. Для этого вам нужно добавить информацию о клиенте в таблицу "client", которая находится в базе данных security, схема sec. Необходимо указать:
+6. [Зарегистрируйте клиента OAuth2](#oauth), если ещё этого не сделали.
 
-   ```
-   # client_id - id клиента, который будет обращаться к серверу auth-gateway, в случае этого примера - myapp.
-   # client_secret - секретное слово клиента, который будет обращаться к серверу auth-gateway
-   # grant_types - типы авторизации (допустим client_credentials,authorization_code)
-   # redirect_uris - URI разрешенные для редиректа после авторизации
-   # access_token_lifetime - время жизни токена
-   # refresh_token_lifetime - время жизни refresh токена
-   # logout_url - URL для выхода
-   ```
-   
 7. Запустите ваше приложение. При открытии любой страницы через браузер должна
    произойти переадресация на страницу входа Auth Gateway.
