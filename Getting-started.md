@@ -88,9 +88,9 @@ Auth Gateway - это SSO сервер, построенный на базе Spr
 
 5. Запустите сервер командой `java -jar auth-gateway.jar`
 
-6. Запустите скрипты `create_admin.sql`, которые расположены в папке resources модуля auth-gateway.
+6. Запустите скрипты `create_admin.sql`, которые расположены в папке resources модуля auth-gateway. В них находятся необходимые permission для администрирования.
 
-8. <a name="oauth"></a>Зарегистрируйте клиента OAuth2, который будет аутентифицироваться в Auth Gateway. Для этого вам нужно добавить информацию о клиенте в таблицу "client", которая находится в базе данных security, схема sec. Необходимо указать:
+8. <a name="oauth"></a>Зарегистрируйте клиента OAuth2, который будет аутентифицироваться в Auth Gateway. Для этого вам нужно добавить информацию о клиенте в таблицу "client". Необходимо указать:
 
    ```
    # client_id - id клиента, который будет обращаться к серверу auth-gateway, в случае этого примера - myapp.
@@ -178,9 +178,9 @@ Auth Gateway - это SSO сервер, построенный на базе Spr
    #Адрес по которому расположен сервис Auth Gateway
    security.oauth2.auth-server-uri=http://localhost:9999
    #Идентификатор клиента OAuth2 OpenId Connect
-   security.oauth2.client.client-id=myapp
+   security.oauth2.client.client-id=frontend-app-id
    #Секретное слово клиента OAuth2 OpenId Connect
-   security.oauth2.client.client-secret=12345-12345-12345-12345
+   security.oauth2.client.client-secret=33403217-430c-448e-aed5-5278873d5sda
    #Запрашиваемый уровень доступа
    security.oauth2.client.scope=read,write
    #Адрес сервиса аутентификации через браузер
