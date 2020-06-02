@@ -336,7 +336,7 @@ security.oauth2.sso.logout-uri=${security.oauth2.auth-server-uri}/logout?redirec
 
 Схема SSO аутентификации::
 +
-image::images\oauth2.png[]
+image::images\auth_gateway_flow.png[]
 
 . Запросы не авторизованных пользователей перенаправляют на Auth Gateway сервер
 . Gateway пренаправляет пользователя на Keycloak
