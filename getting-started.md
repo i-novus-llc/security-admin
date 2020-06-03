@@ -1,4 +1,6 @@
 # Быстрый старт
+Полная документация доступна [здесь](https://git.i-novus.ru/framework/security-admin/blob/master/doc/src/index.adoc).
+
 ## Шаг первый - настройка Keycloak
 
 Keycloak это открытый сервер SSO аутентификации, разворачиваемый на базе Wildfly.
