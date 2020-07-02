@@ -34,7 +34,7 @@
     </permission>
 
     <permission id="access.admin.system.read">
-        <page-access page-id="systems"/>
+        <url-access pattern="/n2o/page/systems"/>
     </permission>
 
     <permission id="access.admin.user.edit">
@@ -46,6 +46,7 @@
     </permission>
 
     <permission id="access.admin.system.edit">
+        <url-access pattern="/n2o/page/systems"/>
         <object-access object-id="system" operations="*"/>
         <object-access object-id="service" operations="*"/>
         <object-access object-id="client" operations="*"/>

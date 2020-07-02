@@ -13,9 +13,9 @@ import org.springframework.context.annotation.Configuration;
 public class AdminWebConfiguration {
     @Bean
     public QueryProcessor saQueryProcessor(ContextProcessor contextProcessor,
-                                         DomainProcessor domainProcessor,
-                                         N2oInvocationFactory invocationFactory,
-                                         QueryExceptionHandler exceptionHandler) {
+                                           DomainProcessor domainProcessor,
+                                           N2oInvocationFactory invocationFactory,
+                                           QueryExceptionHandler exceptionHandler) {
         N2oQueryProcessor queryProcessor = new N2oQueryProcessor(invocationFactory, contextProcessor, domainProcessor,
                 exceptionHandler);
         queryProcessor.setCriteriaResolver(new BaseCriteriaConstructor());
