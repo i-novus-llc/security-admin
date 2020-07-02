@@ -68,12 +68,11 @@ Keycloak это открытый сервер SSO аутентификации, 
 
 Установка::
 
-. Скачайте Keycloak в варианте link:https://www.keycloak.org/downloads.html[Standalone server] версии 6.0
+. Скачайте Keycloak в варианте link:https://www.keycloak.org/downloads.html[Standalone server]
 . Запустите команду `/bin/standalone` (сервер поднимется по порту 8080, рекомендуется link:https://www.keycloak.org/docs/6.0/server_installation/[изменить этот порт] на 8888)
 . Создайте супер пользователя `/bin/add-user-keycloak`
 . Войдите в консоль администрирования `http://localhost:8888/auth`
-. Создайте домен системы (Add realm), если в Вашем Keycloak сервере будет несколько систем.
-Или выберите домен по умолчанию Master, если Ваша система основная.
+. Создайте домен системы (Add realm).
 +
 image::images\keycloak1.png[]
 . Создайте клиентов OAuth2 (Clients > Create). Клиент - это приложение, которое будет аутентифицироваться в Keycloak.
@@ -111,7 +110,7 @@ image::images\keycloak4.png[]
 +
 image::images\keycloak13.png[]
 +
-. Создайте роль "admin" для администрирования системы (Roles > Add role)
+. Создайте роль "access.admin" для администрирования системы (Roles > Add role)
 +
 image::images\keycloak8.png[]
 +
@@ -122,7 +121,7 @@ image::images\keycloak8.png[]
 +
 image::images\keycloak9.png[]
 +
-. На вкладке "Role Mappings" добавьте роль "admin"
+. На вкладке "Role Mappings" добавьте роль "access.admin"
 +
 image::images\keycloak10.png[]
 +
@@ -165,13 +164,24 @@ OAuth2 OpenId Connect, например, с Keycloak или ЕСИА.
 
 . Соберите Auth Gateway выполнив команду `mvn clean package`
 . Auth Gateway подписывает токены с помощью асинхронных ключей по алгоритму RSA.
-Задать ключи можно следующими настройками:
+Задать ключи можно следующим образом:
+
+* Сгенерируйте https://docs.oracle.com/cd/E19509-01/820-3503/gfzbf/index.html[Key Pair и Self-Signed Certificate].
+* Перейдите в модуль `security-admin-auth-server` и добавьте ваш keystore в папку resources/keystore.
+* В настройках `OAuthServerConfiguration` укажите корректный путь к вашему keystore.
 +
 [listing]
-#Закрытый ключ
-access.jwt.signing_key=-----BEGIN RSA PRIVATE KEY-----
-#Открытый ключ
-access.jwt.verifier_key=-----BEGIN PUBLIC KEY-----
+@Bean
+public KeyStoreKeyFactory keyStoreKeyFactory() {
+            return new KeyStoreKeyFactory(new ClassPathResource("keystore/gateway.jks"), properties.getPassword().toCharArray());
+}
+* В настройках `OAuthServerConfiguration` замените все `alias` (по умолчанию "gateway") на корректные.
+* Перейдите в модуль `auth-gateway` и в `application.properties` укажите
+корректные настройки для вашего keystore:
++
+[listing]
+access.auth.keystore.password=lFJhM7YTAoFJWxl7XnMvDuORn17buMb9
+access.auth.keystore.key-id=hYyfxVDkchN9wXuLLjSLe5kQ2EUrW4Mr
 
 . Для подключения Auth Gateway к Keycloak серверу необходимо задать следующие настройки:
 +
@@ -190,7 +200,9 @@ access.keycloak.client.client-secret=
 Клиента auth-gateway необходимо заранее создать в Keycloak (см. link:#Keycloak[Keycloak])
 
 +
+. Создайте базу данных под названием `security`.
 . Запустите сервер командой `java -jar auth-gateway.jar` с настройками выше
+. Запустите скрипты `create_admin.sql`, которые расположены в папке resources модуля auth-gateway. В них находятся необходимые permission для администрирования.
 . Согласно протоколу OAuth2 шлюзовой сервер аутентификации открывает
 следующие эндпоинты, проверьте их доступность:
 +
@@ -200,23 +212,16 @@ Token endpoint: /oauth/token
 UserInfo endpoint: /userinfo
 Admin API: /api/info
 
-. Зарегистрируйте клиентов OAuth2. Клиент - это приложение, которое будет аутентифицироваться в Auth Gateway.
-Сделать это можно с помощью REST сервиса:
-+
-----
-POST /api/clients
-Content-Type: application/json
-----
-Тело запроса:
-+
-----
-{
-  "clientId" : "myapp",
-  "clientSecret" : "mysecret"
-  "grantTypes" : ["authorization_code"],
-  "registeredRedirectUrl" : ["http://localhost:8080/web"]
-}
-----
+
+. Зарегистрируйте клиента OAuth2, который будет аутентифицироваться в Auth Gateway. Для этого вам нужно добавить информацию о клиенте в таблицу "client". Необходимо указать:
+
+   # client_id - id клиента, который будет обращаться к серверу auth-gateway, в случае этого примера - myapp.
+   # client_secret - секретное слово клиента, который будет обращаться к серверу auth-gateway
+   # grant_types - типы авторизации (допустим client_credentials,authorization_code)
+   # redirect_uris - URI разрешенные для редиректа после авторизации
+   # access_token_lifetime - время жизни токена
+   # refresh_token_lifetime - время жизни refresh токена
+   # logout_url - URL для выхода
 
 == OAuth2 OpenId Connect
 В этом разделе рассказывается как подключить к вашему приложению авторизацию
@@ -331,7 +336,7 @@ security.oauth2.sso.logout-uri=${security.oauth2.auth-server-uri}/logout?redirec
 
 Схема SSO аутентификации::
 +
-image::images\oauth2.png[]
+image::images\auth_gateway_flow.png[]
 
 . Запросы не авторизованных пользователей перенаправляют на Auth Gateway сервер
 . Gateway пренаправляет пользователя на Keycloak

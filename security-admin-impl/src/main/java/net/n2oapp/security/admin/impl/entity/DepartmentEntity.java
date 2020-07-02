@@ -33,6 +33,12 @@ public class DepartmentEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
+    /**
+     * Признак что запись была удалена из справочника
+     */
+    @Column(name = "is_deleted")
+    private Boolean isDeleted;
+
     public DepartmentEntity(Integer id) {
         this.id = id;
     }

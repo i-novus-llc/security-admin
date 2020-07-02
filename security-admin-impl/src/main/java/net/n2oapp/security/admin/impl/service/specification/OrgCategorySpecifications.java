@@ -26,6 +26,8 @@ public class OrgCategorySpecifications implements Specification<OrgCategoryEntit
         Predicate predicate = builder.and();
         if (criteria.getName() != null)
             predicate = builder.and(predicate, builder.like(builder.lower(root.get(OrgCategoryEntity_.name)), "%" + criteria.getName().toLowerCase() + "%"));
+
+        predicate = builder.and(predicate, builder.or(builder.equal(root.get(OrgCategoryEntity_.isDeleted), Boolean.FALSE), builder.isNull(root.get(OrgCategoryEntity_.isDeleted))));
         return predicate;
     }
 }

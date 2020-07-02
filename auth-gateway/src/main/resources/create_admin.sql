@@ -1,3 +1,5 @@
+INSERT INTO sec.system(code, name) VALUES('access', 'Единая подсистема прав доступа');
+
 INSERT INTO sec.permission(name, code, system_code) VALUES('Пользователи', 'access.admin.user','access') on conflict on constraint permission_pkey do nothing;
 INSERT INTO sec.permission(name, code, system_code, parent_code) VALUES('Просмотр пользователей', 'access.admin.user.read','access', 'access.admin.user') on conflict on constraint permission_pkey do nothing;
 INSERT INTO sec.permission(name, code, system_code, parent_code) VALUES('Добавление и редактирование пользователей', 'access.admin.user.edit','access', 'access.admin.user') on conflict on constraint permission_pkey do nothing;

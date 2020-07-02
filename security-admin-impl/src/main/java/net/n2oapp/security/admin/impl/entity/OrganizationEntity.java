@@ -1,17 +1,20 @@
 package net.n2oapp.security.admin.impl.entity;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Сущность Организация
  */
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "organization", schema = "sec")
 public class OrganizationEntity implements Serializable {
@@ -80,14 +83,33 @@ public class OrganizationEntity implements Serializable {
     /**
      * Категории организации
      */
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "assigned_org_category", schema = "sec",
             joinColumns = {@JoinColumn(name = "org_code", referencedColumnName = "code")},
             inverseJoinColumns = {@JoinColumn(name = "org_category_code", referencedColumnName = "code")}
     )
     private List<OrgCategoryEntity> categories;
 
+    /**
+     * Признак что запись была удалена из справочника
+     */
+    @Column(name = "is_deleted")
+    private Boolean isDeleted;
+
     public OrganizationEntity(Integer id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrganizationEntity that = (OrganizationEntity) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
