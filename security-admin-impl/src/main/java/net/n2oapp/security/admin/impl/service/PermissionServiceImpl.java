@@ -44,7 +44,7 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     public Permission create(Permission permission) {
         checkPermissionCodeUnique(permission.getCode());
-        return model(permissionRepository.save(entity(permission)));
+        return model(permissionRepository.save(entity(permission)), false);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class PermissionServiceImpl implements PermissionService {
             permissionForUpdate.setParentPermission(new PermissionEntity(permission.getParent().getCode()));
         } else
             permissionForUpdate.setParentPermission(null);
-        return model(permissionRepository.save(permissionForUpdate));
+        return model(permissionRepository.save(permissionForUpdate), false);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class PermissionServiceImpl implements PermissionService {
             return model(systemRepository.findOneByCode(code.replace(SYSTEM_PREFIX, "")));
         }
         PermissionEntity permissionEntity = permissionRepository.findById(code).get();
-        return model(permissionEntity);
+        return model(permissionEntity, false);
     }
 
     @Override
@@ -93,12 +93,12 @@ public class PermissionServiceImpl implements PermissionService {
         if (criteria.getWithSystem() != null && criteria.getWithSystem()) {
             return addPermissionFromSystem(permissionEntityPage);
         }
-        return permissionEntityPage.map(this::model);
+        return permissionEntityPage.map(p -> model(p, criteria.getWithSystem()));
     }
 
     @Override
     public List<Permission> getAllByParentCode(String parentCode) {
-        return permissionRepository.findByParentPermission(new PermissionEntity(parentCode)).stream().map(this::model).collect(Collectors.toList());
+        return permissionRepository.findByParentPermission(new PermissionEntity(parentCode)).stream().map(p -> model(p, false)).collect(Collectors.toList());
     }
 
     private Page<Permission> addPermissionFromSystem(Page<PermissionEntity> permissionEntityPage) {
@@ -109,7 +109,7 @@ public class PermissionServiceImpl implements PermissionService {
             PermissionEntity permission = permissions.get(i);
             if (isNull(permission.getParentPermission())
                     && nonNull(permission.getSystemCode())) {
-                Permission temp = model(permission);
+                Permission temp = model(permission, false);
                 temp.setParent(new Permission(SYSTEM_PREFIX + permission.getSystemCode().getCode()));
                 modelPermissions.add(temp);
                 permissions.remove(permission);
@@ -120,7 +120,7 @@ public class PermissionServiceImpl implements PermissionService {
                 }
             }
         }
-        modelPermissions.addAll(permissions.stream().map(this::model).collect(Collectors.toList()));
+        modelPermissions.addAll(permissions.stream().map(p -> model(p, false)).collect(Collectors.toList()));
         return new PageImpl<>(modelPermissions);
     }
 
@@ -138,7 +138,7 @@ public class PermissionServiceImpl implements PermissionService {
             }
         }
         permissions.removeAll(forRemove);
-        return new PageImpl<>(permissions.stream().map(this::model).collect(Collectors.toList()));
+        return new PageImpl<>(permissions.stream().map(p -> model(p, false)).collect(Collectors.toList()));
     }
 
     private PermissionEntity entity(Permission model) {
@@ -154,7 +154,7 @@ public class PermissionServiceImpl implements PermissionService {
         return entity;
     }
 
-    private Permission model(PermissionEntity entity) {
+    private Permission model(PermissionEntity entity, Boolean withSystem) {
         if (entity == null) return null;
         Permission model = new Permission();
         model.setName(entity.getName());
@@ -163,8 +163,8 @@ public class PermissionServiceImpl implements PermissionService {
         model.setUsedInRole(entity.getRoleList() != null && !entity.getRoleList().isEmpty());
         model.setUserLevel(entity.getUserLevel());
         if (entity.getParentPermission() != null) {
-            model.setParent(model(entity.getParentPermission()));
-        } else {
+            model.setParent(model(entity.getParentPermission(), false));
+        } else if (Boolean.TRUE.equals(withSystem)) {
             model.setParent(model(entity.getSystemCode()));
         }
         if (entity.getSystemCode() != null) {
