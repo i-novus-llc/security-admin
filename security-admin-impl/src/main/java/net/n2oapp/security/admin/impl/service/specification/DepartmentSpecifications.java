@@ -25,6 +25,8 @@ public class DepartmentSpecifications implements Specification<DepartmentEntity>
         Predicate predicate = builder.and();
         if (criteria.getName() != null)
             predicate = builder.and(predicate, builder.like(builder.lower(root.get(DepartmentEntity_.name)), "%" + criteria.getName().toLowerCase() + "%"));
+
+        predicate = builder.and(predicate, builder.or(builder.equal(root.get(DepartmentEntity_.isDeleted), Boolean.FALSE), builder.isNull(root.get(DepartmentEntity_.isDeleted))));
         return predicate;
     }
 }

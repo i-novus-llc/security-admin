@@ -39,6 +39,12 @@ public class RegionEntity {
     @Column(name = "OKATO")
     private String okato;
 
+    /**
+     * Признак что запись была удалена из справочника
+     */
+    @Column(name = "is_deleted")
+    private Boolean isDeleted;
+
     public RegionEntity(Integer id) {
         this.id = id;
     }
