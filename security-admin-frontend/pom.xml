@@ -35,11 +35,11 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>net.n2oapp.framework.security</groupId>-->
-            <!--<artifactId>security-auth-simple</artifactId>-->
-            <!--<version>${project.version}</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>net.n2oapp.framework.security</groupId>
+            <artifactId>security-auth-oauth2-gateway</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
 <!--        PLATFORM-->
         <dependency>
