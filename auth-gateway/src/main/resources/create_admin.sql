@@ -17,8 +17,12 @@ INSERT INTO sec.permission(name, code, system_code, parent_code) VALUES('Доб�
 INSERT INTO sec.permission(name, code, system_code, parent_code) VALUES('Удаление систем', 'access.admin.system.delete','access', 'access.admin.system') on conflict on constraint permission_pkey do nothing;
 INSERT INTO sec.permission(name, code, system_code, parent_code) VALUES('Изменение параметров OAuth 2.0', 'access.admin.system.oauth','access', 'access.admin.system') on conflict on constraint permission_pkey do nothing;
 
-INSERT INTO sec.role(name, code, system_code) SELECT 'Администратор ЕПБА', 'access.admin','access' WHERE NOT EXISTS (SELECT code FROM sec.role r WHERE r.code = 'access.admin');
+INSERT INTO sec.permission(name, code, system_code) VALUES('Права доступа', 'access.admin.permission','access') on conflict on constraint permission_pkey do nothing;
+INSERT INTO sec.permission(name, code, system_code, parent_code) VALUES('Просмотр прав доступа', 'access.admin.permission.read','access', 'access.admin.permission') on conflict on constraint permission_pkey do nothing;
+INSERT INTO sec.permission(name, code, system_code, parent_code) VALUES('Добавление и редактирование прав доступа', 'access.admin.permission.edit','access', 'access.admin.permission') on conflict on constraint permission_pkey do nothing;
+INSERT INTO sec.permission(name, code, system_code, parent_code) VALUES('Удаление прав доступа', 'access.admin.permission.delete','access', 'access.admin.permission') on conflict on constraint permission_pkey do nothing;
 
+INSERT INTO sec.role(name, code, system_code) SELECT 'Администратор ЕПБА', 'access.admin','access' WHERE NOT EXISTS (SELECT code FROM sec.role r WHERE r.code = 'access.admin');
 
 INSERT INTO sec.role_permission(permission_code, role_id) VALUES('access.admin.user.read',(SELECT id FROM sec.role WHERE code='access.admin')) on conflict on constraint role_permission_pk do nothing;
 INSERT INTO sec.role_permission(permission_code, role_id) VALUES('access.admin.user.edit',(SELECT id FROM sec.role WHERE code='access.admin')) on conflict on constraint role_permission_pk do nothing;
@@ -34,4 +38,8 @@ INSERT INTO sec.role_permission(permission_code, role_id) VALUES('access.admin.s
 INSERT INTO sec.role_permission(permission_code, role_id) VALUES('access.admin.system.delete',(SELECT id FROM sec.role WHERE code='access.admin')) on conflict on constraint role_permission_pk do nothing;
 INSERT INTO sec.role_permission(permission_code, role_id) VALUES('access.admin.system.oauth',(SELECT id FROM sec.role WHERE code='access.admin')) on conflict on constraint role_permission_pk do nothing;
 INSERT INTO sec.role_permission(permission_code, role_id) VALUES('access.admin.system',(SELECT id FROM sec.role WHERE code='access.admin')) on conflict on constraint role_permission_pk do nothing;
+INSERT INTO sec.role_permission(permission_code, role_id) VALUES('access.admin.permission.read',(SELECT id FROM sec.role WHERE code='access.admin')) on conflict on constraint role_permission_pk do nothing;
+INSERT INTO sec.role_permission(permission_code, role_id) VALUES('access.admin.permission.edit',(SELECT id FROM sec.role WHERE code='access.admin')) on conflict on constraint role_permission_pk do nothing;
+INSERT INTO sec.role_permission(permission_code, role_id) VALUES('access.admin.permission.delete',(SELECT id FROM sec.role WHERE code='access.admin')) on conflict on constraint role_permission_pk do nothing;
+INSERT INTO sec.role_permission(permission_code, role_id) VALUES('access.admin.permission',(SELECT id FROM sec.role WHERE code='access.admin')) on conflict on constraint role_permission_pk do nothing;
 
