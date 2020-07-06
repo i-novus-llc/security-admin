@@ -1,0 +1,58 @@
+version: "3.6"
+
+services:
+
+  frontend:
+    environment:
+      - JAVA_OPTS=-Xmx300m
+      - SECURITY_OAUTH2_AUTH_SERVER_URI=https://epmp.master.i-novus.ru/auth
+      - SECURITY_OAUTH2_CLIENT_CLIENT_SECRET=6aebc9fa-3321-4ca4-8a90-b145b2b562e9
+      - JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
+    ports:
+      - 8080
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+      restart_policy:
+        max_attempts: 3
+      placement:
+        constraints:
+          - node.labels.type == db2
+
+
+#  # security ==================================================================================================
+#  auth-gateway:
+#    environment:
+#      - JAVA_OPTS=-Xmx400m
+#      - SERVER_PORT=8080
+#      - SERVER_USE_FORWARD_HEADERS=true
+#      - ACCESS_KEYCLOAK_SERVER_URL=http://keycloak8.i-novus.ru/auth
+#      - ACCESS_KEYCLOAK_REALM=security-admin
+#      - ACCESS_KEYCLOAK_CLIENT_CLIENT_ID=auth-gateway
+#      - ACCESS_KEYCLOAK_CLIENT_CLIENT_SECRET=5b64d94a-6940-4ee3-97e0-b404c3a0c7c7
+#      - ACCESS_KEYCLOAK_ADMIN_CLIENT_ID=auth-gateway
+#      - ACCESS_KEYCLOAK_ADMIN_CLIENT_SECRET=5b64d94a-6940-4ee3-97e0-b404c3a0c7c7
+#      - ACCESS_ESIA_AUTH_SERVER_URI=https://esia-portal1.test.gosuslugi.ru
+#      - ACCESS_ESIA_CLIENT_CLIENT_ID=EPMPS_EPBA
+#      - ACCESS_ESIA_CLIENT_SCOPE=openid,snils,fullname,usr_org
+#      - ACCESS_ESIA_PATH_TO_KEYSTORE=classpath:keystore/mps_esia_test.jks
+#      - ACCESS_ESIA_KEY_ALIAS=mps_esia_test
+#      - ACCESS_ESIA_KEY_STORE_PASSWORD=mps_esia_test
+#      - ACCESS_AUTH_AUTHENTICATED_USER_REDIRECT_URL=https://epmp.master.i-novus.ru/
+#      - RDM_CLIENT_SYNC_URL=http://integration-bus:8080/integration/get/rdm/read?envCode=access
+#      - RDM_CLIENT_EXPORT_URL=http://rdm-service:8080/rdm/service/rdm/api
+#      - JAXRS_SWAGGER_SCHEMES=https
+#      - JAXRS_SWAGGER_AUTH_NAME=oauth2
+#      - JAXRS_SWAGGER_AUTH_TOKEN_URI=https://epmp.master.i-novus.ru/auth/oauth/token
+#      - AUDIT_SERVICE_URL=http://audit-service:8080/audit/service/api
+#      - AUDIT_CLIENT_SOURCEAPPLICATION=access
+#    ports:
+#      - 8080
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 1024M
+#      placement:
+#        constraints:
+#          - node.labels.type == db2

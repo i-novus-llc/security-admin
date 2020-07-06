@@ -1,0 +1,5 @@
+version: "3.6"
+
+services:
+  forntend:
+    image: "${DOCKER_REGISTRY}/security-admin/frontend:${TAG}"

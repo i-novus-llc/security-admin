@@ -1,0 +1,9 @@
+version: "3.6"
+
+services:
+
+  frontend:
+    build:
+      context: security-admin-frontend
+      args:
+        JAR_FILE: target/access-web.jar
