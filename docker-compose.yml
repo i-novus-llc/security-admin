@@ -5,8 +5,9 @@ services:
   frontend:
     environment:
       - JAVA_OPTS=-Xmx300m
-      - SECURITY_OAUTH2_AUTH_SERVER_URI=https://epmp.master.i-novus.ru/auth
-      - SECURITY_OAUTH2_CLIENT_CLIENT_SECRET=6aebc9fa-3321-4ca4-8a90-b145b2b562e9
+      - SECURITY_OAUTH2_AUTH_SERVER_URI=http://docker.one:8278
+      - SECURITY_OAUTH2_CLIENT_CLIENT_ID=frontend
+      - SECURITY_OAUTH2_CLIENT_CLIENT_SECRET=ca12a678-b275-499b-a778-750bad4d0a77
       - JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
     ports:
       - 8080
