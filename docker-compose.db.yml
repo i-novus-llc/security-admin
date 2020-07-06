@@ -15,11 +15,11 @@ services:
         constraints:
           - node.labels.type == db
 
-  idm-service:
+  auth-gateway:
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/security
     depends_on:
-      - idm-db
+      - db
 
 volumes:
   db-data:
