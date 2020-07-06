@@ -1,0 +1,25 @@
+version: "3.6"
+
+services:
+
+  db:
+    volumes:
+      - db-data:/pg/11/data
+    ports:
+      - 5432
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+      placement:
+        constraints:
+          - node.labels.type == db
+
+  idm-service:
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/security
+    depends_on:
+      - idm-db
+
+volumes:
+  db-data:
