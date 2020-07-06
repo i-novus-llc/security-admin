@@ -3,3 +3,6 @@ version: "3.6"
 services:
   frontend:
     image: "${DOCKER_REGISTRY}/security-admin/frontend:${TAG}"
+
+  auth-gateway:
+    image: "${DOCKER_REGISTRY}/security-admin/auth-gateway:${TAG}"

@@ -7,3 +7,9 @@ services:
       context: security-admin-frontend
       args:
         JAR_FILE: target/access-web.jar
+
+  auth-gateway:
+    build:
+      context: auth-gateway
+      args:
+        JAR_FILE: target/auth-gateway.jar
