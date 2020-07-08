@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import ru.inovus.ms.rdm.sync.rest.RdmSyncRest;
 
 @Component
-@ConditionalOnProperty(name = "access.nsiOrganizationSync")
+@ConditionalOnProperty(name = "access.organization-sync-or-crud", havingValue = "rdm")
 public class OrganizationSynchronizeJob implements Job {
 
     private static final Logger logger = LoggerFactory.getLogger(OrganizationSynchronizeJob.class);

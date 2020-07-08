@@ -102,6 +102,10 @@ public class OrganizationServiceImpl implements OrganizationService {
         model.setCode(entity.getCode());
         model.setOgrn(entity.getOgrn());
         model.setOkpo(entity.getOkpo());
+        model.setInn(entity.getInn());
+        model.setLegalAddress(entity.getLegalAddress());
+        model.setKpp(entity.getKpp());
+        model.setEmail(entity.getEmail());
         return model;
     }
 
