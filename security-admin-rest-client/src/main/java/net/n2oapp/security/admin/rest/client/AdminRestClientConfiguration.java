@@ -3,14 +3,17 @@ package net.n2oapp.security.admin.rest.client;
 import net.n2oapp.platform.jaxrs.autoconfigure.EnableJaxRsProxyClient;
 import net.n2oapp.security.admin.rest.api.*;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+
 @EnableJaxRsProxyClient(
         classes = {UserRestService.class, RoleRestService.class, PermissionRestService.class,
                 ApplicationSystemRestService.class, ClientRestService.class, UserDetailsRestService.class,
-                RegionRestService.class, OrganizationRestService.class, DepartmentRestService.class, UserLevelRestService.class},
+                RegionRestService.class, OrganizationReadRestService.class, OrganizationCUDRestService.class, DepartmentRestService.class, UserLevelRestService.class},
         address = "${access.service.url}")
 public class AdminRestClientConfiguration {
 
@@ -40,8 +43,16 @@ public class AdminRestClientConfiguration {
     }
 
     @Bean
-    public OrganizationServiceRestClient organizationService(@Qualifier("organizationRestServiceJaxRsProxyClient") OrganizationRestService client) {
-        return new OrganizationServiceRestClient(client);
+    @ConditionalOnBean(value = OrganizationCUDRestService.class)
+    public OrganizationServiceRestClient organizationService(@Qualifier("organizationReadRestServiceJaxRsProxyClient") OrganizationReadRestService readClient,
+                                                             @Qualifier("organizationCUDRestServiceJaxRsProxyClient") OrganizationCUDRestService cudClient) {
+        return new OrganizationServiceRestClient(readClient, cudClient);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(value = OrganizationCUDRestService.class)
+    public OrganizationServiceRestClient organizationService(@Qualifier("organizationRestServiceJaxRsProxyClient") OrganizationReadRestService client) {
+        return new OrganizationServiceRestClient(client, null);
     }
 
     @Bean

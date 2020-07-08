@@ -55,4 +55,19 @@ public class Organization {
     @ApiModelProperty(value = "Полное наименование организации")
     private String fullName;
 
+    @JsonProperty
+    @ApiModelProperty(value = "ИНН организации")
+    private String inn;
+
+    @JsonProperty
+    @ApiModelProperty(value = "КПП организации")
+    private String kpp;
+
+    @JsonProperty
+    @ApiModelProperty(value = "Юридический адрес")
+    private String legalAddress;
+
+    @JsonProperty
+    @ApiModelProperty(value = "Электронная почта")
+    private String email;
 }

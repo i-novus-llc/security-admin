@@ -15,10 +15,7 @@
  */
 package net.n2oapp.security.admin.rest.api;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.Authorization;
+import io.swagger.annotations.*;
 import net.n2oapp.security.admin.api.model.OrgCategory;
 import net.n2oapp.security.admin.api.model.Organization;
 import net.n2oapp.security.admin.rest.api.criteria.RestOrgCategoryCriteria;
@@ -29,19 +26,26 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 /**
- * REST сервис организациями
+ * REST сервис для чтения организаций
  */
 @Path("/")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Api(value = "Организации", authorizations = @Authorization(value = "oauth2"))
-public interface OrganizationRestService {
+public interface OrganizationReadRestService {
 
     @GET
     @Path("/organizations")
     @ApiOperation("Найти все организации")
     @ApiResponse(code = 200, message = "Страница организации")
     Page<Organization> getAll(@BeanParam RestOrganizationCriteria criteria);
+
+    @GET
+    @Path("/organizations/{id}")
+    @ApiOperation("Найти организацию по уникальному идентификатору")
+    @ApiResponse(code = 200, message = "Организация")
+    Organization get(@ApiParam("Уникальный идентификатор записи") @PathParam("id") Integer id);
+
 
     @GET
     @Path("/orgCategories")

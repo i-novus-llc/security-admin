@@ -30,6 +30,10 @@ public class RdmSyncConfiguration {
 
     @Value("${rdm.cron.import.department}")
     private String departmentUpdateCronExpression;
+
+    @Value("${access.nsiOrganizationSync:true}")
+    private Boolean nsiOrganizationSync;
+
     @Autowired
     private RdmSyncRest rdmSyncRest;
 
@@ -52,16 +56,6 @@ public class RdmSyncConfiguration {
                 .withIdentity("app_sys_export_trigger")
                 .withDescription("Trigger for app_sys_export_job")
                 .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
-                .build();
-
-
-        JobDetail organizationJobDetail = JobBuilder.newJob().ofType(OrganizationSynchronizeJob.class)
-                .storeDurably()
-                .withIdentity("organization_job_detail")
-                .build();
-        CronTrigger organizationTrigger = TriggerBuilder.newTrigger().forJob(organizationJobDetail)
-                .withIdentity("organization_trigger")
-                .withSchedule(cronSchedule(organizationUpdateCronExpression))
                 .build();
 
 
@@ -100,9 +94,18 @@ public class RdmSyncConfiguration {
         Map jobDetailAndTriggerMap = new HashMap();
         jobDetailAndTriggerMap.put(appSysExportJobDetail, Set.of(triggerForAppSystemExportJob));
         jobDetailAndTriggerMap.put(regionJobDetail, Set.of(regionTrigger));
-        jobDetailAndTriggerMap.put(organizationJobDetail, Set.of(organizationTrigger));
         jobDetailAndTriggerMap.put(departmentJobDetail, Set.of(departmentTrigger));
-
+        if (nsiOrganizationSync) {
+            JobDetail organizationJobDetail = JobBuilder.newJob().ofType(OrganizationSynchronizeJob.class)
+                    .storeDurably()
+                    .withIdentity("organization_job_detail")
+                    .build();
+            CronTrigger organizationTrigger = TriggerBuilder.newTrigger().forJob(organizationJobDetail)
+                    .withIdentity("organization_trigger")
+                    .withSchedule(cronSchedule(organizationUpdateCronExpression))
+                    .build();
+            jobDetailAndTriggerMap.put(organizationJobDetail, Set.of(organizationTrigger));
+        }
         if (properties.getSynchronizeEnabled()) {
             jobDetailAndTriggerMap.put(userSynchronizeJobDetail, Set.of(userSynchronizeJobTrigger));
         }
