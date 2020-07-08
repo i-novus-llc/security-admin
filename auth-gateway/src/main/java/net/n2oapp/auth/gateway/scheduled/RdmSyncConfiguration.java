@@ -31,8 +31,8 @@ public class RdmSyncConfiguration {
     @Value("${rdm.cron.import.department}")
     private String departmentUpdateCronExpression;
 
-    @Value("${access.nsiOrganizationSync:true}")
-    private Boolean nsiOrganizationSync;
+    @Value("${access.organization-sync-or-crud}")
+    private String organizationSyncOrCrud;
 
     @Autowired
     private RdmSyncRest rdmSyncRest;
@@ -95,7 +95,7 @@ public class RdmSyncConfiguration {
         jobDetailAndTriggerMap.put(appSysExportJobDetail, Set.of(triggerForAppSystemExportJob));
         jobDetailAndTriggerMap.put(regionJobDetail, Set.of(regionTrigger));
         jobDetailAndTriggerMap.put(departmentJobDetail, Set.of(departmentTrigger));
-        if (nsiOrganizationSync) {
+        if ("rdm".equals(organizationSyncOrCrud)) {
             JobDetail organizationJobDetail = JobBuilder.newJob().ofType(OrganizationSynchronizeJob.class)
                     .storeDurably()
                     .withIdentity("organization_job_detail")

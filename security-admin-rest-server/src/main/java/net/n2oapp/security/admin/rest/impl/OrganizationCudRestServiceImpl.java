@@ -11,7 +11,7 @@ import org.springframework.stereotype.Controller;
  * Реализация REST сервиса управления организациями
  */
 @Controller
-@ConditionalOnProperty(name = "access.nsiOrganizationSync", havingValue = "false")
+@ConditionalOnProperty(name = "access.organization-sync-or-crud", havingValue = "crud")
 public class OrganizationCudRestServiceImpl implements OrganizationCUDRestService {
 
     @Autowired
