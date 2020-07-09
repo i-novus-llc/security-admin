@@ -12,7 +12,7 @@ import org.springframework.stereotype.Controller;
  */
 @Controller
 @ConditionalOnProperty(name = "access.organization-persist-mode", havingValue = "crud")
-public class OrganizationPersistServiceImpl implements OrganizationPersistRestService {
+public class OrganizationPersistRestServiceImpl implements OrganizationPersistRestService {
 
     @Autowired
     private OrganizationService service;
