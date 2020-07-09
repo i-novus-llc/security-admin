@@ -75,6 +75,8 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public Organization update(Organization organization) {
+        if (organization.getId() == null)
+            throw new UserException("exception.NullOrganizationId");
         if (!organizationRepository.existsById(organization.getId()))
             throw new UserException("exception.OrganizationNotFound");
         if (organization.getCode() == null)

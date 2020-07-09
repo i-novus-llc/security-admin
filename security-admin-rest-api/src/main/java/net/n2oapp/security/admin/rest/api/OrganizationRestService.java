@@ -32,7 +32,7 @@ import javax.ws.rs.core.MediaType;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Api(value = "Организации", authorizations = @Authorization(value = "oauth2"))
-public interface OrganizationReadRestService {
+public interface OrganizationRestService {
 
     @GET
     @Path("/organizations")
