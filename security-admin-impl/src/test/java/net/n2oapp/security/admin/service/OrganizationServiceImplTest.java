@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.service;
 
+import net.n2oapp.security.admin.api.criteria.OrgCategoryCriteria;
 import net.n2oapp.security.admin.api.criteria.OrganizationCriteria;
 import net.n2oapp.security.admin.api.model.Organization;
 import net.n2oapp.security.admin.impl.service.OrganizationServiceImpl;
@@ -30,8 +31,7 @@ public class OrganizationServiceImplTest {
 
     @Test
     public void createOrg() {
-
-        Organization organizationResponse = prepareOrgForTest("2");
+        Organization organizationResponse = organizationService.create(prepareOrgRequest("2"));
         assertNotNull(organizationResponse.getId());
         assertThat(organizationResponse.getCode(), is("2"));
         assertThat(organizationResponse.getShortName(), is("2"));
@@ -45,8 +45,50 @@ public class OrganizationServiceImplTest {
     }
 
     @Test
+    public void createOrgException() {
+        Organization organizationResponse = organizationService.create(prepareOrgRequest("8"));
+
+        Throwable thrown = catchThrowable(() -> organizationService.create(organizationResponse));
+        assertThat(thrown.getMessage(), is("exception.uniqueOrganization"));
+
+        organizationResponse.setId(null);
+        organizationResponse.setCode(null);
+        thrown = catchThrowable(() -> organizationService.create(organizationResponse));
+        assertThat(thrown.getMessage(), is("exception.NullOrganizationCode"));
+
+        organizationResponse.setCode("8");
+        thrown = catchThrowable(() -> organizationService.create(organizationResponse));
+        assertThat(thrown.getMessage(), is("exception.uniqueOrganizationCode"));
+    }
+
+    @Test
+    public void updateOrgException() {
+        Organization organizationResponse = organizationService.create(prepareOrgRequest("9"));
+        Integer orgId = organizationResponse.getId();
+
+        organizationResponse.setId(null);
+        Throwable thrown = catchThrowable(() -> organizationService.update(organizationResponse));
+        assertThat(thrown.getMessage(), is("exception.NullOrganizationId"));
+
+        organizationResponse.setId(9999999);
+        thrown = catchThrowable(() -> organizationService.update(organizationResponse));
+        assertThat(thrown.getMessage(), is("exception.OrganizationNotFound"));
+
+        organizationResponse.setId(orgId);
+        organizationResponse.setCode(null);
+        thrown = catchThrowable(() -> organizationService.update(organizationResponse));
+        assertThat(thrown.getMessage(), is("exception.NullOrganizationCode"));
+
+        organizationService.create(prepareOrgRequest("10"));
+
+        organizationResponse.setCode("10");
+        thrown = catchThrowable(() -> organizationService.update(organizationResponse));
+        assertThat(thrown.getMessage(), is("exception.uniqueOrganizationCode"));
+    }
+
+    @Test
     public void updateOrg() {
-        Organization organizationResponse = prepareOrgForTest("3");
+        Organization organizationResponse = organizationService.create(prepareOrgRequest("3"));
         Integer orgId = organizationResponse.getId();
         organizationResponse.setCode("99");
         organizationResponse.setShortName("4");
@@ -73,26 +115,28 @@ public class OrganizationServiceImplTest {
 
     @Test
     public void deleteOrg() {
-        Organization organizationResponse = prepareOrgForTest("6");
+        Organization organizationResponse = organizationService.create(prepareOrgRequest("6"));
         organizationService.delete(organizationResponse.getId());
-        Throwable thrown = catchThrowable(() -> organizationService.find(organizationResponse.getId()));
+        Throwable thrown = catchThrowable(() -> organizationService.delete(organizationResponse.getId()));
         assertThat(thrown.getMessage(), is("exception.OrganizationNotFound"));
     }
 
     @Test
     public void findOrg() {
-        Organization organization = prepareOrgForTest("7");
+        Organization organization = organizationService.create(prepareOrgRequest("7"));
         Organization response = organizationService.find(organization.getId());
         assertThat(response.getId(), is(organization.getId()));
     }
 
     @Test
-    public void findAll() {
+    public void findAllOrg() {
         OrganizationCriteria criteria = new OrganizationCriteria();
         criteria.setInn("test_inn6");
         List<Organization> organizations = organizationService.findAll(criteria).getContent();
         assertThat(organizations.size(), is(1));
         assertThat(organizations.get(0).getCode(), is("test_code6"));
+        criteria.setOrders(null);
+        assertNotNull(organizationService.findAll(criteria).getContent());
 
         criteria = new OrganizationCriteria();
         criteria.setOgrn("test_ogrn4");
@@ -113,7 +157,15 @@ public class OrganizationServiceImplTest {
         assertThat(organizations.get(0).getCode(), is("test_code2"));
     }
 
-    private Organization prepareOrgForTest(String testValue) {
+    @Test
+    public void findAllCategory() {
+        assertNotNull(organizationService.findAllCategories(new OrgCategoryCriteria()));
+        OrgCategoryCriteria categoryCriteria = new OrgCategoryCriteria();
+        categoryCriteria.setOrders(null);
+        assertNotNull(organizationService.findAllCategories(categoryCriteria));
+    }
+
+    private Organization prepareOrgRequest(String testValue) {
         Organization organization = new Organization();
         organization.setCode(testValue);
         organization.setShortName(testValue);
@@ -125,6 +177,6 @@ public class OrganizationServiceImplTest {
         organization.setLegalAddress(testValue);
         organization.setEmail(testValue);
 
-        return organizationService.create(organization);
+        return organization;
     }
 }

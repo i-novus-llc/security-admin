@@ -2,7 +2,7 @@ package net.n2oapp.security.admin.rest.impl;
 
 import net.n2oapp.security.admin.api.model.Organization;
 import net.n2oapp.security.admin.api.service.OrganizationService;
-import net.n2oapp.security.admin.rest.api.OrganizationCUDRestService;
+import net.n2oapp.security.admin.rest.api.OrganizationPersistRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Controller;
@@ -11,8 +11,8 @@ import org.springframework.stereotype.Controller;
  * Реализация REST сервиса управления организациями
  */
 @Controller
-@ConditionalOnProperty(name = "access.organization-sync-or-crud", havingValue = "crud")
-public class OrganizationCudRestServiceImpl implements OrganizationCUDRestService {
+@ConditionalOnProperty(name = "access.organization-persist-mode", havingValue = "crud")
+public class OrganizationPersistServiceImpl implements OrganizationPersistRestService {
 
     @Autowired
     private OrganizationService service;

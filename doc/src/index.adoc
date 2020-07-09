@@ -1011,9 +1011,18 @@ systems
 |boolean
 |Отправлять уведомление пользователю о блокировке
 
+|access.organization-persist-mode=rdm
+|rdm,crud
+|Режим работы с организациями 1)Синхронизация организаций через нси и выключенные CRUD(rdm) 2)Синхронизация через нси выключена и работают CRUD(crud)
+
+|access.keycloak.synchronizeEnabled=false
+|boolean
+|Включение автоматической синхронизации пользователей
+
 |rdm.client.export.url
 |string
 |Адрес сервиса RDM для экспорта Приложений и Систем в сервис НСИ
+
 
 |===
 

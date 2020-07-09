@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 @EnableJaxRsProxyClient(
         classes = {UserRestService.class, RoleRestService.class, PermissionRestService.class,
                 ApplicationSystemRestService.class, ClientRestService.class, UserDetailsRestService.class,
-                RegionRestService.class, OrganizationReadRestService.class, OrganizationCUDRestService.class, DepartmentRestService.class, UserLevelRestService.class},
+                RegionRestService.class, OrganizationRestService.class, OrganizationPersistRestService.class, DepartmentRestService.class, UserLevelRestService.class},
         address = "${access.service.url}")
 public class AdminRestClientConfiguration {
 
@@ -43,15 +43,15 @@ public class AdminRestClientConfiguration {
     }
 
     @Bean
-    @ConditionalOnBean(value = OrganizationCUDRestService.class)
-    public OrganizationServiceRestClient organizationService(@Qualifier("organizationReadRestServiceJaxRsProxyClient") OrganizationReadRestService readClient,
-                                                             @Qualifier("organizationCUDRestServiceJaxRsProxyClient") OrganizationCUDRestService cudClient) {
-        return new OrganizationServiceRestClient(readClient, cudClient);
+    @ConditionalOnBean(value = OrganizationPersistRestService.class)
+    public OrganizationServiceRestClient organizationService(@Qualifier("organizationRestServiceJaxRsProxyClient") OrganizationRestService organizationRestService,
+                                                             @Qualifier("organizationPersistRestServiceJaxRsProxyClient") OrganizationPersistRestService organizationPersistRestService) {
+        return new OrganizationServiceRestClient(organizationRestService, organizationPersistRestService);
     }
 
     @Bean
-    @ConditionalOnMissingBean(value = OrganizationCUDRestService.class)
-    public OrganizationServiceRestClient organizationService(@Qualifier("organizationRestServiceJaxRsProxyClient") OrganizationReadRestService client) {
+    @ConditionalOnMissingBean(value = OrganizationPersistRestService.class)
+    public OrganizationServiceRestClient organizationService(@Qualifier("organizationRestServiceJaxRsProxyClient") OrganizationRestService client) {
         return new OrganizationServiceRestClient(client, null);
     }
 
