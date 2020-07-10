@@ -89,7 +89,7 @@ public class RdmSyncConfiguration {
     }
 
     @Bean
-    @ConditionalOnProperty(name = "access.keycloak.synchronizeEnabled")
+    @ConditionalOnProperty(name = "access.keycloak.synchronize-enabled")
     public SynchronizationInfo userJobAndTrigger() {
         JobDetail userSynchronizeJobDetail = JobBuilder.newJob().ofType(UserSynchronizeJob.class)
                 .storeDurably()
