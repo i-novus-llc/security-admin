@@ -1011,9 +1011,9 @@ systems
 |boolean
 |Отправлять уведомление пользователю о блокировке
 
-|access.organization-persist-mode=rdm
-|rdm,crud
-|Режим работы с организациями 1)Синхронизация организаций через нси и выключенные CRUD(rdm) 2)Синхронизация через нси выключена и работают CRUD(crud)
+|access.organization-persist-mode
+|sync,rest
+|Режим заполнения таблицы организаций 1) rest - через Rest сервисы 2)  sync -  режим синхронизации. Источник - НСИ.
 
 |access.keycloak.synchronizeEnabled=false
 |boolean

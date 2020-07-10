@@ -11,7 +11,7 @@ import org.springframework.stereotype.Controller;
  * Реализация REST сервиса управления организациями
  */
 @Controller
-@ConditionalOnProperty(name = "access.organization-persist-mode", havingValue = "crud")
+@ConditionalOnProperty(name = "access.organization-persist-mode", havingValue = "rest")
 public class OrganizationPersistRestServiceImpl implements OrganizationPersistRestService {
 
     @Autowired
