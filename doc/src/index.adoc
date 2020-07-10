@@ -1015,7 +1015,7 @@ systems
 |sync,rest
 |Режим заполнения таблицы организаций 1) rest - через Rest сервисы 2)  sync -  режим синхронизации. Источник - НСИ.
 
-|access.keycloak.synchronizeEnabled=false
+|access.keycloak.synchronize-enabled=false
 |boolean
 |Включение автоматической синхронизации пользователей
 
