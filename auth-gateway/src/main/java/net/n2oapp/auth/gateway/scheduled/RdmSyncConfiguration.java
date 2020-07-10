@@ -35,9 +35,6 @@ public class RdmSyncConfiguration {
     @Value("${rdm.cron.import.department}")
     private String departmentUpdateCronExpression;
 
-    @Value("${access.organization-persist-mode}")
-    private String organizationSyncOrCrud;
-
     @Autowired
     private RdmSyncRest rdmSyncRest;
 
@@ -48,7 +45,7 @@ public class RdmSyncConfiguration {
     private static final String USER_SYNCHRONIZE_TRIGGER = "User_Synchronize_Trigger";
 
     @Bean
-    public JobAndTrigger appSysExportJobAndTrigger() {
+    public SynchronizationInfo appSysExportJobAndTrigger() {
         JobDetail appSysExportJobDetail = JobBuilder.newJob().ofType(ApplicationSystemExportJob.class)
                 .storeDurably()
                 .withIdentity("app_sys_export_job")
@@ -60,11 +57,11 @@ public class RdmSyncConfiguration {
                 .withDescription("Trigger for app_sys_export_job")
                 .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
                 .build();
-        return new JobAndTrigger(appSysExportJobDetail, Set.of(triggerForAppSystemExportJob));
+        return new SynchronizationInfo(appSysExportJobDetail, Set.of(triggerForAppSystemExportJob));
     }
 
     @Bean
-    public JobAndTrigger regionJobAndTrigger() {
+    public SynchronizationInfo regionJobAndTrigger() {
         JobDetail regionJobDetail = JobBuilder.newJob().ofType(RegionSynchronizeJob.class)
                 .storeDurably()
                 .withIdentity("region_job_detail")
@@ -74,11 +71,11 @@ public class RdmSyncConfiguration {
                 .withSchedule(cronSchedule(regionUpdateCronExpression))
                 .build();
 
-        return new JobAndTrigger(regionJobDetail, Set.of(regionTrigger));
+        return new SynchronizationInfo(regionJobDetail, Set.of(regionTrigger));
     }
 
     @Bean
-    public JobAndTrigger departmentJobAndTrigger() {
+    public SynchronizationInfo departmentJobAndTrigger() {
         JobDetail departmentJobDetail = JobBuilder.newJob().ofType(DepartmentSynchronizeJob.class)
                 .storeDurably()
                 .withIdentity("department_job_detail")
@@ -88,12 +85,12 @@ public class RdmSyncConfiguration {
                 .withSchedule(cronSchedule(departmentUpdateCronExpression))
                 .build();
 
-        return new JobAndTrigger(departmentJobDetail, Set.of(departmentTrigger));
+        return new SynchronizationInfo(departmentJobDetail, Set.of(departmentTrigger));
     }
 
     @Bean
     @ConditionalOnProperty(name = "access.keycloak.synchronizeEnabled")
-    public JobAndTrigger userJobAndTrigger() {
+    public SynchronizationInfo userJobAndTrigger() {
         JobDetail userSynchronizeJobDetail = JobBuilder.newJob().ofType(UserSynchronizeJob.class)
                 .storeDurably()
                 .withIdentity(USER_SYNCHRONIZE_JOB_DETAIL)
@@ -104,12 +101,12 @@ public class RdmSyncConfiguration {
                 .withIdentity(USER_SYNCHRONIZE_TRIGGER)
                 .withSchedule(cronSchedule(properties.getSynchronizeFrequency()))
                 .build();
-        return new JobAndTrigger(userSynchronizeJobDetail, Set.of(userSynchronizeJobTrigger));
+        return new SynchronizationInfo(userSynchronizeJobDetail, Set.of(userSynchronizeJobTrigger));
     }
 
     @Bean
-    @ConditionalOnProperty(name = "access.organization-persist-mode", havingValue = "rdm")
-    public JobAndTrigger organizationJobAndTrigger() {
+    @ConditionalOnProperty(name = "access.organization-persist-mode", havingValue = "sync")
+    public SynchronizationInfo organizationJobAndTrigger() {
         JobDetail organizationJobDetail = JobBuilder.newJob().ofType(OrganizationSynchronizeJob.class)
                 .storeDurably()
                 .withIdentity("organization_job_detail")
@@ -118,12 +115,12 @@ public class RdmSyncConfiguration {
                 .withIdentity("organization_trigger")
                 .withSchedule(cronSchedule(organizationUpdateCronExpression))
                 .build();
-        return new JobAndTrigger(organizationJobDetail, Set.of(organizationTrigger));
+        return new SynchronizationInfo(organizationJobDetail, Set.of(organizationTrigger));
     }
 
     @Bean
-    public Scheduler scheduler(SchedulerFactoryBean schedulerFactoryBean, List<JobAndTrigger> jobAndTriggers) throws SchedulerException {
-        Map<JobDetail, Set<? extends Trigger>> scheduleJobs = jobAndTriggers.stream().collect(Collectors.toMap(JobAndTrigger::getJob, JobAndTrigger::getTrigger));
+    public Scheduler scheduler(SchedulerFactoryBean schedulerFactoryBean, List<SynchronizationInfo> synchronizationInfos) throws SchedulerException {
+        Map<JobDetail, Set<? extends Trigger>> scheduleJobs = synchronizationInfos.stream().collect(Collectors.toMap(SynchronizationInfo::getJob, SynchronizationInfo::getTrigger));
         Scheduler scheduler = schedulerFactoryBean.getScheduler();
         scheduler.scheduleJobs(scheduleJobs, true);
         scheduler.getContext().put(RdmSyncRest.class.getSimpleName(), rdmSyncRest);
@@ -133,10 +130,10 @@ public class RdmSyncConfiguration {
 
     @Getter
     @Setter
-    private class JobAndTrigger {
-        public JobAndTrigger(JobDetail job, Set<? extends Trigger> trigger) {
+    private static class SynchronizationInfo {
+        public SynchronizationInfo(JobDetail job, Set<? extends Trigger> triggers) {
             this.job = job;
-            this.trigger = trigger;
+            this.trigger = triggers;
         }
 
         private JobDetail job;
