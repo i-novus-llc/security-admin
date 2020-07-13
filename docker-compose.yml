@@ -19,7 +19,7 @@ services:
         max_attempts: 3
       placement:
         constraints:
-          - node.labels.type == db2
+          - node.hostname == os-4
 
   auth-gateway:
     environment:
@@ -42,4 +42,4 @@ services:
           memory: 1024M
       placement:
         constraints:
-          - node.labels.type == db2
+          - node.hostname == os-4
