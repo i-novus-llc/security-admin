@@ -27,4 +27,8 @@
         <sqlFile path="access/db/changelog/sql/v2_update_permissions.sql"/>
     </changeSet>
 
+    <changeSet id="add_account_type" author="btsyganov" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/V3_add_account_type.sql"/>
+    </changeSet>
+
 </databaseChangeLog>

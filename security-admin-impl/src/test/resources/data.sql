@@ -29,5 +29,8 @@ INSERT INTO sec.role_permission(role_id, permission_code) VALUES (101, 'test-cod
 INSERT INTO sec.role_permission(role_id, permission_code) VALUES (102, 'test-code2');
 
 
+--for testing account_type
+INSERT INTO sec.account_type (code, name, description, user_level, status) VALUES ('testAccountTypeCode', 'testAccountTypeName', 'testDescription', 'PERSONAL', false);
+
 
 

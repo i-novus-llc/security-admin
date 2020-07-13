@@ -21,11 +21,12 @@ package net.n2oapp.security.admin.api.model;
  */
 public enum UserLevel {
     FEDERAL("Федеральный уровень"),
+    PERSONAL("Личная учетная запись"),
     REGIONAL("Региональный уровень"),
     ORGANIZATION("Уровень организации"),
     NOT_SET("Не задан");
 
-    private String desc;
+    private final String desc;
 
     UserLevel(String desc) {
         this.desc = desc;
