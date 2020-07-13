@@ -13,7 +13,7 @@ services:
           memory: 1024M
       placement:
         constraints:
-          - node.hostname == os-4
+          [node.hostname == os-4]
 
   auth-gateway:
     environment:
