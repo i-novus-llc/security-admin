@@ -8,6 +8,7 @@
             <input-text id="name" label="Имя" default-value="#{name}" enabled="false"/>
             <input-text id="patronymic" label="Отчество" default-value="#{patronymic}" enabled="false"/>
             <input-text id="email" label="Электронная почта" default-value="#{email}" enabled="false"/>
+            <input-text id="departmentName" label="Департамент" default-value="#{departmentName}" enabled="false"/>
         </fields>
     </form>
 </simple-page>
