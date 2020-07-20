@@ -1011,9 +1011,18 @@ systems
 |boolean
 |Отправлять уведомление пользователю о блокировке
 
+|access.organization-persist-mode
+|sync,rest
+|Режим заполнения таблицы организаций 1) rest - через Rest сервисы 2)  sync -  режим синхронизации. Источник - НСИ.
+
+|access.keycloak.synchronize-enabled=false
+|boolean
+|Включение автоматической синхронизации пользователей
+
 |rdm.client.export.url
 |string
 |Адрес сервиса RDM для экспорта Приложений и Систем в сервис НСИ
+
 
 |===
 
