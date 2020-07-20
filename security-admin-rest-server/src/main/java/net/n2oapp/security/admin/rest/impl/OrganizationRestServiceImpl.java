@@ -10,9 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 
-
 /**
- * Реализация REST сервиса управления организациями
+ * Реализация REST сервиса для чтения организаций
  */
 @Controller
 public class OrganizationRestServiceImpl implements OrganizationRestService {
@@ -23,6 +22,11 @@ public class OrganizationRestServiceImpl implements OrganizationRestService {
     @Override
     public Page<Organization> getAll(RestOrganizationCriteria criteria) {
         return service.findAll(criteria);
+    }
+
+    @Override
+    public Organization get(Integer id) {
+        return service.find(id);
     }
 
     @Override

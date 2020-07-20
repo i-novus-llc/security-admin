@@ -22,7 +22,7 @@ import net.n2oapp.security.admin.api.model.Organization;
 import org.springframework.data.domain.Page;
 
 /**
- * Сервис управления регионами
+ * Сервис управления организациями
  */
 public interface OrganizationService {
 
@@ -35,11 +35,42 @@ public interface OrganizationService {
     Page<Organization> findAll(OrganizationCriteria criteria);
 
     /**
+     * Найти организацию по уникальному идентификатору записи
+     *
+     * @param id Уникальный идентификатор
+     * @return Найденная организация
+     */
+    Organization find(Integer id);
+
+    /**
      * Найти все категории организаций по критериям поиска
      *
      * @param criteria Критерии поиска
      * @return Страница категории организаций
      */
     Page<OrgCategory> findAllCategories(OrgCategoryCriteria criteria);
+
+    /**
+     * Создать организацию
+     *
+     * @param organization Форма организации
+     * @return Созданная организация
+     */
+    Organization create(Organization organization);
+
+    /**
+     * Обновить организацию
+     *
+     * @param organization Форма организации
+     * @return Обновленная организация
+     */
+    Organization update(Organization organization);
+
+    /**
+     * Удалить организацию
+     *
+     * @param id Уникальный идентификатор записи организации
+     */
+    void delete(Integer id);
 
 }

@@ -24,6 +24,7 @@ public class User extends org.springframework.security.core.userdetails.User {
     private String organization;
     private String region;
     private String department;
+    private String departmentName;
     private String userLevel;
 
     public User(String username) {
@@ -162,6 +163,14 @@ public class User extends org.springframework.security.core.userdetails.User {
 
     public void setDepartment(String department) {
         this.department = department;
+    }
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
     }
 
     public String getUserLevel() {

@@ -19,7 +19,7 @@ services:
         max_attempts: 3
       placement:
         constraints:
-          - node.labels.type == db2
+          [node.hostname == os-4]
 
   auth-gateway:
     environment:
@@ -32,6 +32,8 @@ services:
       - ACCESS_KEYCLOAK_CLIENT_CLIENT_SECRET=0a889967-3fa4-4dd7-898c-7625e99bd793
       - ACCESS_KEYCLOAK_ADMIN_CLIENT_ID=auth-gateway
       - ACCESS_KEYCLOAK_ADMIN_CLIENT_SECRET=0a889967-3fa4-4dd7-898c-7625e99bd793
+      - ACCESS_ORGANIZATION_PERSIST_MODE=rest
+      - JAXRS_SWAGGER_AUTH_TOKEN_URI=http://docker.one:8278/oauth/token
     ports:
       - 8080
     deploy:
@@ -40,4 +42,4 @@ services:
           memory: 1024M
       placement:
         constraints:
-          - node.labels.type == db2
+          [node.hostname == os-4]
