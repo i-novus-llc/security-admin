@@ -53,10 +53,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public User loadUserDetails(UserDetailsToken userDetails) {
-        UserEntity userEntity = userRepository.findOneByUsernameIgnoreCase(emailAsUsername ? userDetails.getEmail() : userDetails.getUsername());
+        UserEntity userEntity = userRepository.findOneByUsernameIgnoreCase(Boolean.TRUE.equals(emailAsUsername) ? userDetails.getEmail() : userDetails.getUsername());
         if (isNull(userEntity) && createUser) {
             userEntity = new UserEntity();
-            userEntity.setUsername(emailAsUsername ? userDetails.getEmail() : userDetails.getUsername());
+            userEntity.setUsername(Boolean.TRUE.equals(emailAsUsername) ? userDetails.getEmail() : userDetails.getUsername());
             userEntity.setExtUid(userDetails.getExtUid());
             userEntity.setEmail(userDetails.getEmail());
             userEntity.setSurname(userDetails.getSurname());

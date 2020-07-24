@@ -389,7 +389,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void validateUsernameEmailSnils(UserForm user) {
-        if (!emailAsUsername) {
+        if (!Boolean.TRUE.equals(emailAsUsername)) {
             userValidations.checkUsernameUniq(user.getId(), model(userRepository.findOneByUsernameIgnoreCase(user.getUsername())));
             userValidations.checkUsername(user.getUsername());
         } else {

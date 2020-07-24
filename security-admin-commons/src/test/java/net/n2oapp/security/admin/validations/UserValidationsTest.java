@@ -1,10 +1,15 @@
 package net.n2oapp.security.admin.validations;
 
 import net.n2oapp.platform.i18n.UserException;
+import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.commons.util.UserValidations;
 import org.junit.Test;
 
 import java.util.Arrays;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.junit.Assert.assertEquals;
 
 public class UserValidationsTest {
 
@@ -29,5 +34,27 @@ public class UserValidationsTest {
         } catch (UserException ex) {
 
         }
+    }
+
+    @Test
+    public void EmailUniqValidationTest() {
+        UserValidations userValidations = new UserValidations();
+        User user = new User();
+        user.setId(1);
+        userValidations.checkEmailUniq(1, user);
+        Throwable thrown = catchThrowable(() -> userValidations.checkEmailUniq(2, user));
+        assertThat(thrown).isInstanceOf(UserException.class);
+        assertEquals("exception.uniqueEmail", thrown.getMessage());
+    }
+
+    @Test
+    public void UserNameUniqValidationTest() {
+        UserValidations userValidations = new UserValidations();
+        User user = new User();
+        user.setId(1);
+        userValidations.checkEmailUniq(1, user);
+        Throwable thrown = catchThrowable(() -> userValidations.checkUsernameUniq(2, user));
+        assertThat(thrown).isInstanceOf(UserException.class);
+        assertEquals("exception.uniqueUsername", thrown.getMessage());
     }
 }

@@ -44,7 +44,7 @@ public class UserValidations {
      * Валидация на уникальность имени пользователя
      */
     public void checkUsernameUniq(Integer id, User foundUser) {
-        if (anotherUserExist(id, foundUser))
+        if (Boolean.TRUE.equals(anotherUserExist(id, foundUser)))
             throw new UserException("exception.uniqueUsername");
     }
 
@@ -52,7 +52,7 @@ public class UserValidations {
      * Валидация на уникальность email пользователя
      */
     public void checkEmailUniq(Integer id, User foundUser) {
-        if (anotherUserExist(id, foundUser))
+        if (Boolean.TRUE.equals(anotherUserExist(id, foundUser)))
             throw new UserException("exception.uniqueEmail");
     }
 
