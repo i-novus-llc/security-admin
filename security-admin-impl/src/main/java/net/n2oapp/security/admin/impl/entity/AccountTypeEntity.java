@@ -1,13 +1,16 @@
 package net.n2oapp.security.admin.impl.entity;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import net.n2oapp.security.admin.api.model.UserLevel;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "account_type", schema = "sec")
 public class AccountTypeEntity {
@@ -49,4 +52,9 @@ public class AccountTypeEntity {
      */
     @Column(name = "status", nullable = false)
     private Boolean status;
+
+
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
+    private List<AccountTypeRoleEntity> roleList;
+
 }
