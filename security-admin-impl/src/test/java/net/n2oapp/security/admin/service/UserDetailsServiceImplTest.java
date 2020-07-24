@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserDetailsToken;
 import net.n2oapp.security.admin.impl.service.UserDetailsServiceImpl;
+import net.n2oapp.security.admin.impl.service.UserServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,16 +23,20 @@ import static org.junit.Assert.assertEquals;
 public class UserDetailsServiceImplTest {
 
     @Autowired
-    private UserDetailsServiceImpl service;
+    private UserDetailsServiceImpl detailsService;
+
+    @Autowired
+    private UserServiceImpl userService;
 
     @Test
     public void loadUserDetailsTest() {
-        User userDetails = service.loadUserDetails(userDetailsToken());
+        User userDetails = detailsService.loadUserDetails(userDetailsToken());
         assertEquals("testUserName", userDetails.getUsername());
         assertEquals("testName", userDetails.getName());
         assertEquals("test@test.test", userDetails.getEmail());
         assertEquals("testSurname", userDetails.getSurname());
         assertEquals(2, userDetails.getRoles().size());
+        userService.delete(userDetails.getId());
     }
 
     private UserDetailsToken userDetailsToken() {
