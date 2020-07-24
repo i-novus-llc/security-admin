@@ -24,7 +24,7 @@ import static org.hamcrest.Matchers.is;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @TestPropertySource("classpath:test.properties")
 public class AccountTypeServiceTest {
-    
+
     @Autowired
     private AccountTypeService service;
 
@@ -62,7 +62,7 @@ public class AccountTypeServiceTest {
         newAccountType.setStatus(true);
         newAccountType.setUserLevel(UserLevel.REGIONAL);
         newAccountType.setDescription("testDescription2");
-        newAccountType.setRoleIds(Arrays.asList(1, 2, 99));
+        newAccountType.setRoleIds(Arrays.asList(100, 101, 102));
         service.create(newAccountType);
 
         assertThat(service.findAll(new AccountTypeCriteria()).getTotalElements(), is(2L));
@@ -120,6 +120,5 @@ public class AccountTypeServiceTest {
         assertThat(service.findAll(new AccountTypeCriteria()).getTotalElements(), is(2L));
         service.delete(id);
         assertThat(service.findAll(new AccountTypeCriteria()).getTotalElements(), is(1L));
-
     }
 }

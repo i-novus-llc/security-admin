@@ -1,10 +1,10 @@
 CREATE TABLE sec.account_type
 (
-    id SERIAL,
-    code character varying(100) NOT NULL,
+    id serial,
+    code character VARYING(100) NOT NULL,
     name character varying(100) NOT NULL,
-    description character varying(255),
-    user_level character varying(50) NOT NULL,
+    description character VARYING(255),
+    user_level character VARYING(50) NOT NULL,
     status boolean NOT NULL,
     CONSTRAINT account_type_pkey PRIMARY KEY (id)
 );
@@ -28,8 +28,10 @@ CREATE TABLE sec.account_type_role
 (
     account_type_id integer,
     role_id integer,
-    org_default_role boolean NOT NULL default false,
-    CONSTRAINT account_type_role_pkey PRIMARY KEY (account_type_id, role_id)
+    org_default_role boolean NOT NULL DEFAULT FALSE,
+    CONSTRAINT account_type_role_pkey PRIMARY KEY (account_type_id, role_id),
+    CONSTRAINT account_type_role_account_fk FOREIGN KEY ( account_type_id ) REFERENCES sec.account_type( id ),
+    CONSTRAINT account_type_role_role_fk FOREIGN KEY ( role_id ) REFERENCES sec.role( id )
 );
 
 COMMENT ON TABLE sec.account_type_role

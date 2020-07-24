@@ -3,7 +3,10 @@ package net.n2oapp.security.admin.impl.entity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 @Entity
@@ -12,14 +15,10 @@ import java.io.Serializable;
 @Table(name = "account_type_role", schema = "sec")
 public class AccountTypeRoleEntity implements Serializable {
 
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "role_id")
-    private RoleEntity role;
+    @EmbeddedId
+    private AccountTypeRoleEntityId id;
 
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "account_type_id")
-    private AccountTypeEntity accountType;
+    @Column(name = "org_default_role")
+    private Boolean orgDefaultRole = false;
 
 }

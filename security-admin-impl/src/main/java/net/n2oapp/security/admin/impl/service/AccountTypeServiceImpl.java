@@ -6,6 +6,7 @@ import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.service.AccountTypeService;
 import net.n2oapp.security.admin.impl.entity.AccountTypeEntity;
 import net.n2oapp.security.admin.impl.entity.AccountTypeRoleEntity;
+import net.n2oapp.security.admin.impl.entity.AccountTypeRoleEntityId;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.repository.AccountTypeRepository;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
@@ -33,7 +34,6 @@ public class AccountTypeServiceImpl implements AccountTypeService {
     public Page<AccountType> findAll(AccountTypeCriteria criteria) {
         Specification<AccountTypeEntity> specification = new AccountTypeSpecifications(criteria);
         return repository.findAll(specification, criteria).map(this::model);
-
     }
 
     @Override
@@ -68,9 +68,9 @@ public class AccountTypeServiceImpl implements AccountTypeService {
         if (entity.getRoleList() != null) {
             model.setRoles(entity.getRoleList().stream().map(e -> {
                 Role role = new Role();
-                role.setId(e.getRole().getId());
-                role.setCode(e.getRole().getCode());
-                role.setName(e.getRole().getName());
+                role.setId(e.getId().getRole().getId());
+                role.setCode(e.getId().getRole().getCode());
+                role.setName(e.getId().getRole().getName());
                 return role;
             }).collect(Collectors.toList()));
         }
@@ -90,10 +90,12 @@ public class AccountTypeServiceImpl implements AccountTypeService {
             entity.setRoleList(
                     model.getRoleIds().stream().map(m -> {
                         AccountTypeRoleEntity accountTypeRole = new AccountTypeRoleEntity();
-                        accountTypeRole.setAccountType(entity);
+                        AccountTypeRoleEntityId id = new AccountTypeRoleEntityId();
+                        id.setAccountType(entity);
                         RoleEntity roleEntity = new RoleEntity();
                         roleEntity.setId(m);
-                        accountTypeRole.setRole(roleEntity);
+                        id.setRole(roleEntity);
+                        accountTypeRole.setId(id);
                         return accountTypeRole;
                     }).collect(Collectors.toList())
             );
