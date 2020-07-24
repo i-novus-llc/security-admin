@@ -4,8 +4,17 @@
     <form query-id="${access.user.query.id}">
         <fields>
             <row>
-                <input-text id="username" enabled="false"/>
-                <input-text id="email" label="e-mail" required="${access.user.email-required}">
+                <input-text id="username" enabled="false">
+                    <dependencies>
+                        <requiring>!${access.email-as-username}</requiring>
+                        <visibility>!${access.email-as-username}</visibility>
+                    </dependencies>
+                </input-text>
+                <input-text id="email" label="e-mail">
+                    <dependencies>
+                        <requiring>${access.user.email-required} || ${access.email-as-username}</requiring>
+                        <enabling>!${access.email-as-username}</enabling>
+                    </dependencies>
                     <validations white-list="emailValidation"/>
                 </input-text>
             </row>
