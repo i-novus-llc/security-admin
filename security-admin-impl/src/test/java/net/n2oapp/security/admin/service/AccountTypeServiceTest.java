@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Arrays;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -60,7 +62,7 @@ public class AccountTypeServiceTest {
         newAccountType.setStatus(true);
         newAccountType.setUserLevel(UserLevel.REGIONAL);
         newAccountType.setDescription("testDescription2");
-
+        newAccountType.setRoleIds(Arrays.asList(1, 2, 99));
         service.create(newAccountType);
 
         assertThat(service.findAll(new AccountTypeCriteria()).getTotalElements(), is(2L));

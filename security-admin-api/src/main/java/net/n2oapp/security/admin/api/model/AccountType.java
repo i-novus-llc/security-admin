@@ -7,6 +7,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * Тип аккаунта
  */
@@ -34,6 +36,14 @@ public class AccountType {
     @JsonProperty
     @ApiModelProperty("Уровень пользователя")
     private UserLevel userLevel;
+
+    @JsonProperty
+    @ApiModelProperty(value = "Список ролей")
+    private List<Role> roles;
+
+    @JsonProperty
+    @ApiModelProperty("Список идентификаторов ролей")
+    private List<Integer> roleIds;
 
     @JsonProperty
     @ApiModelProperty("Статус")
