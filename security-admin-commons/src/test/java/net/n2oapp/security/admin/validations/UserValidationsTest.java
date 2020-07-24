@@ -52,7 +52,7 @@ public class UserValidationsTest {
         UserValidations userValidations = new UserValidations();
         User user = new User();
         user.setId(1);
-        userValidations.checkEmailUniq(1, user);
+        userValidations.checkUsernameUniq(1, user);
         Throwable thrown = catchThrowable(() -> userValidations.checkUsernameUniq(2, user));
         assertThat(thrown).isInstanceOf(UserException.class);
         assertEquals("exception.uniqueUsername", thrown.getMessage());

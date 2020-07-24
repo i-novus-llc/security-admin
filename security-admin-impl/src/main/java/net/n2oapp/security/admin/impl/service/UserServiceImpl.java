@@ -252,6 +252,10 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    public void setEmailAsUsername(Boolean emailAsUsername) {
+        this.emailAsUsername = emailAsUsername;
+    }
+
     private UserEntity entityForm(UserEntity entity, UserForm model) {
         entity.setUsername(model.getUsername());
         entity.setName(model.getName());
