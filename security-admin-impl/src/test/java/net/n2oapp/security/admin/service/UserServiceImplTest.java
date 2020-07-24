@@ -60,6 +60,22 @@ public class UserServiceImplTest {
         checkValidationEmail(user);
         checkValidationPassword(user);
         checkValidationUsername(user);
+        service.delete(user.getId());
+        service.setEmailAsUsername(Boolean.TRUE);
+        user = service.create(newUser());
+        assertTrue(greenMail.waitForIncomingEmail(1000, 1));
+        checkValidationEmail(user);
+        checkValidationPassword(user);
+        service.delete(user.getId());
+        UserForm userForm = newUser();
+        userForm.setSnils("112-233-445 95");
+        userForm.setEmail(null);
+        service.setEmailAsUsername(Boolean.FALSE);
+        user = service.create(userForm);
+        assertTrue(greenMail.waitForIncomingEmail(1000, 1));
+        checkValidationEmail(user);
+        checkValidationPassword(user);
+
     }
 
     @Test
