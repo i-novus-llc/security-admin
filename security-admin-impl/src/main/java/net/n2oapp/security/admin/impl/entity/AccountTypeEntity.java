@@ -53,8 +53,7 @@ public class AccountTypeEntity {
     @Column(name = "status", nullable = false)
     private Boolean status;
 
-
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "id.accountType", cascade = CascadeType.ALL)
     private List<AccountTypeRoleEntity> roleList;
 
 }
