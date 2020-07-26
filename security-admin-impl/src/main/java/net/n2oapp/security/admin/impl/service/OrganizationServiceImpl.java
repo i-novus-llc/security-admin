@@ -108,7 +108,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         model.setLegalAddress(entity.getLegalAddress());
         model.setKpp(entity.getKpp());
         model.setEmail(entity.getEmail());
-        model.setExtUid(entity.getExtId());
+        model.setExtUid(entity.getExtUid());
         return model;
     }
 
@@ -125,7 +125,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         organizationEntity.setKpp(organization.getKpp());
         organizationEntity.setLegalAddress(organization.getLegalAddress());
         organizationEntity.setEmail(organization.getEmail());
-        organizationEntity.setExtId(organization.getExtUid());
+        organizationEntity.setExtUid(organization.getExtUid());
         return organizationEntity;
     }
 

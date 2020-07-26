@@ -7,6 +7,7 @@ import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
+import net.n2oapp.security.admin.api.model.UserStatus;
 import net.n2oapp.security.admin.api.service.UserService;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -57,9 +58,11 @@ public class UserServiceImplTest {
     public void checkValidations() {
         User user = service.create(newUser());
         assertTrue(greenMail.waitForIncomingEmail(1000, 1));
+        assertSame(UserStatus.REGISTERED, user.getStatus());
         checkValidationEmail(user);
         checkValidationPassword(user);
         checkValidationUsername(user);
+
     }
 
     @Test
@@ -195,6 +198,7 @@ public class UserServiceImplTest {
         List<Integer> roles = new ArrayList<>();
         roles.add(100);
         user.setRoles(roles);
+        user.setStatus(UserStatus.REGISTERED);
         return user;
     }
 
