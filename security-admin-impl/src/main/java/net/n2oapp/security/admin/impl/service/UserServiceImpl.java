@@ -271,6 +271,7 @@ public class UserServiceImpl implements UserService {
         entity.setDepartment(nonNull(model.getDepartmentId()) ? new DepartmentEntity(model.getDepartmentId()) : null);
         entity.setOrganization(nonNull(model.getOrganizationId()) ? new OrganizationEntity(model.getOrganizationId()) : null);
         entity.setRegion(nonNull(model.getRegionId()) ? new RegionEntity(model.getRegionId()) : null);
+        entity.setStatus(model.getStatus() != null ? model.getStatus() : UserStatus.AWAITING_MODERATION);
         if (nonNull(model.getRoles()))
             entity.setRoleList(model.getRoles().stream().filter(roleId -> roleId > 0).map(RoleEntity::new).collect(Collectors.toList()));
         return entity;
@@ -289,6 +290,7 @@ public class UserServiceImpl implements UserService {
         entity.setEmail(modelFromProvider.getEmail());
         entity.setSnils(modelFromProvider.getSnils());
         entity.setUserLevel(modelFromProvider.getUserLevel());
+        entity.setStatus(modelFromProvider.getStatus());
         if (nonNull(modelFromProvider.getDepartment()))
             entity.setDepartment(new DepartmentEntity(modelFromProvider.getDepartment().getId()));
         if (nonNull(modelFromProvider.getOrganization()))
@@ -330,6 +332,7 @@ public class UserServiceImpl implements UserService {
         model.setRegion(model(entity.getRegion()));
         model.setExtSys(entity.getExtSys());
         model.setExtUid(entity.getExtUid());
+        model.setStatus(entity.getStatus());
         StringBuilder builder = new StringBuilder();
         if (nonNull(entity.getSurname())) {
             builder.append(entity.getSurname()).append(" ");
