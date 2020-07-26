@@ -31,4 +31,8 @@
         <sqlFile path="access/db/changelog/sql/V3_add_account_type.sql"/>
     </changeSet>
 
+    <changeSet id="ext_id" author="btsyganov" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/V3_add_organization_ext_id.sql"/>
+    </changeSet>
+
 </databaseChangeLog>

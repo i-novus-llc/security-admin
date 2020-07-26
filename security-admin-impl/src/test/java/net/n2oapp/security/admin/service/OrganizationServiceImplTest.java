@@ -31,17 +31,19 @@ public class OrganizationServiceImplTest {
 
     @Test
     public void createOrg() {
-        Organization organizationResponse = organizationService.create(prepareOrgRequest("2"));
+        String id = "2";
+        Organization organizationResponse = organizationService.create(prepareOrgRequest(id));
         assertNotNull(organizationResponse.getId());
-        assertThat(organizationResponse.getCode(), is("2"));
-        assertThat(organizationResponse.getShortName(), is("2"));
-        assertThat(organizationResponse.getOgrn(), is("2"));
-        assertThat(organizationResponse.getOkpo(), is("2"));
-        assertThat(organizationResponse.getFullName(), is("2"));
-        assertThat(organizationResponse.getInn(), is("2"));
-        assertThat(organizationResponse.getKpp(), is("2"));
-        assertThat(organizationResponse.getLegalAddress(), is("2"));
-        assertThat(organizationResponse.getEmail(), is("2"));
+        assertThat(organizationResponse.getCode(), is(id));
+        assertThat(organizationResponse.getShortName(), is(id));
+        assertThat(organizationResponse.getOgrn(), is(id));
+        assertThat(organizationResponse.getOkpo(), is(id));
+        assertThat(organizationResponse.getFullName(), is(id));
+        assertThat(organizationResponse.getInn(), is(id));
+        assertThat(organizationResponse.getKpp(), is(id));
+        assertThat(organizationResponse.getLegalAddress(), is(id));
+        assertThat(organizationResponse.getEmail(), is(id));
+        assertThat(organizationResponse.getExtId(), is(id));
     }
 
     @Test
@@ -176,6 +178,7 @@ public class OrganizationServiceImplTest {
         organization.setKpp(testValue);
         organization.setLegalAddress(testValue);
         organization.setEmail(testValue);
+        organization.setExtId(testValue);
 
         return organization;
     }
