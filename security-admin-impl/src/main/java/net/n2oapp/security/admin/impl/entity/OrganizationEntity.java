@@ -81,6 +81,12 @@ public class OrganizationEntity implements Serializable {
     private String email;
 
     /**
+     * Идентификатор во внешней системе
+     */
+    @Column(name = "ext_id")
+    private String extId;
+
+    /**
      * Категории организации
      */
     @ManyToMany(fetch = FetchType.EAGER)

@@ -57,12 +57,12 @@ public class AccountTypeServiceTest {
         assertThat(service.findAll(new AccountTypeCriteria()).getTotalElements(), is(1L));
 
         AccountType newAccountType = new AccountType();
-        newAccountType.setCode("testCode2");
+        newAccountType.setCode("testCode22");
         newAccountType.setName("testName2");
         newAccountType.setStatus(true);
         newAccountType.setUserLevel(UserLevel.REGIONAL);
         newAccountType.setDescription("testDescription2");
-        newAccountType.setRoleIds(Arrays.asList(100, 101, 102));
+        newAccountType.setRoleIds(Arrays.asList(100, 101));
         service.create(newAccountType);
 
         assertThat(service.findAll(new AccountTypeCriteria()).getTotalElements(), is(2L));
@@ -74,6 +74,8 @@ public class AccountTypeServiceTest {
         assertThat(result.getDescription(), is("testDescription2"));
         assertThat(result.getStatus(), is(true));
         assertThat(result.getUserLevel(), is(UserLevel.REGIONAL));
+        assertThat(result.getRoles().get(0).getId(), is(100));
+        assertThat(result.getRoles().get(1).getId(), is(101));
 
         service.delete(2);
     }

@@ -70,4 +70,8 @@ public class Organization {
     @JsonProperty
     @ApiModelProperty(value = "Электронная почта")
     private String email;
+
+    @JsonProperty
+    @ApiModelProperty(value = "Идентификатор во внешней системе")
+    private String extId;
 }
