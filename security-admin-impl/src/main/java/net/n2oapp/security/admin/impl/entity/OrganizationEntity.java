@@ -83,8 +83,8 @@ public class OrganizationEntity implements Serializable {
     /**
      * Идентификатор во внешней системе
      */
-    @Column(name = "ext_id")
-    private String extId;
+    @Column(name = "ext_uid")
+    private String extUid;
 
     /**
      * Категории организации

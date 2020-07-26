@@ -73,5 +73,5 @@ public class Organization {
 
     @JsonProperty
     @ApiModelProperty(value = "Идентификатор во внешней системе")
-    private String extId;
+    private String extUid;
 }
