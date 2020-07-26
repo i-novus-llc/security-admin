@@ -43,7 +43,7 @@ public class OrganizationServiceImplTest {
         assertThat(organizationResponse.getKpp(), is(id));
         assertThat(organizationResponse.getLegalAddress(), is(id));
         assertThat(organizationResponse.getEmail(), is(id));
-        assertThat(organizationResponse.getExtId(), is(id));
+        assertThat(organizationResponse.getExtUid(), is(id));
     }
 
     @Test
@@ -178,7 +178,7 @@ public class OrganizationServiceImplTest {
         organization.setKpp(testValue);
         organization.setLegalAddress(testValue);
         organization.setEmail(testValue);
-        organization.setExtId(testValue);
+        organization.setExtUid(testValue);
 
         return organization;
     }

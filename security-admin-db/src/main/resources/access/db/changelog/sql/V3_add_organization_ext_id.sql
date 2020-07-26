@@ -1,2 +1,2 @@
 ALTER TABLE sec.organization
-  ADD ext_id character varying;
+  ADD ext_uid character varying;
