@@ -18,7 +18,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 /**
- * Тест сервиса типов акукаунтов
+ * Тест сервиса типов аккаунтов
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -70,7 +70,7 @@ public class AccountTypeServiceTest {
         AccountType result = service.findById(2);
         assertThat(result.getId(), is(2));
         assertThat(result.getName(), is("testName2"));
-        assertThat(result.getCode(), is("testCode2"));
+        assertThat(result.getCode(), is("testCode22"));
         assertThat(result.getDescription(), is("testDescription2"));
         assertThat(result.getStatus(), is(true));
         assertThat(result.getUserLevel(), is(UserLevel.REGIONAL));
