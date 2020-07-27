@@ -40,6 +40,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Value("${access.permission.enabled}")
     private Boolean permissionEnabled;
 
+    @Value("${access.email-as-username}")
+    private Boolean emailAsUsername;
+
     private Boolean createUser = true;
 
     private List<String> defaultRoles = new ArrayList<>();
@@ -50,10 +53,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public User loadUserDetails(UserDetailsToken userDetails) {
-        UserEntity userEntity = userRepository.findOneByUsernameIgnoreCase(userDetails.getUsername());
+        UserEntity userEntity = userRepository.findOneByUsernameIgnoreCase(Boolean.TRUE.equals(emailAsUsername) ? userDetails.getEmail() : userDetails.getUsername());
         if (isNull(userEntity) && createUser) {
             userEntity = new UserEntity();
-            userEntity.setUsername(userDetails.getUsername());
+            userEntity.setUsername(Boolean.TRUE.equals(emailAsUsername) ? userDetails.getEmail() : userDetails.getUsername());
             userEntity.setExtUid(userDetails.getExtUid());
             userEntity.setEmail(userDetails.getEmail());
             userEntity.setSurname(userDetails.getSurname());

@@ -7,7 +7,7 @@ import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
-import net.n2oapp.security.admin.api.service.UserService;
+import net.n2oapp.security.admin.impl.service.UserServiceImpl;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -36,7 +36,7 @@ import static org.junit.Assert.*;
 public class UserServiceImplTest {
 
     @Autowired
-    private UserService service;
+    private UserServiceImpl service;
 
     @Rule
     public final GreenMailRule greenMail = new GreenMailRule(new ServerSetup(2525, null, "smtp"));
@@ -60,6 +60,22 @@ public class UserServiceImplTest {
         checkValidationEmail(user);
         checkValidationPassword(user);
         checkValidationUsername(user);
+        service.delete(user.getId());
+        service.setEmailAsUsername(Boolean.TRUE);
+        user = service.create(newUser());
+        assertTrue(greenMail.waitForIncomingEmail(1000, 1));
+        checkValidationEmail(user);
+        checkValidationPassword(user);
+        service.delete(user.getId());
+        UserForm userForm = newUser();
+        userForm.setSnils("112-233-445 95");
+        userForm.setEmail(null);
+        service.setEmailAsUsername(Boolean.FALSE);
+        user = service.create(userForm);
+        assertTrue(greenMail.waitForIncomingEmail(1000, 1));
+        checkValidationEmail(user);
+        checkValidationPassword(user);
+
     }
 
     @Test
@@ -79,6 +95,28 @@ public class UserServiceImplTest {
     public void testCheckUniqueUsername() {
         assertFalse(service.checkUniqueUsername("test2"));
         assertTrue(service.checkUniqueUsername("nonExistentUser"));
+    }
+
+    /**
+     * Проверка, что при некорректно введеном уровне пользователя в критерии, не последует ошибки
+     * и при этом возвращаемый список пользователей будет пуст
+     */
+    @Test
+    public void findAllUsersWithBadUserLevelTest() {
+        UserCriteria criteria = new UserCriteria();
+        criteria.setUserLevel("wrong");
+        assertTrue(service.findAll(criteria).isEmpty());
+    }
+
+    /**
+     * Проверка, что при заданном критерии по уровню пользователя, будет возвращено корректное число пользователей
+     * Также проверяется, что поиск не чувствителен к регистру
+     */
+    @Test
+    public void findAllUsersByUserLevel() {
+        UserCriteria criteria = new UserCriteria();
+        criteria.setUserLevel("federal");
+        assertThat(service.findAll(criteria).getTotalElements()).isEqualTo(1);
     }
 
     private void checkValidationEmail(User user) {
@@ -213,25 +251,5 @@ public class UserServiceImplTest {
         return form;
     }
 
-    /**
-     * Проверка, что при некорректно введеном уровне пользователя в критерии, не последует ошибки
-     * и при этом возвращаемый список пользователей будет пуст
-     */
-    @Test
-    public void findAllUsersWithBadUserLevelTest() {
-        UserCriteria criteria = new UserCriteria();
-        criteria.setUserLevel("wrong");
-        assertTrue(service.findAll(criteria).isEmpty());
-    }
 
-    /**
-     * Проверка, что при заданном критерии по уровню пользователя, будет возвращено корректное число пользователей
-     * Также проверяется, что поиск не чувствителен к регистру
-     */
-    @Test
-    public void findAllUsersByUserLevel() {
-        UserCriteria criteria = new UserCriteria();
-        criteria.setUserLevel("federal");
-        assertThat(service.findAll(criteria).getTotalElements()).isEqualTo(1);
-    }
 }

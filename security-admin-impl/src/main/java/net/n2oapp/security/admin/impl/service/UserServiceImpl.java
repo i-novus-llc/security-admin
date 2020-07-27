@@ -56,6 +56,9 @@ public class UserServiceImpl implements UserService {
     @Value("${access.user.send-mail-activate-user:false}")
     private Boolean sendMailActivate;
 
+    @Value("${access.email-as-username}")
+    private Boolean emailAsUsername;
+
     public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, SsoUserRoleProvider provider) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -64,12 +67,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User create(UserForm user) {
-        userValidations.checkUsernameUniq(user.getId(), model(userRepository.findOneByUsernameIgnoreCase(user.getUsername())));
-        userValidations.checkUsername(user.getUsername());
-        if (nonNull(user.getEmail()))
-            userValidations.checkEmail(user.getEmail());
-        if (nonNull(user.getSnils()))
-            userValidations.checkSnils(user.getSnils());
+        validateUsernameEmailSnils(user);
         String password = (user.getPassword() != null) ? user.getPassword() : user.getTemporaryPassword();
         if (nonNull(user.getPassword()))
             userValidations.checkPassword(password, user.getPasswordCheck(), user.getId());
@@ -104,12 +102,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User update(UserForm user) {
-        userValidations.checkUsernameUniq(user.getId(), model(userRepository.findOneByUsernameIgnoreCase(user.getUsername())));
-        userValidations.checkUsername(user.getUsername());
-        if (nonNull(user.getEmail()))
-            userValidations.checkEmail(user.getEmail());
-        if (nonNull(user.getSnils()))
-            userValidations.checkSnils(user.getSnils());
+        validateUsernameEmailSnils(user);
         if (nonNull(user.getPassword())) {
             userValidations.checkPassword(user.getPassword(), user.getPasswordCheck(), user.getId());
         }
@@ -259,6 +252,10 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    public void setEmailAsUsername(Boolean emailAsUsername) {
+        this.emailAsUsername = emailAsUsername;
+    }
+
     private UserEntity entityForm(UserEntity entity, UserForm model) {
         entity.setUsername(model.getUsername());
         entity.setName(model.getName());
@@ -393,6 +390,20 @@ public class UserServiceImpl implements UserService {
         model.setCode(entity.getCode());
         model.setOkato(entity.getOkato());
         return model;
+    }
+
+    private void validateUsernameEmailSnils(UserForm user) {
+        if (!Boolean.TRUE.equals(emailAsUsername)) {
+            userValidations.checkUsernameUniq(user.getId(), model(userRepository.findOneByUsernameIgnoreCase(user.getUsername())));
+            userValidations.checkUsername(user.getUsername());
+        } else {
+            userValidations.checkEmailUniq(user.getId(), model(userRepository.findOneByEmailIgnoreCase(user.getEmail())));
+            user.setUsername(user.getEmail());
+        }
+        if (nonNull(user.getEmail()))
+            userValidations.checkEmail(user.getEmail());
+        if (nonNull(user.getSnils()))
+            userValidations.checkSnils(user.getSnils());
     }
 
     private User audit(String action, User user) {

@@ -54,6 +54,9 @@
         </field>
         <field id="email" domain="string" name="E-mail">
             <select mapping="email"/>
+            <filters>
+                <eq filter-id="email" mapping="email"/>
+            </filters>
         </field>
 
         <field id="isActive" domain="boolean" name="Активность">
