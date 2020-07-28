@@ -47,5 +47,5 @@ public class AccountType {
 
     @JsonProperty
     @ApiModelProperty("Статус")
-    private Boolean status;
+    private UserStatus status;
 }

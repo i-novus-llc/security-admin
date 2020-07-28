@@ -3,6 +3,7 @@ package net.n2oapp.security.admin.service;
 import net.n2oapp.security.admin.api.criteria.AccountTypeCriteria;
 import net.n2oapp.security.admin.api.model.AccountType;
 import net.n2oapp.security.admin.api.model.UserLevel;
+import net.n2oapp.security.admin.api.model.UserStatus;
 import net.n2oapp.security.admin.api.service.AccountTypeService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,7 +39,7 @@ public class AccountTypeServiceTest {
         assertThat(accountTypes.getContent().get(0).getName(), is("testAccountTypeName"));
         assertThat(accountTypes.getContent().get(0).getDescription(), is("testDescription"));
         assertThat(accountTypes.getContent().get(0).getUserLevel(), is(UserLevel.PERSONAL));
-        assertThat(accountTypes.getContent().get(0).getStatus(), is(false));
+        assertThat(accountTypes.getContent().get(0).getStatus(), is(UserStatus.REGISTERED));
     }
 
     @Test
@@ -49,7 +50,7 @@ public class AccountTypeServiceTest {
         assertThat(accountType.getName(), is("testAccountTypeName"));
         assertThat(accountType.getDescription(), is("testDescription"));
         assertThat(accountType.getUserLevel(), is(UserLevel.PERSONAL));
-        assertThat(accountType.getStatus(), is(false));
+        assertThat(accountType.getStatus(), is(UserStatus.REGISTERED));
     }
 
     @Test
@@ -59,7 +60,7 @@ public class AccountTypeServiceTest {
         AccountType newAccountType = new AccountType();
         newAccountType.setCode("testCode22");
         newAccountType.setName("testName2");
-        newAccountType.setStatus(true);
+        newAccountType.setStatus(UserStatus.REGISTERED);
         newAccountType.setUserLevel(UserLevel.REGIONAL);
         newAccountType.setDescription("testDescription2");
         newAccountType.setRoleIds(Arrays.asList(100, 101));
@@ -72,7 +73,7 @@ public class AccountTypeServiceTest {
         assertThat(result.getName(), is("testName2"));
         assertThat(result.getCode(), is("testCode22"));
         assertThat(result.getDescription(), is("testDescription2"));
-        assertThat(result.getStatus(), is(true));
+        assertThat(result.getStatus(), is(UserStatus.REGISTERED));
         assertThat(result.getUserLevel(), is(UserLevel.REGIONAL));
         assertThat(result.getRoles().get(0).getId(), is(100));
         assertThat(result.getRoles().get(1).getId(), is(101));
@@ -85,7 +86,7 @@ public class AccountTypeServiceTest {
         AccountType newAccountType = new AccountType();
         newAccountType.setCode("testCode2");
         newAccountType.setName("testName2");
-        newAccountType.setStatus(true);
+        newAccountType.setStatus(UserStatus.REGISTERED);
         newAccountType.setUserLevel(UserLevel.REGIONAL);
         newAccountType.setDescription("testDescription2");
 
@@ -94,7 +95,7 @@ public class AccountTypeServiceTest {
         newAccountType.setId(id);
         newAccountType.setCode("testCode22");
         newAccountType.setName("testName22");
-        newAccountType.setStatus(false);
+        newAccountType.setStatus(UserStatus.AWAITING_MODERATION);
         newAccountType.setUserLevel(UserLevel.ORGANIZATION);
         newAccountType.setDescription("testDescription22");
         AccountType result = service.update(newAccountType);
@@ -102,7 +103,7 @@ public class AccountTypeServiceTest {
         assertThat(result.getId(), is(id));
         assertThat(result.getCode(), is("testCode22"));
         assertThat(result.getName(), is("testName22"));
-        assertThat(result.getStatus(), is(false));
+        assertThat(result.getStatus(), is(UserStatus.AWAITING_MODERATION));
         assertThat(result.getUserLevel(), is(UserLevel.ORGANIZATION));
         assertThat(result.getDescription(), is("testDescription22"));
 
@@ -114,13 +115,14 @@ public class AccountTypeServiceTest {
         AccountType newAccountType = new AccountType();
         newAccountType.setCode("testCode2");
         newAccountType.setName("testName2");
-        newAccountType.setStatus(true);
+        newAccountType.setStatus(UserStatus.AWAITING_MODERATION);
         newAccountType.setUserLevel(UserLevel.REGIONAL);
         newAccountType.setDescription("testDescription2");
 
         Integer id = service.create(newAccountType).getId();
-        assertThat(service.findAll(new AccountTypeCriteria()).getTotalElements(), is(2L));
+        Long before = service.findAll(new AccountTypeCriteria()).getTotalElements();
         service.delete(id);
-        assertThat(service.findAll(new AccountTypeCriteria()).getTotalElements(), is(1L));
+        Long after = service.findAll(new AccountTypeCriteria()).getTotalElements();
+        assertThat(before - after, is(1L));
     }
 }

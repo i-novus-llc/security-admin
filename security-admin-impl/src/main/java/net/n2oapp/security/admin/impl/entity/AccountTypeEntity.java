@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.n2oapp.security.admin.api.model.UserLevel;
+import net.n2oapp.security.admin.api.model.UserStatus;
 
 import javax.persistence.*;
 import java.util.List;
@@ -51,7 +52,8 @@ public class AccountTypeEntity {
      * Статус регистрации
      */
     @Column(name = "status", nullable = false)
-    private Boolean status;
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
 
     @OneToMany(mappedBy = "id.accountType", cascade = CascadeType.ALL)
     private List<AccountTypeRoleEntity> roleList;

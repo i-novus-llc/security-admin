@@ -9,6 +9,7 @@ import net.n2oapp.security.admin.api.service.UserService;
 import net.n2oapp.security.admin.commons.AdminCommonsConfiguration;
 import net.n2oapp.security.admin.impl.audit.AuditHelper;
 import net.n2oapp.security.admin.impl.provider.SimpleSsoUserRoleProvider;
+import net.n2oapp.security.admin.impl.repository.AccountTypeRepository;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.UserLevelServiceImpl;
@@ -48,8 +49,9 @@ public class AdminImplConfiguration {
     private Boolean userLevelValueOrg;
 
     @Bean
-    public UserService userService(UserRepository userRepository, RoleRepository roleRepository, SsoUserRoleProvider ssoUserRoleProvider) {
-        return new UserServiceImpl(userRepository, roleRepository, ssoUserRoleProvider);
+    public UserService userService(UserRepository userRepository, RoleRepository roleRepository,
+                                   SsoUserRoleProvider ssoUserRoleProvider, AccountTypeRepository accountTypeRepository) {
+        return new UserServiceImpl(userRepository, roleRepository, ssoUserRoleProvider, accountTypeRepository);
     }
 
     @Bean

@@ -5,7 +5,7 @@ CREATE TABLE sec.account_type
     name character varying(100) NOT NULL,
     description character VARYING(255),
     user_level character VARYING(50) NOT NULL,
-    status boolean NOT NULL,
+    status character varying NOT NULL,
     CONSTRAINT account_type_pkey PRIMARY KEY (id)
 );
 
