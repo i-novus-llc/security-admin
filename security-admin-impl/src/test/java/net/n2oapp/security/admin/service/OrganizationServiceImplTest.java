@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -44,6 +45,9 @@ public class OrganizationServiceImplTest {
         assertThat(organizationResponse.getLegalAddress(), is(id));
         assertThat(organizationResponse.getEmail(), is(id));
         assertThat(organizationResponse.getExtUid(), is(id));
+        assertThat(organizationResponse.getRoles().size(), is(2));
+        assertThat(organizationResponse.getRoles().get(0).getId(), is(100));
+        assertThat(organizationResponse.getRoles().get(1).getId(), is(101));
     }
 
     @Test
@@ -179,7 +183,7 @@ public class OrganizationServiceImplTest {
         organization.setLegalAddress(testValue);
         organization.setEmail(testValue);
         organization.setExtUid(testValue);
-
+        organization.setRoleIds(Arrays.asList(100, 101));
         return organization;
     }
 }

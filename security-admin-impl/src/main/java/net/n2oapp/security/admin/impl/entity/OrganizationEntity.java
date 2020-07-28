@@ -97,6 +97,16 @@ public class OrganizationEntity implements Serializable {
     private List<OrgCategoryEntity> categories;
 
     /**
+     * Роли
+     */
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "org_role", schema = "sec",
+            joinColumns = {@JoinColumn(name = "org_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id")}
+    )
+    private List<RoleEntity> roleList;
+
+    /**
      * Признак что запись была удалена из справочника
      */
     @Column(name = "is_deleted")
