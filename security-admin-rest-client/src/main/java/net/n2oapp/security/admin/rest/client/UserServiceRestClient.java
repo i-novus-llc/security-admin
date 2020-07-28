@@ -3,6 +3,7 @@ package net.n2oapp.security.admin.rest.client;
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
+import net.n2oapp.security.admin.api.model.UserRegisterForm;
 import net.n2oapp.security.admin.api.service.UserService;
 import net.n2oapp.security.admin.rest.api.UserRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
@@ -13,7 +14,7 @@ import org.springframework.data.domain.Page;
  */
 public class UserServiceRestClient implements UserService {
 
-    private UserRestService client;
+    private final UserRestService client;
 
     public UserServiceRestClient(UserRestService client) {
         this.client = client;
@@ -22,6 +23,11 @@ public class UserServiceRestClient implements UserService {
     @Override
     public User create(UserForm user) {
         return client.create(user);
+    }
+
+    @Override
+    public User register(UserRegisterForm user) {
+        return client.register(user);
     }
 
     @Override

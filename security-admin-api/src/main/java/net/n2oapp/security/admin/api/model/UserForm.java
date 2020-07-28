@@ -89,4 +89,7 @@ public class UserForm {
 
     @ApiModelProperty(value = "Статус регистрации пользователя")
     private UserStatus status;
+
+    @ApiModelProperty(value = "Тип аккаунта")
+    private String accountTypeCode;
 }

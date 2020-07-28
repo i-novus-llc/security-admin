@@ -2,6 +2,7 @@ package net.n2oapp.security.admin.rest.impl;
 
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
+import net.n2oapp.security.admin.api.model.UserRegisterForm;
 import net.n2oapp.security.admin.api.service.UserService;
 import net.n2oapp.security.admin.commons.util.PasswordGenerator;
 import net.n2oapp.security.admin.rest.api.UserRestService;
@@ -33,6 +34,11 @@ public class UserRestServiceImpl implements UserRestService {
     @Override
     public User create(UserForm user) {
         return service.create(user);
+    }
+
+    @Override
+    public User register(UserRegisterForm user) {
+        return service.register(user);
     }
 
     @Override
