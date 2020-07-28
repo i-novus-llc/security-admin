@@ -37,13 +37,23 @@ public class UserValidations {
     @Value("${access.user.email.regexp}")
     private String emailRegexp;
 
+    @Value("${access.email-as-username}")
+    private Boolean emailAsUsername;
+
     /**
      * Валидация на уникальность имени пользователя
      */
     public void checkUsernameUniq(Integer id, User foundUser) {
-        Boolean result = id == null ? foundUser == null : ((foundUser == null) || (foundUser.getId().equals(id)));
-        if (!result)
+        if (Boolean.TRUE.equals(anotherUserExist(id, foundUser)))
             throw new UserException("exception.uniqueUsername");
+    }
+
+    /**
+     * Валидация на уникальность email пользователя
+     */
+    public void checkEmailUniq(Integer id, User foundUser) {
+        if (Boolean.TRUE.equals(anotherUserExist(id, foundUser)))
+            throw new UserException("exception.uniqueEmail");
     }
 
     /**
@@ -147,5 +157,9 @@ public class UserValidations {
         } catch (NumberFormatException e) {
             throw new UserException("exception.incorrectSnilsFormat");
         }
+    }
+
+    private Boolean anotherUserExist(Integer id, User foundUser) {
+        return !(id == null ? foundUser == null : ((foundUser == null) || (foundUser.getId().equals(id))));
     }
 }

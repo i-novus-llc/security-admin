@@ -28,6 +28,7 @@ import java.util.List;
 @Setter
 public class UserCriteria extends BaseCriteria {
     private String username;
+    private String email;
     private String fio;
     private String isActive;
     private List<Integer> roleIds;

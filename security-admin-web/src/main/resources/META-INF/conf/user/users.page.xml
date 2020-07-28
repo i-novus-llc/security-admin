@@ -6,7 +6,20 @@
         <region place="single">
             <table name="Пользователи" query-id="${access.user.query.id}">
                 <columns>
-                    <column text-field-id="username"/>
+                    <column text-field-id="username">
+                        <dependencies>
+                            <visibility>
+                                !${access.email-as-username}
+                            </visibility>
+                        </dependencies>
+                    </column>
+                    <column text-field-id="email">
+                        <dependencies>
+                            <visibility>
+                                ${access.email-as-username}
+                            </visibility>
+                        </dependencies>
+                    </column>
                     <column text-field-id="fio"/>
                     <column text-field-id="userLevel.name" sorting-field-id="userLevel"/>
                     <column text-field-id="roleNamesWithSystem" label="Роли" sorting-field-id="roleCount">
@@ -38,7 +51,20 @@
                 </rows>
                 <filters>
                     <row>
-                        <input-text id="username"/>
+                        <input-text id="username">
+                            <dependencies>
+                                <visibility>
+                                    !${access.email-as-username}
+                                </visibility>
+                            </dependencies>
+                        </input-text>
+                        <input-text id="email" visible="false">
+                            <dependencies>
+                                <visibility>
+                                    ${access.email-as-username}
+                                </visibility>
+                            </dependencies>
+                        </input-text>
                         <input-text id="fio" class="n2o-control-10"/>
                         <input-select id="system" label="Система" visible="${access.system.enabled}"
                                       query-id="system" label-field-id="name"/>

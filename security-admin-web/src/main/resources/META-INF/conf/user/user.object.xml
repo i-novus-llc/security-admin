@@ -92,7 +92,7 @@
             <in-parameters>
                 <param id="id" mapping="[0]" domain="integer" required="true"/>
             </in-parameters>
-            <validations/>
+            <validations black-list="usernameValidation"/>
         </operation>
 
         <operation id="changeUserActive" success-text="Активность пользователя изменена!">
@@ -120,8 +120,11 @@
             </invocation>
             <in-parameters>
                 <param id="id" mapping="[0].id" domain="integer" required="true"/>
-                <param id="username" mapping="[0].username" domain="string" required="true"/>
-                <param id="email" mapping="[0].email" domain="string" required="${access.user.email-required}"/>
+                <param id="username" mapping="[0].username" domain="string" required="!${access.email-as-username}"/>
+                <param id="email"
+                       mapping="[0].email"
+                       domain="string"
+                       required="${access.user.email-required} || ${access.email-as-username}"/>
                 <param id="password" mapping="[0].password" domain="string" required="${access.user.password.input}"/>
                 <param id="passwordCheck" mapping="[0].passwordCheck" domain="string"/>
                 <param id="temporaryPassword" mapping="[0].temporaryPassword" domain="string" required="${access.user.password.generate}"/>
@@ -135,6 +138,8 @@
     <validations>
         <condition id="usernameValidation" severity="danger" message="Неверное имя" on="username">
             <![CDATA[
+                    if (${access.email-as-username})
+                        return true;
                     if (typeof username != 'undefined' && username != null && username != '') {
                         var regex = new RegExp('${access.user.username.regexp}');
                         return regex.test(username);
