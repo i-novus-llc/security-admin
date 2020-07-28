@@ -33,6 +33,13 @@ public class RestUserCriteria extends UserCriteria {
         super.setUsername(username);
     }
 
+    @QueryParam("email")
+    @Override
+    @ApiParam(value = "Email пользователя")
+    public void setEmail(String email) {
+        super.setEmail(email);
+    }
+
     @QueryParam("fio")
     @Override
     @ApiParam(value = "ФИО")

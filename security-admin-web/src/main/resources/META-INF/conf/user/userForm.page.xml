@@ -3,10 +3,17 @@
     <form default-values-query-id="simpleUser" object-id="user" upload="defaults">
         <fields>
             <row>
-                <input-text id="username" label="Имя пользователя" required="true">
+                <input-text id="username" label="Имя пользователя">
+                    <dependencies>
+                        <requiring>!${access.email-as-username}</requiring>
+                        <visibility>!${access.email-as-username}</visibility>
+                    </dependencies>
                     <validations white-list="usernameValidation"/>
                 </input-text>
-                <input-text id="email" label="e-mail" required="${access.user.email-required}">
+                <input-text id="email" label="e-mail">
+                    <dependencies>
+                        <requiring>${access.user.email-required} || ${access.email-as-username}</requiring>
+                    </dependencies>
                     <validations white-list="emailValidation">
                         <condition id="emailIsRequired" severity="danger" on="sendOnEmail"
                                    message="Поле обязательно для заполнения" side="client">

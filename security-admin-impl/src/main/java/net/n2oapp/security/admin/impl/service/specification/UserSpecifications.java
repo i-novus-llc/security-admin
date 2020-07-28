@@ -27,6 +27,8 @@ public class UserSpecifications implements Specification<UserEntity> {
         Predicate predicate = builder.and();
         if (nonNull(criteria.getUsername()))
             predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.username), criteria.getUsername()));
+        if (nonNull(criteria.getEmail()))
+            predicate = builder.and(predicate, builder.like(root.get(UserEntity_.email), "%" + criteria.getEmail() + "%"));
         if (nonNull(criteria.getFio())) {
             criteria.setFio(criteria.getFio().toLowerCase().replace(" ", ""));
             predicate = builder.and(predicate,
