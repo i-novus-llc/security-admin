@@ -39,4 +39,8 @@
         <sqlFile path="access/db/changelog/sql/V3_add_user_status.sql"/>
     </changeSet>
 
+    <changeSet id="add_org_role" author="btsyganov" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/V3_add_org_role.sql"/>
+    </changeSet>
+
 </databaseChangeLog>
