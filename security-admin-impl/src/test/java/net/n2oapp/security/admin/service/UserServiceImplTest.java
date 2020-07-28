@@ -7,6 +7,7 @@ import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
+import net.n2oapp.security.admin.api.model.UserStatus;
 import net.n2oapp.security.admin.impl.service.UserServiceImpl;
 import org.junit.BeforeClass;
 import org.junit.Rule;
