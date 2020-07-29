@@ -25,6 +25,7 @@
                 <param id="isActive" mapping="[0].isActive" domain="boolean" default-value="true"/>
                 <param id="roles*.id" mapping="[0].roles" domain="integer[]" required="true"/>
                 <param id="snils" mapping="[0].snils" domain="string"/>
+                <param id="status" mapping="[0].status" default-value="REGISTERED" domain="string"/>
                 <param id="userLevel.id" mapping="[0].userLevel" domain="string"
                        mapping-condition="${access.level.enabled}"/>
                 <param id="department.id" mapping="[0].departmentId" domain="integer"
@@ -61,6 +62,7 @@
                 <param id="isActive" mapping="[0].isActive" domain="boolean" default-value="true"/>
                 <param id="roles*.id" mapping="[0].roles" domain="integer[]" required="true"/>
                 <param id="snils" mapping="[0].snils" domain="string"/>
+                <param id="status" mapping="[0].status" default-value="REGISTERED" domain="string"/>
                 <param id="userLevel.id" mapping="[0].userLevel" domain="string"
                        mapping-condition="${access.level.enabled}"/>
                 <param id="department.id" mapping="[0].departmentId" domain="string"

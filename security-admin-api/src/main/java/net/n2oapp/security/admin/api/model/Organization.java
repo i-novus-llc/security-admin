@@ -22,6 +22,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * Организация
  */
@@ -70,4 +72,16 @@ public class Organization {
     @JsonProperty
     @ApiModelProperty(value = "Электронная почта")
     private String email;
+
+    @JsonProperty
+    @ApiModelProperty(value = "Идентификаторы ролей")
+    private List<Integer> roleIds;
+
+    @JsonProperty
+    @ApiModelProperty(value = "Роли")
+    private List<Role> roles;
+
+    @JsonProperty
+    @ApiModelProperty(value = "Идентификатор во внешней системе")
+    private String extUid;
 }

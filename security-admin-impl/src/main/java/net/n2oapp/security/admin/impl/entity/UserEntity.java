@@ -3,6 +3,7 @@ package net.n2oapp.security.admin.impl.entity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.n2oapp.security.admin.api.model.UserLevel;
+import net.n2oapp.security.admin.api.model.UserStatus;
 import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
@@ -130,5 +131,12 @@ public class UserEntity {
     @JoinColumn(name = "department_id")
     @ManyToOne(fetch = FetchType.EAGER)
     private DepartmentEntity department;
+
+    /**
+     * Статус регистрации пользователя
+     */
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
 }
 

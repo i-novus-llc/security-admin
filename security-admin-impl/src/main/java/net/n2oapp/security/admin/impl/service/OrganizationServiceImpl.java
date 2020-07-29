@@ -5,9 +5,11 @@ import net.n2oapp.security.admin.api.criteria.OrgCategoryCriteria;
 import net.n2oapp.security.admin.api.criteria.OrganizationCriteria;
 import net.n2oapp.security.admin.api.model.OrgCategory;
 import net.n2oapp.security.admin.api.model.Organization;
+import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.service.OrganizationService;
 import net.n2oapp.security.admin.impl.entity.OrgCategoryEntity;
 import net.n2oapp.security.admin.impl.entity.OrganizationEntity;
+import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.repository.OrgCatRepository;
 import net.n2oapp.security.admin.impl.repository.OrganizationRepository;
 import net.n2oapp.security.admin.impl.service.specification.OrgCategorySpecifications;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * Реализация сервиса управления организациями
@@ -108,6 +111,19 @@ public class OrganizationServiceImpl implements OrganizationService {
         model.setLegalAddress(entity.getLegalAddress());
         model.setKpp(entity.getKpp());
         model.setEmail(entity.getEmail());
+        model.setExtUid(entity.getExtUid());
+        if (entity.getRoleList() != null) {
+            model.setRoles(entity.getRoleList().stream()
+                    .map(roleEntity -> {
+                        Role role = new Role();
+                        role.setId(roleEntity.getId());
+                        role.setCode(roleEntity.getCode());
+                        role.setName(roleEntity.getName());
+                        return role;
+                    })
+                    .collect(Collectors.toList())
+            );
+        }
         return model;
     }
 
@@ -124,6 +140,14 @@ public class OrganizationServiceImpl implements OrganizationService {
         organizationEntity.setKpp(organization.getKpp());
         organizationEntity.setLegalAddress(organization.getLegalAddress());
         organizationEntity.setEmail(organization.getEmail());
+        organizationEntity.setExtUid(organization.getExtUid());
+        if (organization.getRoleIds() != null) {
+            organizationEntity.setRoleList(organization.getRoleIds().stream().map(roleId -> {
+                RoleEntity role = new RoleEntity();
+                role.setId(roleId);
+                return role;
+            }).collect(Collectors.toList()));
+        }
         return organizationEntity;
     }
 

@@ -27,4 +27,20 @@
         <sqlFile path="access/db/changelog/sql/v2_update_permissions.sql"/>
     </changeSet>
 
+    <changeSet id="add_account_type" author="btsyganov" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/V3_add_account_type.sql"/>
+    </changeSet>
+
+    <changeSet id="add_organization_ext_uid" author="btsyganov" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/V3_add_organization_ext_uid.sql"/>
+    </changeSet>
+
+    <changeSet id="add_user_status" author="btsyganov" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/V3_add_user_status.sql"/>
+    </changeSet>
+
+    <changeSet id="add_org_role" author="btsyganov" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/V3_add_org_role.sql"/>
+    </changeSet>
+
 </databaseChangeLog>
