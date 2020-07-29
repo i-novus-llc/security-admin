@@ -10,6 +10,7 @@ import net.n2oapp.security.admin.commons.util.PasswordGenerator;
 import net.n2oapp.security.admin.commons.util.UserValidations;
 import net.n2oapp.security.admin.impl.audit.AuditHelper;
 import net.n2oapp.security.admin.impl.entity.*;
+import net.n2oapp.security.admin.impl.repository.AccountTypeRepository;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.UserSpecifications;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -35,9 +37,10 @@ import static java.util.Objects.nonNull;
  */
 @Transactional
 public class UserServiceImpl implements UserService {
-    private UserRepository userRepository;
-    private RoleRepository roleRepository;
-    private SsoUserRoleProvider provider;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final AccountTypeRepository accountTypeRepository;
+    private final SsoUserRoleProvider provider;
 
     @Autowired
     private PasswordGenerator passwordGenerator;
@@ -59,9 +62,11 @@ public class UserServiceImpl implements UserService {
     @Value("${access.email-as-username}")
     private Boolean emailAsUsername;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, SsoUserRoleProvider provider) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
+                           SsoUserRoleProvider provider, AccountTypeRepository accountTypeRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.accountTypeRepository = accountTypeRepository;
         this.provider = provider;
     }
 
@@ -79,6 +84,29 @@ public class UserServiceImpl implements UserService {
         UserEntity entity = entityForm(new UserEntity(), user);
         String passwordHash = passwordEncoder.encode(password);
         entity.setPasswordHash(passwordHash);
+
+        if (user.getAccountTypeCode() != null) {
+            AccountTypeEntity accountType = accountTypeRepository.findByCode(user.getAccountTypeCode())
+                    .orElseThrow(() -> new UserException("exception.accountTypeNotFound"));
+            List<RoleEntity> accountTypeRoles = null;
+            if (accountType.getRoleList() != null) {
+                accountTypeRoles = accountType.getRoleList().stream()
+                        .filter(r -> r.getId() != null && r.getId().getRole() != null && r.getId().getRole().getId() != null)
+                        .map(r -> {
+                            RoleEntity roleEntity = new RoleEntity();
+                            roleEntity.setId(r.getId().getRole().getId());
+                            return roleEntity;
+                        }).collect(Collectors.toList());
+            }
+            if (accountTypeRoles != null) {
+                if (user.getRoles() == null)
+                    entity.setRoleList(accountTypeRoles);
+                else
+                    entity.getRoleList().addAll(accountTypeRoles);
+            }
+            entity.setUserLevel(accountType.getUserLevel());
+            entity.setStatus(accountType.getStatus());
+        }
         UserEntity savedUser = userRepository.save(entity);
         // получаем модель для сохранения SSO провайдером, ему надо передать незакодированный пароль
         if (provider.isSupports(savedUser.getExtSys())) {
@@ -98,6 +126,17 @@ public class UserServiceImpl implements UserService {
             mailService.sendWelcomeMail(user);
         }
         return audit("audit.userCreate", model(savedUser));
+    }
+
+    @Override
+    public User register(UserRegisterForm user) {
+        UserForm form = new UserForm();
+        form.setEmail(user.getEmail());
+        form.setUsername(user.getUsername());
+        form.setPassword(user.getPassword());
+        form.setPasswordCheck(user.getPassword());
+        form.setAccountTypeCode(user.getAccountTypeCode());
+        return create(form);
     }
 
     @Override
@@ -268,6 +307,7 @@ public class UserServiceImpl implements UserService {
         entity.setDepartment(nonNull(model.getDepartmentId()) ? new DepartmentEntity(model.getDepartmentId()) : null);
         entity.setOrganization(nonNull(model.getOrganizationId()) ? new OrganizationEntity(model.getOrganizationId()) : null);
         entity.setRegion(nonNull(model.getRegionId()) ? new RegionEntity(model.getRegionId()) : null);
+        entity.setStatus(model.getStatus() != null ? model.getStatus() : UserStatus.AWAITING_MODERATION);
         if (nonNull(model.getRoles()))
             entity.setRoleList(model.getRoles().stream().filter(roleId -> roleId > 0).map(RoleEntity::new).collect(Collectors.toList()));
         return entity;
@@ -286,6 +326,7 @@ public class UserServiceImpl implements UserService {
         entity.setEmail(modelFromProvider.getEmail());
         entity.setSnils(modelFromProvider.getSnils());
         entity.setUserLevel(modelFromProvider.getUserLevel());
+        entity.setStatus(modelFromProvider.getStatus());
         if (nonNull(modelFromProvider.getDepartment()))
             entity.setDepartment(new DepartmentEntity(modelFromProvider.getDepartment().getId()));
         if (nonNull(modelFromProvider.getOrganization()))
@@ -327,6 +368,7 @@ public class UserServiceImpl implements UserService {
         model.setRegion(model(entity.getRegion()));
         model.setExtSys(entity.getExtSys());
         model.setExtUid(entity.getExtUid());
+        model.setStatus(entity.getStatus());
         StringBuilder builder = new StringBuilder();
         if (nonNull(entity.getSurname())) {
             builder.append(entity.getSurname()).append(" ");

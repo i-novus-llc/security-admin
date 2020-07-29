@@ -81,6 +81,12 @@ public class OrganizationEntity implements Serializable {
     private String email;
 
     /**
+     * Идентификатор во внешней системе
+     */
+    @Column(name = "ext_uid")
+    private String extUid;
+
+    /**
      * Категории организации
      */
     @ManyToMany(fetch = FetchType.EAGER)
@@ -89,6 +95,16 @@ public class OrganizationEntity implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "org_category_code", referencedColumnName = "code")}
     )
     private List<OrgCategoryEntity> categories;
+
+    /**
+     * Роли
+     */
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "org_role", schema = "sec",
+            joinColumns = {@JoinColumn(name = "org_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id")}
+    )
+    private List<RoleEntity> roleList;
 
     /**
      * Признак что запись была удалена из справочника

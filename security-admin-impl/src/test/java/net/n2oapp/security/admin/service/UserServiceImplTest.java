@@ -4,9 +4,7 @@ import com.icegreen.greenmail.junit.GreenMailRule;
 import com.icegreen.greenmail.util.ServerSetup;
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
-import net.n2oapp.security.admin.api.model.Role;
-import net.n2oapp.security.admin.api.model.User;
-import net.n2oapp.security.admin.api.model.UserForm;
+import net.n2oapp.security.admin.api.model.*;
 import net.n2oapp.security.admin.impl.service.UserServiceImpl;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -51,6 +49,20 @@ public class UserServiceImplTest {
         org.springframework.security.core.userdetails.User contextUser = new org.springframework.security.core.userdetails.User("SelfDelete", "pass", new ArrayList<>());
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(contextUser, new Object());
         SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+
+    @Test
+    public void testRegistration() {
+        UserRegisterForm user = new UserRegisterForm();
+        user.setUsername("testUser");
+        user.setEmail("test@test.ru");
+        user.setPassword("1234ABCabc,");
+        user.setPasswordCheck(user.getPassword());
+        user.setAccountTypeCode("testAccountTypeCode");
+        User result = service.register(user);
+        assertEquals(1, result.getRoles().size());
+        assertEquals(UserLevel.PERSONAL, result.getUserLevel());
+        assertEquals(UserStatus.REGISTERED, result.getStatus());
     }
 
     @Test
@@ -233,6 +245,7 @@ public class UserServiceImplTest {
         List<Integer> roles = new ArrayList<>();
         roles.add(100);
         user.setRoles(roles);
+        user.setStatus(UserStatus.REGISTERED);
         return user;
     }
 

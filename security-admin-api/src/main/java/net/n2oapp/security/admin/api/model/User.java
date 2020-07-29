@@ -83,4 +83,7 @@ public class User {
 
     @ApiModelProperty(value = "Организация")
     private Organization organization;
+
+    @ApiModelProperty(value = "Статус пользователя")
+    private UserStatus status;
 }

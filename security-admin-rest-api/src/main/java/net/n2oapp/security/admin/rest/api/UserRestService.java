@@ -19,6 +19,7 @@ package net.n2oapp.security.admin.rest.api;
 import io.swagger.annotations.*;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
+import net.n2oapp.security.admin.api.model.UserRegisterForm;
 import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
 import org.springframework.data.domain.Page;
 
@@ -52,6 +53,12 @@ public interface UserRestService {
     @ApiOperation("Создать пользователя")
     @ApiResponse(code = 200, message = "Созданный пользователь")
     User create(@ApiParam(value = "Пользователь") UserForm user);
+
+    @POST
+    @Path("/register")
+    @ApiOperation("Регистрация пользователя")
+    @ApiResponse(code = 200, message = "Зарегистрированный пользователь")
+    User register(@ApiParam(value = "Пользователь") UserRegisterForm user);
 
     @PUT
     @Path("/")

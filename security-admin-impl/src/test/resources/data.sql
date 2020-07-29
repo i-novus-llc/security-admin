@@ -37,5 +37,10 @@ INSERT INTO sec.organization(code, short_name, full_name, ogrn, okpo, legal_addr
                ('test_code6', 'test_short_name6', 'test_full_name6', 'test_ogrn6', 'test_okpo6', 'test_legal_address6', 'test_email6', 'test_inn6');
 
 
+--for testing account_type
+INSERT INTO sec.account_type (code, name, description, user_level, status) VALUES ('testAccountTypeCode', 'testAccountTypeName', 'testDescription', 'PERSONAL', 'REGISTERED');
+
+INSERT INTO sec.account_type_role (account_type_id, role_id) VALUES (1, 100);
+
 
 
