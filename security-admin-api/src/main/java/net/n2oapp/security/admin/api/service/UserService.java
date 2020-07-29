@@ -18,6 +18,7 @@ package net.n2oapp.security.admin.api.service;
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
+import net.n2oapp.security.admin.api.model.UserRegisterForm;
 import org.springframework.data.domain.Page;
 
 /**
@@ -31,6 +32,13 @@ public interface UserService {
      * @return Созданный пользователь
      */
     User create(UserForm user);
+
+    /**
+     * Зарегистрировать пользователя
+     * @param user Модель пользователя
+     * @return Зарегистрированный пользователь
+     */
+    User register(UserRegisterForm user);
 
     /**
      * Изменить пользователя
