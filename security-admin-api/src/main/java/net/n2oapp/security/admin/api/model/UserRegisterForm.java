@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
-@ApiModel("Клиент")
+@ApiModel("Форма регистрации пользователя")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserRegisterForm {
 
