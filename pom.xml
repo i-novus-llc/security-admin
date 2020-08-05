@@ -16,7 +16,7 @@
 
     <properties>
         <java.version>11</java.version>
-        <n2o.version>7.8.0</n2o.version>
+        <n2o.version>7.8.1</n2o.version>
         <rdm.version>1.128.2</rdm.version>
         <spring.boot.version>2.1.1.RELEASE</spring.boot.version>
         <config.server.enable>false</config.server.enable>
