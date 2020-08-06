@@ -34,6 +34,7 @@ services:
       - ACCESS_KEYCLOAK_ADMIN_CLIENT_SECRET=0a889967-3fa4-4dd7-898c-7625e99bd793
       - ACCESS_ORGANIZATION_PERSIST_MODE=rest
       - JAXRS_SWAGGER_AUTH_TOKEN_URI=http://docker.one:8278/oauth/token
+      - ACCESS_EMAIL_AS_USERNAME=true
     ports:
       - 8080
     deploy:
