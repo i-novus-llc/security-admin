@@ -82,10 +82,12 @@ public class OrganizationServiceImpl implements OrganizationService {
             throw new UserException("exception.NullOrganizationId");
         if (!organizationRepository.existsById(organization.getId()))
             throw new UserException("exception.OrganizationNotFound");
-        organizationRepository.findByCode(organization.getCode()).ifPresent(organizationEntity -> {
-            if (!organizationEntity.getId().equals(organization.getId()))
-                throw new UserException("exception.uniqueOrganizationCode");
-        });
+        if (organization.getCode() != null) {
+            organizationRepository.findByCode(organization.getCode()).ifPresent(organizationEntity -> {
+                if (!organizationEntity.getId().equals(organization.getId()))
+                    throw new UserException("exception.uniqueOrganizationCode");
+            });
+        }
         return model(organizationRepository.save(entity(organization)));
     }
 
