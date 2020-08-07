@@ -68,10 +68,10 @@ public class OrganizationServiceImpl implements OrganizationService {
     public Organization create(Organization organization) {
         if (organization.getId() != null && organizationRepository.existsById(organization.getId()))
             throw new UserException("exception.uniqueOrganization");
-        if (organization.getCode() == null)
-            throw new UserException("exception.NullOrganizationCode");
-        else if (organizationRepository.findByCode(organization.getCode()).isPresent())
+        if (organizationRepository.findByCode(organization.getCode()).isPresent())
             throw new UserException("exception.uniqueOrganizationCode");
+        if (organizationRepository.findByOgrn(organization.getOgrn()).isPresent())
+            throw new UserException("exception.uniqueOgrn");
 
         return model(organizationRepository.save(entity(organization)));
     }
@@ -82,8 +82,6 @@ public class OrganizationServiceImpl implements OrganizationService {
             throw new UserException("exception.NullOrganizationId");
         if (!organizationRepository.existsById(organization.getId()))
             throw new UserException("exception.OrganizationNotFound");
-        if (organization.getCode() == null)
-            throw new UserException("exception.NullOrganizationCode");
         organizationRepository.findByCode(organization.getCode()).ifPresent(organizationEntity -> {
             if (!organizationEntity.getId().equals(organization.getId()))
                 throw new UserException("exception.uniqueOrganizationCode");
@@ -124,6 +122,19 @@ public class OrganizationServiceImpl implements OrganizationService {
                     .collect(Collectors.toList())
             );
         }
+        if (entity.getCategories() != null) {
+            model.setOrgCategories(entity.getCategories().stream()
+                    .map(categoryEntity -> {
+                        OrgCategory orgCategory = new OrgCategory();
+                        orgCategory.setId(categoryEntity.getId());
+                        orgCategory.setCode(categoryEntity.getCode());
+                        orgCategory.setName(categoryEntity.getName());
+                        orgCategory.setDescription(categoryEntity.getDescription());
+                        return orgCategory;
+                    })
+                    .collect(Collectors.toList())
+            );
+        }
         return model;
     }
 
@@ -146,6 +157,13 @@ public class OrganizationServiceImpl implements OrganizationService {
                 RoleEntity role = new RoleEntity();
                 role.setId(roleId);
                 return role;
+            }).collect(Collectors.toList()));
+        }
+        if (organization.getOrgCategoryIds() != null) {
+            organizationEntity.setCategories(organization.getOrgCategoryIds().stream().map(categoryId -> {
+                OrgCategoryEntity orgCategory = new OrgCategoryEntity();
+                orgCategory.setId(categoryId);
+                return orgCategory;
             }).collect(Collectors.toList()));
         }
         return organizationEntity;
