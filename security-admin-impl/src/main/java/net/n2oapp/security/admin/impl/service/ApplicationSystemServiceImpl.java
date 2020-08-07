@@ -72,7 +72,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
 
     @Override
     public Application updateApplication(Application service) {
-        if (!service.getOAuth()) {
+        if (!service.getOAuth() && service.getClient() != null) {
             service.getClient().setEnabled(false);
             service.getClient().setClientId(service.getCode());
             clientService.persist(service.getClient());
