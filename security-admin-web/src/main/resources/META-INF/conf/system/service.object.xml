@@ -12,7 +12,7 @@
                 </java>
             </invocation>
             <in-parameters>
-                <param id="id" mapping="[0].code" domain="string" required="true"/>
+                <param id="code" mapping="[0].code" domain="string" required="true"/>
                 <param id="name" mapping="[0].name" domain="string" required="true"/>
                 <param id="systemCode" mapping="[0].systemCode" domain="string" required="true"/>
                 <param id="enableClient" mapping="[0].oAuth" domain="boolean" required="true" default-value="false"/>
@@ -43,7 +43,7 @@
                 </java>
             </invocation>
             <in-parameters>
-                <param id="id" mapping="[0].code" domain="string" required="true"/>
+                <param id="code" mapping="[0].code" domain="string" required="true"/>
                 <param id="name" mapping="[0].name" domain="string" required="true"/>
                 <param id="systemCode" mapping="[0].systemCode" domain="string" required="true"/>
                 <param id="enableClient" mapping="[0].oAuth" domain="boolean" required="true" default-value="false"/>
@@ -75,7 +75,7 @@
                 </java>
             </invocation>
             <in-parameters>
-                <param id="id" mapping="[0]" domain="string" required="true"/>
+                <param id="code" mapping="[0]" domain="string" required="true"/>
             </in-parameters>
             <validations black-list="uniqServiceCode"/>
         </operation>
