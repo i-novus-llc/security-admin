@@ -68,7 +68,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     public Organization create(Organization organization) {
         if (organization.getId() != null && organizationRepository.existsById(organization.getId()))
             throw new UserException("exception.uniqueOrganization");
-        if (organizationRepository.findByCode(organization.getCode()).isPresent())
+        if (organization.getCode() != null && organizationRepository.findByCode(organization.getCode()).isPresent())
             throw new UserException("exception.uniqueOrganizationCode");
         if (organizationRepository.findByOgrn(organization.getOgrn()).isPresent())
             throw new UserException("exception.uniqueOgrn");
