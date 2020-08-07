@@ -181,6 +181,7 @@ public class OrganizationServiceImplTest {
         organization.setEmail(testValue);
         organization.setExtUid(testValue);
         organization.setRoleIds(Arrays.asList(100, 101));
+        organization.setOrgCategoryIds(Arrays.asList(1));
         return organization;
     }
 }
