@@ -31,4 +31,11 @@ public class AccountTypeRestCriteria extends AccountTypeCriteria {
     public void setOrders(List<Sort.Order> orders) {
         super.setOrders(orders);
     }
+
+    @QueryParam("name")
+    @Override
+    @ApiParam(value = "Наименование типа аккаунта")
+    public void setName(String name) {
+        super.setName(name);
+    }
 }
