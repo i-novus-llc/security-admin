@@ -26,6 +26,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.inovus.ms.rdm.sync.service.change_data.RdmChangeDataClient;
 
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -143,7 +145,13 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
 
     @Override
     public AppSystem getSystem(String id) {
-        return model(systemRepository.findById(id).orElse(null));
+        Optional<SystemEntity> system = systemRepository.findById(id);
+        if (system.isEmpty()) {
+            Response response = Response.status(404).header("x-error-message", "system with such id doesn't exists").build();
+            throw new NotFoundException(response);
+        }
+        return model(system.get());
+
     }
 
     @Override
