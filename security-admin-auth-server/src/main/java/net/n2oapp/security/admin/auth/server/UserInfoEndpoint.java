@@ -54,6 +54,7 @@ public class UserInfoEndpoint {
                 orgModel.setCode(org.getCode());
                 orgModel.setShortName(org.getShortName());
                 orgModel.setFullName(org.getFullName());
+                orgModel.setInn(org.getInn());
                 map.put(ORGANIZATION, orgModel);
             }
             map.put(REGION, user.getRegion());
