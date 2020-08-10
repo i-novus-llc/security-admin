@@ -42,5 +42,7 @@ INSERT INTO sec.account_type (code, name, description, user_level, status) VALUE
 
 INSERT INTO sec.account_type_role (account_type_id, role_id) VALUES (1, 100);
 
-
+INSERT INTO sec.org_category(id, code, name, description)
+	    VALUES (1 ,'test_code', 'test_name', 'test_description'),
+	           (2 ,'test_code2', 'test_name2', 'test_description2');
 
