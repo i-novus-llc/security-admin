@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-2.0"
+             name="Добавление организации">
+    <form upload="defaults" query-id="organization" object-id="organization">
+        <fields>
+            <row>
+                <input-select id="accountType"
+                              label="Тип аккаунта"
+                              query-id="accountType"
+                              label-field-id="name"
+                              description-field-id="description"
+                              visible="${access.organization.use-account-type}"
+                              enabled="${access.organization.use-account-type}"
+                              search="false"
+                              help="Для преднастройки ролей"/>
+            </row>
+            <row>
+                <input-text id="shortName" label="Краткое наименование" required="true"/>
+                <input-text id="ogrn" label="ОГРН" required="true">
+                    <!--                    <toolbar>-->
+                    <!--                        <button id="dsfsd" icon="fa fa-search">-->
+                    <!--                             <invoke operation-id="getByOgrn"/>-->
+                    <!--                        </button>-->
+                    <!--                    </toolbar>-->
+                </input-text>
+            </row>
+            <row>
+                <input-text id="fullName" label="Наименование" required="true"/>
+            </row>
+            <row>
+                <input-text id="inn" label="ИНН" required="true">
+
+                </input-text>
+                <input-text id="kpp" label="КПП"/>
+                <input-text id="okpo" label="ОКПО"/>
+                <input-text id="email" label="e-mail"/>
+            </row>
+            <row>
+                <input-text id="legalAddress" label="Юридический адрес"/>
+            </row>
+            <row>
+                <input-select id="orgCategories" label="Категории" query-id="orgCategory"/>
+            </row>
+            <row>
+                <input-select-tree id="roles"
+                                   label="Роли, допустимые для пользователей организации"
+                                   checkboxes="true"
+                                   required="true"
+                                   parent-field-id="systemId"
+                                   query-id="roleGroupedBySystem"
+                                   search-field-id="name"
+                                   size="1000">
+                    <pre-filters>
+                        <eq field-id="userLevel.id" value="{rolesFilterValue}"/>
+                        <eq field-id="forForm" value="true"/>
+                    </pre-filters>
+                    <dependencies>
+                        <set-value on="accountType" apply-on-init="false">
+                            <![CDATA[
+                                if(accountType != null && typeof(accountType) != undefined){
+                                    return accountType.roles;
+                                }
+                            ]]>
+                        </set-value>
+                    </dependencies>
+                </input-select-tree>
+            </row>
+            <hidden id="rolesFilterValue">
+                <dependencies>
+                    <set-value apply-on-init="true">
+                        ${access.level.enabled} ? 'ORGANIZATION' : null
+                    </set-value>
+                </dependencies>
+            </hidden>
+            <hidden id="id" default-value="0"/>
+        </fields>
+    </form>
+</simple-page>

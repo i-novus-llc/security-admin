@@ -71,7 +71,10 @@
                 <eq domain="boolean" mapping="groupBySystem" default-value="true"></eq>
             </filters>
         </field>
+        <field id="forForm" domain="boolean">
+            <filters>
+                <eq domain="boolean" mapping="forForm" filter-id="forForm"/>
+            </filters>
+        </field>
     </fields>
-
-
 </query>

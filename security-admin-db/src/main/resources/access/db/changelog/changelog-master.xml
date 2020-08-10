@@ -43,4 +43,12 @@
         <sqlFile path="access/db/changelog/sql/V3_add_org_role.sql"/>
     </changeSet>
 
+    <changeSet id="alter_assigned_org_category" author="aarifullin" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/V4_alter_assigned_org_category.sql"/>
+    </changeSet>
+
+    <changeSet id="org_code_nullable" author="aarifullin" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/V4_organization_code_nullable.sql"/>
+    </changeSet>
+
 </databaseChangeLog>

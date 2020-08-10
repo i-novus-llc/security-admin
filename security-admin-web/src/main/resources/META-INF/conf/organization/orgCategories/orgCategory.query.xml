@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0" object-id="organization">
+    <list result-mapping="['content']" count-mapping="['totalElements']">
+        <java method="findAllCategories" class="net.n2oapp.security.admin.api.service.OrganizationService">
+            <spring/>
+            <arguments>
+                <argument class="net.n2oapp.security.admin.api.criteria.OrgCategoryCriteria" type="criteria"/>
+            </arguments>
+        </java>
+    </list>
+    <unique>
+        <java method="find" class="net.n2oapp.security.admin.api.service.AccountTypeService">
+            <spring/>
+            <arguments>
+                <argument type="primitive"/>
+            </arguments>
+        </java>
+    </unique>
+
+    <fields>
+        <field id="id" name="Идентификатор" domain="integer">
+            <select mapping="id"/>
+        </field>
+        <field id="code" domain="string" name="Код">
+            <select mapping="code"/>
+            <filters>
+                <like filter-id="code" mapping="code"/>
+            </filters>
+        </field>
+        <field id="description" domain="string" name="Описание">
+            <select mapping="description"/>
+        </field>
+        <field id="name" domain="string" name="Наименование">
+            <select mapping="name"/>
+            <filters>
+                <eq filter-id="name" mapping="name"/>
+            </filters>
+        </field>
+    </fields>
+</query>
