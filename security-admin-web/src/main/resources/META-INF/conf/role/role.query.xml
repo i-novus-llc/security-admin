@@ -99,7 +99,5 @@
                 <eq filter-id="userLevel.id" domain="string" mapping="userLevel"></eq>
             </filters>
         </field>
-
-
     </fields>
 </query>

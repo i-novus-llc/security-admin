@@ -84,4 +84,12 @@ public class Organization {
     @JsonProperty
     @ApiModelProperty(value = "Идентификатор во внешней системе")
     private String extUid;
+
+    @JsonProperty
+    @ApiModelProperty(value = "Идентификаторы категорий")
+    private List<Integer> orgCategoryIds;
+
+    @JsonProperty
+    @ApiModelProperty(value = "Категории организаций")
+    private List<OrgCategory> orgCategories;
 }
