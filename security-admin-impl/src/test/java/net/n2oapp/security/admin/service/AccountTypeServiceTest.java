@@ -32,6 +32,8 @@ public class AccountTypeServiceTest {
     @Test
     public void testFindAll() {
         AccountTypeCriteria criteria = new AccountTypeCriteria();
+        criteria.setName("testAccountTypeName");
+        criteria.setUserLevel("PERSONAL");
         Page<AccountType> accountTypes = service.findAll(criteria);
         assertThat(accountTypes.getTotalElements(), is(1L));
         assertThat(accountTypes.getContent().get(0).getId(), is(1));
