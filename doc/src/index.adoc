@@ -165,15 +165,13 @@ OAuth2 OpenId Connect, например, с Keycloak или ЕСИА.
 . Соберите Auth Gateway выполнив команду `mvn clean package`
 . Auth Gateway подписывает токены с помощью асинхронных ключей по алгоритму RSA.
 Задать ключи можно следующим образом:
+Вариант 1 keystore: :::
 
 * Сгенерируйте https://docs.oracle.com/cd/E19509-01/820-3503/gfzbf/index.html[Key Pair и Self-Signed Certificate].
 * Перейдите в модуль `security-admin-auth-server` и добавьте ваш keystore в папку resources/keystore.
-* В настройках `OAuthServerConfiguration` укажите корректный путь к вашему keystore.
 +
 [listing]
-@Bean
-public KeyStoreKeyFactory keyStoreKeyFactory() {
-            return new KeyStoreKeyFactory(new ClassPathResource("keystore/gateway.jks"), properties.getPassword().toCharArray());
+@Bean @ConditionalOnExpression("T(org.springframework.util.StringUtils).isEmpty('${access.jwt.signing-key:}') && T(org.springframework.util.StringUtils).isEmpty('${access.jwt.verifier-key:}')") public KeyPair keyPairFromJKS() { return new KeyStoreKeyFactory(new ClassPathResource("keystore/gateway.jks"), properties.getPassword().toCharArray()).getKeyPair("gateway");
 }
 * В настройках `OAuthServerConfiguration` замените все `alias` (по умолчанию "gateway") на корректные.
 * Перейдите в модуль `auth-gateway` и в `application.properties` укажите
@@ -183,6 +181,21 @@ public KeyStoreKeyFactory keyStoreKeyFactory() {
 access.auth.keystore.password=lFJhM7YTAoFJWxl7XnMvDuORn17buMb9
 access.auth.keystore.key-id=hYyfxVDkchN9wXuLLjSLe5kQ2EUrW4Mr
 
+Вариант 2 pem формат: :::
+* Установите openssl
+* Выполните последовательно команды
++
+[listing]
+openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout privateKey.pem -out cert.pem
++
+[listing]
+openssl rsa -in privateKey.pem -pubout -out pubKey.pem
+
+* В файлах privateKey.pem и pubKey.pem будут лежать закрытый и открытый ключ соответсвенно.
+* Перейдите в модуль `auth-gateway` и в `application.properties` укажите корректные настройки ключей:
++
+[listing]
+access.jwt.signing-key=-----BEGIN PRIVATE KEY-----.....-----END PRIVATE KEY----- access.jwt.verifier-key=-----BEGIN PUBLIC KEY-----.....-----END PUBLIC KEY-----
 . Для подключения Auth Gateway к Keycloak серверу необходимо задать следующие настройки:
 +
 [listing]
@@ -202,7 +215,7 @@ access.keycloak.client.client-secret=
 +
 . Создайте базу данных под названием `security`.
 . Запустите сервер командой `java -jar auth-gateway.jar` с настройками выше
-. Запустите скрипты `create_admin.sql`, которые расположены в папке resources модуля auth-gateway. В них находятся необходимые permission для администрирования.
+. Запустите скрипты `create_admin.sql`, которые расположены в папке resources модуля auth-gateway.В них находятся необходимые permission для администрирования.
 . Согласно протоколу OAuth2 шлюзовой сервер аутентификации открывает
 следующие эндпоинты, проверьте их доступность:
 +
@@ -212,8 +225,7 @@ Token endpoint: /oauth/token
 UserInfo endpoint: /userinfo
 Admin API: /api/info
 
-
-. Зарегистрируйте клиента OAuth2, который будет аутентифицироваться в Auth Gateway. Для этого вам нужно добавить информацию о клиенте в таблицу "client". Необходимо указать:
+. Зарегистрируйте клиента OAuth2, который будет аутентифицироваться в Auth Gateway.Для этого вам нужно добавить информацию о клиенте в таблицу "client".Необходимо указать:
 
    # client_id - id клиента, который будет обращаться к серверу auth-gateway, в случае этого примера - myapp.
    # client_secret - секретное слово клиента, который будет обращаться к серверу auth-gateway
