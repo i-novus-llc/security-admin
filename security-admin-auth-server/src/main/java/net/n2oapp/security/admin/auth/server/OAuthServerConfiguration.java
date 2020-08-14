@@ -13,6 +13,7 @@ import net.n2oapp.security.auth.common.LogoutHandler;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.security.oauth2.authserver.AuthorizationServerProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.authserver.OAuth2AuthorizationServerConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -40,8 +41,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
 import java.util.Set;
 
 @Configuration
@@ -66,8 +75,8 @@ public class OAuthServerConfiguration extends OAuth2AuthorizationServerConfigura
     }
 
     @Bean
-    public LogoutHandler logoutHandler(KeyStoreKeyFactory keyStoreKeyFactory, ClientService clientService) {
-        RsaSigner signer = new RsaSigner((RSAPrivateKey) keyStoreKeyFactory.getKeyPair("gateway").getPrivate());
+    public LogoutHandler logoutHandler(KeyPair keyPair, ClientService clientService) {
+        RsaSigner signer = new RsaSigner((RSAPrivateKey) keyPair.getPrivate());
         return new OIDCBackChannelLogoutHandler(signer, clientService);
     }
 
@@ -86,6 +95,12 @@ public class OAuthServerConfiguration extends OAuth2AuthorizationServerConfigura
         @Value("${access.token.include-claims:}")
         private Set<String> tokenIncludeClaims;
 
+        @Value("${access.jwt.signing-key:#{null}}")
+        private String signingKey;
+
+        @Value("${access.jwt.verifier-key:#{null}}")
+        private String verifierKey;
+
         @Autowired
         private KeystoreProperties properties;
 
@@ -95,14 +110,35 @@ public class OAuthServerConfiguration extends OAuth2AuthorizationServerConfigura
         }
 
         @Bean
-        public KeyStoreKeyFactory keyStoreKeyFactory() {
-            return new KeyStoreKeyFactory(new ClassPathResource("keystore/gateway.jks"), properties.getPassword().toCharArray());
+        @ConditionalOnExpression("!T(org.springframework.util.StringUtils).isEmpty('${access.jwt.signing-key:}') && !T(org.springframework.util.StringUtils).isEmpty('${access.jwt.verifier-key:}')")
+        public KeyPair keyPairFromPem() throws NoSuchAlgorithmException, InvalidKeySpecException {
+            String privateKeyContent = signingKey.strip();
+            String publicKeyContent = verifierKey.strip();
+
+            privateKeyContent = privateKeyContent.replaceAll("\\n", "").replace("-----BEGIN PRIVATE KEY-----", "").replace("-----END PRIVATE KEY-----", "");
+            publicKeyContent = publicKeyContent.replaceAll("\\n", "").replace("-----BEGIN PUBLIC KEY-----", "").replace("-----END PUBLIC KEY-----", "");
+
+            KeyFactory kf = KeyFactory.getInstance("RSA");
+
+            PKCS8EncodedKeySpec keySpecPKCS8 = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(privateKeyContent));
+            PrivateKey privateKey = kf.generatePrivate(keySpecPKCS8);
+
+            X509EncodedKeySpec keySpecX509 = new X509EncodedKeySpec(Base64.getDecoder().decode(publicKeyContent));
+            RSAPublicKey publicKey = (RSAPublicKey) kf.generatePublic(keySpecX509);
+
+            return new KeyPair(publicKey, privateKey);
         }
 
         @Bean
-        public AccessTokenHeaderConverter accessTokenConverter(KeyStoreKeyFactory keyStoreKeyFactory) {
+        @ConditionalOnExpression("T(org.springframework.util.StringUtils).isEmpty('${access.jwt.signing-key:}') && T(org.springframework.util.StringUtils).isEmpty('${access.jwt.verifier-key:}')")
+        public KeyPair keyPairFromJKS() {
+            return new KeyStoreKeyFactory(new ClassPathResource("keystore/gateway.jks"), properties.getPassword().toCharArray()).getKeyPair("gateway");
+        }
+
+        @Bean
+        public AccessTokenHeaderConverter accessTokenConverter(KeyPair keyPair) {
             AccessTokenHeaderConverter converter = new AccessTokenHeaderConverter();
-            converter.setKeyPair(keyStoreKeyFactory.getKeyPair("gateway"));
+            converter.setKeyPair(keyPair);
             Boolean includeRoles = tokenIncludeClaims.contains("roles");
             Boolean includePermissions = tokenIncludeClaims.contains("permissions");
             Boolean includeSystems = tokenIncludeClaims.contains("systems");
@@ -112,8 +148,8 @@ public class OAuthServerConfiguration extends OAuth2AuthorizationServerConfigura
         }
 
         @Bean
-        public JWKSet jwkSet(KeyStoreKeyFactory keyStoreKeyFactory) {
-            RSAKey.Builder builder = new RSAKey.Builder((RSAPublicKey) keyStoreKeyFactory.getKeyPair("gateway").getPublic())
+        public JWKSet jwkSet(KeyPair keyPair) {
+            RSAKey.Builder builder = new RSAKey.Builder((RSAPublicKey) keyPair.getPublic())
                     .keyUse(KeyUse.SIGNATURE)
                     .algorithm(JWSAlgorithm.RS256)
                     .keyID(properties.getKeyId());
