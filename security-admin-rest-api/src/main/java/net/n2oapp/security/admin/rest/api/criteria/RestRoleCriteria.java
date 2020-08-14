@@ -94,4 +94,16 @@ public class RestRoleCriteria extends RoleCriteria {
     public void setGroupBySystem(Boolean groupBySystem) {
         super.setGroupBySystem(groupBySystem);
     }
+
+    @QueryParam("orgRoles")
+    @Override
+    public void setOrgRoles(List<Integer> orgRoles) {
+        super.setOrgRoles(orgRoles);
+    }
+
+    @QueryParam("onOrgDependency")
+    @Override
+    public void setOnOrgDependency(Boolean onOrgDependency) {
+        super.setOnOrgDependency(onOrgDependency);
+    }
 }

@@ -8,6 +8,7 @@
         <object-access object-id="organization" operations="*"/>
         <object-access object-id="department"/>
         <object-access object-id="userLevel" operations="*"/>
+        <object-access object-id="accountType" operations="*"/>
     </authenticated>
 
     <permission id="access.admin.user.read">

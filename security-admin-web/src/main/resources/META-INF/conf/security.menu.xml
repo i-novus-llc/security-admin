@@ -5,4 +5,5 @@
     <page page-id="roles" label="Роли"/>
     <page page-id="permissions" label="Права доступа"/>
     <page page-id="organizations" label="Организации"/>
+    <page page-id="accountType" label="Типы аккаунтов"/>
 </nav>

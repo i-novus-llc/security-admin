@@ -91,6 +91,16 @@
                 <eq filter-id="userLevel.id" domain="string" mapping="userLevel"></eq>
             </filters>
         </field>
+        <field id="orgRoles" domain="object[]">
+            <filters>
+                <in filter-id="orgRoles*.id" domain="integer[]" mapping="orgRoles"/>
+            </filters>
+        </field>
+        <field id="onOrgDependency" domain="boolean">
+            <filters>
+                <eq filter-id="onOrgDependency" domain="boolean" mapping="onOrgDependency"/>
+            </filters>
+        </field>
     </fields>
 
 </query>

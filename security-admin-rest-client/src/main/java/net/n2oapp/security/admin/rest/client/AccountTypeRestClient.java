@@ -21,6 +21,7 @@ public class AccountTypeRestClient implements AccountTypeService {
     @Override
     public Page<AccountType> findAll(AccountTypeCriteria criteria) {
         AccountTypeRestCriteria restCriteria = new AccountTypeRestCriteria();
+        restCriteria.setUserLevel(criteria.getUserLevel());
         restCriteria.setName(criteria.getName());
         restCriteria.setPage(criteria.getPage());
         restCriteria.setOrders(criteria.getOrders());

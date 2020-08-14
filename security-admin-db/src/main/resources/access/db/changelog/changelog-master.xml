@@ -51,4 +51,16 @@
         <sqlFile path="access/db/changelog/sql/V4_organization_code_nullable.sql"/>
     </changeSet>
 
+    <changeSet id="account_type_role_rename_column" author="imolostvov" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/V5_account_type_role_rename_column.sql"/>
+    </changeSet>
+
+    <changeSet id="account_type_drop_not_null" author="imolostvov" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/V5_account_type_drop_not_null.sql"/>
+    </changeSet>
+
+    <changeSet id="account_type_role_change_type" author="imolostvov" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/V5_account_type_role_change_type.sql"/>
+    </changeSet>
+
 </databaseChangeLog>
