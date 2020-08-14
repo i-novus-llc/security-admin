@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<object xmlns="http://n2oapp.net/framework/config/schema/object-3.0" name="Типы аккаунтов">
+
+    <operations>
+        <operation id="create">
+            <invocation>
+                <java method="create" class="net.n2oapp.security.admin.api.service.AccountTypeService">
+                    <spring/>
+                    <arguments>
+                        <argument type="class" class="net.n2oapp.security.admin.api.model.AccountType"/>
+                    </arguments>
+                </java>
+            </invocation>
+            <in-parameters>
+                <param id="code" mapping="[0].code" domain="string" required="true"/>
+                <param id="name" mapping="[0].name" domain="string" required="true"/>
+                <param id="description" mapping="[0].description" domain="string"/>
+                <param id="roles*.id" mapping="[0].roleIds" domain="integer[]"/>
+                <param id="orgRoles*.id" mapping="[0].orgRoleIds" domain="integer[]"/>
+                <param id="userLevel.id" mapping="[0].userLevel" domain="string"
+                       mapping-condition="${access.level.enabled}"/>
+            </in-parameters>
+            <out-parameters>
+                <param id="id" mapping="code"/>
+            </out-parameters>
+        </operation>
+
+        <operation id="update">
+            <invocation>
+                <java method="update" class="net.n2oapp.security.admin.api.service.AccountTypeService">
+                    <spring/>
+                    <arguments>
+                        <argument type="class" class="net.n2oapp.security.admin.api.model.AccountType"/>
+                    </arguments>
+                </java>
+            </invocation>
+            <in-parameters>
+                <param id="id" mapping="[0].id" domain="integer" required="true"/>
+                <param id="code" mapping="[0].code" domain="string" required="true"/>
+                <param id="name" mapping="[0].name" domain="string" required="true"/>
+                <param id="description" mapping="[0].description" domain="string"/>
+                <param id="roles*.id" mapping="[0].roleIds" domain="integer[]"/>
+                <param id="orgRoles*.id" mapping="[0].orgRoleIds" domain="integer[]"/>
+                <param id="userLevel.id" mapping="[0].userLevel" domain="string"
+                       mapping-condition="${access.level.enabled}"/>
+                <param id="status" mapping="[0].status" domain="string"/>
+            </in-parameters>
+            <out-parameters>
+                <param id="id" mapping="code"/>
+            </out-parameters>
+        </operation>
+
+        <operation id="delete"
+                   confirm-text="Вы уверены, что хотите удалить тип аккаунта?"
+                   success-text="Тип аккаунта удалён">
+            <invocation>
+                <java method="delete" class="net.n2oapp.security.admin.api.service.AccountTypeService">
+                    <spring/>
+                    <arguments>
+                        <argument type="primitive"/>
+                    </arguments>
+                </java>
+            </invocation>
+            <in-parameters>
+                <param id="id" mapping="[0]" domain="integer" required="true"/>
+            </in-parameters>
+        </operation>
+    </operations>
+</object>

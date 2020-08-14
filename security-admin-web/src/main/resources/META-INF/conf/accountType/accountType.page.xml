@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-2.0" name="Настройки типов аккаунтов для саморегистрации">
+    <table query-id="accountType" object-id="accountType">
+        <filters>
+            <row>
+                <col>
+                    <input-text id="name" label="Наименование"/>
+                </col>
+                <col>
+                    <input-select id="userLevel" enabled="${access.level.enabled}" label="Уровень пользователя" query-id="userLevelForFilter"/>
+                </col>
+                <col>
+                    <search-buttons id="def"/>
+                </col>
+            </row>
+        </filters>
+        <toolbar>
+            <button label="Создать" model="filter">
+                <show-modal page-id="accountTypeForm" submit-operation-id="create" model="filter" object-id="accountType"
+                             upload="defaults" route="/create"/>
+            </button>
+        </toolbar>
+        <columns>
+            <column text-field-id="name" label="Наименование"/>
+            <column text-field-id="description" label="Описание"/>
+            <column text-field-id="userLevel.name" label="Уровень пользователя"/>
+            <column text-field-id="">
+                <toolbar>
+                    <button icon="fa fa-trash" type="iconAndText" label="Удалить" confirm="true" confirm-text="Вы уверены, что хотите удалить тип аккаунта?">
+                        <invoke operation-id="delete"/>
+                    </button>
+                </toolbar>
+            </column>
+        </columns>
+        <rows>
+            <click>
+                <show-modal page-id="accountTypeForm" submit-operation-id="update" object-id="accountType"
+                            detail-field-id="id" route="/update"/>
+            </click>
+        </rows>
+    </table>
+</simple-page>
