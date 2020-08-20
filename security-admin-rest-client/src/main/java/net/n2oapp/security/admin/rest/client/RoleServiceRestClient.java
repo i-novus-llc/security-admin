@@ -68,6 +68,8 @@ public class RoleServiceRestClient implements RoleService {
         roleCriteria.setUserLevel(criteria.getUserLevel());
         roleCriteria.setForForm(criteria.getForForm());
         roleCriteria.setGroupBySystem(criteria.getGroupBySystem());
+        roleCriteria.setOrgRoles(criteria.getOrgRoles());
+        roleCriteria.setOnOrgDependency(criteria.getOnOrgDependency());
         return roleCriteria;
     }
 }
