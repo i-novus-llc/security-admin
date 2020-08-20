@@ -77,7 +77,7 @@ public class AccountTypeServiceImpl implements AccountTypeService {
         if (entity.getRoleList() != null) {
             List<Role> roles = new ArrayList<>();
             for (AccountTypeRoleEntity accountTypeRoleEntity: entity.getRoleList()) {
-                if (accountTypeRoleEntity.getRoleType().equals(AccountTypeRoleEnum.ORG_AND_USER_ROLE) ||
+                if (AccountTypeRoleEnum.ORG_AND_USER_ROLE.equals(accountTypeRoleEntity.getRoleType()) ||
                         accountTypeRoleEntity.getRoleType().equals(AccountTypeRoleEnum.USER_ROLE)) {
                     Role role = new Role();
                     role.setId(accountTypeRoleEntity.getId().getRole().getId());
