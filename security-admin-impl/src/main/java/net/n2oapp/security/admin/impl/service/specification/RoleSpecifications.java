@@ -67,6 +67,11 @@ public class RoleSpecifications implements Specification<RoleEntity> {
             predicate = builder.and(predicate, builder.isNull(root.get(RoleEntity_.USER_LEVEL)));
         }
 
+        if (nonNull(criteria.getOrgRoles()) && nonNull(criteria.getOnOrgDependency()) && criteria.getOnOrgDependency()) {
+            if (criteria.getOrgRoles().isEmpty())
+                return builder.disjunction();
+            predicate = builder.and(predicate, builder.and(root.get(RoleEntity_.ID).in(criteria.getOrgRoles())));
+        }
         return predicate;
     }
 }

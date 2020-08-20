@@ -32,6 +32,8 @@ public class AccountTypeServiceTest {
     @Test
     public void testFindAll() {
         AccountTypeCriteria criteria = new AccountTypeCriteria();
+        criteria.setName("testAccountTypeName");
+        criteria.setUserLevel("PERSONAL");
         Page<AccountType> accountTypes = service.findAll(criteria);
         assertThat(accountTypes.getTotalElements(), is(1L));
         assertThat(accountTypes.getContent().get(0).getId(), is(1));
@@ -63,7 +65,8 @@ public class AccountTypeServiceTest {
         newAccountType.setStatus(UserStatus.REGISTERED);
         newAccountType.setUserLevel(UserLevel.REGIONAL);
         newAccountType.setDescription("testDescription2");
-        newAccountType.setRoleIds(Arrays.asList(100, 101));
+        newAccountType.setRoleIds(Arrays.asList(100));
+        newAccountType.setOrgRoleIds(Arrays.asList(100, 101));
         service.create(newAccountType);
 
         assertThat(service.findAll(new AccountTypeCriteria()).getTotalElements(), is(2L));
@@ -76,7 +79,8 @@ public class AccountTypeServiceTest {
         assertThat(result.getStatus(), is(UserStatus.REGISTERED));
         assertThat(result.getUserLevel(), is(UserLevel.REGIONAL));
         assertThat(result.getRoles().get(0).getId(), is(100));
-        assertThat(result.getRoles().get(1).getId(), is(101));
+        assertThat(result.getOrgRoles().get(0).getId(), is(100));
+        assertThat(result.getOrgRoles().get(1).getId(), is(101));
 
         service.delete(2);
     }

@@ -2,11 +2,9 @@ package net.n2oapp.security.admin.impl.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.n2oapp.security.admin.api.model.AccountTypeRoleEnum;
 
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
@@ -18,7 +16,8 @@ public class AccountTypeRoleEntity implements Serializable {
     @EmbeddedId
     private AccountTypeRoleEntityId id;
 
-    @Column(name = "org_default_role")
-    private Boolean orgDefaultRole = false;
+    @Column(name = "role_type")
+    @Enumerated(EnumType.STRING)
+    private AccountTypeRoleEnum roleType;
 
 }

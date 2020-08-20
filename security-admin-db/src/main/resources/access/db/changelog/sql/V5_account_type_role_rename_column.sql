@@ -1,0 +1,1 @@
+ALTER TABLE sec.account_type_role RENAME COLUMN org_default_role TO role_type;

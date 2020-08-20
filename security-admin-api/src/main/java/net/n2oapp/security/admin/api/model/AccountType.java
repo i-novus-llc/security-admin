@@ -46,6 +46,14 @@ public class AccountType {
     private List<Integer> roleIds;
 
     @JsonProperty
+    @ApiModelProperty(value = "Список ролей организации")
+    private List<Role> orgRoles;
+
+    @JsonProperty
+    @ApiModelProperty("Список идентификаторов ролей организации")
+    private List<Integer> orgRoleIds;
+
+    @JsonProperty
     @ApiModelProperty("Статус")
     private UserStatus status;
 }
