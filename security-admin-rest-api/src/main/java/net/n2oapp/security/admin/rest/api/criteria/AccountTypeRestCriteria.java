@@ -38,4 +38,11 @@ public class AccountTypeRestCriteria extends AccountTypeCriteria {
     public void setName(String name) {
         super.setName(name);
     }
+
+    @QueryParam("userLevel")
+    @Override
+    @ApiParam(value = "Уровень пользователя")
+    public void setUserLevel(String userLevel) {
+        super.setUserLevel(userLevel);
+    }
 }

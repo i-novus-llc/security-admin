@@ -12,4 +12,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AccountTypeCriteria extends BaseCriteria {
     private String name;
+    private String userLevel;
 }
