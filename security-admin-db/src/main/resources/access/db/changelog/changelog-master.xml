@@ -63,4 +63,8 @@
         <sqlFile path="access/db/changelog/sql/V5_account_type_role_change_type.sql"/>
     </changeSet>
 
+    <changeSet id="add_client_id_user" author="aarifullin" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/V5_add_client_id_user.sql"/>
+    </changeSet>
+
 </databaseChangeLog>
