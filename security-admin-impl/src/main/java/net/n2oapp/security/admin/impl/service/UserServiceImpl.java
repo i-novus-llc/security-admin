@@ -116,7 +116,7 @@ public class UserServiceImpl implements UserService {
         //        todo доработка для russpass
         if (!CollectionUtils.isEmpty(savedUser.getRoleList())) {
             RoleEntity operator = roleRepository.findOneByCode("lkop.partner_operator");
-            if (savedUser.getRoleList().stream().anyMatch(roleEntity -> operator.getId().equals(roleEntity.getId()))) {
+            if (nonNull(operator) && savedUser.getRoleList().stream().anyMatch(roleEntity -> operator.getId().equals(roleEntity.getId()))) {
                 NotificationClientModel model = new NotificationClientModel();
                 model.setFirstName(savedUser.getName());
                 model.setLastName(savedUser.getSurname());
@@ -174,7 +174,7 @@ public class UserServiceImpl implements UserService {
             entityUser.setPasswordHash(passwordEncoder.encode(user.getPassword()));
         //        todo доработка для russpass
         RoleEntity operator = roleRepository.findOneByCode("lkop.partner_operator");
-        if (isNull(entityUser.getClientId())) {
+        if (nonNull(operator) && isNull(entityUser.getClientId())) {
             if (!CollectionUtils.isEmpty(entityUser.getRoleList()))
                 if (entityUser.getRoleList().stream().anyMatch(roleEntity -> operator.getId().equals(roleEntity.getId()))) {
                     NotificationClientModel model = new NotificationClientModel();
