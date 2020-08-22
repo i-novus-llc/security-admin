@@ -5,12 +5,12 @@
     <meta charset="utf-8">
 </head>
 <body>
-<p>Уважаемый <span th:text="${surname}"/> <span th:text="${name}"/> <span th:text="${patronymic}"/>!</p>
+<p>Уважаемый <span th:text="${surname}"/> <span th:text="${name}"/>!</p>
 
 <p>Логин для входа: <span th:text="${username}"/></p>
 <div th:if="${password}">
     <p>Временный пароль: <span th:text="${password}"/></p>
 </div>
-<p>Пожалуйста измените пароль при следующем входе.</p>
+<p>Пожалуйста, измените пароль при следующем входе.</p>
 </body>
 </html>
