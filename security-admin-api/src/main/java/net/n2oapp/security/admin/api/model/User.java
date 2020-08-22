@@ -86,4 +86,7 @@ public class User {
 
     @ApiModelProperty(value = "Статус пользователя")
     private UserStatus status;
+
+    @ApiModelProperty(value = "Идентификатор клиента в системе уведомлений")
+    private Integer clientId;
 }
