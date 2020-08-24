@@ -55,7 +55,7 @@ public class AccountTypeEntity {
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
-    @OneToMany(mappedBy = "id.accountType", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "id.accountType", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<AccountTypeRoleEntity> roleList;
 
 }

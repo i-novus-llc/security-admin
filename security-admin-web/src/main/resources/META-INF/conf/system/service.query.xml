@@ -26,6 +26,9 @@
                 <eq filter-id="uniqueId" mapping="[0]"/>
             </filters>
         </field>
+        <field id="code" domain="string">
+            <select mapping="code"/>
+        </field>
         <field id="name" domain="string" name="Имя">
             <select mapping="name"/>
         </field>

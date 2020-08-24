@@ -4,6 +4,11 @@
     <form upload="defaults" query-id="service" default-values-query-id="serviceDefault">
         <fields>
             <input-text id="id" label="Код приложения" required="true"/>
+            <hidden id="code">
+                <dependencies>
+                    <set-value on="id">id</set-value>
+                </dependencies>
+            </hidden>
             <input-text id="name" label="Наименование приложения" required="true"/>
 
             <field id="enableClient" label="Включить OAuth 2.0" default-value="false">

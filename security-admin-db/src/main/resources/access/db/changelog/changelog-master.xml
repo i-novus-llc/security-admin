@@ -43,4 +43,28 @@
         <sqlFile path="access/db/changelog/sql/V3_add_org_role.sql"/>
     </changeSet>
 
+    <changeSet id="alter_assigned_org_category" author="aarifullin" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/V4_alter_assigned_org_category.sql"/>
+    </changeSet>
+
+    <changeSet id="org_code_nullable" author="aarifullin" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/V4_organization_code_nullable.sql"/>
+    </changeSet>
+
+    <changeSet id="account_type_role_rename_column" author="imolostvov" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/V5_account_type_role_rename_column.sql"/>
+    </changeSet>
+
+    <changeSet id="account_type_drop_not_null" author="imolostvov" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/V5_account_type_drop_not_null.sql"/>
+    </changeSet>
+
+    <changeSet id="account_type_role_change_type" author="imolostvov" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/V5_account_type_role_change_type.sql"/>
+    </changeSet>
+
+    <changeSet id="add_client_id_user" author="aarifullin" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/V5_add_client_id_user.sql"/>
+    </changeSet>
+
 </databaseChangeLog>

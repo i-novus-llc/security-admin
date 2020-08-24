@@ -20,6 +20,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.core.Response;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -74,8 +76,12 @@ public class PermissionServiceImpl implements PermissionService {
         if (code.startsWith(SYSTEM_PREFIX)) {
             return model(systemRepository.findOneByCode(code.replace(SYSTEM_PREFIX, "")));
         }
-        PermissionEntity permissionEntity = permissionRepository.findById(code).get();
-        return model(permissionEntity, false);
+        Optional<PermissionEntity> permissionEntity = permissionRepository.findById(code);
+        if (permissionEntity.isEmpty()) {
+            Response response = Response.status(404).header("x-error-message", "permission with such id doesn't exists").build();
+            throw new NotFoundException(response);
+        }
+        return model(permissionEntity.get(), false);
     }
 
     @Override

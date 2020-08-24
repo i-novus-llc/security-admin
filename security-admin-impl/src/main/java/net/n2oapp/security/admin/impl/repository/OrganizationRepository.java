@@ -13,4 +13,6 @@ import java.util.Optional;
 @Repository
 public interface OrganizationRepository extends JpaRepository<OrganizationEntity, Integer>, JpaSpecificationExecutor<OrganizationEntity> {
     Optional<OrganizationEntity> findByCode(String code);
+
+    Optional<OrganizationEntity> findByOgrn(String ogrn);
 }
