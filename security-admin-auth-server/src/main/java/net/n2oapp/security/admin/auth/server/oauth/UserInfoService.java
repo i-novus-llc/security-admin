@@ -31,7 +31,6 @@ public class UserInfoService {
 
     public Map<String, Object> buildUserInfo(OAuth2Authentication authentication) {
         Map<String, Object> map = new HashMap<>();
-        List<String> roles = new ArrayList<>();
         List<String> permissions = new ArrayList<>();
         List<String> systems = new ArrayList<>();
 
@@ -48,7 +47,6 @@ public class UserInfoService {
             map.put(REGION, user.getRegion());
             map.put(USER_LEVEL, user.getUserLevel());
             if (nonNull(user.getRoleList())) {
-                roles.addAll(user.getRoleList().stream().map(r -> r.getCode()).collect(Collectors.toList()));
                 if (permissionEnabled) {
                     permissions.addAll(user.getRoleList().stream().filter(r -> nonNull(r.getPermissionList())).flatMap(r -> r.getPermissionList().stream())
                             .map(p -> p.getCode()).collect(Collectors.toList()));
@@ -62,7 +60,6 @@ public class UserInfoService {
         }
 
         map.put(USERNAME, authentication.getName());
-        map.put(ROLES, roles);
         map.put(PERMISSIONS, permissions);
         map.put(SYSTEMS, systems);
         if (authentication.getUserAuthentication() != null)

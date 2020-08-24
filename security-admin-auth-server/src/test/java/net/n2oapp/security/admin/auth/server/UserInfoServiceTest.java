@@ -1,9 +1,11 @@
 package net.n2oapp.security.admin.auth.server;
 
 import net.n2oapp.security.admin.api.model.Organization;
+import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.UserLevel;
 import net.n2oapp.security.admin.api.oauth.UserInfoEnricher;
 import net.n2oapp.security.admin.auth.server.oauth.OrganizationEnricher;
+import net.n2oapp.security.admin.auth.server.oauth.RoleEnricher;
 import net.n2oapp.security.admin.auth.server.oauth.UserInfoService;
 import net.n2oapp.security.admin.impl.entity.*;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
@@ -15,6 +17,7 @@ import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.isNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -29,7 +32,8 @@ public class UserInfoServiceTest {
         UserRepository repository = mock(UserRepository.class);
 
         when(repository.findOneByUsernameIgnoreCase("testUser")).thenReturn(initUserEntity());
-        UserInfoService userInfoService = new UserInfoService(repository, true, Collections.singletonList(new OrganizationEnricher()));
+        UserInfoService userInfoService = new UserInfoService(repository, true, List.of(new OrganizationEnricher(),
+                new RoleEnricher()));
         OAuth2Authentication authentication = mock(OAuth2Authentication.class);
         User user = new User("testUser");
         when(authentication.getPrincipal()).thenReturn(user);
@@ -43,7 +47,7 @@ public class UserInfoServiceTest {
         assertThat(((Organization) userinfo.get("organization")).getId(), is(1));
         assertThat(((Organization) userinfo.get("organization")).getCode(), is("testCode"));
         assertThat(((Organization) userinfo.get("organization")).getInn(), is("testInn"));
-
+        assertThat(((List<String>) userinfo.get("roles")).get(0), is("testRoleCode"));
     }
 
     @Test
