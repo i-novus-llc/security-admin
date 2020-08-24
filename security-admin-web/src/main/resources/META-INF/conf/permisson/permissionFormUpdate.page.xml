@@ -6,17 +6,16 @@
                           visible="${access.system.enabled}" label-field-id="name" enabled="false"/>
             <input-text id="name" required="true"/>
             <input-text id="id" required="true" enabled="false"/>
-            <!--                   todo https://jira.i-novus.ru/browse/NNO-4825-->
-<!--            <output-text id="alert" class="text-danger" visible="false" no-label="true">-->
-<!--                <dependencies>-->
-<!--                    <set-value>-->
-<!--                        "Редактирование атрибутов запрещено. Право доступа используется в роли/является родительским"-->
-<!--                    </set-value>-->
-<!--                    <visibility>-->
-<!--                        hasChildren || usedInRole-->
-<!--                    </visibility>-->
-<!--                </dependencies>-->
-<!--            </output-text>-->
+            <output-text id="alert" class="text-danger" visible="false" no-label="true">
+                <dependencies>
+                    <set-value>
+                        "Редактирование атрибутов запрещено. Право доступа используется в роли/является родительским"
+                    </set-value>
+                    <visibility>
+                        hasChildren || usedInRole
+                    </visibility>
+                </dependencies>
+            </output-text>
             <input-select id="parent" ajax="false" label="Родительское право доступа" checkboxes="true"
                           query-id="permission" size="100">
                 <pre-filters>
