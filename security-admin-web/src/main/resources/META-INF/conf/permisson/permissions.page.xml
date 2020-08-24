@@ -34,7 +34,7 @@
                     <column text-field-id="action" label=" ">
                         <toolbar>
                             <button id="remove" icon="fa fa-trash" label="Удалить"
-                                    confirm="true" confirm-text="Вы действительно хотите удалить роль?">
+                                    confirm="true" confirm-text="Вы уверены, что хотите удалить право доступа?">
                                 <invoke operation-id="delete"/>
                             </button>
                         </toolbar>

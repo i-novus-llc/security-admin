@@ -138,5 +138,11 @@ public class UserEntity {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private UserStatus status;
+
+    /**
+     * Идентификатор клиента в системе уведомлений
+     */
+    @Column(name = "client_id")
+    private Integer clientId;
 }
 

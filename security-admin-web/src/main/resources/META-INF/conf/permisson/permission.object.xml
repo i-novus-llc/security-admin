@@ -40,7 +40,7 @@
         </operation>
         <operation id="delete"
                    confirm-text="Вы уверены, что хотите удалить право доступа?"
-                   success-text="Право доступа удалена">
+                   success-text="Право доступа удалено">
             <invocation>
                 <java method="delete" class="net.n2oapp.security.admin.api.service.PermissionService">
                     <spring/>

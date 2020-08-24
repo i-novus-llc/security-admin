@@ -58,13 +58,14 @@ public class OrganizationServiceImplTest {
         assertThat(thrown.getMessage(), is("exception.uniqueOrganization"));
 
         organizationResponse.setId(null);
-        organizationResponse.setCode(null);
-        thrown = catchThrowable(() -> organizationService.create(organizationResponse));
-        assertThat(thrown.getMessage(), is("exception.NullOrganizationCode"));
-
         organizationResponse.setCode("8");
         thrown = catchThrowable(() -> organizationService.create(organizationResponse));
         assertThat(thrown.getMessage(), is("exception.uniqueOrganizationCode"));
+
+        organizationResponse.setCode("2463242");
+        organizationResponse.setOgrn("8");
+        thrown = catchThrowable(() -> organizationService.create(organizationResponse));
+        assertThat(thrown.getMessage(), is("exception.uniqueOgrn"));
     }
 
     @Test
@@ -80,13 +81,9 @@ public class OrganizationServiceImplTest {
         thrown = catchThrowable(() -> organizationService.update(organizationResponse));
         assertThat(thrown.getMessage(), is("exception.OrganizationNotFound"));
 
-        organizationResponse.setId(orgId);
-        organizationResponse.setCode(null);
-        thrown = catchThrowable(() -> organizationService.update(organizationResponse));
-        assertThat(thrown.getMessage(), is("exception.NullOrganizationCode"));
-
         organizationService.create(prepareOrgRequest("10"));
 
+        organizationResponse.setId(orgId);
         organizationResponse.setCode("10");
         thrown = catchThrowable(() -> organizationService.update(organizationResponse));
         assertThat(thrown.getMessage(), is("exception.uniqueOrganizationCode"));
@@ -184,6 +181,7 @@ public class OrganizationServiceImplTest {
         organization.setEmail(testValue);
         organization.setExtUid(testValue);
         organization.setRoleIds(Arrays.asList(100, 101));
+        organization.setOrgCategoryIds(Arrays.asList(1));
         return organization;
     }
 }

@@ -32,6 +32,8 @@ public class RoleCriteria extends BaseCriteria {
     private String userLevel;
     private Boolean forForm;
     private Boolean groupBySystem;
+    private List<Integer> orgRoles;
+    private Boolean onOrgDependency;
 
     public void setPermissionCodes(List<String> permissionCodes) {
         this.permissionCodes = permissionCodes != null ? permissionCodes : new ArrayList<>();
