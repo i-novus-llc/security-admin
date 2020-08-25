@@ -94,18 +94,13 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Client getOrCreate(String id) {
-        Client client = findByClientId(id);
-        if (isNull(client)) {
-            client = new Client();
-            client.setClientId(id);
-            client.setClientSecret(UUID.randomUUID().toString());
-            client.setIsAuthorizationCode(true);
-            client.setEnabled(false);
-            return client;
-        }
-
-        client.setEnabled(true);
+    public Client getDefaultClient(String id) {
+        Client client = new Client();
+        client.setSystemCode(id);
+        client.setClientId(id);
+        client.setClientSecret(UUID.randomUUID().toString());
+        client.setIsAuthorizationCode(true);
+        client.setEnabled(false);
         return client;
     }
 

@@ -41,7 +41,7 @@ public class ClientRestTest {
 
     @Test
     public void persistAndGet() {
-        Client client = clientService.getOrCreate("notExists");
+        Client client = clientService.getDefaultClient("notExists");
         assertEquals(client.getClientId(), "notExists");
         assertEquals(client.getEnabled(), false);
         assertEquals(client.getIsAuthorizationCode(), true);
@@ -60,14 +60,14 @@ public class ClientRestTest {
         applicationSystemService.createApplication(application);
 
         Client clientFromCreateMethod = clientService.persist(newClient());
-        client = clientService.getOrCreate(newClient().getClientId());
+        client = clientService.getByClientId(newClient().getClientId());
         compareClient(client, newClient());
         compareClient(client, clientFromCreateMethod);
 
         client.setClientSecret("newSecret");
         clientFromCreateMethod = clientService.persist(client);
         compareClient(client, clientFromCreateMethod);
-        client = clientService.getOrCreate(newClient().getClientId());
+        client = clientService.getByClientId(newClient().getClientId());
         compareClient(client, clientFromCreateMethod);
 
         client.setEnabled(false);
