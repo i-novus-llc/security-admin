@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <query xmlns="http://n2oapp.net/framework/config/schema/query-4.0">
     <unique result-mapping="#this">
-        <java method="getOrCreate" class="net.n2oapp.security.admin.api.service.ClientService">
+        <java method="getDefaultValue" class="net.n2oapp.security.admin.api.service.ClientService">
             <spring/>
             <arguments>
                 <argument type="primitive"/>

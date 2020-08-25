@@ -53,7 +53,7 @@ public class ClientServiceRestClient implements ClientService {
     }
 
     @Override
-    public Client getOrCreate(String id) {
-        return clientService.getOrCreate(id);
+    public Client getDefaultValue(String id) {
+        return clientService.getDefaultValue(id);
     }
 }

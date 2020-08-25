@@ -48,8 +48,8 @@ public class ClientRestServiceImpl implements ClientRestService {
     }
 
     @Override
-    public Client getOrCreate(String clientId) {
-        return service.getOrCreate(clientId);
+    public Client getDefaultValue(String clientId) {
+        return service.getDefaultValue(clientId);
     }
 
 
