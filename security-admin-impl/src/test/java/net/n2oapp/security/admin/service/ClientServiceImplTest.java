@@ -48,7 +48,7 @@ public class ClientServiceImplTest {
 
     @Test
     public void testPersistAndGet() {
-        Client client = service.getDefaultValue("notExists");
+        Client client = service.getDefaultClient("notExists");
         assertEquals(client.getClientId(), "notExists");
         assertEquals(client.getEnabled(), false);
         assertEquals(client.getIsAuthorizationCode(), true);

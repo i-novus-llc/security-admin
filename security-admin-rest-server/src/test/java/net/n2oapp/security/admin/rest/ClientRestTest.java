@@ -41,7 +41,7 @@ public class ClientRestTest {
 
     @Test
     public void persistAndGet() {
-        Client client = clientService.getDefaultValue("notExists");
+        Client client = clientService.getDefaultClient("notExists");
         assertEquals(client.getClientId(), "notExists");
         assertEquals(client.getEnabled(), false);
         assertEquals(client.getIsAuthorizationCode(), true);

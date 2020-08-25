@@ -94,7 +94,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Client getDefaultValue(String id) {
+    public Client getDefaultClient(String id) {
         Client client = new Client();
         client.setSystemCode(id);
         client.setClientId(id);
