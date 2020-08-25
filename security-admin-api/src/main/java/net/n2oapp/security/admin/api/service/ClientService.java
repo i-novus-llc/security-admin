@@ -76,5 +76,5 @@ public interface ClientService {
      * @param id Идентификатор
      * @return
      */
-    Client getOrCreate(String id);
+    Client getDefaultClient(String id);
 }
