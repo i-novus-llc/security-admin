@@ -48,7 +48,7 @@ public class ClientServiceImplTest {
 
     @Test
     public void testPersistAndGet() {
-        Client client = service.getOrCreate("notExists");
+        Client client = service.getDefaultValue("notExists");
         assertEquals(client.getClientId(), "notExists");
         assertEquals(client.getEnabled(), false);
         assertEquals(client.getIsAuthorizationCode(), true);
@@ -67,14 +67,14 @@ public class ClientServiceImplTest {
         applicationSystemService.createApplication(application);
 
         Client clientFromCreateMethod = service.persist(client());
-        client = service.getOrCreate(client().getClientId());
+        client = service.getDefaultValue(client().getClientId());
         compareClient(client, client());
         compareClient(client, clientFromCreateMethod);
 
         client.setClientSecret("newSecret");
         clientFromCreateMethod = service.persist(client);
         compareClient(client, clientFromCreateMethod);
-        client = service.getOrCreate(client().getClientId());
+        client = service.getDefaultValue(client().getClientId());
         compareClient(client, clientFromCreateMethod);
 
         client.setEnabled(false);
