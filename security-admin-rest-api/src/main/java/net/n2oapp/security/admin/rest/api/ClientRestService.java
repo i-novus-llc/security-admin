@@ -67,6 +67,6 @@ public interface ClientRestService {
     Client persist(Client clientForm);
 
     @GET
-    @Path("/getOrCreate/{clientId}")
-    Client getOrCreate(@PathParam("clientId") String clientId);
+    @Path("/getDefaultClient/{clientId}")
+    Client getDefaultClient(@PathParam("clientId") String clientId);
 }
