@@ -53,7 +53,7 @@ public class ClientServiceRestClient implements ClientService {
     }
 
     @Override
-    public Client getDefaultValue(String id) {
-        return clientService.getDefaultValue(id);
+    public Client getDefaultClient(String id) {
+        return clientService.getDefaultClient(id);
     }
 }

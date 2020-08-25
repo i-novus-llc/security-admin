@@ -76,5 +76,5 @@ public interface ClientService {
      * @param id Идентификатор
      * @return
      */
-    Client getDefaultValue(String id);
+    Client getDefaultClient(String id);
 }
