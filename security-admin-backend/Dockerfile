@@ -1,4 +1,4 @@
-FROM inovus/openjdk:11_jdk_v1.0
+FROM inovus/openjdk:14-jdk
 
 EXPOSE 8080
 
