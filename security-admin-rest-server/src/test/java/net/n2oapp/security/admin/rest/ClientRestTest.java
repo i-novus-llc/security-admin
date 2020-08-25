@@ -60,14 +60,14 @@ public class ClientRestTest {
         applicationSystemService.createApplication(application);
 
         Client clientFromCreateMethod = clientService.persist(newClient());
-        client = clientService.getDefaultValue(newClient().getClientId());
+        client = clientService.getByClientId(newClient().getClientId());
         compareClient(client, newClient());
         compareClient(client, clientFromCreateMethod);
 
         client.setClientSecret("newSecret");
         clientFromCreateMethod = clientService.persist(client);
         compareClient(client, clientFromCreateMethod);
-        client = clientService.getDefaultValue(newClient().getClientId());
+        client = clientService.getByClientId(newClient().getClientId());
         compareClient(client, clientFromCreateMethod);
 
         client.setEnabled(false);
