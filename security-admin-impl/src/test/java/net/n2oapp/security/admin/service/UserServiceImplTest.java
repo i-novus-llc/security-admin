@@ -138,6 +138,7 @@ public class UserServiceImplTest {
     public void findAllUsersByLastActionDate() {
         UserCriteria criteria = new UserCriteria();
         criteria.setLastActionDate(LocalDateTime.now(Clock.systemUTC()));
+        assertThat(service.findAll(criteria).getTotalElements()).isEqualTo(0);
         UserRegisterForm user = new UserRegisterForm();
         user.setUsername("testUser2");
         user.setEmail("test2@test.ru");
