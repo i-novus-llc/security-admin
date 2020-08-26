@@ -8,6 +8,8 @@ import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -144,5 +146,18 @@ public class UserEntity {
      */
     @Column(name = "client_id")
     private Integer clientId;
+
+    @Column(name = "last_action_date")
+    private LocalDateTime lastActionDate;
+
+    @PrePersist
+    private void prePersist() {
+        setLastActionDate(LocalDateTime.now(Clock.systemUTC()));
+    }
+
+    @PreUpdate
+    private void preUpdate() {
+        setLastActionDate(LocalDateTime.now(Clock.systemUTC()));
+    }
 }
 
