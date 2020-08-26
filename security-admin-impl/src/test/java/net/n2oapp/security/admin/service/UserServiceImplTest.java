@@ -5,6 +5,7 @@ import com.icegreen.greenmail.util.ServerSetup;
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import net.n2oapp.security.admin.api.model.*;
+import net.n2oapp.security.admin.impl.entity.UserEntity;
 import net.n2oapp.security.admin.impl.service.UserServiceImpl;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -17,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -135,8 +137,15 @@ public class UserServiceImplTest {
     @Test
     public void findAllUsersByLastActionDate() {
         UserCriteria criteria = new UserCriteria();
-        criteria.setLastActionDate(LocalDateTime.parse("2020-08-26T08:27:48.52884"));
-        assertThat(service.findAll(criteria).getTotalElements()).isGreaterThanOrEqualTo(1);
+        criteria.setLastActionDate(LocalDateTime.now(Clock.systemUTC()));
+        UserRegisterForm user = new UserRegisterForm();
+        user.setUsername("testUser2");
+        user.setEmail("test2@test.ru");
+        user.setPassword("1234ABCabc,");
+        user.setPasswordCheck(user.getPassword());
+        user.setAccountTypeCode("testAccountTypeCode");
+        service.register(user);
+        assertThat(service.findAll(criteria).getTotalElements()).isEqualTo(1);
     }
 
     private void checkValidationEmail(User user) {
