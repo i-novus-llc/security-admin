@@ -20,6 +20,7 @@ import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import org.springframework.data.domain.Sort;
 
 import javax.ws.rs.QueryParam;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -115,5 +116,12 @@ public class RestUserCriteria extends UserCriteria {
     @ApiParam(value = "Уровень пользователя")
     public void setUserLevel(String userLevel) {
         super.setUserLevel(userLevel);
+    }
+
+    @QueryParam("lastActionDate")
+    @Override
+    @ApiParam(value = "Время последних изменений")
+    public void setLastActionDate(LocalDateTime lastActionDate) {
+        super.setLastActionDate(lastActionDate);
     }
 }
