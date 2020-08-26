@@ -25,6 +25,8 @@ public class GatewayPrincipalExtractor implements PrincipalExtractor, Authoritie
     private static final String DEPARTMENT = "department";
     private static final String CODE_KEY = "code";
     private static final String NAME_KEY = "name";
+    private static final String ORGANIZATION = "organization";
+    private static final String REGION = "region";
 
     @Override
     public List<GrantedAuthority> extractAuthorities(Map<String, Object> map) {
@@ -43,7 +45,8 @@ public class GatewayPrincipalExtractor implements PrincipalExtractor, Authoritie
             user.setDepartment((String) department.get(CODE_KEY));
             user.setDepartmentName((String) department.get(NAME_KEY));
         }
-
+        user.setOrganization((String) map.get(ORGANIZATION));
+        user.setRegion((String) map.get(REGION));
         return user;
     }
 }
