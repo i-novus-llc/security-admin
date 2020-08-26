@@ -66,8 +66,15 @@
     <changeSet id="add_client_id_user" author="aarifullin" dbms="postgresql">
         <sqlFile path="access/db/changelog/sql/V5_add_client_id_user.sql"/>
     </changeSet>
-    <changeSet id="user_add_column_and_set_value" author="imolostvov" dbms="postgresql">
-        <sqlFile path="access/db/changelog/sql/V6_user_add_column_and_set_value.sql"/>
+
+    <changeSet id="user_add_last_action_date" author="imolostvov" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/V6_user_add_last_action_date.sql"/>
     </changeSet>
 
+    <changeSet id="user_create_index_last_action_date" author="imolostvov" dbms="postgresql">
+        <preConditions onFail="MARK_RAN">
+            <columnExists schemaName="sec" tableName="user" columnName="last_action_date"/>
+        </preConditions>
+        <sqlFile path="access/db/changelog/sql/V6_user_create_index_last_action_date.sql"/>
+    </changeSet>
 </databaseChangeLog>
