@@ -17,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -128,6 +129,13 @@ public class UserServiceImplTest {
     public void findAllUsersByUserLevel() {
         UserCriteria criteria = new UserCriteria();
         criteria.setUserLevel("federal");
+        assertThat(service.findAll(criteria).getTotalElements()).isEqualTo(1);
+    }
+
+    @Test
+    public void findAllUsersByLastActionDate() {
+        UserCriteria criteria = new UserCriteria();
+        criteria.setLastActionDate(LocalDateTime.parse("2520-08-26T08:27:48.52884"));
         assertThat(service.findAll(criteria).getTotalElements()).isEqualTo(1);
     }
 

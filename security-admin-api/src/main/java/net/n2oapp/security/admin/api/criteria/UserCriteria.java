@@ -18,6 +18,7 @@ package net.n2oapp.security.admin.api.criteria;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +40,7 @@ public class UserCriteria extends BaseCriteria {
     private List<Integer> organizations;
     private Integer departmentId;
     private String extSys;
+    private LocalDateTime lastActionDate;
 
     public void setRoleIds(List<Integer> roleIds) {
         this.roleIds = roleIds != null ? roleIds : new ArrayList<>();
