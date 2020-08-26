@@ -61,6 +61,7 @@ public class UserServiceRestClient implements UserService {
         userCriteria.setDepartmentId(criteria.getDepartmentId());
         userCriteria.setOrganizations(criteria.getOrganizations());
         userCriteria.setRegionId(criteria.getRegionId());
+        userCriteria.setLastActionDate(criteria.getLastActionDate());
         return client.findAll(userCriteria);
     }
 
