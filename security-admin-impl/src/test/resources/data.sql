@@ -12,7 +12,7 @@ INSERT INTO sec.role(name, code, description) VALUES ('admin','code2','descripti
 INSERT INTO sec.user(username, email, name, surname, patronymic, password, is_active, user_level, last_action_date)
             VALUES ('test', 'test@example.com', 'name1', 'surname1', 'patronymic1', 'password1', TRUE, 'FEDERAL', '2012-08-26 08:27:48.52884');
 INSERT INTO sec.user(username, email, name, surname, patronymic, password, is_active, user_level, last_action_date)
-            VALUES ('test2', 'test@example.com', 'name1', 'surname1', 'patronymic1', 'password1', TRUE, 'ORGANIZATION', '2920-08-26 08:27:48.52884');
+            VALUES ('test2', 'test@example.com', 'name1', 'surname1', 'patronymic1', 'password1', TRUE, 'ORGANIZATION', '2020-08-26 08:27:48.52884');
 INSERT INTO sec.user_role(user_id, role_id) VALUES (1,1);
 INSERT INTO sec.user_role(user_id, role_id) VALUES (2,1);
 INSERT INTO sec.user_role(user_id, role_id) VALUES (1,2);

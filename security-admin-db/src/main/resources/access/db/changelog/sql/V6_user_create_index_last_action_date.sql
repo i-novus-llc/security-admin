@@ -1,0 +1,1 @@
+CREATE INDEX last_action_date_idx on sec."user"(last_action_date);

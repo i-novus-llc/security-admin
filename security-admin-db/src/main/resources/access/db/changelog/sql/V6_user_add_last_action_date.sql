@@ -1,0 +1,1 @@
+ALTER TABLE sec."user" ADD COLUMN last_action_date timestamp default (now() at time zone 'utc');
