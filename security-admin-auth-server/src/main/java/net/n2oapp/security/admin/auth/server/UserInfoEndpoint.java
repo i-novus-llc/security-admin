@@ -1,7 +1,5 @@
 package net.n2oapp.security.admin.auth.server;
 
-import net.n2oapp.security.admin.api.model.Organization;
-import net.n2oapp.security.admin.impl.entity.OrganizationEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.auth.common.User;
@@ -47,17 +45,10 @@ public class UserInfoEndpoint {
             map.put(PATRONYMIC, user.getPatronymic());
             map.put(EMAIL, user.getEmail());
             map.put(DEPARTMENT, user.getDepartment());
-            OrganizationEntity org = user.getOrganization();
-            if (nonNull(org)) {
-                Organization orgModel = new Organization();
-                orgModel.setId(org.getId());
-                orgModel.setCode(org.getCode());
-                orgModel.setShortName(org.getShortName());
-                orgModel.setFullName(org.getFullName());
-                orgModel.setInn(org.getInn());
-                map.put(ORGANIZATION, orgModel);
-            }
-            map.put(REGION, user.getRegion());
+            if (nonNull(user.getOrganization()))
+                map.put(ORGANIZATION, user.getOrganization().getCode());
+            if (nonNull(user.getRegion()))
+                map.put(REGION, user.getRegion().getCode());
             map.put(USER_LEVEL, user.getUserLevel());
             if (nonNull(user.getRoleList())) {
                 roles.addAll(user.getRoleList().stream().map(r -> r.getCode()).collect(Collectors.toList()));
