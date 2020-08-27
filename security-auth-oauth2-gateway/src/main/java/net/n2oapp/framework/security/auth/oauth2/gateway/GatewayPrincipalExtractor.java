@@ -45,8 +45,15 @@ public class GatewayPrincipalExtractor implements PrincipalExtractor, Authoritie
             user.setDepartment((String) department.get(CODE_KEY));
             user.setDepartmentName((String) department.get(NAME_KEY));
         }
-        user.setOrganization((String) map.get(ORGANIZATION));
-        user.setRegion((String) map.get(REGION));
+
+        LinkedHashMap organization = (LinkedHashMap) map.get(ORGANIZATION);
+        if (organization != null)
+            user.setOrganization((String) organization.get(CODE_KEY));
+
+        LinkedHashMap region = (LinkedHashMap) map.get(REGION);
+        if (region != null)
+            user.setRegion((String) region.get(CODE_KEY));
+
         return user;
     }
 }
