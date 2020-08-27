@@ -91,6 +91,7 @@ public class OAuthServerConfiguration {
             }
         }
 
+        @Override
         public void configure(AuthorizationServerSecurityConfigurer security) {
             //client_secret должен храниться в открытом виде
             security.passwordEncoder(new PasswordEncoder() {
