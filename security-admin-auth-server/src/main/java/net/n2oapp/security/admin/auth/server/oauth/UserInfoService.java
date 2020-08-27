@@ -21,31 +21,24 @@ public class UserInfoService {
 
     private final boolean permissionEnabled;
     private final UserRepository userRepository;
-    private final Collection<UserInfoEnricher<?>> userInfoEnrichers;
+    private final Collection<UserInfoEnricher<UserEntity>> userInfoEnrichers;
 
-    public UserInfoService(UserRepository userRepository, boolean permissionEnabled, Collection<UserInfoEnricher<?>> userInfoEnrichers) {
+    public UserInfoService(UserRepository userRepository, boolean permissionEnabled, Collection<UserInfoEnricher<UserEntity>> userInfoEnrichers) {
         this.permissionEnabled = permissionEnabled;
         this.userRepository = userRepository;
         this.userInfoEnrichers = userInfoEnrichers;
     }
 
     public Map<String, Object> buildUserInfo(OAuth2Authentication authentication) {
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> userInfo = new HashMap<>();
         List<String> permissions = new ArrayList<>();
         List<String> systems = new ArrayList<>();
 
         if (authentication.getPrincipal() instanceof User) {
             UserEntity user = userRepository.findOneByUsernameIgnoreCase(((User) authentication.getPrincipal()).getUsername());
-            for (UserInfoEnricher enricher : userInfoEnrichers)
-                enricher.enrich(map, user);
+            for (UserInfoEnricher<UserEntity> enricher : userInfoEnrichers)
+                enricher.enrich(userInfo, user);
 
-            map.put(NAME, user.getName());
-            map.put(SURNAME, user.getSurname());
-            map.put(PATRONYMIC, user.getPatronymic());
-            map.put(EMAIL, user.getEmail());
-            map.put(DEPARTMENT, user.getDepartment());
-            map.put(REGION, user.getRegion());
-            map.put(USER_LEVEL, user.getUserLevel());
             if (nonNull(user.getRoleList())) {
                 if (permissionEnabled) {
                     permissions.addAll(user.getRoleList().stream().filter(r -> nonNull(r.getPermissionList())).flatMap(r -> r.getPermissionList().stream())
@@ -59,11 +52,11 @@ public class UserInfoService {
             }
         }
 
-        map.put(USERNAME, authentication.getName());
-        map.put(PERMISSIONS, permissions);
-        map.put(SYSTEMS, systems);
+        userInfo.put(PERMISSIONS, permissions);
+        userInfo.put(SYSTEMS, systems);
+
         if (authentication.getUserAuthentication() != null)
-            map.put(SID, ((Map<String, Object>) authentication.getUserAuthentication().getDetails()).get(SID));
-        return map;
+            userInfo.put(SID, ((Map<String, Object>) authentication.getUserAuthentication().getDetails()).get(SID));
+        return userInfo;
     }
 }
