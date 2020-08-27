@@ -455,6 +455,7 @@ public class UserServiceImpl implements UserService {
         model.setShortName(entity.getShortName());
         model.setCode(entity.getCode());
         model.setOgrn(entity.getOgrn());
+        model.setInn(entity.getInn());
         model.setOkpo(entity.getOkpo());
         return model;
     }
