@@ -1,12 +1,11 @@
 package net.n2oapp.security.admin.auth.server;
 
+import net.n2oapp.security.admin.api.model.Department;
 import net.n2oapp.security.admin.api.model.Organization;
-import net.n2oapp.security.admin.api.model.Role;
+import net.n2oapp.security.admin.api.model.Region;
 import net.n2oapp.security.admin.api.model.UserLevel;
 import net.n2oapp.security.admin.api.oauth.UserInfoEnricher;
-import net.n2oapp.security.admin.auth.server.oauth.OrganizationEnricher;
-import net.n2oapp.security.admin.auth.server.oauth.RoleEnricher;
-import net.n2oapp.security.admin.auth.server.oauth.UserInfoService;
+import net.n2oapp.security.admin.auth.server.oauth.*;
 import net.n2oapp.security.admin.impl.entity.*;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.auth.common.User;
@@ -17,7 +16,6 @@ import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.isNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -32,8 +30,8 @@ public class UserInfoServiceTest {
         UserRepository repository = mock(UserRepository.class);
 
         when(repository.findOneByUsernameIgnoreCase("testUser")).thenReturn(initUserEntity());
-        UserInfoService userInfoService = new UserInfoService(repository, true, List.of(new OrganizationEnricher(),
-                new RoleEnricher()));
+        UserInfoService userInfoService = new UserInfoService(repository, true,
+                List.of(new OrganizationEnricher(), new RoleEnricher(), new RegionEnricher(), new DepartmentEnricher(), new SimpleUserDataEnricher()));
         OAuth2Authentication authentication = mock(OAuth2Authentication.class);
         User user = new User("testUser");
         when(authentication.getPrincipal()).thenReturn(user);
@@ -48,6 +46,13 @@ public class UserInfoServiceTest {
         assertThat(((Organization) userinfo.get("organization")).getCode(), is("testCode"));
         assertThat(((Organization) userinfo.get("organization")).getInn(), is("testInn"));
         assertThat(((List<String>) userinfo.get("roles")).get(0), is("testRoleCode"));
+        assertThat(((Department) userinfo.get("department")).getId(), is(1));
+        assertThat(((Department) userinfo.get("department")).getCode(), is("testCode"));
+        assertThat(((Department) userinfo.get("department")).getName(), is("testName"));
+        assertThat(((Region) userinfo.get("region")).getId(), is(1));
+        assertThat(((Region) userinfo.get("region")).getName(), is("testName"));
+        assertThat(((Region) userinfo.get("region")).getCode(), is("testCode"));
+        assertThat(((Region) userinfo.get("region")).getOkato(), is("testOkato"));
     }
 
     @Test
@@ -55,9 +60,8 @@ public class UserInfoServiceTest {
         UserInfoEnrichmentConfiguration.UserInfoEnrichersConfigurer configurer = new UserInfoEnrichmentConfiguration
                 .UserInfoEnrichersConfigurer(Set.of("test1", "test2"), Arrays.asList(
                 new UserInfoEnricher<>() {
-
                     @Override
-                    public Object buildValue(Object source) {
+                    public Object buildValue(UserEntity source) {
                         return null;
                     }
 
@@ -69,7 +73,7 @@ public class UserInfoServiceTest {
                 new UserInfoEnricher<>() {
 
                     @Override
-                    public Object buildValue(Object source) {
+                    public Object buildValue(UserEntity source) {
                         return null;
                     }
 
@@ -79,7 +83,7 @@ public class UserInfoServiceTest {
                     }
                 }
         ));
-        List<UserInfoEnricher<?>> configured = configurer.configure();
+        List<UserInfoEnricher<UserEntity>> configured = configurer.configure();
         assertThat(configured.size(), is(1));
         assertThat(configured.get(0).getAlias(), is("test1"));
     }
@@ -117,6 +121,14 @@ public class UserInfoServiceTest {
         organization.setCode("testCode");
         organization.setKpp("testKpp");
         entity.setOrganization(organization);
+
+        RegionEntity regionEntity = new RegionEntity();
+        regionEntity.setId(1);
+        regionEntity.setName("testName");
+        regionEntity.setCode("testCode");
+        regionEntity.setOkato("testOkato");
+        entity.setRegion(regionEntity);
+
         return entity;
     }
 }
