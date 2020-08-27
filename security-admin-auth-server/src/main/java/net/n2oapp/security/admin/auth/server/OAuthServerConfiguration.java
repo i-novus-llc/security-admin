@@ -15,21 +15,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.security.oauth2.authserver.AuthorizationServerProperties;
-import org.springframework.boot.autoconfigure.security.oauth2.authserver.OAuth2AuthorizationServerConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.jwt.crypto.sign.RsaSigner;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
@@ -55,23 +55,70 @@ import java.util.Set;
 
 @Configuration
 @EnableAuthorizationServer
-public class OAuthServerConfiguration extends OAuth2AuthorizationServerConfiguration {
+public class OAuthServerConfiguration {
 
-    public OAuthServerConfiguration(BaseClientDetails details, AuthenticationConfiguration authenticationConfiguration,
-                                    ObjectProvider<TokenStore> tokenStore, ObjectProvider<AccessTokenConverter> tokenConverter,
-                                    AuthorizationServerProperties properties) throws Exception {
-        super(details, authenticationConfiguration, tokenStore, tokenConverter, properties);
-    }
+    @Configuration
+    private static class AuthorizationSecurityConfigurer extends AuthorizationServerConfigurerAdapter {
+        private final TokenStore tokenStore;
+        private final AccessTokenConverter tokenConverter;
+        private final AuthorizationServerProperties properties;
+        private final GatewayService gatewayService;
 
-    @Override
-    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        super.configure(endpoints);
-        endpoints.redirectResolver(new RedirectResolverImpl());
-    }
+        public AuthorizationSecurityConfigurer(ObjectProvider<TokenStore> tokenStore,
+                                               ObjectProvider<AccessTokenConverter> tokenConverter,
+                                               AuthorizationServerProperties properties, GatewayService gatewayService) {
+            this.tokenStore = tokenStore.getIfAvailable();
+            this.tokenConverter = tokenConverter.getIfAvailable();
+            this.properties = properties;
+            this.gatewayService = gatewayService;
+        }
 
-    @Override
-    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.withClientDetails(new GatewayService());
+        @Override
+        public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+            clients.withClientDetails(gatewayService);
+        }
+
+        @Override
+        public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
+            endpoints.redirectResolver(new RedirectResolverImpl());
+
+            if (this.tokenConverter != null) {
+                endpoints.accessTokenConverter(this.tokenConverter);
+            }
+
+            if (this.tokenStore != null) {
+                endpoints.tokenStore(this.tokenStore);
+            }
+        }
+
+        @Override
+        public void configure(AuthorizationServerSecurityConfigurer security) {
+            //client_secret должен храниться в открытом виде
+            security.passwordEncoder(new PasswordEncoder() {
+                @Override
+                public String encode(CharSequence rawPassword) {
+                    return rawPassword.toString();
+                }
+
+                @Override
+                public boolean matches(CharSequence rawPassword, String encodedPassword) {
+                    return encodedPassword.equals(rawPassword.toString());
+                }
+            });
+
+            if (this.properties.getCheckTokenAccess() != null) {
+                security.checkTokenAccess(this.properties.getCheckTokenAccess());
+            }
+
+            if (this.properties.getTokenKeyAccess() != null) {
+                security.tokenKeyAccess(this.properties.getTokenKeyAccess());
+            }
+
+            if (this.properties.getRealm() != null) {
+                security.realm(this.properties.getRealm());
+            }
+
+        }
     }
 
     @Bean
