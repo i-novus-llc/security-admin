@@ -20,9 +20,9 @@ public class UserInfoEnrichmentConfiguration {
     private Set<String> wantedEnrichers;
 
     @Bean
-    public UserInfoService userInfoService(UserRepository userRepository, @Value("${access.permission.enabled}") Boolean permissionEnabled, List<UserInfoEnricher<UserEntity>> enrichers) {
+    public UserInfoService userInfoService(UserRepository userRepository, List<UserInfoEnricher<UserEntity>> enrichers) {
         UserInfoEnrichersConfigurer configurer = new UserInfoEnrichersConfigurer(wantedEnrichers, enrichers);
-        return new UserInfoService(userRepository, permissionEnabled, configurer.configure());
+        return new UserInfoService(userRepository, configurer.configure());
     }
 
     public static class UserInfoEnrichersConfigurer {
