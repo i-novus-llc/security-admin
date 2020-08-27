@@ -30,8 +30,10 @@ public class UserInfoServiceTest {
         UserRepository repository = mock(UserRepository.class);
 
         when(repository.findOneByUsernameIgnoreCase("testUser")).thenReturn(initUserEntity());
-        UserInfoService userInfoService = new UserInfoService(repository, true,
-                List.of(new OrganizationEnricher(), new RoleEnricher(), new RegionEnricher(), new DepartmentEnricher(), new SimpleUserDataEnricher()));
+        UserInfoService userInfoService = new UserInfoService(repository,
+                List.of(new OrganizationEnricher(), new RolesEnricher(), new SystemsEnricher(true),
+                        new RegionEnricher(), new DepartmentEnricher(), new PermissionsEnricher(true),
+                        new SimpleUserDataEnricher()));
         OAuth2Authentication authentication = mock(OAuth2Authentication.class);
         User user = new User("testUser");
         when(authentication.getPrincipal()).thenReturn(user);
