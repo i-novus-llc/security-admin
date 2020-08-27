@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class RoleEnricher implements UserInfoEnricher<UserEntity> {
+public class RolesEnricher implements UserInfoEnricher<UserEntity> {
     @Override
     public Object buildValue(UserEntity source) {
         List<RoleEntity> roles = source.getRoleList();
