@@ -93,6 +93,9 @@ public class UserSpecifications implements Specification<UserEntity> {
             criteria.getOrganizations().forEach(in::value);
             predicate = builder.and(predicate, in);
         }
+        if (nonNull(criteria.getLastActionDate())) {
+            predicate = builder.and(predicate, builder.greaterThanOrEqualTo(root.get(UserEntity_.lastActionDate), criteria.getLastActionDate()));
+        }
         return predicate;
     }
 }

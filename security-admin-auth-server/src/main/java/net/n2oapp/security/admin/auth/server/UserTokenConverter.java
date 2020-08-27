@@ -16,23 +16,23 @@ import java.util.*;
 
 public class UserTokenConverter implements UserAuthenticationConverter {
 
-    static final String ROLES = "roles";
-    static final String PERMISSIONS = "permissions";
-    static final String NAME = "name";
-    static final String EMAIL = "email";
-    static final String SURNAME = "surname";
-    static final String PATRONYMIC = "patronymic";
-    static final String SID = "sid";
-    static final String USER = "username";
-    static final String DEPARTMENT = "department";
-    static final String ORGANIZATION = "organization";
-    static final String REGION = "region";
-    static final String USER_LEVEL = "userLevel";
-    static final String SYSTEMS = "systems";
+    public static final String ROLES = "roles";
+    public static final String PERMISSIONS = "permissions";
+    public static final String NAME = "name";
+    public static final String EMAIL = "email";
+    public static final String SURNAME = "surname";
+    public static final String PATRONYMIC = "patronymic";
+    public static final String SID = "sid";
+    public static final String USER = "username";
+    public static final String DEPARTMENT = "department";
+    public static final String ORGANIZATION = "organization";
+    public static final String REGION = "region";
+    public static final String USER_LEVEL = "userLevel";
+    public static final String SYSTEMS = "systems";
 
-    private Boolean includeRoles;
-    private Boolean includePermissions;
-    private Boolean includeSystems;
+    private final Boolean includeRoles;
+    private final Boolean includePermissions;
+    private final Boolean includeSystems;
 
     public UserTokenConverter(Boolean includeRoles, Boolean includePermissions, Boolean includeSystems) {
         this.includeRoles = includeRoles;
