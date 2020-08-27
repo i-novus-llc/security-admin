@@ -62,24 +62,23 @@ public class OAuthServerConfiguration {
         private final TokenStore tokenStore;
         private final AccessTokenConverter tokenConverter;
         private final AuthorizationServerProperties properties;
-        private final PasswordEncoder passwordEncoder;
         private final GatewayService gatewayService;
 
         public AuthorizationSecurityConfigurer(ObjectProvider<TokenStore> tokenStore,
                                                ObjectProvider<AccessTokenConverter> tokenConverter,
-                                               AuthorizationServerProperties properties,
-                                               PasswordEncoder passwordEncoder, GatewayService gatewayService) {
+                                               AuthorizationServerProperties properties, GatewayService gatewayService) {
             this.tokenStore = tokenStore.getIfAvailable();
             this.tokenConverter = tokenConverter.getIfAvailable();
             this.properties = properties;
-            this.passwordEncoder = passwordEncoder;
             this.gatewayService = gatewayService;
         }
 
+        @Override
         public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
             clients.withClientDetails(gatewayService);
         }
 
+        @Override
         public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
             endpoints.redirectResolver(new RedirectResolverImpl());
 
