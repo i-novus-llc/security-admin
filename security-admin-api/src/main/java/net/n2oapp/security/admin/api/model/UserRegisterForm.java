@@ -24,10 +24,16 @@ public class UserRegisterForm {
     @ApiModelProperty(value = "Пароль")
     private String password;
 
-    @ApiModelProperty(value = "Повторный ввод пароля")
-    private String passwordCheck;
-
     @ApiModelProperty(value = "Тип аккаунта")
     private String accountTypeCode;
+
+    @ApiModelProperty(value = "Имя")
+    private String name;
+
+    @ApiModelProperty(value = "Фамилия")
+    private String surname;
+
+    @ApiModelProperty(value = "Отчество")
+    private String patronymic;
 
 }

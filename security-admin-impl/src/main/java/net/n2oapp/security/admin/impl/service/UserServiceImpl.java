@@ -154,6 +154,9 @@ public class UserServiceImpl implements UserService {
         form.setPassword(user.getPassword());
         form.setPasswordCheck(user.getPassword());
         form.setAccountTypeCode(user.getAccountTypeCode());
+        form.setName(user.getName());
+        form.setSurname(user.getSurname());
+        form.setPatronymic(user.getPatronymic());
         return create(form);
     }
 
