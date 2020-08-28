@@ -5,7 +5,6 @@ import com.icegreen.greenmail.util.ServerSetup;
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import net.n2oapp.security.admin.api.model.*;
-import net.n2oapp.security.admin.impl.entity.UserEntity;
 import net.n2oapp.security.admin.impl.service.UserServiceImpl;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -60,7 +59,6 @@ public class UserServiceImplTest {
         user.setUsername("testUser");
         user.setEmail("test@test.ru");
         user.setPassword("1234ABCabc,");
-        user.setPasswordCheck(user.getPassword());
         user.setAccountTypeCode("testAccountTypeCode");
         User result = service.register(user);
         assertEquals(1, result.getRoles().size());
@@ -143,7 +141,6 @@ public class UserServiceImplTest {
         user.setUsername("testUser2");
         user.setEmail("test2@test.ru");
         user.setPassword("1234ABCabc,");
-        user.setPasswordCheck(user.getPassword());
         user.setAccountTypeCode("testAccountTypeCode");
         service.register(user);
         assertThat(service.findAll(criteria).getTotalElements()).isEqualTo(1);
