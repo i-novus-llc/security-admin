@@ -60,10 +60,18 @@ public class UserServiceImplTest {
         user.setEmail("test@test.ru");
         user.setPassword("1234ABCabc,");
         user.setAccountTypeCode("testAccountTypeCode");
+        user.setName("name");
+        user.setSurname("surname");
+        user.setPatronymic("patronymic");
         User result = service.register(user);
         assertEquals(1, result.getRoles().size());
         assertEquals(UserLevel.PERSONAL, result.getUserLevel());
         assertEquals(UserStatus.REGISTERED, result.getStatus());
+        assertEquals("testUser", result.getUsername());
+        assertEquals("test@test.ru", result.getEmail());
+        assertEquals("name", result.getName());
+        assertEquals("surname", result.getSurname());
+        assertEquals("patronymic", result.getPatronymic());
     }
 
     @Test
