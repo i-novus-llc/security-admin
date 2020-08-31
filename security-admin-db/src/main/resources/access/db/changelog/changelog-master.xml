@@ -71,4 +71,8 @@
         <sqlFile path="access/db/changelog/sql/V6_user_add_last_action_date.sql"/>
     </changeSet>
 
+    <changeSet id="organization_increase_field_length" author="aarifullin" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/V6_organization_increase_field_length.sql"/>
+    </changeSet>
+
 </databaseChangeLog>
