@@ -21,7 +21,7 @@
                 <param id="isClientGrant" mapping="[0].client.isClientGrant" domain="boolean"/>
                 <param id="isResourceOwnerPass" mapping="[0].client.isResourceOwnerPass" domain="boolean"/>
                 <param id="isAuthorizationCode" mapping="[0].client.isAuthorizationCode" domain="boolean"/>
-                <param id="accessTokenLifetime" mapping="[0].client.accessTokenLifetime" domain="integer"/>
+                <param id="accessTokenValidityMinutes" mapping="[0].client.accessTokenValidityMinutes" domain="integer"/>
                 <param id="refreshTokenLifetime" mapping="[0].client.refreshTokenLifetime" domain="integer"/>
                 <param id="redirectUris" mapping="[0].client.redirectUris" domain="string[]"/>
                 <param id="logoutUrl" mapping="[0].client.logoutUrl" domain="string"/>
@@ -52,7 +52,7 @@
                 <param id="isClientGrant" mapping="[0].client.isClientGrant" domain="boolean"/>
                 <param id="isResourceOwnerPass" mapping="[0].client.isResourceOwnerPass" domain="boolean"/>
                 <param id="isAuthorizationCode" mapping="[0].client.isAuthorizationCode" domain="boolean"/>
-                <param id="accessTokenLifetime" mapping="[0].client.accessTokenLifetime" domain="integer"/>
+                <param id="accessTokenValidityMinutes" mapping="[0].client.accessTokenValidityMinutes" domain="integer"/>
                 <param id="refreshTokenLifetime" mapping="[0].client.refreshTokenLifetime" domain="integer"/>
                 <param id="redirectUris" mapping="[0].client.redirectUris" domain="string[]"/>
                 <param id="logoutUrl" mapping="[0].client.logoutUrl" domain="string"/>

@@ -100,7 +100,7 @@ public class ClientRestTest {
         Client client = clientService.getByClientId(id);
 
         client.setClientSecret("newSecret");
-        client.setAccessTokenLifetime(69);
+        client.setAccessTokenValidityMinutes(69);
         client.setRefreshTokenLifetime(88);
         client.setRedirectUris("new.uri.1 new.uri.2");
         client.setIsResourceOwnerPass(false);
@@ -124,7 +124,7 @@ public class ClientRestTest {
         Client client = new Client();
         client.setClientId("testId");
         client.setClientSecret("testSecret");
-        client.setAccessTokenLifetime(666);
+        client.setAccessTokenValidityMinutes(666);
         client.setRefreshTokenLifetime(667);
         client.setRedirectUris("test.uri.1 test.uri.2");
         client.setIsResourceOwnerPass(true);
@@ -140,7 +140,7 @@ public class ClientRestTest {
 
     private void compareClient(Client clientFirst, Client clientSecond) {
         assertEquals(clientFirst.getClientId(), clientSecond.getClientId());
-        assertEquals(clientFirst.getAccessTokenLifetime(), clientSecond.getAccessTokenLifetime());
+        assertEquals(clientFirst.getAccessTokenValidityMinutes(), clientSecond.getAccessTokenValidityMinutes());
         assertEquals(clientFirst.getIsAuthorizationCode(), clientSecond.getIsAuthorizationCode());
         assertEquals(clientFirst.getIsResourceOwnerPass(), clientSecond.getIsResourceOwnerPass());
         assertEquals(clientFirst.getIsClientGrant(), clientSecond.getIsClientGrant());

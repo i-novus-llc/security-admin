@@ -29,8 +29,8 @@
             <select mapping="isAuthorizationCode"/>
         </field>
 
-        <field id="accessTokenLifetime" domain="integer">
-            <select mapping="accessTokenLifetime"/>
+        <field id="accessTokenValidityMinutes" domain="integer">
+            <select mapping="accessTokenValidityMinutes"/>
         </field>
         <field id="refreshTokenLifetime" domain="integer">
             <select mapping="refreshTokenLifetime"/>
