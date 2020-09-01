@@ -71,4 +71,8 @@
         <sqlFile path="access/db/changelog/sql/V6_user_add_last_action_date.sql"/>
     </changeSet>
 
+    <changeSet id="client_secret_generation" author="aarifullin" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/V6_client_secret_generation.sql"/>
+    </changeSet>
+
 </databaseChangeLog>
