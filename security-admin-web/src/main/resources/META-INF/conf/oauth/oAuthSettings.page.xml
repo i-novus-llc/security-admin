@@ -20,7 +20,7 @@
                     </dependencies>
                 </password>
 
-                <input-text id="accessTokenLifetime" label="Максимальное время действия токена (минуты)"
+                <input-text id="accessTokenValidityMinutes" label="Максимальное время действия токена (минуты)"
                             domain="integer">
                     <dependencies>
                         <visibility on="enableClient" reset="false">

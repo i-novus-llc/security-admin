@@ -59,8 +59,8 @@ public class Client {
     private String redirectUris;
 
     @JsonProperty
-    @ApiModelProperty("Время жизни токена доступа")
-    private Integer accessTokenLifetime;
+    @ApiModelProperty("Время жизни токена доступа (в минутах)")
+    private Integer accessTokenValidityMinutes;
 
     @JsonProperty
     @ApiModelProperty("Время жизни токена обновления")

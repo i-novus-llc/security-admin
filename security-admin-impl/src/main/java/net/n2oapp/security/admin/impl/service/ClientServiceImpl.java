@@ -118,7 +118,7 @@ public class ClientServiceImpl implements ClientService {
         if (nonNull(clientEntity.getRedirectUris()))
             client.setRedirectUris(clientEntity.getRedirectUris().replace(",", " "));
         if (nonNull(clientEntity.getAccessTokenValiditySeconds()))
-            client.setAccessTokenLifetime(clientEntity.getAccessTokenValiditySeconds() / 60);
+            client.setAccessTokenValidityMinutes(clientEntity.getAccessTokenValiditySeconds() / 60);
         if (nonNull(clientEntity.getRefreshTokenLifetime()))
             client.setRefreshTokenLifetime(clientEntity.getRefreshTokenLifetime() / 60);
         client.setLogoutUrl(clientEntity.getLogoutUrl());
@@ -136,8 +136,8 @@ public class ClientServiceImpl implements ClientService {
         entity.setClientSecret(client.getClientSecret());
         String[] redirectUris = StringUtils.tokenizeToStringArray(client.getRedirectUris(), " ", true, true);
         entity.setRedirectUris(StringUtils.arrayToCommaDelimitedString(redirectUris));
-        if (nonNull(client.getAccessTokenLifetime()))
-            entity.setAccessTokenValiditySeconds(client.getAccessTokenLifetime() * 60);
+        if (nonNull(client.getAccessTokenValidityMinutes()))
+            entity.setAccessTokenValiditySeconds(client.getAccessTokenValidityMinutes() * 60);
         if (nonNull(client.getRefreshTokenLifetime()))
             entity.setRefreshTokenLifetime(client.getRefreshTokenLifetime() * 60);
         entity.setLogoutUrl(client.getLogoutUrl());
