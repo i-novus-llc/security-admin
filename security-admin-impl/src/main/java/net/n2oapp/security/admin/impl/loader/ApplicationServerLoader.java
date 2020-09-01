@@ -46,7 +46,7 @@ public class ApplicationServerLoader implements ServerLoader<AppModel> {
                 client.setClientId(m.getClientId());
                 client.setClientSecret(m.getClientSecret());
                 client.setAccessTokenValiditySeconds(m.getAccessTokenLifetime());
-                client.setRefreshTokenLifetime(m.getRefreshTokenLifetime());
+                client.setRefreshTokenValiditySeconds(m.getRefreshTokenLifetime());
                 client.setGrantTypes(m.getGrantTypes());
                 client.setRedirectUris(m.getRedirectUris());
                 client.setLogoutUrl(m.getLogoutUrl());
