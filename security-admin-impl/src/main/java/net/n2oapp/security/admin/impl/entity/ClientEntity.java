@@ -42,13 +42,13 @@ public class ClientEntity {
     private String redirectUris;
 
     /**
-     * Время жизни токена доступа в секундах
+     * Время жизни токена доступа (в секундах)
      */
     @Column(name = "access_token_validity_seconds")
     private Integer accessTokenValiditySeconds;
 
     /**
-     * Время жизни refresh токена
+     * Время жизни Refresh-токена (в секундах)
      */
     @Column(name = "refresh_token_validity_seconds")
     private Integer refreshTokenValiditySeconds;
