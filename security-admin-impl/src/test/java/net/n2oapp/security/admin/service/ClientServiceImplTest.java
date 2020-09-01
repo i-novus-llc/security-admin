@@ -92,7 +92,7 @@ public class ClientServiceImplTest {
         compareClient(clientFromDB, clientExample);
         clientExample.setClientSecret("newSecret");
         clientExample.setAccessTokenValidityMinutes(69);
-        clientExample.setRefreshTokenLifetime(88);
+        clientExample.setRefreshTokenValidityMinutes(88);
         clientExample.setRedirectUris("new.uri.1 new.uri.2");
         clientExample.setIsResourceOwnerPass(false);
         clientExample.setIsClientGrant(true);
@@ -136,7 +136,7 @@ public class ClientServiceImplTest {
         client.setClientId("testId");
         client.setClientSecret("testSecret");
         client.setAccessTokenValidityMinutes(666);
-        client.setRefreshTokenLifetime(667);
+        client.setRefreshTokenValidityMinutes(667);
         client.setRedirectUris("test.uri.1 test.uri.2");
         client.setIsResourceOwnerPass(true);
         client.setIsClientGrant(false);
@@ -154,7 +154,7 @@ public class ClientServiceImplTest {
         assertEquals(clientFirst.getIsClientGrant(), clientSecond.getIsClientGrant());
         assertEquals(clientFirst.getRedirectUris(), clientSecond.getRedirectUris());
         assertEquals(clientFirst.getClientSecret(), clientSecond.getClientSecret());
-        assertEquals(clientFirst.getRefreshTokenLifetime(), clientSecond.getRefreshTokenLifetime());
+        assertEquals(clientFirst.getRefreshTokenValidityMinutes(), clientSecond.getRefreshTokenValidityMinutes());
         assertEquals(clientFirst.getLogoutUrl(), clientSecond.getLogoutUrl());
     }
 

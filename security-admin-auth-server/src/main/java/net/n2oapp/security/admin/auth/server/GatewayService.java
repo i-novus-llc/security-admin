@@ -54,8 +54,8 @@ public class GatewayService implements ClientDetailsService {
         if (nonNull(apiModel.getAccessTokenValidityMinutes())) {
             client.setAccessTokenValiditySeconds(apiModel.getAccessTokenValidityMinutes() * 60);
         } else client.setAccessTokenValiditySeconds(accessTokenLifetime * 60);
-        if (nonNull(apiModel.getRefreshTokenLifetime())) {
-            client.setRefreshTokenValiditySeconds(apiModel.getRefreshTokenLifetime() * 60);
+        if (nonNull(apiModel.getRefreshTokenValidityMinutes())) {
+            client.setRefreshTokenValiditySeconds(apiModel.getRefreshTokenValidityMinutes() * 60);
         } else client.setRefreshTokenValiditySeconds(refreshTokenLifetime * 60);
         client.setRoles(apiModel.getRoles());
         return client;

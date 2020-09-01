@@ -35,8 +35,8 @@
         <field id="accessTokenValidityMinutes" domain="integer">
             <select mapping="accessTokenValidityMinutes"/>
         </field>
-        <field id="refreshTokenLifetime" domain="integer">
-            <select mapping="refreshTokenLifetime"/>
+        <field id="refreshTokenValidityMinutes" domain="integer">
+            <select mapping="refreshTokenValidityMinutes"/>
         </field>
         <field id="redirectUris" domain="string[]">
             <select mapping="redirectUris"/>

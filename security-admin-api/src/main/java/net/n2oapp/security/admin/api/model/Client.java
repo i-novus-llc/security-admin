@@ -63,8 +63,8 @@ public class Client {
     private Integer accessTokenValidityMinutes;
 
     @JsonProperty
-    @ApiModelProperty("Время жизни токена обновления")
-    private Integer refreshTokenLifetime;
+    @ApiModelProperty("Время жизни Refresh-токена (в минутах)")
+    private Integer refreshTokenValidityMinutes;
 
     @JsonProperty
     @ApiModelProperty("Ссылка для выхода")

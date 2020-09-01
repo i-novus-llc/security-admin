@@ -33,7 +33,7 @@
                     </dependencies>
                 </input-text>
 
-                <input-text id="refreshTokenLifetime" label="Максимальное время действия  refresh токена (минуты)"
+                <input-text id="refreshTokenValidityMinutes" label="Максимальное время действия  refresh токена (минуты)"
                             domain="integer">
                     <dependencies>
                         <visibility on="enableClient">
