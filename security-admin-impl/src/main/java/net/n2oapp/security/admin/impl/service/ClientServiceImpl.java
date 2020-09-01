@@ -119,8 +119,8 @@ public class ClientServiceImpl implements ClientService {
             client.setRedirectUris(clientEntity.getRedirectUris().replace(",", " "));
         if (nonNull(clientEntity.getAccessTokenValiditySeconds()))
             client.setAccessTokenValidityMinutes(clientEntity.getAccessTokenValiditySeconds() / 60);
-        if (nonNull(clientEntity.getRefreshTokenLifetime()))
-            client.setRefreshTokenLifetime(clientEntity.getRefreshTokenLifetime() / 60);
+        if (nonNull(clientEntity.getRefreshTokenValiditySeconds()))
+            client.setRefreshTokenLifetime(clientEntity.getRefreshTokenValiditySeconds() / 60);
         client.setLogoutUrl(clientEntity.getLogoutUrl());
         if (nonNull(clientEntity.getRoleList())) {
             client.setRoles(clientEntity.getRoleList().stream().map(r -> ClientServiceImpl.model(r, permissionEnabled)).collect(Collectors.toList()));
@@ -139,7 +139,7 @@ public class ClientServiceImpl implements ClientService {
         if (nonNull(client.getAccessTokenValidityMinutes()))
             entity.setAccessTokenValiditySeconds(client.getAccessTokenValidityMinutes() * 60);
         if (nonNull(client.getRefreshTokenLifetime()))
-            entity.setRefreshTokenLifetime(client.getRefreshTokenLifetime() * 60);
+            entity.setRefreshTokenValiditySeconds(client.getRefreshTokenLifetime() * 60);
         entity.setLogoutUrl(client.getLogoutUrl());
         ArrayList<String> authorizedGrantTypes = new ArrayList<>();
         if (Boolean.TRUE.equals(client.getIsClientGrant()))
