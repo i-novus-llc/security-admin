@@ -27,7 +27,7 @@ public class GatewayService implements ClientDetailsService {
     private int accessTokenValidityMinutes;
 
     @Value("${access.auth.refresh-token-lifetime:1440}")
-    private Integer refreshTokenLifetime;
+    private int refreshTokenValidityMinutes;
 
     @Override
     public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
@@ -56,7 +56,7 @@ public class GatewayService implements ClientDetailsService {
         } else client.setAccessTokenValiditySeconds(accessTokenValidityMinutes * 60);
         if (nonNull(apiModel.getRefreshTokenValidityMinutes())) {
             client.setRefreshTokenValiditySeconds(apiModel.getRefreshTokenValidityMinutes() * 60);
-        } else client.setRefreshTokenValiditySeconds(refreshTokenLifetime * 60);
+        } else client.setRefreshTokenValiditySeconds(refreshTokenValidityMinutes * 60);
         client.setRoles(apiModel.getRoles());
         return client;
     }
