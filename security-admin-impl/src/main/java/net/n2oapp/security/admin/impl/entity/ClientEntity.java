@@ -50,7 +50,7 @@ public class ClientEntity {
     /**
      * Время жизни refresh токена
      */
-    @Column(name = "refresh_token_lifetime")
+    @Column(name = "refresh_token_validity_seconds")
     private Integer refreshTokenLifetime;
 
     /**

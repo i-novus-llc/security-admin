@@ -75,4 +75,8 @@
         <sqlFile path="access/db/changelog/sql/V7_access_token_lifetime_rename_column.sql"/>
     </changeSet>
 
+    <changeSet id="refresh_token_lifetime_rename_column" author="igilfanov" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/V7_refresh_token_lifetime_rename_column.sql"/>
+    </changeSet>
+
 </databaseChangeLog>
