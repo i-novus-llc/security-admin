@@ -96,8 +96,7 @@
                 </input-text>
 
                 <input-text id="logoutUrl" label="Ссылка для выхода из клиентского приложения"
-                            description="На данный URL должен быть направлен запрос, содержащий токен выхода, при выходе из клиентского приложения"
-                            required="true">
+                            description="На данный URL должен быть направлен запрос, содержащий токен выхода, при выходе из клиентского приложения">
                     <dependencies>
                         <visibility on="enableClient">
                             enableClient

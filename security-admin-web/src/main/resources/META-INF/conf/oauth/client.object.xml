@@ -19,7 +19,7 @@
                 <param id="accessTokenValidityMinutes" mapping="accessTokenValidityMinutes" domain="integer"/>
                 <param id="refreshTokenValidityMinutes" mapping="refreshTokenValidityMinutes" domain="integer"/>
                 <param id="redirectUris" mapping="redirectUris" domain="string[]" required="true"/>
-                <param id="logoutUrl" mapping="logoutUrl" domain="string" required="true"/>
+                <param id="logoutUrl" mapping="logoutUrl" domain="string"/>
                 <param id="enableClient" mapping="enabled" domain="boolean" required="true"/>
                 <param id="clientRoles*.id" mapping="rolesIds" domain="integer[]" required="false"/>
             </in-parameters>
