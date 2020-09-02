@@ -86,7 +86,7 @@
                     </dependencies>
                 </input-text>
 
-                <input-text id="logoutUrl" label="Ссылка для выхода из системы"
+                <input-text id="logoutUrl" label="Ссылка для выхода из клиентского приложения"
                             description="На данный URL должен быть направлен запрос, содержащий токен выхода, при выходе из системы"
                             required="true">
                     <dependencies>
