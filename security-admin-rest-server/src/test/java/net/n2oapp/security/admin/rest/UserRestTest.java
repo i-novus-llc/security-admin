@@ -74,6 +74,64 @@ public class UserRestTest {
     }
 
     @Test
+    public void searchByRoleCodes() throws Exception {
+
+        List<String> roleCodes = new ArrayList<>();
+        roleCodes.add("code1");
+        roleCodes.add("code2");
+
+        RestUserCriteria criteria = new RestUserCriteria();
+        criteria.setPage(0);
+        criteria.setSize(4);
+
+        criteria.setRoleCodes(roleCodes);
+        Page<User> userPage = client.findAll(criteria);
+        assertEquals(1, userPage.getTotalElements());
+
+        List<User> content = userPage.getContent();
+        assertEquals(content.size(), 1);
+
+        User user = content.get(0);
+
+        assertEquals(user.getId().intValue(), 1);
+        assertEquals(user.getUsername(), "test");
+        assertEquals(user.getFio(), "surname1 name1 patronymic1");
+        assertEquals(user.getEmail(), "test@example.com");
+        assertEquals(user.getSurname(), "surname1");
+        assertEquals(user.getName(), "name1");
+        assertEquals(user.getPatronymic(), "patronymic1");
+        assertNull(user.getPassword());
+        assertEquals(user.getPasswordHash(), "password1");
+        assertNull(user.getPasswordCheck());
+        assertNull(user.getTemporaryPassword());
+        assertEquals(user.getIsActive(), Boolean.TRUE);
+
+        Role role1 = new Role();
+        role1.setId(1);
+        role1.setName("user");
+        role1.setCode("code1");
+        role1.setDescription("description1");
+        role1.setNameWithSystem("user");
+
+        Role role2 = new Role();
+        role2.setId(2);
+        role2.setName("admin");
+        role2.setCode("code2");
+        role2.setDescription("description2");
+        role2.setNameWithSystem("admin");
+
+        assertEquals(user.getRoles(), Arrays.asList(role1, role2));
+
+        assertNull(user.getSnils());
+        assertNull(user.getUserLevel());
+        assertNull(user.getDepartment());
+        assertNull(user.getRegion());
+        assertNull(user.getOrganization());
+        assertNull(user.getStatus());
+        assertNull(user.getClientId());
+    }
+
+    @Test
     public void crud() {
         User user = create();
         update(form(user));
