@@ -31,7 +31,8 @@
                 </input-text>
 
                 <input-text id="refreshTokenValidityMinutes" label="Максимальное время действия  refresh токена (минуты)"
-                            domain="integer">
+                            domain="integer"
+                            description="Если не указано иное, используется значение по умолчанию (1440 минут)">
                     <dependencies>
                         <visibility on="enableClient" reset="false">
                             enableClient
