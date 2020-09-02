@@ -23,6 +23,7 @@
                                search-field-id="name" size="1000" checking-strategy="child">
                 <pre-filters>
                     <eq field-id="userLevel.id" value="{userLevel.id}"/>
+                    <eq field-id="groupBySystem" value="true"/>
                 </pre-filters>
                 <dependencies>
                     <visibility on="userLevel">
@@ -36,6 +37,7 @@
                                parent-field-id="systemId" query-id="roleForForm"
                                search-field-id="name" size="1000" checking-strategy="child">
                 <pre-filters>
+                    <eq field-id="groupBySystem" value="true"/>
                     <eq field-id="userLevel.id" value="{userLevel.id}"/>
                     <in field-id="orgRoles" values="{orgRoles*.id}"/>
                     <eq field-id="onOrgDependency" value="{onOrgDependencyHidden}"/>
