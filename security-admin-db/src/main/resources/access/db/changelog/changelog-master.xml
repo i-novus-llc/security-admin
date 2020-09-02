@@ -71,6 +71,10 @@
         <sqlFile path="access/db/changelog/sql/V6_user_add_last_action_date.sql"/>
     </changeSet>
 
+    <changeSet id="organization_increase_field_length" author="aarifullin" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/V6_organization_increase_field_length.sql"/>
+    </changeSet>
+
     <changeSet id="access_token_lifetime_rename_column" author="igilfanov" dbms="postgresql">
         <sqlFile path="access/db/changelog/sql/V7_access_token_lifetime_rename_column.sql"/>
     </changeSet>
