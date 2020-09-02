@@ -21,7 +21,8 @@
                 </password>
 
                 <input-text id="accessTokenValidityMinutes" label="Максимальное время действия токена (минуты)"
-                            domain="integer">
+                            domain="integer"
+                            description="Если не указано иное, используется значение по умолчанию (60 минут)">
                     <dependencies>
                         <visibility on="enableClient" reset="false">
                             enableClient
