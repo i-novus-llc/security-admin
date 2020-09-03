@@ -40,7 +40,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Value("${access.permission.enabled}")
     private Boolean permissionEnabled;
 
-    @Value("${access.email-as-username}")
+    @Value("${access.email-as-username:false}")
     private Boolean emailAsUsername;
 
     private Boolean createUser = true;
