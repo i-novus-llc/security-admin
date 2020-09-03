@@ -10,10 +10,11 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1024M
+          cpus: '0.7'
+          memory: 512m
       placement:
         constraints:
-          [node.hostname == os-4]
+          - node.labels.type == db
 
   auth-gateway:
     environment:
