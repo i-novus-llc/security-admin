@@ -16,10 +16,10 @@
                 <param id="isClientGrant" mapping="isClientGrant" domain="boolean" required="false"/>
                 <param id="isResourceOwnerPass" mapping="isResourceOwnerPass" domain="boolean" required="false"/>
                 <param id="isAuthorizationCode" mapping="isAuthorizationCode" domain="boolean" required="false"/>
-                <param id="accessTokenLifetime" mapping="accessTokenLifetime" domain="integer"/>
-                <param id="refreshTokenLifetime" mapping="refreshTokenLifetime" domain="integer"/>
+                <param id="accessTokenValidityMinutes" mapping="accessTokenValidityMinutes" domain="integer"/>
+                <param id="refreshTokenValidityMinutes" mapping="refreshTokenValidityMinutes" domain="integer"/>
                 <param id="redirectUris" mapping="redirectUris" domain="string[]" required="true"/>
-                <param id="logoutUrl" mapping="logoutUrl" domain="string" required="true"/>
+                <param id="logoutUrl" mapping="logoutUrl" domain="string"/>
                 <param id="enableClient" mapping="enabled" domain="boolean" required="true"/>
                 <param id="clientRoles*.id" mapping="rolesIds" domain="integer[]" required="false"/>
             </in-parameters>
