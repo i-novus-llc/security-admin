@@ -59,11 +59,11 @@
             <select mapping="client?.isAuthorizationCode"/>
         </field>
 
-        <field id="accessTokenLifetime" domain="integer">
-            <select mapping="client?.accessTokenLifetime"/>
+        <field id="accessTokenValidityMinutes" domain="integer">
+            <select mapping="client?.accessTokenValidityMinutes"/>
         </field>
-        <field id="refreshTokenLifetime" domain="integer">
-            <select mapping="client?.refreshTokenLifetime"/>
+        <field id="refreshTokenValidityMinutes" domain="integer">
+            <select mapping="client?.refreshTokenValidityMinutes"/>
         </field>
         <field id="redirectUris" domain="string[]">
             <select mapping="client?.redirectUris"/>
