@@ -299,30 +299,43 @@ public class UserServiceImpl implements UserService {
         if (nonNull(user.getPassword())) {
             userValidations.checkPassword(password, user.getPasswordCheck(), user.getId());
         }
-        if (isNull(password)) {
-            password = passwordGenerator.generate();
-        }
 
-        if (user.getId() != null) {
-            UserEntity userEntity = userRepository.getOne(user.getId());
+        UserEntity userEntity = null;
+        if (user.getId() != null)
+            userEntity = userRepository.getOne(user.getId());
+        if (userEntity == null && user.getEmail() != null)
+            userEntity = userRepository.findOneByEmailIgnoreCase(user.getEmail());
+        if (userEntity == null && user.getUsername() != null)
+            userEntity = userRepository.findOneByUsernameIgnoreCase(user.getUsername());
+        if (userEntity == null && user.getSnils() != null)
+            userEntity = userRepository.findOneBySnilsIgnoreCase(user.getSnils()).orElse(null);
 
-            if (userEntity != null) {
-                userEntity.setPasswordHash(passwordEncoder.encode(password));
-                UserEntity updatedUser = userRepository.save(userEntity);
+        if (userEntity != null) {
+            user.setEmail(userEntity.getEmail());
+            user.setUsername(userEntity.getUsername());
+            user.setName(userEntity.getName());
+            user.setSurname(userEntity.getSurname());
+            user.setPatronymic(userEntity.getPatronymic());
+            if (isNull(password)) {
+                password = passwordGenerator.generate();
+            }
+            userEntity.setPasswordHash(passwordEncoder.encode(password));
+            UserEntity updatedUser = userRepository.save(userEntity);
 
-                //в провайдер отправляем незакодированный пароль
-                if (provider.isSupports(updatedUser.getExtSys())) {
-                    SsoUser ssoUser = model(updatedUser);
-                    ssoUser.setPassword(password);
-                    // если пароль временный, то требуем смены пароля при следующем входе пользователя
-                    if (user.getTemporaryPassword() != null)
-                        ssoUser.setRequiredActions(Collections.singletonList("UPDATE_PASSWORD"));
-                    provider.resetPassword(ssoUser);
+            //в провайдер отправляем незакодированный пароль
+            if (provider.isSupports(updatedUser.getExtSys())) {
+                SsoUser ssoUser = model(updatedUser);
+                ssoUser.setPassword(password);
+                // если пароль временный, то требуем смены пароля при следующем входе пользователя
+                if (isNull(user.getPassword()) || user.getTemporaryPassword() != null) {
+                    user.setPassword(password);
+                    ssoUser.setRequiredActions(Collections.singletonList("UPDATE_PASSWORD"));
                 }
+                provider.resetPassword(ssoUser);
+            }
 
-                if (Boolean.TRUE.equals(user.getSendOnEmail()) && nonNull(user.getEmail())) {
-                    mailService.sendResetPasswordMail(user);
-                }
+            if (nonNull(user.getEmail())) {
+                mailService.sendResetPasswordMail(user);
             }
         }
     }
