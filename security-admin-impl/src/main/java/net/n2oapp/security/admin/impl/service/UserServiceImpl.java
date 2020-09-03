@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
     @Value("${access.user.send-mail-activate-user:false}")
     private Boolean sendMailActivate;
 
-    @Value("${access.email-as-username}")
+    @Value("${access.email-as-username:false}")
     private Boolean emailAsUsername;
 
     public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository,

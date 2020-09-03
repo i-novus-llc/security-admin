@@ -37,7 +37,7 @@ public class UserValidations {
     @Value("${access.user.email.regexp}")
     private String emailRegexp;
 
-    @Value("${access.email-as-username}")
+    @Value("${access.email-as-username:false}")
     private Boolean emailAsUsername;
 
     /**
