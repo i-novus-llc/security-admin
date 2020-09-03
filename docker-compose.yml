@@ -5,7 +5,7 @@ services:
   frontend:
     environment:
       - JAVA_OPTS=-Xmx300m
-      - SECURITY_OAUTH2_AUTH_SERVER_URI=http://docker.one:8278
+      - SECURITY_OAUTH2_AUTH_SERVER_URI=http://yandex.develop:8278
       - SECURITY_OAUTH2_CLIENT_CLIENT_ID=frontend
       - SECURITY_OAUTH2_CLIENT_CLIENT_SECRET=ca12a678-b275-499b-a778-750bad4d0a77
       - JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
@@ -14,12 +14,13 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1024M
+          cpus: '0.7'
+          memory: 1024m
       restart_policy:
         max_attempts: 3
       placement:
         constraints:
-          [node.hostname == os-4]
+          - node.labels.type == service
 
   auth-gateway:
     environment:
@@ -33,14 +34,15 @@ services:
       - ACCESS_KEYCLOAK_ADMIN_CLIENT_ID=auth-gateway
       - ACCESS_KEYCLOAK_ADMIN_CLIENT_SECRET=0a889967-3fa4-4dd7-898c-7625e99bd793
       - ACCESS_ORGANIZATION_PERSIST_MODE=rest
-      - JAXRS_SWAGGER_AUTH_TOKEN_URI=http://docker.one:8278/oauth/token
+      - JAXRS_SWAGGER_AUTH_TOKEN_URI=http://yandex.develop:8278/oauth/token
       - ACCESS_EMAIL_AS_USERNAME=true
     ports:
       - 8080
     deploy:
       resources:
         limits:
-          memory: 1024M
+          cpus: '0.7'
+          memory: 1024m
       placement:
         constraints:
-          [node.hostname == os-4]
+          - node.labels.type == service
