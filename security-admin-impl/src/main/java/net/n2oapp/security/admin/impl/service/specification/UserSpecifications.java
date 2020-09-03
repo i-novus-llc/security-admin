@@ -48,6 +48,17 @@ public class UserSpecifications implements Specification<UserEntity> {
                 predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.isActive), false));
             }
         }
+
+        if (!CollectionUtils.isEmpty(criteria.getRoleCodes())) {
+            Subquery sub = criteriaQuery.subquery(String.class);
+            Root subRoot = sub.from(RoleEntity.class);
+            ListJoin<RoleEntity, UserEntity> subUsers = subRoot.join(RoleEntity_.userList);
+            sub.select(subRoot.get(RoleEntity_.code));
+            sub.where(builder.and(builder.equal(root.get(UserEntity_.id), subUsers.get(UserEntity_.id)),
+                    subRoot.get(RoleEntity_.code).in(criteria.getRoleCodes())));
+            predicate = builder.and(predicate, builder.exists(sub));
+        }
+
         if (!CollectionUtils.isEmpty(criteria.getRoleIds())) {
             Subquery sub = criteriaQuery.subquery(Integer.class);
             Root subRoot = sub.from(RoleEntity.class);
