@@ -154,13 +154,9 @@ public class OrganizationServiceImpl implements OrganizationService {
         organizationEntity.setLegalAddress(organization.getLegalAddress());
         organizationEntity.setEmail(organization.getEmail());
         organizationEntity.setExtUid(organization.getExtUid());
-        if (organization.getRoleIds() != null) {
-            organizationEntity.setRoleList(organization.getRoleIds().stream().map(roleId -> {
-                RoleEntity role = new RoleEntity();
-                role.setId(roleId);
-                return role;
-            }).collect(Collectors.toList()));
-        }
+        if (organization.getRoleIds() != null)
+            organizationEntity.setRoleList(organization.getRoleIds().stream().filter(roleId -> roleId > 0).map(RoleEntity::new).collect(Collectors.toList()));
+
         if (organization.getOrgCategoryIds() != null) {
             organizationEntity.setCategories(organization.getOrgCategoryIds().stream().map(categoryId -> {
                 OrgCategoryEntity orgCategory = new OrgCategoryEntity();

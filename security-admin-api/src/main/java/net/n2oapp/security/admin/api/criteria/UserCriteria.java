@@ -33,6 +33,7 @@ public class UserCriteria extends BaseCriteria {
     private String fio;
     private String isActive;
     private List<Integer> roleIds;
+    private List<String> roleCodes;
     private String password;
     private List<String> systems;
     private String userLevel;
@@ -44,6 +45,10 @@ public class UserCriteria extends BaseCriteria {
 
     public void setRoleIds(List<Integer> roleIds) {
         this.roleIds = roleIds != null ? roleIds : new ArrayList<>();
+    }
+
+    public void setRoleCodes(List<String> roleCodes) {
+        this.roleCodes = roleCodes != null ? roleCodes : new ArrayList<>();
     }
 
 }

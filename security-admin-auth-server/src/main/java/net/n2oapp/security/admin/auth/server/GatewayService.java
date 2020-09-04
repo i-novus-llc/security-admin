@@ -24,10 +24,10 @@ public class GatewayService implements ClientDetailsService {
     private ClientService clientService;
 
     @Value("${access.auth.access-token-lifetime:60}")
-    private Integer accessTokenLifetime;
+    private int accessTokenValidityMinutes;
 
     @Value("${access.auth.refresh-token-lifetime:1440}")
-    private Integer refreshTokenLifetime;
+    private int refreshTokenValidityMinutes;
 
     @Override
     public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
@@ -51,12 +51,12 @@ public class GatewayService implements ClientDetailsService {
         client.setAuthorizedGrantTypes(authorizedGrantTypes);
         String redirectUris = nonNull(apiModel.getRedirectUris()) ? apiModel.getRedirectUris().replace(" ", ",") : null;
         client.setRegisteredRedirectUri(StringUtils.commaDelimitedListToSet(redirectUris));
-        if (nonNull(apiModel.getAccessTokenLifetime())) {
-            client.setAccessTokenValiditySeconds(apiModel.getAccessTokenLifetime() * 60);
-        } else client.setAccessTokenValiditySeconds(accessTokenLifetime * 60);
-        if (nonNull(apiModel.getRefreshTokenLifetime())) {
-            client.setRefreshTokenValiditySeconds(apiModel.getRefreshTokenLifetime() * 60);
-        } else client.setRefreshTokenValiditySeconds(refreshTokenLifetime * 60);
+        if (nonNull(apiModel.getAccessTokenValidityMinutes())) {
+            client.setAccessTokenValiditySeconds(apiModel.getAccessTokenValidityMinutes() * 60);
+        } else client.setAccessTokenValiditySeconds(accessTokenValidityMinutes * 60);
+        if (nonNull(apiModel.getRefreshTokenValidityMinutes())) {
+            client.setRefreshTokenValiditySeconds(apiModel.getRefreshTokenValidityMinutes() * 60);
+        } else client.setRefreshTokenValiditySeconds(refreshTokenValidityMinutes * 60);
         client.setRoles(apiModel.getRoles());
         return client;
     }

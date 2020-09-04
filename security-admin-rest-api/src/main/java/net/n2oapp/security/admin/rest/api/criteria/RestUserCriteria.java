@@ -69,6 +69,13 @@ public class RestUserCriteria extends UserCriteria {
         super.setRoleIds(roleIds);
     }
 
+    @QueryParam("roleCodes")
+    @Override
+    @ApiParam(value = "Список кодов ролей")
+    public void setRoleCodes(List<String> roleCodes) {
+        super.setRoleCodes(roleCodes);
+    }
+
     @QueryParam("page")
     @Override
     @ApiParam(value = "Номер страницы")

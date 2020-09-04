@@ -117,10 +117,10 @@ public class ClientServiceImpl implements ClientService {
         }
         if (nonNull(clientEntity.getRedirectUris()))
             client.setRedirectUris(clientEntity.getRedirectUris().replace(",", " "));
-        if (nonNull(clientEntity.getAccessTokenLifetime()))
-            client.setAccessTokenLifetime(clientEntity.getAccessTokenLifetime() / 60);
-        if (nonNull(clientEntity.getRefreshTokenLifetime()))
-            client.setRefreshTokenLifetime(clientEntity.getRefreshTokenLifetime() / 60);
+        if (nonNull(clientEntity.getAccessTokenValiditySeconds()))
+            client.setAccessTokenValidityMinutes(clientEntity.getAccessTokenValiditySeconds() / 60);
+        if (nonNull(clientEntity.getRefreshTokenValiditySeconds()))
+            client.setRefreshTokenValidityMinutes(clientEntity.getRefreshTokenValiditySeconds() / 60);
         client.setLogoutUrl(clientEntity.getLogoutUrl());
         if (nonNull(clientEntity.getRoleList())) {
             client.setRoles(clientEntity.getRoleList().stream().map(r -> ClientServiceImpl.model(r, permissionEnabled)).collect(Collectors.toList()));
@@ -136,10 +136,10 @@ public class ClientServiceImpl implements ClientService {
         entity.setClientSecret(client.getClientSecret());
         String[] redirectUris = StringUtils.tokenizeToStringArray(client.getRedirectUris(), " ", true, true);
         entity.setRedirectUris(StringUtils.arrayToCommaDelimitedString(redirectUris));
-        if (nonNull(client.getAccessTokenLifetime()))
-            entity.setAccessTokenLifetime(client.getAccessTokenLifetime() * 60);
-        if (nonNull(client.getRefreshTokenLifetime()))
-            entity.setRefreshTokenLifetime(client.getRefreshTokenLifetime() * 60);
+        if (nonNull(client.getAccessTokenValidityMinutes()))
+            entity.setAccessTokenValiditySeconds(client.getAccessTokenValidityMinutes() * 60);
+        if (nonNull(client.getRefreshTokenValidityMinutes()))
+            entity.setRefreshTokenValiditySeconds(client.getRefreshTokenValidityMinutes() * 60);
         entity.setLogoutUrl(client.getLogoutUrl());
         ArrayList<String> authorizedGrantTypes = new ArrayList<>();
         if (Boolean.TRUE.equals(client.getIsClientGrant()))
