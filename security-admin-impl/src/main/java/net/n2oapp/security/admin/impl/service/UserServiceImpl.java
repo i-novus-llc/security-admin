@@ -323,7 +323,7 @@ public class UserServiceImpl implements UserService {
         entity.setDepartment(nonNull(model.getDepartmentId()) ? new DepartmentEntity(model.getDepartmentId()) : null);
         entity.setOrganization(nonNull(model.getOrganizationId()) ? new OrganizationEntity(model.getOrganizationId()) : null);
         entity.setRegion(nonNull(model.getRegionId()) ? new RegionEntity(model.getRegionId()) : null);
-        entity.setStatus(model.getStatus() != null ? model.getStatus() : UserStatus.AWAITING_MODERATION);
+        entity.setStatus(model.getStatus());
         if (nonNull(model.getRoles()))
             entity.setRoleList(model.getRoles().stream().filter(roleId -> roleId > 0).map(RoleEntity::new).collect(Collectors.toList()));
         return entity;
