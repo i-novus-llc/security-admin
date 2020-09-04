@@ -15,7 +15,6 @@
  */
 package net.n2oapp.security.admin.rest.api;
 
-
 import io.swagger.annotations.*;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
@@ -38,7 +37,10 @@ public interface UserRestService {
     @GET
     @Path("/")
     @ApiOperation("Найти всех пользователей")
-    @ApiResponse(code = 200, message = "Страница пользователей")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Страница пользователей"),
+            @ApiResponse(code = 400, message = "По указанным критериям поиска ничего не найдено")
+    })
     Page<User> findAll(@BeanParam RestUserCriteria criteria);
 
     @GET
@@ -47,35 +49,50 @@ public interface UserRestService {
     @ApiResponse(code = 200, message = "Пользователь")
     User getById(@ApiParam(value = "Идентификатор") @PathParam("id") Integer id);
 
-
     @POST
     @Path("/")
     @ApiOperation("Создать пользователя")
-    @ApiResponse(code = 200, message = "Созданный пользователь")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Созданный пользователь"),
+            @ApiResponse(code = 400, message = "Неккоректный запрос. Отсутвуют обязательные поля или заполнены не корректными данными")
+    })
     User create(@ApiParam(value = "Пользователь") UserForm user);
 
     @POST
     @Path("/register")
     @ApiOperation("Регистрация пользователя")
-    @ApiResponse(code = 200, message = "Зарегистрированный пользователь")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Зарегистрированный пользователь"),
+            @ApiResponse(code = 400, message = "Неккоректный запрос. Отсутвуют обязательные поля или заполнены не корректными данными")
+    })
     User register(@ApiParam(value = "Пользователь") UserRegisterForm user);
 
     @PUT
     @Path("/")
     @ApiOperation("Изменить пользователя")
-    @ApiResponse(code = 200, message = "Измененный пользователь")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Измененный пользователь"),
+            @ApiResponse(code = 400, message = "Неккоректный запрос. Отсутвуют обязательные поля или заполнены не корректными данными")
+    })
     User update(@ApiParam(value = "Пользователь") UserForm user);
 
     @DELETE
     @Path("/{id}")
     @ApiOperation("Удалить пользователя")
     @ApiResponse(code = 200, message = "Пользователь удален")
+    @ApiResponses({
+            @ApiResponse(code = 204, message = "Пользователь удален"),
+            @ApiResponse(code = 400, message = "Неккоректный запрос. Пользователь не найден или вы пытаетесь удалить самого себя")
+    })
     void delete(@ApiParam(value = "Идентификатор") @PathParam("id") Integer id);
 
     @PUT
     @Path("/changeActive/{id}")
     @ApiOperation("Изменить статус пользователя")
-    @ApiResponse(code = 200, message = "Пользователь с измененным статусом")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Пользователь с измененным статусом"),
+            @ApiResponse(code = 400, message = "Неккоректный запрос. Отсутвуют обязательные поля или заполнены не корректными данными")
+    })
     User changeActive(@ApiParam(value = "Идентификатор") @PathParam("id") Integer id);
 
     @GET
@@ -87,6 +104,9 @@ public interface UserRestService {
     @PUT
     @Path("/resetPassword")
     @ApiOperation("Сбросить пароль")
-    @ApiResponse(code = 200, message = "Пароль сброшен")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Пароль сброшен"),
+            @ApiResponse(code = 400, message = "Неккоректный запрос. Отсутвуют обязательные поля или заполнены не корректными данными")
+    })
     void resetPassword(@ApiParam(value = "Пользователь") UserForm user);
 }
