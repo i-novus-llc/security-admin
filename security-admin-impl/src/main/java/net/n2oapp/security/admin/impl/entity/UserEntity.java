@@ -142,12 +142,6 @@ public class UserEntity {
     private UserStatus status;
 
     /**
-     * Идентификатор клиента в системе уведомлений
-     */
-    @Column(name = "client_id")
-    private Integer clientId;
-
-    /**
      * Дата и время последних изменений
      */
     @Column(name = "last_action_date")

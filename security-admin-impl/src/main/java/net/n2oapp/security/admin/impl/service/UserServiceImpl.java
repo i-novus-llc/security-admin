@@ -5,7 +5,6 @@ import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import net.n2oapp.security.admin.api.model.*;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.MailService;
-import net.n2oapp.security.admin.api.service.NotificationService;
 import net.n2oapp.security.admin.api.service.UserService;
 import net.n2oapp.security.admin.commons.util.PasswordGenerator;
 import net.n2oapp.security.admin.commons.util.UserValidations;
@@ -23,7 +22,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,8 +52,6 @@ public class UserServiceImpl implements UserService {
     private UserValidations userValidations;
     @Autowired
     private AuditHelper audit;
-    @Autowired
-    private NotificationService notificationService;
 
     @Value("${access.user.send-mail-delete-user:false}")
     private Boolean sendMailDelete;
@@ -63,7 +59,7 @@ public class UserServiceImpl implements UserService {
     @Value("${access.user.send-mail-activate-user:false}")
     private Boolean sendMailActivate;
 
-    @Value("${access.email-as-username}")
+    @Value("${access.email-as-username:false}")
     private Boolean emailAsUsername;
 
     public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
@@ -112,20 +108,6 @@ public class UserServiceImpl implements UserService {
             entity.setStatus(accountType.getStatus());
         }
         UserEntity savedUser = userRepository.save(entity);
-
-        //        todo доработка для russpass
-        if (!CollectionUtils.isEmpty(savedUser.getRoleList())) {
-            RoleEntity operator = roleRepository.findOneByCode("lkop.partner_operator");
-            if (nonNull(operator) && savedUser.getRoleList().stream().anyMatch(roleEntity -> operator.getId().equals(roleEntity.getId()))) {
-                NotificationClientModel model = new NotificationClientModel();
-                model.setFirstName(savedUser.getName());
-                model.setLastName(savedUser.getSurname());
-                model.setEmails(Collections.singletonList(
-                        new NotificationClientEmailModel(entity.getEmail(), true)));
-                savedUser.setClientId(notificationService.createClient(model));
-            }
-        }
-
         // получаем модель для сохранения SSO провайдером, ему надо передать незакодированный пароль
         if (provider.isSupports(savedUser.getExtSys())) {
             SsoUser ssoUser = model(savedUser);
@@ -175,21 +157,6 @@ public class UserServiceImpl implements UserService {
         // кодируем пароль перед сохранением в бд если он изменился
         if (nonNull(user.getPassword()))
             entityUser.setPasswordHash(passwordEncoder.encode(user.getPassword()));
-        //        todo доработка для russpass
-        RoleEntity operator = roleRepository.findOneByCode("lkop.partner_operator");
-        if (nonNull(operator) && isNull(entityUser.getClientId())) {
-            if (!CollectionUtils.isEmpty(entityUser.getRoleList()))
-                if (entityUser.getRoleList().stream().anyMatch(roleEntity -> operator.getId().equals(roleEntity.getId()))) {
-                    NotificationClientModel model = new NotificationClientModel();
-                    model.setFirstName(entityUser.getName());
-                    model.setLastName(entityUser.getSurname());
-                    model.setEmails(Collections.singletonList(
-                            new NotificationClientEmailModel(entityUser.getEmail(), true)));
-                    entityUser.setClientId(notificationService.createClient(model));
-                }
-        }
-        if (nonNull(entityUser.getClientId()) && entityUser.getRoleList().stream().noneMatch(roleEntity -> operator.getId().equals(roleEntity.getId())))
-            entityUser.setClientId(null);
         UserEntity updatedUser = userRepository.save(entityUser);
         //в провайдер отправляем незакодированный пароль, если он изменился, и отправляем null, если не изменялся пароль
         if (provider.isSupports(updatedUser.getExtSys())) {
@@ -299,30 +266,43 @@ public class UserServiceImpl implements UserService {
         if (nonNull(user.getPassword())) {
             userValidations.checkPassword(password, user.getPasswordCheck(), user.getId());
         }
-        if (isNull(password)) {
-            password = passwordGenerator.generate();
-        }
 
-        if (user.getId() != null) {
-            UserEntity userEntity = userRepository.getOne(user.getId());
+        UserEntity userEntity = null;
+        if (user.getId() != null)
+            userEntity = userRepository.getOne(user.getId());
+        if (userEntity == null && user.getEmail() != null)
+            userEntity = userRepository.findOneByEmailIgnoreCase(user.getEmail());
+        if (userEntity == null && user.getUsername() != null)
+            userEntity = userRepository.findOneByUsernameIgnoreCase(user.getUsername());
+        if (userEntity == null && user.getSnils() != null)
+            userEntity = userRepository.findOneBySnilsIgnoreCase(user.getSnils()).orElse(null);
 
-            if (userEntity != null) {
-                userEntity.setPasswordHash(passwordEncoder.encode(password));
-                UserEntity updatedUser = userRepository.save(userEntity);
+        if (userEntity != null) {
+            user.setEmail(userEntity.getEmail());
+            user.setUsername(userEntity.getUsername());
+            user.setName(userEntity.getName());
+            user.setSurname(userEntity.getSurname());
+            user.setPatronymic(userEntity.getPatronymic());
+            if (isNull(password)) {
+                password = passwordGenerator.generate();
+            }
+            userEntity.setPasswordHash(passwordEncoder.encode(password));
+            UserEntity updatedUser = userRepository.save(userEntity);
 
-                //в провайдер отправляем незакодированный пароль
-                if (provider.isSupports(updatedUser.getExtSys())) {
-                    SsoUser ssoUser = model(updatedUser);
-                    ssoUser.setPassword(password);
-                    // если пароль временный, то требуем смены пароля при следующем входе пользователя
-                    if (user.getTemporaryPassword() != null)
-                        ssoUser.setRequiredActions(Collections.singletonList("UPDATE_PASSWORD"));
-                    provider.resetPassword(ssoUser);
+            //в провайдер отправляем незакодированный пароль
+            if (provider.isSupports(updatedUser.getExtSys())) {
+                SsoUser ssoUser = model(updatedUser);
+                ssoUser.setPassword(password);
+                // если пароль временный, то требуем смены пароля при следующем входе пользователя
+                if (isNull(user.getPassword()) || user.getTemporaryPassword() != null) {
+                    user.setPassword(password);
+                    ssoUser.setRequiredActions(Collections.singletonList("UPDATE_PASSWORD"));
                 }
+                provider.resetPassword(ssoUser);
+            }
 
-                if (Boolean.TRUE.equals(user.getSendOnEmail()) && nonNull(user.getEmail())) {
-                    mailService.sendResetPasswordMail(user);
-                }
+            if (nonNull(user.getEmail())) {
+                mailService.sendResetPasswordMail(user);
             }
         }
     }
@@ -363,7 +343,6 @@ public class UserServiceImpl implements UserService {
         entity.setSnils(modelFromProvider.getSnils());
         entity.setUserLevel(modelFromProvider.getUserLevel());
         entity.setStatus(modelFromProvider.getStatus());
-        entity.setClientId(modelFromProvider.getClientId());
         if (nonNull(modelFromProvider.getDepartment()))
             entity.setDepartment(new DepartmentEntity(modelFromProvider.getDepartment().getId()));
         if (nonNull(modelFromProvider.getOrganization()))
@@ -406,7 +385,6 @@ public class UserServiceImpl implements UserService {
         model.setExtSys(entity.getExtSys());
         model.setExtUid(entity.getExtUid());
         model.setStatus(entity.getStatus());
-        model.setClientId(entity.getClientId());
         StringBuilder builder = new StringBuilder();
         if (nonNull(entity.getSurname())) {
             builder.append(entity.getSurname()).append(" ");

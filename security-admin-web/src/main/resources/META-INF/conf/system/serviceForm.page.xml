@@ -29,8 +29,9 @@
                     </dependencies>
                 </password>
 
-                <input-text id="accessTokenLifetime" label="Максимальное время действия токена (минуты)"
-                            domain="integer">
+                <input-text id="accessTokenValidityMinutes" label="Максимальное время действия токена (минуты)"
+                            domain="integer"
+                            description="Если не указано иное, используется значение по умолчанию (60 минут)">
                     <dependencies>
                         <visibility on="enableClient">
                             enableClient
@@ -38,8 +39,9 @@
                     </dependencies>
                 </input-text>
 
-                <input-text id="refreshTokenLifetime" label="Максимальное время действия  refresh токена (минуты)"
-                            domain="integer">
+                <input-text id="refreshTokenValidityMinutes" label="Максимальное время действия  refresh токена (минуты)"
+                            domain="integer"
+                            description="Если не указано иное, используется значение по умолчанию (1440 минут)">
                     <dependencies>
                         <visibility on="enableClient">
                             enableClient
@@ -93,9 +95,8 @@
                     </dependencies>
                 </input-text>
 
-                <input-text id="logoutUrl" label="Ссылка для выхода из системы"
-                            description="На данный URL должен быть направлен запрос, содержащий токен выхода, при выходе из системы"
-                            required="true">
+                <input-text id="logoutUrl" label="Ссылка для выхода из клиентского приложения"
+                            description="На данный URL должен быть направлен запрос, содержащий токен выхода, при выходе из клиентского приложения">
                     <dependencies>
                         <visibility on="enableClient">
                             enableClient
