@@ -38,8 +38,7 @@ public interface UserRestService {
     @Path("/")
     @ApiOperation("Найти всех пользователей")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Страница пользователей"),
-            @ApiResponse(code = 400, message = "По указанным критериям поиска ничего не найдено")
+            @ApiResponse(code = 200, message = "Страница пользователей")
     })
     Page<User> findAll(@BeanParam RestUserCriteria criteria);
 
@@ -54,7 +53,7 @@ public interface UserRestService {
     @ApiOperation("Создать пользователя")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Созданный пользователь"),
-            @ApiResponse(code = 400, message = "Неккоректный запрос. Отсутвуют обязательные поля или заполнены не корректными данными")
+            @ApiResponse(code = 400, message = "Неккоректный запрос. Отсутвуют обязательные поля или заполнены некорректными данными")
     })
     User create(@ApiParam(value = "Пользователь") UserForm user);
 
@@ -63,7 +62,7 @@ public interface UserRestService {
     @ApiOperation("Регистрация пользователя")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Зарегистрированный пользователь"),
-            @ApiResponse(code = 400, message = "Неккоректный запрос. Отсутвуют обязательные поля или заполнены не корректными данными")
+            @ApiResponse(code = 400, message = "Неккоректный запрос. Отсутвуют обязательные поля или заполнены некорректными данными")
     })
     User register(@ApiParam(value = "Пользователь") UserRegisterForm user);
 
@@ -72,7 +71,7 @@ public interface UserRestService {
     @ApiOperation("Изменить пользователя")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Измененный пользователь"),
-            @ApiResponse(code = 400, message = "Неккоректный запрос. Отсутвуют обязательные поля или заполнены не корректными данными")
+            @ApiResponse(code = 400, message = "Неккоректный запрос. Отсутвуют обязательные поля или заполнены некорректными данными")
     })
     User update(@ApiParam(value = "Пользователь") UserForm user);
 
@@ -91,7 +90,7 @@ public interface UserRestService {
     @ApiOperation("Изменить статус пользователя")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Пользователь с измененным статусом"),
-            @ApiResponse(code = 400, message = "Неккоректный запрос. Отсутвуют обязательные поля или заполнены не корректными данными")
+            @ApiResponse(code = 400, message = "Неккоректный запрос. Отсутвуют обязательные поля или заполнены некорректными данными")
     })
     User changeActive(@ApiParam(value = "Идентификатор") @PathParam("id") Integer id);
 
@@ -106,7 +105,7 @@ public interface UserRestService {
     @ApiOperation("Сбросить пароль")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Пароль сброшен"),
-            @ApiResponse(code = 400, message = "Неккоректный запрос. Отсутвуют обязательные поля или заполнены не корректными данными")
+            @ApiResponse(code = 400, message = "Неккоректный запрос. Отсутвуют обязательные поля или заполнены некорректными данными")
     })
     void resetPassword(@ApiParam(value = "Пользователь") UserForm user);
 }
