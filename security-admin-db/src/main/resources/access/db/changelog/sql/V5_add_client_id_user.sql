@@ -1,1 +1,0 @@
-ALTER TABLE sec."user" ADD client_id integer;

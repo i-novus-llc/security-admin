@@ -63,10 +63,6 @@
         <sqlFile path="access/db/changelog/sql/V5_account_type_role_change_type.sql"/>
     </changeSet>
 
-    <changeSet id="add_client_id_user" author="aarifullin" dbms="postgresql">
-        <sqlFile path="access/db/changelog/sql/V5_add_client_id_user.sql"/>
-    </changeSet>
-
     <changeSet id="user_add_last_action_date" author="imolostvov" dbms="postgresql">
         <sqlFile path="access/db/changelog/sql/V6_user_add_last_action_date.sql"/>
     </changeSet>
