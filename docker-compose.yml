@@ -10,6 +10,7 @@ services:
       - SECURITY_OAUTH2_CLIENT_CLIENT_SECRET=ca12a678-b275-499b-a778-750bad4d0a77
       - SECURITY_OAUTH2_CLIENT_ACCESS_TOKEN_URI=http://auth-gateway:8080/oauth/token
       - SECURITY_OAUTH2_RESOURCE_USER_INFO_URI=http://auth-gateway:8080/userinfo
+      - ACCERSS_SERVICE_URL=http://auth-gateway:8080/api
       - JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
     ports:
       - 8080
