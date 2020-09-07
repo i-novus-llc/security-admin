@@ -32,6 +32,8 @@ public interface MailService {
 
     void sendWelcomeMail(UserForm user);
 
+    void sendWelcomeMailWithoutPassword(UserForm user);
+
     void sendResetPasswordMail(UserForm user);
 
     void sendChangeActivateMail(User user);

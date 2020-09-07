@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
             userValidations.checkPassword(password, user.getPasswordCheck(), user.getId());
         if (isNull(password)) {
             password = passwordGenerator.generate();
-            user.setPassword(password);
+            user.setTemporaryPassword(password);
         }
         //сохраняем пароль в закодированном виде
         UserEntity entity = entityForm(new UserEntity(), user);
@@ -122,10 +122,12 @@ public class UserServiceImpl implements UserService {
                 savedUser = userRepository.save(changedSsoUser);
             }
         }
-        if (Boolean.TRUE.equals(user.getSendOnEmail()) && user.getEmail() != null) {
+        if (Boolean.TRUE.equals(user.getSendOnEmail()) && user.getEmail() != null && user.getTemporaryPassword() != null) {
             mailService.sendWelcomeMail(user);
+        } else if (Boolean.TRUE.equals(user.getSendOnEmail()) && user.getEmail() != null && user.getPassword() != null) {
+            mailService.sendWelcomeMailWithoutPassword(user);
         }
-        return audit("audit.userCreate", model(savedUser));
+        return model(savedUser);
     }
 
     @Override
@@ -139,6 +141,8 @@ public class UserServiceImpl implements UserService {
         form.setName(user.getName());
         form.setSurname(user.getSurname());
         form.setPatronymic(user.getPatronymic());
+        form.setSendOnEmail(user.getSendPasswordToEmail());
+        form.setIsActive(user.getIsActive() != null ? user.getIsActive() : true);
         return create(form);
     }
 

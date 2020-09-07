@@ -63,6 +63,8 @@ public class UserServiceImplTest {
         user.setName("name");
         user.setSurname("surname");
         user.setPatronymic("patronymic");
+        user.setIsActive(true);
+        user.setSendPasswordToEmail(true);
         User result = service.register(user);
         assertEquals(1, result.getRoles().size());
         assertEquals(UserLevel.PERSONAL, result.getUserLevel());
