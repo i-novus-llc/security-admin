@@ -17,7 +17,13 @@ import java.util.stream.Collectors;
 import static org.quartz.CronScheduleBuilder.cronSchedule;
 
 @Configuration
+@ConditionalOnProperty(prefix = "rdm.sync", name = "enabled", havingValue = "false")
 public class RdmSyncConfiguration {
+
+    public static final String APP_SYS_EXPORT_JOB_NAME = "app_sys_export_job";
+    public static final String REGION_SYNC_JOB_NAME = "region_job_detail";
+    public static final String DEPARTMENT_SYNC_JOB_NAME = "department_job_detail";
+    public static final String ORGANIZATION_SYNC_JOB_NAME = "organization_job_detail";
 
     @Value("${rdm.cron.export}")
     private String cronExpression;
@@ -38,7 +44,7 @@ public class RdmSyncConfiguration {
     public SynchronizationInfo appSysExportJobAndTrigger() {
         JobDetail appSysExportJobDetail = JobBuilder.newJob().ofType(ApplicationSystemExportJob.class)
                 .storeDurably()
-                .withIdentity("app_sys_export_job")
+                .withIdentity(APP_SYS_EXPORT_JOB_NAME)
                 .withDescription("Export Applications and Systems")
                 .usingJobData(new JobDataMap())
                 .build();
@@ -54,7 +60,7 @@ public class RdmSyncConfiguration {
     public SynchronizationInfo regionJobAndTrigger() {
         JobDetail regionJobDetail = JobBuilder.newJob().ofType(RegionSynchronizeJob.class)
                 .storeDurably()
-                .withIdentity("region_job_detail")
+                .withIdentity(REGION_SYNC_JOB_NAME)
                 .build();
         CronTrigger regionTrigger = TriggerBuilder.newTrigger().forJob(regionJobDetail)
                 .withIdentity("region_trigger")
@@ -68,7 +74,7 @@ public class RdmSyncConfiguration {
     public SynchronizationInfo departmentJobAndTrigger() {
         JobDetail departmentJobDetail = JobBuilder.newJob().ofType(DepartmentSynchronizeJob.class)
                 .storeDurably()
-                .withIdentity("department_job_detail")
+                .withIdentity(DEPARTMENT_SYNC_JOB_NAME)
                 .build();
         CronTrigger departmentTrigger = TriggerBuilder.newTrigger().forJob(departmentJobDetail)
                 .withIdentity("Department_Trigger")
@@ -83,7 +89,7 @@ public class RdmSyncConfiguration {
     public SynchronizationInfo organizationJobAndTrigger() {
         JobDetail organizationJobDetail = JobBuilder.newJob().ofType(OrganizationSynchronizeJob.class)
                 .storeDurably()
-                .withIdentity("organization_job_detail")
+                .withIdentity(ORGANIZATION_SYNC_JOB_NAME)
                 .build();
         CronTrigger organizationTrigger = TriggerBuilder.newTrigger().forJob(organizationJobDetail)
                 .withIdentity("organization_trigger")
