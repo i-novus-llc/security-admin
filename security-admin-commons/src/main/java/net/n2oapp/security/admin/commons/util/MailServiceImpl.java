@@ -113,17 +113,10 @@ public class MailServiceImpl implements MailService {
         String password = getPassword(user);
         Map<String, Object> data = getData(user.getUsername(), user.getSurname(), user.getName(),
                 user.getPatronymic(), user.getEmail(), password);
-        sendMail(data, welcomeMailSubject, welcomeMailResource);
-    }
-
-
-
-    @Override
-    public void sendWelcomeMailWithoutPassword(UserForm user) {
-        String password = getPassword(user);
-        Map<String, Object> data = getData(user.getUsername(), user.getSurname(), user.getName(),
-                user.getPatronymic(), user.getEmail(), password);
-        sendMail(data, welcomeMailSubject, welcomeUserWithPassword);
+        if (user.getTemporaryPassword() != null)
+            sendMail(data, welcomeMailSubject, welcomeMailResource);
+        else if (user.getPassword() != null)
+            sendMail(data, welcomeMailSubject, welcomeUserWithPassword);
     }
 
     /**
