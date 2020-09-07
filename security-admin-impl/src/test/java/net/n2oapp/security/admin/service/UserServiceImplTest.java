@@ -14,9 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.io.IOException;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -37,6 +41,9 @@ public class UserServiceImplTest {
 
     @Autowired
     private UserServiceImpl service;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Rule
     public final GreenMailRule greenMail = new GreenMailRule(new ServerSetup(2525, null, "smtp"));
@@ -74,6 +81,111 @@ public class UserServiceImplTest {
         assertEquals("name", result.getName());
         assertEquals("surname", result.getSurname());
         assertEquals("patronymic", result.getPatronymic());
+        assertTrue(result.getIsActive());
+
+        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+        assertEquals(1, receivedMessages.length);
+        try {
+            Object content = receivedMessages[0].getContent();
+            assertTrue(content.toString().contains("<p>Уважаемый <span>surname</span> <span>name</span>!</p>"));
+            assertTrue(content.toString().contains("<p>Вы зарегистрированы в системе.</p>"));
+            assertTrue(content.toString().contains("<p>Логин для входа: <span>testUser</span></p>"));
+        } catch (IOException | MessagingException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testChangeActive() {
+        UserRegisterForm user = new UserRegisterForm();
+        user.setUsername("testUser28");
+        user.setEmail("test2@test.ru");
+        user.setName("name");
+        user.setSurname("surname");
+        user.setPatronymic("patronymic");
+        user.setIsActive(true);
+        user.setSendPasswordToEmail(true);
+        User result = service.register(user);
+        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+        assertEquals(1, receivedMessages.length);
+        try {
+            Object content = receivedMessages[0].getContent();
+            assertTrue(content.toString().contains("<p>Уважаемый <span>surname</span> <span>name</span>!</p>"));
+            assertTrue(content.toString().contains("<p>Логин для входа: <span>testUser28</span></p>"));
+            assertTrue(content.toString().contains("<p>Временный пароль:"));
+            assertTrue(content.toString().contains("<p>Пожалуйста, измените пароль при следующем входе.</p>"));
+        } catch (IOException | MessagingException e) {
+            fail();
+        }
+
+        assertEquals("testUser28", result.getUsername());
+        assertEquals("test2@test.ru", result.getEmail());
+        assertEquals("name", result.getName());
+        assertEquals("surname", result.getSurname());
+        assertEquals("patronymic", result.getPatronymic());
+        assertEquals(true, result.getIsActive());
+
+        Integer userId = result.getId();
+        User changedUser = service.changeActive(userId);
+
+        assertEquals("testUser28", changedUser.getUsername());
+        assertEquals("test2@test.ru", changedUser.getEmail());
+        assertEquals("name", changedUser.getName());
+        assertEquals("surname", changedUser.getSurname());
+        assertEquals("patronymic", changedUser.getPatronymic());
+        assertEquals(false, changedUser.getIsActive());
+
+        service.delete(userId);
+    }
+
+    @Test
+    public void testResetPassword() {
+        UserRegisterForm user = new UserRegisterForm();
+        user.setUsername("testUser29");
+        user.setEmail("test2@test.ru");
+        user.setName("name");
+        user.setSurname("surname");
+        user.setPatronymic("patronymic");
+        user.setIsActive(true);
+        user.setSendPasswordToEmail(true);
+        User result = service.register(user);
+        greenMail.reset();
+        assertEquals("testUser29", result.getUsername());
+        assertEquals("test2@test.ru", result.getEmail());
+        assertEquals("name", result.getName());
+        assertEquals("surname", result.getSurname());
+        assertEquals("patronymic", result.getPatronymic());
+        assertEquals(true, result.getIsActive());
+
+        Integer userId = result.getId();
+        UserForm userForm = new UserForm();
+        userForm.setId(userId);
+        userForm.setPassword("Zz123456789!");
+
+        service.resetPassword(userForm);
+
+        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+        assertEquals(1, receivedMessages.length);
+        try {
+            Object content = receivedMessages[0].getContent();
+            assertTrue(content.toString().contains("<p>Уважаемый <span>testUser29</span>!</p>"));
+            assertTrue(content.toString().contains("<p>Ваш пароль был сброшен.</p>"));
+            assertTrue(content.toString().contains("<p>Временный пароль:"));
+            assertTrue(content.toString().contains("<p>Пожалуйста измените пароль при следующем входе.</p>"));
+        } catch (IOException | MessagingException e) {
+            fail();
+        }
+
+        User changedUser = service.getById(userId);
+
+        assertEquals("testUser29", changedUser.getUsername());
+        assertEquals("test2@test.ru", changedUser.getEmail());
+        assertEquals("name", changedUser.getName());
+        assertEquals("surname", changedUser.getSurname());
+        assertEquals("patronymic", changedUser.getPatronymic());
+        assertTrue(passwordEncoder.matches("Zz123456789!", changedUser.getPasswordHash()));
+
+        service.delete(userId);
     }
 
     @Test
