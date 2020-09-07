@@ -1,7 +1,5 @@
 package net.n2oapp.auth.gateway.scheduled;
 
-import lombok.Getter;
-import lombok.Setter;
 import net.n2oapp.security.admin.sso.keycloak.AdminSsoKeycloakProperties;
 import net.n2oapp.security.admin.sso.keycloak.synchronization.UserSynchronizeJob;
 import org.quartz.*;
@@ -126,17 +124,5 @@ public class RdmSyncConfiguration {
         scheduler.getContext().put(RdmSyncRest.class.getSimpleName(), rdmSyncRest);
 
         return scheduler;
-    }
-
-    @Getter
-    @Setter
-    private static class SynchronizationInfo {
-        public SynchronizationInfo(JobDetail job, Set<? extends Trigger> triggers) {
-            this.job = job;
-            this.trigger = triggers;
-        }
-
-        private JobDetail job;
-        private Set<? extends Trigger> trigger;
     }
 }
