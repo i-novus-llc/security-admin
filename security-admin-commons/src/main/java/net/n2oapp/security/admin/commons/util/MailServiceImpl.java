@@ -40,6 +40,9 @@ public class MailServiceImpl implements MailService {
     @Value("${sec.password.mail.welcome.resource.name}")
     private String welcomeMailResource;
 
+    @Value("${sec.mail.welcome.resource.name}")
+    private String welcomeUserWithPassword;
+
     /**
      * Тема приветственного сообщения
      */
@@ -101,7 +104,7 @@ public class MailServiceImpl implements MailService {
     private String mailMessageFrom;
 
     /**
-     * Отправка сообщения на почту при успешном создании пользователя
+     * Отправка сообщения на почту при успешном создании пользователя с временным паролем
      *
      * @param user Пользователь
      */
@@ -116,6 +119,18 @@ public class MailServiceImpl implements MailService {
         data.put("email", user.getEmail());
 
         sendMail(data, welcomeMailSubject, welcomeMailResource);
+    }
+
+    @Override
+    public void sendWelcomeMailWithoutPassword(UserForm user) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("email", user.getEmail());
+        data.put("username", user.getUsername());
+        data.put("surname", valueOrEmpty(user.getSurname()));
+        data.put("name", valueOrEmpty(user.getName()));
+        data.put("patronymic", valueOrEmpty(user.getPatronymic()));
+
+        sendMail(data, welcomeMailSubject, welcomeUserWithPassword);
     }
 
     /**
