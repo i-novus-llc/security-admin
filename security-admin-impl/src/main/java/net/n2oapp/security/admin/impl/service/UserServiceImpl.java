@@ -122,10 +122,8 @@ public class UserServiceImpl implements UserService {
                 savedUser = userRepository.save(changedSsoUser);
             }
         }
-        if (Boolean.TRUE.equals(user.getSendOnEmail()) && user.getEmail() != null && user.getTemporaryPassword() != null) {
+        if (Boolean.TRUE.equals(user.getSendOnEmail()) && user.getEmail() != null) {
             mailService.sendWelcomeMail(user);
-        } else if (Boolean.TRUE.equals(user.getSendOnEmail()) && user.getEmail() != null && user.getPassword() != null) {
-            mailService.sendWelcomeMailWithoutPassword(user);
         }
         return model(savedUser);
     }
