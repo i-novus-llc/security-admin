@@ -88,7 +88,7 @@ Keycloak с помощью вашего клиента.
 В поле "Valid Redirect URIs" укажите правильные префиксы адресов, на которые возможна переадресация после успешного входа.
 Снова нажмите "Save".
 +
-image::images\keycloak3.png[]
+image::images/keycloak3.png[]
 +
 [WARNING]
 Если при попытке входа Keycloak выдаст сообщение:
