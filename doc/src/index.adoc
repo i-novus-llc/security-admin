@@ -74,11 +74,11 @@ Keycloak это открытый сервер SSO аутентификации, 
 . Войдите в консоль администрирования `http://localhost:8888/auth`
 . Создайте домен системы (Add realm).
 +
-image::images\keycloak1.png[]
+image::images/keycloak1.png[]
 . Создайте клиентов OAuth2 (Clients > Create). Клиент - это приложение, которое будет аутентифицироваться в Keycloak.
 В поле "Client ID" задаётся идентификатор клиента.
 +
-image::images\keycloak2.png[]
+image::images/keycloak2.png[]
 +
 . Нажмите "Save", откроется форма редактирования клиента.
 В поле "Access Type" выберите "confidential", чтобы никто не смог войти в
@@ -102,56 +102,56 @@ image::images/keycloak3.png[]
 . На вкладке "Credentials" будет информация о секретном слове (поле "Secret").
 Скопируйте его и используйте в настройках OAuth2 аутентификации вашего приложения.
 +
-image::images\keycloak4.png[]
+image::images/keycloak4.png[]
 +
 . Задайте маппинг ролей (Clients > Mappers). Кликните по кнопке "Add Builtin"
 выберите "realm roles" и нажмите "Add selected". В поле "Token Claim Name" измените значение на "roles".
 Установите переключатель "Add to userinfo" в положение "ON". Нажмите "Save".
 +
-image::images\keycloak13.png[]
+image::images/keycloak13.png[]
 +
 . Создайте роль "access.admin" для администрирования системы (Roles > Add role)
 +
-image::images\keycloak8.png[]
+image::images/keycloak8.png[]
 +
 . Создайте пользователя "admin", под которым Вы будете входить в модуль
 администрирования доступа (Users > Add user).
 Задайте "Email" и установите переключатель "Email Verified" в положение "ON".
 Нажмите "Save".
 +
-image::images\keycloak9.png[]
+image::images/keycloak9.png[]
 +
 . На вкладке "Role Mappings" добавьте роль "access.admin"
 +
-image::images\keycloak10.png[]
+image::images/keycloak10.png[]
 +
 . На вкладке "Credentials" дважды введите пароль пользователя.
 И переключите поле "Temporary" в положение "OFF". Нажмите "Reset Password".
 +
-image::images\keycloak11.png[]
+image::images/keycloak11.png[]
 +
 . Создайте клиента для синхронизации с сервисами администрирования (Clients > Create).
 В поле "Client Id" введите "access-service", это значение по умолчанию, которое
 задается настройкой `access.keycloak.admin-client-id`. Нажмите "Save".
 +
-image::images\keycloak5.png[]
+image::images/keycloak5.png[]
 +
 . В поле "Access Type" задайте "confidential". Затем поставьте переключатель
 "Service Accounts Enabled" в положение "ON", а переключатель
 "Standard Flow Enabled" в положение "OFF". Нажмите "Save".
 +
-image::images\keycloak6.png[]
+image::images/keycloak6.png[]
 +
 . Перейдите на вкладку "Service Account Roles". Добавьте роли для управления
 realm и пользователями:
 +
-image::images\keycloak7.png[]
+image::images/keycloak7.png[]
 +
 . Для корректной отправки сообщений пользователю
 (с напоминанием пароля, подтверждением учетных данных и тд.) из Keycloak
 пропишите найстройки вашего Email сервера (Realm settings > Email).
 +
-image::images\keycloak12.png[]
+image::images/keycloak12.png[]
 +
 
 
@@ -243,7 +243,7 @@ Admin API: /api/info
 
 Схема SSO аутентификации::
 +
-image::images\oauth1.png[]
+image::images/oauth1.png[]
 
 . Запросы не авторизованных пользователей перенаправляют на Keycloak сервер
 . Keycloak показывает пользователю страницу входа
@@ -348,7 +348,7 @@ security.oauth2.sso.logout-uri=${security.oauth2.auth-server-uri}/logout?redirec
 
 Схема SSO аутентификации::
 +
-image::images\auth_gateway_flow.png[]
+image::images/auth_gateway_flow.png[]
 
 . Запросы не авторизованных пользователей перенаправляют на Auth Gateway сервер
 . Gateway пренаправляет пользователя на Keycloak
@@ -489,7 +489,7 @@ link:https://openid.net/specs/openid-connect-backchannel-1_0.html[OpenID Connect
 Эта схема предусматривает установку WEB интерфейса администрирования внутри
 вашего прикладного приложения с JPA доступом к Базе Данных.
 
-image::images\deploy2.png[]
+image::images/deploy2.png[]
 
 Требования к приложению::
 - Spring Boot 2.1
@@ -568,7 +568,7 @@ CREATE DATABASE security ENCODING = 'UTF8';
 внутри вашего прикладного приложения с удаленными вызовами REST сервисов
 к отдельно стоящему REST серверу администрирования.
 
-image::images\deploy3.png[]
+image::images/deploy3.png[]
 
 Требования к приложению::
 - Spring Boot 2.1
@@ -629,7 +629,7 @@ access.service.url=http://localhost:9090/api
 интерфейса администрирования с удаленными вызовами REST сервисов к отдельно
 стоящему REST серверу администрирования.
 
-image::images\deploy4.png[]
+image::images/deploy4.png[]
 
 Установка::
 +
@@ -651,7 +651,7 @@ access.service.url=http://localhost:9090/api
 Эта схема предусматривает разворачивание REST сервера администрирования доступа
 встроенного в ваше приложение.
 
-image::images\deploy5.png[]
+image::images/deploy5.png[]
 
 Установка::
 +
@@ -723,7 +723,7 @@ CREATE DATABASE security ENCODING = 'UTF8';
 === Standalone REST Server
 Эта схема предусматривает разворачивание REST сервера администрирования доступа.
 
-image::images\deploy6.png[]
+image::images/deploy6.png[]
 
 Установка::
 +
@@ -752,7 +752,7 @@ spring.datasource.password=postgres
 Виды синхронизации::
 - Прямая событийная.
 +
-image::images\sync1.png[]
+image::images/sync1.png[]
 +
 Cервисы администрирования (1) после успешного сохранения данных в собственной
 Базе Данных (2) вызывают аналогичные операции в Keycloak (3).
@@ -760,7 +760,7 @@ Cервисы администрирования (1) после успешног
 +
 - Обратная событийная
 +
-image::images\sync2.png[]
+image::images/sync2.png[]
 +
 При успешном входе нового пользователя в приложение или в Auth Gateway (1),
 выполняется запрос `/userinfo` в Keycloak за информацией о пользователе (2),
@@ -769,7 +769,7 @@ image::images\sync2.png[]
 +
 - Прямая асинхронная
 +
-image::images\sync3.png[]
+image::images/sync3.png[]
 +
 Периодически вызывается сервис, который получает из Keycloak всех
 пользователей (1) и пытается связать их с пользователями в Базе Данных (2).
@@ -1075,7 +1075,7 @@ $KEYCLOAK_HOME/bin/jboss-cli.sh --command="module add --name=net.n2oapp.security
 +
 . Выберите тему "n2o" в Realm настройках консоли администрирования Keycloak:
 +
-image::images\index-0c310.png[]
+image::images/index-0c310.png[]
 
 == Расширение профиля пользователя
 В этом разделе рассказывается как расширить профиль пользователя новыми атрибутами, как встроить их в интерфейс и использовать в контексте приложения.
