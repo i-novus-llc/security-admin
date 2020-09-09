@@ -37,7 +37,7 @@ public class RdmSyncConfiguration {
     @Value("${rdm.cron.import.department}")
     private String departmentUpdateCronExpression;
 
-    @Autowired
+    @Autowired(required = false)
     private RdmSyncRest rdmSyncRest;
 
     @Bean
