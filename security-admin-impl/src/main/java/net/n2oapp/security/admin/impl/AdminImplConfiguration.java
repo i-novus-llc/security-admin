@@ -16,6 +16,7 @@ import net.n2oapp.security.admin.impl.service.UserLevelServiceImpl;
 import net.n2oapp.security.admin.impl.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -60,7 +61,7 @@ public class AdminImplConfiguration {
         return new SimpleSsoUserRoleProvider();
     }
 
-    @ConditionalOnProperty(name = "rdm.client.export.url")
+    @ConditionalOnExpression("${rdm.sync.enabled:true} && T(org.springframework.util.StringUtils).hasText('${rdm.client.export.url:}')")
     @EnableJaxRsProxyClient(
             classes = {DraftService.class, PublishService.class},
             address = "${rdm.client.export.url}"
