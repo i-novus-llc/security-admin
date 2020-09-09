@@ -37,6 +37,9 @@ public interface UserDetailsRestService {
     @POST
     @Path("/details")
     @ApiOperation("Загрузить информацию о пользователе, по его имени и списку ролей")
-    @ApiResponse(code = 200, message = "Страница пользователей")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Информация о пользователе"),
+            @ApiResponse(code = 400, message = "Неккоректный запрос. Отсутвуют обязательные поля или заполнены не корректными данными")
+    })
     User loadDetails(@ApiParam(value = "Информация о пользователе") RestUserDetailsToken token);
 }
