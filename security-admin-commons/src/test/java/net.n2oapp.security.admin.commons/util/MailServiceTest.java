@@ -2,8 +2,10 @@ package net.n2oapp.security.admin.commons.util;
 
 import com.icegreen.greenmail.junit.GreenMailRule;
 import com.icegreen.greenmail.util.ServerSetup;
+import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.api.service.MailService;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +35,11 @@ public class MailServiceTest {
     @Rule
     public final GreenMailRule greenMail = new GreenMailRule(new ServerSetup(2525, null, "smtp"));
 
+    @Before
+    public void before() {
+        greenMail.reset();
+    }
+
     @Test
     public void testSendWelcomeMail() {
         UserForm user = new UserForm();
@@ -52,6 +59,94 @@ public class MailServiceTest {
             assertTrue(content.toString().contains("<p>Уважаемый <span>surname</span> <span>name</span>!</p>"));
             assertTrue(content.toString().contains("<p>Вы зарегистрированы в системе.</p>"));
             assertTrue(content.toString().contains("<p>Логин для входа: <span>username</span></p>"));
+        } catch (IOException | MessagingException e) {
+            fail();
+        }
+
+        user.setPassword(null);
+        user.setTemporaryPassword("12345");
+
+        greenMail.reset();
+
+        mailService.sendWelcomeMail(user);
+        assertTrue(greenMail.waitForIncomingEmail(1000, 1));
+        receivedMessages = greenMail.getReceivedMessages();
+        assertEquals(1, receivedMessages.length);
+        try {
+            Object content = receivedMessages[0].getContent();
+            assertTrue(content.toString().contains("<p>Уважаемый <span>surname</span> <span>name</span>!</p>"));
+            assertTrue(content.toString().contains("<p>Логин для входа: <span>username</span></p>"));
+            assertTrue(content.toString().contains("<p>Временный пароль:"));
+            assertTrue(content.toString().contains("<p>Пожалуйста, измените пароль при следующем входе.</p>"));
+        } catch (IOException | MessagingException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testSendResetPasswordMail() {
+        UserForm user = new UserForm();
+        user.setUsername("username");
+        user.setSurname("surname");
+        user.setName("name");
+        user.setPatronymic("patronymic");
+        user.setEmail("email");
+
+        mailService.sendResetPasswordMail(user);
+
+        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+        assertEquals(1, receivedMessages.length);
+        try {
+            Object content = receivedMessages[0].getContent();
+            assertTrue(content.toString().contains("<p>Уважаемый <span>username</span>!</p>"));
+            assertTrue(content.toString().contains("<p>Ваш пароль был сброшен.</p>"));
+            assertTrue(content.toString().contains("<p>Временный пароль:"));
+            assertTrue(content.toString().contains("<p>Пожалуйста измените пароль при следующем входе.</p>"));
+        } catch (IOException | MessagingException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testSendChangeActivateMail() {
+        User user = new User();
+        user.setUsername("username");
+        user.setSurname("surname");
+        user.setName("name");
+        user.setPatronymic("patronymic");
+        user.setEmail("email");
+        user.setIsActive(true);
+
+        mailService.sendChangeActivateMail(user);
+
+        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+        assertEquals(1, receivedMessages.length);
+        try {
+            Object content = receivedMessages[0].getContent();
+            assertTrue(content.toString().contains("<p>Уважаемый <span>surname</span> <span>name</span> <span>patronymic</span>!</p>"));
+            assertTrue(content.toString().contains("Признак активности Вашей учетной записи изменен на \"<span>Да</span>\"."));
+        } catch (IOException | MessagingException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testSendUserDeletedMail() {
+        User user = new User();
+        user.setUsername("username");
+        user.setSurname("surname");
+        user.setName("name");
+        user.setPatronymic("patronymic");
+        user.setEmail("email");
+
+        mailService.sendUserDeletedMail(user);
+
+        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+        assertEquals(1, receivedMessages.length);
+        try {
+            Object content = receivedMessages[0].getContent();
+            assertTrue(content.toString().contains("<p>Уважаемый <span>surname</span> <span>name</span> <span>patronymic</span>!</p>"));
+            assertTrue(content.toString().contains("<p>Ваша учетная запись удалена.</p>"));
         } catch (IOException | MessagingException e) {
             fail();
         }
