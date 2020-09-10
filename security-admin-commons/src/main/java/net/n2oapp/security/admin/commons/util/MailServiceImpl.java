@@ -110,8 +110,8 @@ public class MailServiceImpl implements MailService {
      */
     @Override
     public void sendWelcomeMail(UserForm user) {
-        String password = getPassword(user);
-        Map<String, Object> data = getData(user.getUsername(), user.getSurname(), user.getName(),
+        String password = obtainPassword(user);
+        Map<String, Object> data = obtainMapWithData(user.getUsername(), user.getSurname(), user.getName(),
                 user.getPatronymic(), user.getEmail(), password);
         if (user.getTemporaryPassword() != null)
             sendMail(data, welcomeMailSubject, welcomeMailResource);
@@ -126,8 +126,8 @@ public class MailServiceImpl implements MailService {
      */
     @Override
     public void sendResetPasswordMail(UserForm user) {
-        String password = getPassword(user);
-        Map<String, Object> data = getData(user.getUsername(), user.getSurname(), user.getName(),
+        String password = obtainPassword(user);
+        Map<String, Object> data = obtainMapWithData(user.getUsername(), user.getSurname(), user.getName(),
                 user.getPatronymic(), user.getEmail(), password);
         sendMail(data, resetPasswordMailSubject, resetPasswordMailResource);
     }
@@ -139,7 +139,7 @@ public class MailServiceImpl implements MailService {
      */
     @Override
     public void sendChangeActivateMail(User user) {
-        Map<String, Object> data = getData(user.getUsername(), user.getSurname(), user.getName(),
+        Map<String, Object> data = obtainMapWithData(user.getUsername(), user.getSurname(), user.getName(),
                 user.getPatronymic(), user.getEmail(), null);
 
         data.put("isActive", user.getIsActive() ? valueYes : valueNo);
@@ -153,7 +153,7 @@ public class MailServiceImpl implements MailService {
      */
     @Override
     public void sendUserDeletedMail(User user) {
-        Map<String, Object> data = getData(user.getUsername(), user.getSurname(), user.getName(),
+        Map<String, Object> data = obtainMapWithData(user.getUsername(), user.getSurname(), user.getName(),
                 user.getPatronymic(), user.getEmail(), null);
 
         sendMail(data, deletedMailSubject, deletedMailResource);
@@ -184,7 +184,7 @@ public class MailServiceImpl implements MailService {
         }
     }
 
-    private Map<String, Object> getData(String username, String surname, String name, String patronymic, String email, String password) {
+    private Map<String, Object> obtainMapWithData(String username, String surname, String name, String patronymic, String email, String password) {
         Map<String, Object> data = new HashMap<>();
         data.put("username", valueOrEmpty(username));
         data.put("surname", valueOrEmpty(surname));
@@ -195,7 +195,7 @@ public class MailServiceImpl implements MailService {
         return data;
     }
 
-    private String getPassword(UserForm user) {
+    private String obtainPassword(UserForm user) {
         String password = null;
         if (user.getPassword() != null)
             password = user.getPassword();
