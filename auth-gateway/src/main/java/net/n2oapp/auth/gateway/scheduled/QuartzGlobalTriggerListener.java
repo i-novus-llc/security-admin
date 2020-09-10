@@ -32,6 +32,7 @@ public class QuartzGlobalTriggerListener implements TriggerListener {
 
     @Override
     public void triggerFired(Trigger trigger, JobExecutionContext jobExecutionContext) {
+        //operation not supported
     }
 
     @Override
@@ -53,10 +54,12 @@ public class QuartzGlobalTriggerListener implements TriggerListener {
 
     @Override
     public void triggerMisfired(Trigger trigger) {
+        //operation not supported
     }
 
     @Override
     public void triggerComplete(Trigger trigger, JobExecutionContext jobExecutionContext, Trigger.CompletedExecutionInstruction completedExecutionInstruction) {
+        //operation not supported
     }
 
     private boolean isIgnoringJob(JobKey jobKey) {
