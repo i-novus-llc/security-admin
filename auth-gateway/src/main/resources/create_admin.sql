@@ -1,5 +1,10 @@
 INSERT INTO sec.system(code, name) VALUES('access', 'Единая подсистема прав доступа');
 
+INSERT INTO sec.application(code, name, system_code) VALUES ('admin-web','Веб-модуль единой подсистемы прав доступа','access');
+
+INSERT INTO sec.client(client_id, grant_types, redirect_uris)
+	VALUES ('admin-web', 'authorization_code,client_credentials', '*');
+
 INSERT INTO sec.permission(name, code, system_code) VALUES('Пользователи', 'access.admin.user','access') on conflict on constraint permission_pkey do nothing;
 INSERT INTO sec.permission(name, code, system_code, parent_code) VALUES('Просмотр пользователей', 'access.admin.user.read','access', 'access.admin.user') on conflict on constraint permission_pkey do nothing;
 INSERT INTO sec.permission(name, code, system_code, parent_code) VALUES('Добавление и редактирование пользователей', 'access.admin.user.edit','access', 'access.admin.user') on conflict on constraint permission_pkey do nothing;
