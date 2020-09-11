@@ -9,7 +9,6 @@ import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -28,7 +27,6 @@ import static org.junit.Assert.*;
  */
 @Ignore
 @RunWith(SpringRunner.class)
-@SpringBootConfiguration
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, classes = SsoKeycloakConfiguration.class, properties = {
         "access.keycloak.serverUrl=http://127.0.0.1:8085/auth", "access.keycloak.adminClientSecret=177b14bc-ad98-46bc-ac32-2c0f424a8a52"
 })
