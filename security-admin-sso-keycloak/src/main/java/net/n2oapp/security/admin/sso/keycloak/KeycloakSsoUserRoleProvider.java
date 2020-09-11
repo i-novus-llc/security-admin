@@ -127,6 +127,11 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
     }
 
     @Override
+    public List<Role> getAllRoles() {
+        return roleService.getAllRoles().stream().map(this::mapRoleRepresentation).collect(Collectors.toList());
+    }
+
+    @Override
     public Role createRole(Role role) {
         try {
             roleService.createRole(map(role));
@@ -203,6 +208,15 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
             kUser.setCredentials(Arrays.asList(passwordCred));
         }
         return kUser;
+    }
+
+    private Role mapRoleRepresentation(RoleRepresentation roleRepresentation) {
+        if (roleRepresentation == null)
+            return null;
+        Role role = new Role();
+        role.setCode(roleRepresentation.getName());
+        role.setDescription(roleRepresentation.getDescription());
+        return role;
     }
 
     private RoleRepresentation map(Role role) {

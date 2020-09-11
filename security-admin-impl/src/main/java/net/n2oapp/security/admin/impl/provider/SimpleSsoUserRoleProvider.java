@@ -4,6 +4,8 @@ import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.SsoUser;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 
+import java.util.List;
+
 /**
  * Дефолтная реализация
  */
@@ -32,6 +34,11 @@ public class SimpleSsoUserRoleProvider implements SsoUserRoleProvider {
     @Override
     public void changeActivity(SsoUser user) {
 
+    }
+
+    @Override
+    public List<Role> getAllRoles() {
+        return null;
     }
 
     @Override
