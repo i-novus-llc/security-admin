@@ -39,7 +39,8 @@
                     </dependencies>
                 </input-text>
 
-                <input-text id="refreshTokenValidityMinutes" label="Максимальное время действия  refresh токена (минуты)"
+                <input-text id="refreshTokenValidityMinutes"
+                            label="Максимальное время действия  refresh токена (минуты)"
                             domain="integer"
                             description="Если не указано иное, используется значение по умолчанию (1440 минут)">
                     <dependencies>
@@ -104,9 +105,14 @@
                     </dependencies>
                 </input-text>
 
-                <input-select-tree id="clientRoles" ajax="false"
-                                   label="Настройки прав доступа от имени системы (приложения)" checkboxes="true" parent-field-id="systemId"
-                                   query-id="roleGroupedBySystem" search-field-id="name" size="1000">
+                <input-select-tree id="clientRoles"
+                                   ajax="false"
+                                   label="Настройки прав доступа от имени системы (приложения)"
+                                   checkboxes="true"
+                                   parent-field-id="systemId"
+                                   query-id="roleGroupedBySystem"
+                                   search-field-id="name"
+                                   size="1000">
                     <dependencies>
                         <visibility on="enableClient">
                             enableClient
