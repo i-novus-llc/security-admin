@@ -125,7 +125,7 @@ public class UserServiceImpl implements UserService {
         if (Boolean.TRUE.equals(user.getSendOnEmail()) && user.getEmail() != null) {
             mailService.sendWelcomeMail(user);
         }
-        return model(savedUser);
+        return audit("audit.userCreate", model(savedUser));
     }
 
     @Override
