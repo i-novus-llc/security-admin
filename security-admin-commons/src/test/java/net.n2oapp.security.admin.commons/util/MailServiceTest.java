@@ -1,30 +1,33 @@
 package net.n2oapp.security.admin.commons.util;
 
-import com.icegreen.greenmail.junit.GreenMailRule;
-import com.icegreen.greenmail.util.ServerSetup;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.api.service.MailService;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.mail.MessagingException;
+import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
+import java.util.Properties;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {MailServiceImpl.class})
-@Import(MailConfiguration.class)
 @PropertySource("classpath:mail.properties")
 @EnableAutoConfiguration
 public class MailServiceTest {
@@ -32,12 +35,16 @@ public class MailServiceTest {
     @Autowired
     private MailService mailService;
 
-    @Rule
-    public final GreenMailRule greenMail = new GreenMailRule(new ServerSetup(2525, null, "smtp"));
+    @MockBean
+    private JavaMailSender emailSender;
+
+    @Captor
+    private ArgumentCaptor<MimeMessage> mimeMessageArgumentCaptor;
 
     @Before
     public void before() {
-        greenMail.reset();
+        Mockito.doNothing().when(emailSender).send(mimeMessageArgumentCaptor.capture());
+        Mockito.doReturn(new MimeMessage(Session.getDefaultInstance(new Properties()))).when(emailSender).createMimeMessage();
     }
 
     @Test
@@ -51,11 +58,9 @@ public class MailServiceTest {
         user.setEmail("email");
 
         mailService.sendWelcomeMail(user);
-        assertTrue(greenMail.waitForIncomingEmail(1000, 1));
-        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
-        assertEquals(1, receivedMessages.length);
+
         try {
-            Object content = receivedMessages[0].getContent();
+            Object content = mimeMessageArgumentCaptor.getValue().getContent();
             assertTrue(content.toString().contains("<p>Уважаемый <span>surname</span> <span>name</span>!</p>"));
             assertTrue(content.toString().contains("<p>Вы зарегистрированы в системе.</p>"));
             assertTrue(content.toString().contains("<p>Логин для входа: <span>username</span></p>"));
@@ -66,14 +71,9 @@ public class MailServiceTest {
         user.setPassword(null);
         user.setTemporaryPassword("12345");
 
-        greenMail.reset();
-
         mailService.sendWelcomeMail(user);
-        assertTrue(greenMail.waitForIncomingEmail(1000, 1));
-        receivedMessages = greenMail.getReceivedMessages();
-        assertEquals(1, receivedMessages.length);
         try {
-            Object content = receivedMessages[0].getContent();
+            Object content = mimeMessageArgumentCaptor.getValue().getContent();
             assertTrue(content.toString().contains("<p>Уважаемый <span>surname</span> <span>name</span>!</p>"));
             assertTrue(content.toString().contains("<p>Логин для входа: <span>username</span></p>"));
             assertTrue(content.toString().contains("<p>Временный пароль:"));
@@ -94,10 +94,8 @@ public class MailServiceTest {
 
         mailService.sendResetPasswordMail(user);
 
-        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
-        assertEquals(1, receivedMessages.length);
         try {
-            Object content = receivedMessages[0].getContent();
+            Object content = mimeMessageArgumentCaptor.getValue().getContent();
             assertTrue(content.toString().contains("<p>Уважаемый <span>username</span>!</p>"));
             assertTrue(content.toString().contains("<p>Ваш пароль был сброшен.</p>"));
             assertTrue(content.toString().contains("<p>Временный пароль:"));
@@ -119,10 +117,8 @@ public class MailServiceTest {
 
         mailService.sendChangeActivateMail(user);
 
-        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
-        assertEquals(1, receivedMessages.length);
         try {
-            Object content = receivedMessages[0].getContent();
+            Object content = mimeMessageArgumentCaptor.getValue().getContent();
             assertTrue(content.toString().contains("<p>Уважаемый <span>surname</span> <span>name</span> <span>patronymic</span>!</p>"));
             assertTrue(content.toString().contains("Признак активности Вашей учетной записи изменен на \"<span>Да</span>\"."));
         } catch (IOException | MessagingException e) {
@@ -141,10 +137,8 @@ public class MailServiceTest {
 
         mailService.sendUserDeletedMail(user);
 
-        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
-        assertEquals(1, receivedMessages.length);
         try {
-            Object content = receivedMessages[0].getContent();
+            Object content = mimeMessageArgumentCaptor.getValue().getContent();
             assertTrue(content.toString().contains("<p>Уважаемый <span>surname</span> <span>name</span> <span>patronymic</span>!</p>"));
             assertTrue(content.toString().contains("<p>Ваша учетная запись удалена.</p>"));
         } catch (IOException | MessagingException e) {

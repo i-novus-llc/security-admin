@@ -1,17 +1,20 @@
 package net.n2oapp.security.admin.service;
 
-import com.icegreen.greenmail.junit.GreenMailRule;
-import com.icegreen.greenmail.util.ServerSetup;
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import net.n2oapp.security.admin.api.model.*;
 import net.n2oapp.security.admin.impl.service.UserServiceImpl;
+import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,12 +22,14 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.mail.MessagingException;
+import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,8 +50,17 @@ public class UserServiceImplTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Rule
-    public final GreenMailRule greenMail = new GreenMailRule(new ServerSetup(2525, null, "smtp"));
+    @MockBean
+    private JavaMailSender emailSender;
+
+    @Captor
+    private ArgumentCaptor<MimeMessage> mimeMessageArgumentCaptor;
+
+    @Before
+    public void before() {
+        Mockito.doNothing().when(emailSender).send(mimeMessageArgumentCaptor.capture());
+        Mockito.doReturn(new MimeMessage(Session.getDefaultInstance(new Properties()))).when(emailSender).createMimeMessage();
+    }
 
     @Test
     public void testUp() throws Exception {
@@ -83,10 +97,8 @@ public class UserServiceImplTest {
         assertEquals("patronymic", result.getPatronymic());
         assertTrue(result.getIsActive());
 
-        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
-        assertEquals(1, receivedMessages.length);
         try {
-            Object content = receivedMessages[0].getContent();
+            Object content = mimeMessageArgumentCaptor.getValue().getContent();
             assertTrue(content.toString().contains("<p>Уважаемый <span>surname</span> <span>name</span>!</p>"));
             assertTrue(content.toString().contains("<p>Вы зарегистрированы в системе.</p>"));
             assertTrue(content.toString().contains("<p>Логин для входа: <span>testUser</span></p>"));
@@ -106,10 +118,9 @@ public class UserServiceImplTest {
         user.setIsActive(true);
         user.setSendPasswordToEmail(true);
         User result = service.register(user);
-        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
-        assertEquals(1, receivedMessages.length);
+
         try {
-            Object content = receivedMessages[0].getContent();
+            Object content = mimeMessageArgumentCaptor.getValue().getContent();
             assertTrue(content.toString().contains("<p>Уважаемый <span>surname</span> <span>name</span>!</p>"));
             assertTrue(content.toString().contains("<p>Логин для входа: <span>testUser28</span></p>"));
             assertTrue(content.toString().contains("<p>Временный пароль:"));
@@ -127,6 +138,14 @@ public class UserServiceImplTest {
 
         Integer userId = result.getId();
         User changedUser = service.changeActive(userId);
+
+        try {
+            Object content = mimeMessageArgumentCaptor.getValue().getContent();
+            assertTrue(content.toString().contains("<p>Уважаемый <span>surname</span> <span>name</span> <span>patronymic</span>!</p>"));
+            assertTrue(content.toString().contains("Признак активности Вашей учетной записи изменен на \"<span>Нет</span>\"."));
+        } catch (IOException | MessagingException e) {
+            fail();
+        }
 
         assertEquals("testUser28", changedUser.getUsername());
         assertEquals("test2@test.ru", changedUser.getEmail());
@@ -149,7 +168,6 @@ public class UserServiceImplTest {
         user.setIsActive(true);
         user.setSendPasswordToEmail(true);
         User result = service.register(user);
-        greenMail.reset();
         assertEquals("testUser29", result.getUsername());
         assertEquals("test2@test.ru", result.getEmail());
         assertEquals("name", result.getName());
@@ -164,10 +182,8 @@ public class UserServiceImplTest {
 
         service.resetPassword(userForm);
 
-        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
-        assertEquals(1, receivedMessages.length);
         try {
-            Object content = receivedMessages[0].getContent();
+            Object content = mimeMessageArgumentCaptor.getValue().getContent();
             assertTrue(content.toString().contains("<p>Уважаемый <span>testUser29</span>!</p>"));
             assertTrue(content.toString().contains("<p>Ваш пароль был сброшен.</p>"));
             assertTrue(content.toString().contains("<p>Временный пароль:"));
@@ -191,14 +207,12 @@ public class UserServiceImplTest {
     @Test
     public void checkValidations() {
         User user = service.create(newUser());
-        assertTrue(greenMail.waitForIncomingEmail(1000, 1));
         checkValidationEmail(user);
         checkValidationPassword(user);
         checkValidationUsername(user);
         service.delete(user.getId());
         service.setEmailAsUsername(Boolean.TRUE);
         user = service.create(newUser());
-        assertTrue(greenMail.waitForIncomingEmail(1000, 1));
         checkValidationEmail(user);
         checkValidationPassword(user);
         service.delete(user.getId());
@@ -207,7 +221,6 @@ public class UserServiceImplTest {
         userForm.setEmail(null);
         service.setEmailAsUsername(Boolean.FALSE);
         user = service.create(userForm);
-        assertTrue(greenMail.waitForIncomingEmail(1000, 1));
         checkValidationEmail(user);
         checkValidationPassword(user);
 
