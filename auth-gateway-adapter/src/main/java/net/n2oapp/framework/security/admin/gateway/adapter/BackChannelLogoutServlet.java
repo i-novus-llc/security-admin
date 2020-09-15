@@ -24,15 +24,15 @@ public class BackChannelLogoutServlet extends HttpServlet {
     private ObjectMapper mapper = new ObjectMapper();
 
     private SessionRegistry sessionRegistry;
-    private JwtHelperHolder jwtHelperHolder;
+    private final JwtHelperHolder jwtHelperHolder;
 
-    public BackChannelLogoutServlet(SessionRegistry sessionRegistry, String tokenKeyEndpointUrl, JwtHelperHolder jwtHelperHolder) {
+    public BackChannelLogoutServlet(SessionRegistry sessionRegistry, JwtHelperHolder jwtHelperHolder) {
         this.sessionRegistry = sessionRegistry;
         this.jwtHelperHolder = jwtHelperHolder;
     }
 
     public BackChannelLogoutServlet(SessionRegistry sessionRegistry, String tokenKeyEndpointUrl) {
-        this(sessionRegistry, tokenKeyEndpointUrl, new JwtHelperHolder(tokenKeyEndpointUrl));
+        this(sessionRegistry, new JwtHelperHolder(tokenKeyEndpointUrl));
     }
 
     @Override

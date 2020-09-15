@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -84,11 +83,7 @@ public class TestApp {
                 String.class
         );
 
-        assertEquals(sessionRegistry.getAllSessions(user, true).size(), 1);
-        assertEquals(sessionRegistry.getAllSessions(user, true).get(0).isExpired(), true);
-    }
-
-    public static void main(String[] args) {
-        SpringApplication.run(TestApp.class, args);
+        assertEquals(1, sessionRegistry.getAllSessions(user, true).size());
+        assertEquals(true, sessionRegistry.getAllSessions(user, true).get(0).isExpired());
     }
 }

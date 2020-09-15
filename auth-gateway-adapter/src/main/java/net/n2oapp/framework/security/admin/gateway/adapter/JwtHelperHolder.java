@@ -24,7 +24,7 @@ public class JwtHelperHolder {
 
     private synchronized SignatureVerifier getVerifier() {
         if (verifier == null) {
-            Map response = restTemplate.getForObject(tokenKeyEndpointUrl, Map.class);
+            Map<String, Object> response = restTemplate.getForObject(tokenKeyEndpointUrl, Map.class);
             if (response != null && response.get("value") != null)
                 verifier = new RsaVerifier((String) response.get("value"));
         }
