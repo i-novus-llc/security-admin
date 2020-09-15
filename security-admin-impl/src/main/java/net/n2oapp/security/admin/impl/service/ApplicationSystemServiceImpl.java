@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 import static net.n2oapp.security.admin.impl.service.ApplicationSystemExportServiceImpl.APPLICATION_REF_BOOK_CODE;
 import static net.n2oapp.security.admin.impl.service.ApplicationSystemExportServiceImpl.SYSTEM_REF_BOOK_CODE;
 
@@ -55,7 +56,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     private PermissionRepository permissionRepository;
     @Autowired
     private AuditHelper audit;
-    @Autowired
+    @Autowired(required = false)
     private RdmChangeDataClient rdmChangeDataClient;
     @Autowired
     private ClientService clientService;
@@ -68,7 +69,10 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
         checkServiceUniq(service.getCode());
         checkSystemExists(service.getSystemCode());
         Application result = model(applicationRepository.save(entity(service)));
-        rdmChangeDataClient.changeData(APPLICATION_REF_BOOK_CODE, singletonList(result), emptyList());
+
+        if(nonNull(rdmChangeDataClient))
+            rdmChangeDataClient.changeData(APPLICATION_REF_BOOK_CODE, singletonList(result), emptyList());
+
         return audit("audit.applicationCreate", result);
     }
 
@@ -80,7 +84,10 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
             clientService.persist(service.getClient());
         }
         Application result = model(applicationRepository.save(entity(service)));
-        rdmChangeDataClient.changeData(APPLICATION_REF_BOOK_CODE, singletonList(result), emptyList());
+
+        if(nonNull(rdmChangeDataClient))
+            rdmChangeDataClient.changeData(APPLICATION_REF_BOOK_CODE, singletonList(result), emptyList());
+
         return audit("audit.applicationUpdate", result);
     }
 
@@ -91,7 +98,10 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
             throw new UserException("exception.applicationNotFound");
         applicationRepository.deleteById(code);
         Application model = model(app);
-        rdmChangeDataClient.changeData(APPLICATION_REF_BOOK_CODE, emptyList(), singletonList(model));
+
+        if(nonNull(rdmChangeDataClient))
+            rdmChangeDataClient.changeData(APPLICATION_REF_BOOK_CODE, emptyList(), singletonList(model));
+
         audit("audit.applicationDelete", model);
     }
 
@@ -120,14 +130,20 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     public AppSystem createSystem(AppSystemForm system) {
         checkSystemUniq(system.getCode());
         AppSystem result = model(systemRepository.save(entity(system)));
-        rdmChangeDataClient.changeData(SYSTEM_REF_BOOK_CODE, singletonList(result), emptyList());
+
+        if(nonNull(rdmChangeDataClient))
+            rdmChangeDataClient.changeData(SYSTEM_REF_BOOK_CODE, singletonList(result), emptyList());
+
         return audit("audit.appSystemCreate", result);
     }
 
     @Override
     public AppSystem updateSystem(AppSystemForm system) {
         AppSystem result = model(systemRepository.save(entity(system)));
-        rdmChangeDataClient.changeData(SYSTEM_REF_BOOK_CODE, singletonList(result), emptyList());
+
+        if(nonNull(rdmChangeDataClient))
+            rdmChangeDataClient.changeData(SYSTEM_REF_BOOK_CODE, singletonList(result), emptyList());
+
         return audit("audit.appSystemUpdate", result);
     }
 
@@ -138,7 +154,10 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
         systemRepository.deleteById(code);
         if (sys != null) {
             AppSystem model = model(sys);
-            rdmChangeDataClient.changeData(SYSTEM_REF_BOOK_CODE, emptyList(), singletonList(model));
+
+            if(nonNull(rdmChangeDataClient))
+                rdmChangeDataClient.changeData(SYSTEM_REF_BOOK_CODE, emptyList(), singletonList(model));
+
             audit("audit.appSystemDelete", model);
         }
     }
