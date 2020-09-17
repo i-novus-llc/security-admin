@@ -26,7 +26,7 @@
 - ActiveMQ - опционально
 
 === Стек технологий
-- java 14
+- Java 14
 - JDBC
 - JMS
 - Spring Boot 2.1
