@@ -22,7 +22,7 @@
 - PostgreSQL 12
 - Keycloak 6+
 - N2O Audit 2
-- RDM 1.128.2
+- N2O RDM 1.128.2
 - ActiveMQ - опционально
 
 === Стек технологий
