@@ -17,6 +17,24 @@
 - Интеграция со сторонними серверами SSO (Keycloak, ESIA)
 - Настраиваемый пользовательский интерфейс
 
+=== Требования
+- Openjdk 14
+- PostgreSQL 12
+- Keycloak 6+
+- N2O Audit 2
+- RDM 1.128.2
+- ActiveMQ - опционально
+
+=== Стек технологий
+- java 14
+- JDBC
+- JMS
+- Spring Boot 2.1
+- Apache CXF 3.3
+- Liquibase 3.6.2
+- N2O Platform 3
+- N2O UI Framework 7
+
 == Simple Auth
 В этом разделе рассказывается как подключить простую авторизацию
 к вашему приложению.
