@@ -24,15 +24,15 @@ public class BackChannelLogoutServlet extends HttpServlet {
     private ObjectMapper mapper = new ObjectMapper();
 
     private SessionRegistry sessionRegistry;
-    private final JwtHelperHolder jwtHelperHolder;
+    private final JwtVerifier jwtVerifier;
 
-    public BackChannelLogoutServlet(SessionRegistry sessionRegistry, JwtHelperHolder jwtHelperHolder) {
+    public BackChannelLogoutServlet(SessionRegistry sessionRegistry, JwtVerifier jwtVerifier) {
         this.sessionRegistry = sessionRegistry;
-        this.jwtHelperHolder = jwtHelperHolder;
+        this.jwtVerifier = jwtVerifier;
     }
 
     public BackChannelLogoutServlet(SessionRegistry sessionRegistry, String tokenKeyEndpointUrl) {
-        this(sessionRegistry, new JwtHelperHolder(tokenKeyEndpointUrl));
+        this(sessionRegistry, new JwtVerifier(tokenKeyEndpointUrl));
     }
 
     @Override
@@ -42,7 +42,7 @@ public class BackChannelLogoutServlet extends HttpServlet {
 
     private void handleLogout(HttpServletRequest req) {
         String token = req.getParameterMap().get("logout_token")[0];
-        Jwt jwt = jwtHelperHolder.decodeAndVerify(token);
+        Jwt jwt = jwtVerifier.decodeAndVerify(token);
         Map<String, Object> claims;
         try {
             claims = mapper.readValue(jwt.getClaims(), new TypeReference<Map<String, Object>>() {

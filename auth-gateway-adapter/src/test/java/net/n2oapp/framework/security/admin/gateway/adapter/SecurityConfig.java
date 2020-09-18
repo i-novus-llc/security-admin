@@ -18,8 +18,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public ServletRegistrationBean servletRegistrationBean(SessionRegistry sessionRegistry, JwtHelperHolder jwtHelperHolder) {
-        ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean(new BackChannelLogoutServlet(sessionRegistry, jwtHelperHolder), "/backchannel_logout");
+    public ServletRegistrationBean servletRegistrationBean(SessionRegistry sessionRegistry, JwtVerifier jwtVerifier) {
+        ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean(new BackChannelLogoutServlet(sessionRegistry, jwtVerifier), "/backchannel_logout");
         return servletRegistrationBean;
     }
 

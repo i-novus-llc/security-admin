@@ -42,7 +42,7 @@ public class TestApp {
     private SessionRegistry sessionRegistry;
 
     @MockBean
-    private JwtHelperHolder jwtHelperHolder;
+    private JwtVerifier jwtVerifier;
 
     @Test
     public void test() {
@@ -67,7 +67,7 @@ public class TestApp {
                 return new byte[0];
             }
         };
-        when(jwtHelperHolder.decodeAndVerify(any())).thenReturn(jwt);
+        when(jwtVerifier.decodeAndVerify(any())).thenReturn(jwt);
         RestTemplate restTemplate = new RestTemplate();
         User user = new User("test_user", "qwerty", new ArrayList<>());
         sessionRegistry.registerNewSession("test_id", user);

@@ -8,13 +8,13 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
-public class JwtHelperHolder {
+public class JwtVerifier {
 
     private RestTemplate restTemplate = new RestTemplate();
     private volatile SignatureVerifier verifier;
     private String tokenKeyEndpointUrl;
 
-    public JwtHelperHolder(String tokenKeyEndpointUrl) {
+    public JwtVerifier(String tokenKeyEndpointUrl) {
         this.tokenKeyEndpointUrl = tokenKeyEndpointUrl;
     }
 
@@ -22,13 +22,16 @@ public class JwtHelperHolder {
         return JwtHelper.decodeAndVerify(token, getVerifier());
     }
 
-    private synchronized SignatureVerifier getVerifier() {
+    private SignatureVerifier getVerifier() {
         if (verifier == null) {
-            Map<String, Object> response = restTemplate.getForObject(tokenKeyEndpointUrl, Map.class);
-            if (response != null && response.get("value") != null)
-                verifier = new RsaVerifier((String) response.get("value"));
+            synchronized (this) {
+                if (verifier == null) {
+                    Map response = restTemplate.getForObject(tokenKeyEndpointUrl, Map.class);
+                    if (response != null && response.get("value") != null)
+                        verifier = new RsaVerifier((String) response.get("value"));
+                }
+            }
         }
-
         return verifier;
     }
 }
