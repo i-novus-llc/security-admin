@@ -28,6 +28,12 @@ INSERT INTO sec.role(id, code, name, description, user_level) VALUES (102, '102'
 INSERT INTO sec.role_permission(role_id, permission_code) VALUES (101, 'test-code1');
 INSERT INTO sec.role_permission(role_id, permission_code) VALUES (102, 'test-code2');
 
+INSERT INTO sec.department(id, code, name, is_deleted)
+        VALUES (1, 'test_code', 'test_name', false);
+
+INSERT INTO sec.region(id, code, name, okato, is_deleted)
+        VALUES (1, 'test_code', 'test_name', 'test_okato', false);
+
 INSERT INTO sec.organization(code, short_name, full_name, ogrn, okpo, legal_address, email, inn)
         VALUES ('test_code', 'test_short_name', 'test_full_name' ,'test_ogrn', 'test_okpo', 'test_legal_address', 'test_email', 'test_inn'),
                ('test_code2', 'test_short_name2' , 'test_full_name2' ,'test_ogrn2', 'test_okpo2', 'test_legal_address2', 'test_email2', 'test_inn2'),

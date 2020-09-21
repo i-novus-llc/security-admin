@@ -28,7 +28,9 @@ import java.io.IOException;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
@@ -279,6 +281,114 @@ public class UserServiceImplTest {
         user.setAccountTypeCode("testAccountTypeCode");
         service.register(user);
         assertThat(service.findAll(criteria).getTotalElements()).isEqualTo(1);
+    }
+
+    @Test
+    public void testPatch() {
+        UserForm userForm = new UserForm();
+        userForm.setUsername("username");
+        userForm.setEmail("username@username.username");
+        userForm.setAccountTypeCode("testAccountTypeCode");
+        userForm.setPassword("1234ABCabc,");
+        userForm.setPasswordCheck(userForm.getPassword());
+        userForm.setDepartmentId(1);
+        userForm.setName("name");
+        userForm.setSurname("surname");
+        userForm.setPatronymic("patronymic");
+        userForm.setRegionId(1);
+        userForm.setSnils("124-985-753 00");
+
+        User result = service.create(userForm);
+
+        assertEquals(1, result.getRoles().size());
+        assertEquals("username", result.getUsername());
+        assertEquals("surname name patronymic", result.getFio());
+        assertEquals("username@username.username", result.getEmail());
+        assertEquals("surname", result.getSurname());
+        assertEquals("name", result.getName());
+        assertEquals("patronymic", result.getPatronymic());
+        assertEquals("124-985-753 00", result.getSnils());
+        assertEquals(UserLevel.PERSONAL, result.getUserLevel());
+        assertEquals(UserStatus.REGISTERED, result.getStatus());
+        assertThat(result.getDepartment().getId()).isEqualTo(1);
+        assertThat(result.getRegion().getId()).isEqualTo(1);
+
+        Map<String, Object> userInfo = new HashMap<>();
+
+        Map<String, Object> finalUserInfo = userInfo;
+        Throwable thrown = catchThrowable(() -> {
+            service.patch(finalUserInfo);
+        });
+        assertEquals("exception.userWithoutId", thrown.getMessage());
+
+        userInfo.put("id", result.getId());
+
+        result = service.patch(userInfo);
+
+        assertEquals(1, result.getRoles().size());
+        assertEquals("username", result.getUsername());
+        assertEquals("surname name patronymic", result.getFio());
+        assertEquals("username@username.username", result.getEmail());
+        assertEquals("surname", result.getSurname());
+        assertEquals("name", result.getName());
+        assertEquals("patronymic", result.getPatronymic());
+        assertEquals("124-985-753 00", result.getSnils());
+        assertEquals(UserLevel.PERSONAL, result.getUserLevel());
+        assertEquals(UserStatus.REGISTERED, result.getStatus());
+        assertThat(result.getDepartment().getId()).isEqualTo(1);
+        assertThat(result.getRegion().getId()).isEqualTo(1);
+
+        userInfo.put("username", "supapupausername");
+        userInfo.put("surname", "supasurname");
+
+        result = service.patch(userInfo);
+
+        assertEquals(1, result.getRoles().size());
+        assertEquals("supapupausername", result.getUsername());
+        assertEquals("supasurname name patronymic", result.getFio());
+        assertEquals("username@username.username", result.getEmail());
+        assertEquals("supasurname", result.getSurname());
+        assertEquals("name", result.getName());
+        assertEquals("patronymic", result.getPatronymic());
+        assertEquals("124-985-753 00", result.getSnils());
+        assertEquals(UserLevel.PERSONAL, result.getUserLevel());
+        assertEquals(UserStatus.REGISTERED, result.getStatus());
+        assertThat(result.getDepartment().getId()).isEqualTo(1);
+        assertThat(result.getRegion().getId()).isEqualTo(1);
+
+        userInfo = new HashMap<>();
+        userInfo.put("id", result.getId());
+        userInfo.put("username", "username");
+        userInfo.put("email", "username@username.username");
+        userInfo.put("accountTypeCode", "testAccountTypeCode");
+        userInfo.put("password", "1234ABCabc,");
+        userInfo.put("passwordCheck", "1234ABCabc,");
+        userInfo.put("departmentId", 1);
+        userInfo.put("name", "name");
+        userInfo.put("surname", "surname");
+        userInfo.put("patronymic", "patronymic");
+        userInfo.put("regionId", 1);
+        userInfo.put("snils", "124-985-753 00");
+        List<Integer> roles = new ArrayList<>();
+        roles.add(100);
+        userInfo.put("roles", roles);
+
+        result = service.patch(userInfo);
+
+        assertEquals(1, result.getRoles().size());
+        assertEquals("username", result.getUsername());
+        assertEquals("surname name patronymic", result.getFio());
+        assertEquals("username@username.username", result.getEmail());
+        assertEquals("surname", result.getSurname());
+        assertEquals("name", result.getName());
+        assertEquals("patronymic", result.getPatronymic());
+        assertEquals("124-985-753 00", result.getSnils());
+        assertEquals(UserLevel.PERSONAL, result.getUserLevel());
+        assertEquals(UserStatus.REGISTERED, result.getStatus());
+        assertThat(result.getDepartment().getId()).isEqualTo(1);
+        assertThat(result.getRegion().getId()).isEqualTo(1);
+
+        service.delete(result.getId());
     }
 
     private void checkValidationEmail(User user) {
