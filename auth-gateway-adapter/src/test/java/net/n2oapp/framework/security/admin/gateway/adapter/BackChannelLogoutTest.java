@@ -28,12 +28,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@SpringBootTest(classes = TestApp.class,
+@SpringBootTest(classes = BackChannelLogoutTest.class,
         properties = {"spring.cloud.consul.enabled=false"},
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test.properties")
 @SpringBootApplication
-public class TestApp {
+public class BackChannelLogoutTest {
 
     @LocalServerPort
     private String port;
