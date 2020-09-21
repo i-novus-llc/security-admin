@@ -23,20 +23,19 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static org.springframework.util.StringUtils.hasText;
 
 /**
  * Реализация сервиса управления пользователями
  */
 @Transactional
 public class UserServiceImpl implements UserService {
+    public static final String STATUS = "status";
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final AccountTypeRepository accountTypeRepository;
@@ -80,9 +79,10 @@ public class UserServiceImpl implements UserService {
             password = passwordGenerator.generate();
             user.setTemporaryPassword(password);
         }
-        //сохраняем пароль в закодированном виде
+        user.setRoles(excludeDummyRoles(user.getRoles()));
         UserEntity entity = entityForm(new UserEntity(), user);
         String passwordHash = passwordEncoder.encode(password);
+        //сохраняем пароль в закодированном виде
         entity.setPasswordHash(passwordHash);
 
         if (user.getAccountTypeCode() != null) {
@@ -146,15 +146,33 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User update(UserForm user) {
+        return doUpdate(user);
+    }
+
+    @Override
+    public User patch(Map<String, Object> userInfo) {
+        if (userInfo == null)
+            throw new UserException("exception.wrongRequest");
+        if (!userInfo.containsKey("id"))
+            throw new UserException("exception.userWithoutId");
+        UserEntity entity = userRepository.findById(Integer.parseInt(userInfo.get("id").toString())).orElseThrow();
+        UserForm user = obtainUserForm(entity, userInfo);
+        return doUpdate(user);
+    }
+
+    public User doUpdate(UserForm user) {
         validateUsernameEmailSnils(user);
         if (nonNull(user.getPassword())) {
             userValidations.checkPassword(user.getPassword(), user.getPasswordCheck(), user.getId());
         }
         UserEntity entityUser = userRepository.getOne(user.getId());
-        boolean isActiveChanged = !Objects.equals(entityUser.getIsActive(), user.getIsActive());
+        boolean isActiveChanged = false;
+        if (nonNull(user.getIsActive()))
+            isActiveChanged = !Objects.equals(entityUser.getIsActive(), user.getIsActive());
         if (entityUser.getUsername().equals(getContextUserName()) && isActiveChanged) {
             throw new UserException("exception.selfChangeActivity");
         }
+        user.setRoles(excludeDummyRoles(user.getRoles()));
         entityUser = entityForm(entityUser, user);
         // кодируем пароль перед сохранением в бд если он изменился
         if (nonNull(user.getPassword()))
@@ -176,6 +194,7 @@ public class UserServiceImpl implements UserService {
         }
         return audit("audit.userUpdate", result);
     }
+
 
     @Override
     public void delete(Integer id) {
@@ -327,7 +346,7 @@ public class UserServiceImpl implements UserService {
         entity.setRegion(nonNull(model.getRegionId()) ? new RegionEntity(model.getRegionId()) : null);
         entity.setStatus(model.getStatus());
         if (nonNull(model.getRoles()))
-            entity.setRoleList(model.getRoles().stream().filter(roleId -> roleId > 0).map(RoleEntity::new).collect(Collectors.toList()));
+            entity.setRoleList(model.getRoles().stream().map(RoleEntity::new).collect(Collectors.toList()));
         return entity;
     }
 
@@ -397,7 +416,8 @@ public class UserServiceImpl implements UserService {
         if (nonNull(entity.getPatronymic())) {
             builder.append(entity.getPatronymic());
         }
-        model.setFio(builder.toString());
+        String fio = builder.toString().strip();
+        model.setFio(hasText(fio) ? fio : null);
         if (nonNull(entity.getRoleList())) {
             model.setRoles(entity.getRoleList().stream().map(e -> {
                 RoleEntity re = roleRepository.findById(e.getId()).get();
@@ -470,5 +490,43 @@ public class UserServiceImpl implements UserService {
     private User audit(String action, User user) {
         audit.audit(action, user, "" + user.getId(), "audit.user");
         return user;
+    }
+
+    private UserForm obtainUserForm(UserEntity entity, Map<String, Object> userInfo) {
+        UserForm userForm = new UserForm();
+        userForm.setId((Integer) userInfo.getOrDefault("id", entity.getId()));
+        userForm.setExtSys((String) userInfo.getOrDefault("extSys", entity.getExtSys()));
+        userForm.setExtUid((String) userInfo.getOrDefault("extUid", entity.getExtUid()));
+        userForm.setUsername((String) userInfo.getOrDefault("username", entity.getUsername()));
+        userForm.setEmail((String) userInfo.getOrDefault("email", entity.getEmail()));
+        userForm.setSurname((String) userInfo.getOrDefault("surname", entity.getSurname()));
+        userForm.setName((String) userInfo.getOrDefault("name", entity.getName()));
+        userForm.setPatronymic((String) userInfo.getOrDefault("patronymic", entity.getPatronymic()));
+        userForm.setPassword((String) userInfo.getOrDefault("password", null));
+        userForm.setPasswordCheck((String) userInfo.getOrDefault("passwordCheck", null));
+        userForm.setTemporaryPassword((String) userInfo.getOrDefault("temporaryPassword", null));
+        userForm.setSendOnEmail((Boolean) userInfo.getOrDefault("sendOnEmail", false));
+        userForm.setIsActive((Boolean) userInfo.getOrDefault("isActive",  entity.getIsActive()));
+        userForm.setRoles((List<Integer>) userInfo.getOrDefault("roles",  entity.getRoleList().stream().map(RoleEntity::getId).collect(Collectors.toList())));
+        userForm.setSnils((String) userInfo.getOrDefault("snils", entity.getSnils()));
+        userForm.setUserLevel((String) userInfo.getOrDefault("userLevel", entity.getUserLevel() != null ? entity.getUserLevel().getName() : null));
+        userForm.setDepartmentId((Integer) userInfo.getOrDefault("departmentId", entity.getDepartment() != null ? entity.getDepartment().getId() : null));
+        userForm.setRegionId((Integer) userInfo.getOrDefault("regionId", entity.getRegion() != null ? entity.getRegion().getId() : null));
+        userForm.setOrganizationId((Integer) userInfo.getOrDefault("organizationId",  entity.getOrganization() != null ? entity.getOrganization().getId() : null));
+        userForm.setStatus(userInfo.containsKey(STATUS) ? UserStatus.valueOf((String) userInfo.get(STATUS)) : entity.getStatus());
+        userForm.setAccountTypeCode((String) userInfo.getOrDefault("accountTypeCode",null));
+        return userForm;
+    }
+
+    /**
+     * Значение roleId > 0, потому что в наборе могут присутствовать dummy роли, которые не должны быть учтены
+     * и имеют отрицательное значение id.
+     * @param roles список ролей пользователя
+     * @return отфильтрованный список ролей
+     */
+    private List<Integer> excludeDummyRoles(List<Integer> roles) {
+        if (nonNull(roles))
+            return roles.stream().filter(roleId -> roleId > 0).collect(Collectors.toList());
+        return new ArrayList<>();
     }
 }
