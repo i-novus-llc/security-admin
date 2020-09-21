@@ -40,6 +40,9 @@ public class MailServiceImpl implements MailService {
     @Value("${sec.password.mail.welcome.resource.name}")
     private String welcomeMailResource;
 
+    @Value("${sec.mail.welcome.resource.name}")
+    private String welcomeUserWithPassword;
+
     /**
      * Тема приветственного сообщения
      */
@@ -101,21 +104,19 @@ public class MailServiceImpl implements MailService {
     private String mailMessageFrom;
 
     /**
-     * Отправка сообщения на почту при успешном создании пользователя
+     * Отправка сообщения на почту при успешном создании пользователя с временным паролем
      *
      * @param user Пользователь
      */
     @Override
     public void sendWelcomeMail(UserForm user) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("username", user.getUsername());
-        data.put("surname", valueOrEmpty(user.getSurname()));
-        data.put("name", valueOrEmpty(user.getName()));
-        data.put("patronymic", valueOrEmpty(user.getPatronymic()));
-        data.put("password", user.getPassword() != null ? user.getPassword() : user.getTemporaryPassword());
-        data.put("email", user.getEmail());
-
-        sendMail(data, welcomeMailSubject, welcomeMailResource);
+        String password = obtainPassword(user);
+        Map<String, Object> data = buildEmailInfo(user.getUsername(), user.getSurname(), user.getName(),
+                user.getPatronymic(), user.getEmail(), password);
+        if (user.getTemporaryPassword() != null)
+            sendMail(data, welcomeMailSubject, welcomeMailResource);
+        else if (user.getPassword() != null)
+            sendMail(data, welcomeMailSubject, welcomeUserWithPassword);
     }
 
     /**
@@ -125,11 +126,9 @@ public class MailServiceImpl implements MailService {
      */
     @Override
     public void sendResetPasswordMail(UserForm user) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("username", user.getUsername());
-        data.put("password", user.getPassword() != null ? user.getPassword() : user.getTemporaryPassword());
-        data.put("email", user.getEmail());
-
+        String password = obtainPassword(user);
+        Map<String, Object> data = buildEmailInfo(user.getUsername(), user.getSurname(), user.getName(),
+                user.getPatronymic(), user.getEmail(), password);
         sendMail(data, resetPasswordMailSubject, resetPasswordMailResource);
     }
 
@@ -140,12 +139,8 @@ public class MailServiceImpl implements MailService {
      */
     @Override
     public void sendChangeActivateMail(User user) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("username", user.getUsername());
-        data.put("surname", valueOrEmpty(user.getSurname()));
-        data.put("name", valueOrEmpty(user.getName()));
-        data.put("patronymic", valueOrEmpty(user.getPatronymic()));
-        data.put("email", user.getEmail());
+        Map<String, Object> data = buildEmailInfo(user.getUsername(), user.getSurname(), user.getName(),
+                user.getPatronymic(), user.getEmail(), null);
 
         data.put("isActive", user.getIsActive() ? valueYes : valueNo);
         sendMail(data, changeActivateMailSubject, changeActivateMailResource);
@@ -158,12 +153,8 @@ public class MailServiceImpl implements MailService {
      */
     @Override
     public void sendUserDeletedMail(User user) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("username", user.getUsername());
-        data.put("surname", valueOrEmpty(user.getSurname()));
-        data.put("name", valueOrEmpty(user.getName()));
-        data.put("patronymic", valueOrEmpty(user.getPatronymic()));
-        data.put("email", user.getEmail());
+        Map<String, Object> data = buildEmailInfo(user.getUsername(), user.getSurname(), user.getName(),
+                user.getPatronymic(), user.getEmail(), null);
 
         sendMail(data, deletedMailSubject, deletedMailResource);
     }
@@ -191,6 +182,26 @@ public class MailServiceImpl implements MailService {
         } catch (MailException | MessagingException e) {
             log.error("Exception while sending mail notification to " + data.get("username") + "\n" + e.toString() + "\n");
         }
+    }
+
+    private Map<String, Object> buildEmailInfo(String username, String surname, String name, String patronymic, String email, String password) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("username", valueOrEmpty(username));
+        data.put("surname", valueOrEmpty(surname));
+        data.put("name", valueOrEmpty(name));
+        data.put("patronymic", valueOrEmpty(patronymic));
+        data.put("email", valueOrEmpty(email));
+        data.put("password", valueOrEmpty(password));
+        return data;
+    }
+
+    private String obtainPassword(UserForm user) {
+        String password = null;
+        if (user.getPassword() != null)
+            password = user.getPassword();
+        else if (user.getTemporaryPassword() != null)
+            password = user.getTemporaryPassword();
+        return password;
     }
 
     /**
