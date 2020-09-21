@@ -36,4 +36,10 @@ public class UserRegisterForm {
     @ApiModelProperty(value = "Отчество")
     private String patronymic;
 
+    @ApiModelProperty(value = "Отправлять письмо с паролем на е-мейл")
+    private Boolean sendPasswordToEmail;
+
+    @ApiModelProperty(value = "Активен ли пользователь")
+    private Boolean isActive;
+
 }

@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
             userValidations.checkPassword(password, user.getPasswordCheck(), user.getId());
         if (isNull(password)) {
             password = passwordGenerator.generate();
-            user.setPassword(password);
+            user.setTemporaryPassword(password);
         }
         //сохраняем пароль в закодированном виде
         UserEntity entity = entityForm(new UserEntity(), user);
@@ -139,6 +139,8 @@ public class UserServiceImpl implements UserService {
         form.setName(user.getName());
         form.setSurname(user.getSurname());
         form.setPatronymic(user.getPatronymic());
+        form.setSendOnEmail(user.getSendPasswordToEmail());
+        form.setIsActive(user.getIsActive() != null ? user.getIsActive() : true);
         return create(form);
     }
 
