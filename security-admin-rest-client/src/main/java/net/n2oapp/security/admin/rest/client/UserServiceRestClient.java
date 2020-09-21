@@ -9,6 +9,8 @@ import net.n2oapp.security.admin.rest.api.UserRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
 import org.springframework.data.domain.Page;
 
+import java.util.Map;
+
 /**
  * Прокси реализация сервиса управления пользователями, для вызова rest
  */
@@ -33,6 +35,11 @@ public class UserServiceRestClient implements UserService {
     @Override
     public User update(UserForm user) {
         return client.update(user);
+    }
+
+    @Override
+    public User patch(Map<String, Object> userInfo) {
+        return client.patch(userInfo);
     }
 
     @Override
