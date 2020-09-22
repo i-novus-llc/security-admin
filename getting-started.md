@@ -123,7 +123,7 @@ Auth Gateway - это SSO сервер авторизации, построен�
 * Сконфигурируйте приложение для использования OpenID сервера с помощью настроек
 
    ```
-        security.oauth2.auth-server-uri=http://localhost:9999
+        security.oauth2.auth-server-uri=http://localhost:9999/auth
         #Настройки клиента хранятся в auth-gateway в таблице sec.client
         security.oauth2.client.client-id=admin-web
         security.oauth2.client.client-secret=33403217-430c-448e-aed5-5278873d5sda
