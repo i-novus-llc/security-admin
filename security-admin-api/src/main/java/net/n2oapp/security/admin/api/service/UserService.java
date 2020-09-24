@@ -21,6 +21,8 @@ import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.api.model.UserRegisterForm;
 import org.springframework.data.domain.Page;
 
+import java.util.Map;
+
 /**
  * Сервис управления пользователями
  */
@@ -46,6 +48,15 @@ public interface UserService {
      * @return Измененный пользователь
      */
     User update(UserForm user);
+
+    /**
+     * Частичное обновление данных. Ожидает на вход мапу по своей структуре сходную
+     * с моделью UserForm.
+     * @see UserForm
+     * @param userInfo Модель пользователя
+     * @return Измененный пользователь
+     */
+    User patch(Map<String, Object> userInfo);
 
     /**
      * Удалить пользователя

@@ -9,6 +9,8 @@ import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 
+import java.util.Map;
+
 /**
  * Реализация REST сервиса управления пользоватлями
  */
@@ -44,6 +46,11 @@ public class UserRestServiceImpl implements UserRestService {
     @Override
     public User update(UserForm user) {
         return service.update(user);
+    }
+
+    @Override
+    public User patch(Map<String, Object> userForm) {
+        return service.patch(userForm);
     }
 
     @Override
