@@ -2,7 +2,6 @@ package net.n2oapp.security.admin.loader;
 
 import net.n2oapp.platform.loader.server.ServerLoader;
 import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
-import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.RoleForm;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
@@ -12,6 +11,7 @@ import net.n2oapp.security.admin.loader.builder.RoleFormBuilder;
 import net.n2oapp.security.admin.loader.builder.SystemEntityBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.AdditionalAnswers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -52,7 +52,7 @@ public class RoleServerLoaderTest {
      */
     @Test
     public void repositoryLoader() {
-        Mockito.doReturn(new Role()).when(provider).createRole(Mockito.any());
+        Mockito.when(provider.createRole(Mockito.any())).then(AdditionalAnswers.returnsFirstArg());
         Mockito.doReturn(new ArrayList<>()).when(provider).getAllRoles();
         BiConsumer<List<RoleForm>, String> loader = serverLoader::load;
         repository.removeBySystemCode(SystemEntityBuilder.buildSystemEntity1());
@@ -78,7 +78,8 @@ public class RoleServerLoaderTest {
     }
 
     /**
-     * Вставка трех записей, две есть в БД, третья изменена
+     * Вставка трех записей, одна есть в бд, одна изменена, последней нет.
+     * Добавится та, которой нет, измененная запись проигнорируется.
      */
     private void case3(BiConsumer<List<RoleForm>, String> loader) {
         RoleForm roleForm1 = RoleFormBuilder.buildRoleForm1();
