@@ -3,6 +3,7 @@ package net.n2oapp.framework.security.admin.gateway.adapter;
 import net.n2oapp.framework.security.auth.oauth2.gateway.GatewayPrincipalExtractor;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.*;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.session.SessionRegistry;
@@ -14,7 +15,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().anyRequest().permitAll().and().csrf().disable();
+        http.authorizeRequests().antMatchers(HttpMethod.POST, "/backchannel_logout").permitAll().anyRequest().authenticated().and().csrf().disable();
     }
 
     @Bean

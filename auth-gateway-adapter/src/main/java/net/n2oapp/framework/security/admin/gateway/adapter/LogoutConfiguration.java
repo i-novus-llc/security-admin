@@ -27,7 +27,7 @@ public class LogoutConfiguration {
     }
 
     @Bean
-    public JwtVerifier jwtHelperHolder() {
+    public JwtVerifier jwtVerifier() {
         return new JwtVerifier(tokenKeyUri);
     }
 
