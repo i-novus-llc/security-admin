@@ -5,6 +5,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import ru.inovus.ms.rdm.sync.rest.RdmSyncRest;
@@ -14,6 +15,9 @@ import ru.inovus.ms.rdm.sync.rest.RdmSyncRest;
 public class OrganizationSynchronizeJob implements Job {
 
     private static final Logger logger = LoggerFactory.getLogger(OrganizationSynchronizeJob.class);
+
+    @Value("${rdm.organization.sync.job.code}")
+    private String organizationSyncJobCode;
 
     private RdmSyncRest getRdmSyncRest(JobExecutionContext context) {
         String key = RdmSyncRest.class.getSimpleName();
@@ -28,7 +32,7 @@ public class OrganizationSynchronizeJob implements Job {
     @Override
     public void execute(JobExecutionContext context) {
         logger.info("Organization sync is started");
-        getRdmSyncRest(context).update("S003");
+        getRdmSyncRest(context).update(organizationSyncJobCode);
         logger.info("Organization sync is completed");
     }
 }
