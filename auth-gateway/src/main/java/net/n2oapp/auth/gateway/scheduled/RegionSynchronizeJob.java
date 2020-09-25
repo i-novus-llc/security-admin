@@ -5,6 +5,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.inovus.ms.rdm.sync.rest.RdmSyncRest;
 
@@ -12,6 +13,9 @@ import ru.inovus.ms.rdm.sync.rest.RdmSyncRest;
 public class RegionSynchronizeJob implements Job {
 
     private static final Logger logger = LoggerFactory.getLogger(RegionSynchronizeJob.class);
+
+    @Value("${rdm.region.sync.job.code}")
+    private String regionSyncJobCode;
 
     private RdmSyncRest getRdmSyncRest(JobExecutionContext context) {
         String key = RdmSyncRest.class.getSimpleName();
@@ -26,7 +30,7 @@ public class RegionSynchronizeJob implements Job {
     @Override
     public void execute(JobExecutionContext context) {
         logger.info("Region sync is started");
-        getRdmSyncRest(context).update("S002");
+        getRdmSyncRest(context).update(regionSyncJobCode);
         logger.info("Region sync is completed");
     }
 }
