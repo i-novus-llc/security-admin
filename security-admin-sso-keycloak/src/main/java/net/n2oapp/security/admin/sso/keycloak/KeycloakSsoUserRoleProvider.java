@@ -147,11 +147,7 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
 
     @Override
     public void deleteRole(Role role) {
-        try {
-            roleService.deleteRole(role.getCode());
-        } catch (HttpClientErrorException e) {
-            throwUserException(e);
-        }
+        roleService.deleteRole(role.getCode());
     }
 
     @Override
