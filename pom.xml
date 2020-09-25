@@ -36,6 +36,10 @@
         <module>security-admin-api</module>
         <module>security-admin-rest-api</module>
         <module>security-admin-rest-client</module>
+        <module>security-auth</module>
+        <module>security-auth-common</module>
+        <module>security-auth-oauth2</module>
+        <module>security-auth-oauth2-gateway</module>
     </modules>
 
     <dependencyManagement>
@@ -72,11 +76,7 @@
             <modules>
                 <module>auth-gateway</module>
                 <module>auth-gateway-adapter</module>
-                <module>security-auth</module>
-                <module>security-auth-common</module>
                 <module>security-auth-simple</module>
-                <module>security-auth-oauth2</module>
-                <module>security-auth-oauth2-gateway</module>
                 <module>security-admin-impl</module>
                 <module>security-admin-web</module>
                 <module>security-admin-rest-server</module>
