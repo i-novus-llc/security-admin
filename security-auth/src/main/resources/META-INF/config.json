@@ -1,0 +1,10 @@
+{
+  "modules": {
+    "AuthRedirect": {
+      "src": "public/authRedirect.js",
+      "options": {
+        "pathToRedirect": "${n2o.ui.url}"
+      }
+    }
+  }
+}

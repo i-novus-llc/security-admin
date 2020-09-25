@@ -13,19 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.n2oapp.security.admin.api.criteria;
+package net.n2oapp.security.auth.common;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.springframework.security.core.Authentication;
 
 /**
- * Критерий фильтрации типов аккаунтов
+ * Обработчик Logout действия
  */
-@Getter
-@Setter
-@NoArgsConstructor
-public class AccountTypeCriteria extends BaseCriteria {
-    private String name;
-    private String userLevel;
+public interface LogoutHandler {
+
+    /**
+     * Произвести выход
+     *
+     * @param authentication - Токен аутентификации пользователя
+     */
+    void doLogout(Authentication authentication);
+
 }
