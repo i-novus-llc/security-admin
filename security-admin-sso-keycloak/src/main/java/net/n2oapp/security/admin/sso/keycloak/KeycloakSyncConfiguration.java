@@ -1,11 +1,12 @@
-package net.n2oapp.auth.gateway.scheduled;
+package net.n2oapp.security.admin.sso.keycloak;
 
-import net.n2oapp.security.admin.sso.keycloak.AdminSsoKeycloakProperties;
+import net.n2oapp.security.admin.impl.scheduled.SynchronizationInfo;
 import net.n2oapp.security.admin.sso.keycloak.synchronization.UserSynchronizeJob;
 import org.quartz.*;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 import java.util.Set;
 
 import static org.quartz.CronScheduleBuilder.cronSchedule;

@@ -1,4 +1,4 @@
-package net.n2oapp.auth.gateway.scheduled;
+package net.n2oapp.security.admin.impl.scheduled;
 
 import net.n2oapp.security.admin.api.service.ApplicationSystemExportService;
 import org.quartz.Job;
