@@ -2,8 +2,8 @@ package net.n2oapp.security.admin.loader;
 
 import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
 import net.n2oapp.security.admin.impl.entity.SystemEntity;
-import net.n2oapp.security.admin.impl.loader.model.AppModel;
 import net.n2oapp.security.admin.impl.loader.ApplicationServerLoader;
+import net.n2oapp.security.admin.impl.loader.model.AppModel;
 import net.n2oapp.security.admin.impl.repository.ApplicationRepository;
 import net.n2oapp.security.admin.impl.repository.ClientRepository;
 import net.n2oapp.security.admin.impl.repository.SystemRepository;
@@ -57,7 +57,7 @@ public class ApplicationServerLoaderTest {
         appLoader.load(apps, "testSystem");
         assertThat(applicationRepository.findAll().size(), is(1));
         assertThat(applicationRepository.findById("testApp1").isPresent(), is(true));
-        assertThat(clientRepository.findAll().size(), is(1));
+        assertThat(clientRepository.findAll().size(), is(2));
         assertThat(clientRepository.findById("testApp1").isPresent(), is(true));
 
         //удаление ранее добавленного, создание нового
@@ -71,7 +71,7 @@ public class ApplicationServerLoaderTest {
         appLoader.load(apps, "testSystem");
         assertThat(applicationRepository.findAll().size(), is(1));
         assertThat(applicationRepository.findById("testApp2").isPresent(), is(true));
-        assertThat(clientRepository.findAll().size(), is(1));
+        assertThat(clientRepository.findAll().size(), is(2));
         assertThat(clientRepository.findById("testApp2").isPresent(), is(true));
 
         //Приложение без клиента
@@ -82,6 +82,6 @@ public class ApplicationServerLoaderTest {
 
         appLoader.load(apps, "testSystem");
         assertThat(applicationRepository.findAll().size(), is(2));
-        assertThat(clientRepository.findAll().size(), is(1));
+        assertThat(clientRepository.findAll().size(), is(2));
     }
 }

@@ -25,6 +25,9 @@ INSERT INTO sec.permission (code, name, parent_code, user_level) VALUES ('test-c
 INSERT INTO sec.permission (code, name, parent_code, user_level) VALUES ('test-code2', 'name2', NULL, 'ORGANIZATION');
 INSERT INTO sec.role(id, code, name, description, user_level) VALUES (101, '101', 'name1', 'desc1', 'FEDERAL');
 INSERT INTO sec.role(id, code, name, description, user_level) VALUES (102, '102', 'name2', 'desc2', 'REGIONAL');
+INSERT INTO sec.role(id, code, name, description, user_level) VALUES (103, '103', 'name3', 'desc3', 'REGIONAL');
+INSERT INTO sec.role(id, code, name, description, user_level) VALUES (104, '104', 'name4', 'desc4', 'REGIONAL');
+INSERT INTO sec.role(id, code, name, description, user_level) VALUES (105, '105', 'name5', 'desc5', 'REGIONAL');
 INSERT INTO sec.role_permission(role_id, permission_code) VALUES (101, 'test-code1');
 INSERT INTO sec.role_permission(role_id, permission_code) VALUES (102, 'test-code2');
 
@@ -51,4 +54,11 @@ INSERT INTO sec.account_type_role (account_type_id, role_id, role_type) VALUES (
 INSERT INTO sec.org_category(id, code, name, description)
 	    VALUES (1 ,'test_code', 'test_name', 'test_description'),
 	           (2 ,'test_code2', 'test_name2', 'test_description2');
+
+INSERT INTO sec.org_role(role_id, org_id) VALUES (103,1);
+
+INSERT INTO sec.client(client_id, grant_types, redirect_uris)
+	VALUES ('admin-web', 'authorization_code,client_credentials', '*');
+
+INSERT INTO sec.client_role(client_id, role_id) VALUES ('admin-web',105);
 

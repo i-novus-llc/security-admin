@@ -9,6 +9,7 @@ import net.n2oapp.security.admin.impl.audit.AuditHelper;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.SystemEntity;
+import net.n2oapp.security.admin.impl.repository.OrganizationRepository;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.RoleSpecifications;
@@ -47,6 +48,8 @@ public class RoleServiceImpl implements RoleService {
     @Autowired
     private SsoUserRoleProvider provider;
     @Autowired
+    private OrganizationRepository organizationRepository;
+    @Autowired
     private AuditHelper audit;
 
     @Override
@@ -77,8 +80,9 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void delete(Integer id) {
-        checkRoleIsUsed(id);
-        Role role = model(roleRepository.findById(id).orElseThrow(NotFoundException::new));
+        RoleEntity entity = roleRepository.findById(id).orElseThrow(NotFoundException::new);
+        checkRoleIsUsed(entity);
+        Role role = model(entity);
         roleRepository.deleteById(id);
         if (role != null) {
             audit("audit.roleDelete", role);
@@ -227,9 +231,17 @@ public class RoleServiceImpl implements RoleService {
      * Валидация на удаление ролей
      * Запрещено удалять роль, если существует пользователь с такой ролью
      */
-    private void checkRoleIsUsed(Integer roleId) {
-        if (userRepository.countUsersWithRoleId(roleId) != 0)
+    private void checkRoleIsUsed(RoleEntity entity) {
+        if (!entity.getUserList().isEmpty())
             throw new UserException("exception.usernameWithSuchRoleExists");
+        if (!entity.getAccountTypeRoleList().isEmpty())
+            throw new UserException("exception.accountTypeWithSuchRoleExists");
+        if (!entity.getClientList().isEmpty())
+            throw new UserException("exception.clientWithSuchRoleExists");
+        if (organizationRepository.countOrgsWithRoleId(entity.getId()) != 0)
+            throw new UserException("exception.organizationWithSuchRoleExists");
+
+
     }
 
     private Role audit(String action, Role role) {
