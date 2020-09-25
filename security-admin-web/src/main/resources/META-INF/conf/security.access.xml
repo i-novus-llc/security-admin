@@ -5,10 +5,10 @@
         <object-access object-id="service"/>
         <object-access object-id="${access.role.object.id}"/>
         <object-access object-id="region"/>
-        <object-access object-id="organization" operations="*"/>
+        <object-access object-id="organization"/>
         <object-access object-id="department"/>
         <object-access object-id="userLevel" operations="*"/>
-        <object-access object-id="accountType" operations="*"/>
+        <object-access object-id="accountType"/>
     </authenticated>
 
     <permission id="access.admin.user.read">
@@ -51,6 +51,32 @@
         <object-access object-id="system" operations="*"/>
         <object-access object-id="service" operations="*"/>
         <object-access object-id="client" operations="*"/>
+    </permission>
+
+    <permission id="access.admin.organization.read">
+        <object-access object-id="organization"/>
+        <page-access page-id="organizations"/>
+    </permission>
+
+    <permission id="access.admin.organization.edit">
+        <object-access object-id="organization" operations="create,update"/>
+    </permission>
+
+    <permission id="access.admin.organization.delete">
+        <object-access object-id="organization" operations="delete"/>
+    </permission>
+
+    <permission id="access.admin.accountType.read">
+        <object-access object-id="accountType"/>
+        <page-access page-id="accountType"/>
+    </permission>
+
+    <permission id="access.admin.accountType.edit">
+        <object-access object-id="accountType" operations="create,update"/>
+    </permission>
+
+    <permission id="access.admin.accountType.delete">
+        <object-access object-id="accountType" operations="delete"/>
     </permission>
 
 </access>
