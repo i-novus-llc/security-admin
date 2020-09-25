@@ -9,7 +9,7 @@
                     <row>
                         <input-select id="system" label-field-id="name" query-id="system"
                                       visible="${access.system.enabled}" label="Система"/>
-                        <input-text id="name" label="Название"/>
+                        <input-text id="name" label="Наименование"/>
                         <input-text id="code" label="Код"/>
                     </row>
                 </filters>
