@@ -12,6 +12,8 @@ import net.n2oapp.security.admin.impl.entity.SystemEntity;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.RoleSpecifications;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -20,6 +22,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 
 import javax.ws.rs.NotFoundException;
 import java.util.ArrayList;
@@ -36,6 +39,8 @@ import static java.util.Objects.nonNull;
 @Service
 @Transactional
 public class RoleServiceImpl implements RoleService {
+
+    private static final Logger log = LoggerFactory.getLogger(RoleServiceImpl.class);
 
     @Value("${access.permission.enabled}")
     private Boolean permissionEnabled;
@@ -82,7 +87,13 @@ public class RoleServiceImpl implements RoleService {
         roleRepository.deleteById(id);
         if (role != null) {
             audit("audit.roleDelete", role);
-            provider.deleteRole(role);
+            try {
+                provider.deleteRole(role);
+            } catch (HttpClientErrorException ex) {
+                if (404 != ex.getRawStatusCode())
+                    throw ex;
+                log.warn("Role with id " + id + " not found in keycloak", ex);
+            }
         }
     }
 
