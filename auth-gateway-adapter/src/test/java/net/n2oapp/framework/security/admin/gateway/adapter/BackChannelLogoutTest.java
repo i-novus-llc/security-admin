@@ -15,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.jwt.Jwt;
-import org.springframework.security.jwt.crypto.sign.SignatureVerifier;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -46,27 +45,7 @@ public class BackChannelLogoutTest {
 
     @Test
     public void test() {
-        Jwt jwt = new Jwt() {
-            @Override
-            public String getClaims() {
-                return "{\"aud\":\"access-app\",\"iss\":\"auth-gateway\",\"event\":\"LOGOUT\",\"username\":\"test_user\",\"sid\":\"97C5AC1039B77FFE4F6AB55ACF5707EC\"}";
-            }
-
-            @Override
-            public String getEncoded() {
-                return null;
-            }
-
-            @Override
-            public void verifySignature(SignatureVerifier verifier) {
-
-            }
-
-            @Override
-            public byte[] bytes() {
-                return new byte[0];
-            }
-        };
+        Jwt jwt = new LogoutToken();
         when(jwtVerifier.decodeAndVerify(any())).thenReturn(jwt);
         RestTemplate restTemplate = new RestTemplate();
         User user = new User("test_user", "qwerty", new ArrayList<>());

@@ -22,6 +22,10 @@ public class JwtVerifier {
         return JwtHelper.decodeAndVerify(token, getVerifier());
     }
 
+    public void setRestTemplate(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
+
     private SignatureVerifier getVerifier() {
         if (verifier == null) {
             synchronized (this) {
