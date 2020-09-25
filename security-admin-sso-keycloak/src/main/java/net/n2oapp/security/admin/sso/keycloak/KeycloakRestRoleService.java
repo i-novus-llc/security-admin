@@ -1,11 +1,12 @@
 package net.n2oapp.security.admin.sso.keycloak;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.keycloak.representations.idm.ErrorRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestOperations;
@@ -18,6 +19,8 @@ import java.util.stream.Collectors;
  * Сервис для создания, изменения, удаления ролей в keycloak
  */
 public class KeycloakRestRoleService {
+
+    private static final Logger log = LoggerFactory.getLogger(KeycloakRestRoleService.class);
 
     private static String ROLE_BY_NAME = "%s/admin/realms/%s/roles/%s";
     private static String ROLES = "%s/admin/realms/%s/roles/";
@@ -181,8 +184,15 @@ public class KeycloakRestRoleService {
         final String serverUrl = String.format(ROLE_BY_NAME, properties.getServerUrl(), properties.getRealm(), roleName);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        ResponseEntity<Response> response = template
-                .exchange(serverUrl, HttpMethod.DELETE, new HttpEntity<>(headers), Response.class);
+        ResponseEntity<Response> response;
+        try {
+            response = template.exchange(serverUrl, HttpMethod.DELETE, new HttpEntity<>(headers), Response.class);
+        } catch (HttpClientErrorException ex) {
+            if (404 != ex.getRawStatusCode())
+                throw ex;
+            log.warn("Role: " + roleName + " not found in keycloak", ex);
+            return;
+        }
         if (response.getStatusCodeValue() < 200 || response.getStatusCodeValue() > 300) {
             throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
         }
