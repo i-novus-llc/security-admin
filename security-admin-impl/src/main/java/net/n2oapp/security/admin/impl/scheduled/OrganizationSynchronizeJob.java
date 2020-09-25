@@ -1,4 +1,4 @@
-package net.n2oapp.auth.gateway.scheduled;
+package net.n2oapp.security.admin.impl.scheduled;
 
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -6,16 +6,18 @@ import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import ru.inovus.ms.rdm.sync.rest.RdmSyncRest;
 
 @Component
-public class DepartmentSynchronizeJob implements Job {
+@ConditionalOnProperty(name = "access.organization-persist-mode", havingValue = "sync")
+public class OrganizationSynchronizeJob implements Job {
 
-    private static final Logger logger = LoggerFactory.getLogger(DepartmentSynchronizeJob.class);
+    private static final Logger logger = LoggerFactory.getLogger(OrganizationSynchronizeJob.class);
 
-    @Value("${rdm.department.sync.job.code}")
-    private String departmentSyncJobCode;
+    @Value("${rdm.sync.job_code.organization}")
+    private String organizationSyncJobCode;
 
     private RdmSyncRest getRdmSyncRest(JobExecutionContext context) {
         String key = RdmSyncRest.class.getSimpleName();
@@ -29,8 +31,8 @@ public class DepartmentSynchronizeJob implements Job {
 
     @Override
     public void execute(JobExecutionContext context) {
-        logger.info("Department sync is started");
-        getRdmSyncRest(context).update(departmentSyncJobCode);
-        logger.info("Department sync is completed");
+        logger.info("Organization sync is started");
+        getRdmSyncRest(context).update(organizationSyncJobCode);
+        logger.info("Organization sync is completed");
     }
 }

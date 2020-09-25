@@ -1,4 +1,4 @@
-package net.n2oapp.auth.gateway.scheduled;
+package net.n2oapp.security.admin.impl.scheduled;
 
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -14,7 +14,7 @@ public class RegionSynchronizeJob implements Job {
 
     private static final Logger logger = LoggerFactory.getLogger(RegionSynchronizeJob.class);
 
-    @Value("${rdm.region.sync.job.code}")
+    @Value("${rdm.sync.job_code.region}")
     private String regionSyncJobCode;
 
     private RdmSyncRest getRdmSyncRest(JobExecutionContext context) {

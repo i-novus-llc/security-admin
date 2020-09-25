@@ -1,4 +1,4 @@
-package net.n2oapp.auth.gateway.scheduled;
+package net.n2oapp.security.admin.impl.scheduled;
 
 import org.quartz.*;
 import org.slf4j.Logger;
@@ -8,9 +8,13 @@ import ru.inovus.ms.rdm.sync.service.change_data.RdmSyncExportDirtyRecordsToRdmJ
 import java.util.Arrays;
 
 import static java.util.Objects.nonNull;
-import static net.n2oapp.auth.gateway.scheduled.RdmSyncConfiguration.*;
 
 public class QuartzGlobalTriggerListener implements TriggerListener {
+
+    public static final String APP_SYS_EXPORT_JOB_NAME = "app_sys_export_job";
+    public static final String REGION_SYNC_JOB_NAME = "region_job_detail";
+    public static final String DEPARTMENT_SYNC_JOB_NAME = "department_job_detail";
+    public static final String ORGANIZATION_SYNC_JOB_NAME = "organization_job_detail";
 
     private static final Logger logger = LoggerFactory.getLogger(QuartzGlobalTriggerListener.class);
 

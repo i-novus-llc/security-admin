@@ -1,4 +1,4 @@
-package net.n2oapp.auth.gateway.scheduled;
+package net.n2oapp.security.admin.impl.scheduled;
 
 import org.quartz.Scheduler;
 import org.springframework.beans.factory.annotation.Autowired;
