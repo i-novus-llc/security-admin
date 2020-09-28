@@ -90,9 +90,8 @@ public class RoleServiceImpl implements RoleService {
             try {
                 provider.deleteRole(role);
             } catch (UserException ex) {
-                if (ex.getCause() instanceof HttpClientErrorException &&
-                        ((HttpClientErrorException) ex.getCause()).getRawStatusCode() == 404)
-                log.warn("Role with id " + id + " not found in keycloak", ex);
+                if (ex.getCause() instanceof HttpClientErrorException && ((HttpClientErrorException) ex.getCause()).getRawStatusCode() == 404)
+                    log.warn(String.format("Role with id %d not found in keycloak", id), ex);
                 else
                     throw ex;
             }
@@ -118,7 +117,6 @@ public class RoleServiceImpl implements RoleService {
             Page<RoleEntity> all = roleRepository.findAll(specification, criteria);
             return all.map(this::model);
         }
-
     }
 
     private Page<Role> groupBySystem(Specification<RoleEntity> specification, RoleCriteria criteria) {
