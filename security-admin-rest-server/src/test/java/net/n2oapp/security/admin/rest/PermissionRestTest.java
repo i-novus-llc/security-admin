@@ -4,22 +4,22 @@ import net.n2oapp.security.admin.TestApplication;
 import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.rest.api.PermissionRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestPermissionCriteria;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Тест Rest сервиса управления правами доступа
  */
-
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
         properties = "server.port=8290")
@@ -51,7 +51,7 @@ public class PermissionRestTest {
     public void findAllPermissionsWithBadUserLevelTest() {
         RestPermissionCriteria criteria = new RestPermissionCriteria();
         criteria.setUserLevel("wrong");
-        assertEquals(true, client.getAll(null, criteria).isEmpty());
+        assertTrue(client.getAll(null, criteria).isEmpty());
     }
 
     /**
