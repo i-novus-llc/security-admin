@@ -16,8 +16,8 @@ public class OrganizationSynchronizeJob implements Job {
 
     private static final Logger logger = LoggerFactory.getLogger(OrganizationSynchronizeJob.class);
 
-    @Value("${rdm.sync.job_code.organization}")
-    private String organizationSyncJobCode;
+    @Value("${rdm.sync.ref_book_code.organization}")
+    private String organizationRefBookCode;
 
     private RdmSyncRest getRdmSyncRest(JobExecutionContext context) {
         String key = RdmSyncRest.class.getSimpleName();
@@ -32,7 +32,7 @@ public class OrganizationSynchronizeJob implements Job {
     @Override
     public void execute(JobExecutionContext context) {
         logger.info("Organization sync is started");
-        getRdmSyncRest(context).update(organizationSyncJobCode);
+        getRdmSyncRest(context).update(organizationRefBookCode);
         logger.info("Organization sync is completed");
     }
 }
