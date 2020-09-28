@@ -147,7 +147,12 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
 
     @Override
     public void deleteRole(Role role) {
-        roleService.deleteRole(role.getCode());
+        try {
+            roleService.deleteRole(role.getCode());
+        } catch (HttpClientErrorException e) {
+            throwUserException(e);
+        }
+
     }
 
     @Override
@@ -176,7 +181,8 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
     private void throwUserException(HttpClientErrorException exception) {
         try {
             Map<String, String> map = objectMapper.readValue(exception.getResponseBodyAsString(), new TypeReference<Map<String, String>>() {});
-            throw new UserException("exception." + map.get("errorMessage").toLowerCase().replaceAll(" ", "-"));
+            String errorMessage = map.containsKey("errorMessage") ? map.get("errorMessage") : map.get("error");
+            throw new UserException("exception." + errorMessage.toLowerCase().replaceAll(" ", "-"), exception);
         } catch (IOException e) {
             throw new IllegalArgumentException(exception);
         }

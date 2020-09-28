@@ -89,10 +89,12 @@ public class RoleServiceImpl implements RoleService {
             audit("audit.roleDelete", role);
             try {
                 provider.deleteRole(role);
-            } catch (HttpClientErrorException ex) {
-                if (404 != ex.getRawStatusCode())
-                    throw ex;
+            } catch (UserException ex) {
+                if (ex.getCause() instanceof HttpClientErrorException &&
+                        ((HttpClientErrorException) ex.getCause()).getRawStatusCode() == 404)
                 log.warn("Role with id " + id + " not found in keycloak", ex);
+                else
+                    throw ex;
             }
         }
     }
