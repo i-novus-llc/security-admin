@@ -182,7 +182,7 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
         try {
             Map<String, String> map = objectMapper.readValue(exception.getResponseBodyAsString(), new TypeReference<Map<String, String>>() {});
             String errorMessage = map.containsKey("errorMessage") ? map.get("errorMessage") : map.get("error");
-            throw new UserException("exception." + errorMessage.toLowerCase().replaceAll(" ", "-"), exception);
+            throw new UserException("exception." + errorMessage.toLowerCase().replace(" ", "-"), exception);
         } catch (IOException e) {
             throw new IllegalArgumentException(exception);
         }
