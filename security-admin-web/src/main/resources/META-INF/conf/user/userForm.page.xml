@@ -3,70 +3,121 @@
     <form default-values-query-id="simpleUser" object-id="user" upload="defaults">
         <fields>
             <row>
-                <input-text id="username" label="Имя пользователя">
-                    <dependencies>
-                        <requiring>!${access.email-as-username}</requiring>
-                        <visibility>!${access.email-as-username}</visibility>
-                    </dependencies>
-                    <validations white-list="usernameValidation"/>
-                </input-text>
-                <input-text id="email" label="e-mail">
-                    <dependencies>
-                        <requiring>${access.user.email-required} || ${access.email-as-username}</requiring>
-                    </dependencies>
-                    <validations white-list="emailValidation">
-                        <condition id="emailIsRequired" severity="danger" on="sendOnEmail"
-                                   message="Поле обязательно для заполнения" side="client">
-                            <![CDATA[
+                <col size="4">
+                    <input-text id="username" label="Имя пользователя">
+                        <dependencies>
+                            <requiring>!${access.email-as-username}</requiring>
+                            <visibility>!${access.email-as-username}</visibility>
+                        </dependencies>
+                        <validations white-list="usernameValidation"/>
+                    </input-text>
+                </col>
+                <col size="4">
+                    <input-text id="email" label="e-mail">
+                        <dependencies>
+                            <requiring>${access.user.email-required} || ${access.email-as-username}</requiring>
+                        </dependencies>
+                        <validations white-list="emailValidation">
+                            <condition id="emailIsRequired" severity="danger" on="sendOnEmail"
+                                       message="Поле обязательно для заполнения" side="client">
+                                <![CDATA[
                                 if (${access.user.choice-send-password} &&
                                     (typeof sendOnEmail == 'undefined' || sendOnEmail == null || sendOnEmail == false))
                                     return true;
                                 return email != null;
                             ]]>
-                        </condition>
-                    </validations>
-                </input-text>
+                            </condition>
+                        </validations>
+                    </input-text>
+                </col>
+                <col size="4" class="d-flex align-items-center">
+                    <checkbox id="sendOnEmail" label="Отправить пароль на e-mail"
+                              visible="${access.user.choice-send-password}"
+                              default-value="${access.user.choice-send-password}"/>
+                </col>
             </row>
-
             <row>
-                <checkbox id="sendOnEmail" label="Отправить пароль на e-mail"
-                          visible="${access.user.choice-send-password}"
-                          default-value="${access.user.choice-send-password}"/>
-                <password id="temporaryPassword" label="Временный пароль" enabled="false"
-                          visible="${access.user.password.generate}"/>
+                <col size="4">
+                    <password id="temporaryPassword" label="Временный пароль" enabled="false"
+                              visible="${access.user.password.generate}"/>
+                </col>
             </row>
-
             <row>
-                <password id="password"
-                          required="${access.user.password.input}"
-                          visible="${access.user.password.input}"
-                          label="Пароль" eye="false">
-                    <validations
-                            white-list="passwordLengthValidation,passwordCorrectSymbolsValidation,passwordLowerCaseValidation,passwordUpperCaseValidation,passwordDigitsValidation,passwordSpecialSymbolsValidation"/>
-                </password>
-                <password id="passwordCheck"
-                          required="${access.user.password.input}"
-                          visible="${access.user.password.input}"
-                          label="Подтвердить пароль" eye="false">
-                    <validations white-list="passwordCheckValidation"/>
-                    <dependencies>
-                        <enabling on="password">typeof password != 'undefined' &amp;&amp; password != null &amp;&amp;
-                            password != ''
-                        </enabling>
-                    </dependencies>
-                </password>
+                <col size="4">
+                    <password id="password"
+                              required="${access.user.password.input}"
+                              visible="${access.user.password.input}"
+                              label="Пароль" eye="false">
+                        <validations
+                                white-list="passwordLengthValidation,passwordCorrectSymbolsValidation,passwordLowerCaseValidation,passwordUpperCaseValidation,passwordDigitsValidation,passwordSpecialSymbolsValidation"/>
+                    </password>
+                </col>
+                <col size="4">
+                    <password id="passwordCheck"
+                              required="${access.user.password.input}"
+                              visible="${access.user.password.input}"
+                              label="Подтвердить пароль" eye="false">
+                        <validations white-list="passwordCheckValidation"/>
+                        <dependencies>
+                            <enabling on="password">typeof password != 'undefined' &amp;&amp; password != null &amp;&amp;
+                                password != ''
+                            </enabling>
+                        </dependencies>
+                    </password>
+                </col>
             </row>
-            <input-text id="surname" label="Фамилия" required="${access.user.surname.required}" length="100"/>
-            <input-text id="name" label="Имя" required="${access.user.name.required}" length="100"/>
-            <input-text id="patronymic" label="Отчество" length="100"/>
-            <masked-input id="snils" mask="999-999-999 99" label="СНИЛС" visible="${access.user.snils-visible}">
-                <validations white-list="snilsValidation"/>
-            </masked-input>
-            <input-select id="userLevel" query-id="userLevel" label-field-id="name"
-                          visible="${access.level.enabled}" label="Уровень пользователя">
-            </input-select>
             <row>
-                <col size="10">
+                <col size="4">
+                    <input-text id="surname" label="Фамилия" required="${access.user.surname.required}" length="100"/>
+                </col>
+                <col size="4">
+                    <input-text id="name" label="Имя" required="${access.user.name.required}" length="100"/>
+                </col>
+                <col size="4">
+                    <input-text id="patronymic" label="Отчество" length="100"/>
+                </col>
+            </row>
+            <row>
+                <col size="4">
+                    <masked-input id="snils" mask="999-999-999 99" label="СНИЛС" visible="${access.user.snils-visible}">
+                        <validations white-list="snilsValidation"/>
+                    </masked-input>
+                </col>
+            </row>
+            <row>
+                <col size="4">
+                    <input-select id="userLevel" query-id="userLevel" label-field-id="name"
+                                  visible="${access.level.enabled}" label="Уровень пользователя">
+                    </input-select>
+                </col>
+                <col size="4">
+                    <input-select id="department" query-id="department" label-field-id="name" label="Департамент">
+                        <dependencies>
+                            <visibility on="userLevel">userLevel.id == 'FEDERAL' &amp;&amp; ${access.level.department}
+                            </visibility>
+                            <set-value on="userLevel" apply-on-init="false">return null;</set-value>
+                        </dependencies>
+                    </input-select>
+                    <input-select id="region" query-id="region" label-field-id="name" label="Регион">
+                        <dependencies>
+                            <requiring on="userLevel">userLevel.id == 'REGIONAL'</requiring>
+                            <visibility on="userLevel">userLevel.id == 'REGIONAL' || userLevel.id == 'ORGANIZATION'</visibility>
+                            <set-value on="userLevel" apply-on-init="false">return null;</set-value>
+                        </dependencies>
+                    </input-select>
+                </col>
+                <col size="4">
+                    <input-select id="organization" query-id="organization" label-field-id="shortName" label="Организация">
+                        <dependencies>
+                            <requiring on="userLevel">userLevel.id == 'ORGANIZATION'</requiring>
+                            <visibility on="userLevel">userLevel.id == 'ORGANIZATION'</visibility>
+                            <set-value on="userLevel" apply-on-init="false">return null;</set-value>
+                        </dependencies>
+                    </input-select>
+                </col>
+            </row>
+            <row>
+                <col size="8">
                     <input-select-tree id="roles" label="Роли" checkboxes="true" required="true"
                                        parent-field-id="systemId" query-id="roleGroupedBySystem"
                                        search-field-id="name" size="1000">
@@ -78,33 +129,10 @@
                         </dependencies>
                     </input-select-tree>
                 </col>
-                <col size="2" class="d-flex align-items-end">
+                <col size="4" class="d-flex align-items-center">
                     <checkbox id="isActive" label="Активность" default-value="true"/>
                 </col>
             </row>
-
-            <input-select id="department" query-id="department" label-field-id="name" label="Департамент">
-                <dependencies>
-                    <visibility on="userLevel">userLevel.id == 'FEDERAL' &amp;&amp; ${access.level.department}
-                    </visibility>
-                    <set-value on="userLevel" apply-on-init="false">return null;</set-value>
-                </dependencies>
-            </input-select>
-            <input-select id="region" query-id="region" label-field-id="name" label="Регион">
-                <dependencies>
-                    <requiring on="userLevel">userLevel.id == 'REGIONAL'</requiring>
-                    <visibility on="userLevel">userLevel.id == 'REGIONAL' || userLevel.id == 'ORGANIZATION'</visibility>
-                    <set-value on="userLevel" apply-on-init="false">return null;</set-value>
-                </dependencies>
-            </input-select>
-            <input-select id="organization" query-id="organization" label-field-id="shortName" label="Организация">
-                <dependencies>
-                    <requiring on="userLevel">userLevel.id == 'ORGANIZATION'</requiring>
-                    <visibility on="userLevel">userLevel.id == 'ORGANIZATION'</visibility>
-                    <set-value on="userLevel" apply-on-init="false">return null;</set-value>
-                </dependencies>
-            </input-select>
-
         </fields>
     </form>
 </simple-page>
