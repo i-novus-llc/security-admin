@@ -14,8 +14,8 @@ public class RegionSynchronizeJob implements Job {
 
     private static final Logger logger = LoggerFactory.getLogger(RegionSynchronizeJob.class);
 
-    @Value("${rdm.sync.job_code.region}")
-    private String regionSyncJobCode;
+    @Value("${rdm.sync.ref_book_code.region}")
+    private String regionRefBookCode;
 
     private RdmSyncRest getRdmSyncRest(JobExecutionContext context) {
         String key = RdmSyncRest.class.getSimpleName();
@@ -30,7 +30,7 @@ public class RegionSynchronizeJob implements Job {
     @Override
     public void execute(JobExecutionContext context) {
         logger.info("Region sync is started");
-        getRdmSyncRest(context).update(regionSyncJobCode);
+        getRdmSyncRest(context).update(regionRefBookCode);
         logger.info("Region sync is completed");
     }
 }

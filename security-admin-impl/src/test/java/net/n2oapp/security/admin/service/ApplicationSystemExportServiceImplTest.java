@@ -6,16 +6,17 @@ import net.n2oapp.security.admin.api.model.AppSystem;
 import net.n2oapp.security.admin.api.model.Application;
 import net.n2oapp.security.admin.api.service.ApplicationSystemExportService;
 import net.n2oapp.security.admin.api.service.ApplicationSystemService;
-import net.n2oapp.security.admin.impl.service.ApplicationSystemExportServiceImpl;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.ArgumentMatchers;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.i_novus.platform.datastorage.temporal.model.Reference;
 import ru.i_novus.platform.datastorage.temporal.model.value.BooleanFieldValue;
@@ -41,20 +42,22 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
+@TestPropertySource("classpath:test.properties")
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class ApplicationSystemExportServiceImplTest {
-    @Mock
+    @SpyBean
     private VersionService versionService;
-    @Mock
-    private ApplicationSystemService applicationSystemService;
-    @Mock
+    @SpyBean
     private RefBookService refBookService;
-    @Mock
+    @SpyBean
     private DraftService draftService;
-    @Mock
+    @SpyBean
     private PublishService publishService;
 
-    @InjectMocks
-    private ApplicationSystemExportService exportService = new ApplicationSystemExportServiceImpl();
+    @SpyBean
+    private ApplicationSystemService applicationSystemService;
+    @Autowired
+    private ApplicationSystemExportService exportService;
 
     @Test
     public void testAppExport() {
@@ -146,23 +149,16 @@ public class ApplicationSystemExportServiceImplTest {
     }
 
     private void mock(RefBook refBook, RefBookRowValue refBookRowValue, Page<Application> appPage, Page<AppSystem> appSystemPage) {
-        when(refBookService.search(any(RefBookCriteria.class))).thenReturn(new PageImpl<>(Collections.singletonList(refBook)));
-
-        when(applicationSystemService.findAllApplications(ArgumentMatchers.any()))
-                .thenReturn(appPage);
-
-        when(applicationSystemService.findAllSystems(ArgumentMatchers.any()))
-                .thenReturn(appSystemPage);
-
-        Page<RefBookRowValue> p = new PageImpl<>(Collections.singletonList(refBookRowValue));
-        when(versionService.search(ArgumentMatchers.anyString(), ArgumentMatchers.any())).thenReturn(p);
-
+        Page<RefBookRowValue> page = new PageImpl<>(Collections.singletonList(refBookRowValue));
         Draft draft = new Draft();
         draft.setId(3);
-        when(draftService.createFromVersion(ArgumentMatchers.any())).thenReturn(draft);
-        doNothing().when(draftService).updateData(ArgumentMatchers.anyInt(), ArgumentMatchers.isA(Row.class));
-        doNothing().when(publishService)
-                .publish(ArgumentMatchers.anyInt(), ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.isNull(),
-                        ArgumentMatchers.anyBoolean());
+
+        doReturn(new PageImpl<>(Collections.singletonList(refBook))).when(refBookService).search(Mockito.any(RefBookCriteria.class));
+        doReturn(appPage).when(applicationSystemService).findAllApplications(Mockito.any());
+        doReturn(appSystemPage).when(applicationSystemService).findAllSystems(Mockito.any());
+        doReturn(draft).when(draftService).createFromVersion(Mockito.anyInt());
+        doReturn(page).when(versionService).search(Mockito.anyString(), Mockito.any());
+        doNothing().when(draftService).updateData(Mockito.anyInt(), Mockito.any(Row.class));
+        doNothing().when(publishService).publish(Mockito.anyInt(), Mockito.isNull(), Mockito.isNull(), Mockito.isNull(), Mockito.anyBoolean());
     }
 }
