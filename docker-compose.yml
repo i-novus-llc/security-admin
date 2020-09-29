@@ -39,6 +39,7 @@ services:
       - ACCESS_ORGANIZATION_PERSIST_MODE=rest
       - JAXRS_SWAGGER_AUTH_TOKEN_URI=http://yandex.develop:8278/oauth/token
       - ACCESS_EMAIL_AS_USERNAME=true
+      - AUDIT_CLIENT_ENABLED=false
     ports:
       - 8080
     deploy:
