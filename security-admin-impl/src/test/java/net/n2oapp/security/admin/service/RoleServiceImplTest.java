@@ -45,7 +45,7 @@ public class RoleServiceImplTest {
         Role role = service.create(newRole());
         checkValidationRoleName(role);
         checkValidationRoleCode(role);
-        checkValidationRoleExists(1);
+        checkValidationRoleAssociationExists();
     }
 
     @Test
@@ -94,12 +94,19 @@ public class RoleServiceImplTest {
         role.setCode("test-code");
     }
 
-    private void checkValidationRoleExists(Integer id) {
-        Throwable thrown = catchThrowable(() -> {
-            service.delete(id);
-        });
+    private void checkValidationRoleAssociationExists() {
+        Throwable thrown = catchThrowable(() -> service.delete(1));
         assertThat(thrown).isInstanceOf(UserException.class);
         assertEquals("exception.usernameWithSuchRoleExists", thrown.getMessage());
+        thrown = catchThrowable(() -> service.delete(100));
+        assertThat(thrown).isInstanceOf(UserException.class);
+        assertEquals("exception.accountTypeWithSuchRoleExists", thrown.getMessage());
+        thrown = catchThrowable(() -> service.delete(103));
+        assertThat(thrown).isInstanceOf(UserException.class);
+        assertEquals("exception.organizationWithSuchRoleExists", thrown.getMessage());
+        thrown = catchThrowable(() -> service.delete(105));
+        assertThat(thrown).isInstanceOf(UserException.class);
+        assertEquals("exception.clientWithSuchRoleExists", thrown.getMessage());
     }
 
     /**
