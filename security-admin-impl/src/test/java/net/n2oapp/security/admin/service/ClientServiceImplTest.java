@@ -1,6 +1,5 @@
 package net.n2oapp.security.admin.service;
 
-
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.criteria.ClientCriteria;
 import net.n2oapp.security.admin.api.model.AppSystemForm;
@@ -8,7 +7,6 @@ import net.n2oapp.security.admin.api.model.Application;
 import net.n2oapp.security.admin.api.model.Client;
 import net.n2oapp.security.admin.impl.service.ApplicationSystemServiceImpl;
 import net.n2oapp.security.admin.impl.service.ClientServiceImpl;
-import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,13 +31,6 @@ public class ClientServiceImplTest {
 
     @Autowired
     private ApplicationSystemServiceImpl applicationSystemService;
-
-    @After
-    public void cleanDB() {
-        ClientCriteria criteria = new ClientCriteria();
-        criteria.setPage(0);
-        service.findAll(criteria).getContent().forEach(client -> service.delete(client.getClientId()));
-    }
 
     @Test
     public void testUp() throws Exception {
