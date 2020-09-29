@@ -229,7 +229,7 @@ public class RoleServiceImpl implements RoleService {
 
     /**
      * Валидация на удаление ролей
-     * Запрещено удалять роль, если существует пользователь с такой ролью
+     * Запрещено удалять роль, если существует пользователь, клиент, организация или тип аккаунта с такой ролью
      */
     private void checkRoleIsUsed(RoleEntity entity) {
         if (!entity.getUserList().isEmpty())
