@@ -24,14 +24,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
+import javax.ws.rs.NotFoundException;
 import java.io.IOException;
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -319,7 +316,7 @@ public class UserServiceImplTest {
         Throwable thrown = catchThrowable(() -> {
             service.patch(finalUserInfo);
         });
-        assertEquals("exception.userWithoutId", thrown.getMessage());
+        assertEquals("exception.userWithoutIdAndUsername", thrown.getMessage());
 
         userInfo.put("id", result.getId());
 
@@ -389,6 +386,35 @@ public class UserServiceImplTest {
         assertThat(result.getRegion().getId()).isEqualTo(1);
 
         service.delete(result.getId());
+
+        try {
+            service.patch(Collections.EMPTY_MAP);
+            assert false;
+        } catch (UserException ex) {
+            assertThat(ex.getCode()).isEqualTo("exception.userWithoutIdAndUsername");
+        }
+
+        try {
+            service.patch(Map.of("id", Integer.MAX_VALUE));
+            assert false;
+        } catch (NotFoundException ex) {
+            assertThat(ex.getMessage()).isEqualTo("HTTP 404 Not Found");
+        }
+
+        try {
+            service.patch(Map.of("username", "nonExistingUser"));
+            assert false;
+        } catch (NotFoundException ex) {
+            assertThat(ex.getMessage()).isEqualTo("HTTP 404 Not Found");
+        }
+
+        result = service.patch(Map.of("username", "test"));
+        assertThat(result.getId()).isEqualTo(1);
+        assertThat(result.getUsername()).isEqualTo("test");
+
+        result = service.patch(Map.of("id", 1));
+        assertThat(result.getId()).isEqualTo(1);
+        assertThat(result.getUsername()).isEqualTo("test");
     }
 
     private void checkValidationEmail(User user) {
