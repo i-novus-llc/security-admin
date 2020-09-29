@@ -21,6 +21,12 @@ VALUES ('testAccountType1', 'testName1', 'testDesc1', 'NOT_SET', 'REGISTERED');
 INSERT INTO sec.account_type (code, name, description, user_level, status)
 VALUES ('testAccountType2', 'testName2', 'testDesc2', 'FEDERAL', 'AWAITING_MODERATION');
 
+-- department
+INSERT INTO sec.department (code, name)
+VALUES ('testDepartment1', 'testDepartment1');
+INSERT INTO sec.department (code, name)
+VALUES ('testDepartment2', 'testDepartment2');
+
 
 
 

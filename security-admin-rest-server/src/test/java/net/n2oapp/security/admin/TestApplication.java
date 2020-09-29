@@ -21,7 +21,8 @@ import ru.inovus.ms.rdm.sync.service.change_data.RdmChangeDataClient;
 @SpringBootApplication(exclude = RdmClientSyncAutoConfiguration.class)
 @EnableJaxRsProxyClient(
         classes = {RefBookService.class, VersionService.class, UserRestService.class, RoleRestService.class,
-                PermissionRestService.class, ClientRestService.class, UserDetailsRestService.class, AccountTypeRestService.class},
+                PermissionRestService.class, ClientRestService.class, UserDetailsRestService.class,
+                AccountTypeRestService.class, DepartmentRestService.class},
         address = "http://localhost:${server.port}/api")
 @EnableEmbeddedPg
 public class TestApplication {
