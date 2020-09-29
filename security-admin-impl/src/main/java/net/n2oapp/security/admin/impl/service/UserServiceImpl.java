@@ -23,6 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.ws.rs.NotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -35,7 +36,9 @@ import static org.springframework.util.StringUtils.hasText;
  */
 @Transactional
 public class UserServiceImpl implements UserService {
-    public static final String STATUS = "status";
+    private static final String ID = "id";
+    private static final String USERNAME = "username";
+    private static final String STATUS = "status";
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final AccountTypeRepository accountTypeRepository;
@@ -153,9 +156,21 @@ public class UserServiceImpl implements UserService {
     public User patch(Map<String, Object> userInfo) {
         if (userInfo == null)
             throw new UserException("exception.wrongRequest");
-        if (!userInfo.containsKey("id"))
-            throw new UserException("exception.userWithoutId");
-        UserEntity entity = userRepository.findById(Integer.parseInt(userInfo.get("id").toString())).orElseThrow();
+
+        if (!userInfo.containsKey(ID) && !userInfo.containsKey(USERNAME))
+            throw new UserException("exception.userWithoutIdAndUsername");
+
+        UserEntity entity = null;
+        if (userInfo.containsKey(ID) && nonNull(userInfo.get(ID))) {
+            entity = userRepository.findById(Integer.parseInt(userInfo.get(ID).toString())).orElse(null);
+        }
+        if (isNull(entity) && userInfo.containsKey(USERNAME) && nonNull(userInfo.get(USERNAME))) {
+            entity = userRepository.findOneByUsernameIgnoreCase(userInfo.get(USERNAME).toString());
+        }
+
+        if (isNull(entity))
+            throw new NotFoundException();
+
         UserForm user = obtainUserForm(entity, userInfo);
         return doUpdate(user);
     }
@@ -494,10 +509,10 @@ public class UserServiceImpl implements UserService {
 
     private UserForm obtainUserForm(UserEntity entity, Map<String, Object> userInfo) {
         UserForm userForm = new UserForm();
-        userForm.setId((Integer) userInfo.getOrDefault("id", entity.getId()));
+        userForm.setId((Integer) userInfo.getOrDefault(ID, entity.getId()));
+        userForm.setUsername((String) userInfo.getOrDefault(USERNAME, entity.getUsername()));
         userForm.setExtSys((String) userInfo.getOrDefault("extSys", entity.getExtSys()));
         userForm.setExtUid((String) userInfo.getOrDefault("extUid", entity.getExtUid()));
-        userForm.setUsername((String) userInfo.getOrDefault("username", entity.getUsername()));
         userForm.setEmail((String) userInfo.getOrDefault("email", entity.getEmail()));
         userForm.setSurname((String) userInfo.getOrDefault("surname", entity.getSurname()));
         userForm.setName((String) userInfo.getOrDefault("name", entity.getName()));
@@ -506,21 +521,22 @@ public class UserServiceImpl implements UserService {
         userForm.setPasswordCheck((String) userInfo.getOrDefault("passwordCheck", null));
         userForm.setTemporaryPassword((String) userInfo.getOrDefault("temporaryPassword", null));
         userForm.setSendOnEmail((Boolean) userInfo.getOrDefault("sendOnEmail", false));
-        userForm.setIsActive((Boolean) userInfo.getOrDefault("isActive",  entity.getIsActive()));
-        userForm.setRoles((List<Integer>) userInfo.getOrDefault("roles",  entity.getRoleList().stream().map(RoleEntity::getId).collect(Collectors.toList())));
+        userForm.setIsActive((Boolean) userInfo.getOrDefault("isActive", entity.getIsActive()));
+        userForm.setRoles((List<Integer>) userInfo.getOrDefault("roles", entity.getRoleList().stream().map(RoleEntity::getId).collect(Collectors.toList())));
         userForm.setSnils((String) userInfo.getOrDefault("snils", entity.getSnils()));
         userForm.setUserLevel((String) userInfo.getOrDefault("userLevel", entity.getUserLevel() != null ? entity.getUserLevel().getName() : null));
         userForm.setDepartmentId((Integer) userInfo.getOrDefault("departmentId", entity.getDepartment() != null ? entity.getDepartment().getId() : null));
         userForm.setRegionId((Integer) userInfo.getOrDefault("regionId", entity.getRegion() != null ? entity.getRegion().getId() : null));
-        userForm.setOrganizationId((Integer) userInfo.getOrDefault("organizationId",  entity.getOrganization() != null ? entity.getOrganization().getId() : null));
+        userForm.setOrganizationId((Integer) userInfo.getOrDefault("organizationId", entity.getOrganization() != null ? entity.getOrganization().getId() : null));
         userForm.setStatus(userInfo.containsKey(STATUS) ? UserStatus.valueOf((String) userInfo.get(STATUS)) : entity.getStatus());
-        userForm.setAccountTypeCode((String) userInfo.getOrDefault("accountTypeCode",null));
+        userForm.setAccountTypeCode((String) userInfo.getOrDefault("accountTypeCode", null));
         return userForm;
     }
 
     /**
      * Значение roleId > 0, потому что в наборе могут присутствовать dummy роли, которые не должны быть учтены
      * и имеют отрицательное значение id.
+     *
      * @param roles список ролей пользователя
      * @return отфильтрованный список ролей
      */
