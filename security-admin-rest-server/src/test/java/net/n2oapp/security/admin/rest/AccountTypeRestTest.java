@@ -85,6 +85,17 @@ public class AccountTypeRestTest {
     }
 
     @Test
+    public void testFindById() {
+        AccountType accountType = client.findById(1);
+        assertThat(accountType.getId(), is(1));
+        assertThat(accountType.getCode(), is("testAccountType1"));
+        assertThat(accountType.getName(), is("testName1"));
+        assertThat(accountType.getDescription(), is("testDesc1"));
+        assertThat(accountType.getUserLevel(), is(UserLevel.NOT_SET));
+        assertThat(accountType.getStatus(), is(UserStatus.REGISTERED));
+    }
+
+    @Test
     public void testCreate() {
         AccountType accountType = new AccountType();
         accountType.setCode("testCode3");
