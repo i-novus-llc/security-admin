@@ -15,6 +15,12 @@ INSERT INTO sec.user_role(user_id, role_id) VALUES (1,2);
 INSERT INTO sec.role_permission (role_id, permission_code) VALUES (1,'test');
 INSERT INTO sec.role_permission (role_id, permission_code) VALUES (1,'test2');
 
+-- account_type
+INSERT INTO sec.account_type (code, name, description, user_level, status)
+VALUES ('testAccountType1', 'testName1', 'testDesc1', 'NOT_SET', 'REGISTERED');
+INSERT INTO sec.account_type (code, name, description, user_level, status)
+VALUES ('testAccountType2', 'testName2', 'testDesc2', 'FEDERAL', 'AWAITING_MODERATION');
+
 
 
 
