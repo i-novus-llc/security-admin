@@ -127,11 +127,6 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
     }
 
     @Override
-    public List<Role> getAllRoles() {
-        return roleService.getAllRoles().stream().map(this::mapRoleRepresentation).collect(Collectors.toList());
-    }
-
-    @Override
     public Role createRole(Role role) {
         try {
             roleService.createRole(map(role));
