@@ -18,8 +18,6 @@ package net.n2oapp.security.admin.api.provider;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.SsoUser;
 
-import java.util.List;
-
 /**
  * Создание, изменение, удаление пользователя и ролей на sso сервере
  */
@@ -55,13 +53,6 @@ public interface SsoUserRoleProvider {
      * @param user
      */
     void changeActivity(SsoUser user);
-
-    /**
-     * Получение всех ролей уровня realm
-     * @return список ролей
-     */
-
-    List<Role> getAllRoles();
 
     /**
      * Создание роли
