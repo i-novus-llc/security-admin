@@ -12,7 +12,7 @@ import org.springframework.data.domain.Page;
  */
 public class DepartmentServiceRestClient implements DepartmentService {
 
-    private DepartmentRestService client;
+    private final DepartmentRestService client;
 
     public DepartmentServiceRestClient(DepartmentRestService client) {
         this.client = client;
@@ -25,7 +25,7 @@ public class DepartmentServiceRestClient implements DepartmentService {
         restDepartmentCriteria.setPage(criteria.getPage());
         restDepartmentCriteria.setOrders(criteria.getOrders());
         restDepartmentCriteria.setSize(criteria.getSize());
-        return client.getAll(restDepartmentCriteria);
+        return client.findAll(restDepartmentCriteria);
     }
 
 }
