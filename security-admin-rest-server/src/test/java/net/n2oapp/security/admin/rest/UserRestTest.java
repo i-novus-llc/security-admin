@@ -11,7 +11,6 @@ import net.n2oapp.security.admin.rest.api.UserRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
 import net.n2oapp.security.admin.rest.api.criteria.RestUserDetailsToken;
 import org.junit.Rule;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,12 +25,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Тест Rest сервиса управления пользователями
  */
+// TODO: 28.09.2020 Перенйти на Junit5
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TestApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
@@ -51,15 +52,15 @@ public class UserRestTest {
     private UserDetailsRestService userDetailsRestService;
 
 
-    @Test
-    public void search() throws Exception {
+    @org.junit.Test
+    public void search() {
         List<Integer> roles = new ArrayList<>();
         roles.add(1);
         RestUserCriteria criteria = new RestUserCriteria();
         criteria.setPage(0);
         criteria.setSize(4);
         List<Sort.Order> orders = new ArrayList<>();
-        orders.add(new Sort.Order(Sort.Direction.DESC,"fio"));
+        orders.add(new Sort.Order(Sort.Direction.DESC, "fio"));
         criteria.setOrders(orders);
         Page<User> user = client.findAll(criteria);
         assertThat(user.getContent().stream().map(User::getSurname).collect(Collectors.toList()), hasItem("surname3"));
@@ -73,8 +74,8 @@ public class UserRestTest {
 
     }
 
-    @Test
-    public void searchByRoleCodes() throws Exception {
+    @org.junit.Test
+    public void searchByRoleCodes() {
 
         List<String> roleCodes = new ArrayList<>();
         roleCodes.add("code1");
@@ -131,15 +132,15 @@ public class UserRestTest {
         assertNull(user.getClientId());
     }
 
-    @Test
+    @org.junit.Test
     public void crud() {
         User user = create();
         update(form(user));
         delete(user.getId());
     }
 
-    @Test
-    public void testUserDetails() throws Exception {
+    @org.junit.Test
+    public void testUserDetails() {
         RestUserDetailsToken token = new RestUserDetailsToken();
         token.setUsername("test");
         token.setRoleNames(Arrays.asList("code1", "code2"));
