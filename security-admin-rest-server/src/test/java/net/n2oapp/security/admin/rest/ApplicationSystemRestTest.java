@@ -7,7 +7,10 @@ import net.n2oapp.security.admin.api.model.Application;
 import net.n2oapp.security.admin.rest.api.ApplicationSystemRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestApplicationCriteria;
 import net.n2oapp.security.admin.rest.api.criteria.RestSystemCriteria;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -28,12 +31,14 @@ import static org.hamcrest.Matchers.is;
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
         properties = "server.port=8290")
 @TestPropertySource("classpath:test.properties")
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ApplicationSystemRestTest {
     @Autowired
     @Qualifier("applicationSystemRestServiceJaxRsProxyClient")
     private ApplicationSystemRestService client;
 
     @Test
+    @Order(1)
     public void findAllSystems() {
         RestSystemCriteria criteria = new RestSystemCriteria();
         List<AppSystem> systems = client.findAllSystems(criteria).getContent();
@@ -45,6 +50,7 @@ public class ApplicationSystemRestTest {
 
 
     @Test
+    @Order(2)
     public void findAllApplications() {
         RestApplicationCriteria criteria = new RestApplicationCriteria();
         List<Application> apps = client.findAllApplications(criteria).getContent();
@@ -57,6 +63,7 @@ public class ApplicationSystemRestTest {
     }
 
     @Test
+    @Order(3)
     public void testCreateApplication() {
         Application application = new Application();
         application.setCode("testApplicationCode3");
@@ -73,6 +80,7 @@ public class ApplicationSystemRestTest {
     }
 
     @Test
+    @Order(4)
     public void testUpdateApplication() {
         Application application = new Application();
         application.setCode("testApplicationUpdateCode1");
@@ -93,6 +101,7 @@ public class ApplicationSystemRestTest {
     }
 
     @Test
+    @Order(5)
     public void testDeleteApplication() {
         Application application = new Application();
         application.setCode("testApplicationDeleteCode1");
@@ -113,6 +122,7 @@ public class ApplicationSystemRestTest {
     }
 
     @Test
+    @Order(6)
     public void testCreateSystem() {
         AppSystem system = new AppSystem();
         system.setCode("testSystemCode3");
@@ -137,6 +147,7 @@ public class ApplicationSystemRestTest {
     }
 
     @Test
+    @Order(7)
     public void testDeleteSystem() {
         AppSystem system = new AppSystem();
         system.setCode("testSystemCode3");
@@ -162,6 +173,7 @@ public class ApplicationSystemRestTest {
     }
 
     @Test
+    @Order(8)
     public void testUpdateSystem() {
         AppSystem system = new AppSystem();
         system.setCode("testSystemCodeUpdate1");
