@@ -46,4 +46,12 @@ INSERT INTO sec.org_role (org_id, role_id)
 SELECT t1.id, t2.id FROM  (select id from sec.organization where code = 'testOrganization1') t1 , (select id from sec.role where code = 'testOrgRole') t2;
 
 
+-- systems
+INSERT INTO sec.system(code, name, description, short_name, icon, url, public_access, view_order, show_on_interface)
+VALUES ('testSystemCode1','testSystemName1','testSystemDesc1', 'testSystemShortName1', 'testSystemIcon1', 'testSystemUrl1', true, 1, true);
+INSERT INTO sec.system(code, name, description, short_name, icon, url, public_access, view_order, show_on_interface)
+VALUES ('testSystemCode2','testSystemName2','testSystemDesc2', 'testSystemShortName2', 'testSystemIcon2', 'testSystemUrl2', false, 2, false);
 
+-- applications
+INSERT INTO sec.application(code, name, system_code) VALUES ('testApplicationCode1', 'testApplicationName1', 'testSystemCode1');
+INSERT INTO sec.application(code, name, system_code) VALUES ('testApplicationCode2', 'testApplicationName2', 'testSystemCode1');
