@@ -27,6 +27,23 @@ VALUES ('testDepartment1', 'testDepartment1');
 INSERT INTO sec.department (code, name)
 VALUES ('testDepartment2', 'testDepartment2');
 
+-- organization
+INSERT INTO sec.organization (code, short_name, full_name, ogrn, okpo, inn, kpp, legal_address, email)
+VALUES ('testOrganization1', 'testOrganizationShortName1', 'testOrganizationFullName1', '123', '456', '789', '012', 'testOrganizationLegalAddress1', 'testOrganizationEmail1');
+INSERT INTO sec.organization (code, short_name, full_name, ogrn, okpo, inn, kpp, legal_address, email)
+VALUES ('testOrganization2', 'testOrganizationShortName2', 'testOrganizationFullName2', '123', '456', '789', '012', 'testOrganizationLegalAddress2', 'testOrganizationEmail2');
+
+INSERT INTO sec.org_category (code, name, description)
+VALUES ('testCategory1', 'testCategoryName1', 'testCategoryDescription1');
+INSERT INTO sec.org_category (code, name, description)
+VALUES ('testCategory2', 'testCategoryName2', 'testCategoryDescription2');
+
+INSERT INTO sec.assigned_org_category (org_id, org_category_id)
+SELECT t1.id, t2.id FROM  (select id from sec.organization where code = 'testOrganization1') t1 , (select id from sec.org_category where code = 'testCategory2') t2;
+
+INSERT INTO sec.role(name, code, description) VALUES ('testOrgRole','testOrgRole','testOrgRole');
+INSERT INTO sec.org_role (org_id, role_id)
+SELECT t1.id, t2.id FROM  (select id from sec.organization where code = 'testOrganization1') t1 , (select id from sec.role where code = 'testOrgRole') t2;
 
 
 
