@@ -73,6 +73,9 @@ public class ClientRestTest {
         client.setEnabled(false);
         clientService.persist(client);
         assertNull(clientService.getByClientId(client.getClientId()));
+
+        applicationSystemService.deleteApplication(application.getCode());
+        applicationSystemService.deleteSystem(appSystem.getCode());
     }
 
     @Test
