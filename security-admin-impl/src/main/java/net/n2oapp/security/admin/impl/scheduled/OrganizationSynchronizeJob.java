@@ -13,7 +13,7 @@ public class OrganizationSynchronizeJob extends SynchronizeJob {
 
     private static final Logger logger = LoggerFactory.getLogger(OrganizationSynchronizeJob.class);
 
-    @Value("${rdm.sync.ref_book_code.organization}")
+    @Value("${rdm.sync.ref-book-code.organization}")
     private String organizationRefBookCode;
 
     @Override

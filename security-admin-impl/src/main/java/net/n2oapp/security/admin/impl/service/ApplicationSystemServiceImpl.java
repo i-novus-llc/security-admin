@@ -44,9 +44,9 @@ import static java.util.Objects.nonNull;
 @Transactional
 public class ApplicationSystemServiceImpl implements ApplicationSystemService {
 
-    @Value("${rdm.sync.ref_book_code.system}")
+    @Value("${rdm.sync.ref-book-code.system}")
     private String systemRefBookCode;
-    @Value("${rdm.sync.ref_book_code.application}")
+    @Value("${rdm.sync.ref-book-code.application}")
     private String applicationRefBookCode;
 
     @Autowired

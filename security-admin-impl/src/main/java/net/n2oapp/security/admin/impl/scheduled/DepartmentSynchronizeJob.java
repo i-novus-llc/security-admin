@@ -11,7 +11,7 @@ public class DepartmentSynchronizeJob extends SynchronizeJob {
 
     private static final Logger logger = LoggerFactory.getLogger(DepartmentSynchronizeJob.class);
 
-    @Value("${rdm.sync.ref_book_code.department}")
+    @Value("${rdm.sync.ref-book-code.department}")
     private String departmentRefBookCode;
 
     @Override
