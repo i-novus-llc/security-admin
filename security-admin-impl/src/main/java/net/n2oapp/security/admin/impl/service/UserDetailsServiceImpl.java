@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static org.springframework.util.StringUtils.hasText;
 
 @Service
 @Transactional
@@ -71,21 +72,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new UserNotFoundAuthenticationException("User " + userDetails.getName() + " " + userDetails.getSurname() + " doesn't registered in system");
         } else if (updateUser) {
             userEntity.setIsActive(true);
-            if (nonNull(userDetails.getExtUid())) {
-                userEntity.setExtUid(userDetails.getExtUid());
-            }
-            if (nonNull(userDetails.getEmail())) {
-                userEntity.setEmail(userDetails.getEmail());
-            }
-            if (nonNull(userDetails.getPatronymic())) {
-                userEntity.setPatronymic(userDetails.getPatronymic());
-            }
-            if (nonNull(userDetails.getSurname())) {
-                userEntity.setSurname(userDetails.getSurname());
-            }
-            if (nonNull(userDetails.getName())) {
-                userEntity.setName(userDetails.getName());
-            }
+            userEntity.setExtUid(hasText(userDetails.getExtUid()) ? userDetails.getExtUid() : null);
+            userEntity.setEmail(hasText(userDetails.getEmail()) ? userDetails.getEmail() : null);
+            userEntity.setSurname(hasText(userDetails.getSurname()) ? userDetails.getSurname() : null);
+            userEntity.setName(hasText(userDetails.getName()) ? userDetails.getName() : null);
             if (isNull(userDetails.getRoleNames()) && updateRoles) {
                 userEntity.getRoleList().clear();
             } else if (updateRoles) {

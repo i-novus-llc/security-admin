@@ -24,6 +24,7 @@ import org.springframework.data.domain.Page;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.Map;
 
 /**
  * REST сервис управления пользоватлями
@@ -74,6 +75,18 @@ public interface UserRestService {
             @ApiResponse(code = 400, message = "Неккоректный запрос. Отсутвуют обязательные поля или заполнены некорректными данными")
     })
     User update(@ApiParam(value = "Пользователь") UserForm user);
+
+    /**
+     * Частичное обновление данных. Ожидает на вход мапу по своей структуре сходную
+     * с моделью UserForm.
+     * @see UserForm
+     */
+
+    @PATCH
+    @Path("/")
+    @ApiOperation("Изменить пользователя (частично)")
+    @ApiResponse(code = 200, message = "Измененный пользователь")
+    User patch(@ApiParam(value = "Пользователь") Map<String, Object> userForm);
 
     @DELETE
     @Path("/{id}")
