@@ -38,9 +38,9 @@ public class ApplicationSystemExportServiceImpl implements ApplicationSystemExpo
 
     private static final Logger log = LoggerFactory.getLogger(ApplicationSystemExportServiceImpl.class);
 
-    @Value("${rdm.sync.ref_book_code.system}")
+    @Value("${rdm.sync.ref-book-code.system}")
     private String systemRefBookCode;
-    @Value("${rdm.sync.ref_book_code.application}")
+    @Value("${rdm.sync.ref-book-code.application}")
     private String applicationRefBookCode;
 
     private static final String CODE = "code";

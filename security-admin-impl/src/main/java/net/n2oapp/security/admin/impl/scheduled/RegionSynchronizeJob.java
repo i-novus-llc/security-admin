@@ -11,7 +11,7 @@ public class RegionSynchronizeJob extends SynchronizeJob {
 
     private static final Logger logger = LoggerFactory.getLogger(RegionSynchronizeJob.class);
 
-    @Value("${rdm.sync.ref_book_code.region}")
+    @Value("${rdm.sync.ref-book-code.region}")
     private String regionRefBookCode;
 
     @Override
