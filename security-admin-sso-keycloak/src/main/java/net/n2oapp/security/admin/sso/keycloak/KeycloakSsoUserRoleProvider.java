@@ -152,6 +152,7 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
         } catch (HttpClientErrorException e) {
             throwUserException(e);
         }
+
     }
 
     @Override
@@ -180,7 +181,8 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
     private void throwUserException(HttpClientErrorException exception) {
         try {
             Map<String, String> map = objectMapper.readValue(exception.getResponseBodyAsString(), new TypeReference<Map<String, String>>() {});
-            throw new UserException("exception." + map.get("errorMessage").toLowerCase().replaceAll(" ", "-"));
+            String errorMessage = map.containsKey("errorMessage") ? map.get("errorMessage") : map.get("error");
+            throw new UserException("exception." + errorMessage.toLowerCase().replace(" ", "-"), exception);
         } catch (IOException e) {
             throw new IllegalArgumentException(exception);
         }
@@ -190,10 +192,10 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
         UserRepresentation kUser = new UserRepresentation();
         kUser.setId(user.getExtUid());
         kUser.setEnabled(user.getIsActive());
-        kUser.setUsername(user.getUsername());
-        kUser.setFirstName(user.getName());
-        kUser.setLastName(user.getSurname());
-        kUser.setEmail(user.getEmail());
+        kUser.setUsername(user.getUsername() != null ? user.getUsername() : "");
+        kUser.setFirstName(user.getName() != null ? user.getName() : "");
+        kUser.setLastName(user.getSurname() != null ? user.getSurname() : "");
+        kUser.setEmail(user.getEmail() != null ? user.getEmail() : "");
         kUser.setEmailVerified(properties.getEmailVerified());
         if (user.getPassword() != null) {
             CredentialRepresentation passwordCred = new CredentialRepresentation();

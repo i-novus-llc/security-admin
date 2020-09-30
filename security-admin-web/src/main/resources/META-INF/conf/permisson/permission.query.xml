@@ -27,7 +27,7 @@
                 <like filter-id="code" mapping="code"/>
             </filters>
         </field>
-        <field id="name" domain="string" name="Название">
+        <field id="name" domain="string" name="Наименование">
             <select mapping="name"/>
             <filters>
                 <like filter-id="name" mapping="name"/>

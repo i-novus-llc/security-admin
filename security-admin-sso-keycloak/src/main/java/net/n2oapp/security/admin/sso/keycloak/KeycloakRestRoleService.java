@@ -1,6 +1,5 @@
 package net.n2oapp.security.admin.sso.keycloak;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +17,6 @@ import java.util.stream.Collectors;
  * Сервис для создания, изменения, удаления ролей в keycloak
  */
 public class KeycloakRestRoleService {
-
     private static String ROLE_BY_NAME = "%s/admin/realms/%s/roles/%s";
     private static String ROLES = "%s/admin/realms/%s/roles/";
     private static String ROLE_COMPOSITES = "%s/admin/realms/%s/roles/%s/composites";

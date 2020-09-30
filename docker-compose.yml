@@ -12,6 +12,7 @@ services:
       - SECURITY_OAUTH2_RESOURCE_USER_INFO_URI=http://auth-gateway:8080/userinfo
       - ACCESS_SERVICE_URL=http://auth-gateway:8080/api
       - JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
+      - SPRING_CLOUD_CONSUL_CONFIG_PREFIX=security-admin-master
     ports:
       - 8080
     deploy:
@@ -39,6 +40,8 @@ services:
       - ACCESS_ORGANIZATION_PERSIST_MODE=rest
       - JAXRS_SWAGGER_AUTH_TOKEN_URI=http://yandex.develop:8278/oauth/token
       - ACCESS_EMAIL_AS_USERNAME=true
+      - AUDIT_CLIENT_ENABLED=false
+      - SPRING_CLOUD_CONSUL_CONFIG_PREFIX=security-admin-master
     ports:
       - 8080
     deploy:
