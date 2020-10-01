@@ -139,4 +139,29 @@
         </profile>
     </profiles>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.5</version>
+                <configuration>
+                    <destFile>${project.build.directory}/jacoco.exec</destFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>aggregate-report</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report-aggregate</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.basedir}/../target/site/jacoco-aggregate</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>
