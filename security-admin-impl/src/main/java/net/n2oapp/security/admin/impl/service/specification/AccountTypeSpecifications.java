@@ -34,7 +34,7 @@ public class AccountTypeSpecifications implements Specification<AccountTypeEntit
             }
             if (UserLevel.NOT_SET.getName().equals(userLevel)) {
                 predicate = builder.and(predicate, builder.or(builder.isNull(root.get(AccountTypeEntity_.userLevel)),
-                        builder.equal(root.get(AccountTypeEntity_.userLevel), UserLevel.valueOf(userLevel))));
+                        builder.equal(root.get(AccountTypeEntity_.userLevel), UserLevel.NOT_SET)));
             } else {
                 predicate = builder.and(predicate, builder.equal(root.get(AccountTypeEntity_.userLevel), UserLevel.valueOf(userLevel)));
             }
