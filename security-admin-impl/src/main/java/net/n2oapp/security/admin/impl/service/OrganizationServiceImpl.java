@@ -93,8 +93,9 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public void delete(Integer id) {
-        if (!organizationRepository.existsById(id))
-            throw new UserException("exception.OrganizationNotFound");
+        OrganizationEntity organizationEntity = organizationRepository.findById(id).orElseThrow(() -> new UserException("exception.OrganizationNotFound"));
+        if (!organizationEntity.getUsers().isEmpty())
+            throw new UserException("exception.organizationHasUsers");
         organizationRepository.deleteById(id);
     }
 
