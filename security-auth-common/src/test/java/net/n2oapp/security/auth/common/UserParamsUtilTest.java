@@ -1,0 +1,308 @@
+package net.n2oapp.security.auth.common;
+
+import net.n2oapp.security.auth.common.authority.PermissionGrantedAuthority;
+import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
+import net.n2oapp.security.auth.common.authority.SystemGrantedAuthority;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpSession;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
+
+import java.util.*;
+
+import static org.junit.Assert.*;
+import static org.springframework.security.core.context.SecurityContextHolder.*;
+
+public class UserParamsUtilTest {
+
+    private static final String PRINCIPIAL_DEPARTMENT_NAME_ATTR = "departmentName";
+    private static final String PRINCIPIAL_DEPARTMENT_ATTR = "department";
+    private static final String PRINCIPIAL_CREDENTIAL_NON_EXPIRED_ATTR = "credentialsNonExpired";
+    private static final String PRINCIPIAL_ROLES_ATTR = "roles";
+    private static final String PRINCIPIAL_SURNAME_ATTR = "surname";
+    private static final String PRINCIPIAL_NAME_ATTR = "name";
+    private static final String PRINCIPIAL_PATRONYMIC_ATTR = "patronymic";
+    private static final String PRINCIPIAL_USER_SHORT_NAME_ATTR = "userShortName";
+    private static final String PRINCIPIAL_USER_FULL_NAME_ATTR = "userFullName";
+    private static final String PRINCIPIAL_PASSWORD_ATTR = "password";
+    private static final String PRINCIPIAL_USER_NAME_SURNAME_ATTR = "userNameSurname";
+    private static final String PRINCIPIAL_ORGANIZATION_ATTR = "organization";
+    private static final String PRINCIPIAL_ACCOUNT_NON_EXPIRED_ATTR = "accountNonExpired";
+    private static final String PRINCIPIAL_ENABLED_EXPIRED_ATTR = "enabled";
+    private static final String PRINCIPIAL_USER_LEVEL_ATTR = "userLevel";
+    private static final String PRINCIPIAL_PERMISSIONS_ATTR = "permissions";
+    private static final String PRINCIPIAL_REGION_ATTR = "region";
+    private static final String PRINCIPIAL_CLASS_ATTR = "class";
+    private static final String PRINCIPIAL_EMAIL_ATTR = "email";
+    private static final String PRINCIPIAL_USERNAME_ATTR = "username";
+    private static final String PRINCIPIAL_ACCOUNT_NON_LOCKED_ATTR = "accountNonLocked";
+    private static final String PRINCIPIAL_AUTHORITEIES_ATTR = "authorities";
+
+    private static final String SOME_DEPARTMENT_NAME = "someDepartmentName";
+    private static final String SOME_DEPARTMENT = "someDepartment";
+    private static final String SOME_ROLE = "ROLE_USER";
+    private static final String SOME_SURNAME = "someSurname";
+    private static final String SOME_NAME = "someName";
+    private static final String SOME_PATRONYMIC = "somePatronymic";
+    private static final String SOME_PASSWORD = "pass";
+    private static final String SOME_ORGANIZATION = "someOrganization";
+    private static final String SOME_USER_LEVEL = "someUserLevel";
+    private static final String SOME_REGION = "someRegion";
+    private static final String SOME_EMAIL = "someEmail";
+    private static final String SOME_USERNAME = "someUserName";
+    private static final String SOME_PERMISSION = "somePermission";
+    private static final String SOME_SYSTEM = "someSystem";
+    private static final String SOME_ANONYMOUS_USERNAME = "anonymous";
+    private static final String SOME_ANONYMOUS_PASSWORD = "anonymous";
+    private static final String SOME_ANONYMOUS_ROLE = "ANONYMOUS";
+    private static final GrantedAuthority SOME_GRANTED_AUTHORITY = new RoleGrantedAuthority(SOME_ROLE);
+    private static final Set SOME_AUTHORITEIES = Collections.unmodifiableSet(Set.of(SOME_GRANTED_AUTHORITY));
+
+    private static final String SOME_SESSION_ID_1 = "1";
+    private static final String SOME_SESSION_ID_3 = "3";
+    private static final String SOME_SESSION_ID_15 = "15";
+
+    private static final String USER_SHORTNAME_FORMAT = "%s %s.%s.";
+    private static final String USER_FULLNAME_FORMAT = "%s %s %s";
+    private static final String USER_NAME_FULLNAME_FORMAT = "%s %s";
+
+    private static final List SOME_ROLE_LIST = Arrays.asList(SOME_ROLE);
+
+    private static final String ROLES = "roles";
+    private static final String PERMISSIONS = "permissions";
+    private static final String SYSTEMS = "systems";
+
+    private TestingAuthenticationToken testingAuthenticationToken;
+    private TestingAuthenticationToken testingAuthTokenWithNullPrincipal;
+    private TestingAuthenticationToken testingAuthTokenWithPrincipalIsDetails;
+    private AnonymousAuthenticationToken anonymousAuthenticationToken;
+
+    private MockHttpServletRequest request;
+
+    private WebAuthenticationDetails authenticationDetails;
+
+    private User testPrincipal;
+
+    @Before
+    public void setup() {
+
+        testingAuthenticationToken = new TestingAuthenticationToken(SOME_USERNAME, SOME_PASSWORD, SOME_ROLE);
+
+        testingAuthTokenWithNullPrincipal = new TestingAuthenticationToken(null, SOME_PASSWORD);
+
+        anonymousAuthenticationToken = new AnonymousAuthenticationToken(SOME_ANONYMOUS_USERNAME, SOME_ANONYMOUS_PASSWORD,
+                AuthorityUtils.createAuthorityList(SOME_ANONYMOUS_ROLE));
+
+        request = new MockHttpServletRequest();
+        request.setSession(new MockHttpSession());
+        authenticationDetails = new WebAuthenticationDetails(request);
+
+        testPrincipal = new User(SOME_USERNAME, SOME_PASSWORD, Collections.singleton(SOME_GRANTED_AUTHORITY));
+        testPrincipal.setSurname(SOME_SURNAME);
+        testPrincipal.setName(SOME_NAME);
+        testPrincipal.setPatronymic(SOME_PATRONYMIC);
+        testPrincipal.setDepartment(SOME_DEPARTMENT);
+        testPrincipal.setDepartmentName(SOME_DEPARTMENT_NAME);
+        testPrincipal.setOrganization(SOME_ORGANIZATION);
+        testPrincipal.setUserLevel(SOME_USER_LEVEL);
+        testPrincipal.setRegion(SOME_REGION);
+        testPrincipal.setEmail(SOME_EMAIL);
+
+        testingAuthTokenWithPrincipalIsDetails = new TestingAuthenticationToken(testPrincipal, SOME_PASSWORD);
+    }
+
+    @After
+    public void cleanup() {
+        clearContext();
+    }
+
+    @Test
+    public void testGetSessionId_whenNullContext() {
+        assertEquals(UserParamsUtil.getSessionId(), StringUtils.EMPTY);
+    }
+
+    @Test
+    public void testGetSessionId_withTestingAuthDetails() {
+        testingAuthenticationToken.setDetails(authenticationDetails);
+        SecurityContextHolder.getContext().setAuthentication(testingAuthenticationToken);
+        assertEquals(UserParamsUtil.getSessionId(), SOME_SESSION_ID_15);
+    }
+
+    @Test
+    public void testGetSessionId_withAnonymousAuthDetails() {
+        anonymousAuthenticationToken.setDetails(authenticationDetails);
+        SecurityContextHolder.getContext().setAuthentication(anonymousAuthenticationToken);
+        assertEquals(UserParamsUtil.getSessionId(), SOME_SESSION_ID_3);
+    }
+
+    @Test
+    public void testGetSessionId_withOutAuthDetails() {
+        testingAuthenticationToken.setDetails(authenticationDetails);
+        assertEquals(UserParamsUtil.getSessionId(), StringUtils.EMPTY);
+    }
+
+    @Test
+    public void testGetSessionId_withArg() {
+        testingAuthenticationToken.setDetails(authenticationDetails);
+        assertEquals(UserParamsUtil.getSessionId(testingAuthenticationToken), SOME_SESSION_ID_1);
+    }
+
+    @Test
+    public void testGetUsername_whenNullContext() {
+        assertEquals(UserParamsUtil.getUsername(), StringUtils.EMPTY);
+    }
+
+    @Test
+    public void testGetUsername_whenNullAuth() {
+        SecurityContextHolder.getContext().setAuthentication(null);
+        assertEquals(UserParamsUtil.getUsername(), StringUtils.EMPTY);
+    }
+
+    @Test
+    public void testGetUsername_whenAnonymousAuth() {
+        anonymousAuthenticationToken.setDetails(authenticationDetails);
+        assertEquals(UserParamsUtil.getUsername(), StringUtils.EMPTY);
+    }
+
+    @Test
+    public void testGetUsername_whenPrincipalIsString() {
+        SecurityContextHolder.getContext().setAuthentication(testingAuthenticationToken);
+        assertEquals(UserParamsUtil.getUsername(), SOME_USERNAME);
+    }
+
+    @Test
+    public void testGetUsername_whenPrincipalIsDetails() {
+        SecurityContextHolder.getContext().setAuthentication(testingAuthTokenWithPrincipalIsDetails);
+        assertEquals(UserParamsUtil.getUsername(), SOME_USERNAME);
+    }
+
+    @Test
+    public void testGetUserDetails_whenNullContext() {
+        assertNull(UserParamsUtil.getUserDetails());
+    }
+
+    @Test
+    public void testGetUserDetails_whenNullAuth() {
+        SecurityContextHolder.getContext().setAuthentication(null);
+        assertNull(UserParamsUtil.getUserDetails());
+    }
+
+    @Test
+    public void testGetUserDetails_whenPrincipalIsDetails() {
+        SecurityContextHolder.getContext().setAuthentication(testingAuthTokenWithPrincipalIsDetails);
+        assertEquals(UserParamsUtil.getUserDetails(), testPrincipal);
+    }
+
+    @Test
+    public void testGetUserDetails_withTestingAuthDetails() {
+        initSecurityContextWithPrincipal();
+        assertEquals(UserParamsUtil.getUserDetails(), testPrincipal);
+    }
+
+
+    @Test
+    public void testGetUserDetailsAsMap_withNullArg() {
+        Map<String, Object> map = UserParamsUtil.getUserDetailsAsMap(null);
+        assertTrue(map.isEmpty());
+    }
+
+    @Test
+    public void testGetUserDetailsAsMap_withUserDetailsArg() {
+        Map<String, Object> map = UserParamsUtil.getUserDetailsAsMap(testPrincipal);
+        assertUserDetailsMap(map);
+    }
+
+    @Test
+    public void testGetUserDetailsAsMap_withoutArg() {
+        initSecurityContextWithPrincipal();
+
+        Map<String, Object> map = UserParamsUtil.getUserDetailsAsMap();
+        assertUserDetailsMap(map);
+    }
+
+    @Test
+    public void testGetUserDetailsProperty() {
+        User user = new User(SOME_USERNAME);
+        user.setSurname(SOME_SURNAME);
+        assertEquals(UserParamsUtil.getUserDetailsProperty(user, PRINCIPIAL_SURNAME_ATTR), SOME_SURNAME);
+    }
+
+    @Test
+    public void testExtractAuthorities() {
+
+        Map map = new HashMap<String, List<String>>();
+        map.put(ROLES, Arrays.asList(SOME_ROLE));
+        map.put(PERMISSIONS, Arrays.asList(SOME_PERMISSION));
+        map.put(SYSTEMS, Arrays.asList(SOME_SYSTEM));
+
+        List<GrantedAuthority> authorities = UserParamsUtil.extractAuthorities(map);
+        assertFalse(authorities.isEmpty());
+
+        for (GrantedAuthority authority : authorities) {
+
+            if (authority instanceof RoleGrantedAuthority) {
+                assertEquals(authority, new RoleGrantedAuthority(SOME_ROLE));
+            } else if (authority instanceof PermissionGrantedAuthority) {
+                assertEquals(authority, new PermissionGrantedAuthority(SOME_PERMISSION));
+            } else if (authority instanceof SystemGrantedAuthority) {
+                assertEquals(authority, new SystemGrantedAuthority(SOME_SYSTEM));
+            } else {
+                fail();
+            }
+        }
+    }
+
+    private String getUserShortName() {
+        return String.format(USER_SHORTNAME_FORMAT, SOME_SURNAME,
+                SOME_NAME.substring(0, 1).toUpperCase(),
+                SOME_PATRONYMIC.substring(0, 1).toUpperCase());
+    }
+
+    private String getUserFullName() {
+        return String.format(USER_FULLNAME_FORMAT, SOME_SURNAME, SOME_NAME, SOME_PATRONYMIC);
+    }
+
+    private String getUserNameSurname() {
+        return String.format(USER_NAME_FULLNAME_FORMAT, SOME_NAME, SOME_SURNAME);
+    }
+
+    private void initSecurityContextWithPrincipal() {
+        testingAuthenticationToken.setDetails(testPrincipal);
+        SecurityContextHolder.getContext().setAuthentication(testingAuthenticationToken);
+    }
+
+    private void assertUserDetailsMap(Map<String, Object> map) {
+        assertNotNull(map);
+
+        assertEquals(map.get(PRINCIPIAL_DEPARTMENT_NAME_ATTR), SOME_DEPARTMENT_NAME);
+        assertEquals(map.get(PRINCIPIAL_DEPARTMENT_ATTR), SOME_DEPARTMENT);
+        assertEquals(map.get(PRINCIPIAL_CREDENTIAL_NON_EXPIRED_ATTR), Boolean.TRUE);
+        assertEquals(map.get(PRINCIPIAL_ROLES_ATTR), SOME_ROLE_LIST);
+        assertEquals(map.get(PRINCIPIAL_USER_FULL_NAME_ATTR), getUserFullName());
+        assertEquals(map.get(PRINCIPIAL_AUTHORITEIES_ATTR), SOME_AUTHORITEIES);
+        assertEquals(map.get(PRINCIPIAL_ENABLED_EXPIRED_ATTR), Boolean.TRUE);
+        assertEquals(map.get(PRINCIPIAL_USER_SHORT_NAME_ATTR), getUserShortName());
+        assertEquals(map.get(PRINCIPIAL_PASSWORD_ATTR), SOME_PASSWORD);
+        assertEquals(map.get(PRINCIPIAL_SURNAME_ATTR), SOME_SURNAME);
+        assertEquals(map.get(PRINCIPIAL_NAME_ATTR), SOME_NAME);
+        assertEquals(map.get(PRINCIPIAL_PATRONYMIC_ATTR), SOME_PATRONYMIC);
+        assertEquals(map.get(PRINCIPIAL_USER_LEVEL_ATTR), SOME_USER_LEVEL);
+        assertEquals(map.get(PRINCIPIAL_PERMISSIONS_ATTR), new ArrayList<>());
+        assertEquals(map.get(PRINCIPIAL_ORGANIZATION_ATTR), SOME_ORGANIZATION);
+        assertEquals(map.get(PRINCIPIAL_ACCOUNT_NON_EXPIRED_ATTR), Boolean.TRUE);
+        assertEquals(map.get(PRINCIPIAL_REGION_ATTR), SOME_REGION);
+        assertEquals(map.get(PRINCIPIAL_CLASS_ATTR), User.class);
+        assertEquals(map.get(PRINCIPIAL_USER_NAME_SURNAME_ATTR), getUserNameSurname());
+        assertEquals(map.get(PRINCIPIAL_EMAIL_ATTR), SOME_EMAIL);
+        assertEquals(map.get(PRINCIPIAL_ACCOUNT_NON_LOCKED_ATTR), Boolean.TRUE);
+        assertEquals(map.get(PRINCIPIAL_USERNAME_ATTR), SOME_USERNAME);
+    }
+}
