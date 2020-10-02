@@ -63,7 +63,7 @@ public class UserParamsUtilTest {
 
     private static final String SOME_SESSION_ID_2 = "2";
     private static final String SOME_SESSION_ID_4 = "4";
-    private static final String SOME_SESSION_ID_18 = "18";
+    private static final String SOME_SESSION_ID_19 = "19";
 
 
     private static final List SOME_ROLE_LIST = Arrays.asList(SOME_ROLE);
@@ -125,7 +125,7 @@ public class UserParamsUtilTest {
     public void testGetSessionId_withTestingAuthDetails() {
         testingAuthenticationToken.setDetails(authenticationDetails);
         SecurityContextHolder.getContext().setAuthentication(testingAuthenticationToken);
-        assertEquals(UserParamsUtil.getSessionId(), SOME_SESSION_ID_18);
+        assertEquals(UserParamsUtil.getSessionId(), SOME_SESSION_ID_19);
     }
 
     @Test
@@ -243,6 +243,12 @@ public class UserParamsUtilTest {
     @Test
     public void testGetUserDetailsProperty_whenNullUserDetails() {
         assertNull(UserParamsUtil.getUserDetailsProperty(null, PRINCIPIAL_SURNAME_ATTR));
+    }
+
+    @Test
+    public void testGetUserDetailsProperty_withOnceArg() {
+        initSecurityContextWithPrincipal();
+        assertEquals(UserParamsUtil.getUserDetailsProperty(PRINCIPIAL_SURNAME_ATTR), SOME_SURNAME);
     }
 
     @Test
