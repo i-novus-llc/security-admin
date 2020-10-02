@@ -61,9 +61,9 @@ public class UserParamsUtilTest {
     private static final GrantedAuthority SOME_GRANTED_AUTHORITY = new RoleGrantedAuthority(SOME_ROLE);
     private static final Set SOME_AUTHORITEIES = Collections.unmodifiableSet(Set.of(SOME_GRANTED_AUTHORITY));
 
-    private static final String SOME_SESSION_ID_1 = "1";
-    private static final String SOME_SESSION_ID_3 = "3";
-    private static final String SOME_SESSION_ID_15 = "15";
+    private static final String SOME_SESSION_ID_2 = "2";
+    private static final String SOME_SESSION_ID_4 = "4";
+    private static final String SOME_SESSION_ID_18 = "18";
 
 
     private static final List SOME_ROLE_LIST = Arrays.asList(SOME_ROLE);
@@ -125,14 +125,14 @@ public class UserParamsUtilTest {
     public void testGetSessionId_withTestingAuthDetails() {
         testingAuthenticationToken.setDetails(authenticationDetails);
         SecurityContextHolder.getContext().setAuthentication(testingAuthenticationToken);
-        assertEquals(UserParamsUtil.getSessionId(), SOME_SESSION_ID_15);
+        assertEquals(UserParamsUtil.getSessionId(), SOME_SESSION_ID_18);
     }
 
     @Test
     public void testGetSessionId_withAnonymousAuthDetails() {
         anonymousAuthenticationToken.setDetails(authenticationDetails);
         SecurityContextHolder.getContext().setAuthentication(anonymousAuthenticationToken);
-        assertEquals(UserParamsUtil.getSessionId(), SOME_SESSION_ID_3);
+        assertEquals(UserParamsUtil.getSessionId(), SOME_SESSION_ID_4);
     }
 
     @Test
@@ -144,7 +144,13 @@ public class UserParamsUtilTest {
     @Test
     public void testGetSessionId_withArg() {
         testingAuthenticationToken.setDetails(authenticationDetails);
-        assertEquals(UserParamsUtil.getSessionId(testingAuthenticationToken), SOME_SESSION_ID_1);
+        assertEquals(UserParamsUtil.getSessionId(testingAuthenticationToken), SOME_SESSION_ID_2);
+    }
+
+    @Test
+    public void testGetSessionId_whenPrincipalIsDetails() {
+        testingAuthenticationToken.setDetails(testPrincipal);
+        assertEquals(UserParamsUtil.getSessionId(testingAuthenticationToken), StringUtils.EMPTY);
     }
 
     @Test
@@ -161,6 +167,7 @@ public class UserParamsUtilTest {
     @Test
     public void testGetUsername_whenAnonymousAuth() {
         anonymousAuthenticationToken.setDetails(authenticationDetails);
+        SecurityContextHolder.getContext().setAuthentication(anonymousAuthenticationToken);
         assertEquals(UserParamsUtil.getUsername(), StringUtils.EMPTY);
     }
 
@@ -199,6 +206,12 @@ public class UserParamsUtilTest {
         assertEquals(UserParamsUtil.getUserDetails(), testPrincipal);
     }
 
+    @Test
+    public void testGetUserDetails_whenNullUserDetails() {
+        testingAuthenticationToken.setDetails(null);
+        SecurityContextHolder.getContext().setAuthentication(testingAuthenticationToken);
+        assertNull(UserParamsUtil.getUserDetails());
+    }
 
     @Test
     public void testGetUserDetailsAsMap_withNullArg() {
@@ -225,6 +238,11 @@ public class UserParamsUtilTest {
         User user = new User(SOME_USERNAME);
         user.setSurname(SOME_SURNAME);
         assertEquals(UserParamsUtil.getUserDetailsProperty(user, PRINCIPIAL_SURNAME_ATTR), SOME_SURNAME);
+    }
+
+    @Test
+    public void testGetUserDetailsProperty_whenNullUserDetails() {
+        assertNull(UserParamsUtil.getUserDetailsProperty(null, PRINCIPIAL_SURNAME_ATTR));
     }
 
     @Test
