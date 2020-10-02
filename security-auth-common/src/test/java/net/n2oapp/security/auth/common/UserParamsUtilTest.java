@@ -18,6 +18,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import java.util.*;
 
+import static net.n2oapp.security.auth.common.TestConstants.*;
 import static org.junit.Assert.*;
 import static org.springframework.security.core.context.SecurityContextHolder.*;
 
@@ -48,16 +49,10 @@ public class UserParamsUtilTest {
 
     private static final String SOME_DEPARTMENT_NAME = "someDepartmentName";
     private static final String SOME_DEPARTMENT = "someDepartment";
-    private static final String SOME_ROLE = "ROLE_USER";
-    private static final String SOME_SURNAME = "someSurname";
-    private static final String SOME_NAME = "someName";
-    private static final String SOME_PATRONYMIC = "somePatronymic";
-    private static final String SOME_PASSWORD = "pass";
+
     private static final String SOME_ORGANIZATION = "someOrganization";
     private static final String SOME_USER_LEVEL = "someUserLevel";
     private static final String SOME_REGION = "someRegion";
-    private static final String SOME_EMAIL = "someEmail";
-    private static final String SOME_USERNAME = "someUserName";
     private static final String SOME_PERMISSION = "somePermission";
     private static final String SOME_SYSTEM = "someSystem";
     private static final String SOME_ANONYMOUS_USERNAME = "anonymous";
@@ -70,9 +65,6 @@ public class UserParamsUtilTest {
     private static final String SOME_SESSION_ID_3 = "3";
     private static final String SOME_SESSION_ID_15 = "15";
 
-    private static final String USER_SHORTNAME_FORMAT = "%s %s.%s.";
-    private static final String USER_FULLNAME_FORMAT = "%s %s %s";
-    private static final String USER_NAME_FULLNAME_FORMAT = "%s %s";
 
     private static final List SOME_ROLE_LIST = Arrays.asList(SOME_ROLE);
 
