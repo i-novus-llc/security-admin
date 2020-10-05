@@ -22,6 +22,7 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 /**
  * Тест Rest сервиса управления системами и приложениями
@@ -111,6 +112,8 @@ public class ApplicationSystemRestTest {
         Application created = client.createApplication(application);
         assertThat(created != null, is(true));
 
+        assertThat(client.getApplication(application.getCode()), notNullValue());
+
         client.deleteApplication(created.getCode());
 
         try {
@@ -161,6 +164,9 @@ public class ApplicationSystemRestTest {
 
         AppSystem result = client.createSystem(system);
         assertThat(result != null, is(true));
+
+        assertThat(client.getSystem(system.getCode()), is(notNullValue()));
+
 
         client.deleteSystem(result.getCode());
 
