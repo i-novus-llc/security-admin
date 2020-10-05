@@ -16,6 +16,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -93,6 +94,9 @@ public class PermissionRestTest {
         RestPermissionCriteria criteria = new RestPermissionCriteria();
         criteria.setCode(permission.getCode());
         assertThat(client.getAll(null, criteria).getContent().size(), is(1));
+
+        assertThat(client.getById(permission.getCode()), notNullValue());
+
         client.delete(permission.getCode());
         assertThat(client.getAll(null, criteria).getContent().size(), is(0));
 
