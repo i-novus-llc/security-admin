@@ -27,6 +27,12 @@ VALUES ('testDepartment1', 'testDepartment1');
 INSERT INTO sec.department (code, name)
 VALUES ('testDepartment2', 'testDepartment2');
 
+-- region
+INSERT INTO sec.region (code, name, okato)
+VALUES ('testRegion1', 'testRegion1', 'testOkato1');
+INSERT INTO sec.region (code, name)
+VALUES ('testRegion2', 'testRegion2');
+
 -- organization
 INSERT INTO sec.organization (code, short_name, full_name, ogrn, okpo, inn, kpp, legal_address, email)
 VALUES ('testOrganization1', 'testOrganizationShortName1', 'testOrganizationFullName1', '123', '456', '789', '012', 'testOrganizationLegalAddress1', 'testOrganizationEmail1');
