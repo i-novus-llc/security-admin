@@ -1,11 +1,14 @@
 package net.n2oapp.security.auth.common;
 
 import net.n2oapp.security.auth.common.authority.PermissionGrantedAuthority;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static net.n2oapp.security.auth.common.TestConstants.OTHER_PERMISSION;
 import static net.n2oapp.security.auth.common.TestConstants.SOME_PERMISSION;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 public class PermissionGrantedAuthorityTest {
 
@@ -14,19 +17,17 @@ public class PermissionGrantedAuthorityTest {
     @Test
     public void testGetAuthority() {
         PermissionGrantedAuthority auth = new PermissionGrantedAuthority(SOME_PERMISSION);
-        Assert.assertEquals(auth.getAuthority(), DEFAULT_PERMISSION_PREFIX + SOME_PERMISSION);
+        assertEquals(DEFAULT_PERMISSION_PREFIX + SOME_PERMISSION, auth.getAuthority());
     }
 
     @Test
     public void testGetPermission() {
-        PermissionGrantedAuthority auth = new PermissionGrantedAuthority(SOME_PERMISSION);
-        Assert.assertEquals(auth.getPermission(), SOME_PERMISSION);
+        assertEquals(SOME_PERMISSION, new PermissionGrantedAuthority(SOME_PERMISSION).getPermission());
     }
 
     @Test
     public void testToString() {
-        PermissionGrantedAuthority auth = new PermissionGrantedAuthority(SOME_PERMISSION);
-        Assert.assertEquals(auth.toString(), SOME_PERMISSION);
+        assertEquals(SOME_PERMISSION, new PermissionGrantedAuthority(SOME_PERMISSION).toString());
     }
 
     @Test
@@ -34,22 +35,22 @@ public class PermissionGrantedAuthorityTest {
         PermissionGrantedAuthority x = new PermissionGrantedAuthority(SOME_PERMISSION);
         PermissionGrantedAuthority y = new PermissionGrantedAuthority(SOME_PERMISSION);
 
-        Assert.assertTrue(x.equals(x) && x.equals(x));
-        Assert.assertTrue(x.hashCode() == x.hashCode());
+        assertTrue(x.equals(x) && x.equals(x));
+        assertTrue(x.hashCode() == x.hashCode());
 
-        Assert.assertTrue(x.equals(y) && y.equals(x));
-        Assert.assertTrue(x.hashCode() == y.hashCode());
+        assertTrue(x.equals(y) && y.equals(x));
+        assertTrue(x.hashCode() == y.hashCode());
 
         PermissionGrantedAuthority z = new PermissionGrantedAuthority(OTHER_PERMISSION);
 
-        Assert.assertFalse(x.equals(z));
-        Assert.assertFalse(z.equals(x));
-        Assert.assertFalse(x.hashCode() == z.hashCode());
+        assertFalse(x.equals(z));
+        assertFalse(z.equals(x));
+        assertFalse(x.hashCode() == z.hashCode());
 
         Object otherObject = new Object();
 
-        Assert.assertFalse(x.equals(otherObject));
-        Assert.assertFalse(otherObject.equals(x));
-        Assert.assertFalse(x.hashCode() == otherObject.hashCode());
+        assertFalse(x.equals(otherObject));
+        assertFalse(otherObject.equals(x));
+        assertFalse(x.hashCode() == otherObject.hashCode());
     }
 }

@@ -1,11 +1,13 @@
 package net.n2oapp.security.auth.common;
 
 import net.n2oapp.security.auth.common.authority.SystemGrantedAuthority;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static net.n2oapp.security.auth.common.TestConstants.OTHER_SYSTEM_NAME;
 import static net.n2oapp.security.auth.common.TestConstants.SOME_SYSTEM_NAME;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 public class SystemGrantedAuthorityTest {
 
@@ -14,19 +16,17 @@ public class SystemGrantedAuthorityTest {
     @Test
     public void testGetAuthority() {
         SystemGrantedAuthority auth = new SystemGrantedAuthority(SOME_SYSTEM_NAME);
-        Assert.assertEquals(auth.getAuthority(), DEFAULT_SYSTEM_PREFIX + SOME_SYSTEM_NAME);
+        assertEquals( DEFAULT_SYSTEM_PREFIX + SOME_SYSTEM_NAME, auth.getAuthority());
     }
 
     @Test
     public void testGetSystem() {
-        SystemGrantedAuthority auth = new SystemGrantedAuthority(SOME_SYSTEM_NAME);
-        Assert.assertEquals(auth.getSystem(), SOME_SYSTEM_NAME);
+        assertEquals(SOME_SYSTEM_NAME, new SystemGrantedAuthority(SOME_SYSTEM_NAME).getSystem());
     }
 
     @Test
     public void testToString() {
-        SystemGrantedAuthority auth = new SystemGrantedAuthority(SOME_SYSTEM_NAME);
-        Assert.assertEquals(auth.toString(), SOME_SYSTEM_NAME);
+        assertEquals(SOME_SYSTEM_NAME, new SystemGrantedAuthority(SOME_SYSTEM_NAME).toString());
     }
 
     @Test
@@ -34,22 +34,22 @@ public class SystemGrantedAuthorityTest {
         SystemGrantedAuthority x = new SystemGrantedAuthority(SOME_SYSTEM_NAME);
         SystemGrantedAuthority y = new SystemGrantedAuthority(SOME_SYSTEM_NAME);
 
-        Assert.assertTrue(x.equals(x) && x.equals(x));
-        Assert.assertTrue(x.hashCode() == x.hashCode());
+        assertTrue(x.equals(x) && x.equals(x));
+        assertTrue(x.hashCode() == x.hashCode());
 
-        Assert.assertTrue(x.equals(y) && y.equals(x));
-        Assert.assertTrue(x.hashCode() == y.hashCode());
+        assertTrue(x.equals(y) && y.equals(x));
+        assertTrue(x.hashCode() == y.hashCode());
 
         SystemGrantedAuthority z = new SystemGrantedAuthority(OTHER_SYSTEM_NAME);
 
-        Assert.assertFalse(x.equals(z));
-        Assert.assertFalse(z.equals(x));
-        Assert.assertFalse(x.hashCode() == z.hashCode());
+        assertFalse(x.equals(z));
+        assertFalse(z.equals(x));
+        assertFalse(x.hashCode() == z.hashCode());
 
         Object otherObject = new Object();
 
-        Assert.assertFalse(x.equals(otherObject));
-        Assert.assertFalse(otherObject.equals(x));
-        Assert.assertFalse(x.hashCode() == otherObject.hashCode());
+        assertFalse(x.equals(otherObject));
+        assertFalse(otherObject.equals(x));
+        assertFalse(x.hashCode() == otherObject.hashCode());
     }
 }

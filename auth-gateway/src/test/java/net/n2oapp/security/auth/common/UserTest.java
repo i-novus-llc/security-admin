@@ -24,11 +24,11 @@ public class UserTest {
 
         List<String> listRole = user.getRoles();
         assertFalse(listRole.isEmpty());
-        assertEquals(listRole.get(0), DEFAULT_ROLE);
+        assertEquals(DEFAULT_ROLE, listRole.get(0));
 
-        assertEquals(user.getUserFullName(), SOME_USERNAME);
-        assertEquals(user.getUserShortName(), SOME_USERNAME + StringUtils.SPACE);
-        assertEquals(user.getUserNameSurname(), SOME_USERNAME);
+        assertEquals(SOME_USERNAME, user.getUserFullName());
+        assertEquals(SOME_USERNAME + StringUtils.SPACE, user.getUserShortName());
+        assertEquals(SOME_USERNAME, user.getUserNameSurname());
     }
 
     @Test
@@ -36,16 +36,16 @@ public class UserTest {
 
         User user = new User(SOME_USERNAME, SOME_PASSWORD, Collections.singleton(new RoleGrantedAuthority(DEFAULT_ROLE)));
         assertNotNull(user);
-        assertEquals(user.getUsername(), SOME_USERNAME);
-        assertEquals(user.getPassword(), SOME_PASSWORD);
+        assertEquals(SOME_USERNAME, user.getUsername());
+        assertEquals(SOME_PASSWORD, user.getPassword());
 
         List<String> listRole = user.getRoles();
         assertFalse(listRole.isEmpty());
-        assertEquals(listRole.get(0), DEFAULT_ROLE);
+        assertEquals(DEFAULT_ROLE, listRole.get(0));
 
-        assertEquals(user.getUserFullName(), SOME_USERNAME);
-        assertEquals(user.getUserShortName(), SOME_USERNAME + StringUtils.SPACE);
-        assertEquals(user.getUserNameSurname(), SOME_USERNAME);
+        assertEquals(SOME_USERNAME, user.getUserFullName());
+        assertEquals(SOME_USERNAME + StringUtils.SPACE, user.getUserShortName());
+        assertEquals(SOME_USERNAME, user.getUserNameSurname());
     }
 
     @Test
@@ -56,20 +56,20 @@ public class UserTest {
                              SOME_SURNAME, SOME_NAME, SOME_PATRONYMIC,
                              SOME_EMAIL);
         assertNotNull(user);
-        assertEquals(user.getUsername(), SOME_USERNAME);
-        assertEquals(user.getPassword(), SOME_PASSWORD);
+        assertEquals(SOME_USERNAME, user.getUsername());
+        assertEquals(SOME_PASSWORD, user.getPassword());
 
         List<String> listRole = user.getRoles();
         assertFalse(listRole.isEmpty());
-        assertEquals(listRole.get(0), DEFAULT_ROLE);
-        assertEquals(user.getSurname(), SOME_SURNAME);
-        assertEquals(user.getName(), SOME_NAME);
-        assertEquals(user.getPatronymic(), SOME_PATRONYMIC);
-        assertEquals(user.getEmail(), SOME_EMAIL);
+        assertEquals(DEFAULT_ROLE, listRole.get(0));
+        assertEquals(SOME_SURNAME, user.getSurname());
+        assertEquals(SOME_NAME, user.getName());
+        assertEquals(SOME_PATRONYMIC, user.getPatronymic());
+        assertEquals(SOME_EMAIL, user.getEmail());
 
-        assertEquals(user.getUserFullName(), getUserFullName());
-        assertEquals(user.getUserShortName(), getUserShortName());
-        assertEquals(user.getUserNameSurname(), getUserNameSurname());
+        assertEquals(getUserFullName(), user.getUserFullName());
+        assertEquals(getUserShortName(), user.getUserShortName());
+        assertEquals(getUserNameSurname(), user.getUserNameSurname());
     }
 
     @Test
@@ -79,8 +79,8 @@ public class UserTest {
                              Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE,
                              Collections.singleton(new RoleGrantedAuthority(DEFAULT_ROLE)));
         assertNotNull(user);
-        assertEquals(user.getUsername(), SOME_USERNAME);
-        assertEquals(user.getPassword(), SOME_PASSWORD);
+        assertEquals(SOME_USERNAME, user.getUsername());
+        assertEquals(SOME_PASSWORD, user.getPassword());
 
         assertFalse(user.isEnabled());
         assertFalse(user.isAccountNonExpired());
@@ -89,11 +89,11 @@ public class UserTest {
 
         List<String> listRole = user.getRoles();
         assertFalse(listRole.isEmpty());
-        assertEquals(listRole.get(0), DEFAULT_ROLE);
+        assertEquals(DEFAULT_ROLE, listRole.get(0));
 
-        assertEquals(user.getUserFullName(), SOME_USERNAME);
-        assertEquals(user.getUserShortName(), SOME_USERNAME + StringUtils.SPACE);
-        assertEquals(user.getUserNameSurname(), SOME_USERNAME);
+        assertEquals(SOME_USERNAME, user.getUserFullName());
+        assertEquals(SOME_USERNAME + StringUtils.SPACE, user.getUserShortName());
+        assertEquals(SOME_USERNAME, user.getUserNameSurname());
     }
 
     @Test
@@ -104,8 +104,8 @@ public class UserTest {
                 SOME_SURNAME, SOME_NAME, SOME_PATRONYMIC,
                 SOME_EMAIL);
         assertNotNull(user);
-        assertEquals(user.getUsername(), SOME_USERNAME);
-        assertEquals(user.getPassword(), SOME_PASSWORD);
+        assertEquals(SOME_USERNAME, user.getUsername());
+        assertEquals(SOME_PASSWORD, user.getPassword());
 
         assertFalse(user.isEnabled());
         assertFalse(user.isAccountNonExpired());
@@ -114,18 +114,18 @@ public class UserTest {
 
         List<String> listRole = user.getRoles();
         assertFalse(listRole.isEmpty());
-        assertEquals(listRole.get(0), DEFAULT_ROLE);
+        assertEquals(DEFAULT_ROLE, listRole.get(0));
 
-        assertEquals(user.getSurname(), SOME_SURNAME);
-        assertEquals(user.getName(), SOME_NAME);
-        assertEquals(user.getPatronymic(), SOME_PATRONYMIC);
-        assertEquals(user.getEmail(), SOME_EMAIL);
+        assertEquals(SOME_SURNAME, user.getSurname());
+        assertEquals(SOME_NAME, user.getName());
+        assertEquals(SOME_PATRONYMIC, user.getPatronymic());
+        assertEquals(SOME_EMAIL, user.getEmail());
 
-        assertEquals(user.getUserFullName(), getUserFullName());
+        assertEquals(getUserFullName(), user.getUserFullName());
 
-        assertEquals(user.getUserShortName(), getUserShortName());
+        assertEquals(getUserShortName(), user.getUserShortName());
 
-        assertEquals(user.getUserNameSurname(),getUserNameSurname());
+        assertEquals(getUserNameSurname(), user.getUserNameSurname());
     }
 
     @Test
@@ -135,6 +135,6 @@ public class UserTest {
         assertNotNull(user);
 
         user.setName(SOME_NAME);
-        assertEquals(user.getUserShortName(), SOME_NAME);
+        assertEquals(SOME_NAME, user.getUserShortName());
     }
 }

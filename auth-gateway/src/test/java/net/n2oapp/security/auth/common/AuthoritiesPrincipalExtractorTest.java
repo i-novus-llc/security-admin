@@ -79,24 +79,24 @@ public class AuthoritiesPrincipalExtractorTest {
 
         assertNotNull(user);
 
-        assertEquals(user.getUsername(), SOME_USERNAME);
-        assertEquals(user.getEmail(), SOME_EMAIL);
-        assertEquals(user.getSurname(), SOME_SURNAME);
-        assertEquals(user.getName(), SOME_NAME);
-        assertEquals(user.getPatronymic(), SOME_PATRONYMIC);
-        assertEquals(user.getDepartment(), SOME_DEPARTMENT_CODE);
-        assertEquals(user.getDepartmentName(), SOME_DEPARTMENT_NAME);
-        assertEquals(user.getUserShortName(), getUserShortName());
-        assertEquals(user.getUserFullName(), getUserFullName());
-        assertEquals(user.isEnabled(), Boolean.TRUE);
-        assertEquals(user.isAccountNonExpired(), Boolean.TRUE);
-        assertEquals(user.getPassword(), VALUE_NOT_AVAILABLE);
-        assertEquals(user.getOrganization(), SOME_ORGANIZATION_CODE);
-        assertEquals(user.getUserLevel(), SOME_USER_LEVEL);
-        assertEquals(user.getRegion(), SOME_REGION_CODE);
-        assertEquals(user.getUserNameSurname(), getUserNameSurname());
-        assertEquals(user.getRoles(), SOME_ROLE_LIST);
-        assertEquals(user.getAuthorities(), SOME_AUTHORITEIES);
+        assertEquals(SOME_USERNAME, user.getUsername());
+        assertEquals(SOME_EMAIL, user.getEmail());
+        assertEquals(SOME_SURNAME, user.getSurname());
+        assertEquals(SOME_NAME, user.getName());
+        assertEquals(SOME_PATRONYMIC, user.getPatronymic());
+        assertEquals(SOME_DEPARTMENT_CODE, user.getDepartment());
+        assertEquals(SOME_DEPARTMENT_NAME, user.getDepartmentName());
+        assertEquals(getUserShortName(), user.getUserShortName());
+        assertEquals(getUserFullName(), user.getUserFullName());
+        assertEquals(Boolean.TRUE, user.isEnabled());
+        assertEquals(Boolean.TRUE, user.isAccountNonExpired());
+        assertEquals(VALUE_NOT_AVAILABLE, user.getPassword());
+        assertEquals(SOME_ORGANIZATION_CODE, user.getOrganization());
+        assertEquals(SOME_USER_LEVEL, user.getUserLevel());
+        assertEquals(SOME_REGION_CODE, user.getRegion());
+        assertEquals(getUserNameSurname(), user.getUserNameSurname());
+        assertEquals(SOME_ROLE_LIST, user.getRoles());
+        assertEquals(SOME_AUTHORITEIES, user.getAuthorities());
 
         List<String> permissions = user.getPermissions();
 
@@ -124,9 +124,9 @@ public class AuthoritiesPrincipalExtractorTest {
 
         List<GrantedAuthority> authorities = getExtractor().extractAuthorities(map);
         assertNotNull(authorities);
-        assertEquals(authorities.size(), 1);
+        assertEquals(1, authorities.size());
 
-        assertEquals(authorities.get(0), SOME_GRANTED_AUTHORITY);
+        assertEquals(SOME_GRANTED_AUTHORITY, authorities.get(0));
     }
 
     @Test
@@ -143,7 +143,7 @@ public class AuthoritiesPrincipalExtractorTest {
 
         assertNotNull(user);
 
-        assertEquals(user.getUsername(), SOME_USERNAME);
+        assertEquals(SOME_USERNAME, user.getUsername());
     }
 
     private AuthoritiesPrincipalExtractor getExtractor() {

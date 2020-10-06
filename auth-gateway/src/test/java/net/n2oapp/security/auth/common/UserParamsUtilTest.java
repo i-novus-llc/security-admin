@@ -104,62 +104,62 @@ public class UserParamsUtilTest {
     public void testGetSessionId_withTestingAuthDetails() {
         testingAuthenticationToken.setDetails(authenticationDetails);
         SecurityContextHolder.getContext().setAuthentication(testingAuthenticationToken);
-        assertEquals(UserParamsUtil.getSessionId(), SOME_SESSION_ID_19);
+        assertEquals(SOME_SESSION_ID_19, UserParamsUtil.getSessionId());
     }
 
     @Test
     public void testGetSessionId_withAnonymousAuthDetails() {
         anonymousAuthenticationToken.setDetails(authenticationDetails);
         SecurityContextHolder.getContext().setAuthentication(anonymousAuthenticationToken);
-        assertEquals(UserParamsUtil.getSessionId(), SOME_SESSION_ID_4);
+        assertEquals(SOME_SESSION_ID_4, UserParamsUtil.getSessionId());
     }
 
     @Test
     public void testGetSessionId_withOutAuthDetails() {
         testingAuthenticationToken.setDetails(authenticationDetails);
-        assertEquals(UserParamsUtil.getSessionId(), StringUtils.EMPTY);
+        assertEquals(StringUtils.EMPTY, UserParamsUtil.getSessionId());
     }
 
     @Test
     public void testGetSessionId_withArg() {
         testingAuthenticationToken.setDetails(authenticationDetails);
-        assertEquals(UserParamsUtil.getSessionId(testingAuthenticationToken), SOME_SESSION_ID_2);
+        assertEquals(SOME_SESSION_ID_2, UserParamsUtil.getSessionId(testingAuthenticationToken));
     }
 
     @Test
     public void testGetSessionId_whenPrincipalIsDetails() {
         testingAuthenticationToken.setDetails(testPrincipal);
-        assertEquals(UserParamsUtil.getSessionId(testingAuthenticationToken), StringUtils.EMPTY);
+        assertEquals(StringUtils.EMPTY, UserParamsUtil.getSessionId(testingAuthenticationToken));
     }
 
     @Test
     public void testGetUsername_whenNullContext() {
-        assertEquals(UserParamsUtil.getUsername(), StringUtils.EMPTY);
+        assertEquals(StringUtils.EMPTY, UserParamsUtil.getUsername());
     }
 
     @Test
     public void testGetUsername_whenNullAuth() {
         SecurityContextHolder.getContext().setAuthentication(null);
-        assertEquals(UserParamsUtil.getUsername(), StringUtils.EMPTY);
+        assertEquals(StringUtils.EMPTY, UserParamsUtil.getUsername());
     }
 
     @Test
     public void testGetUsername_whenAnonymousAuth() {
         anonymousAuthenticationToken.setDetails(authenticationDetails);
         SecurityContextHolder.getContext().setAuthentication(anonymousAuthenticationToken);
-        assertEquals(UserParamsUtil.getUsername(), StringUtils.EMPTY);
+        assertEquals(StringUtils.EMPTY, UserParamsUtil.getUsername());
     }
 
     @Test
     public void testGetUsername_whenPrincipalIsString() {
         SecurityContextHolder.getContext().setAuthentication(testingAuthenticationToken);
-        assertEquals(UserParamsUtil.getUsername(), SOME_USERNAME);
+        assertEquals(SOME_USERNAME, UserParamsUtil.getUsername());
     }
 
     @Test
     public void testGetUsername_whenPrincipalIsDetails() {
         SecurityContextHolder.getContext().setAuthentication(testingAuthTokenWithPrincipalIsDetails);
-        assertEquals(UserParamsUtil.getUsername(), SOME_USERNAME);
+        assertEquals(SOME_USERNAME, UserParamsUtil.getUsername());
     }
 
     @Test
@@ -176,13 +176,13 @@ public class UserParamsUtilTest {
     @Test
     public void testGetUserDetails_whenPrincipalIsDetails() {
         SecurityContextHolder.getContext().setAuthentication(testingAuthTokenWithPrincipalIsDetails);
-        assertEquals(UserParamsUtil.getUserDetails(), testPrincipal);
+        assertEquals(testPrincipal, UserParamsUtil.getUserDetails());
     }
 
     @Test
     public void testGetUserDetails_withTestingAuthDetails() {
         initSecurityContextWithPrincipal();
-        assertEquals(UserParamsUtil.getUserDetails(), testPrincipal);
+        assertEquals(testPrincipal, UserParamsUtil.getUserDetails());
     }
 
     @Test
@@ -216,7 +216,7 @@ public class UserParamsUtilTest {
     public void testGetUserDetailsProperty() {
         User user = new User(SOME_USERNAME);
         user.setSurname(SOME_SURNAME);
-        assertEquals(UserParamsUtil.getUserDetailsProperty(user, PRINCIPIAL_SURNAME_ATTR), SOME_SURNAME);
+        assertEquals(SOME_SURNAME, UserParamsUtil.getUserDetailsProperty(user, PRINCIPIAL_SURNAME_ATTR));
     }
 
     @Test
@@ -227,7 +227,7 @@ public class UserParamsUtilTest {
     @Test
     public void testGetUserDetailsProperty_withOnceArg() {
         initSecurityContextWithPrincipal();
-        assertEquals(UserParamsUtil.getUserDetailsProperty(PRINCIPIAL_SURNAME_ATTR), SOME_SURNAME);
+        assertEquals(SOME_SURNAME, UserParamsUtil.getUserDetailsProperty(PRINCIPIAL_SURNAME_ATTR));
     }
 
     @Test
@@ -244,11 +244,11 @@ public class UserParamsUtilTest {
         for (GrantedAuthority authority : authorities) {
 
             if (authority instanceof RoleGrantedAuthority) {
-                assertEquals(authority, new RoleGrantedAuthority(SOME_ROLE));
+                assertEquals(new RoleGrantedAuthority(SOME_ROLE), authority);
             } else if (authority instanceof PermissionGrantedAuthority) {
-                assertEquals(authority, new PermissionGrantedAuthority(SOME_PERMISSION));
+                assertEquals(new PermissionGrantedAuthority(SOME_PERMISSION), authority);
             } else if (authority instanceof SystemGrantedAuthority) {
-                assertEquals(authority, new SystemGrantedAuthority(SOME_SYSTEM));
+                assertEquals(new SystemGrantedAuthority(SOME_SYSTEM), authority);
             } else {
                 fail();
             }
@@ -263,27 +263,27 @@ public class UserParamsUtilTest {
     private void assertUserDetailsMap(Map<String, Object> map) {
         assertNotNull(map);
 
-        assertEquals(map.get(PRINCIPIAL_DEPARTMENT_NAME_ATTR), SOME_DEPARTMENT_NAME);
-        assertEquals(map.get(PRINCIPIAL_DEPARTMENT_ATTR), SOME_DEPARTMENT);
-        assertEquals(map.get(PRINCIPIAL_CREDENTIAL_NON_EXPIRED_ATTR), Boolean.TRUE);
-        assertEquals(map.get(PRINCIPIAL_ROLES_ATTR), SOME_ROLE_LIST);
-        assertEquals(map.get(PRINCIPIAL_USER_FULL_NAME_ATTR), getUserFullName());
-        assertEquals(map.get(PRINCIPIAL_AUTHORITEIES_ATTR), SOME_AUTHORITEIES);
-        assertEquals(map.get(PRINCIPIAL_ENABLED_EXPIRED_ATTR), Boolean.TRUE);
-        assertEquals(map.get(PRINCIPIAL_USER_SHORT_NAME_ATTR), getUserShortName());
-        assertEquals(map.get(PRINCIPIAL_PASSWORD_ATTR), SOME_PASSWORD);
-        assertEquals(map.get(PRINCIPIAL_SURNAME_ATTR), SOME_SURNAME);
-        assertEquals(map.get(PRINCIPIAL_NAME_ATTR), SOME_NAME);
-        assertEquals(map.get(PRINCIPIAL_PATRONYMIC_ATTR), SOME_PATRONYMIC);
-        assertEquals(map.get(PRINCIPIAL_USER_LEVEL_ATTR), SOME_USER_LEVEL);
-        assertEquals(map.get(PRINCIPIAL_PERMISSIONS_ATTR), new ArrayList<>());
-        assertEquals(map.get(PRINCIPIAL_ORGANIZATION_ATTR), SOME_ORGANIZATION);
-        assertEquals(map.get(PRINCIPIAL_ACCOUNT_NON_EXPIRED_ATTR), Boolean.TRUE);
-        assertEquals(map.get(PRINCIPIAL_REGION_ATTR), SOME_REGION);
-        assertEquals(map.get(PRINCIPIAL_CLASS_ATTR), User.class);
-        assertEquals(map.get(PRINCIPIAL_USER_NAME_SURNAME_ATTR), getUserNameSurname());
-        assertEquals(map.get(PRINCIPIAL_EMAIL_ATTR), SOME_EMAIL);
-        assertEquals(map.get(PRINCIPIAL_ACCOUNT_NON_LOCKED_ATTR), Boolean.TRUE);
-        assertEquals(map.get(PRINCIPIAL_USERNAME_ATTR), SOME_USERNAME);
+        assertEquals(SOME_DEPARTMENT_NAME, map.get(PRINCIPIAL_DEPARTMENT_NAME_ATTR));
+        assertEquals(SOME_DEPARTMENT, map.get(PRINCIPIAL_DEPARTMENT_ATTR));
+        assertEquals(Boolean.TRUE, map.get(PRINCIPIAL_CREDENTIAL_NON_EXPIRED_ATTR));
+        assertEquals(SOME_ROLE_LIST, map.get(PRINCIPIAL_ROLES_ATTR));
+        assertEquals(getUserFullName(), map.get(PRINCIPIAL_USER_FULL_NAME_ATTR));
+        assertEquals(SOME_AUTHORITEIES, map.get(PRINCIPIAL_AUTHORITEIES_ATTR));
+        assertEquals(Boolean.TRUE, map.get(PRINCIPIAL_ENABLED_EXPIRED_ATTR));
+        assertEquals(getUserShortName(), map.get(PRINCIPIAL_USER_SHORT_NAME_ATTR));
+        assertEquals(SOME_PASSWORD, map.get(PRINCIPIAL_PASSWORD_ATTR));
+        assertEquals(SOME_SURNAME, map.get(PRINCIPIAL_SURNAME_ATTR));
+        assertEquals(SOME_NAME, map.get(PRINCIPIAL_NAME_ATTR));
+        assertEquals(SOME_PATRONYMIC, map.get(PRINCIPIAL_PATRONYMIC_ATTR));
+        assertEquals(SOME_USER_LEVEL, map.get(PRINCIPIAL_USER_LEVEL_ATTR));
+        assertEquals(new ArrayList<>(), map.get(PRINCIPIAL_PERMISSIONS_ATTR));
+        assertEquals(SOME_ORGANIZATION, map.get(PRINCIPIAL_ORGANIZATION_ATTR));
+        assertEquals(Boolean.TRUE, map.get(PRINCIPIAL_ACCOUNT_NON_EXPIRED_ATTR));
+        assertEquals(SOME_REGION, map.get(PRINCIPIAL_REGION_ATTR));
+        assertEquals(User.class, map.get(PRINCIPIAL_CLASS_ATTR));
+        assertEquals(getUserNameSurname(), map.get(PRINCIPIAL_USER_NAME_SURNAME_ATTR));
+        assertEquals(SOME_EMAIL, map.get(PRINCIPIAL_EMAIL_ATTR));
+        assertEquals(Boolean.TRUE, map.get(PRINCIPIAL_ACCOUNT_NON_LOCKED_ATTR));
+        assertEquals(SOME_USERNAME, map.get(PRINCIPIAL_USERNAME_ATTR));
     }
 }
