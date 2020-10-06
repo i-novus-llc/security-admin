@@ -6,6 +6,7 @@ import net.n2oapp.security.admin.TestApplication;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
+import net.n2oapp.security.admin.api.model.UserRegisterForm;
 import net.n2oapp.security.admin.rest.api.UserDetailsRestService;
 import net.n2oapp.security.admin.rest.api.UserRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -137,6 +139,8 @@ public class UserRestTest {
         User user = create();
         update(form(user));
         delete(user.getId());
+        user = register();
+        delete(user.getId());
     }
 
     @org.junit.Test
@@ -173,6 +177,24 @@ public class UserRestTest {
         assertEquals((Integer) 1, user.getRoles().iterator().next().getId());
         assertTrue(greenMail.waitForIncomingEmail(1000, 1));
         return user;
+    }
+
+    private User register() {
+        UserRegisterForm user = new UserRegisterForm();
+        user.setUsername("testRegisterUsername");
+        user.setEmail("testRegisterEmail@mail.ru");
+        user.setName("testRegisterName");
+        user.setSurname("testRegisterSurname");
+        user.setPatronymic("testRegisterPatronymic");
+        User result = client.register(user);
+        assertNotNull(result);
+        assertTrue(greenMail.waitForIncomingEmail(1000, 1));
+        assertThat(result.getUsername(), is("testRegisterUsername"));
+        assertThat(result.getEmail(), is("testRegisterEmail@mail.ru"));
+        assertThat(result.getName(), is("testRegisterName"));
+        assertThat(result.getSurname(), is("testRegisterSurname"));
+        assertThat(result.getPatronymic(), is("testRegisterPatronymic"));
+        return result;
     }
 
     private User update(UserForm user) {
