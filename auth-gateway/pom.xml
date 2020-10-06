@@ -13,7 +13,6 @@
 
     <properties>
         <maven.deploy.skip>true</maven.deploy.skip>
-        <jacoco.skip>false</jacoco.skip>
     </properties>
 
     <dependencies>
