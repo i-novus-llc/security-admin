@@ -68,6 +68,7 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
                 model.getPatronymic(), model.getEmail());
         if (nonNull(model.getDepartment())) {
             user.setDepartment(model.getDepartment().getCode());
+            user.setDepartmentName(model.getDepartment().getName());
         }
         if (nonNull(model.getOrganization())) {
             user.setOrganization(model.getOrganization().getCode());
