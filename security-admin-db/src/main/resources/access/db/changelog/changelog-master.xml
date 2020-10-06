@@ -83,4 +83,20 @@
         <sqlFile path="access/db/changelog/sql/V6_client_secret_generation.sql"/>
     </changeSet>
 
+    <changeSet id="account_type_code_unique" author="imolostvov" dbms="postgresql">
+        <preConditions onFailMessage="Невозможно создать уникальный индекс для account_type.code - присутствуют дубликаты">
+            <sqlCheck expectedResult="0">
+                SELECT CASE WHEN exists(
+                SELECT code, COUNT(*)
+                FROM sec.account_type
+                group by code
+                having count(*) > 1 )
+                then 1
+                else 0
+                END;
+            </sqlCheck>
+        </preConditions>
+        <sqlFile path="access/db/changelog/sql/V8_account_type_code_unique.sql"/>
+    </changeSet>
+
 </databaseChangeLog>
