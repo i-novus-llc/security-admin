@@ -39,5 +39,5 @@ public interface DepartmentRestService {
     @Path("/")
     @ApiOperation("Найти все департаменты")
     @ApiResponse(code = 200, message = "Страница департамента")
-    Page<Department> getAll(@BeanParam RestDepartmentCriteria criteria);
+    Page<Department> findAll(@BeanParam RestDepartmentCriteria criteria);
 }
