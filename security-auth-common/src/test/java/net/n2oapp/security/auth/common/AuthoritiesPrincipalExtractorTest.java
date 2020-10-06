@@ -2,7 +2,7 @@ package net.n2oapp.security.auth.common;
 
 import net.n2oapp.security.admin.api.model.*;
 import net.n2oapp.security.admin.api.model.User;
-import net.n2oapp.security.admin.impl.service.UserDetailsServiceImpl;
+import net.n2oapp.security.admin.api.service.UserDetailsService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
 public class AuthoritiesPrincipalExtractorTest {
 
     @MockBean
-    private UserDetailsServiceImpl userDetailsService;
+    private UserDetailsService userDetailsService;
 
     private User testPrincipal;
 
