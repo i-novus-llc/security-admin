@@ -18,9 +18,9 @@ public class UserTest {
     public void testConstructor_withUsernameArg() {
         User user = new User(SOME_USERNAME);
         assertNotNull(user);
-        assertEquals(user.getUsername(), SOME_USERNAME);
+        assertEquals(SOME_USERNAME, user.getUsername());
 
-        assertEquals(user.getPassword(), StringUtils.EMPTY);
+        assertEquals(StringUtils.EMPTY, user.getPassword());
 
         List<String> listRole = user.getRoles();
         assertFalse(listRole.isEmpty());

@@ -97,7 +97,7 @@ public class UserParamsUtilTest {
 
     @Test
     public void testGetSessionId_whenNullContext() {
-        assertEquals(UserParamsUtil.getSessionId(), StringUtils.EMPTY);
+        assertEquals(StringUtils.EMPTY, UserParamsUtil.getSessionId());
     }
 
     @Test
