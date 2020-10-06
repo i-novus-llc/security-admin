@@ -25,9 +25,9 @@ import java.util.List;
 public interface UserLevelService {
 
     /**
-     * Найти все уровни пользователя
+     * Получить все уровни пользователя
      *
-     * @return Страница всех уровней пользователя
+     * @return Список всех уровней пользователя
      */
     List<UserLevel> getAll();
 

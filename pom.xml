@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.n2oapp.framework.security</groupId>
@@ -10,8 +11,8 @@
     <parent>
         <groupId>net.n2oapp.platform</groupId>
         <artifactId>n2o-platform-parent</artifactId>
-        <version>3.0.0</version>
-        <relativePath />
+        <version>3.0.6</version>
+        <relativePath/>
     </parent>
 
     <properties>
@@ -22,7 +23,7 @@
         <config.server.enable>false</config.server.enable>
         <audit.version>2.3.2</audit.version>
         <nimbusds.version>7.9</nimbusds.version>
-        <jacoco.skip>true</jacoco.skip>
+        <junit-jupiter.version>5.7.0</junit-jupiter.version>
     </properties>
 
     <scm>
@@ -89,6 +90,7 @@
                 <module>security-admin-example</module>
                 <module>keycloak-theme</module>
                 <module>doc</module>
+                <module>coverage</module>
             </modules>
         </profile>
         <profile>

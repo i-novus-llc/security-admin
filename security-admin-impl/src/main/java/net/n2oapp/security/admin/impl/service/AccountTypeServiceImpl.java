@@ -10,14 +10,13 @@ import net.n2oapp.security.admin.impl.entity.AccountTypeRoleEntity;
 import net.n2oapp.security.admin.impl.entity.AccountTypeRoleEntityId;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.repository.AccountTypeRepository;
-import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.service.specification.AccountTypeSpecifications;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.ws.rs.NotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,12 +25,9 @@ import java.util.List;
 public class AccountTypeServiceImpl implements AccountTypeService {
 
     private final AccountTypeRepository repository;
-    private final RoleRepository roleRepository;
 
-    @Autowired
-    public AccountTypeServiceImpl(AccountTypeRepository repository, RoleRepository roleRepository) {
+    public AccountTypeServiceImpl(AccountTypeRepository repository) {
         this.repository = repository;
-        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -57,7 +53,7 @@ public class AccountTypeServiceImpl implements AccountTypeService {
 
     @Override
     public void delete(Integer id) {
-        repository.deleteById(id);
+        repository.delete(repository.findById(id).orElseThrow(NotFoundException::new));
     }
 
     private AccountType model(AccountTypeEntity entity) {
@@ -76,7 +72,7 @@ public class AccountTypeServiceImpl implements AccountTypeService {
     private void mapModelRoles(AccountTypeEntity entity, AccountType model) {
         if (entity.getRoleList() != null) {
             List<Role> roles = new ArrayList<>();
-            for (AccountTypeRoleEntity accountTypeRoleEntity: entity.getRoleList()) {
+            for (AccountTypeRoleEntity accountTypeRoleEntity : entity.getRoleList()) {
                 if (AccountTypeRoleEnum.ORG_AND_USER_ROLE.equals(accountTypeRoleEntity.getRoleType()) ||
                         accountTypeRoleEntity.getRoleType().equals(AccountTypeRoleEnum.USER_ROLE)) {
                     Role role = new Role();
@@ -88,7 +84,7 @@ public class AccountTypeServiceImpl implements AccountTypeService {
             }
             model.setRoles(roles);
             roles = new ArrayList<>();
-            for (AccountTypeRoleEntity accountTypeRoleEntity: entity.getRoleList()) {
+            for (AccountTypeRoleEntity accountTypeRoleEntity : entity.getRoleList()) {
                 if (accountTypeRoleEntity.getRoleType().equals(AccountTypeRoleEnum.ORG_AND_USER_ROLE) ||
                         accountTypeRoleEntity.getRoleType().equals(AccountTypeRoleEnum.ORG_ROLE)) {
                     Role role = new Role();
