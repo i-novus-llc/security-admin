@@ -32,18 +32,6 @@
             <groupId>org.springframework.security.oauth.boot</groupId>
             <artifactId>spring-security-oauth2-autoconfigure</artifactId>
         </dependency>
-
-        <!-- Test -->
-        <dependency>
-            <groupId>net.n2oapp.platform</groupId>
-            <artifactId>n2o-platform-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
 </project>

@@ -3,12 +3,12 @@ package net.n2oapp.security.auth.common;
 import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
+
 import java.util.Collections;
 import java.util.List;
 
 import static net.n2oapp.security.auth.common.TestConstants.*;
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertFalse;
 
 public class UserTest {
 
@@ -67,14 +67,9 @@ public class UserTest {
         assertEquals(user.getPatronymic(), SOME_PATRONYMIC);
         assertEquals(user.getEmail(), SOME_EMAIL);
 
-        assertEquals(user.getUserFullName(), String.format(USER_FULLNAME_FORMAT, SOME_SURNAME, SOME_NAME, SOME_PATRONYMIC));
-
-        assertEquals(user.getUserShortName(),String.format(USER_SHORTNAME_FORMAT, SOME_SURNAME,
-                SOME_NAME.substring(0, 1).toUpperCase(),
-                SOME_PATRONYMIC.substring(0, 1).toUpperCase()));
-
-        assertEquals(user.getUserNameSurname(),
-                String.format(USER_NAME_FULLNAME_FORMAT, SOME_NAME, SOME_SURNAME));
+        assertEquals(user.getUserFullName(), getUserFullName());
+        assertEquals(user.getUserShortName(), getUserShortName());
+        assertEquals(user.getUserNameSurname(), getUserNameSurname());
     }
 
     @Test
@@ -126,14 +121,11 @@ public class UserTest {
         assertEquals(user.getPatronymic(), SOME_PATRONYMIC);
         assertEquals(user.getEmail(), SOME_EMAIL);
 
-        assertEquals(user.getUserFullName(), String.format(USER_FULLNAME_FORMAT, SOME_SURNAME, SOME_NAME, SOME_PATRONYMIC));
+        assertEquals(user.getUserFullName(), getUserFullName());
 
-        assertEquals(user.getUserShortName(),String.format(USER_SHORTNAME_FORMAT, SOME_SURNAME,
-                SOME_NAME.substring(0, 1).toUpperCase(),
-                SOME_PATRONYMIC.substring(0, 1).toUpperCase()));
+        assertEquals(user.getUserShortName(), getUserShortName());
 
-        assertEquals(user.getUserNameSurname(),
-                String.format(USER_NAME_FULLNAME_FORMAT, SOME_NAME, SOME_SURNAME));
+        assertEquals(user.getUserNameSurname(),getUserNameSurname());
     }
 
     @Test

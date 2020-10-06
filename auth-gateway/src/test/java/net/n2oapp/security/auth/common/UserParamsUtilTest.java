@@ -20,7 +20,7 @@ import java.util.*;
 
 import static net.n2oapp.security.auth.common.TestConstants.*;
 import static org.junit.Assert.*;
-import static org.springframework.security.core.context.SecurityContextHolder.*;
+import static org.springframework.security.core.context.SecurityContextHolder.clearContext;
 
 public class UserParamsUtilTest {
 
@@ -28,9 +28,6 @@ public class UserParamsUtilTest {
     private static final String PRINCIPIAL_DEPARTMENT_ATTR = "department";
     private static final String PRINCIPIAL_CREDENTIAL_NON_EXPIRED_ATTR = "credentialsNonExpired";
     private static final String PRINCIPIAL_ROLES_ATTR = "roles";
-    private static final String PRINCIPIAL_SURNAME_ATTR = "surname";
-    private static final String PRINCIPIAL_NAME_ATTR = "name";
-    private static final String PRINCIPIAL_PATRONYMIC_ATTR = "patronymic";
     private static final String PRINCIPIAL_USER_SHORT_NAME_ATTR = "userShortName";
     private static final String PRINCIPIAL_USER_FULL_NAME_ATTR = "userFullName";
     private static final String PRINCIPIAL_PASSWORD_ATTR = "password";
@@ -39,41 +36,25 @@ public class UserParamsUtilTest {
     private static final String PRINCIPIAL_ACCOUNT_NON_EXPIRED_ATTR = "accountNonExpired";
     private static final String PRINCIPIAL_ENABLED_EXPIRED_ATTR = "enabled";
     private static final String PRINCIPIAL_USER_LEVEL_ATTR = "userLevel";
-    private static final String PRINCIPIAL_PERMISSIONS_ATTR = "permissions";
     private static final String PRINCIPIAL_REGION_ATTR = "region";
     private static final String PRINCIPIAL_CLASS_ATTR = "class";
-    private static final String PRINCIPIAL_EMAIL_ATTR = "email";
-    private static final String PRINCIPIAL_USERNAME_ATTR = "username";
+
     private static final String PRINCIPIAL_ACCOUNT_NON_LOCKED_ATTR = "accountNonLocked";
     private static final String PRINCIPIAL_AUTHORITEIES_ATTR = "authorities";
 
-    private static final String SOME_DEPARTMENT_NAME = "someDepartmentName";
-    private static final String SOME_DEPARTMENT = "someDepartment";
-
-    private static final String SOME_ORGANIZATION = "someOrganization";
-    private static final String SOME_USER_LEVEL = "someUserLevel";
-    private static final String SOME_REGION = "someRegion";
-    private static final String SOME_PERMISSION = "somePermission";
-    private static final String SOME_SYSTEM = "someSystem";
     private static final String SOME_ANONYMOUS_USERNAME = "anonymous";
     private static final String SOME_ANONYMOUS_PASSWORD = "anonymous";
     private static final String SOME_ANONYMOUS_ROLE = "ANONYMOUS";
-    private static final GrantedAuthority SOME_GRANTED_AUTHORITY = new RoleGrantedAuthority(SOME_ROLE);
-    private static final Set SOME_AUTHORITEIES = Collections.unmodifiableSet(Set.of(SOME_GRANTED_AUTHORITY));
 
     private static final String SOME_SESSION_ID_2 = "2";
     private static final String SOME_SESSION_ID_4 = "4";
     private static final String SOME_SESSION_ID_19 = "19";
-
-
-    private static final List SOME_ROLE_LIST = Arrays.asList(SOME_ROLE);
 
     private static final String ROLES = "roles";
     private static final String PERMISSIONS = "permissions";
     private static final String SYSTEMS = "systems";
 
     private TestingAuthenticationToken testingAuthenticationToken;
-    private TestingAuthenticationToken testingAuthTokenWithNullPrincipal;
     private TestingAuthenticationToken testingAuthTokenWithPrincipalIsDetails;
     private AnonymousAuthenticationToken anonymousAuthenticationToken;
 
@@ -87,8 +68,6 @@ public class UserParamsUtilTest {
     public void setup() {
 
         testingAuthenticationToken = new TestingAuthenticationToken(SOME_USERNAME, SOME_PASSWORD, SOME_ROLE);
-
-        testingAuthTokenWithNullPrincipal = new TestingAuthenticationToken(null, SOME_PASSWORD);
 
         anonymousAuthenticationToken = new AnonymousAuthenticationToken(SOME_ANONYMOUS_USERNAME, SOME_ANONYMOUS_PASSWORD,
                 AuthorityUtils.createAuthorityList(SOME_ANONYMOUS_ROLE));
@@ -274,20 +253,6 @@ public class UserParamsUtilTest {
                 fail();
             }
         }
-    }
-
-    private String getUserShortName() {
-        return String.format(USER_SHORTNAME_FORMAT, SOME_SURNAME,
-                SOME_NAME.substring(0, 1).toUpperCase(),
-                SOME_PATRONYMIC.substring(0, 1).toUpperCase());
-    }
-
-    private String getUserFullName() {
-        return String.format(USER_FULLNAME_FORMAT, SOME_SURNAME, SOME_NAME, SOME_PATRONYMIC);
-    }
-
-    private String getUserNameSurname() {
-        return String.format(USER_NAME_FULLNAME_FORMAT, SOME_NAME, SOME_SURNAME);
     }
 
     private void initSecurityContextWithPrincipal() {
