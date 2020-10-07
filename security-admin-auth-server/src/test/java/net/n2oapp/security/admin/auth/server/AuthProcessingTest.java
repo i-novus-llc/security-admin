@@ -77,7 +77,7 @@ public class AuthProcessingTest {
         Map<String, Object> claims = new ObjectMapper().readValue(JwtHelper.decode((String) tokenResponse.get("access_token")).getClaims(), Map.class);
         assertThat(claims.get("jti"), is(tokenResponse.get("jti")));
         assertThat(claims.get("client_id"), is("test"));
-        assertThat((List<String>) claims.get("scope"), contains("read", "write"));
+        assertThat((List<String>) claims.get("scope"), containsInAnyOrder("write", "read"));
     }
 
     private Client client() {
