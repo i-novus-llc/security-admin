@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.service;
 
+import net.n2oapp.security.admin.TestApplication;
 import net.n2oapp.security.admin.api.criteria.ApplicationCriteria;
 import net.n2oapp.security.admin.api.criteria.SystemCriteria;
 import net.n2oapp.security.admin.api.model.AppSystem;
@@ -43,7 +44,7 @@ import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @TestPropertySource("classpath:test.properties")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class ApplicationSystemExportServiceImplTest {
     @SpyBean
     private VersionService versionService;
