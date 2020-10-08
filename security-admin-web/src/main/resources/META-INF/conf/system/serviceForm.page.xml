@@ -17,11 +17,11 @@
                 </controls>
             </field>
 
-            <set>
+            <set depends-on="enableClient">
                 <password description="Cекретный ключ подключаемого приложения (client_secret).
                                      Именно этот секрет должен использоваться подключенным
                                      приложением при обращении к Единой подсистеме безопасности и авторизации"
-                          id="clientSecret" label="Секрет" required="true">
+                          id="clientSecret" label="Секрет" required="true" visible="false">
                     <dependencies>
                         <visibility on="enableClient">
                             enableClient
@@ -30,7 +30,7 @@
                 </password>
 
                 <input-text id="accessTokenValidityMinutes" label="Максимальное время действия токена (минуты)"
-                            domain="integer"
+                            domain="integer" visible="false"
                             description="Если не указано иное, используется значение по умолчанию (60 минут)">
                     <dependencies>
                         <visibility on="enableClient">
@@ -41,7 +41,7 @@
 
                 <input-text id="refreshTokenValidityMinutes"
                             label="Максимальное время действия  refresh токена (минуты)"
-                            domain="integer"
+                            domain="integer" visible="false"
                             description="Если не указано иное, используется значение по умолчанию (1440 минут)">
                     <dependencies>
                         <visibility on="enableClient">
@@ -50,7 +50,7 @@
                     </dependencies>
                 </input-text>
 
-                <field id="isAuthorizationCode" label="Вход через браузер"
+                <field id="isAuthorizationCode" label="Вход через браузер" visible="false"
                        description="В терминах спецификации OAuth2.0 означает код авторизации (authorization code). Используется с серверными приложениями (server-side applications)">
                     <controls>
                         <checkbox id="isAuthorizationCode" src="Switch"/>
@@ -62,7 +62,7 @@
                     </dependencies>
                 </field>
 
-                <field id="isResourceOwnerPass" label="Вход по логину и паролю"
+                <field id="isResourceOwnerPass" label="Вход по логину и паролю" visible="false"
                        description="В терминах спецификации OAuth2.0 означает поддержку учетных данных владельца ресурса (resource owner password credentials grant). Используется доверенными приложениями, например приложениями, которые являются частью самого сервиса">
                     <controls>
                         <checkbox id="isResourceOwnerPass" src="Switch"/>
@@ -74,7 +74,7 @@
                     </dependencies>
                 </field>
 
-                <field id="isClientGrant" label="Вход от имени системы"
+                <field id="isClientGrant" label="Вход от имени системы" visible="false"
                        description="В терминах спецификации OAuth2.0 означает поддержку учетных данных клиента (client credentials grant). Используется при доступе приложения к API">
                     <controls>
                         <checkbox id="isClientGrant" src="Switch"/>
@@ -86,7 +86,7 @@
                     </dependencies>
                 </field>
 
-                <input-text id="redirectUris" label="Префиксы ссылок возврата"
+                <input-text id="redirectUris" label="Префиксы ссылок возврата" visible="false"
                             description="Список URL используется для проверки ссылок возврата (login_redirect_uri). Если в запросе на выход указана ссылка возврата и она не соответствует ни одному из указанных префиксов, то во входе будет отказано"
                             required="true">
                     <dependencies>
@@ -96,7 +96,7 @@
                     </dependencies>
                 </input-text>
 
-                <input-text id="logoutUrl" label="Ссылка для выхода из клиентского приложения"
+                <input-text id="logoutUrl" label="Ссылка для выхода из клиентского приложения" visible="false"
                             description="На данный URL должен быть направлен запрос, содержащий токен выхода, при выходе из клиентского приложения">
                     <dependencies>
                         <visibility on="enableClient">
@@ -112,7 +112,8 @@
                                    parent-field-id="systemId"
                                    query-id="roleGroupedBySystem"
                                    search-field-id="name"
-                                   size="1000">
+                                   size="1000"
+                                   visible="false">
                     <dependencies>
                         <visibility on="enableClient">
                             enableClient
