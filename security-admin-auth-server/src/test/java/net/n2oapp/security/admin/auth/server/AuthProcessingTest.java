@@ -2,6 +2,7 @@ package net.n2oapp.security.admin.auth.server;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.n2oapp.security.admin.api.criteria.ClientCriteria;
 import net.n2oapp.security.admin.api.model.*;
 import net.n2oapp.security.admin.api.service.ClientService;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
@@ -20,6 +21,7 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -32,6 +34,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
@@ -40,6 +43,7 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -79,6 +83,10 @@ public class AuthProcessingTest {
     public void beforeEach() {
         host = "http://localhost:" + port;
         when(clientService.findByClientId("test")).thenReturn(client());
+
+        when(clientService.findAll(Mockito.any(ClientCriteria.class))).thenReturn(
+                new PageImpl<>(List.of(client()))
+        );
         when(userRepository.findOneByUsernameIgnoreCase("testUser")).thenReturn(userEntity());
         when(userDetailsService.loadUserDetails(Mockito.any(UserDetailsToken.class))).thenReturn(user());
     }
@@ -114,30 +122,34 @@ public class AuthProcessingTest {
 
     @Test
     public void testAuthorizationCode() throws IOException {
+        Cookie authSession = checkAuthentication();
+        checkLogout(authSession);
+    }
 
-        String url = host + "/oauth/authorize?client_id=test&redirect_uri=https://localhost:8080/login&response_type=code&scope=read%20write&state=T45FVY";
-        Response response = WebClient.create(url).get();
+    private Cookie checkAuthentication() throws IOException {
+        Response response = WebClient.create(
+                host + "/oauth/authorize?client_id=test&redirect_uri=https://localhost:8080/login&response_type=code&scope=read%20write&state=T45FVY"
+        ).get();
         assertThat(response.getStatus(), is(302));
         assertThat(response.getLocation().toString(), is(host + "/login/keycloak"));
         NewCookie authSession = response.getCookies().get("JSESSIONID");
 
-        url = host + "/login/keycloak";
-        response = WebClient.create(url).cookie(authSession).get();
+        response = WebClient.create(
+                host + "/login/keycloak"
+        ).cookie(authSession).get();
 
         String state = extractQueryParameter(response.getLocation(), "state");
 
-        url = host + "/login/keycloak" +
-                "?state=" + state + "&session_state=testSessionState" +
-                "&code=testCode";
-
-        response = WebClient.create(url).cookie(authSession).get();
+        response = WebClient.create(
+                host + "/login/keycloak" +
+                        "?state=" + state + "&session_state=testSessionState" +
+                        "&code=testCode"
+        ).cookie(authSession).get();
         response = WebClient.create(response.getLocation()).cookie(authSession).get();
         String code = extractQueryParameter(response.getLocation(), "code");
 
-        url = host + "/oauth/token";
-
         Map<String, Object> tokenResponse = new ObjectMapper().readValue(
-                WebClient.create(url)
+                WebClient.create(host + "/oauth/token")
                         .header("Authorization", "Basic dGVzdDp0ZXN0")
                         .form(new Form()
                                 .param("grant_type", "authorization_code")
@@ -152,10 +164,9 @@ public class AuthProcessingTest {
         assertThat(tokenResponse.get("scope"), notNullValue());
         assertThat(tokenResponse.get("jti"), notNullValue());
 
-        url = host + "/userinfo";
 
         Map<String, Object> userInfo = new ObjectMapper().readValue(
-                WebClient.create(url)
+                WebClient.create(host + "/userinfo")
                         .header("Authorization", "Bearer " + tokenResponse.get("access_token"))
                         .get()
                         .readEntity(String.class), Map.class);
@@ -171,7 +182,28 @@ public class AuthProcessingTest {
         assertThat((List<String>) userInfo.get("permissions"), hasItem("testPermission2"));
         assertThat(userInfo.get("sid"), notNullValue());
 
+        return authSession;
     }
+
+    private void checkLogout(Cookie authCookie) {
+        Response response = WebClient.create(
+                host + "/oauth/authorize?client_id=test&redirect_uri=https://localhost:8080/login&response_type=code&scope=read%20write&state="
+                        + UUID.randomUUID().toString()
+        ).cookie(authCookie).get();
+        assertThat(extractQueryParameter(response.getLocation(), "code"), notNullValue());
+
+        WebClient.create(host + "/logout?redirect_uri=http://localhost:8080/")
+                .cookie(authCookie)
+                .get();
+
+        response = WebClient.create(
+                host + "/oauth/authorize?client_id=test&redirect_uri=https://localhost:8080/login&response_type=code&scope=read%20write&state="
+                        + UUID.randomUUID().toString()
+        ).cookie(authCookie).get();
+
+        assertThat(extractQueryParameter(response.getLocation(), "code"), nullValue());
+    }
+
 
     private static String extractQueryParameter(URI uri, String paramName) {
         return URLEncodedUtils.parse(uri, StandardCharsets.UTF_8).stream()
@@ -181,7 +213,7 @@ public class AuthProcessingTest {
                 .orElse(null);
     }
 
-    private Client client() {
+    private static Client client() {
         Client client = new Client();
         client.setClientId("test");
         client.setClientSecret("test");
@@ -192,10 +224,11 @@ public class AuthProcessingTest {
         client.setAccessTokenValidityMinutes(10);
         client.setRefreshTokenValidityMinutes(10);
         client.setRedirectUris("*");
+        client.setLogoutUrl("http://stubhostname.local");
         return client;
     }
 
-    private User user() {
+    private static User user() {
         User user = new User();
         user.setUsername("testUser");
         user.setEmail("testEmail");
@@ -215,7 +248,7 @@ public class AuthProcessingTest {
         return user;
     }
 
-    private UserEntity userEntity() {
+    private static UserEntity userEntity() {
         UserEntity user = new UserEntity();
         user.setUsername("testUser");
         user.setEmail("testEmail");
