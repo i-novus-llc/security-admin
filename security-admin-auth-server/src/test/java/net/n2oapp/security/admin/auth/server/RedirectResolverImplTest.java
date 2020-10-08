@@ -1,6 +1,6 @@
 package net.n2oapp.security.admin.auth.server;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.security.oauth2.common.exceptions.InvalidGrantException;
 import org.springframework.security.oauth2.common.exceptions.InvalidRequestException;
 import org.springframework.security.oauth2.common.exceptions.RedirectMismatchException;
