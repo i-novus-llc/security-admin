@@ -19,14 +19,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Регион
  */
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
 @ApiModel("Регион")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Region {
