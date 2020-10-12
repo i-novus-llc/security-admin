@@ -1,4 +1,4 @@
-package net.n2oapp.auth.gateway.esia;
+package net.n2oapp.security.admin.auth.server.esia;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.access.AccessDeniedException;
