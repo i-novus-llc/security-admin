@@ -5,6 +5,7 @@ import lombok.Setter;
 import net.n2oapp.auth.gateway.filter.GatewayOAuth2ClientAuthenticationProcessingFilter;
 import net.n2oapp.security.admin.auth.server.EsiaUserDetailsService;
 import net.n2oapp.security.admin.auth.server.OAuthServerConfiguration;
+import net.n2oapp.security.admin.auth.server.ResourceServerConfiguration;
 import net.n2oapp.security.admin.auth.server.esia.EsiaAccessTokenProvider;
 import net.n2oapp.security.admin.auth.server.esia.EsiaUserInfoTokenServices;
 import net.n2oapp.security.admin.auth.server.esia.Pkcs7Util;
@@ -56,7 +57,7 @@ import java.util.List;
 @EnableOAuth2Client
 @EnableWebSecurity
 @ComponentScan("net.n2oapp.security.admin.auth.server")
-@Import(OAuthServerConfiguration.class)
+@Import({OAuthServerConfiguration.class, ResourceServerConfiguration.class})
 @Order(200)
 public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
 
