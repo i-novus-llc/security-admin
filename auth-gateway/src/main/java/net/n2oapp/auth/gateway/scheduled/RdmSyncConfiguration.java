@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 import static org.quartz.CronScheduleBuilder.cronSchedule;
 
 @Configuration
-@ConditionalOnProperty(prefix = "rdm.sync", name = "enabled", havingValue = "false")
+@ConditionalOnProperty(prefix = "rdm.sync", name = "enabled", havingValue = "true")
 public class RdmSyncConfiguration {
 
     public static final String APP_SYS_EXPORT_JOB_NAME = "app_sys_export_job";
