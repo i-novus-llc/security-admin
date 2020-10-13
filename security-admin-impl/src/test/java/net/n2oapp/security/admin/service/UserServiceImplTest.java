@@ -14,6 +14,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -278,6 +279,62 @@ public class UserServiceImplTest {
         user.setAccountTypeCode("testAccountTypeCode");
         service.register(user);
         assertThat(service.findAll(criteria).getTotalElements()).isEqualTo(1);
+    }
+
+    @Test
+    public void testFindAllByCriteria() {
+        UserForm userForm = new UserForm();
+        userForm.setUsername("username");
+        userForm.setEmail("username@username.username");
+        userForm.setAccountTypeCode("testAccountTypeCode");
+        userForm.setPassword("1234ABCabc,");
+        userForm.setPasswordCheck(userForm.getPassword());
+        userForm.setDepartmentId(1);
+        userForm.setName("name");
+        userForm.setSurname("surname");
+        userForm.setPatronymic("patronymic");
+        userForm.setRegionId(1);
+        userForm.setOrganizationId(1);
+        userForm.setSnils("124-985-753 00");
+        userForm.setIsActive(true);
+        List<Integer> roleIds = new ArrayList<>();
+        roleIds.add(1);
+        userForm.setRoles(roleIds);
+        List<String> roleCodes = new ArrayList<>();
+        roleCodes.add("code1");
+        List<Integer> orgIds = new ArrayList<>();
+        orgIds.add(1);
+
+        User user = service.create(userForm);
+
+        UserCriteria criteria = new UserCriteria();
+        criteria.setUsername("username");
+        criteria.setEmail("username@username.username");
+        criteria.setFio("surname name patronymic");
+        criteria.setIsActive("yes");
+        criteria.setRoleIds(roleIds);
+        criteria.setRoleCodes(roleCodes);
+        criteria.setRegionId(1);
+        criteria.setDepartmentId(1);
+        criteria.setOrganizations(orgIds);
+
+        Page<User> users = service.findAll(criteria);
+
+        assertEquals(1, users.getContent().size());
+        assertEquals("username", users.getContent().get(0).getUsername());
+        assertEquals("surname name patronymic", users.getContent().get(0).getFio());
+        assertEquals("username@username.username", users.getContent().get(0).getEmail());
+        assertEquals("surname", users.getContent().get(0).getSurname());
+        assertEquals("name", users.getContent().get(0).getName());
+        assertEquals("patronymic", users.getContent().get(0).getPatronymic());
+        assertEquals("124-985-753 00", users.getContent().get(0).getSnils());
+        assertEquals(UserLevel.PERSONAL, users.getContent().get(0).getUserLevel());
+        assertEquals(UserStatus.REGISTERED, users.getContent().get(0).getStatus());
+        assertThat(users.getContent().get(0).getDepartment().getId()).isEqualTo(1);
+        assertThat(users.getContent().get(0).getRegion().getId()).isEqualTo(1);
+        assertThat(users.getContent().get(0).getOrganization().getId()).isEqualTo(1);
+                assertTrue(users.getContent().get(0).getIsActive());
+        service.delete(user.getId());
     }
 
     @Test

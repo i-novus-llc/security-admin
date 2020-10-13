@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -145,6 +146,29 @@ public class RoleServiceImplTest {
         RoleCriteria criteria = new RoleCriteria();
         criteria.setUserLevel("federal");
         assertThat(service.findAll(criteria).getTotalElements()).isEqualTo(1);
+    }
+
+    @Test
+    public void findAllGroupBySystem() {
+        RoleForm roleForm = new RoleForm();
+        roleForm.setCode("testRoleCode");
+        roleForm.setName("testRoleName");
+        roleForm.setDescription("testRoleDes");
+        roleForm.setSystemCode("system1");
+        Role role = service.create(roleForm);
+
+        RoleCriteria criteria = new RoleCriteria();
+        criteria.setName("testRoleName");
+        criteria.setUserLevel("NOT_SET");
+        criteria.setGroupBySystem(true);
+
+        Page<Role> roles = service.findAll(criteria);
+
+        assertEquals(2, roles.getContent().size());
+        assertTrue(roles.getContent().stream().anyMatch(r -> r.getName().equals("system1")));
+        assertTrue(roles.getContent().stream().anyMatch(r -> r.getName().equals("testRoleName")));
+
+        service.delete(role.getId());
     }
 
     private static RoleForm newRole() {
