@@ -1,6 +1,7 @@
 package net.n2oapp.security.admin.impl.scheduled;
 
 import org.quartz.JobExecutionContext;
+import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,7 +20,12 @@ public class OrganizationSynchronizeJob extends SynchronizeJob {
     @Override
     public void execute(JobExecutionContext context) {
         logger.info("Organization sync is started");
-        getRdmSyncRest(context, logger).update(organizationRefBookCode);
+        try {
+            getRdmSyncRest(context).update(organizationRefBookCode);
+        } catch (SchedulerException e) {
+            logger.error("cannot get " + KEY + "property", e);
+            throw new RuntimeException(e);
+        }
         logger.info("Organization sync is completed");
     }
 }
