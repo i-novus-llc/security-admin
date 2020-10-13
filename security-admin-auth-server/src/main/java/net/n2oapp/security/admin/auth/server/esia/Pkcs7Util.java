@@ -1,4 +1,4 @@
-package net.n2oapp.auth.gateway.esia;
+package net.n2oapp.security.admin.auth.server.esia;
 
 import org.bouncycastle.cert.jcajce.JcaCertStore;
 import org.bouncycastle.cms.CMSProcessableByteArray;

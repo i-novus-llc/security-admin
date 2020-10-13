@@ -2,21 +2,28 @@ package net.n2oapp.security.admin.auth.server;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.n2oapp.security.admin.auth.server.GatewayOAuth2ClientAuthenticationProcessingFilter;
+import net.n2oapp.security.admin.auth.server.EsiaUserDetailsService;
+import net.n2oapp.security.admin.auth.server.OAuthServerConfiguration;
+import net.n2oapp.security.admin.auth.server.ResourceServerConfiguration;
+import net.n2oapp.security.admin.auth.server.esia.EsiaAccessTokenProvider;
+import net.n2oapp.security.admin.auth.server.esia.EsiaUserInfoTokenServices;
+import net.n2oapp.security.admin.auth.server.esia.Pkcs7Util;
+import net.n2oapp.security.admin.auth.server.exception.UserNotFoundAuthenticationExceptionHandler;
 import net.n2oapp.security.admin.auth.server.logout.OAuth2ProviderRedirectLogoutSuccessHandler;
 import net.n2oapp.security.admin.impl.service.UserDetailsServiceImpl;
 import net.n2oapp.security.auth.common.AuthoritiesPrincipalExtractor;
 import net.n2oapp.security.auth.common.LogoutHandler;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.*;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -28,15 +35,12 @@ import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
+import org.springframework.security.oauth2.client.token.AccessTokenProviderChain;
 import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
-import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.web.filter.CompositeFilter;
 import ru.i_novus.ms.audit.client.UserAccessor;
 
@@ -44,28 +48,36 @@ import javax.servlet.Filter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.security.Security;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Configuration
 @EnableOAuth2Client
 @EnableWebSecurity
-@ComponentScan("net.n2oapp.security.admin.auth.server")
-@Import(OAuthServerConfiguration.class)
+@ComponentScan
 @Order(200)
-public class TestAuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
+public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
 
     @Value("${access.auth.login-entry-point:/}")
-    private String loginEntryPoint;
+    String loginEntryPoint;
 
     @Autowired
-    private OAuth2ClientContext oauth2ClientContext;
+    OAuth2ClientContext oauth2ClientContext;
 
     @Autowired
-    private UserDetailsServiceImpl gatewayUserDetailsService;
+    UserDetailsServiceImpl gatewayUserDetailsService;
 
     @Autowired
-    private List<LogoutHandler> logoutHandlers;
+    @Qualifier("esiaUserDetailsService")
+    EsiaUserDetailsService esiaUserDetailsService;
+
+    @Autowired
+    List<LogoutHandler> logoutHandlers;
+
+    @Autowired
+    private Pkcs7Util pkcs7Util;
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -75,15 +87,28 @@ public class TestAuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests().antMatchers("/", "/login**", "/api/**", "/oauth/certs", "/css/**",
-                "/icons/**", "/fonts/**", "/public/**", "/static/**", "/webjars/**", "/keycloak_mock/token", "/keycloak_mock/userinfo").permitAll().anyRequest()
+                "/icons/**", "/fonts/**", "/public/**", "/static/**", "/webjars/**").permitAll().anyRequest()
                 .authenticated().and().exceptionHandling()
                 .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint(loginEntryPoint)).and().logout()
                 .logoutSuccessUrl(loginEntryPoint)
                 .logoutSuccessHandler(
                         new OAuth2ProviderRedirectLogoutSuccessHandler(logoutHandlers,
-                                keycloak().getLogoutUri(), null)).permitAll()
+                                keycloak().getLogoutUri(), esia().getLogoutUri())).permitAll()
                 .and().csrf().disable()
                 .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
+    }
+
+    @Bean
+    @Primary
+    public UserDetailsServiceImpl gatewayUserDetailsService() {
+        return new UserDetailsServiceImpl();
+    }
+
+    @Bean
+    public EsiaUserDetailsService esiaUserDetailsService() {
+        EsiaUserDetailsService esiaUserDetailsService = new EsiaUserDetailsService();
+        esiaUserDetailsService.setSynchronizeFio(true);
+        return esiaUserDetailsService;
     }
 
     @Bean
@@ -107,21 +132,45 @@ public class TestAuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
         return new ClientResources();
     }
 
-    private Filter ssoFilter() {
+    @Bean
+    @ConfigurationProperties("access.esia")
+    public ClientResources esia() {
+        return new ClientResources();
+    }
+
+    protected Filter ssoFilter() {
         CompositeFilter filter = new CompositeFilter();
         List<Filter> filters = new ArrayList<>();
         filters.add(ssoKeycloakFilter(keycloak(), "/login/keycloak"));
+        filters.add(ssoEsiaFilter(esia(), "/login/esia"));
         filter.setFilters(filters);
         return filter;
     }
 
     private Filter ssoKeycloakFilter(ClientResources client, String path) {
-        OAuth2ClientAuthenticationProcessingFilter filter = new OAuth2ClientAuthenticationProcessingFilter(path);
+        OAuth2ClientAuthenticationProcessingFilter filter = new GatewayOAuth2ClientAuthenticationProcessingFilter(path);
         OAuth2RestTemplate template = new OAuth2RestTemplate(client.getClient(), oauth2ClientContext);
         filter.setRestTemplate(template);
         UserInfoTokenServices tokenServices = new UserInfoTokenServices(client.getResource().getUserInfoUri(), client.getClient().getClientId());
         tokenServices.setRestTemplate(template);
         AuthoritiesPrincipalExtractor extractor = new AuthoritiesPrincipalExtractor(gatewayUserDetailsService, "KEYCLOAK");
+        tokenServices.setAuthoritiesExtractor(extractor);
+        tokenServices.setPrincipalExtractor(extractor);
+        filter.setTokenServices(tokenServices);
+        return filter;
+    }
+
+    private Filter ssoEsiaFilter(ClientResources client, String path) {
+        Security.addProvider(new BouncyCastleProvider());
+        OAuth2ClientAuthenticationProcessingFilter filter = new GatewayOAuth2ClientAuthenticationProcessingFilter(path);
+        OAuth2RestTemplate template = new OAuth2RestTemplate(client.getClient(), oauth2ClientContext);
+        template.setAccessTokenProvider(new AccessTokenProviderChain(Arrays.asList(new EsiaAccessTokenProvider(pkcs7Util))));
+        filter.setRestTemplate(template);
+        filter.setAuthenticationFailureHandler(new UserNotFoundAuthenticationExceptionHandler());
+        EsiaUserInfoTokenServices tokenServices = new EsiaUserInfoTokenServices(client.getResource().getUserInfoUri(), client.getClient().getClientId());
+        tokenServices.setRestTemplate(template);
+        AuthoritiesPrincipalExtractor extractor = new AuthoritiesPrincipalExtractor(esiaUserDetailsService, "ESIA")
+                .setPrincipalKeys("snils");
         tokenServices.setAuthoritiesExtractor(extractor);
         tokenServices.setPrincipalExtractor(extractor);
         filter.setTokenServices(tokenServices);
@@ -154,25 +203,13 @@ public class TestAuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
     static class ClientResources {
 
         @NestedConfigurationProperty
-        private final AuthorizationCodeResourceDetails client = new AuthorizationCodeResourceDetails();
+        private AuthorizationCodeResourceDetails client = new AuthorizationCodeResourceDetails();
 
         @NestedConfigurationProperty
-        private final ResourceServerProperties resource = new ResourceServerProperties();
+        private ResourceServerProperties resource = new ResourceServerProperties();
 
         @Setter
         private String logoutUri;
-    }
-
-
-    @Configuration
-    @EnableResourceServer
-    public static class ResourceServerConfig extends ResourceServerConfigurerAdapter {
-        @Override
-        public void configure(HttpSecurity http) throws Exception {
-            http.authorizeRequests().antMatchers("/api/info", "/api/api-docs", "/api/swagger**").permitAll()
-                    .and().requestMatcher(new OrRequestMatcher(new AntPathRequestMatcher("/api/**"), new AntPathRequestMatcher("/userinfo")))
-                    .authorizeRequests().anyRequest().authenticated();
-        }
     }
 }
 
