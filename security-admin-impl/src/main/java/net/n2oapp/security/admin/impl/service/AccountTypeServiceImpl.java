@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.impl.service;
 
+import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.criteria.AccountTypeCriteria;
 import net.n2oapp.security.admin.api.model.AccountType;
 import net.n2oapp.security.admin.api.model.AccountTypeRoleEnum;
@@ -47,17 +48,24 @@ public class AccountTypeServiceImpl implements AccountTypeService {
 
     @Override
     public AccountType create(AccountType accountType) {
+        checkCodeUnique(accountType.getCode());
         return model(repository.save(entity(accountType)));
     }
 
     @Override
     public AccountType update(AccountType accountType) {
+        checkCodeUnique(accountType.getCode());
         return model(repository.save(entity(accountType)));
     }
 
     @Override
     public void delete(Integer id) {
         repository.deleteById(id);
+    }
+
+    private void checkCodeUnique(String code) {
+        if (repository.existsByCode(code))
+            throw new UserException("exception.uniqueAccountType");
     }
 
     private AccountType model(AccountTypeEntity entity) {
