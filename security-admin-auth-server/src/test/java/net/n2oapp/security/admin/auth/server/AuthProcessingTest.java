@@ -4,10 +4,12 @@ package net.n2oapp.security.admin.auth.server;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.n2oapp.security.admin.api.criteria.ClientCriteria;
 import net.n2oapp.security.admin.api.model.*;
+import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.ClientService;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
+import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.UserDetailsServiceImpl;
 import org.apache.cxf.jaxrs.client.WebClient;
@@ -68,7 +70,10 @@ public class AuthProcessingTest {
     private UserRepository userRepository;
 
     @MockBean
-    private UserDetailsServiceImpl userDetailsService;
+    private RoleRepository roleRepository;
+
+    @MockBean
+    private SsoUserRoleProvider ssoUserRoleProvider;
 
     private static final RestTemplate client;
 
@@ -88,7 +93,7 @@ public class AuthProcessingTest {
                 new PageImpl<>(List.of(client()))
         );
         when(userRepository.findOneByUsernameIgnoreCase("testUser")).thenReturn(userEntity());
-        when(userDetailsService.loadUserDetails(Mockito.any(UserDetailsToken.class))).thenReturn(user());
+//        when(userDetailsService.loadUserDetails(Mockito.any(UserDetailsToken.class))).thenReturn(user());
     }
 
 
@@ -134,9 +139,7 @@ public class AuthProcessingTest {
         assertThat(response.getLocation().toString(), is(host + "/login/keycloak"));
         NewCookie authSession = response.getCookies().get("JSESSIONID");
 
-        response = WebClient.create(
-                host + "/login/keycloak"
-        ).cookie(authSession).get();
+        response = WebClient.create(host + "/login/keycloak").cookie(authSession).get();
 
         String state = extractQueryParameter(response.getLocation(), "state");
 
