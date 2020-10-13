@@ -293,6 +293,7 @@ public class UserServiceImplTest {
         userForm.setSurname("surname");
         userForm.setPatronymic("patronymic");
         userForm.setRegionId(1);
+        userForm.setOrganizationId(1);
         userForm.setSnils("124-985-753 00");
 
         User result = service.create(userForm);
@@ -309,6 +310,7 @@ public class UserServiceImplTest {
         assertEquals(UserStatus.REGISTERED, result.getStatus());
         assertThat(result.getDepartment().getId()).isEqualTo(1);
         assertThat(result.getRegion().getId()).isEqualTo(1);
+        assertThat(result.getOrganization().getId()).isEqualTo(1);
 
         Map<String, Object> userInfo = new HashMap<>();
 
@@ -334,6 +336,7 @@ public class UserServiceImplTest {
         assertEquals(UserStatus.REGISTERED, result.getStatus());
         assertThat(result.getDepartment().getId()).isEqualTo(1);
         assertThat(result.getRegion().getId()).isEqualTo(1);
+        assertThat(result.getOrganization().getId()).isEqualTo(1);
 
         userInfo.put("username", "supapupausername");
         userInfo.put("surname", "supasurname");
@@ -415,6 +418,28 @@ public class UserServiceImplTest {
         result = service.patch(Map.of("id", 1));
         assertThat(result.getId()).isEqualTo(1);
         assertThat(result.getUsername()).isEqualTo("test");
+    }
+
+    @Test
+    public void testLoadSimpleDetails() {
+        UserRegisterForm user = new UserRegisterForm();
+        user.setUsername("simpleDetails");
+        user.setEmail("simpleDetails@test.ru");
+        user.setName("name");
+        user.setSurname("surname");
+        user.setPatronymic("patronymic");
+        user.setIsActive(true);
+        user.setSendPasswordToEmail(true);
+
+        User result = service.register(user);
+        User simpleDetailsUser = service.loadSimpleDetails(result.getId());
+
+        assertEquals(result.getId(), simpleDetailsUser.getId());
+        assertEquals(result.getUsername(), simpleDetailsUser.getUsername());
+        assertEquals(result.getEmail(), simpleDetailsUser.getEmail());
+        assertNotNull(simpleDetailsUser.getTemporaryPassword());
+
+        service.delete(result.getId());
     }
 
     private void checkValidationEmail(User user) {
