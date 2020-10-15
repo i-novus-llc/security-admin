@@ -9,6 +9,7 @@ import net.n2oapp.security.admin.api.service.ApplicationSystemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import ru.i_novus.platform.datastorage.temporal.model.Reference;
@@ -37,8 +38,10 @@ public class ApplicationSystemExportServiceImpl implements ApplicationSystemExpo
 
     private static final Logger log = LoggerFactory.getLogger(ApplicationSystemExportServiceImpl.class);
 
-    static final String SYSTEM_REF_BOOK_CODE = "SYS001";
-    static final String APPLICATION_REF_BOOK_CODE = "APP001";
+    @Value("${rdm.sync.ref-book-code.system}")
+    private String systemRefBookCode;
+    @Value("${rdm.sync.ref-book-code.application}")
+    private String applicationRefBookCode;
 
     private static final String CODE = "code";
     private static final String NAME = "name";
@@ -58,7 +61,7 @@ public class ApplicationSystemExportServiceImpl implements ApplicationSystemExpo
                 .findAllApplications(new ApplicationCriteria(0, Integer.MAX_VALUE))
                 .get().collect(Collectors.toMap(Application::getCode, application -> application));
 
-        update(apps, APPLICATION_REF_BOOK_CODE);
+        update(apps, applicationRefBookCode);
     }
 
     @Override
@@ -67,7 +70,7 @@ public class ApplicationSystemExportServiceImpl implements ApplicationSystemExpo
                 .findAllSystems(new SystemCriteria(0, Integer.MAX_VALUE))
                 .get().collect(Collectors.toMap(AppSystem::getCode, system -> system));
 
-        update(systems, SYSTEM_REF_BOOK_CODE);
+        update(systems, systemRefBookCode);
     }
 
 

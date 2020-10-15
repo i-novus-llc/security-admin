@@ -15,40 +15,43 @@
                             <checkbox id="showOnInterface" src="Switch"/>
                         </controls>
                     </field>
-                    <input-text id="shortName" label="Короткое наименование">
-                        <dependencies>
-                            <visibility on="showOnInterface" reset="false">
-                                showOnInterface
-                            </visibility>
-                            <requiring on="showOnInterface">
-                                showOnInterface
-                            </requiring>
-                        </dependencies>
-                    </input-text>
-                    <input-text id="url" label="Адрес">
-                        <dependencies>
-                            <visibility on="showOnInterface" reset="false">
-                                showOnInterface
-                            </visibility>
-                            <requiring on="showOnInterface">
-                                showOnInterface
-                            </requiring>
-                        </dependencies>
-                    </input-text>
-                    <checkbox id="publicAccess" label="Допускается работа в системе без авторизации">
-                        <dependencies>
-                            <visibility on="showOnInterface" reset="false">
-                                showOnInterface
-                            </visibility>
-                        </dependencies>
-                    </checkbox>
-                    <input-text id="viewOrder" domain="integer" label="Порядок отображения системы">
-                        <dependencies>
-                            <visibility on="showOnInterface" reset="false">
-                                showOnInterface
-                            </visibility>
-                        </dependencies>
-                    </input-text>
+
+                    <set depends-on="showOnInterface">
+                        <input-text id="shortName" label="Короткое наименование" visible="false">
+                            <dependencies>
+                                <visibility on="showOnInterface" reset="false">
+                                    showOnInterface
+                                </visibility>
+                                <requiring on="showOnInterface">
+                                    showOnInterface
+                                </requiring>
+                            </dependencies>
+                        </input-text>
+                        <input-text id="url" label="Адрес" visible="false">
+                            <dependencies>
+                                <visibility on="showOnInterface" reset="false">
+                                    showOnInterface
+                                </visibility>
+                                <requiring on="showOnInterface">
+                                    showOnInterface
+                                </requiring>
+                            </dependencies>
+                        </input-text>
+                        <checkbox id="publicAccess" label="Допускается работа в системе без авторизации" visible="false">
+                            <dependencies>
+                                <visibility on="showOnInterface" reset="false">
+                                    showOnInterface
+                                </visibility>
+                            </dependencies>
+                        </checkbox>
+                        <input-text id="viewOrder" domain="integer" label="Порядок отображения системы" visible="false">
+                            <dependencies>
+                                <visibility on="showOnInterface" reset="false">
+                                    showOnInterface
+                                </visibility>
+                            </dependencies>
+                        </input-text>
+                    </set>
                 </fields>
             </form>
         </region>
@@ -72,15 +75,15 @@
                 <rows>
                     <click>
                         <open-page page-id="serviceUpdateForm" submit-operation-id="update" route="/:code/update"
-                                    object-id="service"
-                                    detail-field-id="id">
+                                   object-id="service"
+                                   detail-field-id="id">
                         </open-page>
                     </click>
                 </rows>
                 <toolbar>
                     <button id="createService" label="Создать" model="filter">
                         <open-page page-id="serviceForm" submit-operation-id="create" model="filter"
-                                    object-id="service" upload="defaults" route="/create" close-after-submit="true">
+                                   object-id="service" upload="defaults" route="/create" close-after-submit="true">
                             <pre-filters>
                                 <eq field-id="systemCode" ref-widget-id="main" ref-model="resolve" value="{id}"/>
                             </pre-filters>
