@@ -1,24 +1,24 @@
 package net.n2oaap.security.admin.sso.keycloak;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.SsoUser;
-import net.n2oapp.security.admin.sso.keycloak.AdminSsoKeycloakProperties;
-import net.n2oapp.security.admin.sso.keycloak.KeycloakRestRoleService;
 import net.n2oapp.security.admin.sso.keycloak.KeycloakRestUserService;
 import net.n2oapp.security.admin.sso.keycloak.KeycloakSsoUserRoleProvider;
 import org.apache.cxf.jaxrs.impl.ResponseImpl;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.keycloak.representations.idm.RoleRepresentation;
-import org.mockito.*;
+import org.keycloak.representations.idm.UserRepresentation;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.quartz.SchedulerFactoryBean;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.*;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.client.RestTemplate;
 
 import javax.ws.rs.core.Response;
@@ -27,80 +27,74 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE,
         classes = TestApplication.class,
-        properties = {"access.keycloak.serverUrl=http://127.0.0.1:8590/auth", "spring.liquibase.enabled=false",
+        properties = {"access.keycloak.serverUrl=http://127.0.0.1:8085/auth", "spring.liquibase.enabled=false",
                 "audit.service.url=Mocked", "audit.client.enabled=false"})
+@Import(TestConfig.class)
 public class KeycloakSsoUserRoleProviderTest {
 
-    @Spy
-    private AdminSsoKeycloakProperties properties;
+    private static final String USERS = "http://127.0.0.1:8085/auth/admin/realms/master/users/";
+    private static final String ROLES = "http://127.0.0.1:8085/auth/admin/realms/master/roles/";
+    public static final String ROLE_MAPPINGS_REALM = "/role-mappings/realm";
+    private String externalUuid;
 
-    @Mock
+    @MockBean
     private RestTemplate restTemplate;
-
-    @Mock
-    private KeycloakRestRoleService roleService;
-    @Mock
+    @Autowired
     private KeycloakRestUserService userService;
-
-    @Spy
-    private SchedulerFactoryBean schedulerFactoryBean;
-
-    @Spy
-    private ObjectMapper objectMapper;
-
-    @InjectMocks
-    private KeycloakSsoUserRoleProvider provider = new KeycloakSsoUserRoleProvider(properties);
-    private SsoUser ssoUser;
+    @Autowired
+    private KeycloakSsoUserRoleProvider provider;
 
     @Captor
     ArgumentCaptor<List<RoleRepresentation>> roleCaptor;
+    @Captor
+    ArgumentCaptor<List<RoleRepresentation>> secondRoleCaptor;
+    @Mock
+    private ResponseEntity roleRepresentationsResponse;
+    @Mock
+    private ResponseEntity oneRoleRepresentationResponse;
 
-    @Before
+    private ResponseEntity<ResponseImpl> responseEntity;
+    private SsoUser ssoUser;
+
+    @BeforeEach
     public void before() {
-        roleService = new KeycloakRestRoleService(properties, restTemplate);
-        userService = new KeycloakRestUserService(properties, restTemplate, roleService);
-
-        provider.setRoleService(roleService);
-        provider.setUserService(userService);
-
         ssoUser = new SsoUser();
-        ssoUser.setExtUid(UUID.randomUUID().toString());
         ssoUser.setEmail("email");
         ssoUser.setUsername("username");
         ssoUser.setSurname("surname");
         ssoUser.setName("name");
         ssoUser.setIsActive(true);
         ssoUser.setPassword("123");
+
+        externalUuid = UUID.randomUUID().toString();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setLocation(URI.create(externalUuid));
+
+        responseEntity = new ResponseEntity<>(httpHeaders, HttpStatus.OK);
+
+        RoleRepresentation[] roleRepresentations = new RoleRepresentation[1];
+        RoleRepresentation role = new RoleRepresentation();
+        role.setId(UUID.randomUUID().toString());
+        role.setName("test.role");
+        role.setComposite(true);
+        roleRepresentations[0] = role;
+
+        mockRestTemplate(roleRepresentations);
     }
 
 
     @Test
-    public void createUser() {
-        ArgumentCaptor<String> uuidCaptor = ArgumentCaptor.forClass(String.class);
-        
-        String userUuid = UUID.randomUUID().toString();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(userUuid));
-        ResponseEntity<ResponseImpl> response = new ResponseEntity<>(headers, HttpStatus.OK);
-
-        RoleRepresentation[] roleRepresentationArr = new RoleRepresentation[1];
-        RoleRepresentation roleRepresentation = new RoleRepresentation();
-        roleRepresentation.setName("test");
-        roleRepresentation.setId("id");
-        roleRepresentationArr[0] = roleRepresentation;
-
-        ResponseEntity<RoleRepresentation[]> roleRepresentationResponse = new ResponseEntity<>(roleRepresentationArr, headers, HttpStatus.OK);
-
-        doReturn(response).when(restTemplate).postForEntity(anyString(), any(), eq(Response.class));
-        doReturn(roleRepresentationResponse).when(restTemplate).getForEntity(anyString(), eq(RoleRepresentation[].class));
+    public void testCreateUser() {
 
         List<String> requiredActions = new ArrayList<>();
         requiredActions.add("requiredAction");
@@ -109,16 +103,113 @@ public class KeycloakSsoUserRoleProviderTest {
         List<Role> roles = new ArrayList<>();
         Role role = new Role();
         role.setId(99);
-        role.setCode("test");
+        role.setCode("test.role");
         roles.add(role);
         ssoUser.setRoles(roles);
 
         SsoUser user = provider.createUser(ssoUser);
 
-        assertEquals(ssoUser.getExtUid(), user.getExtUid());
+        ArgumentCaptor<HttpEntity> httpEntityCaptor = ArgumentCaptor.forClass(HttpEntity.class);
+        verify(restTemplate).postForEntity(eq(USERS), httpEntityCaptor.capture(), eq(Response.class));
+
+        HttpEntity captorValue = httpEntityCaptor.getValue();
+        UserRepresentation capturedUserRepresentation = (UserRepresentation) captorValue.getBody();
+
+        assertNotNull(capturedUserRepresentation);
+        assertEquals(ssoUser.getUsername(), capturedUserRepresentation.getUsername());
+        assertEquals(ssoUser.getName(), capturedUserRepresentation.getFirstName());
+        assertEquals(ssoUser.getSurname(), capturedUserRepresentation.getLastName());
+        assertEquals(ssoUser.getEmail(), capturedUserRepresentation.getEmail());
+
+        verify(restTemplate).getForEntity(eq(ROLES), any());
+
+        httpEntityCaptor = ArgumentCaptor.forClass(HttpEntity.class);
+        verify(restTemplate).postForEntity(eq(USERS + externalUuid + ROLE_MAPPINGS_REALM), httpEntityCaptor.capture(), eq(Response.class));
+
+        captorValue = httpEntityCaptor.getValue();
+        List<RoleRepresentation> capturedRoleRepresentations = (List<RoleRepresentation>) captorValue.getBody();
+
+        assertNotNull(capturedRoleRepresentations);
+        assertEquals("test.role", capturedRoleRepresentations.get(0).getName());
+
+        assertEquals(externalUuid, user.getExtUid());
         assertEquals("KEYCLOAK", user.getExtSys());
         assertEquals(ssoUser.getUsername(), user.getUsername());
         assertEquals(ssoUser.getSurname(), user.getSurname());
         assertEquals(ssoUser.getName(), user.getName());
+    }
+
+    @Test
+    public void testUpdateUserRemoveRoles() {
+        ssoUser.setExtUid(externalUuid);
+        ssoUser.setPassword(null);
+
+        provider.updateUser(ssoUser);
+
+        ArgumentCaptor<HttpEntity> httpEntityCaptor = ArgumentCaptor.forClass(HttpEntity.class);
+        verify(restTemplate).exchange(eq(USERS + externalUuid), eq(HttpMethod.PUT), httpEntityCaptor.capture(), eq(Response.class));
+
+        HttpEntity captorValue = httpEntityCaptor.getValue();
+        UserRepresentation capturedUserRepresentation = (UserRepresentation) captorValue.getBody();
+
+        assertNotNull(capturedUserRepresentation);
+        assertEquals(ssoUser.getUsername(), capturedUserRepresentation.getUsername());
+        assertEquals(ssoUser.getName(), capturedUserRepresentation.getFirstName());
+        assertEquals(ssoUser.getSurname(), capturedUserRepresentation.getLastName());
+        assertEquals(ssoUser.getEmail(), capturedUserRepresentation.getEmail());
+
+        verify(restTemplate).getForEntity(eq(USERS + externalUuid + ROLE_MAPPINGS_REALM), any());
+
+        httpEntityCaptor = ArgumentCaptor.forClass(HttpEntity.class);
+        verify(restTemplate).exchange(eq(USERS + externalUuid + ROLE_MAPPINGS_REALM), eq(HttpMethod.DELETE), httpEntityCaptor.capture(), eq(Response.class));
+
+        captorValue = httpEntityCaptor.getValue();
+        List<RoleRepresentation> capturedRoleRepresentations = (List<RoleRepresentation>) captorValue.getBody();
+
+        assertNotNull(capturedRoleRepresentations);
+        assertEquals("test.role", capturedRoleRepresentations.get(0).getName());
+    }
+
+    @Test
+    public void testUpdateUserAddRoles() {
+        ssoUser.setExtUid(externalUuid);
+        ssoUser.setPassword(null);
+
+        List<Role> roles = new ArrayList<>();
+        Role role = new Role();
+        role.setId(99);
+        role.setCode("test");
+        roles.add(role);
+        ssoUser.setRoles(roles);
+
+        doReturn(oneRoleRepresentationResponse).when(restTemplate).getForEntity(eq(ROLES + "test"), any());
+
+        provider.updateUser(ssoUser);
+
+        verify(restTemplate).getForEntity(eq(ROLES + "test"), any());
+
+        ArgumentCaptor<HttpEntity> httpEntityCaptor = ArgumentCaptor.forClass(HttpEntity.class);
+        verify(restTemplate).postForEntity(eq(USERS + externalUuid + ROLE_MAPPINGS_REALM), httpEntityCaptor.capture(), eq(Response.class));
+
+        HttpEntity captorValue = httpEntityCaptor.getValue();
+        List<RoleRepresentation> capturedRoleRepresentations = (List<RoleRepresentation>) captorValue.getBody();
+
+        assertNotNull(capturedRoleRepresentations);
+        assertEquals("test", capturedRoleRepresentations.get(0).getName());
+
+    }
+
+    private void mockRestTemplate(RoleRepresentation[] roleRepresentations) {
+        doReturn(responseEntity).when(restTemplate).postForEntity(eq(USERS), any(), eq(Response.class));
+        doReturn(roleRepresentationsResponse).when(restTemplate).getForEntity(eq(USERS + externalUuid + ROLE_MAPPINGS_REALM), any());
+        doReturn(responseEntity).when(restTemplate).postForEntity(eq(USERS + externalUuid + ROLE_MAPPINGS_REALM), any(), eq(Response.class));
+        doReturn(responseEntity).when(restTemplate).exchange(eq(USERS + externalUuid), eq(HttpMethod.PUT), any(), eq(Response.class));
+        doReturn(responseEntity).when(restTemplate).exchange(eq(USERS + externalUuid + ROLE_MAPPINGS_REALM), eq(HttpMethod.DELETE), any(), eq(Response.class));
+
+        doReturn(roleRepresentationsResponse).when(restTemplate).getForEntity(eq(ROLES), any());
+
+        doReturn(roleRepresentations).when(roleRepresentationsResponse).getBody();
+        doReturn(roleRepresentations[0]).when(oneRoleRepresentationResponse).getBody();
+
     }
 }

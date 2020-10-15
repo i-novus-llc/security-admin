@@ -159,9 +159,12 @@ public class UserServiceImplTest {
 
     @Test
     public void testResetPassword() {
+        UserForm userForm = new UserForm();
+        service.resetPassword(userForm);
+
         UserRegisterForm user = new UserRegisterForm();
         user.setUsername("testUser29");
-        user.setEmail("test2@test.ru");
+        user.setEmail("test242@test.ru");
         user.setName("name");
         user.setSurname("surname");
         user.setPatronymic("patronymic");
@@ -169,19 +172,51 @@ public class UserServiceImplTest {
         user.setSendPasswordToEmail(true);
         User result = service.register(user);
         assertEquals("testUser29", result.getUsername());
-        assertEquals("test2@test.ru", result.getEmail());
+        assertEquals("test242@test.ru", result.getEmail());
         assertEquals("name", result.getName());
         assertEquals("surname", result.getSurname());
         assertEquals("patronymic", result.getPatronymic());
         assertEquals(true, result.getIsActive());
 
         Integer userId = result.getId();
-        UserForm userForm = new UserForm();
+
+        userForm = new UserForm();
         userForm.setId(userId);
         userForm.setPassword("Zz123456789!");
 
         service.resetPassword(userForm);
 
+        resetPasswordMailCheck();
+
+        User changedUser = service.getById(userId);
+
+        assertEquals("testUser29", changedUser.getUsername());
+        assertEquals("test242@test.ru", changedUser.getEmail());
+        assertEquals("name", changedUser.getName());
+        assertEquals("surname", changedUser.getSurname());
+        assertEquals("patronymic", changedUser.getPatronymic());
+        assertTrue(passwordEncoder.matches("Zz123456789!", changedUser.getPasswordHash()));
+
+        userForm = new UserForm();
+        userForm.setEmail("test242@test.ru");
+
+        service.resetPassword(userForm);
+        resetPasswordMailCheck();
+
+        userForm = new UserForm();
+        userForm.setUsername("testUser29");
+
+        service.resetPassword(userForm);
+        resetPasswordMailCheck();
+
+        userForm = new UserForm();
+        userForm.setSnils("123");
+        service.resetPassword(userForm);
+
+        service.delete(userId);
+    }
+
+    private void resetPasswordMailCheck() {
         try {
             Object content = mimeMessageArgumentCaptor.getValue().getContent();
             assertTrue(content.toString().contains("<p>Уважаемый <span>testUser29</span>!</p>"));
@@ -191,17 +226,6 @@ public class UserServiceImplTest {
         } catch (IOException | MessagingException e) {
             fail();
         }
-
-        User changedUser = service.getById(userId);
-
-        assertEquals("testUser29", changedUser.getUsername());
-        assertEquals("test2@test.ru", changedUser.getEmail());
-        assertEquals("name", changedUser.getName());
-        assertEquals("surname", changedUser.getSurname());
-        assertEquals("patronymic", changedUser.getPatronymic());
-        assertTrue(passwordEncoder.matches("Zz123456789!", changedUser.getPasswordHash()));
-
-        service.delete(userId);
     }
 
     @Test
