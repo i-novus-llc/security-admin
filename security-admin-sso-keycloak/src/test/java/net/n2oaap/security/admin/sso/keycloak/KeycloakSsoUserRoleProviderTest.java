@@ -2,16 +2,15 @@ package net.n2oaap.security.admin.sso.keycloak;
 
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.SsoUser;
-import net.n2oapp.security.admin.sso.keycloak.KeycloakRestUserService;
 import net.n2oapp.security.admin.sso.keycloak.KeycloakSsoUserRoleProvider;
 import org.apache.cxf.jaxrs.impl.ResponseImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,8 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
@@ -50,14 +48,8 @@ public class KeycloakSsoUserRoleProviderTest {
     @MockBean
     private RestTemplate restTemplate;
     @Autowired
-    private KeycloakRestUserService userService;
-    @Autowired
     private KeycloakSsoUserRoleProvider provider;
 
-    @Captor
-    ArgumentCaptor<List<RoleRepresentation>> roleCaptor;
-    @Captor
-    ArgumentCaptor<List<RoleRepresentation>> secondRoleCaptor;
     @Mock
     private ResponseEntity roleRepresentationsResponse;
     @Mock
@@ -140,9 +132,8 @@ public class KeycloakSsoUserRoleProviderTest {
     }
 
     @Test
-    public void testUpdateUserRemoveRoles() {
+    public void testUpdateUserRemoveRolesUpdatePassword() {
         ssoUser.setExtUid(externalUuid);
-        ssoUser.setPassword(null);
 
         provider.updateUser(ssoUser);
 
@@ -168,6 +159,17 @@ public class KeycloakSsoUserRoleProviderTest {
 
         assertNotNull(capturedRoleRepresentations);
         assertEquals("test.role", capturedRoleRepresentations.get(0).getName());
+
+        httpEntityCaptor = ArgumentCaptor.forClass(HttpEntity.class);
+        verify(restTemplate).exchange(eq(USERS + externalUuid + "/reset-password"), eq(HttpMethod.PUT), httpEntityCaptor.capture(), eq(Response.class));
+
+        captorValue = httpEntityCaptor.getValue();
+        CredentialRepresentation credentialRepresentation = (CredentialRepresentation) captorValue.getBody();
+
+        assertNotNull(credentialRepresentation);
+        assertEquals("password", credentialRepresentation.getType());
+        assertEquals("123", credentialRepresentation.getValue());
+        assertFalse(credentialRepresentation.isTemporary());
     }
 
     @Test
@@ -199,12 +201,43 @@ public class KeycloakSsoUserRoleProviderTest {
 
     }
 
+    @Test
+    public void testDeleteUsers() {
+        ssoUser.setExtUid(externalUuid);
+        provider.deleteUser(ssoUser);
+        verify(restTemplate).exchange(eq(USERS + externalUuid), eq(HttpMethod.DELETE), any(), eq(Response.class));
+    }
+
+    @Test
+    public void testChangeActive() {
+        ssoUser.setExtUid(externalUuid);
+        ssoUser.setUsername(null);
+        ssoUser.setSurname(null);
+        ssoUser.setName(null);
+        ssoUser.setEmail(null);
+        ssoUser.setIsActive(false);
+        provider.changeActivity(ssoUser);
+
+        ArgumentCaptor<HttpEntity> httpEntityCaptor = ArgumentCaptor.forClass(HttpEntity.class);
+        verify(restTemplate).exchange(eq(USERS + externalUuid), eq(HttpMethod.PUT), httpEntityCaptor.capture(), eq(Response.class));
+
+        HttpEntity captorValue = httpEntityCaptor.getValue();
+        UserRepresentation capturedUserRepresentation = (UserRepresentation) captorValue.getBody();
+
+        assertNotNull(capturedUserRepresentation);
+        assertFalse(capturedUserRepresentation.isEnabled());
+    }
+
+
+
     private void mockRestTemplate(RoleRepresentation[] roleRepresentations) {
         doReturn(responseEntity).when(restTemplate).postForEntity(eq(USERS), any(), eq(Response.class));
         doReturn(roleRepresentationsResponse).when(restTemplate).getForEntity(eq(USERS + externalUuid + ROLE_MAPPINGS_REALM), any());
         doReturn(responseEntity).when(restTemplate).postForEntity(eq(USERS + externalUuid + ROLE_MAPPINGS_REALM), any(), eq(Response.class));
         doReturn(responseEntity).when(restTemplate).exchange(eq(USERS + externalUuid), eq(HttpMethod.PUT), any(), eq(Response.class));
+        doReturn(responseEntity).when(restTemplate).exchange(eq(USERS + externalUuid + "/reset-password"), eq(HttpMethod.PUT), any(), eq(Response.class));
         doReturn(responseEntity).when(restTemplate).exchange(eq(USERS + externalUuid + ROLE_MAPPINGS_REALM), eq(HttpMethod.DELETE), any(), eq(Response.class));
+        doReturn(responseEntity).when(restTemplate).exchange(eq(USERS + externalUuid), eq(HttpMethod.DELETE), any(), eq(Response.class));
 
         doReturn(roleRepresentationsResponse).when(restTemplate).getForEntity(eq(ROLES), any());
 
