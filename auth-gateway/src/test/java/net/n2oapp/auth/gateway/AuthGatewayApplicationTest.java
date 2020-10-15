@@ -1,6 +1,6 @@
 package net.n2oapp.auth.gateway;
 
-import net.n2oapp.auth.gateway.scheduled.SynchronizationInfo;
+import net.n2oapp.security.admin.impl.scheduled.SynchronizationInfo;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
