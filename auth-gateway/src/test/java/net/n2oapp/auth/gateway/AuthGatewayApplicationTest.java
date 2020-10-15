@@ -1,7 +1,7 @@
 package net.n2oapp.auth.gateway;
 
-import net.n2oapp.auth.gateway.scheduled.SynchronizationInfo;
-import org.junit.jupiter.api.Disabled;
+import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
+import net.n2oapp.security.admin.impl.scheduled.SynchronizationInfo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,9 +13,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
-//нужно настроить соединение с бд
-@Disabled
-@SpringBootTest
+@EnableEmbeddedPg
+@SpringBootTest(properties = "rdm.sync.enabled=true")
 public class AuthGatewayApplicationTest {
 
     @Autowired
