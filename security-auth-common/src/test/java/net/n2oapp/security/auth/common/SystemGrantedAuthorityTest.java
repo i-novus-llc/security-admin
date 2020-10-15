@@ -1,14 +1,15 @@
 package net.n2oapp.security.auth.common;
 
 import net.n2oapp.security.auth.common.authority.SystemGrantedAuthority;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static net.n2oapp.security.auth.common.TestConstants.OTHER_SYSTEM_NAME;
 import static net.n2oapp.security.auth.common.TestConstants.SOME_SYSTEM_NAME;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(SpringExtension.class)
 public class SystemGrantedAuthorityTest {
 
     private static final String DEFAULT_SYSTEM_PREFIX = "SYSTEM_";

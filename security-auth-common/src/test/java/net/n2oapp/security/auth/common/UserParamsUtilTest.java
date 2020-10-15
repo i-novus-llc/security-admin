@@ -4,9 +4,10 @@ import net.n2oapp.security.auth.common.authority.PermissionGrantedAuthority;
 import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
 import net.n2oapp.security.auth.common.authority.SystemGrantedAuthority;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -15,13 +16,15 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.*;
 
 import static net.n2oapp.security.auth.common.TestConstants.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.core.context.SecurityContextHolder.clearContext;
 
+@ExtendWith(SpringExtension.class)
 public class UserParamsUtilTest {
 
     private static final String PRINCIPIAL_DEPARTMENT_NAME_ATTR = "departmentName";
@@ -64,7 +67,7 @@ public class UserParamsUtilTest {
 
     private User testPrincipal;
 
-    @Before
+    @BeforeEach
     public void setup() {
 
         testingAuthenticationToken = new TestingAuthenticationToken(SOME_USERNAME, SOME_PASSWORD, SOME_ROLE);
@@ -90,7 +93,7 @@ public class UserParamsUtilTest {
         testingAuthTokenWithPrincipalIsDetails = new TestingAuthenticationToken(testPrincipal, SOME_PASSWORD);
     }
 
-    @After
+    @AfterEach
     public void cleanup() {
         clearContext();
     }

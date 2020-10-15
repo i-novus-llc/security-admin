@@ -171,6 +171,79 @@ public class RoleServiceImplTest {
         service.delete(role.getId());
     }
 
+    @Test
+    public void findAllForForm() {
+        RoleForm roleForm = new RoleForm();
+        roleForm.setCode("testRoleCode");
+        roleForm.setName("testRoleName");
+        roleForm.setDescription("testRoleDes");
+        roleForm.setSystemCode("system1");
+        Role role = service.create(roleForm);
+
+        RoleCriteria criteria = new RoleCriteria();
+        criteria.setName("testRoleName");
+        criteria.setUserLevel("NOT_SET");
+        criteria.setForForm(true);
+        Page<Role> roles = service.findAll(criteria);
+
+        assertEquals(1, roles.getContent().size());
+        assertTrue(roles.getContent().stream().anyMatch(r -> r.getName().equals("testRoleName")));
+
+        criteria = new RoleCriteria();
+        criteria.setName("testRoleName");
+        criteria.setForForm(true);
+
+        roles = service.findAll(criteria);
+
+        assertEquals(1, roles.getContent().size());
+        assertTrue(roles.getContent().stream().anyMatch(r -> r.getName().equals("testRoleName")));
+
+        service.delete(role.getId());
+    }
+
+    @Test
+    public void findAllByOrgDependency() {
+        RoleForm roleForm = new RoleForm();
+        roleForm.setCode("testRoleCode");
+        roleForm.setName("testRoleName");
+        roleForm.setDescription("testRoleDes");
+        roleForm.setSystemCode("system1");
+        Role role = service.create(roleForm);
+
+        RoleCriteria criteria = new RoleCriteria();
+        criteria.setOnOrgDependency(true);
+        List<Integer> orgRoles = new ArrayList<>();
+        orgRoles.add(role.getId());
+        criteria.setOrgRoles(orgRoles);
+        Page<Role> roles = service.findAll(criteria);
+
+        assertEquals(1, roles.getContent().size());
+        assertTrue(roles.getContent().stream().anyMatch(r -> r.getName().equals("testRoleName")));
+
+        service.delete(role.getId());
+    }
+
+    @Test
+    public void findAllBySystem() {
+        RoleForm roleForm = new RoleForm();
+        roleForm.setCode("testRoleCode");
+        roleForm.setName("testRoleName");
+        roleForm.setDescription("testRoleDes");
+        roleForm.setSystemCode("system1");
+        Role role = service.create(roleForm);
+
+        RoleCriteria criteria = new RoleCriteria();
+        List<String> systemCodes = new ArrayList<>();
+        systemCodes.add("system1");
+        criteria.setSystemCodes(systemCodes);
+        Page<Role> roles = service.findAll(criteria);
+
+        assertEquals(1, roles.getContent().size());
+        assertTrue(roles.getContent().stream().anyMatch(r -> r.getName().equals("testRoleName")));
+
+        service.delete(role.getId());
+    }
+
     private static RoleForm newRole() {
         RoleForm role = new RoleForm();
         role.setName("test-name");
