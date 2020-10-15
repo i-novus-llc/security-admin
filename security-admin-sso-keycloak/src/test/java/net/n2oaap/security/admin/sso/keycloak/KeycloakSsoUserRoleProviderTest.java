@@ -228,6 +228,25 @@ public class KeycloakSsoUserRoleProviderTest {
         assertFalse(capturedUserRepresentation.isEnabled());
     }
 
+    @Test
+    public void testResetPassword() {
+        ssoUser.setExtUid(externalUuid);
+        List<String> requiredActions = new ArrayList<>();
+        requiredActions.add("resetPassword");
+        ssoUser.setRequiredActions(requiredActions);
+
+        provider.resetPassword(ssoUser);
+
+        ArgumentCaptor<HttpEntity> httpEntityCaptor = ArgumentCaptor.forClass(HttpEntity.class);
+        verify(restTemplate).exchange(eq(USERS + externalUuid), eq(HttpMethod.PUT), httpEntityCaptor.capture(), eq(Response.class));
+
+        HttpEntity captorValue = httpEntityCaptor.getValue();
+        UserRepresentation capturedUserRepresentation = (UserRepresentation) captorValue.getBody();
+
+        assertNotNull(capturedUserRepresentation);
+        assertEquals("resetPassword", capturedUserRepresentation.getRequiredActions().get(0));
+    }
+
 
 
     private void mockRestTemplate(RoleRepresentation[] roleRepresentations) {
