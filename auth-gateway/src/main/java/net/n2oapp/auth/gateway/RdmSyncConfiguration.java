@@ -1,5 +1,6 @@
-package net.n2oapp.auth.gateway.scheduled;
+package net.n2oapp.auth.gateway;
 
+import net.n2oapp.security.admin.impl.scheduled.*;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
 import static org.quartz.CronScheduleBuilder.cronSchedule;
 
 @Configuration
-@ConditionalOnProperty(prefix = "rdm.sync", name = "enabled", havingValue = "false")
+@ConditionalOnProperty(prefix = "rdm.sync", name = "enabled", havingValue = "true")
 public class RdmSyncConfiguration {
 
     public static final String APP_SYS_EXPORT_JOB_NAME = "app_sys_export_job";

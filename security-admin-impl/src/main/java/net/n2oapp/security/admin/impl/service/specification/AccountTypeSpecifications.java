@@ -10,7 +10,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-
 import java.util.Arrays;
 
 import static org.springframework.util.StringUtils.hasText;
@@ -34,7 +33,8 @@ public class AccountTypeSpecifications implements Specification<AccountTypeEntit
                 return builder.disjunction();
             }
             if (UserLevel.NOT_SET.getName().equals(userLevel)) {
-                predicate = builder.and(predicate, builder.isNull(root.get(AccountTypeEntity_.userLevel)));
+                predicate = builder.and(predicate, builder.or(builder.isNull(root.get(AccountTypeEntity_.userLevel)),
+                        builder.equal(root.get(AccountTypeEntity_.userLevel), UserLevel.NOT_SET)));
             } else {
                 predicate = builder.and(predicate, builder.equal(root.get(AccountTypeEntity_.userLevel), UserLevel.valueOf(userLevel)));
             }
