@@ -108,7 +108,10 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <executable>true</executable>
+                    <executable>false</executable>
+                    <layers>
+                        <enabled>true</enabled>
+                    </layers>
                 </configuration>
             </plugin>
         </plugins>

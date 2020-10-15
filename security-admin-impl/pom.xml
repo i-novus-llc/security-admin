@@ -71,6 +71,11 @@
             <artifactId>jackson-databind</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+        </dependency>
+
 
         <!--Generate metamodel classes ClassName_ -->
         <dependency>

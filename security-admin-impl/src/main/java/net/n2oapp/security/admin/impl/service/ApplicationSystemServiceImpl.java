@@ -36,8 +36,6 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-import static net.n2oapp.security.admin.impl.service.ApplicationSystemExportServiceImpl.APPLICATION_REF_BOOK_CODE;
-import static net.n2oapp.security.admin.impl.service.ApplicationSystemExportServiceImpl.SYSTEM_REF_BOOK_CODE;
 
 /**
  * Реализация сервиса управления приложениями и системами
@@ -45,6 +43,11 @@ import static net.n2oapp.security.admin.impl.service.ApplicationSystemExportServ
 @Service
 @Transactional
 public class ApplicationSystemServiceImpl implements ApplicationSystemService {
+
+    @Value("${rdm.sync.ref-book-code.system}")
+    private String systemRefBookCode;
+    @Value("${rdm.sync.ref-book-code.application}")
+    private String applicationRefBookCode;
 
     @Autowired
     private ApplicationRepository applicationRepository;
@@ -71,7 +74,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
         Application result = model(applicationRepository.save(entity(service)));
 
         if(nonNull(rdmChangeDataClient))
-            rdmChangeDataClient.changeData(APPLICATION_REF_BOOK_CODE, singletonList(result), emptyList());
+            rdmChangeDataClient.changeData(applicationRefBookCode, singletonList(result), emptyList());
 
         return audit("audit.applicationCreate", result);
     }
@@ -86,7 +89,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
         Application result = model(applicationRepository.save(entity(service)));
 
         if(nonNull(rdmChangeDataClient))
-            rdmChangeDataClient.changeData(APPLICATION_REF_BOOK_CODE, singletonList(result), emptyList());
+            rdmChangeDataClient.changeData(applicationRefBookCode, singletonList(result), emptyList());
 
         return audit("audit.applicationUpdate", result);
     }
@@ -100,7 +103,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
         Application model = model(app);
 
         if(nonNull(rdmChangeDataClient))
-            rdmChangeDataClient.changeData(APPLICATION_REF_BOOK_CODE, emptyList(), singletonList(model));
+            rdmChangeDataClient.changeData(applicationRefBookCode, emptyList(), singletonList(model));
 
         audit("audit.applicationDelete", model);
     }
@@ -132,7 +135,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
         AppSystem result = model(systemRepository.save(entity(system)));
 
         if(nonNull(rdmChangeDataClient))
-            rdmChangeDataClient.changeData(SYSTEM_REF_BOOK_CODE, singletonList(result), emptyList());
+            rdmChangeDataClient.changeData(systemRefBookCode, singletonList(result), emptyList());
 
         return audit("audit.appSystemCreate", result);
     }
@@ -142,7 +145,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
         AppSystem result = model(systemRepository.save(entity(system)));
 
         if(nonNull(rdmChangeDataClient))
-            rdmChangeDataClient.changeData(SYSTEM_REF_BOOK_CODE, singletonList(result), emptyList());
+            rdmChangeDataClient.changeData(systemRefBookCode, singletonList(result), emptyList());
 
         return audit("audit.appSystemUpdate", result);
     }
@@ -156,7 +159,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
             AppSystem model = model(sys);
 
             if(nonNull(rdmChangeDataClient))
-                rdmChangeDataClient.changeData(SYSTEM_REF_BOOK_CODE, emptyList(), singletonList(model));
+                rdmChangeDataClient.changeData(systemRefBookCode, emptyList(), singletonList(model));
 
             audit("audit.appSystemDelete", model);
         }
