@@ -10,6 +10,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <properties>
+        <jacoco.skip>false</jacoco.skip>
+    </properties>
 
     <dependencies>
         <dependency>
