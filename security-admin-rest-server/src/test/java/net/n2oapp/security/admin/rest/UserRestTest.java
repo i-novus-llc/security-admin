@@ -123,7 +123,9 @@ public class UserRestTest {
         role2.setDescription("description2");
         role2.setNameWithSystem("admin");
 
-        assertEquals(user.getRoles(), Arrays.asList(role1, role2));
+        assertEquals(user.getRoles().get(0).getCode(), "code1");
+        assertEquals(user.getRoles().get(1).getCode(), "code2");
+
 
         assertNull(user.getSnils());
         assertNull(user.getUserLevel());
