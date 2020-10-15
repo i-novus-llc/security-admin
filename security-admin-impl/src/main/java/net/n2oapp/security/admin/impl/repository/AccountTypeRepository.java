@@ -13,4 +13,5 @@ import java.util.Optional;
 @Repository
 public interface AccountTypeRepository extends JpaRepository<AccountTypeEntity, Integer>, JpaSpecificationExecutor<AccountTypeEntity> {
     Optional<AccountTypeEntity> findByCode(String code);
+    boolean existsByCode(String code);
 }
