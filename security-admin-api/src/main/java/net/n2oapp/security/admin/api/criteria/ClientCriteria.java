@@ -15,12 +15,14 @@
  */
 package net.n2oapp.security.admin.api.criteria;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Критерий фильтрации клиентов
  */
-@Data
+@Getter
+@Setter
 public class ClientCriteria extends BaseCriteria {
     private String clientId;
 }

@@ -15,15 +15,18 @@
  */
 package net.n2oapp.security.admin.api.criteria;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
 /**
  * Критерий фильтрации систем
  */
-@Data
+
+@Getter
+@Setter
 @NoArgsConstructor
 public class SystemCriteria extends BaseCriteria {
     private String code;
