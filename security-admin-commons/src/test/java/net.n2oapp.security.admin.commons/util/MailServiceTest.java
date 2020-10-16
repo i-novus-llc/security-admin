@@ -60,6 +60,7 @@ public class MailServiceTest {
         mailService.sendWelcomeMail(user);
 
         try {
+            Mockito.verify(emailSender, Mockito.timeout(10000).atLeastOnce()).send(Mockito.any(MimeMessage.class));
             Object content = mimeMessageArgumentCaptor.getValue().getContent();
             assertTrue(content.toString().contains("<p>Уважаемый <span>surname</span> <span>name</span>!</p>"));
             assertTrue(content.toString().contains("<p>Вы зарегистрированы в системе.</p>"));
@@ -95,6 +96,7 @@ public class MailServiceTest {
         mailService.sendResetPasswordMail(user);
 
         try {
+            Mockito.verify(emailSender, Mockito.timeout(10000).atLeastOnce()).send(Mockito.any(MimeMessage.class));
             Object content = mimeMessageArgumentCaptor.getValue().getContent();
             assertTrue(content.toString().contains("<p>Уважаемый <span>username</span>!</p>"));
             assertTrue(content.toString().contains("<p>Ваш пароль был сброшен.</p>"));
@@ -118,6 +120,7 @@ public class MailServiceTest {
         mailService.sendChangeActivateMail(user);
 
         try {
+            Mockito.verify(emailSender, Mockito.timeout(10000).atLeastOnce()).send(Mockito.any(MimeMessage.class));
             Object content = mimeMessageArgumentCaptor.getValue().getContent();
             assertTrue(content.toString().contains("<p>Уважаемый <span>surname</span> <span>name</span> <span>patronymic</span>!</p>"));
             assertTrue(content.toString().contains("Признак активности Вашей учетной записи изменен на \"<span>Да</span>\"."));
@@ -138,6 +141,7 @@ public class MailServiceTest {
         mailService.sendUserDeletedMail(user);
 
         try {
+            Mockito.verify(emailSender, Mockito.timeout(10000).atLeastOnce()).send(Mockito.any(MimeMessage.class));
             Object content = mimeMessageArgumentCaptor.getValue().getContent();
             assertTrue(content.toString().contains("<p>Уважаемый <span>surname</span> <span>name</span> <span>patronymic</span>!</p>"));
             assertTrue(content.toString().contains("<p>Ваша учетная запись удалена.</p>"));
