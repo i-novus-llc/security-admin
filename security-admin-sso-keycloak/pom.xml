@@ -57,13 +57,6 @@
 
         <!-- Test -->
         <dependency>
-            <groupId>com.github.tomakehurst</groupId>
-            <artifactId>wiremock-standalone</artifactId>
-            <version>${wiremock-standalone.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-starter-test</artifactId>
             <scope>test</scope>

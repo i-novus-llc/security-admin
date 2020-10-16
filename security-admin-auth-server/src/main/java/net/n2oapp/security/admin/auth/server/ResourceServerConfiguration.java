@@ -1,4 +1,4 @@
-package net.n2oapp.auth.gateway;
+package net.n2oapp.security.admin.auth.server;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

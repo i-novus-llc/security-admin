@@ -1,12 +1,15 @@
 package net.n2oapp.security.admin.sso.keycloak;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * Настройки для модуля взаимодействия с keycloak
  */
-@Data
+@Getter
+@Setter
 @ConfigurationProperties("access.keycloak")
 public class AdminSsoKeycloakProperties {
 

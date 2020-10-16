@@ -3,6 +3,7 @@ package net.n2oapp.security.admin.service;
 import com.google.common.collect.Lists;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserDetailsToken;
+import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.impl.service.UserDetailsServiceImpl;
 import net.n2oapp.security.admin.impl.service.UserServiceImpl;
 import org.junit.Test;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -37,6 +39,47 @@ public class UserDetailsServiceImplTest {
         assertEquals("testSurname", userDetails.getSurname());
         assertEquals(2, userDetails.getRoles().size());
         userService.delete(userDetails.getId());
+
+        detailsService.setCreateUser(false);
+        Throwable thrown = catchThrowable(() -> detailsService.loadUserDetails(userDetailsToken()));
+        assertEquals("User testName testSurname doesn't registered in system", thrown.getMessage());
+
+        detailsService.setUpdateUser(true);
+        detailsService.setUpdateRoles(true);
+
+        UserForm userForm = createUserForm();
+
+        User user = userService.create(userForm);
+
+        userDetails = detailsService.loadUserDetails(userDetailsToken());
+
+        assertEquals("testUserName", userDetails.getUsername());
+        assertEquals("testName", userDetails.getName());
+        assertEquals("test@test.test", userDetails.getEmail());
+        assertEquals("testSurname", userDetails.getSurname());
+        assertEquals(1, userDetails.getOrganization().getId().intValue());
+        assertEquals(1, userDetails.getDepartment().getId().intValue());
+        assertEquals(1, userDetails.getRegion().getId().intValue());
+        assertEquals(2, userDetails.getRoles().size());
+
+        userService.delete(userDetails.getId());
+    }
+
+    private UserForm createUserForm() {
+        UserForm userForm = new UserForm();
+        userForm.setUsername("testUserName");
+        userForm.setEmail("test@test.test");
+        userForm.setAccountTypeCode("testAccountTypeCode");
+        userForm.setPassword("1234ABCabc,");
+        userForm.setPasswordCheck(userForm.getPassword());
+        userForm.setDepartmentId(1);
+        userForm.setName("name");
+        userForm.setSurname("surname");
+        userForm.setPatronymic("patronymic");
+        userForm.setRegionId(1);
+        userForm.setSnils("124-985-753 00");
+        userForm.setOrganizationId(1);
+        return userForm;
     }
 
     private UserDetailsToken userDetailsToken() {

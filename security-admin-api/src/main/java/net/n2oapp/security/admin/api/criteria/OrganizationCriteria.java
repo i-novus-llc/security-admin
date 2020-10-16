@@ -16,13 +16,16 @@
 package net.n2oapp.security.admin.api.criteria;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
 /**
  * Критерий фильтрации организаций
  */
-@Data
+@Getter
+@Setter
 public class OrganizationCriteria extends BaseCriteria {
     private String shortName;
     private String name;

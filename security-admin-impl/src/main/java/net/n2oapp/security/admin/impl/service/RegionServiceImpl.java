@@ -6,7 +6,6 @@ import net.n2oapp.security.admin.api.service.RegionService;
 import net.n2oapp.security.admin.impl.entity.RegionEntity;
 import net.n2oapp.security.admin.impl.repository.RegionRepository;
 import net.n2oapp.security.admin.impl.service.specification.RegionSpecifications;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -21,9 +20,13 @@ import java.util.ArrayList;
 @Service
 @Transactional
 public class RegionServiceImpl implements RegionService {
-    @Autowired
-    private RegionRepository regionRepository;
-    
+
+    private final RegionRepository regionRepository;
+
+    public RegionServiceImpl(RegionRepository regionRepository) {
+        this.regionRepository = regionRepository;
+    }
+
     @Override
     public Page<Region> findAll(RegionCriteria criteria) {
         Specification<RegionEntity> specification = new RegionSpecifications(criteria);
@@ -46,7 +49,4 @@ public class RegionServiceImpl implements RegionService {
 
     }
 
-    public void setRegionRepository(RegionRepository regionRepository) {
-        this.regionRepository = regionRepository;
-    }
 }
