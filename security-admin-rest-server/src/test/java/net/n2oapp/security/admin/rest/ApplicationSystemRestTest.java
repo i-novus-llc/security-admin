@@ -4,6 +4,7 @@ import net.n2oapp.platform.jaxrs.RestException;
 import net.n2oapp.security.admin.TestApplication;
 import net.n2oapp.security.admin.api.model.AppSystem;
 import net.n2oapp.security.admin.api.model.Application;
+import net.n2oapp.security.admin.api.model.Client;
 import net.n2oapp.security.admin.rest.api.ApplicationSystemRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestApplicationCriteria;
 import net.n2oapp.security.admin.rest.api.criteria.RestSystemCriteria;
@@ -20,9 +21,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 
 /**
  * Тест Rest сервиса управления системами и приложениями
@@ -77,6 +78,28 @@ public class ApplicationSystemRestTest {
         assertThat(result.getSystemCode(), is(application.getSystemCode()));
         assertThat(result.getSystemName(), is("testSystemName1"));
         assertThat(result.getOAuth(), is(false));
+
+        client.deleteApplication(result.getCode());
+
+        Client clientApp = new Client();
+        clientApp.setClientId("123");
+        clientApp.setEnabled(true);
+
+        application = new Application();
+        application.setCode("testApplicationCode4");
+        application.setName("testApplicationName4");
+        application.setSystemCode("testSystemCode2");
+        application.setClient(clientApp);
+        application.setOAuth(true);
+
+        result = client.createApplication(application);
+        assertThat(result.getCode(), is(application.getCode()));
+        assertThat(result.getName(), is(application.getName()));
+        assertThat(result.getSystemCode(), is(application.getSystemCode()));
+        assertThat(result.getSystemName(), is("testSystemName2"));
+        assertThat(result.getClient().getClientId(), is("testApplicationCode4"));
+        assertThat(result.getOAuth(), is(true));
+
         client.deleteApplication(result.getCode());
     }
 
@@ -93,6 +116,7 @@ public class ApplicationSystemRestTest {
 
         created.setName("testApplicationUpdateName2");
         created.setSystemCode("testSystemCode2");
+        created.setClient(new Client());
 
         Application updated = client.updateApplication(created);
         assertThat(updated.getName(), is(created.getName()));
@@ -146,6 +170,10 @@ public class ApplicationSystemRestTest {
         assertThat(result.getShowOnInterface(), is(system.getShowOnInterface()));
         assertThat(result.getUrl(), is(system.getUrl()));
         assertThat(result.getViewOrder(), is(system.getViewOrder()));
+
+        Throwable thrown = catchThrowable(() -> client.createSystem(system));
+        assertThat(thrown.getMessage(), equalTo("Система с указанным кодом уже существует"));
+
         client.deleteSystem(result.getCode());
     }
 
@@ -167,8 +195,9 @@ public class ApplicationSystemRestTest {
 
         assertThat(client.getSystem(system.getCode()), is(notNullValue()));
 
-
         client.deleteSystem(result.getCode());
+        Throwable thrown = catchThrowable(() -> client.getSystem(system.getCode()));
+        assertThat(thrown.getMessage(), equalTo("HTTP 404 Not Found"));
 
         try {
             client.deleteSystem(result.getCode());

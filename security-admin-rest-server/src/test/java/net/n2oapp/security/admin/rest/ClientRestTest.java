@@ -19,6 +19,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -96,6 +97,8 @@ public class ClientRestTest {
     private String create() {
         Client client = clientService.create(newClient());
         compareClient(client, newClient());
+        Throwable thrown = catchThrowable(() -> clientService.create(newClient()));
+        assertEquals("Клиент с таким идентификатором уже существует", thrown.getMessage());
         return client.getClientId();
     }
 
@@ -121,6 +124,10 @@ public class ClientRestTest {
         clientService.delete(id);
         Client client = clientService.getByClientId(id);
         assertNull(client);
+
+        String notExistingClient = "28876";
+        Throwable thrown = catchThrowable(() -> clientService.delete(notExistingClient));
+        assertEquals("Клиент с таким идентификатором не существует", thrown.getMessage());
     }
 
     private Client newClient() {

@@ -2,14 +2,17 @@ package net.n2oapp.security.auth.common;
 
 import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Collections;
 import java.util.List;
 
 import static net.n2oapp.security.auth.common.TestConstants.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(SpringExtension.class)
 public class UserTest {
 
     private static final String DEFAULT_ROLE = "ROLE_USER";

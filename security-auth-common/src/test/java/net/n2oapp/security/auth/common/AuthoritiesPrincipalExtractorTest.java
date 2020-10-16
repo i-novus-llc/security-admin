@@ -1,22 +1,25 @@
 package net.n2oapp.security.auth.common;
 
-import net.n2oapp.security.admin.api.model.*;
 import net.n2oapp.security.admin.api.model.User;
+import net.n2oapp.security.admin.api.model.*;
 import net.n2oapp.security.admin.api.service.UserDetailsService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static net.n2oapp.security.auth.common.TestConstants.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 public class AuthoritiesPrincipalExtractorTest {
 
     @MockBean
@@ -24,7 +27,7 @@ public class AuthoritiesPrincipalExtractorTest {
 
     private User testPrincipal;
 
-    @Before
+    @BeforeEach
     public void setup() {
 
         Department department = new Department();
