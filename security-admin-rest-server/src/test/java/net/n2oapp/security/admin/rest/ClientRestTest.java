@@ -8,24 +8,25 @@ import net.n2oapp.security.admin.api.model.Client;
 import net.n2oapp.security.admin.impl.service.ApplicationSystemServiceImpl;
 import net.n2oapp.security.admin.rest.api.ClientRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestClientCriteria;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Тест Rest сервиса управления клиентами
  */
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
         properties = "server.port=8290")
@@ -73,6 +74,9 @@ public class ClientRestTest {
         client.setEnabled(false);
         clientService.persist(client);
         assertNull(clientService.getByClientId(client.getClientId()));
+
+        applicationSystemService.deleteApplication(application.getCode());
+        applicationSystemService.deleteSystem(appSystem.getCode());
     }
 
     @Test
@@ -93,6 +97,8 @@ public class ClientRestTest {
     private String create() {
         Client client = clientService.create(newClient());
         compareClient(client, newClient());
+        Throwable thrown = catchThrowable(() -> clientService.create(newClient()));
+        assertEquals("Клиент с таким идентификатором уже существует", thrown.getMessage());
         return client.getClientId();
     }
 
@@ -118,6 +124,10 @@ public class ClientRestTest {
         clientService.delete(id);
         Client client = clientService.getByClientId(id);
         assertNull(client);
+
+        String notExistingClient = "28876";
+        Throwable thrown = catchThrowable(() -> clientService.delete(notExistingClient));
+        assertEquals("Клиент с таким идентификатором не существует", thrown.getMessage());
     }
 
     private Client newClient() {

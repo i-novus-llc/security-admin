@@ -1,7 +1,8 @@
 package net.n2oapp.security.admin.impl.entity;
 
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -11,7 +12,8 @@ import java.util.List;
  * Сущность Клиент
  */
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "client", schema = "sec")
 public class ClientEntity {
 

@@ -1,7 +1,8 @@
 package net.n2oapp.security.admin.impl.entity;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import net.n2oapp.security.admin.api.model.UserLevel;
 
 import javax.persistence.*;
@@ -12,7 +13,8 @@ import java.util.List;
  * Сущность Роль
  */
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "role", schema = "sec")
 public class RoleEntity {

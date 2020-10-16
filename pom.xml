@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.n2oapp.framework.security</groupId>
@@ -22,6 +23,7 @@
         <config.server.enable>false</config.server.enable>
         <audit.version>2.3.2</audit.version>
         <nimbusds.version>7.9</nimbusds.version>
+        <junit-jupiter.version>5.7.0</junit-jupiter.version>
         <jacoco.skip>true</jacoco.skip>
     </properties>
 
@@ -89,6 +91,7 @@
                 <module>security-admin-example</module>
                 <module>keycloak-theme</module>
                 <module>doc</module>
+                <module>coverage</module>
             </modules>
         </profile>
         <profile>
@@ -138,30 +141,5 @@
             </build>
         </profile>
     </profiles>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.5</version>
-                <configuration>
-                    <destFile>${project.build.directory}/jacoco.exec</destFile>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>aggregate-report</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>report-aggregate</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.basedir}/../target/site/jacoco-aggregate</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

@@ -15,14 +15,16 @@
  */
 package net.n2oapp.security.admin.api.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
 /**
  * Модель пользователя для SSO провайдера
  */
-@Data
+@Getter
+@Setter
 public class SsoUser extends User {
 
     private String extSys;

@@ -1,15 +1,15 @@
 package net.n2oapp.security.admin.impl.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import net.n2oapp.security.admin.api.model.AccountTypeRoleEnum;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
 @Table(name = "account_type_role", schema = "sec")
 public class AccountTypeRoleEntity implements Serializable {
 

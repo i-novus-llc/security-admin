@@ -1,7 +1,7 @@
 package net.n2oapp.security.admin.impl.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -9,8 +9,8 @@ import javax.persistence.*;
  * Сущность Приложение
  */
 @Entity
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
 @Table(name = "application", schema = "sec")
 public class ApplicationEntity {
     /**
@@ -37,8 +37,4 @@ public class ApplicationEntity {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "code", referencedColumnName = "client_id")
     private ClientEntity client;
-
-    public ApplicationEntity(String code) {
-        this.code = code;
-    }
 }
