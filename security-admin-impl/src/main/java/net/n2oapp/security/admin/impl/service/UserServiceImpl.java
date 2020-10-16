@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.ws.rs.NotFoundException;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
@@ -127,7 +126,7 @@ public class UserServiceImpl implements UserService {
             }
         }
         if (Boolean.TRUE.equals(user.getSendOnEmail()) && user.getEmail() != null) {
-            CompletableFuture.runAsync(() -> mailService.sendWelcomeMail(user));
+            mailService.sendWelcomeMail(user);
         }
         return audit("audit.userCreate", model(savedUser));
     }

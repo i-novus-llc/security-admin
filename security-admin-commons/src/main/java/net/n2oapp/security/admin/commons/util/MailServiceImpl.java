@@ -19,6 +19,7 @@ import javax.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Класс для рассылки сообщений
@@ -178,7 +179,7 @@ public class MailServiceImpl implements MailService {
             helper.setTo((String) data.get("email"));
             helper.setSubject(subject);
             helper.setText(body, true);
-            emailSender.send(helper.getMimeMessage());
+            CompletableFuture.runAsync(() -> emailSender.send(helper.getMimeMessage()));
         } catch (MailException | MessagingException e) {
             log.error("Exception while sending mail notification to " + data.get("username") + "\n" + e.toString() + "\n");
         }
