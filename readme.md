@@ -41,35 +41,36 @@ Auth Gateway - это SSO сервер авторизации, построен�
 
 > Все настройки указаны в базовом формате, в зависимости от конкретного окружения нужно конвертировать настройки в соответствующий формат: https://wiki.i-novus.ru/pages/viewpage.action?pageId=93268276
 
-    * Настройки подключения к БД
-        ```
-            spring.datasource.url=jdbc:postgresql://localhost:5432/security
-            spring.datasource.username=postgres
-            spring.datasource.password=postgres
-        ```
-    * Настройки подключения к Keycloak
-        ```
-            access.keycloak.server-url=http://localhost:8888/auth
-            access.keycloak.realm=security-admin
-            access.keycloak.client.client-id=auth-gateway
-            access.keycloak.client.client-secret=3340bfa7-430c-448e-aed5-5278873d54cf
+
+* Настройки подключения к БД
+    ```
+        spring.datasource.url=jdbc:postgresql://localhost:5432/security
+        spring.datasource.username=postgres
+        spring.datasource.password=postgres
+    ```
+* Настройки подключения к Keycloak
+    ```
+        access.keycloak.server-url=http://localhost:8888/auth
+        access.keycloak.realm=security-admin
+        access.keycloak.client.client-id=auth-gateway
+        access.keycloak.client.client-secret=3340bfa7-430c-448e-aed5-5278873d54cf
           
-            # Данные клиента администрирования, как правило, 
-            # это тот же клиент,который используется при аутентификации пользователя 
-            access.keycloak.admin-client-id=${access.keycloak.client.client-id}
-            access.keycloak.admin-client-secret=${access.keycloak.client.client-secret}
-        ```
-    * Настройки почтового сервиса
-        ```
-            sec.mail.host=smtp.gmail.com
-            sec.mail.port=587
-            sec.mail.username=inovus.sec
-            sec.mail.password=
-            sec.mail.smtp.auth=true
-            sec.mail.smtp.starttls.enabled=true
-            sec.password.mail.message.from=inovus.sec@gmail.com
+        # Данные клиента администрирования, как правило, 
+        # это тот же клиент,который используется при аутентификации пользователя 
+        access.keycloak.admin-client-id=${access.keycloak.client.client-id}
+        access.keycloak.admin-client-secret=${access.keycloak.client.client-secret}
+    ```
+* Настройки почтового сервиса
+    ```
+        sec.mail.host=smtp.gmail.com
+        sec.mail.port=587
+        sec.mail.username=inovus.sec
+        sec.mail.password=
+        sec.mail.smtp.auth=true
+        sec.mail.smtp.starttls.enabled=true
+        sec.password.mail.message.from=inovus.sec@gmail.com
         
-        ```
+    ```
 * Auth gateway может быть развернут вместе с микросервисами аудита и НСИ. 
 Для конфигурации доступа к этим микросервисам доступны следующие настройки:
     ```
