@@ -19,14 +19,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Форма для обновления права доступа
  */
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
 @ApiModel("Право доступа")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PermissionUpdateForm {

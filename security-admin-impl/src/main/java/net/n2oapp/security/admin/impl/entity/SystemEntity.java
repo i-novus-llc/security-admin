@@ -1,7 +1,8 @@
 package net.n2oapp.security.admin.impl.entity;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -11,7 +12,8 @@ import java.util.List;
  * Сущность Система
  */
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "system", schema = "sec")
 public class SystemEntity {

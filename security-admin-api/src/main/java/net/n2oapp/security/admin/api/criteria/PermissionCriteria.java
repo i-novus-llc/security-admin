@@ -15,12 +15,14 @@
  */
 package net.n2oapp.security.admin.api.criteria;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Критерий фильтрации прав доступа
  */
-@Data
+@Getter
+@Setter
 public class PermissionCriteria extends BaseCriteria {
     private String name;
     private String code;

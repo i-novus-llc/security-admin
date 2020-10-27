@@ -1,4 +1,4 @@
-package net.n2oapp.auth.gateway.esia;
+package net.n2oapp.security.admin.auth.server.esia;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
