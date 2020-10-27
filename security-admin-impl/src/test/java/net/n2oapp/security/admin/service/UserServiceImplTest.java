@@ -14,6 +14,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -158,9 +159,12 @@ public class UserServiceImplTest {
 
     @Test
     public void testResetPassword() {
+        UserForm userForm = new UserForm();
+        service.resetPassword(userForm);
+
         UserRegisterForm user = new UserRegisterForm();
         user.setUsername("testUser29");
-        user.setEmail("test2@test.ru");
+        user.setEmail("test242@test.ru");
         user.setName("name");
         user.setSurname("surname");
         user.setPatronymic("patronymic");
@@ -168,19 +172,51 @@ public class UserServiceImplTest {
         user.setSendPasswordToEmail(true);
         User result = service.register(user);
         assertEquals("testUser29", result.getUsername());
-        assertEquals("test2@test.ru", result.getEmail());
+        assertEquals("test242@test.ru", result.getEmail());
         assertEquals("name", result.getName());
         assertEquals("surname", result.getSurname());
         assertEquals("patronymic", result.getPatronymic());
         assertEquals(true, result.getIsActive());
 
         Integer userId = result.getId();
-        UserForm userForm = new UserForm();
+
+        userForm = new UserForm();
         userForm.setId(userId);
         userForm.setPassword("Zz123456789!");
 
         service.resetPassword(userForm);
 
+        resetPasswordMailCheck();
+
+        User changedUser = service.getById(userId);
+
+        assertEquals("testUser29", changedUser.getUsername());
+        assertEquals("test242@test.ru", changedUser.getEmail());
+        assertEquals("name", changedUser.getName());
+        assertEquals("surname", changedUser.getSurname());
+        assertEquals("patronymic", changedUser.getPatronymic());
+        assertTrue(passwordEncoder.matches("Zz123456789!", changedUser.getPasswordHash()));
+
+        userForm = new UserForm();
+        userForm.setEmail("test242@test.ru");
+
+        service.resetPassword(userForm);
+        resetPasswordMailCheck();
+
+        userForm = new UserForm();
+        userForm.setUsername("testUser29");
+
+        service.resetPassword(userForm);
+        resetPasswordMailCheck();
+
+        userForm = new UserForm();
+        userForm.setSnils("123");
+        service.resetPassword(userForm);
+
+        service.delete(userId);
+    }
+
+    private void resetPasswordMailCheck() {
         try {
             Object content = mimeMessageArgumentCaptor.getValue().getContent();
             assertTrue(content.toString().contains("<p>Уважаемый <span>testUser29</span>!</p>"));
@@ -190,17 +226,6 @@ public class UserServiceImplTest {
         } catch (IOException | MessagingException e) {
             fail();
         }
-
-        User changedUser = service.getById(userId);
-
-        assertEquals("testUser29", changedUser.getUsername());
-        assertEquals("test2@test.ru", changedUser.getEmail());
-        assertEquals("name", changedUser.getName());
-        assertEquals("surname", changedUser.getSurname());
-        assertEquals("patronymic", changedUser.getPatronymic());
-        assertTrue(passwordEncoder.matches("Zz123456789!", changedUser.getPasswordHash()));
-
-        service.delete(userId);
     }
 
     @Test
@@ -281,6 +306,62 @@ public class UserServiceImplTest {
     }
 
     @Test
+    public void testFindAllByCriteria() {
+        UserForm userForm = new UserForm();
+        userForm.setUsername("username");
+        userForm.setEmail("username@username.username");
+        userForm.setAccountTypeCode("testAccountTypeCode");
+        userForm.setPassword("1234ABCabc,");
+        userForm.setPasswordCheck(userForm.getPassword());
+        userForm.setDepartmentId(1);
+        userForm.setName("name");
+        userForm.setSurname("surname");
+        userForm.setPatronymic("patronymic");
+        userForm.setRegionId(1);
+        userForm.setOrganizationId(1);
+        userForm.setSnils("124-985-753 00");
+        userForm.setIsActive(true);
+        List<Integer> roleIds = new ArrayList<>();
+        roleIds.add(1);
+        userForm.setRoles(roleIds);
+        List<String> roleCodes = new ArrayList<>();
+        roleCodes.add("code1");
+        List<Integer> orgIds = new ArrayList<>();
+        orgIds.add(1);
+
+        User user = service.create(userForm);
+
+        UserCriteria criteria = new UserCriteria();
+        criteria.setUsername("username");
+        criteria.setEmail("username@username.username");
+        criteria.setFio("surname name patronymic");
+        criteria.setIsActive("yes");
+        criteria.setRoleIds(roleIds);
+        criteria.setRoleCodes(roleCodes);
+        criteria.setRegionId(1);
+        criteria.setDepartmentId(1);
+        criteria.setOrganizations(orgIds);
+
+        Page<User> users = service.findAll(criteria);
+
+        assertEquals(1, users.getContent().size());
+        assertEquals("username", users.getContent().get(0).getUsername());
+        assertEquals("surname name patronymic", users.getContent().get(0).getFio());
+        assertEquals("username@username.username", users.getContent().get(0).getEmail());
+        assertEquals("surname", users.getContent().get(0).getSurname());
+        assertEquals("name", users.getContent().get(0).getName());
+        assertEquals("patronymic", users.getContent().get(0).getPatronymic());
+        assertEquals("124-985-753 00", users.getContent().get(0).getSnils());
+        assertEquals(UserLevel.PERSONAL, users.getContent().get(0).getUserLevel());
+        assertEquals(UserStatus.REGISTERED, users.getContent().get(0).getStatus());
+        assertThat(users.getContent().get(0).getDepartment().getId()).isEqualTo(1);
+        assertThat(users.getContent().get(0).getRegion().getId()).isEqualTo(1);
+        assertThat(users.getContent().get(0).getOrganization().getId()).isEqualTo(1);
+                assertTrue(users.getContent().get(0).getIsActive());
+        service.delete(user.getId());
+    }
+
+    @Test
     public void testPatch() {
         UserForm userForm = new UserForm();
         userForm.setUsername("username");
@@ -293,6 +374,7 @@ public class UserServiceImplTest {
         userForm.setSurname("surname");
         userForm.setPatronymic("patronymic");
         userForm.setRegionId(1);
+        userForm.setOrganizationId(1);
         userForm.setSnils("124-985-753 00");
 
         User result = service.create(userForm);
@@ -309,6 +391,7 @@ public class UserServiceImplTest {
         assertEquals(UserStatus.REGISTERED, result.getStatus());
         assertThat(result.getDepartment().getId()).isEqualTo(1);
         assertThat(result.getRegion().getId()).isEqualTo(1);
+        assertThat(result.getOrganization().getId()).isEqualTo(1);
 
         Map<String, Object> userInfo = new HashMap<>();
 
@@ -334,6 +417,7 @@ public class UserServiceImplTest {
         assertEquals(UserStatus.REGISTERED, result.getStatus());
         assertThat(result.getDepartment().getId()).isEqualTo(1);
         assertThat(result.getRegion().getId()).isEqualTo(1);
+        assertThat(result.getOrganization().getId()).isEqualTo(1);
 
         userInfo.put("username", "supapupausername");
         userInfo.put("surname", "supasurname");
@@ -415,6 +499,28 @@ public class UserServiceImplTest {
         result = service.patch(Map.of("id", 1));
         assertThat(result.getId()).isEqualTo(1);
         assertThat(result.getUsername()).isEqualTo("test");
+    }
+
+    @Test
+    public void testLoadSimpleDetails() {
+        UserRegisterForm user = new UserRegisterForm();
+        user.setUsername("simpleDetails");
+        user.setEmail("simpleDetails@test.ru");
+        user.setName("name");
+        user.setSurname("surname");
+        user.setPatronymic("patronymic");
+        user.setIsActive(true);
+        user.setSendPasswordToEmail(true);
+
+        User result = service.register(user);
+        User simpleDetailsUser = service.loadSimpleDetails(result.getId());
+
+        assertEquals(result.getId(), simpleDetailsUser.getId());
+        assertEquals(result.getUsername(), simpleDetailsUser.getUsername());
+        assertEquals(result.getEmail(), simpleDetailsUser.getEmail());
+        assertNotNull(simpleDetailsUser.getTemporaryPassword());
+
+        service.delete(result.getId());
     }
 
     private void checkValidationEmail(User user) {

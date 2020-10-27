@@ -1,13 +1,14 @@
-package net.n2oapp.auth.gateway;
+package net.n2oapp.security.admin.auth.server;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.n2oapp.auth.gateway.esia.EsiaAccessTokenProvider;
-import net.n2oapp.auth.gateway.esia.EsiaUserInfoTokenServices;
-import net.n2oapp.auth.gateway.esia.Pkcs7Util;
-import net.n2oapp.auth.gateway.filter.GatewayOAuth2ClientAuthenticationProcessingFilter;
+import net.n2oapp.security.admin.auth.server.GatewayOAuth2ClientAuthenticationProcessingFilter;
 import net.n2oapp.security.admin.auth.server.EsiaUserDetailsService;
 import net.n2oapp.security.admin.auth.server.OAuthServerConfiguration;
+import net.n2oapp.security.admin.auth.server.ResourceServerConfiguration;
+import net.n2oapp.security.admin.auth.server.esia.EsiaAccessTokenProvider;
+import net.n2oapp.security.admin.auth.server.esia.EsiaUserInfoTokenServices;
+import net.n2oapp.security.admin.auth.server.esia.Pkcs7Util;
 import net.n2oapp.security.admin.auth.server.exception.UserNotFoundAuthenticationExceptionHandler;
 import net.n2oapp.security.admin.auth.server.logout.OAuth2ProviderRedirectLogoutSuccessHandler;
 import net.n2oapp.security.admin.impl.service.UserDetailsServiceImpl;
@@ -55,26 +56,25 @@ import java.util.List;
 @Configuration
 @EnableOAuth2Client
 @EnableWebSecurity
-@ComponentScan("net.n2oapp.security.admin.auth.server")
-@Import(OAuthServerConfiguration.class)
+@ComponentScan
 @Order(200)
 public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
 
     @Value("${access.auth.login-entry-point:/}")
-    private String loginEntryPoint;
+    String loginEntryPoint;
 
     @Autowired
-    private OAuth2ClientContext oauth2ClientContext;
+    OAuth2ClientContext oauth2ClientContext;
 
     @Autowired
-    private UserDetailsServiceImpl gatewayUserDetailsService;
+    UserDetailsServiceImpl gatewayUserDetailsService;
 
     @Autowired
     @Qualifier("esiaUserDetailsService")
-    private EsiaUserDetailsService esiaUserDetailsService;
+    EsiaUserDetailsService esiaUserDetailsService;
 
     @Autowired
-    private List<LogoutHandler> logoutHandlers;
+    List<LogoutHandler> logoutHandlers;
 
     @Autowired
     private Pkcs7Util pkcs7Util;
@@ -138,7 +138,7 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
         return new ClientResources();
     }
 
-    private Filter ssoFilter() {
+    protected Filter ssoFilter() {
         CompositeFilter filter = new CompositeFilter();
         List<Filter> filters = new ArrayList<>();
         filters.add(ssoKeycloakFilter(keycloak(), "/login/keycloak"));

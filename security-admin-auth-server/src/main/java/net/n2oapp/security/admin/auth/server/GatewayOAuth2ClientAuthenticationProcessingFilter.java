@@ -1,4 +1,4 @@
-package net.n2oapp.auth.gateway.filter;
+package net.n2oapp.security.admin.auth.server;
 
 import net.n2oapp.security.admin.impl.exception.UserNotFoundAuthenticationException;
 import org.springframework.security.core.Authentication;
@@ -25,6 +25,5 @@ public class GatewayOAuth2ClientAuthenticationProcessingFilter extends OAuth2Cli
             restTemplate.getOAuth2ClientContext().setAccessToken(null);
             throw e;
         }
-
     }
 }

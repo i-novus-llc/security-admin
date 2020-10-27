@@ -1,7 +1,7 @@
 package net.n2oapp.security.admin.impl.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import net.n2oapp.security.admin.api.model.UserLevel;
 import net.n2oapp.security.admin.api.model.UserStatus;
 import org.hibernate.annotations.Formula;
@@ -16,8 +16,8 @@ import java.util.List;
  * Сущность Пользователь
  */
 @Entity
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
 @Table(name = "user", schema = "sec")
 public class UserEntity {
 

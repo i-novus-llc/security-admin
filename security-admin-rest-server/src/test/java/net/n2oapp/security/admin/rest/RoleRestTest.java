@@ -6,27 +6,26 @@ import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.RoleForm;
 import net.n2oapp.security.admin.rest.api.RoleRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestRoleCriteria;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.ws.rs.NotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Тест Rest сервиса управления ролями пользователя
  */
-
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
         properties = "server.port=8290")
@@ -78,7 +77,8 @@ public class RoleRestTest {
         try {
             client.getById(id);
             fail("Method should throw exception, but he didn't!");
-        } catch (NotFoundException ignored) {}
+        } catch (NotFoundException ignored) {
+        }
     }
 
 
