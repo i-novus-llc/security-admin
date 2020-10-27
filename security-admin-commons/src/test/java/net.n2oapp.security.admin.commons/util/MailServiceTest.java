@@ -74,6 +74,7 @@ public class MailServiceTest {
 
         mailService.sendWelcomeMail(user);
         try {
+            Mockito.verify(emailSender, Mockito.timeout(10000).atLeastOnce()).send(Mockito.any(MimeMessage.class));
             Object content = mimeMessageArgumentCaptor.getValue().getContent();
             assertTrue(content.toString().contains("<p>Уважаемый <span>surname</span> <span>name</span>!</p>"));
             assertTrue(content.toString().contains("<p>Логин для входа: <span>username</span></p>"));
