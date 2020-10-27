@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
         classes = {UserRestService.class, RoleRestService.class, PermissionRestService.class,
                 ApplicationSystemRestService.class, ClientRestService.class, UserDetailsRestService.class,
                 RegionRestService.class, OrganizationRestService.class, DepartmentRestService.class,
-                UserLevelRestService.class, AccountTypeRestService.class, AccountTypeRestService.class},
+                UserLevelRestService.class, AccountTypeRestService.class},
         address = "${access.service.url}")
 public class AdminRestClientConfiguration {
 
