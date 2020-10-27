@@ -2,9 +2,9 @@ package net.n2oapp.security.admin.rest.client;
 
 import net.n2oapp.platform.jaxrs.autoconfigure.EnableJaxRsProxyClient;
 import net.n2oapp.security.admin.rest.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 @EnableJaxRsProxyClient(
         classes = {UserRestService.class, RoleRestService.class, PermissionRestService.class,
                 ApplicationSystemRestService.class, ClientRestService.class, UserDetailsRestService.class,
-                RegionRestService.class, OrganizationRestService.class, OrganizationPersistRestService.class, DepartmentRestService.class,
+                RegionRestService.class, OrganizationRestService.class, DepartmentRestService.class,
                 UserLevelRestService.class, AccountTypeRestService.class, AccountTypeRestService.class},
         address = "${access.service.url}")
 public class AdminRestClientConfiguration {
@@ -44,17 +44,11 @@ public class AdminRestClientConfiguration {
     }
 
     @Bean
-    @ConditionalOnBean(value = OrganizationPersistRestService.class)
     public OrganizationServiceRestClient organizationService(@Qualifier("organizationRestServiceJaxRsProxyClient") OrganizationRestService organizationRestService,
-                                                             @Qualifier("organizationPersistRestServiceJaxRsProxyClient") OrganizationPersistRestService organizationPersistRestService) {
+                                                             @Autowired(required = false) @Qualifier("organizationPersistRestServiceJaxRsProxyClient") OrganizationPersistRestService organizationPersistRestService) {
         return new OrganizationServiceRestClient(organizationRestService, organizationPersistRestService);
     }
 
-    @Bean
-    @ConditionalOnMissingBean(value = OrganizationPersistRestService.class)
-    public OrganizationServiceRestClient organizationService(@Qualifier("organizationRestServiceJaxRsProxyClient") OrganizationRestService client) {
-        return new OrganizationServiceRestClient(client, null);
-    }
 
     @Bean
     public RegionServiceRestClient regionService(@Qualifier("regionRestServiceJaxRsProxyClient") RegionRestService client) {
@@ -80,5 +74,13 @@ public class AdminRestClientConfiguration {
     @Bean
     public AccountTypeRestClient accountTypeService(@Qualifier("accountTypeRestServiceJaxRsProxyClient") AccountTypeRestService client) {
         return new AccountTypeRestClient(client);
+    }
+
+    @Configuration
+    @ConditionalOnProperty(name = "access.organization-persist-mode", havingValue = "rest")
+    @EnableJaxRsProxyClient(classes = OrganizationPersistRestService.class,
+            address = "${access.service.url}")
+    public static class OrganizationPersistRestServiceConfiguration {
+
     }
 }
