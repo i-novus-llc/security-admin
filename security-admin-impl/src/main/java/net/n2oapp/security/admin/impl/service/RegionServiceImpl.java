@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.impl.service;
 
+import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.criteria.RegionCriteria;
 import net.n2oapp.security.admin.api.model.Region;
 import net.n2oapp.security.admin.api.service.RegionService;
@@ -21,6 +22,8 @@ import java.util.ArrayList;
 @Transactional
 public class RegionServiceImpl implements RegionService {
 
+    private static final String WRONG_REQUEST = "exception.wrongRequest";
+    private static final String MISSING_REQUIRED_FIELDS = "exception.missingRequiredFields";
     private final RegionRepository regionRepository;
 
     public RegionServiceImpl(RegionRepository regionRepository) {
@@ -35,10 +38,29 @@ public class RegionServiceImpl implements RegionService {
             criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "id"));
         }
         Page<RegionEntity> all = regionRepository.findAll(specification, criteria);
-        return all.map(this::model);
+        return all.map(this::mapToModel);
     }
 
-    private Region model(RegionEntity entity) {
+    @Override
+    public Region create(Region region) {
+        throwIfModelIsNull(region);
+        validateModelForCreate(region);
+        RegionEntity regionEntity = regionRepository.save(mapToEntity(region));
+        return mapToModel(regionEntity);
+    }
+
+    private RegionEntity mapToEntity(Region model) {
+        RegionEntity entity = new RegionEntity();
+        if (model.getId() != null)
+            entity.setId(model.getId());
+        entity.setCode(model.getCode());
+        entity.setName(model.getName());
+        entity.setOkato(model.getOkato());
+        entity.setIsDeleted(model.getIsDeleted() == null ? Boolean.FALSE : model.getIsDeleted());
+        return entity;
+    }
+
+    private Region mapToModel(RegionEntity entity) {
         if (entity == null) return null;
         Region model = new Region();
         model.setId(entity.getId());
@@ -46,7 +68,14 @@ public class RegionServiceImpl implements RegionService {
         model.setCode(entity.getCode());
         model.setOkato(entity.getOkato());
         return model;
-
     }
 
+    private void throwIfModelIsNull(Region model) {
+        if (model == null) throw new UserException(WRONG_REQUEST);
+    }
+
+    private void validateModelForCreate(Region model) {
+        if (model.getCode() == null || model.getName() == null)
+            throw new UserException(MISSING_REQUIRED_FIELDS);
+    }
 }

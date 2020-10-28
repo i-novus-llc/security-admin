@@ -47,4 +47,8 @@ public class Region {
     @ApiModelProperty(value = "Код ОКАТО региона (субъекта РФ)")
     private String okato;
 
+    @JsonProperty
+    @ApiModelProperty(value = "Признак удалённой записи")
+    private Boolean isDeleted;
+
 }

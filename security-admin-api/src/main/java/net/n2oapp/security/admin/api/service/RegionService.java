@@ -31,4 +31,6 @@ public interface RegionService {
      */
     Page<Region> findAll(RegionCriteria criteria);
 
+    Region create(Region region);
+
 }
