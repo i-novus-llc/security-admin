@@ -38,29 +38,29 @@ public class RegionServiceImpl implements RegionService {
             criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "id"));
         }
         Page<RegionEntity> all = regionRepository.findAll(specification, criteria);
-        return all.map(this::mapToModel);
+        return all.map(this::map);
     }
 
     @Override
     public Region create(Region region) {
-        throwIfModelIsNull(region);
-        validateModelForCreate(region);
-        RegionEntity regionEntity = regionRepository.save(mapToEntity(region));
-        return mapToModel(regionEntity);
+        if (region == null) throw new UserException(WRONG_REQUEST);
+        if (region.getCode() == null || region.getName() == null)
+            throw new UserException(MISSING_REQUIRED_FIELDS);
+        RegionEntity entity = regionRepository.findByCode(region.getCode()).orElse(new RegionEntity());
+        regionRepository.save(map(region, entity));
+        return map(entity);
     }
 
-    private RegionEntity mapToEntity(Region model) {
-        RegionEntity entity = new RegionEntity();
+    private RegionEntity map(Region model, RegionEntity entity) {
         if (model.getId() != null)
             entity.setId(model.getId());
         entity.setCode(model.getCode());
         entity.setName(model.getName());
         entity.setOkato(model.getOkato());
-        entity.setIsDeleted(model.getIsDeleted() == null ? Boolean.FALSE : model.getIsDeleted());
         return entity;
     }
 
-    private Region mapToModel(RegionEntity entity) {
+    private Region map(RegionEntity entity) {
         if (entity == null) return null;
         Region model = new Region();
         model.setId(entity.getId());
@@ -68,14 +68,5 @@ public class RegionServiceImpl implements RegionService {
         model.setCode(entity.getCode());
         model.setOkato(entity.getOkato());
         return model;
-    }
-
-    private void throwIfModelIsNull(Region model) {
-        if (model == null) throw new UserException(WRONG_REQUEST);
-    }
-
-    private void validateModelForCreate(Region model) {
-        if (model.getCode() == null || model.getName() == null)
-            throw new UserException(MISSING_REQUIRED_FIELDS);
     }
 }
