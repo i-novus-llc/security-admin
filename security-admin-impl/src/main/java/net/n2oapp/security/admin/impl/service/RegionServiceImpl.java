@@ -46,14 +46,16 @@ public class RegionServiceImpl implements RegionService {
         if (region == null) throw new UserException(WRONG_REQUEST);
         if (region.getCode() == null || region.getName() == null)
             throw new UserException(MISSING_REQUIRED_FIELDS);
-        RegionEntity entity = regionRepository.findByCode(region.getCode()).orElse(new RegionEntity());
-        regionRepository.save(map(region, entity));
-        return map(entity);
+        return map(regionRepository.save(map(region)));
     }
 
-    private RegionEntity map(Region model, RegionEntity entity) {
-        if (model.getId() != null)
-            entity.setId(model.getId());
+    @Override
+    public void deleteAll() {
+        regionRepository.deleteAll();
+    }
+
+    private RegionEntity map(Region model) {
+        RegionEntity entity = new RegionEntity();
         entity.setCode(model.getCode());
         entity.setName(model.getName());
         entity.setOkato(model.getOkato());

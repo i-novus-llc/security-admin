@@ -20,6 +20,7 @@ public class RegionServerLoader implements ServerLoader<Region> {
 
     @Override
     public void load(List<Region> data, String subject) {
+        regionService.deleteAll();
         for (Region region: data) {
             regionService.create(region);
         }

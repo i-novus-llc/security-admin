@@ -33,4 +33,6 @@ public interface RegionService {
 
     Region create(Region region);
 
+    void deleteAll();
+
 }
