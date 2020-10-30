@@ -252,7 +252,7 @@ public class UserRestTest {
     public void testGeneratePassword() {
         Password password = client.generatePassword();
         assertThat(password.password, instanceOf(String.class));
-        assertThat(password.password.length(), is(16));
+        assertThat(password.password.length(), is(8));
     }
 
     private User create() {
