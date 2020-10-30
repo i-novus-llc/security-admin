@@ -28,8 +28,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -247,6 +246,13 @@ public class UserRestTest {
         Assertions.assertThat(users.getContent().get(0).getOrganization().getId()).isEqualTo(1);
         assertTrue(users.getContent().get(0).getIsActive());
         client.delete(user.getId());
+    }
+
+    @Test
+    public void testGeneratePassword() {
+        Password password = client.generatePassword();
+        assertThat(password.password, instanceOf(String.class));
+        assertThat(password.password.length(), is(8));
     }
 
     private User create() {

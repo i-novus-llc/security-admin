@@ -1,8 +1,7 @@
-package net.n2oapp.security.admin.validations;
+package net.n2oapp.security.admin.commons.util;
 
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.model.User;
-import net.n2oapp.security.admin.commons.util.UserValidations;
 import org.junit.Test;
 
 import java.util.Arrays;
