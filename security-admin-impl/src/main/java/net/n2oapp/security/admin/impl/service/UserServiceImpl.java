@@ -343,6 +343,13 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public Password generatePassword() {
+        Password result = new Password();
+        result.password = passwordGenerator.generate();
+        return result;
+    }
+
     public void setEmailAsUsername(Boolean emailAsUsername) {
         this.emailAsUsername = emailAsUsername;
     }
