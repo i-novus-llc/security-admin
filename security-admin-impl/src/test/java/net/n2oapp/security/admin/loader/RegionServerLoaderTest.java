@@ -103,49 +103,6 @@ class RegionServerLoaderTest {
         }
     }
 
-    @Test
-    void testUpdateExistingRegions() {
-
-        Region region1 = buildRegionModel(1, "01", "Республика Татарстан", "92000000000");
-        Region region2 = buildRegionModel(2, "002", "Республика Тыва", "93000000000");
-
-        List<Region> data = new ArrayList<>();
-        data.add(region1);
-        data.add(region2);
-
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<List<Region>> httpEntity = new HttpEntity<>(data, headers);
-        restTemplate.postForLocation(uri, httpEntity);
-
-        List<RegionEntity> allRegions = repository.findAll();
-
-        assertEquals(2, allRegions.size());
-        assertTrue(allRegions.stream().allMatch(r -> "01".equals(r.getCode()) || "002".equals(r.getCode())));
-        assertTrue(allRegions.stream().allMatch(r -> "Республика Татарстан".equals(r.getName()) || "Республика Тыва".equals(r.getName())));
-        assertTrue(allRegions.stream().allMatch(r -> "92000000000".equals(r.getOkato()) || "93000000000".equals(r.getOkato())));
-        assertTrue(allRegions.stream().allMatch(r -> r.getIsDeleted() == null));
-
-        Region region3 = buildRegionModel(1, "03", "Краснодарский край", "01000000000");
-        Region region4 = buildRegionModel(2, "04", "Красноярский край", "03000000000");
-
-        List<Region> data2 = new ArrayList<>();
-        data2.add(region3);
-        data2.add(region4);
-
-        httpEntity = new HttpEntity<>(data2, headers);
-        restTemplate.postForLocation(uri, httpEntity);
-
-        allRegions = repository.findAll();
-
-        assertEquals(2, allRegions.size());
-        assertTrue(allRegions.stream().allMatch(r -> "03".equals(r.getCode()) || "04".equals(r.getCode())));
-        assertTrue(allRegions.stream().allMatch(r -> "Краснодарский край".equals(r.getName()) || "Красноярский край".equals(r.getName())));
-        assertTrue(allRegions.stream().allMatch(r -> "01000000000".equals(r.getOkato()) || "03000000000".equals(r.getOkato())));
-        assertTrue(allRegions.stream().allMatch(r -> r.getIsDeleted() == null));
-    }
-
     private Region buildRegionModel(Integer id, String code, String name, String okato) {
         Region region = new Region();
         region.setId(id);
