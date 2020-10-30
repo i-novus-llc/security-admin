@@ -13,6 +13,6 @@ import java.util.Optional;
  */
 @Repository
 public interface RegionRepository extends JpaRepository<RegionEntity, Integer>, JpaSpecificationExecutor<RegionEntity> {
-    @Query("from RegionEntity r where r.code = ?1 and (r.isDeleted is null or r.isDeleted = false)")
+    @Query("from RegionEntity r where r.code = ?1 and r.isDeleted <> true")
     Optional<RegionEntity> findByCode(String code);
 }

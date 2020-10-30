@@ -45,7 +45,6 @@ class RegionServerLoaderTest {
 
     @Test
     void testLoadNewRegions() {
-        repository.deleteAll();
 
         Region region1 = buildRegionModel(1, "01", "Республика Татарстан", "92000000000");
         Region region2 = buildRegionModel(2, "002", "Республика Тыва", "93000000000");
@@ -106,7 +105,6 @@ class RegionServerLoaderTest {
 
     @Test
     void testUpdateExistingRegions() {
-        repository.deleteAll();
 
         Region region1 = buildRegionModel(1, "01", "Республика Татарстан", "92000000000");
         Region region2 = buildRegionModel(2, "002", "Республика Тыва", "93000000000");
