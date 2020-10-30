@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.rest.impl;
 
+import net.n2oapp.security.admin.api.model.Password;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.api.model.UserRegisterForm;
@@ -71,5 +72,10 @@ public class UserRestServiceImpl implements UserRestService {
     @Override
     public void resetPassword(UserForm user) {
         service.resetPassword(user);
+    }
+
+    @Override
+    public Password generatePassword() {
+        return service.generatePassword();
     }
 }

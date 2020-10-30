@@ -16,6 +16,7 @@
 package net.n2oapp.security.admin.api.service;
 
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
+import net.n2oapp.security.admin.api.model.Password;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.api.model.UserRegisterForm;
@@ -30,6 +31,7 @@ public interface UserService {
 
     /**
      * Создать пользователя
+     *
      * @param user Модель пользователя
      * @return Созданный пользователь
      */
@@ -37,6 +39,7 @@ public interface UserService {
 
     /**
      * Зарегистрировать пользователя
+     *
      * @param user Модель пользователя
      * @return Зарегистрированный пользователь
      */
@@ -44,6 +47,7 @@ public interface UserService {
 
     /**
      * Изменить пользователя
+     *
      * @param user Модель пользователя
      * @return Измененный пользователь
      */
@@ -52,31 +56,35 @@ public interface UserService {
     /**
      * Частичное обновление данных. Ожидает на вход мапу по своей структуре сходную
      * с моделью UserForm.
-     * @see UserForm
+     *
      * @param userInfo Модель пользователя
      * @return Измененный пользователь
+     * @see UserForm
      */
     User patch(Map<String, Object> userInfo);
 
     /**
      * Удалить пользователя
+     *
      * @param id Идентификатор пользователя
      */
     void delete(Integer id);
 
     /**
      * Получить пользователя по идентификатору
+     *
      * @param id Идентификатор
      * @return Модель пользователя
      */
-    User getById (Integer id);
+    User getById(Integer id);
 
     /**
      * Найти всех пользователей по критериям поиска
+     *
      * @param criteria Критерии поиска
      * @return Страница найденных пользователей
      */
-    Page<User> findAll (UserCriteria criteria);
+    Page<User> findAll(UserCriteria criteria);
 
     /**
      * Изменить статус пользователя
@@ -88,6 +96,7 @@ public interface UserService {
 
     /**
      * Проверить уникальность имени пользователя
+     *
      * @param username имя пользователя
      * @return <code>true</code> имя уникально <code>false</code> иначе
      */
@@ -95,6 +104,7 @@ public interface UserService {
 
     /**
      * Загрузить простейшую информацию о пользователе (имя, почта и временный пароль)
+     *
      * @param id Идентификатор
      * @return Модель пользователя
      */
@@ -102,7 +112,16 @@ public interface UserService {
 
     /**
      * Сбросить пароль пользователя
+     *
      * @param user Модель пользователя
      */
     void resetPassword(UserForm user);
+
+    /**
+     * Сгенерировать пароль согласно
+     * установленной политике паролей
+     *
+     * @return Пароль
+     */
+    Password generatePassword();
 }
