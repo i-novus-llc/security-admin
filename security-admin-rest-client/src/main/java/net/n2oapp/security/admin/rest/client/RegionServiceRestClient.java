@@ -27,14 +27,4 @@ public class RegionServiceRestClient implements RegionService {
         regionCriteria.setOrders(criteria.getOrders());
         return client.getAll(regionCriteria);
     }
-
-    @Override
-    public Region create(Region region) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void deleteAll() {
-        throw new UnsupportedOperationException();
-    }
 }
