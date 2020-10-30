@@ -1,6 +1,7 @@
 package net.n2oapp.security.admin.rest.client;
 
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
+import net.n2oapp.security.admin.api.model.Password;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.api.model.UserRegisterForm;
@@ -95,5 +96,10 @@ public class UserServiceRestClient implements UserService {
     @Override
     public void resetPassword(UserForm user) {
         client.resetPassword(user);
+    }
+
+    @Override
+    public Password generatePassword() {
+        return client.generatePassword();
     }
 }
