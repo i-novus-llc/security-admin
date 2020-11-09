@@ -20,15 +20,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
 /**
  * Организация
  */
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
 @ApiModel("Организация")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Organization {

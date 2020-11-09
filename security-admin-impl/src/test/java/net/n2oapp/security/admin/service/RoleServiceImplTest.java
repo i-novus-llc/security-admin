@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -45,7 +46,7 @@ public class RoleServiceImplTest {
         Role role = service.create(newRole());
         checkValidationRoleName(role);
         checkValidationRoleCode(role);
-        checkValidationRoleExists(1);
+        checkValidationRoleAssociationExists();
     }
 
     @Test
@@ -94,12 +95,19 @@ public class RoleServiceImplTest {
         role.setCode("test-code");
     }
 
-    private void checkValidationRoleExists(Integer id) {
-        Throwable thrown = catchThrowable(() -> {
-            service.delete(id);
-        });
+    private void checkValidationRoleAssociationExists() {
+        Throwable thrown = catchThrowable(() -> service.delete(1));
         assertThat(thrown).isInstanceOf(UserException.class);
         assertEquals("exception.usernameWithSuchRoleExists", thrown.getMessage());
+        thrown = catchThrowable(() -> service.delete(100));
+        assertThat(thrown).isInstanceOf(UserException.class);
+        assertEquals("exception.accountTypeWithSuchRoleExists", thrown.getMessage());
+        thrown = catchThrowable(() -> service.delete(103));
+        assertThat(thrown).isInstanceOf(UserException.class);
+        assertEquals("exception.organizationWithSuchRoleExists", thrown.getMessage());
+        thrown = catchThrowable(() -> service.delete(105));
+        assertThat(thrown).isInstanceOf(UserException.class);
+        assertEquals("exception.clientWithSuchRoleExists", thrown.getMessage());
     }
 
     /**
@@ -138,6 +146,102 @@ public class RoleServiceImplTest {
         RoleCriteria criteria = new RoleCriteria();
         criteria.setUserLevel("federal");
         assertThat(service.findAll(criteria).getTotalElements()).isEqualTo(1);
+    }
+
+    @Test
+    public void findAllGroupBySystem() {
+        RoleForm roleForm = new RoleForm();
+        roleForm.setCode("testRoleCode");
+        roleForm.setName("testRoleName");
+        roleForm.setDescription("testRoleDes");
+        roleForm.setSystemCode("system1");
+        Role role = service.create(roleForm);
+
+        RoleCriteria criteria = new RoleCriteria();
+        criteria.setName("testRoleName");
+        criteria.setUserLevel("NOT_SET");
+        criteria.setGroupBySystem(true);
+
+        Page<Role> roles = service.findAll(criteria);
+
+        assertEquals(2, roles.getContent().size());
+        assertTrue(roles.getContent().stream().anyMatch(r -> r.getName().equals("system1")));
+        assertTrue(roles.getContent().stream().anyMatch(r -> r.getName().equals("testRoleName")));
+
+        service.delete(role.getId());
+    }
+
+    @Test
+    public void findAllForForm() {
+        RoleForm roleForm = new RoleForm();
+        roleForm.setCode("testRoleCode");
+        roleForm.setName("testRoleName");
+        roleForm.setDescription("testRoleDes");
+        roleForm.setSystemCode("system1");
+        Role role = service.create(roleForm);
+
+        RoleCriteria criteria = new RoleCriteria();
+        criteria.setName("testRoleName");
+        criteria.setUserLevel("NOT_SET");
+        criteria.setForForm(true);
+        Page<Role> roles = service.findAll(criteria);
+
+        assertEquals(1, roles.getContent().size());
+        assertTrue(roles.getContent().stream().anyMatch(r -> r.getName().equals("testRoleName")));
+
+        criteria = new RoleCriteria();
+        criteria.setName("testRoleName");
+        criteria.setForForm(true);
+
+        roles = service.findAll(criteria);
+
+        assertEquals(1, roles.getContent().size());
+        assertTrue(roles.getContent().stream().anyMatch(r -> r.getName().equals("testRoleName")));
+
+        service.delete(role.getId());
+    }
+
+    @Test
+    public void findAllByOrgDependency() {
+        RoleForm roleForm = new RoleForm();
+        roleForm.setCode("testRoleCode");
+        roleForm.setName("testRoleName");
+        roleForm.setDescription("testRoleDes");
+        roleForm.setSystemCode("system1");
+        Role role = service.create(roleForm);
+
+        RoleCriteria criteria = new RoleCriteria();
+        criteria.setOnOrgDependency(true);
+        List<Integer> orgRoles = new ArrayList<>();
+        orgRoles.add(role.getId());
+        criteria.setOrgRoles(orgRoles);
+        Page<Role> roles = service.findAll(criteria);
+
+        assertEquals(1, roles.getContent().size());
+        assertTrue(roles.getContent().stream().anyMatch(r -> r.getName().equals("testRoleName")));
+
+        service.delete(role.getId());
+    }
+
+    @Test
+    public void findAllBySystem() {
+        RoleForm roleForm = new RoleForm();
+        roleForm.setCode("testRoleCode");
+        roleForm.setName("testRoleName");
+        roleForm.setDescription("testRoleDes");
+        roleForm.setSystemCode("system1");
+        Role role = service.create(roleForm);
+
+        RoleCriteria criteria = new RoleCriteria();
+        List<String> systemCodes = new ArrayList<>();
+        systemCodes.add("system1");
+        criteria.setSystemCodes(systemCodes);
+        Page<Role> roles = service.findAll(criteria);
+
+        assertEquals(1, roles.getContent().size());
+        assertTrue(roles.getContent().stream().anyMatch(r -> r.getName().equals("testRoleName")));
+
+        service.delete(role.getId());
     }
 
     private static RoleForm newRole() {

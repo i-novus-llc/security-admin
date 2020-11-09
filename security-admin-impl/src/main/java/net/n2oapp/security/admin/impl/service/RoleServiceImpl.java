@@ -9,9 +9,12 @@ import net.n2oapp.security.admin.impl.audit.AuditHelper;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.SystemEntity;
+import net.n2oapp.security.admin.impl.repository.OrganizationRepository;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.RoleSpecifications;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -20,6 +23,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 
 import javax.ws.rs.NotFoundException;
 import java.util.ArrayList;
@@ -37,6 +41,8 @@ import static java.util.Objects.nonNull;
 @Transactional
 public class RoleServiceImpl implements RoleService {
 
+    private static final Logger log = LoggerFactory.getLogger(RoleServiceImpl.class);
+
     @Value("${access.permission.enabled}")
     private Boolean permissionEnabled;
 
@@ -46,6 +52,8 @@ public class RoleServiceImpl implements RoleService {
     private UserRepository userRepository;
     @Autowired
     private SsoUserRoleProvider provider;
+    @Autowired
+    private OrganizationRepository organizationRepository;
     @Autowired
     private AuditHelper audit;
 
@@ -77,12 +85,20 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void delete(Integer id) {
-        checkRoleIsUsed(id);
-        Role role = model(roleRepository.findById(id).orElseThrow(NotFoundException::new));
+        RoleEntity entity = roleRepository.findById(id).orElseThrow(NotFoundException::new);
+        checkRoleIsUsed(entity);
+        Role role = model(entity);
         roleRepository.deleteById(id);
         if (role != null) {
             audit("audit.roleDelete", role);
-            provider.deleteRole(role);
+            try {
+                provider.deleteRole(role);
+            } catch (UserException ex) {
+                if (ex.getCause() instanceof HttpClientErrorException && ((HttpClientErrorException) ex.getCause()).getRawStatusCode() == 404)
+                    log.warn(String.format("Role with id %d not found in keycloak", id), ex);
+                else
+                    throw ex;
+            }
         }
     }
 
@@ -105,7 +121,6 @@ public class RoleServiceImpl implements RoleService {
             Page<RoleEntity> all = roleRepository.findAll(specification, criteria);
             return all.map(this::model);
         }
-
     }
 
     private Page<Role> groupBySystem(Specification<RoleEntity> specification, RoleCriteria criteria) {
@@ -225,11 +240,19 @@ public class RoleServiceImpl implements RoleService {
 
     /**
      * Валидация на удаление ролей
-     * Запрещено удалять роль, если существует пользователь с такой ролью
+     * Запрещено удалять роль, если существует пользователь, клиент, организация или тип аккаунта с такой ролью
      */
-    private void checkRoleIsUsed(Integer roleId) {
-        if (userRepository.countUsersWithRoleId(roleId) != 0)
+    private void checkRoleIsUsed(RoleEntity entity) {
+        if (!entity.getUserList().isEmpty())
             throw new UserException("exception.usernameWithSuchRoleExists");
+        if (!entity.getAccountTypeRoleList().isEmpty())
+            throw new UserException("exception.accountTypeWithSuchRoleExists");
+        if (!entity.getClientList().isEmpty())
+            throw new UserException("exception.clientWithSuchRoleExists");
+        if (organizationRepository.countOrgsWithRoleId(entity.getId()) != 0)
+            throw new UserException("exception.organizationWithSuchRoleExists");
+
+
     }
 
     private Role audit(String action, Role role) {

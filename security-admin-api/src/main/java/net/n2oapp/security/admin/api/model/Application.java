@@ -19,18 +19,16 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 
 /**
  * Приложение
  */
-@Data
-@NoArgsConstructor
-@EqualsAndHashCode(exclude = "systemName")
+@Getter
+@Setter
 @ApiModel("Приложение")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Application implements Serializable {

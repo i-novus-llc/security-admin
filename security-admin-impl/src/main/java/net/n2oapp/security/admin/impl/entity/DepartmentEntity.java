@@ -1,7 +1,8 @@
 package net.n2oapp.security.admin.impl.entity;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -9,7 +10,8 @@ import javax.persistence.*;
  * Сущность Департамент
  */
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "department", schema = "sec")
 public class DepartmentEntity {

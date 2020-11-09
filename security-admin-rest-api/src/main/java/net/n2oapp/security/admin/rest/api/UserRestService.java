@@ -16,6 +16,7 @@
 package net.n2oapp.security.admin.rest.api;
 
 import io.swagger.annotations.*;
+import net.n2oapp.security.admin.api.model.Password;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.api.model.UserRegisterForm;
@@ -79,6 +80,7 @@ public interface UserRestService {
     /**
      * Частичное обновление данных. Ожидает на вход мапу по своей структуре сходную
      * с моделью UserForm.
+     *
      * @see UserForm
      */
 
@@ -121,4 +123,10 @@ public interface UserRestService {
             @ApiResponse(code = 400, message = "Неккоректный запрос. Отсутвуют обязательные поля или заполнены некорректными данными")
     })
     void resetPassword(@ApiParam(value = "Пользователь") UserForm user);
+
+    @POST
+    @Path("/generatePassword")
+    @ApiOperation("Сгенерировать пароль")
+    @ApiResponses({@ApiResponse(code = 200, message = "Пароль")})
+    Password generatePassword();
 }
