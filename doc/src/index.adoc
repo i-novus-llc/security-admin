@@ -213,7 +213,8 @@ openssl rsa -in privateKey.pem -pubout -out pubKey.pem
 * Перейдите в модуль `auth-gateway` и в `application.properties` укажите корректные настройки ключей:
 +
 [listing]
-access.jwt.signing-key=-----BEGIN PRIVATE KEY-----.....-----END PRIVATE KEY----- access.jwt.verifier-key=-----BEGIN PUBLIC KEY-----.....-----END PUBLIC KEY-----
+access.jwt.signing-key=-----BEGIN PRIVATE KEY-----.....-----END PRIVATE KEY-----
+access.jwt.verifier-key=-----BEGIN PUBLIC KEY-----.....-----END PUBLIC KEY-----
 . Для подключения Auth Gateway к Keycloak серверу необходимо задать следующие настройки:
 +
 [listing]
@@ -1056,6 +1057,10 @@ systems
 |rdm.client.export.url
 |string
 |Адрес сервиса RDM для экспорта Приложений и Систем в сервис НСИ
+
+|rdm.sync.enabled
+|boolean
+|Включение синхронизации с сервисами НСИ
 
 |access.organization.use-account-type=true
 |boolean

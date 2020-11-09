@@ -1,6 +1,5 @@
 package net.n2oapp.security.admin.sso.keycloak;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +17,6 @@ import java.util.stream.Collectors;
  * Сервис для создания, изменения, удаления ролей в keycloak
  */
 public class KeycloakRestRoleService {
-
     private static String ROLE_BY_NAME = "%s/admin/realms/%s/roles/%s";
     private static String ROLES = "%s/admin/realms/%s/roles/";
     private static String ROLE_COMPOSITES = "%s/admin/realms/%s/roles/%s/composites";
@@ -89,11 +87,11 @@ public class KeycloakRestRoleService {
             if (role.getComposites() != null) {
                 Set<IdObject> composites = new HashSet<>();
                 if (role.getComposites().getRealm() != null) {
-                    composites.addAll(role.getComposites().getRealm().stream().map(r -> new IdObject(r)).collect(Collectors.toSet()));
+                    composites.addAll(role.getComposites().getRealm().stream().map(IdObject::new).collect(Collectors.toSet()));
                 }
                 if (role.getComposites().getClient() != null) {
-                    composites.addAll(role.getComposites().getClient().values().stream().filter(r -> r != null)
-                            .flatMap(r -> r.stream()).map(r -> new IdObject(r)).collect(Collectors.toSet()));
+                    composites.addAll(role.getComposites().getClient().values().stream().filter(Objects::nonNull)
+                            .flatMap(Collection::stream).map(IdObject::new).collect(Collectors.toSet()));
                 }
                 ResponseEntity<Response> compositesResponse = template
                         .postForEntity(roleCompositesServerUrl, new HttpEntity<>(composites, headers), Response.class);
@@ -131,19 +129,19 @@ public class KeycloakRestRoleService {
                 }
                 Set<IdObject> forRemove;
                 if (role.getComposites() == null) {
-                    forRemove = currentComposites.stream().map(r -> new IdObject(r)).collect(Collectors.toSet());
+                    forRemove = currentComposites.stream().map(IdObject::new).collect(Collectors.toSet());
                 } else {
                     Set<String> composites = new HashSet<>();
                     if (role.getComposites().getRealm() != null) {
                         composites.addAll(role.getComposites().getRealm());
                     }
                     if (role.getComposites().getClient() != null) {
-                        composites.addAll(role.getComposites().getClient().values().stream().filter(r -> r != null)
-                                .flatMap(r -> r.stream()).collect(Collectors.toSet()));
+                        composites.addAll(role.getComposites().getClient().values().stream().filter(Objects::nonNull)
+                                .flatMap(Collection::stream).collect(Collectors.toSet()));
                     }
-                    forRemove = currentComposites.stream().filter(r -> !composites.contains(r)).map(r -> new IdObject(r)).collect(Collectors.toSet());
+                    forRemove = currentComposites.stream().filter(r -> !composites.contains(r)).map(IdObject::new).collect(Collectors.toSet());
                     Set<IdObject> newComposites = composites.stream().filter(r -> !currentComposites.contains(r))
-                            .map(r -> new IdObject(r)).collect(Collectors.toSet());
+                            .map(IdObject::new).collect(Collectors.toSet());
                     if (newComposites != null) {
                         ResponseEntity<Response> compositesResponse = template
                                 .postForEntity(roleCompositesServerUrl, new HttpEntity<>(newComposites, headers), Response.class);
@@ -191,7 +189,7 @@ public class KeycloakRestRoleService {
     @Getter
     @Setter
     @AllArgsConstructor
-    static class IdObject {
+    public static class IdObject {
         private String id;
     }
 }

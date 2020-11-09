@@ -9,7 +9,7 @@ import net.n2oapp.security.admin.auth.server.oauth.*;
 import net.n2oapp.security.admin.impl.entity.*;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.auth.common.User;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 
 import java.util.*;

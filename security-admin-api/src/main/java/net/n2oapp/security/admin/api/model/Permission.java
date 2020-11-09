@@ -19,13 +19,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * Право доступа
  */
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @ApiModel("Право доступа")
 @JsonIgnoreProperties(ignoreUnknown = true)

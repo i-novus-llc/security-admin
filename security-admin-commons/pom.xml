@@ -6,7 +6,7 @@
     <parent>
         <artifactId>security-admin</artifactId>
         <groupId>net.n2oapp.framework.security</groupId>
-        <version>4.18-SNAPSHOT</version>
+        <version>4.20-SNAPSHOT</version>
     </parent>
 
     <artifactId>security-admin-commons</artifactId>
@@ -39,6 +39,7 @@
         <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
+            <version>${javax-mail.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>

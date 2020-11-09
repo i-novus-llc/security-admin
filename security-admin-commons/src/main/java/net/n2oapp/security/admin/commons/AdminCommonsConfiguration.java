@@ -39,7 +39,6 @@ public class AdminCommonsConfiguration {
     @Value("${sec.mail.smtp.starttls.enabled}")
     private Boolean mailSmtpStarttlsEnable;
 
-
     @Bean
     public PasswordGenerator passwordGenerator() {
         return new PasswordGenerator();

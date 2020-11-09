@@ -18,16 +18,16 @@ package net.n2oapp.security.admin.api.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
 /**
  * Роль
  */
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
 @ApiModel("Роль")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RoleForm {

@@ -19,17 +19,17 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
 /**
  * Система
  */
-@Data
-@EqualsAndHashCode(callSuper = true, exclude = "applications")
+@Getter
+@Setter
 @NoArgsConstructor
 @ApiModel("Система")
 @JsonIgnoreProperties(ignoreUnknown = true)

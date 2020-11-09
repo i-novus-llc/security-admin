@@ -24,7 +24,7 @@
                 <eq filter-id="id" mapping="[0]"/>
             </filters>
         </field>
-        <field id="shortName" domain="string" name="Название">
+        <field id="shortName" domain="string" name="Краткое наименование">
             <select mapping="shortName"/>
             <filters>
                 <like filter-id="shortName" mapping="shortName"/>
@@ -39,7 +39,7 @@
         <field id="code" domain="string">
             <select mapping="code"/>
         </field>
-        <field id="fullName" domain="string" name="Полное наименование">
+        <field id="fullName" domain="string" name="Наименование">
             <select mapping="fullName"/>
         </field>
         <field id="inn" domain="string" name="ИНН">

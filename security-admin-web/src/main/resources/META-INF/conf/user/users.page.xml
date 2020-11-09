@@ -45,7 +45,7 @@
                 </columns>
                 <rows>
                     <click>
-                        <show-modal page-id="userUpdateForm" submit-operation-id="update" object-id="user"
+                        <open-page page-id="userUpdateForm" submit-operation-id="update" object-id="user"
                                     detail-field-id="id" route="/:id/update"/>
                     </click>
                 </rows>
@@ -128,7 +128,7 @@
                 </filters>
                 <toolbar>
                     <button id="create" label="Создать" color="primary" model="filter">
-                        <show-modal page-id="userForm" submit-operation-id="create" model="filter" object-id="user"
+                        <open-page page-id="userForm" submit-operation-id="create" model="filter" object-id="user"
                                     upload="defaults" route="create"/>
                     </button>
                 </toolbar>

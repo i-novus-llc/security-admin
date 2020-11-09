@@ -15,8 +15,6 @@
  */
 package net.n2oapp.security.auth;
 
-import lombok.AllArgsConstructor;
-import lombok.Setter;
 import net.n2oapp.framework.access.data.SecurityProvider;
 import net.n2oapp.framework.access.metadata.Security;
 import net.n2oapp.framework.access.metadata.accesspoint.model.N2oUrlAccessPoint;
@@ -40,15 +38,19 @@ import java.util.stream.Collectors;
 
 import static net.n2oapp.framework.access.simple.PermissionAndRoleCollector.URL_ACCESS;
 
-@Setter
-@AllArgsConstructor
 public class N2oUrlFilter implements Filter {
 
-    public static final String USER = "user";
-    private String schemaId;
-    private Boolean defaultUrlAccessDenied;
-    private MetadataEnvironment environment;
-    private SecurityProvider securityProvider;
+    private final String schemaId;
+    private final Boolean defaultUrlAccessDenied;
+    private final MetadataEnvironment environment;
+    private final SecurityProvider securityProvider;
+
+    public N2oUrlFilter(String schemaId, Boolean defaultUrlAccessDenied, MetadataEnvironment environment, SecurityProvider securityProvider) {
+        this.schemaId = schemaId;
+        this.defaultUrlAccessDenied = defaultUrlAccessDenied;
+        this.environment = environment;
+        this.securityProvider = securityProvider;
+    }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {

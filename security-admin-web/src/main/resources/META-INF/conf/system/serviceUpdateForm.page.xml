@@ -12,17 +12,18 @@
                 </controls>
             </field>
 
-            <set>
+            <set depends-on="enableClient">
                 <password description="Cекретный ключ подключаемого приложения (client_secret).
                                      Именно этот секрет должен использоваться подключенным
                                      приложением при обращении к Единой подсистеме безопасности и авторизации"
-                          id="clientSecret" label="Секрет" required="true">
+                          id="clientSecret" label="Секрет" required="true" visible="false">
                     <dependencies>
                         <visibility on="enableClient">
                             enableClient
                         </visibility>
                         <set-value>
                             <![CDATA[
+                                if(clientSecret == null || clientSecret == undefined) {
                                 var lut = []; for (var i=0; i<256; i++) { lut[i] = (i<16?'0':'')+(i).toString(16); }
                                 var d0 = Math.random()*0xffffffff|0;
                                 var d1 = Math.random()*0xffffffff|0;
@@ -32,6 +33,7 @@
                                 lut[d1&0xff]+lut[d1>>8&0xff]+'-'+lut[d1>>16&0x0f|0x40]+lut[d1>>24&0xff]+'-'+
                                 lut[d2&0x3f|0x80]+lut[d2>>8&0xff]+'-'+lut[d2>>16&0xff]+lut[d2>>24&0xff]+
                                 lut[d3&0xff]+lut[d3>>8&0xff]+lut[d3>>16&0xff]+lut[d3>>24&0xff];
+                                }
                         ]]>
                         </set-value>
                     </dependencies>
@@ -39,7 +41,7 @@
 
                 <input-text id="accessTokenValidityMinutes" label="Максимальное время действия токена (минуты)"
                             domain="integer"
-                            description="Если не указано иное, используется значение по умолчанию (60 минут)">
+                            description="Если не указано иное, используется значение по умолчанию (60 минут)" visible="false">
                     <dependencies>
                         <visibility on="enableClient">
                             enableClient
@@ -49,7 +51,7 @@
 
                 <input-text id="refreshTokenValidityMinutes" label="Максимальное время действия  refresh токена (минуты)"
                             domain="integer"
-                            description="Если не указано иное, используется значение по умолчанию (1440 минут)">
+                            description="Если не указано иное, используется значение по умолчанию (1440 минут)" visible="false">
                     <dependencies>
                         <visibility on="enableClient">
                             enableClient
@@ -57,7 +59,7 @@
                     </dependencies>
                 </input-text>
 
-                <field id="isAuthorizationCode" label="Вход через браузер"
+                <field id="isAuthorizationCode" label="Вход через браузер" visible="false"
                        description="В терминах спецификации OAuth2.0 означает код авторизации (authorization code). Используется с серверными приложениями (server-side applications)">
                     <controls>
                         <checkbox id="isAuthorizationCode" src="Switch"/>
@@ -69,7 +71,7 @@
                     </dependencies>
                 </field>
 
-                <field id="isResourceOwnerPass" label="Вход по логину и паролю"
+                <field id="isResourceOwnerPass" label="Вход по логину и паролю" visible="false"
                        description="В терминах спецификации OAuth2.0 означает поддержку учетных данных владельца ресурса (resource owner password credentials grant). Используется доверенными приложениями, например приложениями, которые являются частью самого сервиса">
                     <controls>
                         <checkbox id="isResourceOwnerPass" src="Switch"/>
@@ -81,7 +83,7 @@
                     </dependencies>
                 </field>
 
-                <field id="isClientGrant" label="Вход от имени системы"
+                <field id="isClientGrant" label="Вход от имени системы" visible="false"
                        description="В терминах спецификации OAuth2.0 означает поддержку учетных данных клиента (client credentials grant). Используется при доступе приложения к API">
                     <controls>
                         <checkbox id="isClientGrant" src="Switch"/>
@@ -93,7 +95,7 @@
                     </dependencies>
                 </field>
 
-                <input-text id="redirectUris" label="Префиксы ссылок возврата"
+                <input-text id="redirectUris" label="Префиксы ссылок возврата" visible="false"
                             description="Список URL используется для проверки ссылок возврата (login_redirect_uri). Если в запросе на выход указана ссылка возврата и она не соответствует ни одному из указанных префиксов, то во входе будет отказано"
                             required="true">
                     <dependencies>
@@ -103,7 +105,7 @@
                     </dependencies>
                 </input-text>
 
-                <input-text id="logoutUrl" label="Ссылка для выхода из клиентского приложения"
+                <input-text id="logoutUrl" label="Ссылка для выхода из клиентского приложения" visible="false"
                             description="На данный URL должен быть направлен запрос, содержащий токен выхода, при выходе из клиентского приложения">
                     <dependencies>
                         <visibility on="enableClient">
@@ -112,7 +114,7 @@
                     </dependencies>
                 </input-text>
 
-                <input-select-tree id="clientRoles" ajax="false"
+                <input-select-tree id="clientRoles" ajax="false" visible="false"
                                    label="Настройки прав доступа от имени системы (приложения)" checkboxes="true"
                                    size="1000">
                     <inheritance-nodes parent-field-id="systemId" label-field-id="name" value-field-id="id"

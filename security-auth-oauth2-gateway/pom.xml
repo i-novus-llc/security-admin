@@ -6,10 +6,13 @@
     <parent>
         <artifactId>security-admin</artifactId>
         <groupId>net.n2oapp.framework.security</groupId>
-        <version>4.18-SNAPSHOT</version>
+        <version>4.20-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <properties>
+        <jacoco.skip>false</jacoco.skip>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -34,10 +37,24 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
+        </dependency>
+
+        <!-- test -->
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

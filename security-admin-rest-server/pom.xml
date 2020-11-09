@@ -6,7 +6,7 @@
     <parent>
         <artifactId>security-admin</artifactId>
         <groupId>net.n2oapp.framework.security</groupId>
-        <version>4.18-SNAPSHOT</version>
+        <version>4.20-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
 
@@ -47,33 +47,20 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <scope>test</scope>
-        </dependency>
 
         <dependency>
             <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>com.icegreen</groupId>
-            <artifactId>greenmail</artifactId>
-            <version>1.5.6</version>
+            <artifactId>greenmail-junit5</artifactId>
+            <version>1.6.0</version>
             <scope>test</scope>
         </dependency>
-
-
         <!-- /TEST -->
+
     </dependencies>
 
 </project>
