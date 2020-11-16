@@ -43,7 +43,7 @@ public class MailServiceTest {
 
     @Before
     public void before() {
-        Mockito.doNothing().when(emailSender).send(mimeMessageArgumentCaptor.capture());
+        Mockito.doNothing().when(emailSender).send(Mockito.any(MimeMessage.class));
         Mockito.doReturn(new MimeMessage(Session.getDefaultInstance(new Properties()))).when(emailSender).createMimeMessage();
     }
 
@@ -60,7 +60,7 @@ public class MailServiceTest {
         mailService.sendWelcomeMail(user);
 
         try {
-            Mockito.verify(emailSender, Mockito.timeout(10000).atLeastOnce()).send(Mockito.any(MimeMessage.class));
+            Mockito.verify(emailSender, Mockito.timeout(10000).atLeastOnce()).send(mimeMessageArgumentCaptor.capture());
             Object content = mimeMessageArgumentCaptor.getValue().getContent();
             assertTrue(content.toString().contains("<p>Уважаемый <span>surname</span> <span>name</span>!</p>"));
             assertTrue(content.toString().contains("<p>Вы зарегистрированы в системе.</p>"));
@@ -69,12 +69,23 @@ public class MailServiceTest {
             fail();
         }
 
+
+    }
+
+    @Test
+    public void testSendWelcomeMailWithoutPassword() {
+        UserForm user = new UserForm();
+        user.setUsername("username");
+        user.setSurname("surname");
+        user.setName("name");
+        user.setPatronymic("patronymic");
+        user.setEmail("email");
         user.setPassword(null);
         user.setTemporaryPassword("12345");
 
         mailService.sendWelcomeMail(user);
         try {
-            Mockito.verify(emailSender, Mockito.timeout(10000).atLeastOnce()).send(Mockito.any(MimeMessage.class));
+            Mockito.verify(emailSender, Mockito.timeout(10000).atLeastOnce()).send(mimeMessageArgumentCaptor.capture());
             Object content = mimeMessageArgumentCaptor.getValue().getContent();
             assertTrue(content.toString().contains("<p>Уважаемый <span>surname</span> <span>name</span>!</p>"));
             assertTrue(content.toString().contains("<p>Логин для входа: <span>username</span></p>"));
@@ -97,7 +108,7 @@ public class MailServiceTest {
         mailService.sendResetPasswordMail(user);
 
         try {
-            Mockito.verify(emailSender, Mockito.timeout(10000).atLeastOnce()).send(Mockito.any(MimeMessage.class));
+            Mockito.verify(emailSender, Mockito.timeout(10000).atLeastOnce()).send(mimeMessageArgumentCaptor.capture());
             Object content = mimeMessageArgumentCaptor.getValue().getContent();
             assertTrue(content.toString().contains("<p>Уважаемый <span>username</span>!</p>"));
             assertTrue(content.toString().contains("<p>Ваш пароль был сброшен.</p>"));
@@ -121,7 +132,7 @@ public class MailServiceTest {
         mailService.sendChangeActivateMail(user);
 
         try {
-            Mockito.verify(emailSender, Mockito.timeout(10000).atLeastOnce()).send(Mockito.any(MimeMessage.class));
+            Mockito.verify(emailSender, Mockito.timeout(10000).atLeastOnce()).send(mimeMessageArgumentCaptor.capture());
             Object content = mimeMessageArgumentCaptor.getValue().getContent();
             assertTrue(content.toString().contains("<p>Уважаемый <span>surname</span> <span>name</span> <span>patronymic</span>!</p>"));
             assertTrue(content.toString().contains("Признак активности Вашей учетной записи изменен на \"<span>Да</span>\"."));
@@ -142,7 +153,7 @@ public class MailServiceTest {
         mailService.sendUserDeletedMail(user);
 
         try {
-            Mockito.verify(emailSender, Mockito.timeout(10000).atLeastOnce()).send(Mockito.any(MimeMessage.class));
+            Mockito.verify(emailSender, Mockito.timeout(10000).atLeastOnce()).send(mimeMessageArgumentCaptor.capture());
             Object content = mimeMessageArgumentCaptor.getValue().getContent();
             assertTrue(content.toString().contains("<p>Уважаемый <span>surname</span> <span>name</span> <span>patronymic</span>!</p>"));
             assertTrue(content.toString().contains("<p>Ваша учетная запись удалена.</p>"));
