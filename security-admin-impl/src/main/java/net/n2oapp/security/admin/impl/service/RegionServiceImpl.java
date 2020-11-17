@@ -35,10 +35,10 @@ public class RegionServiceImpl implements RegionService {
             criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "id"));
         }
         Page<RegionEntity> all = regionRepository.findAll(specification, criteria);
-        return all.map(this::model);
+        return all.map(this::map);
     }
 
-    private Region model(RegionEntity entity) {
+    private Region map(RegionEntity entity) {
         if (entity == null) return null;
         Region model = new Region();
         model.setId(entity.getId());
@@ -46,7 +46,5 @@ public class RegionServiceImpl implements RegionService {
         model.setCode(entity.getCode());
         model.setOkato(entity.getOkato());
         return model;
-
     }
-
 }
