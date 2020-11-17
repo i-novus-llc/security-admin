@@ -46,5 +46,4 @@ public class Region {
     @JsonProperty
     @ApiModelProperty(value = "Код ОКАТО региона (субъекта РФ)")
     private String okato;
-
 }
