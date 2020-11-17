@@ -207,15 +207,6 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
         return kUser;
     }
 
-    private Role mapRoleRepresentation(RoleRepresentation roleRepresentation) {
-        if (roleRepresentation == null)
-            return null;
-        Role role = new Role();
-        role.setCode(roleRepresentation.getName());
-        role.setDescription(roleRepresentation.getDescription());
-        return role;
-    }
-
     private RoleRepresentation map(Role role) {
         RoleRepresentation res = new RoleRepresentation();
         res.setName(role.getCode());
