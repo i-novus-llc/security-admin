@@ -2,10 +2,6 @@ package net.n2oapp.security.admin.auth.server;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.n2oapp.security.admin.auth.server.GatewayOAuth2ClientAuthenticationProcessingFilter;
-import net.n2oapp.security.admin.auth.server.EsiaUserDetailsService;
-import net.n2oapp.security.admin.auth.server.OAuthServerConfiguration;
-import net.n2oapp.security.admin.auth.server.ResourceServerConfiguration;
 import net.n2oapp.security.admin.auth.server.esia.EsiaAccessTokenProvider;
 import net.n2oapp.security.admin.auth.server.esia.EsiaUserInfoTokenServices;
 import net.n2oapp.security.admin.auth.server.esia.Pkcs7Util;
@@ -23,7 +19,10 @@ import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoT
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -181,7 +180,7 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
     public UserAccessor userAccessor() {
         return () -> {
             String userId, userName;
-            userId = userName = "UNKNOWN";
+            userId = userName = "-";
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             if (auth != null && auth.getPrincipal() != null) {
                 if (auth.getPrincipal() instanceof net.n2oapp.security.auth.common.User) {
