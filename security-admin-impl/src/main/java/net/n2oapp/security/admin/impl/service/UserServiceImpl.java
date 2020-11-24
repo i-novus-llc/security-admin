@@ -337,7 +337,7 @@ public class UserServiceImpl implements UserService {
                 provider.resetPassword(ssoUser);
             }
 
-            if (nonNull(user.getEmail())) {
+            if (Boolean.TRUE.equals(user.getSendOnEmail()) && nonNull(user.getEmail())) {
                 mailService.sendResetPasswordMail(user);
             }
         }
