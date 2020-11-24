@@ -27,5 +27,4 @@ public class RegionServiceRestClient implements RegionService {
         regionCriteria.setOrders(criteria.getOrders());
         return client.getAll(regionCriteria);
     }
-
 }
