@@ -30,5 +30,4 @@ public interface RegionService {
      * @return Страница найденных регионов
      */
     Page<Region> findAll(RegionCriteria criteria);
-
 }

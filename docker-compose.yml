@@ -13,6 +13,7 @@ services:
       - ACCESS_SERVICE_URL=http://auth-gateway:8080/api
       - JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
       - SPRING_CLOUD_CONSUL_CONFIG_PREFIX=security-admin-master
+      - ACCESS_EMAIL_AS_USERNAME=true
     ports:
       - 8080
     deploy:

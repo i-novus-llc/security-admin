@@ -3,6 +3,7 @@ package net.n2oapp.security.admin.loader;
 import net.n2oapp.platform.loader.server.ServerLoader;
 import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
 import net.n2oapp.security.admin.api.model.RoleForm;
+import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
@@ -10,8 +11,11 @@ import net.n2oapp.security.admin.loader.builder.RoleFormBuilder;
 import net.n2oapp.security.admin.loader.builder.SystemEntityBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.AdditionalAnswers;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -39,19 +43,20 @@ public class RoleServerLoaderTest {
     @Autowired
     private RoleRepository repository;
 
+    @MockBean
+    private SsoUserRoleProvider provider;
+
     /**
      * Тест {@link ServerLoader}
      */
     @Test
     public void repositoryLoader() {
+        Mockito.when(provider.createRole(Mockito.any())).then(AdditionalAnswers.returnsFirstArg());
         BiConsumer<List<RoleForm>, String> loader = serverLoader::load;
         repository.removeBySystemCode(SystemEntityBuilder.buildSystemEntity1());
         repository.removeBySystemCode(SystemEntityBuilder.buildSystemEntity2());
         case1(loader);
-        case2(loader);
         case3(loader);
-        case4(loader);
-        case5(loader);
         case6(loader);
     }
 
@@ -71,22 +76,8 @@ public class RoleServerLoaderTest {
     }
 
     /**
-     * Вставка двух записей, обе есть в БД, но одна будет обновлена
-     */
-    private void case2(BiConsumer<List<RoleForm>, String> loader) {
-        RoleForm roleForm1 = RoleFormBuilder.buildRoleForm1();
-        RoleForm roleForm2 = RoleFormBuilder.buildRoleForm2Updated();
-        List<RoleForm> data = Arrays.asList(roleForm1, roleForm2);
-
-        loader.accept(data, "system1");
-
-        assertThat(repository.findBySystemCode(SystemEntityBuilder.buildSystemEntity1()).size(), is(2));
-        roleAssertEquals(roleForm1, repository.findOneByCode("rcode1"));
-        roleAssertEquals(roleForm2, repository.findOneByCode("rcode2"));
-    }
-
-    /**
-     * Вставка трех записей, две есть в БД, третьей нет
+     * Вставка трех записей, одна есть в бд, одна изменена, последней нет.
+     * Добавится та, которой нет, измененная запись проигнорируется.
      */
     private void case3(BiConsumer<List<RoleForm>, String> loader) {
         RoleForm roleForm1 = RoleFormBuilder.buildRoleForm1();
@@ -98,40 +89,12 @@ public class RoleServerLoaderTest {
 
         assertThat(repository.findBySystemCode(SystemEntityBuilder.buildSystemEntity1()).size(), is(3));
         roleAssertEquals(roleForm1, repository.findOneByCode("rcode1"));
-        roleAssertEquals(roleForm2, repository.findOneByCode("rcode2"));
+        roleAssertEquals(RoleFormBuilder.buildRoleForm2(), repository.findOneByCode("rcode2"));
         roleAssertEquals(roleForm3, repository.findOneByCode("rcode3"));
     }
 
     /**
-     * Вставка двух записей, в БД три записи, вторая и третья будут удалены
-     */
-    private void case4(BiConsumer<List<RoleForm>, String> loader) {
-        RoleForm roleForm1 = RoleFormBuilder.buildRoleForm1();
-        List<RoleForm> data = Arrays.asList(roleForm1);
-
-        loader.accept(data, "system1");
-
-        assertThat(repository.findBySystemCode(SystemEntityBuilder.buildSystemEntity1()).size(), is(1));
-        roleAssertEquals(roleForm1, repository.findOneByCode("rcode1"));
-    }
-
-    /**
-     * Вставка двух записей, в БД одна запись
-     */
-    private void case5(BiConsumer<List<RoleForm>, String> loader) {
-        RoleForm roleForm1 = RoleFormBuilder.buildRoleForm1();
-        RoleForm roleForm2 = RoleFormBuilder.buildRoleForm2();
-        List<RoleForm> data = Arrays.asList(roleForm1, roleForm2);
-
-        loader.accept(data, "system1");
-
-        assertThat(repository.findBySystemCode(SystemEntityBuilder.buildSystemEntity1()).size(), is(2));
-        roleAssertEquals(roleForm1, repository.findOneByCode("rcode1"));
-        roleAssertEquals(roleForm2, repository.findOneByCode("rcode2"));
-    }
-
-    /**
-     * Вставка двух новых записей клиента system2, в БД 2 записи клиента "system1"
+     * Вставка двух новых записей клиента system2, в БД 3 записи клиента "system1"
      */
     private void case6(BiConsumer<List<RoleForm>, String> loader) {
         RoleForm roleForm4 = RoleFormBuilder.buildRoleForm4();
