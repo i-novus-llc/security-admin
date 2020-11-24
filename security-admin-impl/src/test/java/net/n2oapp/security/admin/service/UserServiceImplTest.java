@@ -183,6 +183,7 @@ public class UserServiceImplTest {
         userForm = new UserForm();
         userForm.setId(userId);
         userForm.setPassword("Zz123456789!");
+        userForm.setSendOnEmail(true);
 
         service.resetPassword(userForm);
 
