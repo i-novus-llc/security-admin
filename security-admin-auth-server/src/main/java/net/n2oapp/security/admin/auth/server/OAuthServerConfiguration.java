@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.jwt.crypto.sign.RsaSigner;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -30,7 +31,6 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
@@ -60,17 +60,19 @@ public class OAuthServerConfiguration {
     @Configuration
     private static class AuthorizationSecurityConfigurer extends AuthorizationServerConfigurerAdapter {
         private final TokenStore tokenStore;
-        private final AccessTokenConverter tokenConverter;
+        private final org.springframework.security.oauth2.provider.token.AccessTokenConverter tokenConverter;
         private final AuthorizationServerProperties properties;
         private final GatewayService gatewayService;
+        private final UserDetailsService userDetailsService;
 
         public AuthorizationSecurityConfigurer(ObjectProvider<TokenStore> tokenStore,
-                                               ObjectProvider<AccessTokenConverter> tokenConverter,
-                                               AuthorizationServerProperties properties, GatewayService gatewayService) {
+                                               ObjectProvider<org.springframework.security.oauth2.provider.token.AccessTokenConverter> tokenConverter,
+                                               AuthorizationServerProperties properties, GatewayService gatewayService, UserDetailsService userDetailsService) {
             this.tokenStore = tokenStore.getIfAvailable();
             this.tokenConverter = tokenConverter.getIfAvailable();
             this.properties = properties;
             this.gatewayService = gatewayService;
+            this.userDetailsService = userDetailsService;
         }
 
         @Override
@@ -81,6 +83,7 @@ public class OAuthServerConfiguration {
         @Override
         public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
             endpoints.redirectResolver(new RedirectResolverImpl());
+            endpoints.userDetailsService(userDetailsService);
 
             if (this.tokenConverter != null) {
                 endpoints.accessTokenConverter(this.tokenConverter);
@@ -183,8 +186,8 @@ public class OAuthServerConfiguration {
         }
 
         @Bean
-        public AccessTokenHeaderConverter accessTokenConverter(KeyPair keyPair) {
-            AccessTokenHeaderConverter converter = new AccessTokenHeaderConverter();
+        public AccessTokenConverter accessTokenConverter(KeyPair keyPair) {
+            AccessTokenConverter converter = new AccessTokenConverter();
             converter.setKeyPair(keyPair);
             Boolean includeRoles = tokenIncludeClaims.contains("roles");
             Boolean includePermissions = tokenIncludeClaims.contains("permissions");

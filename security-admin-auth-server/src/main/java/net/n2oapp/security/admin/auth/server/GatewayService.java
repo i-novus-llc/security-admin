@@ -46,7 +46,10 @@ public class GatewayService implements ClientDetailsService {
 
         Set<String> authorizedGrantTypes = new HashSet<>();
         if (Boolean.TRUE.equals(apiModel.getIsClientGrant())) authorizedGrantTypes.add("client_credentials");
-        if (Boolean.TRUE.equals(apiModel.getIsAuthorizationCode())) authorizedGrantTypes.add("authorization_code");
+        if (Boolean.TRUE.equals(apiModel.getIsAuthorizationCode())) {
+            authorizedGrantTypes.add("authorization_code");
+            authorizedGrantTypes.add("refresh_token");
+        }
         if (Boolean.TRUE.equals(apiModel.getIsResourceOwnerPass())) authorizedGrantTypes.add("password");
         client.setAuthorizedGrantTypes(authorizedGrantTypes);
         String redirectUris = nonNull(apiModel.getRedirectUris()) ? apiModel.getRedirectUris().replace(" ", ",") : null;
