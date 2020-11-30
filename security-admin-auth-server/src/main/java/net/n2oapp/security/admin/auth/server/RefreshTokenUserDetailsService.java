@@ -35,34 +35,38 @@ public class RefreshTokenUserDetailsService implements org.springframework.secur
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserDetailsToken userDetailsToken = obtainUserDetailsToken(username);
         User user = userDetailsService.loadUserDetails(userDetailsToken);
-        return map(user);
+        return map(user, username);
     }
 
     private UserDetailsToken obtainUserDetailsToken(String username) {
         UserEntity userEntity = userRepository.findOneByUsernameIgnoreCase(username);
         UserDetailsToken userDetailsToken = new UserDetailsToken();
-        userDetailsToken.setUsername(userEntity.getUsername());
-        userDetailsToken.setEmail(userEntity.getEmail());
-        userDetailsToken.setExtUid(userEntity.getExtUid());
-        userDetailsToken.setName(userEntity.getName());
-        userDetailsToken.setSurname(userEntity.getSurname());
-        userDetailsToken.setPatronymic(userEntity.getPatronymic());
-        userDetailsToken.setRoleNames(userEntity.getRoleList().stream().map(RoleEntity::getCode).collect(Collectors.toList()));
+        if (userEntity != null) {
+            userDetailsToken.setUsername(userEntity.getUsername() == null ? username : userEntity.getUsername());
+            userDetailsToken.setEmail(userEntity.getEmail());
+            userDetailsToken.setExtUid(userEntity.getExtUid());
+            userDetailsToken.setName(userEntity.getName());
+            userDetailsToken.setSurname(userEntity.getSurname());
+            userDetailsToken.setPatronymic(userEntity.getPatronymic());
+            userDetailsToken.setRoleNames(userEntity.getRoleList().stream().map(RoleEntity::getCode).collect(Collectors.toList()));
+        }
         return userDetailsToken;
     }
 
-    private net.n2oapp.security.auth.common.User map(User user) {
+    private net.n2oapp.security.auth.common.User map(User user, String username) {
         List<GrantedAuthority> authorities = extractAuthorities(user);
-        net.n2oapp.security.auth.common.User userDetails = new net.n2oapp.security.auth.common.User(user.getUsername(), "N/A", authorities);
-        userDetails.setEmail(user.getEmail());
-        userDetails.setSurname(user.getSurname());
-        userDetails.setName(user.getName());
-        userDetails.setPatronymic(user.getPatronymic());
-        userDetails.setUserLevel(user.getUserLevel() != null ? user.getUserLevel().toString() : null);
-        userDetails.setOrganization(user.getOrganization() != null ? user.getOrganization().getCode() : null);
-        userDetails.setDepartment(user.getDepartment() != null ? user.getDepartment().getCode() : null);
-        userDetails.setDepartmentName(user.getDepartment() != null ? user.getDepartment().getName() : null);
-        userDetails.setRegion(user.getRegion() != null ? user.getRegion().getCode() : null);
+        net.n2oapp.security.auth.common.User userDetails = new net.n2oapp.security.auth.common.User(username, "N/A", authorities);
+        if (user != null) {
+            userDetails.setEmail(user.getEmail());
+            userDetails.setSurname(user.getSurname());
+            userDetails.setName(user.getName());
+            userDetails.setPatronymic(user.getPatronymic());
+            userDetails.setUserLevel(user.getUserLevel() != null ? user.getUserLevel().toString() : null);
+            userDetails.setOrganization(user.getOrganization() != null ? user.getOrganization().getCode() : null);
+            userDetails.setDepartment(user.getDepartment() != null ? user.getDepartment().getCode() : null);
+            userDetails.setDepartmentName(user.getDepartment() != null ? user.getDepartment().getName() : null);
+            userDetails.setRegion(user.getRegion() != null ? user.getRegion().getCode() : null);
+        }
         return userDetails;
     }
 

@@ -59,6 +59,7 @@ public class AccessTokenConverter extends JwtAccessTokenConverter {
                     userAuthentication.setDetails(detailsMap);
                 }
             } catch (InvalidTokenException e) {
+                // Проглатываем исключение, если рефреш токен ещё не сформирован и его невозможно декодировать.
             }
         }
         return super.enhance(accessToken, authentication);
