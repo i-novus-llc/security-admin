@@ -14,7 +14,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 @EnableEmbeddedPg
-@SpringBootTest(properties = "rdm.sync.enabled=true")
+@SpringBootTest(properties = {"rdm.sync.enabled=true", "access.organization-persist-mode=sync"})
 public class AuthGatewayApplicationTest {
 
     @Autowired
