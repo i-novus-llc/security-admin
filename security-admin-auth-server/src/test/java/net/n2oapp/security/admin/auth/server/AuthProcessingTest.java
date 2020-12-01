@@ -3,7 +3,10 @@ package net.n2oapp.security.admin.auth.server;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.n2oapp.security.admin.api.criteria.ClientCriteria;
-import net.n2oapp.security.admin.api.model.*;
+import net.n2oapp.security.admin.api.model.Client;
+import net.n2oapp.security.admin.api.model.Permission;
+import net.n2oapp.security.admin.api.model.Role;
+import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.ClientService;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
@@ -11,7 +14,6 @@ import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
-import net.n2oapp.security.admin.impl.service.UserDetailsServiceImpl;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -123,6 +125,81 @@ public class AuthProcessingTest {
         assertThat(claims.get("jti"), is(tokenResponse.get("jti")));
         assertThat(claims.get("client_id"), is("test"));
         assertThat((List<String>) claims.get("scope"), containsInAnyOrder("write", "read"));
+    }
+
+    /**
+     * Тест получения токена по гранту refresh_token
+     */
+    @Test
+    public void testRefreshToken() throws IOException {
+        Response response = WebClient.create(
+                host + "/oauth/authorize?client_id=test&redirect_uri=https://localhost:8080/login&response_type=code&scope=read%20write&state=T45FVY"
+        ).get();
+        assertThat(response.getStatus(), is(302));
+        assertThat(response.getLocation().toString(), is(host + "/login/keycloak"));
+        NewCookie authSession = response.getCookies().get("JSESSIONID");
+
+        response = WebClient.create(host + "/login/keycloak").cookie(authSession).get();
+
+        String state = extractQueryParameter(response.getLocation(), "state");
+
+        response = WebClient.create(
+                host + "/login/keycloak" +
+                        "?state=" + state + "&session_state=testSessionState" +
+                        "&code=testCode"
+        ).cookie(authSession).get();
+        response = WebClient.create(response.getLocation()).cookie(authSession).get();
+        String code = extractQueryParameter(response.getLocation(), "code");
+
+        Map<String, Object> tokenResponse = new ObjectMapper().readValue(
+                WebClient.create(host + "/oauth/token")
+                        .header("Authorization", "Basic dGVzdDp0ZXN0")
+                        .form(new Form()
+                                .param("grant_type", "authorization_code")
+                                .param("code", code)
+                                .param("redirect_uri", "https://localhost:8080/login")
+                        ).readEntity(String.class),
+                Map.class);
+
+        assertThat(tokenResponse.get("access_token"), notNullValue());
+        assertThat(tokenResponse.get("refresh_token"), notNullValue());
+        assertThat(tokenResponse.get("token_type"), is("bearer"));
+        assertThat(tokenResponse.get("expires_in"), notNullValue());
+        assertThat(tokenResponse.get("scope"), notNullValue());
+        assertThat(tokenResponse.get("jti"), notNullValue());
+
+        String refreshToken = (String) tokenResponse.get("refresh_token");
+
+        Map<String, Object> claims = new ObjectMapper().readValue(JwtHelper.decode(refreshToken).getClaims(), Map.class);
+        assertThat(claims.get("sid"), notNullValue());
+        assertThat(claims.get("roles"), notNullValue());
+        assertThat(claims.get("permissions"), notNullValue());
+
+        tokenResponse = new ObjectMapper().readValue(
+                WebClient.create(host + "/oauth/token")
+                        .header("Authorization", "Basic dGVzdDp0ZXN0")
+                        .form(new Form()
+                                .param("grant_type", "refresh_token")
+                                .param("refresh_token", refreshToken)
+                        ).readEntity(String.class),
+                Map.class);
+
+        assertThat(tokenResponse.get("access_token"), notNullValue());
+        assertThat(tokenResponse.get("refresh_token"), notNullValue());
+        assertThat(tokenResponse.get("token_type"), is("bearer"));
+        assertThat(tokenResponse.get("expires_in"), notNullValue());
+        assertThat(tokenResponse.get("scope"), notNullValue());
+        assertThat(tokenResponse.get("jti"), notNullValue());
+
+        String accessToken = (String) tokenResponse.get("access_token");
+
+        claims = new ObjectMapper().readValue(JwtHelper.decode(accessToken).getClaims(), Map.class);
+        assertThat(claims.get("sid"), notNullValue());
+
+        refreshToken = (String) tokenResponse.get("refresh_token");
+
+        claims = new ObjectMapper().readValue(JwtHelper.decode(refreshToken).getClaims(), Map.class);
+        assertThat(claims.get("sid"), notNullValue());
     }
 
     @Test

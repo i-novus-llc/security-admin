@@ -7,6 +7,7 @@ import net.n2oapp.security.admin.auth.server.esia.EsiaUserInfoTokenServices;
 import net.n2oapp.security.admin.auth.server.esia.Pkcs7Util;
 import net.n2oapp.security.admin.auth.server.exception.UserNotFoundAuthenticationExceptionHandler;
 import net.n2oapp.security.admin.auth.server.logout.OAuth2ProviderRedirectLogoutSuccessHandler;
+import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.UserDetailsServiceImpl;
 import net.n2oapp.security.auth.common.AuthoritiesPrincipalExtractor;
 import net.n2oapp.security.auth.common.LogoutHandler;
@@ -30,6 +31,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
@@ -78,6 +80,9 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private Pkcs7Util pkcs7Util;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().mvcMatchers("/css/**", "/icons/**", "/fonts/**", "/public/**", "/static/**", "/webjars/**");
@@ -108,6 +113,11 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
         EsiaUserDetailsService esiaUserDetailsService = new EsiaUserDetailsService();
         esiaUserDetailsService.setSynchronizeFio(true);
         return esiaUserDetailsService;
+    }
+
+    @Bean
+    public UserDetailsService refreshTokenUserDetailsService() {
+        return new RefreshTokenUserDetailsService(userRepository, gatewayUserDetailsService);
     }
 
     @Bean
