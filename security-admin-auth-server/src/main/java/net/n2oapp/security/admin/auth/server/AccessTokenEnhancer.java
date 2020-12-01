@@ -17,9 +17,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Добавляет идентификатор ключа в хедер токена
+ * Обрабатывает служебные поля токена
  */
-public class GatewayJwtAccessTokenConverter extends JwtAccessTokenConverter {
+public class AccessTokenEnhancer extends JwtAccessTokenConverter {
 
     private JsonParser objectMapper = JsonParserFactory.create();
     private Signer signer;

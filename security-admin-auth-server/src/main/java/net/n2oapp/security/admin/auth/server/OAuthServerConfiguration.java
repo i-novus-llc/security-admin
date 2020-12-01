@@ -187,8 +187,8 @@ public class OAuthServerConfiguration {
         }
 
         @Bean
-        public GatewayJwtAccessTokenConverter accessTokenConverter(KeyPair keyPair) {
-            GatewayJwtAccessTokenConverter converter = new GatewayJwtAccessTokenConverter();
+        public AccessTokenEnhancer accessTokenConverter(KeyPair keyPair) {
+            AccessTokenEnhancer converter = new AccessTokenEnhancer();
             converter.setKeyPair(keyPair);
             Boolean includeRoles = tokenIncludeClaims.contains("roles");
             Boolean includePermissions = tokenIncludeClaims.contains("permissions");
