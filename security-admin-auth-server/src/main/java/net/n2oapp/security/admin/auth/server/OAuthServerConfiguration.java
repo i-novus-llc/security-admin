@@ -31,6 +31,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
@@ -60,7 +61,7 @@ public class OAuthServerConfiguration {
     @Configuration
     private static class AuthorizationSecurityConfigurer extends AuthorizationServerConfigurerAdapter {
         private final TokenStore tokenStore;
-        private final org.springframework.security.oauth2.provider.token.AccessTokenConverter tokenConverter;
+        private final AccessTokenConverter tokenConverter;
         private final AuthorizationServerProperties properties;
         private final GatewayService gatewayService;
         private final UserDetailsService userDetailsService;
@@ -186,8 +187,8 @@ public class OAuthServerConfiguration {
         }
 
         @Bean
-        public AccessTokenConverter accessTokenConverter(KeyPair keyPair) {
-            AccessTokenConverter converter = new AccessTokenConverter();
+        public GatewayJwtAccessTokenConverter accessTokenConverter(KeyPair keyPair) {
+            GatewayJwtAccessTokenConverter converter = new GatewayJwtAccessTokenConverter();
             converter.setKeyPair(keyPair);
             Boolean includeRoles = tokenIncludeClaims.contains("roles");
             Boolean includePermissions = tokenIncludeClaims.contains("permissions");

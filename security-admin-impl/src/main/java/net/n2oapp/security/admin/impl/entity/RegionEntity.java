@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
 
 /**
  * Сущность Регион
@@ -47,9 +46,6 @@ public class RegionEntity {
      */
     @Column(name = "is_deleted")
     private Boolean isDeleted;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "region", cascade = CascadeType.REMOVE)
-    private List<UserEntity> users;
 
     public RegionEntity(Integer id) {
         this.id = id;
