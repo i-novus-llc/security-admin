@@ -19,7 +19,7 @@ import java.util.Map;
 /**
  * Добавляет идентификатор ключа в хедер токена
  */
-public class AccessTokenConverter extends JwtAccessTokenConverter {
+public class GatewayJwtAccessTokenConverter extends JwtAccessTokenConverter {
 
     private JsonParser objectMapper = JsonParserFactory.create();
     private Signer signer;
@@ -41,8 +41,7 @@ public class AccessTokenConverter extends JwtAccessTokenConverter {
     }
 
     /**
-     * Заглушка на рефреш токен до нормальной реализации. Считывает значение сессии из ещё не переписанного
-     * рефреш токена (если тот существует) и сетит в новый.
+     * Перекладывает значение сессии из refresh_token (если тот существует) в access_token.
      */
     @Override
     public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
@@ -59,7 +58,7 @@ public class AccessTokenConverter extends JwtAccessTokenConverter {
                     userAuthentication.setDetails(detailsMap);
                 }
             } catch (InvalidTokenException e) {
-                // Проглатываем исключение, если рефреш токен ещё не сформирован и его невозможно декодировать.
+                // Когда refresh_token типа UUID
             }
         }
         return super.enhance(accessToken, authentication);
