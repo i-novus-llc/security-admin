@@ -27,7 +27,7 @@
                 </pre-filters>
                 <dependencies>
                     <visibility on="userLevel">
-                        userLevel.id == 'ORGANIZATION';
+                        return userLevel.id == 'ORGANIZATION';
                     </visibility>
                     <set-value on="userLevel" apply-on-init="false">return null;</set-value>
                 </dependencies>

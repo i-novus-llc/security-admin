@@ -77,16 +77,15 @@
                         <open-page page-id="serviceUpdateForm" submit-operation-id="update" route="/:code/update"
                                    object-id="service"
                                    detail-field-id="id">
+                            <path-param name="code" value="{id}"/>
                         </open-page>
                     </click>
                 </rows>
                 <toolbar>
                     <button id="createService" label="Создать" model="filter">
                         <open-page page-id="serviceForm" submit-operation-id="create" model="filter"
-                                   object-id="service" upload="defaults" route="/create" close-after-submit="true">
-                            <pre-filters>
-                                <eq field-id="systemCode" ref-widget-id="main" ref-model="resolve" value="{id}"/>
-                            </pre-filters>
+                                   object-id="service" upload="defaults" route="/:systemCode/create" close-after-submit="true">
+                            <path-param name="systemCode" value="{id}" ref-widget-id="main" ref-model="resolve"/>
                         </open-page>
                     </button>
                 </toolbar>
