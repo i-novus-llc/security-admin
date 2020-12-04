@@ -23,7 +23,9 @@
                 <rows>
                     <click>
                         <open-page page-id="systemFormUpdate" submit-operation-id="update" object-id="system"
-                                   detail-field-id="id" route="/:id/update"/>
+                                   detail-field-id="id" route="/:id/update">
+                            <path-param name="id" value="{id}"/>
+                        </open-page>
                     </click>
                 </rows>
                 <filters>
