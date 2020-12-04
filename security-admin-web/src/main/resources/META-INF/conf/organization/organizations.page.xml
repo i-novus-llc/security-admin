@@ -25,6 +25,7 @@
                                     submit-operation-id="update"
                                     object-id="organization"
                                     route="/:id/update">
+                            <path-param name="id" value="{id}"/>
                         </show-modal>
                     </click>
                 </rows>
