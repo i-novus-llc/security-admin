@@ -8,7 +8,7 @@
     <parent>
         <artifactId>security-admin</artifactId>
         <groupId>net.n2oapp.framework.security</groupId>
-        <version>4.20</version>
+        <version>4.20-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
 
