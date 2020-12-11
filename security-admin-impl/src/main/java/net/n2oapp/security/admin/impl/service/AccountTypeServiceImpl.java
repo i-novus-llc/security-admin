@@ -50,7 +50,6 @@ public class AccountTypeServiceImpl implements AccountTypeService {
 
     @Override
     public AccountType update(AccountType accountType) {
-        checkCodeUnique(accountType.getCode());
         return model(repository.save(entity(accountType)));
     }
 
