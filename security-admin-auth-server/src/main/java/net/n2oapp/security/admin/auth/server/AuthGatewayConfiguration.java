@@ -92,7 +92,7 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests().antMatchers("/", "/login**", "/api/**", "/oauth/certs", "/css/**",
-                "/icons/**", "/fonts/**", "/static/**", "/webjars/**").permitAll().anyRequest()
+                "/icons/**", "/fonts/**", "/public/**", "/static/**", "/webjars/**").permitAll().anyRequest()
                 .authenticated().and().exceptionHandling()
                 .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint(loginEntryPoint)).and().logout()
                 .logoutSuccessUrl(loginEntryPoint)
