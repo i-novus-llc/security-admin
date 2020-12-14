@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import ru.i_novus.ms.audit.client.AuditClient;
 import ru.i_novus.ms.audit.client.model.AuditClientRequest;
+import ru.i_novus.ms.audit.exception.AuditException;
 
 /**
  * Создание сообщений для аудит-сервиса
@@ -38,7 +39,11 @@ public class AuditHelper {
         request.setObjectName(objectName);
         request.setAuditType((short) 1);
 
-        auditClient.add(request);
+        try {
+            auditClient.add(request);
+        } catch (Exception e) {
+            throw new AuditException("We have some trouble with audit service", e);
+        }
     }
 
     @Autowired(required = false)
