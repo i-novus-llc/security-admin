@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class BadCredentialsExceptionExceptionHandler extends SimpleUrlAuthenticationFailureHandler {
-
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         try {
@@ -39,7 +38,7 @@ public class BadCredentialsExceptionExceptionHandler extends SimpleUrlAuthentica
                 response.getOutputStream().flush();
             } else super.onAuthenticationFailure(request, response, exception);
         } catch (Exception e) {
-            System.out.println(e);
+            logger.error(e);
         }
     }
 }
