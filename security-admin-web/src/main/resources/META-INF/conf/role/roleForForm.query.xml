@@ -100,9 +100,9 @@
                 <in filter-id="orgRoles*.id" domain="integer[]" mapping="orgRoles"/>
             </filters>
         </field>
-        <field id="onOrgDependency" domain="boolean">
+        <field id="filterByOrgRoles" domain="boolean">
             <filters>
-                <eq filter-id="onOrgDependency" domain="boolean" mapping="onOrgDependency"/>
+                <eq filter-id="filterByOrgRoles" domain="boolean" mapping="filterByOrgRoles"/>
             </filters>
         </field>
 
