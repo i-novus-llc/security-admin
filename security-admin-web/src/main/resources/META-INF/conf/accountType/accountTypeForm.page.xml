@@ -2,16 +2,6 @@
 <simple-page xmlns="http://n2oapp.net/framework/config/schema/page-2.0" name="Настройки типов аккаунтов для саморегистрации">
     <form query-id="accountType" object-id="accountType">
         <fields>
-            <hidden id="onOrgDependencyHidden" depends-on="userLevel" default-value="false">
-                <dependencies>
-                    <reset on="userLevel">
-                        userLevel == null || userLevel == 'undefined';
-                    </reset>
-                    <set-value on="userLevel">
-                        return userLevel.id == 'ORGANIZATION';
-                    </set-value>
-                </dependencies>
-            </hidden>
             <input-text id="name" required="true" label="Наименование"/>
             <input-text id="code" required="true" label="Код"/>
             <input-text id="description" label="Описание"/>
@@ -40,7 +30,7 @@
                     <eq field-id="groupBySystem" value="true"/>
                     <eq field-id="userLevel.id" value="{userLevel.id}"/>
                     <in field-id="orgRoles" values="{orgRoles*.id}"/>
-                    <eq field-id="onOrgDependency" value="{onOrgDependencyHidden}"/>
+                    <eq field-id="onOrgDependency" value="{userLevel.id == 'ORGANIZATION'}"/>
                 </pre-filters>
                 <dependencies>
                     <set-value on="orgRoles" apply-on-init="false">
