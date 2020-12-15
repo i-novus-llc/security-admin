@@ -211,7 +211,7 @@ public class RoleServiceImplTest {
         Role role = service.create(roleForm);
 
         RoleCriteria criteria = new RoleCriteria();
-        criteria.setOnOrgDependency(true);
+        criteria.setFilterByOrgRoles(true);
         List<Integer> orgRoles = new ArrayList<>();
         orgRoles.add(role.getId());
         criteria.setOrgRoles(orgRoles);

@@ -101,9 +101,9 @@ public class RestRoleCriteria extends RoleCriteria {
         super.setOrgRoles(orgRoles);
     }
 
-    @QueryParam("onOrgDependency")
+    @QueryParam("filterByOrgRoles")
     @Override
-    public void setOnOrgDependency(Boolean onOrgDependency) {
-        super.setOnOrgDependency(onOrgDependency);
+    public void setFilterByOrgRoles(Boolean filterByOrgRoles) {
+        super.setFilterByOrgRoles(filterByOrgRoles);
     }
 }
