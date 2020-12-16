@@ -1,6 +1,7 @@
 package net.n2oapp.security.admin.auth.server.exception;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
@@ -10,14 +11,12 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.AbstractConfigurableTemplateResolver;
 import org.thymeleaf.templateresolver.UrlTemplateResolver;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 public class BadCredentialsExceptionExceptionHandler extends SimpleUrlAuthenticationFailureHandler {
     @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) {
         try {
             if (exception instanceof BadCredentialsException) {
 
@@ -28,11 +27,11 @@ public class BadCredentialsExceptionExceptionHandler extends SimpleUrlAuthentica
                 engine.setTemplateResolver(resolver);
 
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                response.setContentType("text/html;charset=UTF-8");
+                response.setContentType(MediaType.TEXT_HTML_VALUE);
 
                 WebContext context = new WebContext(request, response, request.getServletContext());
                 context.setVariable("errorMessage", exception.getMessage());
-                String errorPage = engine.process("classpath:public/wrongClientCredentials.html", context);
+                String errorPage = engine.process("classpath:public/badClientCredentials.html", context);
                 response.setContentLength(errorPage.length());
                 response.getOutputStream().println(errorPage);
                 response.getOutputStream().flush();
