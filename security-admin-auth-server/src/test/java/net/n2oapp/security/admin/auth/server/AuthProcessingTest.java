@@ -113,7 +113,8 @@ public class AuthProcessingTest {
         ).cookie(authSession).get();
         response = WebClient.create(response.getLocation()).cookie(authSession).get();
         assertThat(response.getStatus(), is(HttpStatus.SC_UNAUTHORIZED));
-        assertThat(response.getMediaType(), is(javax.ws.rs.core.MediaType.TEXT_HTML_TYPE));
+        assertThat(response.getMediaType().getType(), is(javax.ws.rs.core.MediaType.TEXT_HTML_TYPE.getType()));
+        assertThat(response.getMediaType().getSubtype(), is(javax.ws.rs.core.MediaType.TEXT_HTML_TYPE.getSubtype()));
     }
 
     /**
