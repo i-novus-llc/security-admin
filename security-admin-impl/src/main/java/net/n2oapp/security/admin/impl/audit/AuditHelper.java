@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import ru.i_novus.ms.audit.client.AuditClient;
 import ru.i_novus.ms.audit.client.model.AuditClientRequest;
-import ru.i_novus.ms.audit.exception.AuditException;
 
 /**
  * Создание сообщений для аудит-сервиса
@@ -42,7 +41,8 @@ public class AuditHelper {
         try {
             auditClient.add(request);
         } catch (Exception e) {
-            throw new AuditException("We have some trouble with audit service", e);
+//          нужно, чтобы security-admin отдавал статус связанный с её ошибкой, а не возникшей в аудите
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
