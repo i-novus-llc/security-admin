@@ -14,7 +14,7 @@ import org.thymeleaf.templateresolver.UrlTemplateResolver;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class BadCredentialsExceptionExceptionHandler extends SimpleUrlAuthenticationFailureHandler {
+public class BadCredentialsExceptionHandler extends SimpleUrlAuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) {
         try {
