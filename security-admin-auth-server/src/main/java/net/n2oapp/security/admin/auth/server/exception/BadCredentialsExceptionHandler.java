@@ -33,8 +33,7 @@ public class BadCredentialsExceptionHandler extends SimpleUrlAuthenticationFailu
                 context.setVariable("errorMessage", exception.getMessage());
                 String errorPage = engine.process("classpath:public/badClientCredentials.html", context);
                 response.setContentLength(errorPage.length());
-                response.getOutputStream().println(errorPage);
-                response.getOutputStream().flush();
+                response.getWriter().write(errorPage);
             } else super.onAuthenticationFailure(request, response, exception);
         } catch (Exception e) {
             logger.error(e);
