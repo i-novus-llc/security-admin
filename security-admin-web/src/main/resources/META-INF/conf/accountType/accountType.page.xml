@@ -34,7 +34,7 @@
         </columns>
         <rows>
             <click>
-                <show-modal page-id="accountTypeForm" submit-operation-id="update" object-id="accountType"
+                <show-modal page-id="accountTypeUpdateForm" submit-operation-id="update" object-id="accountType"
                             detail-field-id="id" route="/update"/>
             </click>
         </rows>

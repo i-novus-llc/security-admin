@@ -3,7 +3,7 @@
     <form query-id="accountType" object-id="accountType">
         <fields>
             <input-text id="name" required="true" label="Наименование"/>
-            <input-text id="code" required="true" label="Код"/>
+            <input-text id="code" required="true" label="Код" enabled="false"/>
             <input-text id="description" label="Описание"/>
             <input-select id="userLevel" enabled="${access.level.enabled}" label-field-id="name"
                           label="Уровень пользователя" query-id="userLevelForFilter">
