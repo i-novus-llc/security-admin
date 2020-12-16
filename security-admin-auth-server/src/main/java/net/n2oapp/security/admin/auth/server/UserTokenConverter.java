@@ -45,22 +45,22 @@ public class UserTokenConverter implements UserAuthenticationConverter {
         Map<String, Object> response = new LinkedHashMap<>();
         if (authentication.getPrincipal() instanceof User) {
             User user = (User) authentication.getPrincipal();
-            response.put(USER, user.getUsername());
-            response.put(NAME, user.getName());
-            response.put(DEPARTMENT, user.getDepartment());
-            response.put(ORGANIZATION, user.getOrganization());
-            response.put(USER_LEVEL, user.getUserLevel());
-            response.put(REGION, user.getRegion());
-            response.put(SURNAME, user.getSurname());
-            response.put(PATRONYMIC, user.getPatronymic());
-            response.put(EMAIL, user.getEmail());
+            response.computeIfAbsent(USER, value -> user.getUsername());
+            response.computeIfAbsent(NAME, value -> user.getName());
+            response.computeIfAbsent(DEPARTMENT, value -> user.getDepartment());
+            response.computeIfAbsent(ORGANIZATION, value -> user.getOrganization());
+            response.computeIfAbsent(USER_LEVEL, value -> user.getUserLevel());
+            response.computeIfAbsent(REGION, value -> user.getRegion());
+            response.computeIfAbsent(SURNAME, value -> user.getSurname());
+            response.computeIfAbsent(PATRONYMIC, value -> user.getPatronymic());
+            response.computeIfAbsent(EMAIL, value -> user.getEmail());
             if (authentication.getDetails() instanceof Map) {
                 response.put(SID, ((Map) authentication.getDetails()).get(SID));
             } else if (authentication.getDetails() instanceof OAuth2AuthenticationDetails) {
                 response.put(SID, ((OAuth2AuthenticationDetails) authentication.getDetails()).getSessionId());
             }
         } else {
-            response.put(USER, authentication.getName());
+            response.computeIfAbsent(USER, value -> authentication.getName());
         }
         if (authentication.getAuthorities() != null && !authentication.getAuthorities().isEmpty()) {
             List<String> roles = new ArrayList<>();
