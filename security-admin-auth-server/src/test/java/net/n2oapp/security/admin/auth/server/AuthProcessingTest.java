@@ -1,6 +1,5 @@
 package net.n2oapp.security.admin.auth.server;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.n2oapp.security.admin.api.criteria.ClientCriteria;
 import net.n2oapp.security.admin.api.model.Client;
@@ -15,6 +14,7 @@ import net.n2oapp.security.admin.impl.entity.UserEntity;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import org.apache.cxf.jaxrs.client.WebClient;
+import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -98,6 +98,23 @@ public class AuthProcessingTest {
 //        when(userDetailsService.loadUserDetails(Mockito.any(UserDetailsToken.class))).thenReturn(user());
     }
 
+    @Test
+    public void handleTest() {
+        Response response = WebClient.create(
+                host + "/oauth/authorize?client_id=test&redirect_uri=https://localhost:8080/login&response_type=code&scope=read%20write&state=T45FVY"
+        ).get();
+        NewCookie authSession = response.getCookies().get("JSESSIONID");
+        response = WebClient.create(host + "/login/keycloak").cookie(authSession).get();
+        String state = extractQueryParameter(response.getLocation(), "state");
+        response = WebClient.create(
+                host + "/login/keycloak" +
+                        "?state=" + state + "&session_state=testSessionState" +
+                        "&code=needError"
+        ).cookie(authSession).get();
+        response = WebClient.create(response.getLocation()).cookie(authSession).get();
+        assertThat(response.getStatus(), is(HttpStatus.SC_UNAUTHORIZED));
+        assertThat(response.getMediaType(), is(javax.ws.rs.core.MediaType.TEXT_HTML_TYPE));
+    }
 
     /**
      * Тест получения токена по гранту client_credentials
@@ -284,7 +301,6 @@ public class AuthProcessingTest {
         assertThat(extractQueryParameter(response.getLocation(), "code"), nullValue());
     }
 
-
     private static String extractQueryParameter(URI uri, String paramName) {
         return URLEncodedUtils.parse(uri, StandardCharsets.UTF_8).stream()
                 .filter(param -> paramName.equals(param.getName()))
@@ -347,5 +363,4 @@ public class AuthProcessingTest {
         }).collect(Collectors.toList()));
         return user;
     }
-
 }
