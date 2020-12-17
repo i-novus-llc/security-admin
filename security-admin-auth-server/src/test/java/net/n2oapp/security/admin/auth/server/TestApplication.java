@@ -14,6 +14,11 @@ import ru.i_novus.ms.audit.client.autoconfigure.AuditClientAutoConfiguration;
 import ru.i_novus.ms.audit.client.autoconfigure.AuditSimpleClientAutoConfiguration;
 import ru.inovus.ms.rdm.sync.RdmClientSyncAutoConfiguration;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +38,9 @@ public class TestApplication {
     }
 
     @PostMapping("/public/keycloak_mock/token")
-    public Map<String, Object> tokenEndpoint() {
+    public Map<String, Object> tokenEndpoint(HttpServletResponse response, HttpServletRequest request) throws IOException {
+        if (new BufferedReader(new InputStreamReader(request.getInputStream())).readLine().contains("needError"))
+            response.setStatus(401);
         return Map.of(
                 "access_token", "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImhZeWZ4VkRrY2hOOXdYdUxMalNMZTVrUTJFVXJXNE1yIn0.eyJyb2xlcyI6WyJhY2Nlc3MuYWRtaW4iLCJhZG1pbl9jb25maWciLCJhcmNoaXZlIiwiYWRtaW5faW50ZWdyYXRpb24iLCJuc2lfYWRtaW4iLCJtb25pdG9yaW5nX2FkbSIsIlJPTEVfMTYwIiwiUk9MRV8xNjQiLCJhZG1pbl9hdWRpdCIsIlJPTEVfMTY5IiwiVEVTVF9ST0xFIiwiTUZBIDExMTUiLCLQnNCk0JAgNCIsItCc0KTQkCAzMyIsImFkbWluX2FzZHBlIiwiUk9MRV8xODgiXSwiY2xpZW50X2lkIjoiYWRtaW4td2ViIiwic2lkIjoiMTFBMTJENkFGMTE3REE4Rjg2QUU0MDk4NUVGRTE3OTgiLCJwYXRyb255bWljIjoi0JLQsNGB0LjQu9GM0LXQstC40YciLCJ1c2VyTGV2ZWwiOm51bGwsInN5c3RlbXMiOlsiY29uZmlnIiwiYXJjaGl2ZSIsImludGVncmF0aW9uIiwicmRtIiwibW9uaXRvcmluZyIsInNhZmVraWRzIiwibWZhIiwiYXVkaXQiLCJhY2Nlc3MiLCJhc2RwZSJdLCJzdXJuYW1lIjoi0KHQuNC70LXRiNC40L0iLCJvcmdhbml6YXRpb24iOm51bGwsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSJdLCJuYW1lIjoi0JDQvdC00YDQtdC5IiwiZGVwYXJ0bWVudCI6bnVsbCwicmVnaW9uIjpudWxsLCJlbWFpbCI6InJnYWxpbmFAaS1ub3Z1cy5ydSIsImp0aSI6Ijk2ODZjMTQ5LTY0M2MtNDg2NS1hNDBjLTZiYmM4NTgwNjYwYiIsInVzZXJuYW1lIjoiYWRtaW4ifQ",
                 "expires_in", "99999",

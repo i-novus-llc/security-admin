@@ -38,7 +38,12 @@ public class AuditHelper {
         request.setObjectName(objectName);
         request.setAuditType((short) 1);
 
-        auditClient.add(request);
+        try {
+            auditClient.add(request);
+        } catch (Exception e) {
+//          нужно, чтобы security-admin отдавал статус связанный с её ошибкой, а не возникшей в аудите
+            throw new RuntimeException(e.getMessage(), e);
+        }
     }
 
     @Autowired(required = false)
