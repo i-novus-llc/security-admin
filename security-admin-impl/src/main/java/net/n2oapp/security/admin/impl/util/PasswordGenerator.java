@@ -1,4 +1,4 @@
-package net.n2oapp.security.admin.commons.util;
+package net.n2oapp.security.admin.impl.util;
 
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;

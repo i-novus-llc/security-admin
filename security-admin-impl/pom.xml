@@ -28,12 +28,6 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>net.n2oapp.framework.security</groupId>
-            <artifactId>security-admin-commons</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-i18n-commons</artifactId>
         </dependency>
@@ -49,6 +43,12 @@
             <version>${rdm.version}</version>
         </dependency>
 
+        <!-- Web -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -59,12 +59,34 @@
             <artifactId>spring-security-core</artifactId>
         </dependency>
 
+        <!-- Spring -->
         <dependency>
             <groupId>ru.i-novus.ms.audit</groupId>
             <artifactId>audit-client-spring-boot-starter</artifactId>
             <version>${audit.version}</version>
         </dependency>
 
+        <!-- for mail -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>${javax-mail.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+        </dependency>
+
+        <!-- /for mail -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
