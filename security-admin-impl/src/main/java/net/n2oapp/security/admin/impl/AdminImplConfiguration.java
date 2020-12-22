@@ -6,7 +6,6 @@ import net.n2oapp.security.admin.api.model.UserLevel;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.UserLevelService;
 import net.n2oapp.security.admin.api.service.UserService;
-import net.n2oapp.security.admin.commons.AdminCommonsConfiguration;
 import net.n2oapp.security.admin.impl.audit.AuditHelper;
 import net.n2oapp.security.admin.impl.provider.SimpleSsoUserRoleProvider;
 import net.n2oapp.security.admin.impl.repository.AccountTypeRepository;
@@ -20,7 +19,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import ru.inovus.ms.rdm.api.provider.RdmMapperConfigurer;
@@ -36,7 +38,6 @@ import java.util.Locale;
 @EnableJpaRepositories(basePackages = "net.n2oapp.security.admin.impl")
 @EntityScan("net.n2oapp.security.admin.impl")
 @ComponentScan({"net.n2oapp.security.admin.impl", "net.n2oapp.security.admin.api"})
-@Import(AdminCommonsConfiguration.class)
 public class AdminImplConfiguration {
 
     @Value("${access.level.federal}")

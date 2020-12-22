@@ -1,8 +1,9 @@
-package net.n2oapp.security.admin.commons.util;
+package net.n2oapp.security.admin.util;
 
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.api.service.MailService;
+import net.n2oapp.security.admin.impl.util.MailServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,11 +12,14 @@ import org.mockito.Captor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.thymeleaf.TemplateEngine;
 
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -28,8 +32,8 @@ import static org.junit.Assert.fail;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {MailServiceImpl.class})
-@PropertySource("classpath:mail.properties")
-@EnableAutoConfiguration
+@PropertySource(value = {"classpath:mail.properties", "classpath:test.properties"})
+@Import(ThymeleafAutoConfiguration.class)
 public class MailServiceTest {
 
     @Autowired

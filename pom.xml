@@ -81,7 +81,6 @@
                 <module>security-admin-web</module>
                 <module>security-admin-rest-server</module>
                 <module>security-admin-sso-keycloak</module>
-                <module>security-admin-commons</module>
                 <module>security-admin-db</module>
                 <module>security-admin-auth-server</module>
                 <module>security-admin-backend</module>
