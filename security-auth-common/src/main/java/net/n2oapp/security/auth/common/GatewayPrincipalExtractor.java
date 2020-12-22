@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.n2oapp.framework.security.auth.oauth2.gateway;
+package net.n2oapp.security.auth.common;
 
 import net.n2oapp.security.auth.common.User;
 import net.n2oapp.security.auth.common.UserParamsUtil;
@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Создание объекта пользователя из информации в SSO сервере
+ * Извлекает Userinfo из ответа auth-gateway
  */
 public class GatewayPrincipalExtractor implements PrincipalExtractor, AuthoritiesExtractor {
 
