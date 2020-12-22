@@ -1,6 +1,6 @@
 package net.n2oapp.security.admin.frontend;
 
-import net.n2oapp.framework.security.auth.oauth2.gateway.GatewayPrincipalExtractor;
+import net.n2oapp.security.auth.common.GatewayPrincipalExtractor;
 import net.n2oapp.security.admin.rest.client.AdminRestClientConfiguration;
 import net.n2oapp.security.admin.web.AdminWebConfiguration;
 import org.springframework.boot.SpringApplication;

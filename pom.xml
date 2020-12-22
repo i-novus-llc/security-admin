@@ -39,7 +39,6 @@
         <module>security-auth</module>
         <module>security-auth-common</module>
         <module>security-auth-oauth2</module>
-        <module>security-auth-oauth2-gateway</module>
     </modules>
 
     <dependencyManagement>
