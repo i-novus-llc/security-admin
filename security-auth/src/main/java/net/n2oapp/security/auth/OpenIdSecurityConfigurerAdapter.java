@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.n2oapp.security.auth.oauth2;
+package net.n2oapp.security.auth;
 
 import net.n2oapp.framework.access.data.SecurityProvider;
 import net.n2oapp.framework.api.MetadataEnvironment;
