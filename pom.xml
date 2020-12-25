@@ -38,7 +38,6 @@
         <module>security-admin-rest-client</module>
         <module>security-auth</module>
         <module>security-auth-common</module>
-        <module>security-auth-oauth2</module>
     </modules>
 
     <dependencyManagement>
