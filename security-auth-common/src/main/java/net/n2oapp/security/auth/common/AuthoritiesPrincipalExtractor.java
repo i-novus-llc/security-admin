@@ -36,7 +36,6 @@ import static java.util.Objects.nonNull;
 /**
  * Извлекает Userinfo из ответа Keycloak
  */
-@Component
 public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, AuthoritiesExtractor {
 
     private static final String GRANTED_AUTHORITY_KEY = "GrantedAuthorityKey";
