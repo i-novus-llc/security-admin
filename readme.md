@@ -8,11 +8,12 @@ Keycloak это открытый сервер SSO аутентификации, 
 <a name="step1install"></a>
 ### Установка
 
-* Скачайте Keycloak в варианте [Standalone server](https://www.keycloak.org/downloads) и запустите на порту `8888`
+* Keycloak может быть развернут из docker образа командой:
+```
+    docker run -p 8888:8080 -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=1234 jboss/keycloak
+```
 
-* Перейдите на `http://localhost:8888`. В случае отсутствия учетной записи администратора будет предложено её создать. 
-
-* Войдите в консоль администратора и создайте новый `realm` (Не рекомендуется использовать master realm).
+* Перейдите на `http://localhost:8888`, войдите в консоль администратора и создайте новый `realm` (Не рекомендуется использовать master realm).
 
 * Создайте клиент с именем auth-gateway. Назначьте ему следующие Grant Types: "Standard Flow" и 
 "Service Accounts Enabled". Также назначьте ему клиентские роли: "realm-management", "manage-realm" и "manage-users". 
@@ -23,10 +24,9 @@ Keycloak это открытый сервер SSO аутентификации, 
 
 * В настройках реалма можно настроить доступ к smtp серверу для отправки сообщений (Смена пароля и т.п.).
 
-
 ## Шаг второй - настройка Auth Gateway
 
-Auth Gateway - это SSO сервер авторизации, построенный на базе Spring Cloud Security, интегрируемый с любыми другими серверами 
+Auth Gateway - это SSO сервер авторизации, построенный на базе Spring Security, интегрируемый с любыми другими серверами 
 аутентификации по протоколу OAuth2 OpenId Connect, например, с Keycloak или ЕСИА.
 
 ### Требования
