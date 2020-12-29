@@ -172,6 +172,7 @@ image::images/keycloak12.png[]
 +
 
 
+
 === Auth Gateway
 Auth Gateway - это SSO сервер, построенный на базе Spring Cloud Security,
 интегрируемый с любыми другими серверами аутентификации по протоколу
