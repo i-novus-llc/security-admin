@@ -1,4 +1,4 @@
-package net.n2oapp.security.admin.commons.util;
+package net.n2oapp.security.admin.impl.util;
 
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.model.User;

@@ -5,7 +5,7 @@
     <groupId>net.n2oapp.framework.security</groupId>
     <artifactId>security-admin</artifactId>
     <packaging>pom</packaging>
-    <version>4.21-SNAPSHOT</version>
+    <version>5.0.0-SNAPSHOT</version>
 
     <parent>
         <groupId>net.n2oapp.platform</groupId>
@@ -38,8 +38,6 @@
         <module>security-admin-rest-client</module>
         <module>security-auth</module>
         <module>security-auth-common</module>
-        <module>security-auth-oauth2</module>
-        <module>security-auth-oauth2-gateway</module>
     </modules>
 
     <dependencyManagement>
@@ -81,7 +79,6 @@
                 <module>security-admin-web</module>
                 <module>security-admin-rest-server</module>
                 <module>security-admin-sso-keycloak</module>
-                <module>security-admin-commons</module>
                 <module>security-admin-db</module>
                 <module>security-admin-auth-server</module>
                 <module>security-admin-backend</module>

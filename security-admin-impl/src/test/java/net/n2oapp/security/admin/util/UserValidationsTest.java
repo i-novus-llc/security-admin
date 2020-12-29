@@ -1,7 +1,8 @@
-package net.n2oapp.security.admin.commons.util;
+package net.n2oapp.security.admin.util;
 
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.model.User;
+import net.n2oapp.security.admin.impl.util.UserValidations;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -29,7 +30,7 @@ public class UserValidationsTest {
         snilsArray[3] = "100-283-455 01";
 
         try {
-            Arrays.stream(snilsArray).forEach(s -> userValidations.checkSnils(s));
+            Arrays.stream(snilsArray).forEach(userValidations::checkSnils);
         } catch (UserException ex) {
 
         }

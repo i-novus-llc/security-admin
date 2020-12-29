@@ -1,6 +1,7 @@
-package net.n2oapp.security.admin.commons.util;
+package net.n2oapp.security.admin.util;
 
 
+import net.n2oapp.security.admin.impl.util.PasswordGenerator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -34,9 +34,8 @@ import java.util.stream.Collectors;
 import static java.util.Objects.nonNull;
 
 /**
- * Создание объекта пользователя из информации в SSO сервере
+ * Извлекает Userinfo из ответа Keycloak
  */
-@Component
 public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, AuthoritiesExtractor {
 
     private static final String GRANTED_AUTHORITY_KEY = "GrantedAuthorityKey";

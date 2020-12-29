@@ -1,4 +1,4 @@
-package net.n2oapp.framework.security.auth.oauth2.gateway;
+package net.n2oapp.security.auth.common;
 
 import net.n2oapp.security.auth.common.User;
 import org.junit.jupiter.api.BeforeEach;

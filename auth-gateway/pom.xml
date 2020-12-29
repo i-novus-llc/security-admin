@@ -6,7 +6,7 @@
     <parent>
         <artifactId>security-admin</artifactId>
         <groupId>net.n2oapp.framework.security</groupId>
-        <version>4.21-SNAPSHOT</version>
+        <version>5.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>auth-gateway</artifactId>
@@ -21,12 +21,6 @@
         <dependency>
             <groupId>net.n2oapp.framework.security</groupId>
             <artifactId>security-admin-auth-server</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.n2oapp.framework.security</groupId>
-            <artifactId>security-admin-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
 
