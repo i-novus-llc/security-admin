@@ -1,6 +1,6 @@
-package net.n2oapp.security.admin.commons;
+package net.n2oapp.security.admin.impl;
 
-import net.n2oapp.security.admin.commons.util.PasswordGenerator;
+import net.n2oapp.security.admin.impl.util.PasswordGenerator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -18,7 +18,6 @@ import java.util.Properties;
  */
 @Configuration
 @PropertySource({"classpath:mail.properties", "classpath:password.properties"})
-@ComponentScan("net.n2oapp.security.admin.commons")
 public class AdminCommonsConfiguration {
 
     @Value("${sec.mail.host}")

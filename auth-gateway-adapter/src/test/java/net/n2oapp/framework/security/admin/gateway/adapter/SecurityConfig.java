@@ -1,8 +1,11 @@
 package net.n2oapp.framework.security.admin.gateway.adapter;
 
-import net.n2oapp.framework.security.auth.oauth2.gateway.GatewayPrincipalExtractor;
+import net.n2oapp.security.auth.common.GatewayPrincipalExtractor;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -10,7 +13,6 @@ import org.springframework.security.core.session.SessionRegistry;
 
 @Configuration
 @Import(LogoutConfiguration.class)
-@ComponentScan("net.n2oapp.framework.security.auth.oauth2")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
@@ -19,9 +21,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public ServletRegistrationBean servletRegistrationBean(SessionRegistry sessionRegistry, JwtVerifier jwtVerifier) {
-        ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean(new BackChannelLogoutServlet(sessionRegistry, jwtVerifier), "/backchannel_logout");
-        return servletRegistrationBean;
+    public ServletRegistrationBean<BackChannelLogoutServlet> servletRegistrationBean(SessionRegistry sessionRegistry, JwtVerifier jwtVerifier) {
+        return new ServletRegistrationBean<>(new BackChannelLogoutServlet(sessionRegistry, jwtVerifier), "/backchannel_logout");
     }
 
     @Bean
