@@ -86,9 +86,8 @@ Keycloak это открытый сервер SSO аутентификации, 
 
 Установка::
 
-. Скачайте Keycloak в варианте link:https://www.keycloak.org/downloads.html[Standalone server]
-. Запустите команду `/bin/standalone` (сервер поднимется по порту 8080, рекомендуется link:https://www.keycloak.org/docs/6.0/server_installation/[изменить этот порт] на 8888)
-. Создайте супер пользователя `/bin/add-user-keycloak`
+. Разверните Keycloak из docker link:https://hub.docker.com/r/jboss/keycloak/[ образа]
+. Для запуска выполните команду docker run -p 8888:8080 -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=1234 jboss/keycloak
 . Войдите в консоль администрирования `http://localhost:8888/auth`
 . Создайте домен системы (Add realm).
 +
