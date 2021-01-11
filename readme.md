@@ -1,3 +1,8 @@
+#Миграция с security-admin 4.20 на 5.0.0
+* Модуль security-admin-commons был удалён. Функциональность модуля перенесена в модуль security-admin-impl.
+* Модуль security-auth-oauth2-gateway был удалён. Функциональность модуля была перенесена в модуль security-auth-common.
+* Модуль security-auth-oauth2 был удалён. Функциональность модуля была перенесена в модуль security-auth.
+
 # Быстрый старт
 Полная документация доступна [здесь](https://git.i-novus.ru/framework/security-admin/blob/master/doc/src/index.adoc).
 
