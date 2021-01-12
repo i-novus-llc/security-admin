@@ -133,3 +133,7 @@ Auth Gateway - это SSO сервер авторизации, построен�
         access.service.url=${security.oauth2.auth-server-uri}/api
    ```
  * Запустите приложение командой `java -jar access-web.jar`
+ 
+ #Миграция с security-admin 4+ на 5.0.0
+ * Модули security-admin-commons, security-auth-oauth2-gateway, security-auth-oauth2 были удалёны.
+  Функциональность была перенесена в модули security-admin-impl, security-auth-common и security-auth соответственно.
