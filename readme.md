@@ -1,8 +1,3 @@
-#Миграция с security-admin 4.20 на 5.0.0
-* Модуль security-admin-commons был удалён. Функциональность модуля перенесена в модуль security-admin-impl.
-* Модуль security-auth-oauth2-gateway был удалён. Функциональность модуля была перенесена в модуль security-auth-common.
-* Модуль security-auth-oauth2 был удалён. Функциональность модуля была перенесена в модуль security-auth.
-
 # Быстрый старт
 Полная документация доступна [здесь](https://git.i-novus.ru/framework/security-admin/blob/master/doc/src/index.adoc).
 
@@ -138,3 +133,7 @@ Auth Gateway - это SSO сервер авторизации, построен�
         access.service.url=${security.oauth2.auth-server-uri}/api
    ```
  * Запустите приложение командой `java -jar access-web.jar`
+ 
+ #Миграция с security-admin 4+ на 5.0.0
+ * Модули security-admin-commons, security-auth-oauth2-gateway, security-auth-oauth2 были удалёны.
+  Функциональность была перенесена в модули security-admin-impl, security-auth-common и security-auth соответственно.
