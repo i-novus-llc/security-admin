@@ -278,15 +278,17 @@ image::images/oauth1.png[]
 Установка::
 +
 . Установите Keycloak (см. link:#_Keycloak[Keycloak])
-. Добавьте зависимость `security-auth-oauth2`.
-Она содержит класс `OpenIdSecurityConfigurerAdapter`
-и транзитивные зависимости от spring-security-oauth2:
+. Добавьте зависимость `security-auth`.
+Она содержит класс `OpenIdSecurityConfigurerAdapter`,
+транзитивные зависимости от spring-security-oauth2 и зависимость `security-auth-common`.
+`security-auth-common` содержит в себе реализацию интерфейса `PrincipalExtractor` с помощью которой
+атрибуты пользователя Keycloak будут дополнены информацией из администрирования доступа:
 +
 [source,xml]
 ----
 <dependency>
     <groupId>net.n2oapp.framework.security</groupId>
-    <artifactId>security-auth-oauth2</artifactId>
+    <artifactId>security-auth</artifactId>
     <version>${security-admin.version}</version>
 </dependency>
 ----
@@ -305,19 +307,6 @@ public class SecurityConfig extends OpenIdSecurityConfigurerAdapter {
         url.anyRequest().authenticated();//все запросы авторизованы
     }
 }
-----
-+
-. Добавьте зависимость `security-auth-oauth2-keycloak`.
-В ней находится реализация интерфейса `PrincipalExtractor` с помощью которой
-атрибуты пользователя Keycloak будут дополнены информацией из администрирования доступа:
-+
-[source,xml]
-----
-<dependency>
-    <groupId>net.n2oapp.framework.security</groupId>
-    <artifactId>security-auth-oauth2-keycloak</artifactId>
-    <version>${security-admin.version}</version>
-</dependency>
 ----
 +
 . Далее необходимо подключить реализацию security-admin-api. В зависимости
@@ -384,15 +373,17 @@ image::images/auth_gateway_flow.png[]
 Установка::
 +
 . Установите Auth Gateway (см. link:#_Auth_Gateway[Auth Gateway])
-. Добавьте зависимость `security-auth-oauth2`.
-Она содержит класс `OpenIdSecurityConfigurerAdapter`
-и транзитивные зависимости от spring-security-oauth2:
+. Добавьте зависимость `security-auth`.
+Она содержит класс `OpenIdSecurityConfigurerAdapter`,
+транзитивные зависимости от spring-security-oauth2 и зависимость `security-auth-common`.
+`security-auth-common` содержит в себе реализацию интерфейса `PrincipalExtractor` с помощью которой
+будут получены атрибуты пользователя из Auth Gateway:
 +
 [source,xml]
 ----
 <dependency>
     <groupId>net.n2oapp.framework.security</groupId>
-    <artifactId>security-auth-oauth2</artifactId>
+    <artifactId>security-auth</artifactId>
     <version>${security-admin.version}</version>
 </dependency>
 ----
@@ -411,19 +402,6 @@ public class SecurityConfig extends OpenIdSecurityConfigurerAdapter {
         url.anyRequest().authenticated();//все запросы авторизованы
     }
 }
-----
-+
-. Добавьте зависимость `security-auth-oauth2-gateway`.
-В ней находится реализация интерфейса `PrincipalExtractor` с помощью которой
-будут получены атрибуты пользователя из Auth Gateway:
-+
-[source,xml]
-----
-<dependency>
-    <groupId>net.n2oapp.framework.security</groupId>
-    <artifactId>security-auth-oauth2-gateway</artifactId>
-    <version>${security-admin.version}</version>
-</dependency>
 ----
 +
 . Для соединения с Auth Gateway сервером задайте следующие настройки
