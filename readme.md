@@ -134,6 +134,28 @@ Auth Gateway - это SSO сервер авторизации, построен�
    ```
  * Запустите приложение командой `java -jar access-web.jar`
  
- #Миграция с security-admin 4+ на 5.0.0
- * Модули security-admin-commons, security-auth-oauth2-gateway, security-auth-oauth2 были удалёны.
-  Функциональность была перенесена в модули security-admin-impl, security-auth-common и security-auth соответственно.
+ # Миграция с security-admin 4+ на 5.0.0
+ Модули security-admin-commons, security-auth-oauth2-gateway, security-auth-oauth2 были удалёны.
+ Функциональность была перенесена в модули security-admin-impl, security-auth-common и security-auth соответственно.
+ 
+Для перевода клиентского N2O приложения на с версий 4+ на 5.0.0 необходимо добавить в pom.xml зависимость:
+ 
+```
+<dependency>
+    <groupId>net.n2oapp.framework.security</groupId>
+    <artifactId>security-auth</artifactId>
+</dependency>
+``` 
+ 
+При этом удалив следующие зависимости:
+```
+<dependency>
+    <groupId>net.n2oapp.framework.security</groupId>
+    <artifactId>security-auth-oauth2</artifactId>
+</dependency>
+
+<dependency>
+    <groupId>net.n2oapp.framework.security</groupId>
+    <artifactId>security-auth-oauth2-gateway</artifactId>
+</dependency>
+``` 
