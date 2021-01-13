@@ -137,3 +137,52 @@ Auth Gateway - это SSO сервер авторизации, построен�
  # Миграция с security-admin 4+ на 5.0.0
  * Модули security-admin-commons, security-auth-oauth2-gateway, security-auth-oauth2 были удалёны.
   Функциональность была перенесена в модули security-admin-impl, security-auth-common и security-auth соответственно.
+ * Для того чтобы воспользоваться функциональностью security-admin-commons замените зависимость
+
+    ```
+    <dependency>
+        <groupId>net.n2oapp.framework.security</groupId>
+        <artifactId>security-admin-commons</artifactId>
+    </dependency>
+    ```
+    на зависсимость от модуля security-admin-impl:
+    
+    ```
+    <dependency>
+        <groupId>net.n2oapp.framework.security</groupId>
+        <artifactId>security-admin-impl</artifactId>
+    </dependency>
+    ```
+* Для того чтобы воспользоваться функциональностью security-auth-oauth2-gateway замените зависимость
+
+    ```
+    <dependency>
+        <groupId>net.n2oapp.framework.security</groupId>
+        <artifactId>ssecurity-auth-oauth2-gateway</artifactId>
+    </dependency>
+    ```
+    на зависсимость от модуля security-auth-common:
+    
+    ```
+    <dependency>
+        <groupId>net.n2oapp.framework.security</groupId>
+        <artifactId>security-auth-common</artifactId>
+    </dependency>
+    ```
+* Для того чтобы воспользоваться функциональностью security-auth-oauth2 замените зависимость
+
+    ```
+    <dependency>
+        <groupId>net.n2oapp.framework.security</groupId>
+        <artifactId>ssecurity-auth-oauth2</artifactId>
+    </dependency>
+    ```
+    на зависсимость от модуля security-auth:
+    
+    ```
+    <dependency>
+        <groupId>net.n2oapp.framework.security</groupId>
+        <artifactId>security-auth</artifactId>
+    </dependency>
+    ```
+* Модуль security-auth изначально включает в себя модуль security-auth-common.
