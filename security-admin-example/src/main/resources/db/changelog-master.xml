@@ -7,7 +7,6 @@
 
 
     <include file="classpath*:access/db/changelog/changelog-master.xml"/>
-    <include file="quartz-db/changelog/quartz-init.xml"/>
 
     <changeSet id="create_admin_new" author="rgalina">
         <sqlFile path="create_admin.sql"/>

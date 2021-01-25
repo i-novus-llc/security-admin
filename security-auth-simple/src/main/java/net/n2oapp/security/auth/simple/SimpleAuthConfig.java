@@ -16,11 +16,6 @@ import java.util.Arrays;
 public class SimpleAuthConfig {
 
     @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return  new BCryptPasswordEncoder();
-    }
-
-    @Bean
     public ProviderManager providerManager(DaoAuthenticationProvider authenticationProvider) {
         return new ProviderManager(Arrays.asList(authenticationProvider));
     }
