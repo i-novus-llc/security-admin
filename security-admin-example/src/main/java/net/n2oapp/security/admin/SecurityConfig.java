@@ -8,8 +8,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 
 @Configuration
-@ComponentScan("net.n2oapp.framework.security.auth.oauth2")
-
 public class SecurityConfig extends SimpleSecurityConfigurerAdapter {
 
     public SecurityConfig(DaoAuthenticationProvider daoAuthenticationProvider) {
