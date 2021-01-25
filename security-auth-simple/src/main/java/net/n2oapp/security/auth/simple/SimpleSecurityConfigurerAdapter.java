@@ -7,6 +7,7 @@ import net.n2oapp.security.auth.N2oUrlFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -23,10 +24,14 @@ public abstract class SimpleSecurityConfigurerAdapter extends N2oSecurityConfigu
 
     @Value("${n2o.access.schema.id}")
     private String schemaId;
+
     @Value("${n2o.access.deny_urls}")
     private Boolean defaultUrlAccessDenied;
+
+    @Lazy
     @Autowired
     private MetadataEnvironment environment;
+
     @Autowired
     private SecurityProvider securityProvider;
 
