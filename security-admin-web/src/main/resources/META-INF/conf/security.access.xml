@@ -50,7 +50,6 @@
         <url-access pattern="/n2o/page/systems"/>
         <object-access object-id="system" operations="*"/>
         <object-access object-id="service" operations="*"/>
-        <object-access object-id="client" operations="*"/>
     </permission>
 
     <permission id="access.admin.organization.read">
