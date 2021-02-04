@@ -99,6 +99,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 }
             }
         }
+
         return model(userEntity);
     }
 
