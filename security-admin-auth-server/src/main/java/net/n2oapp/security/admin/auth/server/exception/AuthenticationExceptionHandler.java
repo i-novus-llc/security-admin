@@ -5,7 +5,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -13,19 +12,15 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.AbstractConfigurableTemplateResolver;
 import org.thymeleaf.templateresolver.UrlTemplateResolver;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Locale;
 
 public class AuthenticationExceptionHandler extends SimpleUrlAuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) {
         try {
-            if (exception instanceof BadCredentialsException) {
-                writePage(request, response, exception);
-            } else if (exception instanceof AccountExpiredException) {
+            if (exception instanceof BadCredentialsException || exception instanceof AccountExpiredException) {
                 writePage(request, response, exception);
             }
             else super.onAuthenticationFailure(request, response, exception);
