@@ -91,4 +91,7 @@ public class User {
 
     @ApiModelProperty(value = "Идентификатор клиента в системе уведомлений")
     private Integer clientId;
+
+    @ApiModelProperty(value = "Действующий аккаунт?")
+    private boolean isAccountNonExpired = true;
 }
