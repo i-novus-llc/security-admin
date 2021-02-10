@@ -25,7 +25,6 @@ import org.springframework.boot.autoconfigure.security.oauth2.resource.Principal
 import org.springframework.security.authentication.AccountStatusUserDetailsChecker;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsChecker;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -67,9 +66,8 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
             return null;
         }
 
-        // TODO: 04.02.2021 Убрать хардкод
         User user = new User(model.getUsername(), "N/A", model.getIsActive(),
-                false, true, true,
+                model.isAccountNonExpired(), true, true,
                 getAuthorities(map, model), model.getSurname(), model.getName(),
                 model.getPatronymic(), model.getEmail());
 

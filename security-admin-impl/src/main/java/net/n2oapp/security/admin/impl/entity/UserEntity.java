@@ -147,6 +147,12 @@ public class UserEntity {
     @Column(name = "last_action_date")
     private LocalDateTime lastActionDate;
 
+    /**
+     * Срок действия учётной записи пользователя
+     */
+    @Column(name = "expiration_date")
+    private LocalDateTime expirationDate;
+
     @PrePersist
     @PreUpdate
     private void preUpdate() {
