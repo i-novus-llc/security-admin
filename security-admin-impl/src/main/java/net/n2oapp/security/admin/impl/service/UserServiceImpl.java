@@ -123,6 +123,7 @@ public class UserServiceImpl implements UserService {
             if (nonNull(ssoUser)) {
                 UserEntity changedSsoUser = entityProvider(ssoUser);
                 changedSsoUser.setPasswordHash(passwordHash);
+                changedSsoUser.setExpirationDate(savedUser.getExpirationDate());
                 savedUser = userRepository.save(changedSsoUser);
             }
         }
@@ -431,6 +432,8 @@ public class UserServiceImpl implements UserService {
         model.setExtSys(entity.getExtSys());
         model.setExtUid(entity.getExtUid());
         model.setStatus(entity.getStatus());
+        model.setAccountNonExpired(entity.getExpirationDate() == null || !entity.getExpirationDate().isBefore(LocalDateTime.now()));
+
         StringBuilder builder = new StringBuilder();
         if (nonNull(entity.getSurname())) {
             builder.append(entity.getSurname()).append(" ");
@@ -540,7 +543,7 @@ public class UserServiceImpl implements UserService {
         userForm.setOrganizationId((Integer) userInfo.getOrDefault("organizationId", entity.getOrganization() != null ? entity.getOrganization().getId() : null));
         userForm.setStatus(userInfo.containsKey(STATUS) ? UserStatus.valueOf((String) userInfo.get(STATUS)) : entity.getStatus());
         userForm.setAccountTypeCode((String) userInfo.getOrDefault("accountTypeCode", null));
-        userForm.setExpirationDate((LocalDateTime) userInfo.getOrDefault("expiration_date", null));
+        userForm.setExpirationDate((LocalDateTime) userInfo.getOrDefault("expirationDate", null));
         return userForm;
     }
 

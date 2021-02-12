@@ -3,6 +3,8 @@ package net.n2oapp.security.admin.service;
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import net.n2oapp.security.admin.api.model.*;
+import net.n2oapp.security.admin.impl.entity.UserEntity;
+import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.UserServiceImpl;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -29,6 +31,7 @@ import javax.ws.rs.NotFoundException;
 import java.io.IOException;
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -52,6 +55,9 @@ public class UserServiceImplTest {
 
     @MockBean
     private JavaMailSender emailSender;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Captor
     private ArgumentCaptor<MimeMessage> mimeMessageArgumentCaptor;
@@ -95,6 +101,7 @@ public class UserServiceImplTest {
         assertEquals("name", result.getName());
         assertEquals("surname", result.getSurname());
         assertEquals("patronymic", result.getPatronymic());
+        assertTrue(result.isAccountNonExpired());
         assertTrue(result.getIsActive());
 
         try {
@@ -105,6 +112,38 @@ public class UserServiceImplTest {
         } catch (IOException | MessagingException e) {
             fail();
         }
+    }
+
+    @Test
+    public void testTemporaryUserRegistration() {
+        UserRegisterForm user = new UserRegisterForm();
+        user.setUsername("testTemporaryUser");
+        user.setEmail("testTemporary@test.ru");
+        user.setPassword("1234ABCabc,");
+        user.setAccountTypeCode("testAccountTypeCode");
+        user.setName("name");
+        user.setSurname("surname");
+        user.setPatronymic("patronymic");
+        user.setIsActive(true);
+        user.setSendPasswordToEmail(true);
+        user.setExpirationDate(LocalDateTime.of(2017, Month.JULY, 9, 11, 6, 22));
+
+        User result = service.register(user);
+
+        UserEntity userEntity = userRepository.findById(result.getId()).get();
+
+        assertEquals(user.getExpirationDate(), userEntity.getExpirationDate());
+
+        assertEquals(1, result.getRoles().size());
+        assertEquals(UserLevel.PERSONAL, result.getUserLevel());
+        assertEquals(UserStatus.REGISTERED, result.getStatus());
+        assertEquals("testTemporaryUser", result.getUsername());
+        assertEquals("testTemporary@test.ru", result.getEmail());
+        assertEquals("name", result.getName());
+        assertEquals("surname", result.getSurname());
+        assertEquals("patronymic", result.getPatronymic());
+        assertFalse(result.isAccountNonExpired());
+        assertTrue(result.getIsActive());
     }
 
     @Test
@@ -153,6 +192,7 @@ public class UserServiceImplTest {
         assertEquals("surname", changedUser.getSurname());
         assertEquals("patronymic", changedUser.getPatronymic());
         assertEquals(false, changedUser.getIsActive());
+        assertTrue(result.isAccountNonExpired());
 
         service.delete(userId);
     }
@@ -177,6 +217,7 @@ public class UserServiceImplTest {
         assertEquals("surname", result.getSurname());
         assertEquals("patronymic", result.getPatronymic());
         assertEquals(true, result.getIsActive());
+        assertTrue(result.isAccountNonExpired());
 
         Integer userId = result.getId();
 
@@ -197,6 +238,7 @@ public class UserServiceImplTest {
         assertEquals("surname", changedUser.getSurname());
         assertEquals("patronymic", changedUser.getPatronymic());
         assertTrue(passwordEncoder.matches("Zz123456789!", changedUser.getPasswordHash()));
+        assertTrue(result.isAccountNonExpired());
 
         userForm = new UserForm();
         userForm.setEmail("test242@test.ru");
@@ -359,6 +401,7 @@ public class UserServiceImplTest {
         assertThat(users.getContent().get(0).getRegion().getId()).isEqualTo(1);
         assertThat(users.getContent().get(0).getOrganization().getId()).isEqualTo(1);
                 assertTrue(users.getContent().get(0).getIsActive());
+        assertTrue(users.getContent().get(0).isAccountNonExpired());
         service.delete(user.getId());
     }
 
@@ -393,6 +436,7 @@ public class UserServiceImplTest {
         assertThat(result.getDepartment().getId()).isEqualTo(1);
         assertThat(result.getRegion().getId()).isEqualTo(1);
         assertThat(result.getOrganization().getId()).isEqualTo(1);
+        assertTrue(result.isAccountNonExpired());
 
         Map<String, Object> userInfo = new HashMap<>();
 
@@ -403,6 +447,7 @@ public class UserServiceImplTest {
         assertEquals("exception.userWithoutIdAndUsername", thrown.getMessage());
 
         userInfo.put("id", result.getId());
+        userInfo.put("expirationDate", LocalDateTime.of(2017, Month.JULY, 9, 11, 6, 22));
 
         result = service.patch(userInfo);
 
@@ -419,6 +464,11 @@ public class UserServiceImplTest {
         assertThat(result.getDepartment().getId()).isEqualTo(1);
         assertThat(result.getRegion().getId()).isEqualTo(1);
         assertThat(result.getOrganization().getId()).isEqualTo(1);
+        assertFalse(result.isAccountNonExpired());
+
+        UserEntity entity = userRepository.findById(result.getId()).get();
+
+        assertEquals(entity.getExpirationDate(), userInfo.get("expirationDate"));
 
         userInfo.put("username", "supapupausername");
         userInfo.put("surname", "supasurname");

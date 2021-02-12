@@ -62,6 +62,7 @@ public class AuthoritiesPrincipalExtractorTest {
         testPrincipal.setRegion(region);
         testPrincipal.setRoles(Arrays.asList(role));
         testPrincipal.setUserLevel(UserLevel.PERSONAL);
+        testPrincipal.setAccountNonExpired(true);
 
         Mockito.doReturn(testPrincipal).when(userDetailsService).loadUserDetails(Mockito.any());
     }
