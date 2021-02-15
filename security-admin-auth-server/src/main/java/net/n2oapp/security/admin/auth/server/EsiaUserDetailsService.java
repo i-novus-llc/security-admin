@@ -38,7 +38,7 @@ public class EsiaUserDetailsService extends UserDetailsServiceImpl {
             userEntity.setName(userDetails.getName());
             userEntity.setSurname(userDetails.getSurname());
             userEntity.setPatronymic(userDetails.getPatronymic());
-            //keycloakSsoUserRoleProvider.updateUser(model(userRepository.save(userEntity)));
+            keycloakSsoUserRoleProvider.updateUser(model(userRepository.save(userEntity)));
         }
         return model(userEntity);
     }
