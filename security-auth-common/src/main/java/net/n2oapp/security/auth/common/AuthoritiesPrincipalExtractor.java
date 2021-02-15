@@ -67,7 +67,7 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
         }
 
         User user = new User(model.getUsername(), "N/A", model.getIsActive(),
-                model.isAccountNonExpired(), true, true,
+                model.getIsAccountNonExpired(), true, true,
                 getAuthorities(map, model), model.getSurname(), model.getName(),
                 model.getPatronymic(), model.getEmail());
 

@@ -93,5 +93,5 @@ public class User {
     private Integer clientId;
 
     @ApiModelProperty(value = "Действующий аккаунт")
-    private boolean isAccountNonExpired;
+    private Boolean isAccountNonExpired;
 }

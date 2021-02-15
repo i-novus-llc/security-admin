@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
@@ -36,7 +38,7 @@ public class EsiaUserDetailsService extends UserDetailsServiceImpl {
             userEntity.setName(userDetails.getName());
             userEntity.setSurname(userDetails.getSurname());
             userEntity.setPatronymic(userDetails.getPatronymic());
-            keycloakSsoUserRoleProvider.updateUser(model(userRepository.save(userEntity)));
+            //keycloakSsoUserRoleProvider.updateUser(model(userRepository.save(userEntity)));
         }
         return model(userEntity);
     }
@@ -67,6 +69,9 @@ public class EsiaUserDetailsService extends UserDetailsServiceImpl {
         if (entity.getRoleList() != null) {
             model.setRoles(entity.getRoleList().stream().map(this::model).collect(Collectors.toList()));
         }
+
+        model.setIsAccountNonExpired(entity.getExpirationDate() == null || !entity.getExpirationDate().isBefore(LocalDateTime.now(Clock.systemUTC())));
+
         return model;
     }
 
