@@ -24,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.ws.rs.NotFoundException;
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -432,7 +433,7 @@ public class UserServiceImpl implements UserService {
         model.setExtSys(entity.getExtSys());
         model.setExtUid(entity.getExtUid());
         model.setStatus(entity.getStatus());
-        model.setAccountNonExpired(entity.getExpirationDate() == null || !entity.getExpirationDate().isBefore(LocalDateTime.now()));
+        model.setIsAccountNonExpired(entity.getExpirationDate() == null || !entity.getExpirationDate().isBefore(LocalDateTime.now(Clock.systemUTC())));
 
         StringBuilder builder = new StringBuilder();
         if (nonNull(entity.getSurname())) {

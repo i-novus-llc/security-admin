@@ -45,6 +45,7 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -288,7 +289,7 @@ public class AuthProcessingTest {
 
     private void checkExpiredAccountAuthentication() {
         UserEntity userEntity = userEntity();
-        userEntity.setExpirationDate(LocalDateTime.now());
+        userEntity.setExpirationDate(LocalDateTime.now(Clock.systemUTC()));
         when(userRepository.findOneByUsernameIgnoreCase("testUser")).thenReturn(userEntity);
 
         Response response = WebClient.create(
