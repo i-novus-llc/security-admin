@@ -18,4 +18,4 @@ services:
     build:
       context: security-admin-backend
       args:
-        JAR_FILE: target/security-admin-backend.jar
+        JAR_FILE: target/access-service.jar
