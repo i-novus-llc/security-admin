@@ -101,7 +101,7 @@ public class UserServiceImplTest {
         assertEquals("name", result.getName());
         assertEquals("surname", result.getSurname());
         assertEquals("patronymic", result.getPatronymic());
-        assertTrue(result.getIsAccountNonExpired());
+        assertNull(result.getExpirationDate());
         assertTrue(result.getIsActive());
 
         try {
@@ -142,7 +142,7 @@ public class UserServiceImplTest {
         assertEquals("name", result.getName());
         assertEquals("surname", result.getSurname());
         assertEquals("patronymic", result.getPatronymic());
-        assertFalse(result.getIsAccountNonExpired());
+        assertEquals(user.getExpirationDate(), result.getExpirationDate());
         assertTrue(result.getIsActive());
     }
 
@@ -192,7 +192,6 @@ public class UserServiceImplTest {
         assertEquals("surname", changedUser.getSurname());
         assertEquals("patronymic", changedUser.getPatronymic());
         assertEquals(false, changedUser.getIsActive());
-        assertTrue(result.getIsAccountNonExpired());
 
         service.delete(userId);
     }
@@ -217,7 +216,6 @@ public class UserServiceImplTest {
         assertEquals("surname", result.getSurname());
         assertEquals("patronymic", result.getPatronymic());
         assertEquals(true, result.getIsActive());
-        assertTrue(result.getIsAccountNonExpired());
 
         Integer userId = result.getId();
 
@@ -238,7 +236,6 @@ public class UserServiceImplTest {
         assertEquals("surname", changedUser.getSurname());
         assertEquals("patronymic", changedUser.getPatronymic());
         assertTrue(passwordEncoder.matches("Zz123456789!", changedUser.getPasswordHash()));
-        assertTrue(result.getIsAccountNonExpired());
 
         userForm = new UserForm();
         userForm.setEmail("test242@test.ru");
@@ -401,7 +398,6 @@ public class UserServiceImplTest {
         assertThat(users.getContent().get(0).getRegion().getId()).isEqualTo(1);
         assertThat(users.getContent().get(0).getOrganization().getId()).isEqualTo(1);
                 assertTrue(users.getContent().get(0).getIsActive());
-        assertTrue(users.getContent().get(0).getIsAccountNonExpired());
         service.delete(user.getId());
     }
 
@@ -436,7 +432,6 @@ public class UserServiceImplTest {
         assertThat(result.getDepartment().getId()).isEqualTo(1);
         assertThat(result.getRegion().getId()).isEqualTo(1);
         assertThat(result.getOrganization().getId()).isEqualTo(1);
-        assertTrue(result.getIsAccountNonExpired());
 
         Map<String, Object> userInfo = new HashMap<>();
 
@@ -463,8 +458,7 @@ public class UserServiceImplTest {
         assertEquals(UserStatus.REGISTERED, result.getStatus());
         assertThat(result.getDepartment().getId()).isEqualTo(1);
         assertThat(result.getRegion().getId()).isEqualTo(1);
-        assertThat(result.getOrganization().getId()).isEqualTo(1);
-        assertFalse(result.getIsAccountNonExpired());
+        assertEquals(userInfo.get("expirationDate"), result.getExpirationDate());
 
         UserEntity entity = userRepository.findById(result.getId()).get();
 

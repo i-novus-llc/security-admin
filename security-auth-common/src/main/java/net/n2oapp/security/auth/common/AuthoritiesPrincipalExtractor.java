@@ -26,6 +26,8 @@ import org.springframework.security.authentication.AccountStatusUserDetailsCheck
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsChecker;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -66,8 +68,10 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
             return null;
         }
 
+        boolean accountIsNonExpired = model.getExpirationDate() == null || !model.getExpirationDate().isBefore(LocalDateTime.now(Clock.systemUTC()));
+
         User user = new User(model.getUsername(), "N/A", model.getIsActive(),
-                model.getIsAccountNonExpired(), true, true,
+                accountIsNonExpired, true, true,
                 getAuthorities(map, model), model.getSurname(), model.getName(),
                 model.getPatronymic(), model.getEmail());
 

@@ -287,6 +287,19 @@ public class AuthProcessingTest {
         return authSession;
     }
 
+    @Test
+    public void checkEsiaExpiredAccountAuthentication() throws IOException {
+        Response response = WebClient.create(host + "/login/esia").get();
+        NewCookie authSession = response.getCookies().get("JSESSIONID");
+
+        String state = extractQueryParameter(response.getLocation(), "state");
+
+        response = WebClient.create(
+                host + "/login/esia?code=testCode&state=" + state
+        ).cookie(authSession).get();
+        assertThat(response.getStatus(), is(403));
+    }
+
     private void checkExpiredAccountAuthentication() {
         UserEntity userEntity = userEntity();
         userEntity.setExpirationDate(LocalDateTime.now(Clock.systemUTC()));
@@ -311,6 +324,7 @@ public class AuthProcessingTest {
         response = WebClient.create(response.getLocation()).cookie(authSession).get();
         assertThat(response.getStatus(), is(401));
     }
+
 
     private void checkLogout(Cookie authCookie) {
         Response response = WebClient.create(

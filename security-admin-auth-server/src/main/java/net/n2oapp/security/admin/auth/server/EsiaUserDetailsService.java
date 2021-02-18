@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Clock;
-import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
@@ -70,7 +68,7 @@ public class EsiaUserDetailsService extends UserDetailsServiceImpl {
             model.setRoles(entity.getRoleList().stream().map(this::model).collect(Collectors.toList()));
         }
 
-        model.setIsAccountNonExpired(entity.getExpirationDate() == null || !entity.getExpirationDate().isBefore(LocalDateTime.now(Clock.systemUTC())));
+        model.setExpirationDate(entity.getExpirationDate());
 
         return model;
     }
