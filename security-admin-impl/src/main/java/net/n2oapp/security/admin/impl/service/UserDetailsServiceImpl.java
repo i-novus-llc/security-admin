@@ -14,8 +14,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Clock;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -182,7 +180,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         model.setUserLevel(entity.getUserLevel());
 
-        model.setIsAccountNonExpired(entity.getExpirationDate() == null || !entity.getExpirationDate().isBefore(LocalDateTime.now(Clock.systemUTC())));
+        model.setExpirationDate(entity.getExpirationDate());
 
         return model;
     }

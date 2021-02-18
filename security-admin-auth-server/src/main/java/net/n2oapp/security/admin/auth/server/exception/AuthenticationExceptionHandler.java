@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class AuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
+public class AuthenticationExceptionHandler extends SimpleUrlAuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) {
         try {
@@ -52,7 +52,7 @@ public class AuthenticationFailureHandler extends SimpleUrlAuthenticationFailure
 
         WebContext context = new WebContext(request, response, request.getServletContext());
         context.setVariable("errorMessage", exception.getMessage());
-        String errorPage = engine.process("classpath:public/badClientCredentials.html", context);
+        String errorPage = engine.process("classpath:public/authenticationException.html", context);
 
         response.setHeader("Content-Type", "text/html;charset=UTF-8");
         response.getWriter().write(errorPage);
