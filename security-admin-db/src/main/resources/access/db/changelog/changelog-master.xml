@@ -99,4 +99,8 @@
         <sqlFile path="access/db/changelog/sql/V8_account_type_code_unique.sql"/>
     </changeSet>
 
+    <changeSet id="add_expiration_date" author="imolostvov" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/V8_add_user_expiration_date.sql"/>
+    </changeSet>
+
 </databaseChangeLog>
