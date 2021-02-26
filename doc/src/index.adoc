@@ -1044,6 +1044,10 @@ systems
 |boolean
 |Ипользовать тип аккуанта для преднастройки ролей при создании организации
 
+|spring.session.store-type=none
+|none, redis
+|Использовать in-memory хранилище сессий или redis. Для подключения к серверу redis использовать стандартные настройки spring-boot-autoconfigure: https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html
+
 
 |===
 
