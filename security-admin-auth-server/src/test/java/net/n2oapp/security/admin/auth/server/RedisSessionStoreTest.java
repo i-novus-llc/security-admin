@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import redis.embedded.RedisServer;
 
 import java.io.IOException;
 import java.util.List;
@@ -64,6 +65,18 @@ public class RedisSessionStoreTest {
 
     @Test
     void redisStore() throws IOException {
+
+        // for debugging purpose
+        RedisServer redisServer = new RedisServer(6379);
+        try {
+            redisServer.start();
+        } catch (Exception exception) {
+            System.out.println(exception);
+        }
+        // do some work
+        redisServer.stop();
+
+
         try {
             WebClient.create(
                     host + "/oauth/authorize?client_id=test&redirect_uri=https://localhost:8080/login&response_type=code&scope=read%20write&state=T45FVY"
