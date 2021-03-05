@@ -48,6 +48,7 @@ services:
       - SPRING_REDIS_PORT=8280
       - SPRING_REDIS_PASSWORD=0b4d68e7-a887-4a45-b40f-c477aa382e33
       - SPRING_REDIS_TIMEOUT=60000
+      - SPRING_SESSION_STORE_TYPE=redis
     ports:
       - 8080
     deploy:
