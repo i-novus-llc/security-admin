@@ -44,8 +44,8 @@ services:
       - AUDIT_CLIENT_ENABLED=false
       - SPRING_CLOUD_CONSUL_CONFIG_PREFIX=security-admin-master
       - SPRING_REDIS_DATABASE=0
-      - SPRING_REDIS_HOST=http://yandex.develop
-      - SPRING_REDIS_PORT=8280
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
       - SPRING_REDIS_PASSWORD=0b4d68e7-a887-4a45-b40f-c477aa382e33
       - SPRING_REDIS_TIMEOUT=60000
       - SPRING_SESSION_STORE_TYPE=redis
