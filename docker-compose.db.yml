@@ -16,6 +16,11 @@ services:
         constraints:
           - node.labels.type == db
 
+  services:
+    redis:
+      environment:
+        - REDIS_PASSWORD=0b4d68e7-a887-4a45-b40f-c477aa382e33
+
   auth-gateway:
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/security
