@@ -24,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.ws.rs.NotFoundException;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -122,6 +123,7 @@ public class UserServiceImpl implements UserService {
             if (nonNull(ssoUser)) {
                 UserEntity changedSsoUser = entityProvider(ssoUser);
                 changedSsoUser.setPasswordHash(passwordHash);
+                changedSsoUser.setExpirationDate(savedUser.getExpirationDate());
                 savedUser = userRepository.save(changedSsoUser);
             }
         }
@@ -144,6 +146,7 @@ public class UserServiceImpl implements UserService {
         form.setPatronymic(user.getPatronymic());
         form.setSendOnEmail(user.getSendPasswordToEmail());
         form.setIsActive(user.getIsActive() != null ? user.getIsActive() : true);
+        form.setExpirationDate(user.getExpirationDate());
         return create(form);
     }
 
@@ -369,6 +372,7 @@ public class UserServiceImpl implements UserService {
         entity.setStatus(model.getStatus());
         if (nonNull(model.getRoles()))
             entity.setRoleList(model.getRoles().stream().map(RoleEntity::new).collect(Collectors.toList()));
+        entity.setExpirationDate(model.getExpirationDate());
         return entity;
     }
 
@@ -428,6 +432,8 @@ public class UserServiceImpl implements UserService {
         model.setExtSys(entity.getExtSys());
         model.setExtUid(entity.getExtUid());
         model.setStatus(entity.getStatus());
+        model.setExpirationDate(entity.getExpirationDate());
+
         StringBuilder builder = new StringBuilder();
         if (nonNull(entity.getSurname())) {
             builder.append(entity.getSurname()).append(" ");
@@ -537,6 +543,7 @@ public class UserServiceImpl implements UserService {
         userForm.setOrganizationId((Integer) userInfo.getOrDefault("organizationId", entity.getOrganization() != null ? entity.getOrganization().getId() : null));
         userForm.setStatus(userInfo.containsKey(STATUS) ? UserStatus.valueOf((String) userInfo.get(STATUS)) : entity.getStatus());
         userForm.setAccountTypeCode((String) userInfo.getOrDefault("accountTypeCode", null));
+        userForm.setExpirationDate((LocalDateTime) userInfo.getOrDefault("expirationDate", null));
         return userForm;
     }
 

@@ -67,6 +67,9 @@ public class EsiaUserDetailsService extends UserDetailsServiceImpl {
         if (entity.getRoleList() != null) {
             model.setRoles(entity.getRoleList().stream().map(this::model).collect(Collectors.toList()));
         }
+
+        model.setExpirationDate(entity.getExpirationDate());
+
         return model;
     }
 
