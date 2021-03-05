@@ -46,6 +46,7 @@ services:
     ports:
       - 8080
     deploy:
+      replicas: 2
       resources:
         limits:
           cpus: '0.7'
