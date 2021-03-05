@@ -962,7 +962,7 @@ insert into sec.permission(name, code) values('Право доступа к мо
 |string
 |Пароль для доступа к альясу
 
-|audit.client.enabled=false
+|audit.client.enabled
 |boolean
 |Опция включения аудита
 
@@ -1002,7 +1002,7 @@ insert into sec.permission(name, code) values('Право доступа к мо
 |integer
 |Время жизни refresh токена клиента в минутах
 
-|access.users.change-activity-enabled=true
+|access.users.change-activity-enabled
 |boolean
 |Возможность изменения активности на списке пользователей
 
@@ -1010,25 +1010,27 @@ insert into sec.permission(name, code) values('Право доступа к мо
 |roles,
 permissions,
 systems
-|Наполнение токена ролями, пермишенами и системами. Указать одно или несколько значений через запятую.
+|Наполнение токена ролями, пермишенами и системами.
+Указать одно или несколько значений через запятую.
 
-|access.user.send-mail-delete-user=false
+|access.user.send-mail-delete-user
 |boolean
 |Отправлять уведомление пользователю об удалении учетной записи
 
-|access.user.send-mail-activate-user=false
+|access.user.send-mail-activate-user
 |boolean
 |Отправлять уведомление пользователю о блокировке
 
-|access.email-as-username=false
+|access.email-as-username
 |boolean
-|Email используется в качестве имени пользователя. На UI поля 'Имя пользователя' скрываются или заменяются на email
+|Email используется в качестве имени пользователя.На UI поля 'Имя пользователя' скрываются или заменяются на email
 
 |access.organization-persist-mode
 |sync,rest
-|Режим заполнения таблицы организаций 1) rest - через Rest сервисы 2)  sync -  режим синхронизации. Источник - НСИ.
+|Режим заполнения таблицы организаций 1) rest - через Rest сервисы 2) sync - режим синхронизации.
+Источник - НСИ.
 
-|access.keycloak.synchronize-enabled=false
+|access.keycloak.synchronize-enabled
 |boolean
 |Включение автоматической синхронизации пользователей
 
@@ -1040,9 +1042,13 @@ systems
 |boolean
 |Включение синхронизации с сервисами НСИ
 
-|access.organization.use-account-type=true
+|access.organization.use-account-type
 |boolean
 |Ипользовать тип аккуанта для преднастройки ролей при создании организации
+
+|spring.session.store-type
+|none, redis
+|Использовать in-memory хранилище сессий или redis.Для подключения к серверу redis использовать стандартные настройки spring-boot-autoconfigure: https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html
 
 
 |===
