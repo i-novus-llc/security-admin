@@ -21,6 +21,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -91,4 +92,7 @@ public class User {
 
     @ApiModelProperty(value = "Идентификатор клиента в системе уведомлений")
     private Integer clientId;
+
+    @ApiModelProperty(value = "Срок действия аккаунта")
+    private LocalDateTime expirationDate;
 }

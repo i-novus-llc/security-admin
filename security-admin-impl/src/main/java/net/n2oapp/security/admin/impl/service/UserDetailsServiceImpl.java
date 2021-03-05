@@ -99,6 +99,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 }
             }
         }
+
         return model(userEntity);
     }
 
@@ -178,6 +179,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
 
         model.setUserLevel(entity.getUserLevel());
+
+        model.setExpirationDate(entity.getExpirationDate());
+
         return model;
     }
 
