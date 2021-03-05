@@ -22,9 +22,12 @@ import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
 import net.n2oapp.security.auth.common.authority.SystemGrantedAuthority;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.AuthoritiesExtractor;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
+import org.springframework.security.authentication.AccountStatusUserDetailsChecker;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.stereotype.Component;
+import org.springframework.security.core.userdetails.UserDetailsChecker;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -39,6 +42,7 @@ import static java.util.Objects.nonNull;
 public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, AuthoritiesExtractor {
 
     private static final String GRANTED_AUTHORITY_KEY = "GrantedAuthorityKey";
+    private final UserDetailsChecker userDetailsChecker = new AccountStatusUserDetailsChecker();
 
     private String[] PRINCIPAL_KEYS = new String[]{"username", "preferred_username", "login", "sub"};
     private static final String[] SURNAME_KEYS = new String[]{"surname", "second_name", "family_name", "lastName"};
@@ -63,8 +67,14 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
         if (model == null) {
             return null;
         }
-        User user = new User(model.getUsername(), "N/A", getAuthorities(map, model), model.getSurname(), model.getName(),
+
+        boolean accountIsNonExpired = model.getExpirationDate() == null || !model.getExpirationDate().isBefore(LocalDateTime.now(Clock.systemUTC()));
+
+        User user = new User(model.getUsername(), "N/A", model.getIsActive(),
+                accountIsNonExpired, true, true,
+                getAuthorities(map, model), model.getSurname(), model.getName(),
                 model.getPatronymic(), model.getEmail());
+
         if (nonNull(model.getDepartment())) {
             user.setDepartment(model.getDepartment().getCode());
             user.setDepartmentName(model.getDepartment().getName());
@@ -78,6 +88,9 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
         if (nonNull(model.getUserLevel())) {
             user.setUserLevel(model.getUserLevel().toString());
         }
+
+        userDetailsChecker.check(user);
+
         return user;
     }
 

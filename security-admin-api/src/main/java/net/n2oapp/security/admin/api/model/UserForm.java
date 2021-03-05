@@ -18,9 +18,11 @@ package net.n2oapp.security.admin.api.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiParam;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -94,4 +96,7 @@ public class UserForm {
 
     @ApiModelProperty(value = "Тип аккаунта")
     private String accountTypeCode;
+
+    @ApiParam("Срок действия учётной записи пользователя")
+    private LocalDateTime expirationDate;
 }

@@ -45,6 +45,8 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -224,6 +226,8 @@ public class AuthProcessingTest {
     public void testAuthorizationCode() throws IOException {
         Cookie authSession = checkAuthentication();
         checkLogout(authSession);
+
+        checkExpiredAccountAuthentication();
     }
 
     private Cookie checkAuthentication() throws IOException {
@@ -282,6 +286,45 @@ public class AuthProcessingTest {
 
         return authSession;
     }
+
+    @Test
+    public void checkEsiaExpiredAccountAuthentication() throws IOException {
+        Response response = WebClient.create(host + "/login/esia").get();
+        NewCookie authSession = response.getCookies().get("JSESSIONID");
+
+        String state = extractQueryParameter(response.getLocation(), "state");
+
+        response = WebClient.create(
+                host + "/login/esia?code=testCode&state=" + state
+        ).cookie(authSession).get();
+        assertThat(response.getStatus(), is(403));
+    }
+
+    private void checkExpiredAccountAuthentication() {
+        UserEntity userEntity = userEntity();
+        userEntity.setExpirationDate(LocalDateTime.now(Clock.systemUTC()));
+        when(userRepository.findOneByUsernameIgnoreCase("testUser")).thenReturn(userEntity);
+
+        Response response = WebClient.create(
+                host + "/oauth/authorize?client_id=test&redirect_uri=https://localhost:8080/login&response_type=code&scope=read%20write&state=T45FVY"
+        ).get();
+        assertThat(response.getStatus(), is(302));
+        assertThat(response.getLocation().toString(), is(host + "/login/keycloak"));
+        NewCookie authSession = response.getCookies().get("JSESSIONID");
+
+        response = WebClient.create(host + "/login/keycloak").cookie(authSession).get();
+
+        String state = extractQueryParameter(response.getLocation(), "state");
+
+        response = WebClient.create(
+                host + "/login/keycloak" +
+                        "?state=" + state + "&session_state=testSessionState" +
+                        "&code=testCode"
+        ).cookie(authSession).get();
+        response = WebClient.create(response.getLocation()).cookie(authSession).get();
+        assertThat(response.getStatus(), is(401));
+    }
+
 
     private void checkLogout(Cookie authCookie) {
         Response response = WebClient.create(
