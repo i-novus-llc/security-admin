@@ -8,6 +8,11 @@ services:
   auth-gateway:
     ports:
       - 8278:8080
+
   db:
     ports:
       - 8279:5432
+
+  redis:
+    ports:
+      - 8280:6379
