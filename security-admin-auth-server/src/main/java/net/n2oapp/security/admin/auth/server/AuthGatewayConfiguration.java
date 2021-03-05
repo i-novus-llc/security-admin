@@ -5,8 +5,7 @@ import lombok.Setter;
 import net.n2oapp.security.admin.auth.server.esia.EsiaAccessTokenProvider;
 import net.n2oapp.security.admin.auth.server.esia.EsiaUserInfoTokenServices;
 import net.n2oapp.security.admin.auth.server.esia.Pkcs7Util;
-import net.n2oapp.security.admin.auth.server.exception.BadCredentialsExceptionHandler;
-import net.n2oapp.security.admin.auth.server.exception.UserNotFoundAuthenticationExceptionHandler;
+import net.n2oapp.security.admin.auth.server.exception.AuthenticationExceptionHandler;
 import net.n2oapp.security.admin.auth.server.logout.OAuth2ProviderRedirectLogoutSuccessHandler;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.UserDetailsServiceImpl;
@@ -161,7 +160,7 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
         OAuth2ClientAuthenticationProcessingFilter filter = new GatewayOAuth2ClientAuthenticationProcessingFilter(path);
         OAuth2RestTemplate template = new OAuth2RestTemplate(client.getClient(), oauth2ClientContext);
         filter.setRestTemplate(template);
-        filter.setAuthenticationFailureHandler(new BadCredentialsExceptionHandler());
+        filter.setAuthenticationFailureHandler(new AuthenticationExceptionHandler());
         UserInfoTokenServices tokenServices = new UserInfoTokenServices(client.getResource().getUserInfoUri(), client.getClient().getClientId());
         tokenServices.setRestTemplate(template);
         AuthoritiesPrincipalExtractor extractor = new AuthoritiesPrincipalExtractor(gatewayUserDetailsService, "KEYCLOAK");
@@ -177,7 +176,7 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
         OAuth2RestTemplate template = new OAuth2RestTemplate(client.getClient(), oauth2ClientContext);
         template.setAccessTokenProvider(new AccessTokenProviderChain(Arrays.asList(new EsiaAccessTokenProvider(pkcs7Util))));
         filter.setRestTemplate(template);
-        filter.setAuthenticationFailureHandler(new UserNotFoundAuthenticationExceptionHandler());
+        filter.setAuthenticationFailureHandler(new AuthenticationExceptionHandler());
         EsiaUserInfoTokenServices tokenServices = new EsiaUserInfoTokenServices(client.getResource().getUserInfoUri(), client.getClient().getClientId());
         tokenServices.setRestTemplate(template);
         AuthoritiesPrincipalExtractor extractor = new AuthoritiesPrincipalExtractor(esiaUserDetailsService, "ESIA")
