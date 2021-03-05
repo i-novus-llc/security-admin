@@ -3,3 +3,6 @@ version: "3.7"
 services:
   db:
     image: "${DOCKER_REGISTRY}/postgres:11.5"
+
+  redis:
+    image: 'bitnami/redis:latest'
