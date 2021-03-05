@@ -64,13 +64,10 @@ public class RedisSessionStoreTest {
 
     @Test
     void redisStore() throws IOException {
-        try {
-            WebClient.create(
-                    host + "/oauth/authorize?client_id=test&redirect_uri=https://localhost:8080/login&response_type=code&scope=read%20write&state=T45FVY"
-            ).get();
-        } catch (Exception e) {
-        }
-        verify(jedisConnectionFactory, times(6)).getConnection();
+        WebClient.create(
+                host + "/oauth/authorize?client_id=test&redirect_uri=https://localhost:8080/login&response_type=code&scope=read%20write&state=T45FVY"
+        ).get();
+        verify(jedisConnectionFactory, atLeastOnce()).getConnection();
     }
 
     private static Client client() {
