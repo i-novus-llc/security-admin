@@ -19,7 +19,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -38,7 +37,7 @@ import java.util.List;
 public class Client {
 
     @JsonProperty
-    @ApiModelProperty("Имя клиента")
+    @ApiModelProperty(value = "Имя клиента", required = true)
     private String clientId;
 
     @JsonProperty
