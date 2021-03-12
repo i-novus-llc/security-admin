@@ -38,7 +38,7 @@ public class Role {
     private Integer id;
 
     @JsonProperty
-    @ApiModelProperty(value = "Название")
+    @ApiModelProperty(value = "Название", required = true)
     private String name;
 
     @JsonProperty
