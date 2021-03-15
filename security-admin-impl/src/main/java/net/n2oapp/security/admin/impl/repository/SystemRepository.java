@@ -11,4 +11,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SystemRepository extends JpaRepository<SystemEntity, String>, JpaSpecificationExecutor<SystemEntity> {
     SystemEntity findOneByCode(String code);
+    boolean existsByCode(String code);
 }
