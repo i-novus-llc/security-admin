@@ -47,6 +47,7 @@ public class RoleServiceImplTest {
         checkValidationRoleName(role);
         checkValidationRoleCode(role);
         checkValidationRoleAssociationExists();
+        checkSystemCodeValidation();
     }
 
     @Test
@@ -93,6 +94,35 @@ public class RoleServiceImplTest {
         assertEquals("exception.uniqueRole", thrown.getMessage());
 
         role.setCode("test-code");
+    }
+
+    private void checkSystemCodeValidation() {
+        Throwable thrown = catchThrowable(() -> {
+            RoleForm roleForm = newRole();
+            roleForm.setName("systemCodeTest");
+            roleForm.setSystemCode("");
+            service.create(roleForm);
+        });
+        assertThat(thrown).isInstanceOf(UserException.class);
+        assertEquals("exception.systemNotExists", thrown.getMessage());
+
+        thrown = catchThrowable(() -> {
+            RoleForm roleForm = newRole();
+            roleForm.setName("systemCodeTest");
+            roleForm.setSystemCode("   ");
+            service.create(roleForm);
+        });
+        assertThat(thrown).isInstanceOf(UserException.class);
+        assertEquals("exception.systemNotExists", thrown.getMessage());
+
+        thrown = catchThrowable(() -> {
+            RoleForm roleForm = newRole();
+            roleForm.setName("systemCodeTest");
+            roleForm.setSystemCode("unexistingSystemCode");
+            service.create(roleForm);
+        });
+        assertThat(thrown).isInstanceOf(UserException.class);
+        assertEquals("exception.systemNotExists", thrown.getMessage());
     }
 
     private void checkValidationRoleAssociationExists() {
