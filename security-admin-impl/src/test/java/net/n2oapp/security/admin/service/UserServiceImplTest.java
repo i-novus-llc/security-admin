@@ -10,12 +10,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -39,9 +37,6 @@ import static org.junit.Assert.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @TestPropertySource("classpath:test.properties")
 public class UserServiceImplTest extends UserRoleServiceTestBase {
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Before
     public void before() {
@@ -129,79 +124,12 @@ public class UserServiceImplTest extends UserRoleServiceTestBase {
 
     @Test
     public void testChangeActive() {
-        changeActive();
+        checkChangeActive();
     }
 
     @Test
     public void testResetPassword() {
-        UserForm userForm = new UserForm();
-        userService.resetPassword(userForm);
-
-        UserRegisterForm user = new UserRegisterForm();
-        user.setUsername("testUser29");
-        user.setEmail("test242@test.ru");
-        user.setName("name");
-        user.setSurname("surname");
-        user.setPatronymic("patronymic");
-        user.setIsActive(true);
-        user.setSendPasswordToEmail(true);
-        User result = userService.register(user);
-        assertEquals("testUser29", result.getUsername());
-        assertEquals("test242@test.ru", result.getEmail());
-        assertEquals("name", result.getName());
-        assertEquals("surname", result.getSurname());
-        assertEquals("patronymic", result.getPatronymic());
-        assertEquals(true, result.getIsActive());
-
-        Integer userId = result.getId();
-
-        userForm = new UserForm();
-        userForm.setId(userId);
-        userForm.setPassword("Zz123456789!");
-        userForm.setSendOnEmail(true);
-
-        userService.resetPassword(userForm);
-
-        resetPasswordMailCheck();
-
-        User changedUser = userService.getById(userId);
-
-        assertEquals("testUser29", changedUser.getUsername());
-        assertEquals("test242@test.ru", changedUser.getEmail());
-        assertEquals("name", changedUser.getName());
-        assertEquals("surname", changedUser.getSurname());
-        assertEquals("patronymic", changedUser.getPatronymic());
-        assertTrue(passwordEncoder.matches("Zz123456789!", changedUser.getPasswordHash()));
-
-        userForm = new UserForm();
-        userForm.setEmail("test242@test.ru");
-
-        userService.resetPassword(userForm);
-        resetPasswordMailCheck();
-
-        userForm = new UserForm();
-        userForm.setUsername("testUser29");
-
-        userService.resetPassword(userForm);
-        resetPasswordMailCheck();
-
-        userForm = new UserForm();
-        userForm.setSnils("123");
-        userService.resetPassword(userForm);
-
-        userService.delete(userId);
-    }
-
-    private void resetPasswordMailCheck() {
-        try {
-            Object content = mimeMessageArgumentCaptor.getValue().getContent();
-            assertTrue(content.toString().contains("<p>Уважаемый <span>testUser29</span>!</p>"));
-            assertTrue(content.toString().contains("<p>Ваш пароль был сброшен.</p>"));
-            assertTrue(content.toString().contains("<p>Временный пароль:"));
-            assertTrue(content.toString().contains("<p>Пожалуйста измените пароль при следующем входе.</p>"));
-        } catch (IOException | MessagingException e) {
-            fail();
-        }
+        checkResetPassword();
     }
 
     @Test
@@ -223,7 +151,6 @@ public class UserServiceImplTest extends UserRoleServiceTestBase {
         user = userService.create(userForm);
         checkValidationEmail(user);
         checkValidationPassword(user);
-
     }
 
     @Test
@@ -339,7 +266,7 @@ public class UserServiceImplTest extends UserRoleServiceTestBase {
 
     @Test
     public void testPatch() {
-        updateUserInfo();
+        checkUpdateUser();
     }
 
     @Test

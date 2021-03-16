@@ -2,19 +2,18 @@ package net.n2oapp.security.admin.base;
 
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.model.*;
+import net.n2oapp.security.admin.api.service.RoleService;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.UserServiceImpl;
-import org.junit.Before;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.mail.MessagingException;
-import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 import javax.ws.rs.NotFoundException;
 import java.io.IOException;
@@ -35,15 +34,19 @@ public abstract class UserRoleServiceTestBase {
     @Autowired
     protected UserRepository userRepository;
 
+    @Autowired
+    protected RoleService roleService;
+
+    @Autowired
+    protected PasswordEncoder passwordEncoder;
+
     @MockBean
     protected JavaMailSender emailSender;
 
     @Captor
     protected ArgumentCaptor<MimeMessage> mimeMessageArgumentCaptor;
 
-
-
-    protected void updateUserInfo(){
+    protected void checkUpdateUser(){
         UserForm userForm = new UserForm();
         userForm.setUsername("username");
         userForm.setEmail("username@username.username");
@@ -188,7 +191,7 @@ public abstract class UserRoleServiceTestBase {
 
     }
 
-    protected void changeActive() {
+    protected void checkChangeActive() {
         UserRegisterForm user = new UserRegisterForm();
         user.setUsername("testUser28");
         user.setEmail("test2@test.ru");
@@ -369,4 +372,97 @@ public abstract class UserRoleServiceTestBase {
         form.setRoles(user.getRoles().stream().map(Role::getId).collect(Collectors.toList()));
         return form;
     }
+
+    protected static RoleForm newRole() {
+        RoleForm role = new RoleForm();
+        role.setName("test-name");
+        role.setCode("test-code");
+        role.setDescription("test-desc");
+        List<String> permissions = new ArrayList<>();
+        permissions.add("test");
+        role.setPermissions(permissions);
+        return role;
+    }
+
+    protected RoleForm form(Role role) {
+        RoleForm form = new RoleForm();
+        form.setId(role.getId());
+        form.setName(role.getName());
+        form.setCode(role.getCode());
+        form.setDescription(role.getDescription());
+        form.setPermissions(role.getPermissions().stream().map(Permission::getCode).collect(Collectors.toList()));
+        return form;
+    }
+
+    protected void checkResetPassword() {
+        UserForm userForm = new UserForm();
+        userService.resetPassword(userForm);
+
+        UserRegisterForm user = new UserRegisterForm();
+        user.setUsername("testUser29");
+        user.setEmail("test242@test.ru");
+        user.setName("name");
+        user.setSurname("surname");
+        user.setPatronymic("patronymic");
+        user.setIsActive(true);
+        user.setSendPasswordToEmail(true);
+        User result = userService.register(user);
+        assertEquals("testUser29", result.getUsername());
+        assertEquals("test242@test.ru", result.getEmail());
+        assertEquals("name", result.getName());
+        assertEquals("surname", result.getSurname());
+        assertEquals("patronymic", result.getPatronymic());
+        assertEquals(true, result.getIsActive());
+
+        Integer userId = result.getId();
+
+        userForm = new UserForm();
+        userForm.setId(userId);
+        userForm.setPassword("Zz123456789!");
+        userForm.setSendOnEmail(true);
+
+        userService.resetPassword(userForm);
+
+        resetPasswordMailCheck();
+
+        User changedUser = userService.getById(userId);
+
+        assertEquals("testUser29", changedUser.getUsername());
+        assertEquals("test242@test.ru", changedUser.getEmail());
+        assertEquals("name", changedUser.getName());
+        assertEquals("surname", changedUser.getSurname());
+        assertEquals("patronymic", changedUser.getPatronymic());
+        assertTrue(passwordEncoder.matches("Zz123456789!", changedUser.getPasswordHash()));
+
+        userForm = new UserForm();
+        userForm.setEmail("test242@test.ru");
+
+        userService.resetPassword(userForm);
+        resetPasswordMailCheck();
+
+        userForm = new UserForm();
+        userForm.setUsername("testUser29");
+
+        userService.resetPassword(userForm);
+        resetPasswordMailCheck();
+
+        userForm = new UserForm();
+        userForm.setSnils("123");
+        userService.resetPassword(userForm);
+
+        userService.delete(userId);
+    }
+
+    protected void resetPasswordMailCheck() {
+        try {
+            Object content = mimeMessageArgumentCaptor.getValue().getContent();
+            assertTrue(content.toString().contains("<p>Уважаемый <span>testUser29</span>!</p>"));
+            assertTrue(content.toString().contains("<p>Ваш пароль был сброшен.</p>"));
+            assertTrue(content.toString().contains("<p>Временный пароль:"));
+            assertTrue(content.toString().contains("<p>Пожалуйста измените пароль при следующем входе.</p>"));
+        } catch (IOException | MessagingException e) {
+            fail();
+        }
+    }
+
 }
