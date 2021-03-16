@@ -1,5 +1,6 @@
-package net.n2oapp.security.admin.service;
+package net.n2oapp.security.admin.impl.provider;
 
+import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.base.UserRoleServiceTestBase;
@@ -10,16 +11,19 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.TestPropertySourceUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 @RunWith(SpringRunner.class)
@@ -52,7 +56,7 @@ public class SimpleSsoUserRoleProviderTest extends UserRoleServiceTestBase {
 
     @Test
     public void testUpdateUser() {
-        updateUserInfo();
+        checkUpdateUser();
     }
 
     @Test
@@ -69,7 +73,37 @@ public class SimpleSsoUserRoleProviderTest extends UserRoleServiceTestBase {
 
     @Test
     public void testChangeActive() {
-        changeActive();
+        checkChangeActive();
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testCreateRole() {
+        Role role = roleService.create(newRole());
+        assertNotNull(role);
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testUpdateRole() {
+        Role role = roleService.create(newRole());
+        assertNotNull(role);
+        role.setName("demoUser");
+        roleService.update(form(role));
+    }
+
+    @Test
+    public void testDeleteRole() {
+        Role role = roleService.create(newRole());
+        assertNotNull(role);
+        roleService.delete(role.getId());
+    }
+
+    @Test
+    public void testResetPassword() {
+        checkResetPassword();
     }
 
 }
