@@ -9,6 +9,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
@@ -37,6 +39,9 @@ import static org.junit.Assert.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @TestPropertySource("classpath:test.properties")
 public class UserServiceImplTest extends UserRoleServiceTestBase {
+
+    @Captor
+    private ArgumentCaptor<MimeMessage> mimeMessageArgumentCaptor;
 
     @Before
     public void before() {
@@ -124,12 +129,112 @@ public class UserServiceImplTest extends UserRoleServiceTestBase {
 
     @Test
     public void testChangeActive() {
-        checkChangeActive();
+        UserRegisterForm user = new UserRegisterForm();
+        user.setUsername("testUser28");
+        user.setEmail("test2@test.ru");
+        user.setName("name");
+        user.setSurname("surname");
+        user.setPatronymic("patronymic");
+        user.setIsActive(true);
+        user.setSendPasswordToEmail(true);
+        User result = userService.register(user);
+
+        try {
+            Object content = mimeMessageArgumentCaptor.getValue().getContent();
+            assertTrue(content.toString().contains("<p>Уважаемый <span>surname</span> <span>name</span>!</p>"));
+            assertTrue(content.toString().contains("<p>Логин для входа: <span>testUser28</span></p>"));
+            assertTrue(content.toString().contains("<p>Временный пароль:"));
+            assertTrue(content.toString().contains("<p>Пожалуйста, измените пароль при следующем входе.</p>"));
+        } catch (IOException | MessagingException e) {
+            fail();
+        }
+
+        assertEquals("testUser28", result.getUsername());
+        assertEquals("test2@test.ru", result.getEmail());
+        assertEquals("name", result.getName());
+        assertEquals("surname", result.getSurname());
+        assertEquals("patronymic", result.getPatronymic());
+        assertEquals(true, result.getIsActive());
+
+        Integer userId = result.getId();
+        User changedUser = userService.changeActive(userId);
+
+        try {
+            Object content = mimeMessageArgumentCaptor.getValue().getContent();
+            assertTrue(content.toString().contains("<p>Уважаемый <span>surname</span> <span>name</span> <span>patronymic</span>!</p>"));
+            assertTrue(content.toString().contains("Признак активности Вашей учетной записи изменен на \"<span>Нет</span>\"."));
+        } catch (IOException | MessagingException e) {
+            fail();
+        }
+
+        assertEquals("testUser28", changedUser.getUsername());
+        assertEquals("test2@test.ru", changedUser.getEmail());
+        assertEquals("name", changedUser.getName());
+        assertEquals("surname", changedUser.getSurname());
+        assertEquals("patronymic", changedUser.getPatronymic());
+        assertEquals(false, changedUser.getIsActive());
+
+        userService.delete(userId);
     }
 
     @Test
     public void testResetPassword() {
-        checkResetPassword();
+        UserForm userForm = new UserForm();
+        userService.resetPassword(userForm);
+
+        UserRegisterForm user = new UserRegisterForm();
+        user.setUsername("testUser29");
+        user.setEmail("test242@test.ru");
+        user.setName("name");
+        user.setSurname("surname");
+        user.setPatronymic("patronymic");
+        user.setIsActive(true);
+        user.setSendPasswordToEmail(true);
+        User result = userService.register(user);
+        assertEquals("testUser29", result.getUsername());
+        assertEquals("test242@test.ru", result.getEmail());
+        assertEquals("name", result.getName());
+        assertEquals("surname", result.getSurname());
+        assertEquals("patronymic", result.getPatronymic());
+        assertEquals(true, result.getIsActive());
+
+        Integer userId = result.getId();
+
+        userForm = new UserForm();
+        userForm.setId(userId);
+        userForm.setPassword("Zz123456789!");
+        userForm.setSendOnEmail(true);
+
+        userService.resetPassword(userForm);
+
+        resetPasswordMailCheck();
+
+        User changedUser = userService.getById(userId);
+
+        assertEquals("testUser29", changedUser.getUsername());
+        assertEquals("test242@test.ru", changedUser.getEmail());
+        assertEquals("name", changedUser.getName());
+        assertEquals("surname", changedUser.getSurname());
+        assertEquals("patronymic", changedUser.getPatronymic());
+        assertTrue(passwordEncoder.matches("Zz123456789!", changedUser.getPasswordHash()));
+
+        userForm = new UserForm();
+        userForm.setEmail("test242@test.ru");
+
+        userService.resetPassword(userForm);
+        resetPasswordMailCheck();
+
+        userForm = new UserForm();
+        userForm.setUsername("testUser29");
+
+        userService.resetPassword(userForm);
+        resetPasswordMailCheck();
+
+        userForm = new UserForm();
+        userForm.setSnils("123");
+        userService.resetPassword(userForm);
+
+        userService.delete(userId);
     }
 
     @Test
@@ -291,5 +396,15 @@ public class UserServiceImplTest extends UserRoleServiceTestBase {
         userService.delete(result.getId());
     }
 
-
+    private void resetPasswordMailCheck() {
+        try {
+            Object content = mimeMessageArgumentCaptor.getValue().getContent();
+            assertTrue(content.toString().contains("<p>Уважаемый <span>testUser29</span>!</p>"));
+            assertTrue(content.toString().contains("<p>Ваш пароль был сброшен.</p>"));
+            assertTrue(content.toString().contains("<p>Временный пароль:"));
+            assertTrue(content.toString().contains("<p>Пожалуйста измените пароль при следующем входе.</p>"));
+        } catch (IOException | MessagingException e) {
+            fail();
+        }
+    }
 }
