@@ -9,8 +9,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.ws.rs.NotFoundException;
 import java.util.ArrayList;
@@ -34,6 +36,8 @@ public class RoleServiceImplTest extends UserRoleServiceTestBase {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void checkRoleValidations() {
         Role role = roleService.create(newRole());
         checkValidationRoleName(role);
