@@ -217,7 +217,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(Integer id) {
         SsoUser user = model(userRepository.findById(id).orElse(null));
-        if (nonNull(user) && user.getUsername().equals(getContextUserName())) {
+
+        final String contextUserName = getContextUserName();
+        System.out.println("UserServiceImpl.delete(" + id + ") contextUserName: " + contextUserName);
+
+        if (nonNull(user) && user.getUsername().equals(contextUserName)) {
             throw new UserException("exception.selfDelete");
         }
         userRepository.deleteById(id);
