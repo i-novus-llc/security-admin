@@ -42,7 +42,7 @@ public class SimpleSsoUserRoleProviderTest extends UserRoleServiceTestBase {
         @Override
         public void initialize(ConfigurableApplicationContext applicationContext) {
             TestPropertySourceUtils.addInlinedPropertiesToEnvironment(applicationContext,
-                    "access.keycloak.modify-enabled=false");
+                    "access.keycloak.sync-persistence-enabled=false");
         }
     }
 
