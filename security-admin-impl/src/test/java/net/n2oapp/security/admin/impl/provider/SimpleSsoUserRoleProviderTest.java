@@ -47,6 +47,8 @@ public class SimpleSsoUserRoleProviderTest extends UserRoleServiceTestBase {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void testCreateUser() {
         User user = userService.create(newUser());
         checkValidationEmail(user);
@@ -55,6 +57,8 @@ public class SimpleSsoUserRoleProviderTest extends UserRoleServiceTestBase {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void testUpdateUser() {
         checkUpdateUser();
     }
@@ -64,9 +68,6 @@ public class SimpleSsoUserRoleProviderTest extends UserRoleServiceTestBase {
     @Rollback
     public void testDeleteUser() {
         UserForm user = newUser();
-        user.setUsername("SelfDelete");
-        user.setEmail("SelfDelete@gmail.com");
-
         Throwable thrown = catchThrowable(() -> {
             userService.delete(userService.create(user).getId());
         });
@@ -74,6 +75,8 @@ public class SimpleSsoUserRoleProviderTest extends UserRoleServiceTestBase {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void testChangeActive() {
         checkChangeActive();
     }
