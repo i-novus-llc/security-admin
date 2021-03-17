@@ -1,10 +1,12 @@
 package net.n2oapp.security.admin.sso.keycloak;
 
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
+import net.n2oapp.security.admin.impl.provider.SimpleSsoUserRoleProvider;
 import net.n2oapp.security.admin.sso.keycloak.synchronization.UserSynchronizeJob;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -37,8 +39,15 @@ public class SsoKeycloakConfiguration {
     private AdminSsoKeycloakProperties properties;
 
     @Bean
+    @ConditionalOnExpression("${access.keycloak.sync-persistence-enabled:true}")
     SsoUserRoleProvider ssoUserRoleProvider(AdminSsoKeycloakProperties properties) {
         return new KeycloakSsoUserRoleProvider(properties);
+    }
+
+    @Bean
+    @ConditionalOnExpression("${access.keycloak.sync-persistence-enabled:false}")
+    SsoUserRoleProvider ssoUserRoleProvider() {
+        return new SimpleSsoUserRoleProvider();
     }
 
     @Bean
