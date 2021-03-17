@@ -60,6 +60,8 @@ public class SimpleSsoUserRoleProviderTest extends UserRoleServiceTestBase {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void testDeleteUser() {
         UserForm user = newUser();
         user.setUsername("SelfDelete");
