@@ -39,13 +39,13 @@ public class SsoKeycloakConfiguration {
     private AdminSsoKeycloakProperties properties;
 
     @Bean
-    @ConditionalOnExpression("${access.keycloak.modify-enabled:true}")
+    @ConditionalOnExpression("${access.keycloak.sync-persistence-enabled:true}")
     SsoUserRoleProvider ssoUserRoleProvider(AdminSsoKeycloakProperties properties) {
         return new KeycloakSsoUserRoleProvider(properties);
     }
 
     @Bean
-    @ConditionalOnExpression("${access.keycloak.modify-enabled:false}")
+    @ConditionalOnExpression("${access.keycloak.sync-persistence-enabled:false}")
     SsoUserRoleProvider ssoUserRoleProvider() {
         return new SimpleSsoUserRoleProvider();
     }
