@@ -34,15 +34,15 @@ import java.io.Serializable;
 public class Application implements Serializable {
 
     @JsonProperty
-    @ApiModelProperty("Код")
+    @ApiModelProperty(value = "Код", required = true)
     private String code;
 
     @JsonProperty
-    @ApiModelProperty("Наименование")
+    @ApiModelProperty(value = "Наименование", required = true)
     private String name;
 
     @JsonProperty
-    @ApiModelProperty("Код системы")
+    @ApiModelProperty(value = "Код системы", required = true)
     private String systemCode;
 
     @JsonProperty
