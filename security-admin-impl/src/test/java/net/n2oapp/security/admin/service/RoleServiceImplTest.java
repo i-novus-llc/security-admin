@@ -97,7 +97,7 @@ public class RoleServiceImplTest extends UserRoleServiceTestBase {
             RoleForm roleForm = newRole();
             roleForm.setName("systemCodeTest");
             roleForm.setSystemCode("");
-            service.create(roleForm);
+            roleService.create(roleForm);
         });
         assertThat(thrown).isInstanceOf(UserException.class);
         assertEquals("exception.systemNotExists", thrown.getMessage());
@@ -106,7 +106,7 @@ public class RoleServiceImplTest extends UserRoleServiceTestBase {
             RoleForm roleForm = newRole();
             roleForm.setName("systemCodeTest");
             roleForm.setSystemCode("   ");
-            service.create(roleForm);
+            roleService.create(roleForm);
         });
         assertThat(thrown).isInstanceOf(UserException.class);
         assertEquals("exception.systemNotExists", thrown.getMessage());
@@ -115,7 +115,7 @@ public class RoleServiceImplTest extends UserRoleServiceTestBase {
             RoleForm roleForm = newRole();
             roleForm.setName("systemCodeTest");
             roleForm.setSystemCode("unexistingSystemCode");
-            service.create(roleForm);
+            roleService.create(roleForm);
         });
         assertThat(thrown).isInstanceOf(UserException.class);
         assertEquals("exception.systemNotExists", thrown.getMessage());
