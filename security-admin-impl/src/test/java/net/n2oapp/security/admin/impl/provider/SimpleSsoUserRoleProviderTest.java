@@ -3,10 +3,13 @@ package net.n2oapp.security.admin.impl.provider;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
+import net.n2oapp.security.admin.api.model.UserRegisterForm;
 import net.n2oapp.security.admin.base.UserRoleServiceTestBase;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContextInitializer;
@@ -23,14 +26,17 @@ import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ContextConfiguration(initializers = SimpleSsoUserRoleProviderTest.SecurityAdminContextInitializer.class)
 @TestPropertySource("classpath:test.properties")
 public class SimpleSsoUserRoleProviderTest extends UserRoleServiceTestBase {
+
+    @Captor
+    private ArgumentCaptor<MimeMessage> mimeMessageArgumentCaptor;
 
     static class SecurityAdminContextInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
         @Override
@@ -78,7 +84,34 @@ public class SimpleSsoUserRoleProviderTest extends UserRoleServiceTestBase {
     @Transactional
     @Rollback
     public void testChangeActive() {
-        checkChangeActive();
+        UserRegisterForm user = new UserRegisterForm();
+        user.setUsername("testUser28");
+        user.setEmail("test2@test.ru");
+        user.setName("name");
+        user.setSurname("surname");
+        user.setPatronymic("patronymic");
+        user.setIsActive(true);
+        user.setSendPasswordToEmail(true);
+        User result = userService.register(user);
+
+        assertEquals("testUser28", result.getUsername());
+        assertEquals("test2@test.ru", result.getEmail());
+        assertEquals("name", result.getName());
+        assertEquals("surname", result.getSurname());
+        assertEquals("patronymic", result.getPatronymic());
+        assertEquals(true, result.getIsActive());
+
+        Integer userId = result.getId();
+        User changedUser = userService.changeActive(userId);
+
+        assertEquals("testUser28", changedUser.getUsername());
+        assertEquals("test2@test.ru", changedUser.getEmail());
+        assertEquals("name", changedUser.getName());
+        assertEquals("surname", changedUser.getSurname());
+        assertEquals("patronymic", changedUser.getPatronymic());
+        assertEquals(false, changedUser.getIsActive());
+
+        userService.delete(userId);
     }
 
     @Test
@@ -107,8 +140,38 @@ public class SimpleSsoUserRoleProviderTest extends UserRoleServiceTestBase {
     }
 
     @Test
+    @Transactional
+    @Rollback
     public void testResetPassword() {
-        checkResetPassword();
+        UserForm userForm = new UserForm();
+        userService.resetPassword(userForm);
+
+        UserRegisterForm user = new UserRegisterForm();
+        user.setUsername("testUser29");
+        user.setEmail("test242@test.ru");
+        user.setName("name");
+        user.setSurname("surname");
+        user.setPatronymic("patronymic");
+        user.setIsActive(true);
+        user.setSendPasswordToEmail(true);
+        User result = userService.register(user);
+        assertEquals("testUser29", result.getUsername());
+        assertEquals("test242@test.ru", result.getEmail());
+        assertEquals("name", result.getName());
+        assertEquals("surname", result.getSurname());
+        assertEquals("patronymic", result.getPatronymic());
+        assertEquals(true, result.getIsActive());
+
+        Integer userId = result.getId();
+
+        userForm = new UserForm();
+        userForm.setId(userId);
+        userForm.setPassword("Zz123456789!");
+        userForm.setSendOnEmail(true);
+
+        userService.resetPassword(userForm);
+
+        userService.delete(userId);
     }
 
 }
