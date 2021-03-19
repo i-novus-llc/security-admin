@@ -17,7 +17,7 @@
     <properties>
         <java.version>14</java.version>
         <n2o.version>7.12.0</n2o.version>
-        <rdm.version>1.128.2</rdm.version>
+        <rdm.version>1.128.3</rdm.version>
         <spring.boot.version>2.3.3.RELEASE</spring.boot.version>
         <config.server.enable>false</config.server.enable>
         <audit.version>2.3.2</audit.version>
