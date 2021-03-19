@@ -37,12 +37,6 @@
             <artifactId>n2o-platform-starter-loader-server</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>ru.inovus.ms.rdm</groupId>
-            <artifactId>rdm-api</artifactId>
-            <version>${rdm.version}</version>
-        </dependency>
-
         <!-- Web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -110,7 +104,7 @@
         </dependency>
 
         <dependency>
-            <groupId>ru.inovus.ms.rdm</groupId>
+            <groupId>ru.i-novus.ms.rdm</groupId>
             <artifactId>rdm-sync-spring-boot-starter</artifactId>
             <version>${rdm.version}</version>
             <exclusions>
