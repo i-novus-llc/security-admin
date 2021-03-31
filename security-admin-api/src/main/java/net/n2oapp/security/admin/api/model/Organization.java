@@ -19,9 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -44,11 +42,11 @@ public class Organization {
     private String code;
 
     @JsonProperty
-    @ApiModelProperty(value = "Краткое наименование организации")
+    @ApiModelProperty(value = "Краткое наименование организации", required = true)
     private String shortName;
 
     @JsonProperty
-    @ApiModelProperty(value = "Код ОГРН (уникальный код организации)")
+    @ApiModelProperty(value = "Код ОГРН (уникальный код организации)", required = true)
     private String ogrn;
 
     @JsonProperty
