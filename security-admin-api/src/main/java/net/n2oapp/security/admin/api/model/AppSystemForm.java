@@ -19,7 +19,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -37,11 +36,11 @@ import java.io.Serializable;
 public class AppSystemForm implements Serializable {
 
     @JsonProperty
-    @ApiModelProperty(value = "Код")
+    @ApiModelProperty(value = "Код", required = true)
     private String code;
 
     @JsonProperty
-    @ApiModelProperty(value = "Название")
+    @ApiModelProperty(value = "Название", required = true)
     private String name;
 
     @JsonProperty

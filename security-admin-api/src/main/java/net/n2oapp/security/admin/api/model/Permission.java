@@ -34,11 +34,11 @@ import lombok.Setter;
 public class Permission {
 
     @JsonProperty
-    @ApiModelProperty(value = "Название")
+    @ApiModelProperty(value = "Название", required = true)
     private String name;
 
     @JsonProperty
-    @ApiModelProperty(value = "Код")
+    @ApiModelProperty(value = "Код", required = true)
     private String code;
 
     @JsonProperty

@@ -36,7 +36,7 @@ public class User {
     @ApiModelProperty(value = "Идентификатор")
     private Integer id;
 
-    @ApiModelProperty(value = "Имя пользователя")
+    @ApiModelProperty(value = "Имя пользователя", required = true)
     private String username;
 
     @ApiModelProperty(value = "ФИО")

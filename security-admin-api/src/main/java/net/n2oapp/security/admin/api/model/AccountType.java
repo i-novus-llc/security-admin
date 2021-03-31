@@ -19,9 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -35,15 +33,15 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AccountType {
     @JsonProperty
-    @ApiModelProperty("Идентификатор")
+    @ApiModelProperty(value = "Идентификатор")
     private Integer id;
 
     @JsonProperty
-    @ApiModelProperty("Код")
+    @ApiModelProperty(value = "Код", required = true)
     private String code;
 
     @JsonProperty
-    @ApiModelProperty("Наименование")
+    @ApiModelProperty(value = "Наименование", required = true)
     private String name;
 
     @JsonProperty

@@ -93,6 +93,7 @@ public class UserServiceImplTest extends UserRoleServiceTestBase {
         } catch (IOException | MessagingException e) {
             fail();
         }
+        userService.delete(result.getId());
     }
 
     @Test
@@ -125,6 +126,7 @@ public class UserServiceImplTest extends UserRoleServiceTestBase {
         assertEquals("patronymic", result.getPatronymic());
         assertEquals(user.getExpirationDate(), result.getExpirationDate());
         assertTrue(result.getIsActive());
+        userService.delete(result.getId());
     }
 
     @Test
@@ -256,6 +258,7 @@ public class UserServiceImplTest extends UserRoleServiceTestBase {
         user = userService.create(userForm);
         checkValidationEmail(user);
         checkValidationPassword(user);
+        userService.delete(user.getId());
     }
 
     @Test
@@ -263,12 +266,16 @@ public class UserServiceImplTest extends UserRoleServiceTestBase {
         UserForm user = newUser();
         user.setUsername("SelfDelete");
         user.setEmail("SelfDelete@gmail.com");
+        User result = userService.create(user);
 
         Throwable thrown = catchThrowable(() -> {
-            userService.delete(userService.create(user).getId());
+            userService.delete(result.getId());
         });
         assertThat(thrown).isInstanceOf(UserException.class);
         assertEquals("exception.selfDelete", thrown.getMessage());
+
+        SecurityContextHolder.getContext().setAuthentication(null);
+        userService.delete(result.getId());
     }
 
     @Test
@@ -309,8 +316,9 @@ public class UserServiceImplTest extends UserRoleServiceTestBase {
         user.setEmail("test2@test.ru");
         user.setPassword("1234ABCabc,");
         user.setAccountTypeCode("testAccountTypeCode");
-        userService.register(user);
+        User result = userService.register(user);
         assertThat(userService.findAll(criteria).getTotalElements()).isEqualTo(1);
+        userService.delete(result.getId());
     }
 
     @Test

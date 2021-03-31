@@ -35,7 +35,7 @@ public class RoleForm {
     @ApiModelProperty(value = "Идентификатор")
     private Integer id;
 
-    @ApiModelProperty(value = "Название")
+    @ApiModelProperty(value = "Название", required = true)
     private String name;
 
     @ApiModelProperty(value = "Код")

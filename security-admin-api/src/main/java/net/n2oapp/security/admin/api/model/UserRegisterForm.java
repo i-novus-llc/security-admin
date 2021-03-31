@@ -36,7 +36,7 @@ public class UserRegisterForm {
     @ApiModelProperty(value = "Email пользователя")
     private String email;
 
-    @ApiModelProperty(value = "Имя пользователя")
+    @ApiModelProperty(value = "Имя пользователя", required = true)
     private String username;
 
     @ApiModelProperty(value = "Пароль")

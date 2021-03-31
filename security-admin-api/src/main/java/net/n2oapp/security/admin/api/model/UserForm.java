@@ -43,7 +43,7 @@ public class UserForm {
     @ApiModelProperty(value = "Внешний идентификатор")
     private String extUid;
 
-    @ApiModelProperty(value = "Имя пользователя")
+    @ApiModelProperty(value = "Имя пользователя", required = true)
     private String username;
 
     @ApiModelProperty(value = "Электронный адрес")
