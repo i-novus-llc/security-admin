@@ -112,6 +112,8 @@ public class UserServiceImplTest {
         } catch (IOException | MessagingException e) {
             fail();
         }
+
+        service.delete(result.getId());
     }
 
     @Test
@@ -144,6 +146,8 @@ public class UserServiceImplTest {
         assertEquals("patronymic", result.getPatronymic());
         assertEquals(user.getExpirationDate(), result.getExpirationDate());
         assertTrue(result.getIsActive());
+
+        service.delete(result.getId());
     }
 
     @Test
@@ -287,7 +291,7 @@ public class UserServiceImplTest {
         user = service.create(userForm);
         checkValidationEmail(user);
         checkValidationPassword(user);
-
+        service.delete(user.getId());
     }
 
     @Test
@@ -295,12 +299,16 @@ public class UserServiceImplTest {
         UserForm user = newUser();
         user.setUsername("SelfDelete");
         user.setEmail("SelfDelete@gmail.com");
+        User result = service.create(user);
 
         Throwable thrown = catchThrowable(() -> {
-            service.delete(service.create(user).getId());
+            service.delete(result.getId());
         });
         assertThat(thrown).isInstanceOf(UserException.class);
         assertEquals("exception.selfDelete", thrown.getMessage());
+
+        SecurityContextHolder.getContext().setAuthentication(null);
+        service.delete(result.getId());
     }
 
     @Test
@@ -341,8 +349,9 @@ public class UserServiceImplTest {
         user.setEmail("test2@test.ru");
         user.setPassword("1234ABCabc,");
         user.setAccountTypeCode("testAccountTypeCode");
-        service.register(user);
+        User result = service.register(user);
         assertThat(service.findAll(criteria).getTotalElements()).isEqualTo(1);
+        service.delete(result.getId());
     }
 
     @Test
