@@ -5,6 +5,9 @@
     <regions>
         <region place="top">
             <form id="main" query-id="system" route="/">
+                <pre-filters>
+                    <eq field-id="id" param="id"/>
+                </pre-filters>
                 <fields>
                     <input-text id="name" label="Наименование" required="true"/>
                     <input-text id="id" label="Код" required="true" enabled="false"/>

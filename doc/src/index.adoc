@@ -807,6 +807,8 @@ access.keycloak.email-verified=false
 access.keycloak.synchronize-enabled=true
 #Настройка частоты синхронизации пользователей
 access.keycloak.synchronize-frequency=0 0/30 * * * ? *
+#Включение отправки синхронных запросов в Keycloak при изменении данных пользователей и их ролей
+access.keycloak.sync-persistence-enabled=true
 ----
 . Подключите бины синхронизации с Keycloak:
 +
@@ -1033,6 +1035,10 @@ systems
 |access.keycloak.synchronize-enabled
 |boolean
 |Включение автоматической синхронизации пользователей
+
+|access.keycloak.sync-persistence-enabled
+|boolean
+|Включение отправки синхронных запросов в Keycloak при изменении данных пользователей и их ролей
 
 |rdm.client.export.url
 |string
