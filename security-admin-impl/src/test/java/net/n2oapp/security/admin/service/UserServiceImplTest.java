@@ -3,9 +3,8 @@ package net.n2oapp.security.admin.service;
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import net.n2oapp.security.admin.api.model.*;
+import net.n2oapp.security.admin.base.UserRoleServiceTestBase;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
-import net.n2oapp.security.admin.impl.repository.UserRepository;
-import net.n2oapp.security.admin.impl.service.UserServiceImpl;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -13,27 +12,21 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
-import javax.ws.rs.NotFoundException;
 import java.io.IOException;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -45,19 +38,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @TestPropertySource("classpath:test.properties")
-public class UserServiceImplTest {
-
-    @Autowired
-    private UserServiceImpl service;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @MockBean
-    private JavaMailSender emailSender;
-
-    @Autowired
-    private UserRepository userRepository;
+public class UserServiceImplTest extends UserRoleServiceTestBase {
 
     @Captor
     private ArgumentCaptor<MimeMessage> mimeMessageArgumentCaptor;
@@ -70,7 +51,7 @@ public class UserServiceImplTest {
 
     @Test
     public void testUp() throws Exception {
-        assertNotNull(service);
+        assertNotNull(userService);
     }
 
     @BeforeClass
@@ -92,7 +73,7 @@ public class UserServiceImplTest {
         user.setPatronymic("patronymic");
         user.setIsActive(true);
         user.setSendPasswordToEmail(true);
-        User result = service.register(user);
+        User result = userService.register(user);
         assertEquals(1, result.getRoles().size());
         assertEquals(UserLevel.PERSONAL, result.getUserLevel());
         assertEquals(UserStatus.REGISTERED, result.getStatus());
@@ -112,8 +93,7 @@ public class UserServiceImplTest {
         } catch (IOException | MessagingException e) {
             fail();
         }
-
-        service.delete(result.getId());
+        userService.delete(result.getId());
     }
 
     @Test
@@ -130,7 +110,7 @@ public class UserServiceImplTest {
         user.setSendPasswordToEmail(true);
         user.setExpirationDate(LocalDateTime.of(2017, Month.JULY, 9, 11, 6, 22));
 
-        User result = service.register(user);
+        User result = userService.register(user);
 
         UserEntity userEntity = userRepository.findById(result.getId()).get();
 
@@ -146,8 +126,7 @@ public class UserServiceImplTest {
         assertEquals("patronymic", result.getPatronymic());
         assertEquals(user.getExpirationDate(), result.getExpirationDate());
         assertTrue(result.getIsActive());
-
-        service.delete(result.getId());
+        userService.delete(result.getId());
     }
 
     @Test
@@ -160,7 +139,7 @@ public class UserServiceImplTest {
         user.setPatronymic("patronymic");
         user.setIsActive(true);
         user.setSendPasswordToEmail(true);
-        User result = service.register(user);
+        User result = userService.register(user);
 
         try {
             Object content = mimeMessageArgumentCaptor.getValue().getContent();
@@ -180,7 +159,7 @@ public class UserServiceImplTest {
         assertEquals(true, result.getIsActive());
 
         Integer userId = result.getId();
-        User changedUser = service.changeActive(userId);
+        User changedUser = userService.changeActive(userId);
 
         try {
             Object content = mimeMessageArgumentCaptor.getValue().getContent();
@@ -197,13 +176,13 @@ public class UserServiceImplTest {
         assertEquals("patronymic", changedUser.getPatronymic());
         assertEquals(false, changedUser.getIsActive());
 
-        service.delete(userId);
+        userService.delete(userId);
     }
 
     @Test
     public void testResetPassword() {
         UserForm userForm = new UserForm();
-        service.resetPassword(userForm);
+        userService.resetPassword(userForm);
 
         UserRegisterForm user = new UserRegisterForm();
         user.setUsername("testUser29");
@@ -213,7 +192,7 @@ public class UserServiceImplTest {
         user.setPatronymic("patronymic");
         user.setIsActive(true);
         user.setSendPasswordToEmail(true);
-        User result = service.register(user);
+        User result = userService.register(user);
         assertEquals("testUser29", result.getUsername());
         assertEquals("test242@test.ru", result.getEmail());
         assertEquals("name", result.getName());
@@ -228,11 +207,11 @@ public class UserServiceImplTest {
         userForm.setPassword("Zz123456789!");
         userForm.setSendOnEmail(true);
 
-        service.resetPassword(userForm);
+        userService.resetPassword(userForm);
 
         resetPasswordMailCheck();
 
-        User changedUser = service.getById(userId);
+        User changedUser = userService.getById(userId);
 
         assertEquals("testUser29", changedUser.getUsername());
         assertEquals("test242@test.ru", changedUser.getEmail());
@@ -244,54 +223,42 @@ public class UserServiceImplTest {
         userForm = new UserForm();
         userForm.setEmail("test242@test.ru");
 
-        service.resetPassword(userForm);
+        userService.resetPassword(userForm);
         resetPasswordMailCheck();
 
         userForm = new UserForm();
         userForm.setUsername("testUser29");
 
-        service.resetPassword(userForm);
+        userService.resetPassword(userForm);
         resetPasswordMailCheck();
 
         userForm = new UserForm();
         userForm.setSnils("123");
-        service.resetPassword(userForm);
+        userService.resetPassword(userForm);
 
-        service.delete(userId);
-    }
-
-    private void resetPasswordMailCheck() {
-        try {
-            Object content = mimeMessageArgumentCaptor.getValue().getContent();
-            assertTrue(content.toString().contains("<p>Уважаемый <span>testUser29</span>!</p>"));
-            assertTrue(content.toString().contains("<p>Ваш пароль был сброшен.</p>"));
-            assertTrue(content.toString().contains("<p>Временный пароль:"));
-            assertTrue(content.toString().contains("<p>Пожалуйста измените пароль при следующем входе.</p>"));
-        } catch (IOException | MessagingException e) {
-            fail();
-        }
+        userService.delete(userId);
     }
 
     @Test
     public void checkValidations() {
-        User user = service.create(newUser());
+        User user = userService.create(newUser());
         checkValidationEmail(user);
         checkValidationPassword(user);
         checkValidationUsername(user);
-        service.delete(user.getId());
-        service.setEmailAsUsername(Boolean.TRUE);
-        user = service.create(newUser());
+        userService.delete(user.getId());
+        userService.setEmailAsUsername(Boolean.TRUE);
+        user = userService.create(newUser());
         checkValidationEmail(user);
         checkValidationPassword(user);
-        service.delete(user.getId());
+        userService.delete(user.getId());
         UserForm userForm = newUser();
         userForm.setSnils("112-233-445 95");
         userForm.setEmail(null);
-        service.setEmailAsUsername(Boolean.FALSE);
-        user = service.create(userForm);
+        userService.setEmailAsUsername(Boolean.FALSE);
+        user = userService.create(userForm);
         checkValidationEmail(user);
         checkValidationPassword(user);
-        service.delete(user.getId());
+        userService.delete(user.getId());
     }
 
     @Test
@@ -299,22 +266,22 @@ public class UserServiceImplTest {
         UserForm user = newUser();
         user.setUsername("SelfDelete");
         user.setEmail("SelfDelete@gmail.com");
-        User result = service.create(user);
+        User result = userService.create(user);
 
         Throwable thrown = catchThrowable(() -> {
-            service.delete(result.getId());
+            userService.delete(result.getId());
         });
         assertThat(thrown).isInstanceOf(UserException.class);
         assertEquals("exception.selfDelete", thrown.getMessage());
 
         SecurityContextHolder.getContext().setAuthentication(null);
-        service.delete(result.getId());
+        userService.delete(result.getId());
     }
 
     @Test
     public void testCheckUniqueUsername() {
-        assertFalse(service.checkUniqueUsername("test2"));
-        assertTrue(service.checkUniqueUsername("nonExistentUser"));
+        assertFalse(userService.checkUniqueUsername("test2"));
+        assertTrue(userService.checkUniqueUsername("nonExistentUser"));
     }
 
     /**
@@ -325,7 +292,7 @@ public class UserServiceImplTest {
     public void findAllUsersWithBadUserLevelTest() {
         UserCriteria criteria = new UserCriteria();
         criteria.setUserLevel("wrong");
-        assertTrue(service.findAll(criteria).isEmpty());
+        assertTrue(userService.findAll(criteria).isEmpty());
     }
 
     /**
@@ -336,22 +303,22 @@ public class UserServiceImplTest {
     public void findAllUsersByUserLevel() {
         UserCriteria criteria = new UserCriteria();
         criteria.setUserLevel("federal");
-        assertThat(service.findAll(criteria).getTotalElements()).isEqualTo(1);
+        assertThat(userService.findAll(criteria).getTotalElements()).isEqualTo(1);
     }
 
     @Test
     public void findAllUsersByLastActionDate() {
         UserCriteria criteria = new UserCriteria();
         criteria.setLastActionDate(LocalDateTime.now(Clock.systemUTC()));
-        assertThat(service.findAll(criteria).getTotalElements()).isEqualTo(0);
+        assertThat(userService.findAll(criteria).getTotalElements()).isEqualTo(0);
         UserRegisterForm user = new UserRegisterForm();
         user.setUsername("testUser2");
         user.setEmail("test2@test.ru");
         user.setPassword("1234ABCabc,");
         user.setAccountTypeCode("testAccountTypeCode");
-        User result = service.register(user);
-        assertThat(service.findAll(criteria).getTotalElements()).isEqualTo(1);
-        service.delete(result.getId());
+        User result = userService.register(user);
+        assertThat(userService.findAll(criteria).getTotalElements()).isEqualTo(1);
+        userService.delete(result.getId());
     }
 
     @Test
@@ -378,7 +345,7 @@ public class UserServiceImplTest {
         List<Integer> orgIds = new ArrayList<>();
         orgIds.add(1);
 
-        User user = service.create(userForm);
+        User user = userService.create(userForm);
 
         UserCriteria criteria = new UserCriteria();
         criteria.setUsername("username");
@@ -391,7 +358,7 @@ public class UserServiceImplTest {
         criteria.setDepartmentId(1);
         criteria.setOrganizations(orgIds);
 
-        Page<User> users = service.findAll(criteria);
+        Page<User> users = userService.findAll(criteria);
 
         assertEquals(1, users.getContent().size());
         assertEquals("username", users.getContent().get(0).getUsername());
@@ -407,152 +374,12 @@ public class UserServiceImplTest {
         assertThat(users.getContent().get(0).getRegion().getId()).isEqualTo(1);
         assertThat(users.getContent().get(0).getOrganization().getId()).isEqualTo(1);
                 assertTrue(users.getContent().get(0).getIsActive());
-        service.delete(user.getId());
+        userService.delete(user.getId());
     }
 
     @Test
     public void testPatch() {
-        UserForm userForm = new UserForm();
-        userForm.setUsername("username");
-        userForm.setEmail("username@username.username");
-        userForm.setAccountTypeCode("testAccountTypeCode");
-        userForm.setPassword("1234ABCabc,");
-        userForm.setPasswordCheck(userForm.getPassword());
-        userForm.setDepartmentId(1);
-        userForm.setName("name");
-        userForm.setSurname("surname");
-        userForm.setPatronymic("patronymic");
-        userForm.setRegionId(1);
-        userForm.setOrganizationId(1);
-        userForm.setSnils("124-985-753 00");
-
-        User result = service.create(userForm);
-
-        assertEquals(1, result.getRoles().size());
-        assertEquals("username", result.getUsername());
-        assertEquals("surname name patronymic", result.getFio());
-        assertEquals("username@username.username", result.getEmail());
-        assertEquals("surname", result.getSurname());
-        assertEquals("name", result.getName());
-        assertEquals("patronymic", result.getPatronymic());
-        assertEquals("124-985-753 00", result.getSnils());
-        assertEquals(UserLevel.PERSONAL, result.getUserLevel());
-        assertEquals(UserStatus.REGISTERED, result.getStatus());
-        assertThat(result.getDepartment().getId()).isEqualTo(1);
-        assertThat(result.getRegion().getId()).isEqualTo(1);
-        assertThat(result.getOrganization().getId()).isEqualTo(1);
-
-        Map<String, Object> userInfo = new HashMap<>();
-
-        Map<String, Object> finalUserInfo = userInfo;
-        Throwable thrown = catchThrowable(() -> {
-            service.patch(finalUserInfo);
-        });
-        assertEquals("exception.userWithoutIdAndUsername", thrown.getMessage());
-
-        userInfo.put("id", result.getId());
-        userInfo.put("expirationDate", LocalDateTime.of(2017, Month.JULY, 9, 11, 6, 22));
-
-        result = service.patch(userInfo);
-
-        assertEquals(1, result.getRoles().size());
-        assertEquals("username", result.getUsername());
-        assertEquals("surname name patronymic", result.getFio());
-        assertEquals("username@username.username", result.getEmail());
-        assertEquals("surname", result.getSurname());
-        assertEquals("name", result.getName());
-        assertEquals("patronymic", result.getPatronymic());
-        assertEquals("124-985-753 00", result.getSnils());
-        assertEquals(UserLevel.PERSONAL, result.getUserLevel());
-        assertEquals(UserStatus.REGISTERED, result.getStatus());
-        assertThat(result.getDepartment().getId()).isEqualTo(1);
-        assertThat(result.getRegion().getId()).isEqualTo(1);
-        assertEquals(userInfo.get("expirationDate"), result.getExpirationDate());
-
-        UserEntity entity = userRepository.findById(result.getId()).get();
-
-        assertEquals(entity.getExpirationDate(), userInfo.get("expirationDate"));
-
-        userInfo.put("username", "supapupausername");
-        userInfo.put("surname", "supasurname");
-
-        result = service.patch(userInfo);
-
-        assertEquals(1, result.getRoles().size());
-        assertEquals("supapupausername", result.getUsername());
-        assertEquals("supasurname name patronymic", result.getFio());
-        assertEquals("username@username.username", result.getEmail());
-        assertEquals("supasurname", result.getSurname());
-        assertEquals("name", result.getName());
-        assertEquals("patronymic", result.getPatronymic());
-        assertEquals("124-985-753 00", result.getSnils());
-        assertEquals(UserLevel.PERSONAL, result.getUserLevel());
-        assertEquals(UserStatus.REGISTERED, result.getStatus());
-        assertThat(result.getDepartment().getId()).isEqualTo(1);
-        assertThat(result.getRegion().getId()).isEqualTo(1);
-
-        userInfo = new HashMap<>();
-        userInfo.put("id", result.getId());
-        userInfo.put("username", "username");
-        userInfo.put("email", "username@username.username");
-        userInfo.put("accountTypeCode", "testAccountTypeCode");
-        userInfo.put("password", "1234ABCabc,");
-        userInfo.put("passwordCheck", "1234ABCabc,");
-        userInfo.put("departmentId", 1);
-        userInfo.put("name", "name");
-        userInfo.put("surname", "surname");
-        userInfo.put("patronymic", "patronymic");
-        userInfo.put("regionId", 1);
-        userInfo.put("snils", "124-985-753 00");
-        List<Integer> roles = new ArrayList<>();
-        roles.add(100);
-        userInfo.put("roles", roles);
-
-        result = service.patch(userInfo);
-
-        assertEquals(1, result.getRoles().size());
-        assertEquals("username", result.getUsername());
-        assertEquals("surname name patronymic", result.getFio());
-        assertEquals("username@username.username", result.getEmail());
-        assertEquals("surname", result.getSurname());
-        assertEquals("name", result.getName());
-        assertEquals("patronymic", result.getPatronymic());
-        assertEquals("124-985-753 00", result.getSnils());
-        assertEquals(UserLevel.PERSONAL, result.getUserLevel());
-        assertEquals(UserStatus.REGISTERED, result.getStatus());
-        assertThat(result.getDepartment().getId()).isEqualTo(1);
-        assertThat(result.getRegion().getId()).isEqualTo(1);
-
-        service.delete(result.getId());
-
-        try {
-            service.patch(Collections.EMPTY_MAP);
-            assert false;
-        } catch (UserException ex) {
-            assertThat(ex.getCode()).isEqualTo("exception.userWithoutIdAndUsername");
-        }
-
-        try {
-            service.patch(Map.of("id", Integer.MAX_VALUE));
-            assert false;
-        } catch (NotFoundException ex) {
-            assertThat(ex.getMessage()).isEqualTo("HTTP 404 Not Found");
-        }
-
-        try {
-            service.patch(Map.of("username", "nonExistingUser"));
-            assert false;
-        } catch (NotFoundException ex) {
-            assertThat(ex.getMessage()).isEqualTo("HTTP 404 Not Found");
-        }
-
-        result = service.patch(Map.of("username", "test"));
-        assertThat(result.getId()).isEqualTo(1);
-        assertThat(result.getUsername()).isEqualTo("test");
-
-        result = service.patch(Map.of("id", 1));
-        assertThat(result.getId()).isEqualTo(1);
-        assertThat(result.getUsername()).isEqualTo("test");
+        checkUpdateUser();
     }
 
     @Test
@@ -566,149 +393,26 @@ public class UserServiceImplTest {
         user.setIsActive(true);
         user.setSendPasswordToEmail(true);
 
-        User result = service.register(user);
-        User simpleDetailsUser = service.loadSimpleDetails(result.getId());
+        User result = userService.register(user);
+        User simpleDetailsUser = userService.loadSimpleDetails(result.getId());
 
         assertEquals(result.getId(), simpleDetailsUser.getId());
         assertEquals(result.getUsername(), simpleDetailsUser.getUsername());
         assertEquals(result.getEmail(), simpleDetailsUser.getEmail());
         assertNotNull(simpleDetailsUser.getTemporaryPassword());
 
-        service.delete(result.getId());
+        userService.delete(result.getId());
     }
 
-    private void checkValidationEmail(User user) {
-
-        Throwable thrown = catchThrowable(() -> {
-            user.setEmail("test.mail.ru");
-            service.update(form(user));
-        });
-        assertThat(thrown).isInstanceOf(UserException.class);
-        assertEquals("exception.wrongEmail", thrown.getMessage());
-        thrown = catchThrowable(() -> {
-            user.setEmail("test.mail@");
-            service.update(form(user));
-        });
-        assertThat(thrown).isInstanceOf(UserException.class);
-        assertEquals("exception.wrongEmail", thrown.getMessage());
-        thrown = catchThrowable(() -> {
-            user.setEmail("test.mail@ru");
-            service.update(form(user));
-        });
-        assertThat(thrown).isInstanceOf(UserException.class);
-        assertEquals("exception.wrongEmail", thrown.getMessage());
-        thrown = catchThrowable(() -> {
-            user.setEmail("@mail.ru");
-            service.update(form(user));
-        });
-        assertThat(thrown).isInstanceOf(UserException.class);
-        assertEquals("exception.wrongEmail", thrown.getMessage());
-        user.setEmail("UserEmail@gmail.com");
+    private void resetPasswordMailCheck() {
+        try {
+            Object content = mimeMessageArgumentCaptor.getValue().getContent();
+            assertTrue(content.toString().contains("<p>Уважаемый <span>testUser29</span>!</p>"));
+            assertTrue(content.toString().contains("<p>Ваш пароль был сброшен.</p>"));
+            assertTrue(content.toString().contains("<p>Временный пароль:"));
+            assertTrue(content.toString().contains("<p>Пожалуйста измените пароль при следующем входе.</p>"));
+        } catch (IOException | MessagingException e) {
+            fail();
+        }
     }
-
-    private void checkValidationPassword(User user) {
-
-        Throwable thrown = catchThrowable(() -> {
-            user.setPassword("pass");
-            service.update(form(user));
-        });
-        assertThat(thrown).isInstanceOf(UserException.class);
-        assertEquals("exception.passwordLength", thrown.getMessage());
-        thrown = catchThrowable(() -> {
-            user.setPassword("password ");
-            user.setPasswordCheck("password ");
-            service.update(form(user));
-        });
-        assertThat(thrown).isInstanceOf(UserException.class);
-        assertEquals("exception.wrongSymbols", thrown.getMessage());
-        thrown = catchThrowable(() -> {
-            user.setPassword("userpassword");
-            user.setPasswordCheck("userpassword");
-            service.update(form(user));
-        });
-        assertThat(thrown).isInstanceOf(UserException.class);
-        assertEquals("exception.uppercaseLetters", thrown.getMessage());
-        thrown = catchThrowable(() -> {
-            user.setPassword("USERPASSWORD");
-            service.update(form(user));
-        });
-        assertThat(thrown).isInstanceOf(UserException.class);
-        assertEquals("exception.lowercaseLetters", thrown.getMessage());
-        thrown = catchThrowable(() -> {
-            user.setPassword("userPassword");
-            service.update(form(user));
-        });
-        assertThat(thrown).isInstanceOf(UserException.class);
-        assertEquals("exception.numbers", thrown.getMessage());
-        thrown = catchThrowable(() -> {
-            user.setPassword("userPassword1");
-            service.update(form(user));
-        });
-        assertThat(thrown).isInstanceOf(UserException.class);
-        assertEquals("exception.specialSymbols", thrown.getMessage());
-        thrown = catchThrowable(() -> {
-            user.setPassword("userPassword2$");
-            user.setPasswordCheck("userPassword1$");
-            service.update(form(user));
-        });
-        assertThat(thrown).isInstanceOf(UserException.class);
-        assertEquals("exception.passwordsMatch", thrown.getMessage());
-        user.setPassword("userPassword1$");
-    }
-
-    private void checkValidationUsername(User user) {
-        Throwable thrown = catchThrowable(() -> {
-            user.setUsername("$pass");
-            service.update(form(user));
-        });
-        assertThat(thrown).isInstanceOf(UserException.class);
-        assertEquals("exception.wrongUsername", thrown.getMessage());
-        thrown = catchThrowable(() -> {
-            service.create(newUser());
-        });
-        assertThat(thrown).isInstanceOf(UserException.class);
-        assertEquals("exception.uniqueUsername", thrown.getMessage());
-        thrown = catchThrowable(() -> {
-            user.setUsername("test");
-            service.update(form(user));
-        });
-        assertThat(thrown).isInstanceOf(UserException.class);
-        assertEquals("exception.uniqueUsername", thrown.getMessage());
-        user.setUsername("userName4");
-    }
-
-    private static UserForm newUser() {
-        UserForm user = new UserForm();
-        user.setUsername("userName2");
-        user.setName("user1");
-        user.setSurname("userSurname");
-        user.setPatronymic("userPatronymic");
-        user.setEmail("UserEmail@gmail.com");
-        user.setSendOnEmail(true);
-        user.setPassword("userPassword1$");
-        user.setPasswordCheck("userPassword1$");
-        user.setIsActive(true);
-        List<Integer> roles = new ArrayList<>();
-        roles.add(100);
-        user.setRoles(roles);
-        user.setStatus(UserStatus.REGISTERED);
-        return user;
-    }
-
-    private UserForm form(User user) {
-        UserForm form = new UserForm();
-        form.setId(user.getId());
-        form.setUsername(user.getUsername());
-        form.setName(user.getName());
-        form.setSurname(user.getSurname());
-        form.setPatronymic(user.getPatronymic());
-        form.setEmail(user.getEmail());
-        form.setPassword(user.getPassword());
-        form.setPasswordCheck(user.getPasswordCheck());
-        form.setIsActive(true);
-        form.setRoles(user.getRoles().stream().map(Role::getId).collect(Collectors.toList()));
-        return form;
-    }
-
-
 }

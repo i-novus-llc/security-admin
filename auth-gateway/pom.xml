@@ -6,7 +6,7 @@
     <parent>
         <artifactId>security-admin</artifactId>
         <groupId>net.n2oapp.framework.security</groupId>
-        <version>5.0.1-SNAPSHOT</version>
+        <version>5.0.5-SNAPSHOT</version>
     </parent>
 
     <artifactId>auth-gateway</artifactId>
@@ -52,7 +52,7 @@
         </dependency>
 
         <dependency>
-            <groupId>ru.inovus.ms.rdm</groupId>
+            <groupId>ru.i-novus.ms.rdm</groupId>
             <artifactId>rdm-sync-spring-boot-starter</artifactId>
             <version>${rdm.version}</version>
             <exclusions>

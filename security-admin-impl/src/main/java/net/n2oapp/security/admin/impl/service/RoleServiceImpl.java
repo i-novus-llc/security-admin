@@ -11,6 +11,7 @@ import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.SystemEntity;
 import net.n2oapp.security.admin.impl.repository.OrganizationRepository;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
+import net.n2oapp.security.admin.impl.repository.SystemRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.RoleSpecifications;
 import org.slf4j.Logger;
@@ -49,6 +50,8 @@ public class RoleServiceImpl implements RoleService {
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
+    private SystemRepository systemRepository;
+    @Autowired
     private UserRepository userRepository;
     @Autowired
     private SsoUserRoleProvider provider;
@@ -59,6 +62,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role create(RoleForm role) {
+        checkSystemCode(role.getSystemCode());
         checkRoleUnique(role);
         Role result = model(roleRepository.save(entity(role)));
         // если отсутствует код роли, то устанавливаем
@@ -77,6 +81,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role update(RoleForm role) {
+        checkSystemCode(role.getSystemCode());
         checkRoleUnique(role);
         Role result = model(roleRepository.save(entity(role)));
         provider.updateRole(result);
@@ -228,6 +233,11 @@ public class RoleServiceImpl implements RoleService {
         model.setCode(entity.getCode());
         model.setDescription(entity.getDescription());
         return model;
+    }
+
+    private void checkSystemCode(String systemCode) {
+        if (systemCode != null && !systemRepository.existsByCode(systemCode))
+            throw new UserException("exception.systemNotExists");
     }
 
     /**
