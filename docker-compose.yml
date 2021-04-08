@@ -19,7 +19,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.7'
+          cpus: '0.5'
           memory: 1024m
       restart_policy:
         max_attempts: 3
@@ -55,7 +55,7 @@ services:
       replicas: 1
       resources:
         limits:
-          cpus: '0.7'
+          cpus: '0.5'
           memory: 1024m
       placement:
         constraints:

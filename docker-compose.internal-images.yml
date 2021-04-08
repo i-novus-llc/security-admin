@@ -6,6 +6,3 @@ services:
 
   auth-gateway:
     image: "${DOCKER_REGISTRY}/security-admin/auth-gateway:${TAG}"
-
-  security-admin-backend:
-    image: "${DOCKER_REGISTRY}/security-admin/backend:${TAG}"

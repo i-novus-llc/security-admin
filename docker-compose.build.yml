@@ -13,9 +13,3 @@ services:
       context: auth-gateway
       args:
         JAR_FILE: target/auth-gateway.jar
-
-  security-admin-backend:
-    build:
-      context: security-admin-backend
-      args:
-        JAR_FILE: target/access-service.jar

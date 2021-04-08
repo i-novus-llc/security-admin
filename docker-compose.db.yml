@@ -10,7 +10,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.7'
+          cpus: '0.5'
           memory: 512m
       placement:
         constraints:
@@ -19,6 +19,14 @@ services:
   redis:
     environment:
       - REDIS_PASSWORD=0b4d68e7-a887-4a45-b40f-c477aa382e33
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512m
+      placement:
+        constraints:
+          - node.labels.type == db
 
   auth-gateway:
     environment:
