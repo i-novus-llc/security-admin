@@ -62,13 +62,13 @@ Auth Gateway - это SSO сервер авторизации, построен�
     ```
 * Настройки почтового сервиса
     ```
-        sec.mail.host=smtp.gmail.com
+        sec.mail.host=host
         sec.mail.port=587
-        sec.mail.username=inovus.sec
-        sec.mail.password=
+        sec.mail.username=username
+        sec.mail.password=password
         sec.mail.smtp.auth=true
         sec.mail.smtp.starttls.enabled=true
-        sec.password.mail.message.from=inovus.sec@gmail.com
+        sec.password.mail.message.from=example@mail.com
         
     ```
 * Auth gateway может быть развернут вместе с микросервисами аудита и НСИ. 

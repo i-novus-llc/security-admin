@@ -140,7 +140,7 @@ public class UserRestTest {
 
     @Test
     public void crud() {
-        greenMail.setUser("inovus.sec@gmail.com", "");
+        greenMail.setUser("example@mail.com", "");
         User user = create();
         update(form(user));
         delete(user.getId());
