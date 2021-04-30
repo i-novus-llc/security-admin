@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.Map;
 
@@ -14,7 +15,8 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 @EnableEmbeddedPg
-@SpringBootTest(properties = {"rdm.sync.enabled=true", "access.organization-persist-mode=sync"})
+@SpringBootTest
+@TestPropertySource("classpath:test.properties")
 public class AuthGatewayApplicationTest {
 
     @Autowired

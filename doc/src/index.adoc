@@ -196,8 +196,7 @@ OAuth2 OpenId Connect, например, с Keycloak или ЕСИА.
 корректные настройки для вашего keystore:
 +
 [listing]
-access.auth.keystore.password=lFJhM7YTAoFJWxl7XnMvDuORn17buMb9
-access.auth.keystore.key-id=hYyfxVDkchN9wXuLLjSLe5kQ2EUrW4Mr
+access.auth.keystore.key-id=hYyfxVDkchN9wXuLLjSLe5kQ2EUrW4Mr access.auth.keystore.password=youKeyStorePassword
 
 Вариант 2 pem формат: :::
 * Установите openssl
@@ -959,6 +958,14 @@ insert into sec.permission(name, code) values('Право доступа к мо
 |access.esia.key-alias
 |string
 |Альяс ключа в хранилище ключей ЕСИА
+
+|access.esia.signing-key
+|string
+|Ключ для подписи запросов к ЕСИА
+
+|access.esia.certificate
+|string
+|Сертификат от ЕСИА
 
 |access.esia.key-store-password
 |string
