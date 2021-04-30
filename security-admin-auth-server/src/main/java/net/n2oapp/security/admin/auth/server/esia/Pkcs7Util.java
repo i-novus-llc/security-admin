@@ -75,12 +75,12 @@ public final class Pkcs7Util {
         } else {
             CertificateFactory cf = CertificateFactory.getInstance("X.509");
             formatCertificate();
-            Certificate certificate = cf.generateCertificate(new ByteArrayInputStream(this.certificate.getBytes(StandardCharsets.UTF_8)));
+            Certificate compiledCertificate = cf.generateCertificate(new ByteArrayInputStream(certificate.getBytes(StandardCharsets.UTF_8)));
             keystore.load(null, null);
             keyAlias = DEFAULT_KEY_ALIAS;
             keyStorePassword = keyAlias;
-            keystore.setCertificateEntry(keyAlias, certificate);
-            keystore.setKeyEntry(keyAlias, privateKeyFromPem(), keyStorePassword.toCharArray(), new Certificate[]{certificate});
+            keystore.setCertificateEntry(keyAlias, compiledCertificate);
+            keystore.setKeyEntry(keyAlias, privateKeyFromPem(), keyStorePassword.toCharArray(), new Certificate[]{compiledCertificate});
         }
 
         return keystore;
@@ -116,7 +116,7 @@ public final class Pkcs7Util {
 
     private PrivateKey privateKeyFromPem() throws NoSuchAlgorithmException, InvalidKeySpecException {
         String privateKeyContent = signingKey.strip();
-        privateKeyContent = privateKeyContent.replaceAll("\\n", "").replace("-----BEGIN PRIVATE KEY-----", "")
+        privateKeyContent = privateKeyContent.replace("\n", "").replace("-----BEGIN PRIVATE KEY-----", "")
                 .replace("-----END PRIVATE KEY-----", "");
         KeyFactory kf = KeyFactory.getInstance("RSA");
         PKCS8EncodedKeySpec keySpecPKCS8 = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(privateKeyContent), "RSA");
@@ -124,7 +124,7 @@ public final class Pkcs7Util {
     }
 
     private void formatCertificate() {
-        certificate = certificate.replaceAll("\\n", "").replace("-----BEGIN CERTIFICATE-----", "")
+        certificate = certificate.replace("\n", "").replace("-----BEGIN CERTIFICATE-----", "")
                 .replace("-----END CERTIFICATE-----", "");
         certificate = "-----BEGIN CERTIFICATE-----\n" + certificate + "\n-----END CERTIFICATE-----";
     }
