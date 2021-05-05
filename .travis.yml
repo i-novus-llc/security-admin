@@ -9,8 +9,8 @@ before_install:
   - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
   - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
 install:
-  mvn --settings .maven.xml install -Dgpg.skip -Dmaven.javadoc.skip=true -B -V -P!build-all-modules
+  mvn --settings .maven.xml install -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
 
 ## Build and release to maven central
 script:
-  mvn --settings .maven.xml clean deploy -Prelease,!build-all-modules -B -U
+  mvn --settings .maven.xml clean deploy -Prelease -B -U
