@@ -213,11 +213,9 @@ public class UserServiceImpl implements UserService {
         return audit("audit.userUpdate", result);
     }
 
-
     @Override
     public void delete(Integer id) {
-        SsoUser user = model(userRepository.findById(id).orElse(null));
-
+        SsoUser user = model(userRepository.findById(id).orElseThrow(() -> new UserException("exception.noUserWithSuchId")));
         if (nonNull(user) && user.getUsername().equals(getContextUserName())) {
             throw new UserException("exception.selfDelete");
         }
