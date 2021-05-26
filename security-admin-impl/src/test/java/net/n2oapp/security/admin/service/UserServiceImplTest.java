@@ -26,7 +26,9 @@ import java.io.IOException;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -84,8 +86,8 @@ public class UserServiceImplTest extends UserRoleServiceTestBase {
         assertEquals("patronymic", result.getPatronymic());
         assertNull(result.getExpirationDate());
         assertTrue(result.getIsActive());
-
         try {
+            Mockito.verify(emailSender, Mockito.timeout(10000).atLeastOnce()).send(mimeMessageArgumentCaptor.capture());
             Object content = mimeMessageArgumentCaptor.getValue().getContent();
             assertTrue(content.toString().contains("<p>Уважаемый <span>surname</span> <span>name</span>!</p>"));
             assertTrue(content.toString().contains("<p>Вы зарегистрированы в системе.</p>"));
@@ -142,6 +144,7 @@ public class UserServiceImplTest extends UserRoleServiceTestBase {
         User result = userService.register(user);
 
         try {
+            Mockito.verify(emailSender, Mockito.timeout(10000).atLeastOnce()).send(mimeMessageArgumentCaptor.capture());
             Object content = mimeMessageArgumentCaptor.getValue().getContent();
             assertTrue(content.toString().contains("<p>Уважаемый <span>surname</span> <span>name</span>!</p>"));
             assertTrue(content.toString().contains("<p>Логин для входа: <span>testUser28</span></p>"));
@@ -373,7 +376,7 @@ public class UserServiceImplTest extends UserRoleServiceTestBase {
         assertThat(users.getContent().get(0).getDepartment().getId()).isEqualTo(1);
         assertThat(users.getContent().get(0).getRegion().getId()).isEqualTo(1);
         assertThat(users.getContent().get(0).getOrganization().getId()).isEqualTo(1);
-                assertTrue(users.getContent().get(0).getIsActive());
+        assertTrue(users.getContent().get(0).getIsActive());
         userService.delete(user.getId());
     }
 
