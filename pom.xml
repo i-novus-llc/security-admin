@@ -20,7 +20,7 @@
         <rdm.version>1.128.3</rdm.version>
         <spring.boot.version>2.3.3.RELEASE</spring.boot.version>
         <config.server.enable>false</config.server.enable>
-        <audit.version>2.3.2</audit.version>
+        <audit.version>2.4.27</audit.version>
         <nimbusds.version>7.9</nimbusds.version>
         <jacoco.skip>true</jacoco.skip>
     </properties>
