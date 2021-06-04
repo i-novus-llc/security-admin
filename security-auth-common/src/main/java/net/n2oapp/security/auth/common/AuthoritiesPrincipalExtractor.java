@@ -47,7 +47,7 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
     private String[] PRINCIPAL_KEYS = new String[]{"username", "preferred_username", "login", "sub"};
     private static final String[] SURNAME_KEYS = new String[]{"surname", "second_name", "family_name", "lastName"};
     private static final String[] NAME_KEYS = new String[]{"first_name", "given_name", "name", "firstName"};
-    private static final String[] PATRONYMIC_KEYS = new String[]{"middleName"};
+    private static final String[] PATRONYMIC_KEYS = new String[]{"middleName", "middle_name"};
     private static final String[] EMAIL_KEYS = new String[]{"email", "e-mail", "mail"};
     private static final String[] GUID_KEYS = new String[]{"sub", "oid"};
     private static final String[] AUTHORITIES_KEYS = new String[]{"roles", "authorities", "realm_access.roles", "resource_access.roles"};
