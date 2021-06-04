@@ -75,7 +75,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             userEntity.setIsActive(true);
             userEntity.setExtUid(hasText(userDetails.getExtUid()) ? userDetails.getExtUid() : null);
             userEntity.setEmail(hasText(userDetails.getEmail()) ? userDetails.getEmail() : null);
-            userEntity.setPatronymic(hasText(userDetails.getPatronymic()) ? userDetails.getPatronymic() : null);
+            userEntity.setPatronymic(hasText(userDetails.getPatronymic()) ? userDetails.getPatronymic() : userEntity.getPatronymic());
             userEntity.setSurname(hasText(userDetails.getSurname()) ? userDetails.getSurname() : null);
             userEntity.setName(hasText(userDetails.getName()) ? userDetails.getName() : null);
             if (isNull(userDetails.getRoleNames()) && updateRoles) {
