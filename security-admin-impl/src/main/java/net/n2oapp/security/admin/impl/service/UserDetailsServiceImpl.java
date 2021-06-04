@@ -61,6 +61,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             userEntity.setExtUid(userDetails.getExtUid());
             userEntity.setEmail(userDetails.getEmail());
             userEntity.setSurname(userDetails.getSurname());
+            userEntity.setPatronymic(userDetails.getPatronymic());
             userEntity.setName(userDetails.getName());
             userEntity.setIsActive(true);
             userEntity.setExtSys(userDetails.getExternalSystem());
@@ -74,6 +75,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             userEntity.setIsActive(true);
             userEntity.setExtUid(hasText(userDetails.getExtUid()) ? userDetails.getExtUid() : null);
             userEntity.setEmail(hasText(userDetails.getEmail()) ? userDetails.getEmail() : null);
+            userEntity.setPatronymic(hasText(userDetails.getPatronymic()) ? userDetails.getPatronymic() : null);
             userEntity.setSurname(hasText(userDetails.getSurname()) ? userDetails.getSurname() : null);
             userEntity.setName(hasText(userDetails.getName()) ? userDetails.getName() : null);
             if (isNull(userDetails.getRoleNames()) && updateRoles) {
