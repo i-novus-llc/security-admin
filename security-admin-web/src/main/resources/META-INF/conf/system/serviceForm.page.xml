@@ -16,7 +16,7 @@
 
             <field id="enableClient" label="Включить OAuth 2.0" default-value="false">
                 <controls>
-                    <checkbox id="enableClient" src="Switch" default-value="false"/>
+                    <checkbox id="enableClient" src="Switch" default-value="false" no-label="true"/>
                 </controls>
             </field>
 
@@ -56,7 +56,7 @@
                 <field id="isAuthorizationCode" label="Вход через браузер" visible="false"
                        description="В терминах спецификации OAuth2.0 означает код авторизации (authorization code). Используется с серверными приложениями (server-side applications)">
                     <controls>
-                        <checkbox id="isAuthorizationCode" src="Switch"/>
+                        <checkbox id="isAuthorizationCode" src="Switch" no-label="true"/>
                     </controls>
                     <dependencies>
                         <visibility on="enableClient">
@@ -68,7 +68,7 @@
                 <field id="isResourceOwnerPass" label="Вход по логину и паролю" visible="false"
                        description="В терминах спецификации OAuth2.0 означает поддержку учетных данных владельца ресурса (resource owner password credentials grant). Используется доверенными приложениями, например приложениями, которые являются частью самого сервиса">
                     <controls>
-                        <checkbox id="isResourceOwnerPass" src="Switch"/>
+                        <checkbox id="isResourceOwnerPass" src="Switch" no-label="true"/>
                     </controls>
                     <dependencies>
                         <visibility on="enableClient">
@@ -80,7 +80,7 @@
                 <field id="isClientGrant" label="Вход от имени системы" visible="false"
                        description="В терминах спецификации OAuth2.0 означает поддержку учетных данных клиента (client credentials grant). Используется при доступе приложения к API">
                     <controls>
-                        <checkbox id="isClientGrant" src="Switch"/>
+                        <checkbox id="isClientGrant" src="Switch" no-label="true"/>
                     </controls>
                     <dependencies>
                         <visibility on="enableClient">

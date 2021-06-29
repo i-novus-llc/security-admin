@@ -33,10 +33,9 @@
                     <eq field-id="filterByOrgRoles" value="{userLevel.id == 'ORGANIZATION'}"/>
                 </pre-filters>
                 <dependencies>
-                    <set-value on="orgRoles" apply-on-init="false">
+                    <set-value on="orgRoles,userLevel" apply-on-init="false">
                         return null;
                     </set-value>
-                    <set-value on="userLevel" apply-on-init="false">return null;</set-value>
                 </dependencies>
             </input-select-tree>
         </fields>
