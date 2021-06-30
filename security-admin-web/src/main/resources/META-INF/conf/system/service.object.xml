@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<object xmlns="http://n2oapp.net/framework/config/schema/object-3.0" name="Приложения">
+<object xmlns="http://n2oapp.net/framework/config/schema/object-4.0" name="Приложения">
 
     <operations>
         <operation id="create" success-text="Приложение сохранено">
@@ -11,25 +11,25 @@
                     </arguments>
                 </java>
             </invocation>
-            <in-parameters>
-                <param id="code" mapping="[0].code" domain="string" required="true"/>
-                <param id="name" mapping="[0].name" domain="string" required="true"/>
-                <param id="systemCode" mapping="[0].systemCode" domain="string" required="true"/>
-                <param id="enableClient" mapping="[0].oAuth" domain="boolean" required="true" default-value="false"/>
+            <in>
+                <field id="code" mapping="[0].code" domain="string" required="true"/>
+                <field id="name" mapping="[0].name" domain="string" required="true"/>
+                <field id="systemCode" mapping="[0].systemCode" domain="string" required="true"/>
+                <field id="enableClient" mapping="[0].oAuth" domain="boolean" required="true" default-value="false"/>
 
-                <param id="clientSecret" mapping="[0].client.clientSecret" domain="string"/>
-                <param id="isClientGrant" mapping="[0].client.isClientGrant" domain="boolean"/>
-                <param id="isResourceOwnerPass" mapping="[0].client.isResourceOwnerPass" domain="boolean"/>
-                <param id="isAuthorizationCode" mapping="[0].client.isAuthorizationCode" domain="boolean"/>
-                <param id="accessTokenValidityMinutes" mapping="[0].client.accessTokenValidityMinutes" domain="integer"/>
-                <param id="refreshTokenValidityMinutes" mapping="[0].client.refreshTokenValidityMinutes" domain="integer"/>
-                <param id="redirectUris" mapping="[0].client.redirectUris" domain="string[]"/>
-                <param id="logoutUrl" mapping="[0].client.logoutUrl" domain="string"/>
-                <param id="clientRoles*.id" mapping="[0].client.rolesIds" domain="integer[]"/>
-            </in-parameters>
-            <out-parameters>
-                <param id="id" mapping="code"/>
-            </out-parameters>
+                <field id="clientSecret" mapping="[0].client.clientSecret" domain="string"/>
+                <field id="isClientGrant" mapping="[0].client.isClientGrant" domain="boolean"/>
+                <field id="isResourceOwnerPass" mapping="[0].client.isResourceOwnerPass" domain="boolean"/>
+                <field id="isAuthorizationCode" mapping="[0].client.isAuthorizationCode" domain="boolean"/>
+                <field id="accessTokenValidityMinutes" mapping="[0].client.accessTokenValidityMinutes" domain="integer"/>
+                <field id="refreshTokenValidityMinutes" mapping="[0].client.refreshTokenValidityMinutes" domain="integer"/>
+                <field id="redirectUris" mapping="[0].client.redirectUris" domain="string[]"/>
+                <field id="logoutUrl" mapping="[0].client.logoutUrl" domain="string"/>
+                <field id="clientRoles*.id" mapping="[0].client.rolesIds" domain="integer[]"/>
+            </in>
+            <out>
+                <field id="id" mapping="code"/>
+            </out>
             <validations/>
         </operation>
 
@@ -42,25 +42,25 @@
                     </arguments>
                 </java>
             </invocation>
-            <in-parameters>
-                <param id="code" mapping="[0].code" domain="string" required="true"/>
-                <param id="name" mapping="[0].name" domain="string" required="true"/>
-                <param id="systemCode" mapping="[0].systemCode" domain="string" required="true"/>
-                <param id="enableClient" mapping="[0].oAuth" domain="boolean" required="true" default-value="false"/>
+            <in>
+                <field id="code" mapping="[0].code" domain="string" required="true"/>
+                <field id="name" mapping="[0].name" domain="string" required="true"/>
+                <field id="systemCode" mapping="[0].systemCode" domain="string" required="true"/>
+                <field id="enableClient" mapping="[0].oAuth" domain="boolean" required="true" default-value="false"/>
 
-                <param id="clientSecret" mapping="[0].client.clientSecret" domain="string"/>
-                <param id="isClientGrant" mapping="[0].client.isClientGrant" domain="boolean"/>
-                <param id="isResourceOwnerPass" mapping="[0].client.isResourceOwnerPass" domain="boolean"/>
-                <param id="isAuthorizationCode" mapping="[0].client.isAuthorizationCode" domain="boolean"/>
-                <param id="accessTokenValidityMinutes" mapping="[0].client.accessTokenValidityMinutes" domain="integer"/>
-                <param id="refreshTokenValidityMinutes" mapping="[0].client.refreshTokenValidityMinutes" domain="integer"/>
-                <param id="redirectUris" mapping="[0].client.redirectUris" domain="string[]"/>
-                <param id="logoutUrl" mapping="[0].client.logoutUrl" domain="string"/>
-                <param id="clientRoles*.id" mapping="[0].client.rolesIds" domain="integer[]"/>
-            </in-parameters>
-            <out-parameters>
-                <param id="id" mapping="code"/>
-            </out-parameters>
+                <field id="clientSecret" mapping="[0].client.clientSecret" domain="string"/>
+                <field id="isClientGrant" mapping="[0].client.isClientGrant" domain="boolean"/>
+                <field id="isResourceOwnerPass" mapping="[0].client.isResourceOwnerPass" domain="boolean"/>
+                <field id="isAuthorizationCode" mapping="[0].client.isAuthorizationCode" domain="boolean"/>
+                <field id="accessTokenValidityMinutes" mapping="[0].client.accessTokenValidityMinutes" domain="integer"/>
+                <field id="refreshTokenValidityMinutes" mapping="[0].client.refreshTokenValidityMinutes" domain="integer"/>
+                <field id="redirectUris" mapping="[0].client.redirectUris" domain="string[]"/>
+                <field id="logoutUrl" mapping="[0].client.logoutUrl" domain="string"/>
+                <field id="clientRoles*.id" mapping="[0].client.rolesIds" domain="integer[]"/>
+            </in>
+            <out>
+                <field id="id" mapping="code"/>
+            </out>
         </operation>
 
         <operation id="delete"
@@ -74,9 +74,9 @@
                     </arguments>
                 </java>
             </invocation>
-            <in-parameters>
-                <param id="code" mapping="[0]" domain="string" required="true"/>
-            </in-parameters>
+            <in>
+                <field id="code" mapping="[0]" domain="string" required="true"/>
+            </in>
             <validations black-list="uniqServiceCode"/>
         </operation>
     </operations>
@@ -94,14 +94,9 @@
                     </arguments>
                 </java>
             </invocation>
-            <in-parameters>
-                <param id="id" mapping="[0]" domain="string" required="true"/>
-            </in-parameters>
+            <in>
+                <field id="id" mapping="[0]" domain="string" required="true"/>
+            </in>
         </constraint>
     </validations>
 </object>
-
-
-
-
-
