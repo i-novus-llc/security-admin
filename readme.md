@@ -1,5 +1,5 @@
 # Быстрый старт
-Полная документация доступна [здесь](https://git.i-novus.ru/framework/security-admin/blob/master/doc/src/index.adoc).
+Полная документация доступна [здесь](/doc/src/index.adoc).
 
 ## Шаг первый - настройка Keycloak
 
