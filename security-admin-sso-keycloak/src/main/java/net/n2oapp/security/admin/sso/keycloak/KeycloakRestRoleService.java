@@ -99,7 +99,7 @@ public class KeycloakRestRoleService {
                     throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
                 }
             }
-            return response.getHeaders().getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
+            return getByName(role.getName()).getId();
         } else {
             throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
         }
