@@ -64,11 +64,7 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
                 List<RoleRepresentation> roleRepresentationList = roleService.getAllRoles();
                 user.getRoles().forEach(r -> {
                     Optional<RoleRepresentation> roleRep = roleRepresentationList.stream().filter(rp -> rp.getName().equals(r.getCode())).findAny();
-                    if (roleRep.isPresent()) {
-                        roles.add(roleRep.get());
-                    } else {
-                        throw new UserException("exception.ssoRoleNotFound");
-                    }
+                    roleRep.ifPresent(roles::add);
                 });
                 userService.addUserRoles(userGuid, roles);
             }

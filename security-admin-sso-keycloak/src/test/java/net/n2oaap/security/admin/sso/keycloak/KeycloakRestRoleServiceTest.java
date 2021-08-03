@@ -44,12 +44,16 @@ public class KeycloakRestRoleServiceTest {
         ResponseEntity<ResponseImpl> responseEntity = new ResponseEntity<>(httpHeaders, HttpStatus.OK);
         Mockito.doReturn(responseEntity).when(restTemplate).postForEntity(eq(ROLES), any(), eq(Response.class));
         Mockito.doReturn(responseEntity).when(restTemplate).postForEntity(eq(COMPOSITES), any(), eq(Response.class));
+        RoleRepresentation roleRepresentation = new RoleRepresentation();
+        roleRepresentation.setId("testId");
+        ResponseEntity<RoleRepresentation> representationResponseEntity = new ResponseEntity<>(roleRepresentation, HttpStatus.OK);
+        String roleName = "test.role";
+        Mockito.doReturn(representationResponseEntity).when(restTemplate).getForEntity(eq(ROLES + roleName), eq(RoleRepresentation.class));
         ArgumentCaptor<HttpEntity> httpEntityCaptor = ArgumentCaptor.forClass(HttpEntity.class);
 
 
         RoleRepresentation role = new RoleRepresentation();
-        String name = "test.role";
-        role.setName(name);
+        role.setName(roleName);
         role.setComposite(true);
         role.setDescription("test composite role");
         RoleRepresentation.Composites composites = new RoleRepresentation.Composites();
