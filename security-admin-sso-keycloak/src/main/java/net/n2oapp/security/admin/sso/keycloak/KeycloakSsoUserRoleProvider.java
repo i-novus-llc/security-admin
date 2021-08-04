@@ -60,12 +60,12 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
             user.setExtUid(userGuid);
             user.setExtSys("KEYCLOAK");
             if (user.getRoles() != null) {
-                List<RoleRepresentation> roles = new ArrayList<>();
-                List<RoleRepresentation> roleRepresentationList = roleService.getAllRoles();
-                user.getRoles().forEach(r -> {
-                    Optional<RoleRepresentation> roleRep = roleRepresentationList.stream().filter(rp -> rp.getName().equals(r.getCode())).findAny();
-                    roleRep.ifPresent(roles::add);
-                });
+                List<RoleRepresentation> roles = user.getRoles().stream().map(r -> {
+                    RoleRepresentation roleRepresentation = new RoleRepresentation();
+                    roleRepresentation.setName(r.getName());
+                    roleRepresentation.setDescription(r.getDescription());
+                    return roleRepresentation;
+                }).collect(Collectors.toList());
                 userService.addUserRoles(userGuid, roles);
             }
         } catch (HttpClientErrorException e) {
