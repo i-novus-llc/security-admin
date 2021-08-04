@@ -38,7 +38,6 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
     @Autowired
     private ObjectMapper objectMapper;
 
-
     public KeycloakSsoUserRoleProvider(AdminSsoKeycloakProperties properties) {
         this.properties = properties;
     }
@@ -60,12 +59,7 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
             user.setExtUid(userGuid);
             user.setExtSys("KEYCLOAK");
             if (user.getRoles() != null) {
-                List<RoleRepresentation> roles = user.getRoles().stream().map(r -> {
-                    RoleRepresentation roleRepresentation = new RoleRepresentation();
-                    roleRepresentation.setName(r.getName());
-                    roleRepresentation.setDescription(r.getDescription());
-                    return roleRepresentation;
-                }).collect(Collectors.toList());
+                List<RoleRepresentation> roles = user.getRoles().stream().map(this::map).collect(Collectors.toList());
                 userService.addUserRoles(userGuid, roles);
             }
         } catch (HttpClientErrorException e) {
@@ -148,7 +142,6 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
         } catch (HttpClientErrorException e) {
             throwUserException(e);
         }
-
     }
 
     @Override
@@ -176,7 +169,8 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
 
     private void throwUserException(HttpClientErrorException exception) {
         try {
-            Map<String, String> map = objectMapper.readValue(exception.getResponseBodyAsString(), new TypeReference<Map<String, String>>() {});
+            Map<String, String> map = objectMapper.readValue(exception.getResponseBodyAsString(), new TypeReference<Map<String, String>>() {
+            });
             String errorMessage = map.containsKey("errorMessage") ? map.get("errorMessage") : map.get("error");
             throw new UserException("exception." + errorMessage.toLowerCase().replace(" ", "-"), exception);
         } catch (IOException e) {
