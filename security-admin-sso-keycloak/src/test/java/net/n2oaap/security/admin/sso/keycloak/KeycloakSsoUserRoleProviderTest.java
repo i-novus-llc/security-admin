@@ -113,7 +113,7 @@ public class KeycloakSsoUserRoleProviderTest {
         assertEquals(ssoUser.getSurname(), capturedUserRepresentation.getLastName());
         assertEquals(ssoUser.getEmail(), capturedUserRepresentation.getEmail());
 
-        verify(restTemplate).getForEntity(eq(ROLES), any());
+        verify(restTemplate).getForEntity(eq(ROLES + role.getCode()), any());
 
         httpEntityCaptor = ArgumentCaptor.forClass(HttpEntity.class);
         verify(restTemplate).postForEntity(eq(USERS + externalUuid + ROLE_MAPPINGS_REALM), httpEntityCaptor.capture(), eq(Response.class));
@@ -259,6 +259,7 @@ public class KeycloakSsoUserRoleProviderTest {
         doReturn(responseEntity).when(restTemplate).exchange(eq(USERS + externalUuid), eq(HttpMethod.DELETE), any(), eq(Response.class));
 
         doReturn(roleRepresentationsResponse).when(restTemplate).getForEntity(eq(ROLES), any());
+        doReturn(oneRoleRepresentationResponse).when(restTemplate).getForEntity(eq(ROLES + roleRepresentations[0].getName()), eq(RoleRepresentation.class));
 
         doReturn(roleRepresentations).when(roleRepresentationsResponse).getBody();
         doReturn(roleRepresentations[0]).when(oneRoleRepresentationResponse).getBody();
