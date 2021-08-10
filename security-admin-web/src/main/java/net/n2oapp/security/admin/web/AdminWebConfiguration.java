@@ -20,4 +20,9 @@ public class AdminWebConfiguration {
         queryProcessor.setEnvironment(environment);
         return queryProcessor;
     }
+
+    @Bean
+    public OrganizationPagesBinder organizationPagesBinder() {
+        return new OrganizationPagesBinder();
+    }
 }

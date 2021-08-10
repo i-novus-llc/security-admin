@@ -1,4 +1,4 @@
-package net.n2oapp.security.admin.frontend;
+package net.n2oapp.security.admin.web;
 
 import net.n2oapp.framework.api.metadata.Compiled;
 import net.n2oapp.framework.api.metadata.compile.BindProcessor;
@@ -8,9 +8,7 @@ import net.n2oapp.framework.api.metadata.meta.toolbar.ToolbarCell;
 import net.n2oapp.framework.api.metadata.meta.widget.table.Table;
 import net.n2oapp.framework.config.metadata.compile.BaseMetadataBinder;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
-@Component
 public class OrganizationPagesBinder implements BaseMetadataBinder<Page> {
 
     @Value("${access.organization-persist-mode}")
