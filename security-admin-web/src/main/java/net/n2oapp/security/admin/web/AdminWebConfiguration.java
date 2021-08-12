@@ -5,6 +5,7 @@ import net.n2oapp.framework.api.data.QueryExceptionHandler;
 import net.n2oapp.framework.api.data.QueryProcessor;
 import net.n2oapp.framework.engine.data.N2oInvocationFactory;
 import net.n2oapp.framework.engine.data.N2oQueryProcessor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,8 +22,18 @@ public class AdminWebConfiguration {
         return queryProcessor;
     }
 
-    @Bean
-    public OrganizationPagesBinder organizationPagesBinder() {
-        return new OrganizationPagesBinder();
+    @Configuration
+    @ConditionalOnProperty(value = "access.organization-persist-mode", havingValue = "sync")
+    public class OrganizationPersistButtonDisplayConfiguration {
+
+        @Bean
+        public OrganizationPersistButtonTransformer organizationPersistButtonTransformer() {
+            return new OrganizationPersistButtonTransformer();
+        }
+
+        @Bean
+        public OrganizationPersistButtonSourceTransformer organizationPersistButtonSourceTransformer() {
+            return new OrganizationPersistButtonSourceTransformer();
+        }
     }
 }
