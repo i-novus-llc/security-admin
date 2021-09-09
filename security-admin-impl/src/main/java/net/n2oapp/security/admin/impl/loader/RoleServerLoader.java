@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.function.Predicate.not;
+
 @Component
 @Slf4j
 public class RoleServerLoader implements ServerLoader<RoleForm> {
@@ -36,8 +38,7 @@ public class RoleServerLoader implements ServerLoader<RoleForm> {
                 log.warn("Ошибка при добавлении роли в keycloak: {}", e.getMessage());
             }
         }
-        uploadedData.removeAll(fresh);
-        uploadedData.forEach(roleService::update);
+        uploadedData.stream().filter(not(fresh::contains)).forEach(roleService::update);
     }
 
     private List<RoleForm> prepareFreshRoles(List<RoleForm> uploadedData, String systemCode, List<RoleEntity> old) {
@@ -45,14 +46,15 @@ public class RoleServerLoader implements ServerLoader<RoleForm> {
             for (RoleEntity oldRole : old) {
                 if (r.getName() == null)
                     throw new UserException("exception.roleNameIsNull");
-                if (r.getCode().equals(oldRole.getCode()) || r.getName().equals(oldRole.getName()))
+                if (r.getCode().equals(oldRole.getCode()) || r.getName().equals(oldRole.getName())) {
+                    r.setId(oldRole.getId());
                     return false;
+                }
             }
             r.setSystemCode(systemCode);
             return true;
         }).collect(Collectors.toList());
     }
-
 
     @Override
     public String getTarget() {
