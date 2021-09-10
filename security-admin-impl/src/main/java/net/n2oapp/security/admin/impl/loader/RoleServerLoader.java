@@ -6,7 +6,6 @@ import net.n2oapp.platform.loader.server.ServerLoader;
 import net.n2oapp.security.admin.api.model.RoleForm;
 import net.n2oapp.security.admin.api.service.RoleService;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
-import net.n2oapp.security.admin.impl.entity.SystemEntity;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static java.util.function.Predicate.not;
 
 @Component
 @Slf4j
@@ -28,31 +29,34 @@ public class RoleServerLoader implements ServerLoader<RoleForm> {
     @Override
     @Transactional
     public void load(List<RoleForm> uploadedData, String subject) {
-        List<RoleEntity> old = roleRepository.findBySystemCode(new SystemEntity(subject));
+        List<RoleEntity> old = roleRepository.findAll();
         List<RoleForm> fresh = prepareFreshRoles(uploadedData, subject, old);
-        for (RoleForm role: fresh) {
+        for (RoleForm role : fresh) {
             try {
                 roleService.create(role);
             } catch (IllegalArgumentException e) {
                 log.warn("Ошибка при добавлении роли в keycloak: {}", e.getMessage());
             }
-
         }
+        uploadedData.stream().filter(not(fresh::contains)).forEach(roleService::update);
     }
 
-    private List<RoleForm> prepareFreshRoles(List<RoleForm> fresh, String systemCode, List<RoleEntity> old) {
-        return fresh.stream().filter(r -> {
-            for (RoleEntity oldRole : old) {
-                if (r.getName() == null)
-                    throw new UserException("exception.roleNameIsNull");
-                if (r.getName().equals(oldRole.getName()) || r.getCode().equals(oldRole.getCode()))
-                    return false;
-            }
+    private List<RoleForm> prepareFreshRoles(List<RoleForm> uploadedData, String systemCode, List<RoleEntity> old) {
+        return uploadedData.stream().filter(r -> {
             r.setSystemCode(systemCode);
+            if (r.getName() == null)
+                throw new UserException("exception.roleNameIsNull");
+
+            for (RoleEntity oldRole : old) {
+                if (r.getCode().equals(oldRole.getCode()) || r.getName().equals(oldRole.getName())) {
+                    r.setId(oldRole.getId());
+                    return false;
+                }
+            }
+
             return true;
         }).collect(Collectors.toList());
     }
-
 
     @Override
     public String getTarget() {

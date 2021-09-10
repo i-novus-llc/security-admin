@@ -15,7 +15,9 @@ import java.util.List;
  */
 @Repository
 public interface RoleRepository extends JpaRepository<RoleEntity, Integer>, JpaSpecificationExecutor<RoleEntity> {
+
     RoleEntity findOneByCode(String code);
+
     RoleEntity findOneByName(String name);
 
     @Query("select count(r) from RoleEntity r where r.systemCode.code = :systemCode")
