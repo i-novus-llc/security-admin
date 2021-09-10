@@ -43,15 +43,17 @@ public class RoleServerLoader implements ServerLoader<RoleForm> {
 
     private List<RoleForm> prepareFreshRoles(List<RoleForm> uploadedData, String systemCode, List<RoleEntity> old) {
         return uploadedData.stream().filter(r -> {
+            r.setSystemCode(systemCode);
+            if (r.getName() == null)
+                throw new UserException("exception.roleNameIsNull");
+
             for (RoleEntity oldRole : old) {
-                if (r.getName() == null)
-                    throw new UserException("exception.roleNameIsNull");
                 if (r.getCode().equals(oldRole.getCode()) || r.getName().equals(oldRole.getName())) {
                     r.setId(oldRole.getId());
                     return false;
                 }
             }
-            r.setSystemCode(systemCode);
+
             return true;
         }).collect(Collectors.toList());
     }

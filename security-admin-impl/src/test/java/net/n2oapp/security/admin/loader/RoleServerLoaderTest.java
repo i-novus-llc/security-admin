@@ -87,7 +87,7 @@ public class RoleServerLoaderTest {
 
         loader.accept(data, "system1");
 
-        assertThat(repository.findBySystemCode(SystemEntityBuilder.buildSystemEntity1()).size(), is(1));
+        assertThat(repository.findBySystemCode(SystemEntityBuilder.buildSystemEntity1()).size(), is(3));
         roleAssertEquals(roleForm1, repository.findOneByCode("rcode1"));
         roleAssertEquals(RoleFormBuilder.buildRoleForm2Updated(), repository.findOneByCode("rcode2"));
         roleAssertEquals(roleForm3, repository.findOneByCode("rcode3"));
