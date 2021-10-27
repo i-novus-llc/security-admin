@@ -20,7 +20,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import javax.ws.rs.DefaultValue;
-import javax.ws.rs.QueryParam;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -29,11 +28,9 @@ import java.util.stream.StreamSupport;
  * Базовая модель фильтрации данных в таблице
  */
 public class BaseCriteria implements Pageable {
-    @QueryParam("page")
     @DefaultValue("0")
     private int page;
 
-    @QueryParam("size")
     @DefaultValue("10")
     private int size;
 
