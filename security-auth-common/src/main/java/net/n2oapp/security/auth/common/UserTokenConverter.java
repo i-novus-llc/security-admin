@@ -1,7 +1,5 @@
-package net.n2oapp.security.admin.auth.server;
+package net.n2oapp.security.auth.common;
 
-import net.n2oapp.security.auth.common.User;
-import net.n2oapp.security.auth.common.UserParamsUtil;
 import net.n2oapp.security.auth.common.authority.PermissionGrantedAuthority;
 import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
 import net.n2oapp.security.auth.common.authority.SystemGrantedAuthority;
@@ -13,6 +11,10 @@ import org.springframework.security.oauth2.provider.authentication.OAuth2Authent
 import org.springframework.security.oauth2.provider.token.UserAuthenticationConverter;
 
 import java.util.*;
+
+import static java.util.Objects.nonNull;
+import static net.n2oapp.security.auth.common.UserAttributeKeysEnum.*;
+import static net.n2oapp.security.auth.common.UserParamsUtil.extractFromMap;
 
 public class UserTokenConverter implements UserAuthenticationConverter {
 
@@ -86,14 +88,14 @@ public class UserTokenConverter implements UserAuthenticationConverter {
 
     @Override
     public Authentication extractAuthentication(Map<String, ?> map) {
-        if (map.containsKey(USER)) {
+        if (nonNull(extractFromMap(PRINCIPAL.keys, map))) {
             Collection<? extends GrantedAuthority> authorities = getAuthorities(map);
-            User principal = new User((String) map.get(USER), "N/A", authorities, (String) map.get(SURNAME), (String) map.get(NAME),
-                    (String) map.get(PATRONYMIC), (String) map.get(EMAIL));
-            principal.setDepartment((String) map.get(DEPARTMENT));
-            principal.setOrganization((String) map.get(ORGANIZATION));
-            principal.setUserLevel((String) map.get(USER_LEVEL));
-            principal.setRegion((String) map.get(REGION));
+            User principal = new User((String) extractFromMap(PRINCIPAL.keys, map), "N/A", authorities, (String) extractFromMap(UserAttributeKeysEnum.SURNAME.keys, map), (String) extractFromMap(UserAttributeKeysEnum.NAME.keys, map),
+                    (String) extractFromMap(UserAttributeKeysEnum.PATRONYMIC.keys, map), (String) extractFromMap(UserAttributeKeysEnum.EMAIL.keys, map));
+            principal.setDepartment((String) extractFromMap(UserAttributeKeysEnum.DEPARTMENT.keys, map));
+            principal.setOrganization((String) extractFromMap(UserAttributeKeysEnum.ORGANIZATION.keys, map));
+            principal.setUserLevel((String) extractFromMap(UserAttributeKeysEnum.USER_LEVEL.keys, map));
+            principal.setRegion((String) extractFromMap(UserAttributeKeysEnum.REGION.keys, map));
             AbstractAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(principal, "N/A", authorities);
             authentication.setDetails(map);
             return authentication;

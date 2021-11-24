@@ -1,6 +1,7 @@
 package net.n2oapp.security.admin.auth.server;
 
 import net.n2oapp.security.auth.common.User;
+import net.n2oapp.security.auth.common.UserTokenConverter;
 import net.n2oapp.security.auth.common.authority.PermissionGrantedAuthority;
 import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
 import org.springframework.security.core.GrantedAuthority;

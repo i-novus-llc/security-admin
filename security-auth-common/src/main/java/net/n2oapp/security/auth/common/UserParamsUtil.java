@@ -217,4 +217,19 @@ public class UserParamsUtil {
         }
         return authorities;
     }
+
+    /**
+     * Извлечь значение из {@link Map} по первому подходящему ключу
+     *
+     * @param keys Список ключей для поиска
+     * @param map  Информация о пользователе
+     */
+    public static Object extractFromMap(String[] keys, Map<String, ?> map) {
+        for (String key : keys) {
+            if (map.containsKey(key)) {
+                return map.get(key);
+            }
+        }
+        return null;
+    }
 }
