@@ -76,11 +76,11 @@ public class UserTokenConverter implements UserAuthenticationConverter {
                 else if (authority instanceof SystemGrantedAuthority)
                     systems.add(((SystemGrantedAuthority) authority).getSystem());
             }
-            if (!roles.isEmpty() && includeRoles)
+            if (!roles.isEmpty() && Boolean.TRUE.equals(includeRoles))
                 response.put(ROLES, roles);
-            if (!permissions.isEmpty() && includePermissions)
+            if (!permissions.isEmpty() && Boolean.TRUE.equals(includePermissions))
                 response.put(PERMISSIONS, permissions);
-            if (!systems.isEmpty() && includeSystems)
+            if (!systems.isEmpty() && Boolean.TRUE.equals(includeSystems))
                 response.put(SYSTEMS, systems);
         }
         return response;

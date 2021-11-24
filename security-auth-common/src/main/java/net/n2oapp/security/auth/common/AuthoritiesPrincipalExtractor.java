@@ -46,7 +46,7 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
     private static final String GRANTED_AUTHORITY_KEY = "GrantedAuthorityKey";
     private final UserDetailsChecker userDetailsChecker = new AccountStatusUserDetailsChecker();
 
-    private String[] PRINCIPAL_KEYS = PRINCIPAL.keys;
+    private String[] principalKeys = PRINCIPAL.keys;
 
     private final UserDetailsService userDetailsService;
 
@@ -96,13 +96,13 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
     }
 
     public AuthoritiesPrincipalExtractor setPrincipalKeys(String... pKeys) {
-        PRINCIPAL_KEYS = pKeys;
+        principalKeys = pKeys;
         return this;
     }
 
     @SuppressWarnings("unchecked")
     private net.n2oapp.security.admin.api.model.User getUser(Map<String, Object> map) {
-        Object usernameObj = extractFromMap(PRINCIPAL_KEYS, map);
+        Object usernameObj = extractFromMap(principalKeys, map);
         if (usernameObj == null)
             return null;
         Object roles = extractFromMap(AUTHORITIES.keys, map);
