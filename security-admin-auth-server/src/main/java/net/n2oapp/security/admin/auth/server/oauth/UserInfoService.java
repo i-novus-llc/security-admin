@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import static net.n2oapp.security.admin.auth.server.UserTokenConverter.SID;
+import static net.n2oapp.security.auth.common.UserTokenConverter.SID;
 
 /**
  * Сервис для построения UserInfo

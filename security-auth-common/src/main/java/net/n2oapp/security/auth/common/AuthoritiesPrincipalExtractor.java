@@ -35,6 +35,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
+import static net.n2oapp.security.auth.common.UserAttributeKeysEnum.*;
+import static net.n2oapp.security.auth.common.UserParamsUtil.extractFromMap;
 
 /**
  * Извлекает Userinfo из ответа Keycloak
@@ -44,13 +46,7 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
     private static final String GRANTED_AUTHORITY_KEY = "GrantedAuthorityKey";
     private final UserDetailsChecker userDetailsChecker = new AccountStatusUserDetailsChecker();
 
-    private String[] PRINCIPAL_KEYS = new String[]{"username", "preferred_username", "login", "sub"};
-    private static final String[] SURNAME_KEYS = new String[]{"surname", "second_name", "family_name", "lastName"};
-    private static final String[] NAME_KEYS = new String[]{"first_name", "given_name", "name", "firstName"};
-    private static final String[] PATRONYMIC_KEYS = new String[]{"middleName", "middle_name"};
-    private static final String[] EMAIL_KEYS = new String[]{"email", "e-mail", "mail"};
-    private static final String[] GUID_KEYS = new String[]{"sub", "oid"};
-    private static final String[] AUTHORITIES_KEYS = new String[]{"roles", "authorities", "realm_access.roles", "resource_access.roles"};
+    private String[] principalKeys = PRINCIPAL.keys;
 
     private final UserDetailsService userDetailsService;
 
@@ -100,29 +96,29 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
     }
 
     public AuthoritiesPrincipalExtractor setPrincipalKeys(String... pKeys) {
-        PRINCIPAL_KEYS = pKeys;
+        principalKeys = pKeys;
         return this;
     }
 
     @SuppressWarnings("unchecked")
     private net.n2oapp.security.admin.api.model.User getUser(Map<String, Object> map) {
-        Object usernameObj = extractFromMap(PRINCIPAL_KEYS, map);
+        Object usernameObj = extractFromMap(principalKeys, map);
         if (usernameObj == null)
             return null;
-        Object roles = extractFromMap(AUTHORITIES_KEYS, map);
+        Object roles = extractFromMap(AUTHORITIES.keys, map);
         List<String> roleList = new ArrayList<>();
         if (roles instanceof Collection)
             roleList = new ArrayList<>((Collection<String>) roles);
         String username = (String) usernameObj;
-        String surname = extractFromMap(SURNAME_KEYS, map) == null ? null : (String) extractFromMap(SURNAME_KEYS, map);
-        String name = extractFromMap(NAME_KEYS, map) == null ? null : (String) extractFromMap(NAME_KEYS, map);
-        String email = extractFromMap(EMAIL_KEYS, map) == null ? null : (String) extractFromMap(EMAIL_KEYS, map);
-        String patronymic = extractFromMap(PATRONYMIC_KEYS, map) == null ? null : (String) extractFromMap(PATRONYMIC_KEYS, map);
+        String surname = (String) extractFromMap(SURNAME.keys, map);
+        String name = (String) extractFromMap(NAME.keys, map);
+        String email = (String) extractFromMap(EMAIL.keys, map);
+        String patronymic = (String) extractFromMap(PATRONYMIC.keys, map);
 
         UserDetailsToken token = new UserDetailsToken();
         token.setUsername(username);
         token.setRoleNames(roleList);
-        token.setExtUid((String) extractFromMap(GUID_KEYS, map));
+        token.setExtUid((String) extractFromMap(GUID.keys, map));
         token.setName(name);
         token.setSurname(surname);
         token.setPatronymic(patronymic);
@@ -156,14 +152,5 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
             map.put(GRANTED_AUTHORITY_KEY, authorities);
         }
         return authorities;
-    }
-
-    private Object extractFromMap(String[] keys, Map<String, Object> map) {
-        for (String key : keys) {
-            if (map.containsKey(key)) {
-                return map.get(key);
-            }
-        }
-        return null;
     }
 }
