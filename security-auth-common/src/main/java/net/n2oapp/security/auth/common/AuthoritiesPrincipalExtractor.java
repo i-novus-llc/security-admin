@@ -110,10 +110,10 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
         if (roles instanceof Collection)
             roleList = new ArrayList<>((Collection<String>) roles);
         String username = (String) usernameObj;
-        String surname = extractFromMap(SURNAME.keys, map) == null ? null : (String) extractFromMap(SURNAME.keys, map);
-        String name = extractFromMap(NAME.keys, map) == null ? null : (String) extractFromMap(NAME.keys, map);
-        String email = extractFromMap(EMAIL.keys, map) == null ? null : (String) extractFromMap(EMAIL.keys, map);
-        String patronymic = extractFromMap(PATRONYMIC.keys, map) == null ? null : (String) extractFromMap(PATRONYMIC.keys, map);
+        String surname = (String) extractFromMap(SURNAME.keys, map);
+        String name = (String) extractFromMap(NAME.keys, map);
+        String email = (String) extractFromMap(EMAIL.keys, map);
+        String patronymic = (String) extractFromMap(PATRONYMIC.keys, map);
 
         UserDetailsToken token = new UserDetailsToken();
         token.setUsername(username);
