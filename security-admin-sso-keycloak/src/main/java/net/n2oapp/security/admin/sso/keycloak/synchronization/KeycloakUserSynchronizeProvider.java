@@ -62,13 +62,13 @@ public class KeycloakUserSynchronizeProvider {
     private void deactivateUsers(Long usersCount, List<Integer> syncedUsers) {
         int pos = 0;
         UserCriteria criteria = new UserCriteria();
-        criteria.setPageSize(properties.getSynchronizeUserCount());
+        criteria.setSize(properties.getSynchronizeUserCount());
         criteria.setExtSys(EXT_SYS);
         final Specification<UserEntity> specification = new UserSpecifications(criteria);
 
         int missings = 0;
         while (pos * properties.getSynchronizeUserCount() < usersCount) {
-            criteria.setPageNumber(pos);
+            criteria.setPage(pos);
 
             Page<UserEntity> all = transaction.execute(status -> userRepository.findAll(specification, criteria));
             usersCount = all.getTotalElements();

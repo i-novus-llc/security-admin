@@ -28,6 +28,9 @@ import java.util.stream.StreamSupport;
  * Базовая модель фильтрации данных в таблице
  */
 public class BaseCriteria implements Pageable {
+
+    private final int DEFAULT_SIZE_VALUE = 10;
+
     @DefaultValue("0")
     private int page;
 
@@ -38,7 +41,7 @@ public class BaseCriteria implements Pageable {
 
     public BaseCriteria() {
         this.page = 0;
-        this.size = 10;
+        this.size = DEFAULT_SIZE_VALUE;
     }
 
     public BaseCriteria(int page, int size, Sort sort) {
@@ -103,7 +106,10 @@ public class BaseCriteria implements Pageable {
     }
 
     public void setSize(int size) {
-        this.size = size;
+        if (size == 0)
+            this.size = DEFAULT_SIZE_VALUE;
+        else
+            this.size = size;
     }
 
     public int getPage() {
@@ -173,5 +179,4 @@ public class BaseCriteria implements Pageable {
     public int hashCode() {
         return Objects.hash(page, size);
     }
-
 }
