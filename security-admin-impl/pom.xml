@@ -53,13 +53,6 @@
             <artifactId>spring-security-core</artifactId>
         </dependency>
 
-        <!-- Spring -->
-        <dependency>
-            <groupId>ru.i-novus.ms.audit</groupId>
-            <artifactId>audit-client-spring-boot-starter</artifactId>
-            <version>${audit.version}</version>
-        </dependency>
-
         <!-- for mail -->
         <dependency>
             <groupId>org.springframework</groupId>

@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.i_novus.ms.audit.client.autoconfigure.AuditClientAutoConfiguration;
-import ru.i_novus.ms.audit.client.autoconfigure.AuditSimpleClientAutoConfiguration;
 import ru.inovus.ms.rdm.sync.RdmClientSyncAutoConfiguration;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,9 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @SpringBootApplication(exclude = {
-        AuditClientAutoConfiguration.class,
         LiquibaseAutoConfiguration.class,
-        AuditSimpleClientAutoConfiguration.class,
         DataSourceAutoConfiguration.class,
         DataSourceTransactionManagerAutoConfiguration.class,
         HibernateJpaAutoConfiguration.class,

@@ -8,7 +8,7 @@ import net.n2oapp.security.admin.api.model.AppSystemForm;
 import net.n2oapp.security.admin.api.model.Application;
 import net.n2oapp.security.admin.api.service.ApplicationSystemService;
 import net.n2oapp.security.admin.api.service.ClientService;
-import net.n2oapp.security.admin.impl.audit.AuditHelper;
+import net.n2oapp.security.admin.api.audit.AuditService;
 import net.n2oapp.security.admin.impl.entity.ApplicationEntity;
 import net.n2oapp.security.admin.impl.entity.SystemEntity;
 import net.n2oapp.security.admin.impl.repository.ApplicationRepository;
@@ -58,7 +58,7 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     @Autowired(required = false)
     private PermissionRepository permissionRepository;
     @Autowired
-    private AuditHelper audit;
+    private AuditService auditService;
     @Autowired(required = false)
     private RdmChangeDataClient rdmChangeDataClient;
     @Autowired
@@ -284,12 +284,12 @@ public class ApplicationSystemServiceImpl implements ApplicationSystemService {
     }
 
     private Application audit(String action, Application app) {
-        audit.audit(action, app, app.getCode(), "audit.application");
+        auditService.audit(action, app, app.getCode(), "audit.application");
         return app;
     }
 
     private AppSystem audit(String action, AppSystem appSys) {
-        audit.audit(action, appSys, appSys.getCode(), "audit.system");
+        auditService.audit(action, appSys, appSys.getCode(), "audit.system");
         return appSys;
     }
 }

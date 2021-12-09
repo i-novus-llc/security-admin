@@ -6,7 +6,6 @@ import net.n2oapp.security.admin.api.model.UserLevel;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.UserLevelService;
 import net.n2oapp.security.admin.api.service.UserService;
-import net.n2oapp.security.admin.impl.audit.AuditHelper;
 import net.n2oapp.security.admin.impl.provider.SimpleSsoUserRoleProvider;
 import net.n2oapp.security.admin.impl.repository.AccountTypeRepository;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
@@ -92,11 +91,6 @@ public class AdminImplConfiguration {
     @Bean
     public MessageSourceAccessor messageSourceAccessor(MessageSource messageSource) {
         return new MessageSourceAccessor(messageSource, new Locale("ru"));
-    }
-
-    @Bean
-    public AuditHelper getAuditHelper() {
-        return new AuditHelper();
     }
 
 //    @Configuration

@@ -5,7 +5,7 @@ import net.n2oapp.security.admin.api.criteria.RoleCriteria;
 import net.n2oapp.security.admin.api.model.*;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.RoleService;
-import net.n2oapp.security.admin.impl.audit.AuditHelper;
+import net.n2oapp.security.admin.api.audit.AuditService;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.SystemEntity;
@@ -58,7 +58,7 @@ public class RoleServiceImpl implements RoleService {
     @Autowired
     private OrganizationRepository organizationRepository;
     @Autowired
-    private AuditHelper audit;
+    private AuditService auditService;
 
     @Override
     public Role create(RoleForm role) {
@@ -266,7 +266,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     private Role audit(String action, Role role) {
-        audit.audit(action, role, "" + role.getCode(), "audit.role");
+        auditService.audit(action, role, "" + role.getCode(), "audit.role");
         return role;
     }
 }

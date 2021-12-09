@@ -6,7 +6,7 @@ import net.n2oapp.security.admin.api.model.Client;
 import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.service.ClientService;
-import net.n2oapp.security.admin.impl.audit.AuditHelper;
+import net.n2oapp.security.admin.api.audit.AuditService;
 import net.n2oapp.security.admin.impl.entity.ClientEntity;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
@@ -39,7 +39,7 @@ public class ClientServiceImpl implements ClientService {
     private ApplicationRepository applicationRepository;
 
     @Autowired
-    private AuditHelper audit;
+    private AuditService auditService;
 
     @Value("${access.permission.enabled}")
     private Boolean permissionEnabled;
@@ -184,7 +184,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     private Client audit(String action, Client client) {
-        audit.audit(action, client, client.getClientId(), client.getClientId());
+        auditService.audit(action, client, client.getClientId(), client.getClientId());
         return client;
     }
 }
