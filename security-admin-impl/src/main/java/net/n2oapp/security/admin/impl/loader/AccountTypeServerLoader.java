@@ -1,8 +1,10 @@
 package net.n2oapp.security.admin.impl.loader;
 
 import net.n2oapp.platform.loader.server.ServerLoader;
+import net.n2oapp.platform.loader.server.ServerLoaderSettings;
 import net.n2oapp.security.admin.api.model.AccountType;
 import net.n2oapp.security.admin.api.model.AccountTypeRoleEnum;
+import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.impl.entity.AccountTypeEntity;
 import net.n2oapp.security.admin.impl.entity.AccountTypeRoleEntity;
@@ -28,7 +30,7 @@ import static java.util.Objects.nonNull;
  * Загружает типы аккаунтов
  */
 @Component
-public class AccountTypeServerLoader implements ServerLoader<AccountType> {
+public class AccountTypeServerLoader extends ServerLoaderSettings<AccountType> implements ServerLoader<AccountType> {
 
     @Autowired
     private RoleRepository roleRepository;
@@ -86,7 +88,8 @@ public class AccountTypeServerLoader implements ServerLoader<AccountType> {
 
             accountTypes.add(accountTypeEntity);
         }
-        accountTypeRepository.saveAll(accountTypes);
+        if (isCreateRequired())
+            accountTypeRepository.saveAll(accountTypes);
     }
 
     @Override

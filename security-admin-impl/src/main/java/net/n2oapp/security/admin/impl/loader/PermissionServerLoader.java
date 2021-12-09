@@ -1,6 +1,7 @@
 package net.n2oapp.security.admin.impl.loader;
 
 import net.n2oapp.platform.loader.server.ServerLoader;
+import net.n2oapp.platform.loader.server.ServerLoaderSettings;
 import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.entity.SystemEntity;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Component
 @ConditionalOnProperty(name = "access.permission.enabled", havingValue = "true")
-public class PermissionServerLoader implements ServerLoader<Permission> {
+public class PermissionServerLoader extends ServerLoaderSettings<Permission> implements ServerLoader<Permission> {
 
     @Autowired
     PermissionRepository permissionRepository;
@@ -25,12 +26,16 @@ public class PermissionServerLoader implements ServerLoader<Permission> {
     public void load(List<Permission> uploadedData, String subject) {
         List<PermissionEntity> old = permissionRepository.findBySystemCodeOrderByCodeDesc(new SystemEntity(subject));
         List<PermissionEntity> fresh = uploadedData.stream().map(permission -> map(permission, subject)).collect(Collectors.toList());
-        permissionRepository.saveAll(fresh);
+        if (isCreateRequired())
+            permissionRepository.saveAll(fresh);
         old.removeAll(fresh);
-        fresh.forEach(permissionEntity -> old.remove(old.stream().
-                filter(permissionOldEntity -> permissionOldEntity.getCode().equals(permissionEntity.getCode())).findFirst().orElse(null)));
-        old.forEach(permissionEntity -> permissionEntity.getRoleList().forEach(roleEntity -> roleEntity.getPermissionList().remove(permissionEntity)));
-        permissionRepository.deleteAll(old);
+        if (isUpdateRequired()) {
+            fresh.forEach(permissionEntity -> old.remove(old.stream().
+                    filter(permissionOldEntity -> permissionOldEntity.getCode().equals(permissionEntity.getCode())).findFirst().orElse(null)));
+            old.forEach(permissionEntity -> permissionEntity.getRoleList().forEach(roleEntity -> roleEntity.getPermissionList().remove(permissionEntity)));
+        }
+        if (isDeleteRequired())
+            permissionRepository.deleteAll(old);
     }
 
     private static PermissionEntity map(Permission model, String systemCode) {

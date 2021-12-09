@@ -1,6 +1,8 @@
 package net.n2oapp.security.admin.impl.loader;
 
 import net.n2oapp.platform.loader.server.ServerLoader;
+import net.n2oapp.platform.loader.server.ServerLoaderSettings;
+import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.impl.entity.DepartmentEntity;
 import net.n2oapp.security.admin.impl.entity.OrganizationEntity;
@@ -19,7 +21,7 @@ import java.util.stream.Collectors;
 import static java.util.Objects.nonNull;
 
 @Component
-public class UserServerLoader implements ServerLoader<User> {
+public class UserServerLoader extends ServerLoaderSettings<User> implements ServerLoader<User> {
 
     @Autowired
     private RoleRepository roleRepository;
@@ -31,7 +33,8 @@ public class UserServerLoader implements ServerLoader<User> {
     @Transactional
     public void load(List<User> data, String subject) {
         List<UserEntity> fresh = map(data);
-        userRepository.saveAll(fresh);
+        if (isCreateRequired())
+            userRepository.saveAll(fresh);
     }
 
     private List<UserEntity> map(List<User> uploadedUsers) {

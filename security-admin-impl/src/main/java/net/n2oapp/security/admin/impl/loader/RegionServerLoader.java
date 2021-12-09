@@ -2,6 +2,8 @@ package net.n2oapp.security.admin.impl.loader;
 
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.platform.loader.server.ServerLoader;
+import net.n2oapp.platform.loader.server.ServerLoaderSettings;
+import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.model.Region;
 import net.n2oapp.security.admin.impl.entity.RegionEntity;
 import net.n2oapp.security.admin.impl.repository.RegionRepository;
@@ -12,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Component
-public class RegionServerLoader implements ServerLoader<Region> {
+public class RegionServerLoader extends ServerLoaderSettings<Region> implements ServerLoader<Region> {
 
     private static final String WRONG_REQUEST = "exception.wrongRequest";
     private static final String MISSING_REQUIRED_FIELDS = "exception.missingRequiredFields";
@@ -27,9 +29,11 @@ public class RegionServerLoader implements ServerLoader<Region> {
     @Override
     @Transactional
     public void load(List<Region> data, String subject) {
-        regionRepository.deleteAllInBatch();
-        for (Region region : data) {
-            create(region);
+        if (isCreateRequired()) {
+            regionRepository.deleteAllInBatch();
+            for (Region region : data) {
+                create(region);
+            }
         }
     }
 

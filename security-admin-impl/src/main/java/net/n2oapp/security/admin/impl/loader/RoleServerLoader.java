@@ -3,6 +3,8 @@ package net.n2oapp.security.admin.impl.loader;
 import lombok.extern.slf4j.Slf4j;
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.platform.loader.server.ServerLoader;
+import net.n2oapp.platform.loader.server.ServerLoaderSettings;
+import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.model.RoleForm;
 import net.n2oapp.security.admin.api.service.RoleService;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
@@ -18,7 +20,7 @@ import static java.util.function.Predicate.not;
 
 @Component
 @Slf4j
-public class RoleServerLoader implements ServerLoader<RoleForm> {
+public class RoleServerLoader extends ServerLoaderSettings<RoleForm> implements ServerLoader<RoleForm> {
 
     @Autowired
     private RoleRepository roleRepository;
@@ -31,14 +33,17 @@ public class RoleServerLoader implements ServerLoader<RoleForm> {
     public void load(List<RoleForm> uploadedData, String subject) {
         List<RoleEntity> old = roleRepository.findAll();
         List<RoleForm> fresh = prepareFreshRoles(uploadedData, subject, old);
-        for (RoleForm role : fresh) {
-            try {
-                roleService.create(role);
-            } catch (IllegalArgumentException e) {
-                log.warn("Ошибка при добавлении роли в keycloak: {}", e.getMessage());
+        if (isCreateRequired()) {
+            for (RoleForm role : fresh) {
+                try {
+                    roleService.create(role);
+                } catch (IllegalArgumentException e) {
+                    log.warn("Ошибка при добавлении роли в keycloak: {}", e.getMessage());
+                }
             }
         }
-        uploadedData.stream().filter(not(fresh::contains)).forEach(roleService::update);
+        if (isUpdateRequired())
+            uploadedData.stream().filter(not(fresh::contains)).forEach(roleService::update);
     }
 
     private List<RoleForm> prepareFreshRoles(List<RoleForm> uploadedData, String systemCode, List<RoleEntity> old) {

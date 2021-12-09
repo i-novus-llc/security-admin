@@ -1,6 +1,8 @@
 package net.n2oapp.security.admin.impl.loader;
 
 import net.n2oapp.platform.loader.server.ServerLoader;
+import net.n2oapp.platform.loader.server.ServerLoaderSettings;
+import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.impl.entity.ApplicationEntity;
 import net.n2oapp.security.admin.impl.entity.ClientEntity;
 import net.n2oapp.security.admin.impl.entity.SystemEntity;
@@ -19,7 +21,7 @@ import java.util.stream.Collectors;
  * Загружает приложения и их клиентов
  */
 @Component
-public class ApplicationServerLoader implements ServerLoader<AppModel> {
+public class ApplicationServerLoader extends ServerLoaderSettings<AppModel> implements ServerLoader<AppModel> {
 
     private ClientRepository clientRepository;
     private ApplicationRepository appRepository;
@@ -53,8 +55,10 @@ public class ApplicationServerLoader implements ServerLoader<AppModel> {
                 clients.add(client);
             }
         });
-        appRepository.saveAll(apps);
-        clientRepository.saveAll(clients);
+        if (isCreateRequired()) {
+            appRepository.saveAll(apps);
+            clientRepository.saveAll(clients);
+        }
 
         Set<String> fresh = data.stream().map(AppModel::getCode).collect(Collectors.toSet());
         List<ApplicationEntity> old = appRepository.findBySystemCode(new SystemEntity(subject));
@@ -68,8 +72,10 @@ public class ApplicationServerLoader implements ServerLoader<AppModel> {
                 unusedClients.add(client);
             }
         }
-        appRepository.deleteAll(unusedApps);
-        clientRepository.deleteAll(unusedClients);
+        if (isDeleteRequired()) {
+            appRepository.deleteAll(unusedApps);
+            clientRepository.deleteAll(unusedClients);
+        }
     }
 
     @Override
