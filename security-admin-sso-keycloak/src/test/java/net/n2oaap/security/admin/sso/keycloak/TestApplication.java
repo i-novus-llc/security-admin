@@ -6,12 +6,11 @@ import org.apache.cxf.bus.spring.SpringBus;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import ru.inovus.ms.rdm.sync.RdmClientSyncAutoConfiguration;
 
 /**
  * Стартовая точка запуска Spring Boot
  */
-@SpringBootApplication(exclude = RdmClientSyncAutoConfiguration.class)
+@SpringBootApplication
 @EnableEmbeddedPg
 public class TestApplication {
 

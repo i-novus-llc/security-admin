@@ -8,19 +8,14 @@ import net.n2oapp.security.admin.rest.impl.UserDetailsRestServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
-import ru.inovus.ms.rdm.api.service.RefBookService;
-import ru.inovus.ms.rdm.api.service.VersionService;
-import ru.inovus.ms.rdm.sync.RdmClientSyncAutoConfiguration;
-import ru.inovus.ms.rdm.sync.service.change_data.RdmChangeDataClient;
 
 /**
  * Стартовая точка запуска Spring Boot
  */
-@SpringBootApplication(exclude = RdmClientSyncAutoConfiguration.class)
+@SpringBootApplication
 @EnableJaxRsProxyClient(
-        classes = {RefBookService.class, VersionService.class, UserRestService.class, RoleRestService.class,
+        classes = {UserRestService.class, RoleRestService.class,
                 PermissionRestService.class, ClientRestService.class, UserDetailsRestService.class,
                 AccountTypeRestService.class, DepartmentRestService.class, UserLevelRestService.class,
                 OrganizationRestService.class, ApplicationSystemRestService.class, OrganizationPersistRestService.class, RegionRestService.class},
@@ -30,8 +25,6 @@ public class TestApplication {
 
     @Autowired
     UserDetailsService userDetailsService;
-    @MockBean
-    private RdmChangeDataClient rdmChangeDataClient;
 
     @Bean
     public UserDetailsRestService UserDetailsRestService() {

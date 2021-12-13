@@ -1,13 +1,24 @@
 package net.n2oapp.auth.gateway;
 
-import net.n2oapp.security.admin.impl.scheduled.*;
+import net.n2oapp.auth.gateway.rdm.ApplicationSystemExportJob;
+import net.n2oapp.auth.gateway.rdm.scheduled.DepartmentSynchronizeJob;
+import net.n2oapp.auth.gateway.rdm.scheduled.OrganizationSynchronizeJob;
+import net.n2oapp.auth.gateway.rdm.scheduled.RegionSynchronizeJob;
+import net.n2oapp.platform.jaxrs.MapperConfigurer;
+import net.n2oapp.platform.jaxrs.autoconfigure.EnableJaxRsProxyClient;
+import net.n2oapp.security.admin.impl.scheduled.SynchronizationInfo;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
+import ru.inovus.ms.rdm.api.provider.RdmMapperConfigurer;
+import ru.inovus.ms.rdm.api.service.DraftService;
+import ru.inovus.ms.rdm.api.service.PublishService;
 import ru.inovus.ms.rdm.sync.rest.RdmSyncRest;
 
 import java.util.List;
@@ -107,5 +118,18 @@ public class RdmSyncConfiguration {
         scheduler.getContext().put(RdmSyncRest.class.getSimpleName(), rdmSyncRest);
 
         return scheduler;
+    }
+
+    @ConditionalOnExpression("${rdm.sync.enabled:true} && T(org.springframework.util.StringUtils).hasText('${rdm.client.export.url:}')")
+    @EnableJaxRsProxyClient(
+            classes = {DraftService.class, PublishService.class},
+            address = "${rdm.client.export.url}"
+    )
+    @SpringBootConfiguration
+    public static class RdmProxyConfiguration {
+        @Bean
+        public MapperConfigurer cxfObjectMapperConfigurer() {
+            return new RdmMapperConfigurer();
+        }
     }
 }

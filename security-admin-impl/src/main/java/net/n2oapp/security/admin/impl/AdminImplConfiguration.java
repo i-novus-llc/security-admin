@@ -1,7 +1,5 @@
 package net.n2oapp.security.admin.impl;
 
-import net.n2oapp.platform.jaxrs.MapperConfigurer;
-import net.n2oapp.platform.jaxrs.autoconfigure.EnableJaxRsProxyClient;
 import net.n2oapp.security.admin.api.model.UserLevel;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.UserLevelService;
@@ -13,8 +11,6 @@ import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.UserLevelServiceImpl;
 import net.n2oapp.security.admin.impl.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.SpringBootConfiguration;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.MessageSource;
@@ -24,9 +20,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import ru.inovus.ms.rdm.api.provider.RdmMapperConfigurer;
-import ru.inovus.ms.rdm.api.service.DraftService;
-import ru.inovus.ms.rdm.api.service.PublishService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,19 +51,6 @@ public class AdminImplConfiguration {
     @ConditionalOnMissingBean
     public SsoUserRoleProvider ssoUserRoleProvider() {
         return new SimpleSsoUserRoleProvider();
-    }
-
-    @ConditionalOnExpression("${rdm.sync.enabled:true} && T(org.springframework.util.StringUtils).hasText('${rdm.client.export.url:}')")
-    @EnableJaxRsProxyClient(
-            classes = {DraftService.class, PublishService.class},
-            address = "${rdm.client.export.url}"
-    )
-    @SpringBootConfiguration
-    public static class RdmProxyConfiguration {
-        @Bean
-        public MapperConfigurer cxfObjectMapperConfigurer() {
-            return new RdmMapperConfigurer();
-        }
     }
 
     @Bean

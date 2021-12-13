@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.inovus.ms.rdm.sync.RdmClientSyncAutoConfiguration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,8 +22,7 @@ import java.util.Map;
         LiquibaseAutoConfiguration.class,
         DataSourceAutoConfiguration.class,
         DataSourceTransactionManagerAutoConfiguration.class,
-        HibernateJpaAutoConfiguration.class,
-        RdmClientSyncAutoConfiguration.class})
+        HibernateJpaAutoConfiguration.class})
 @RestController
 public class TestApplication {
 

@@ -1,4 +1,4 @@
-package net.n2oapp.security.admin.impl.service;
+package net.n2oapp.auth.gateway.rdm;
 
 import net.n2oapp.security.admin.api.criteria.ApplicationCriteria;
 import net.n2oapp.security.admin.api.criteria.SystemCriteria;
