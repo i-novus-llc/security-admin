@@ -7,7 +7,7 @@
                 <java method="create" class="net.n2oapp.security.admin.api.service.UserService">
                     <spring/>
                     <arguments>
-                        <argument name="userEntity" class="net.n2oapp.security.admin.api.model.UserForm"/>
+                        <argument name="userEntity" class="net.n2oapp.security.admin.api.model.UserForm" type="class"/>
                     </arguments>
                 </java>
             </invocation>
@@ -46,7 +46,7 @@
                 <java method="update" class="net.n2oapp.security.admin.api.service.UserService">
                     <spring/>
                     <arguments>
-                        <argument name="userEntity" class="net.n2oapp.security.admin.api.model.UserForm"/>
+                        <argument name="userEntity" class="net.n2oapp.security.admin.api.model.UserForm" type="class"/>
                     </arguments>
                 </java>
             </invocation>
@@ -114,7 +114,7 @@
                 <java method="resetPassword" class="net.n2oapp.security.admin.api.service.UserService">
                     <spring/>
                     <arguments>
-                        <argument name="userEntity" class="net.n2oapp.security.admin.api.model.UserForm"/>
+                        <argument name="userEntity" class="net.n2oapp.security.admin.api.model.UserForm" type="class"/>
                     </arguments>
                 </java>
             </invocation>

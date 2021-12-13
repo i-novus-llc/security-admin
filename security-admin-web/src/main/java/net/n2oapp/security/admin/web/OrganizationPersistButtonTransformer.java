@@ -19,7 +19,7 @@ public class OrganizationPersistButtonTransformer implements CompileTransformer<
 
     @Override
     public boolean matches(PerformButton compiled, CompileContext<?, ?> context) {
-        return VALIDATED_WIDGET_ID.equals(compiled.getValidatedWidgetId());
+        return VALIDATED_WIDGET_ID.equals(compiled.getValidateWidgetId());
     }
 
     @Override

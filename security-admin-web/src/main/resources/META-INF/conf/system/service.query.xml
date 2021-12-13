@@ -5,7 +5,9 @@
         <java method="findAllApplications" class="net.n2oapp.security.admin.api.service.ApplicationSystemService">
             <spring/>
             <arguments>
-                <argument class="net.n2oapp.security.admin.api.criteria.ApplicationCriteria" type="criteria"/>
+                <argument name="criteria"
+                          class="net.n2oapp.security.admin.api.criteria.ApplicationCriteria"
+                          type="criteria"/>
             </arguments>
         </java>
     </list>
@@ -35,7 +37,7 @@
         <field id="systemCode" domain="string">
             <select mapping="systemCode"/>
             <filters>
-                <eq filter-id="systemCode" mapping="systemCode"/>
+                <eq filter-id="systemCode" mapping="['criteria'].systemCode"/>
             </filters>
         </field>
         <field id="systemName" domain="string">
@@ -76,7 +78,7 @@
         <field id="clientRoles" domain="integer[]" name="Роли">
             <select mapping="client?.roles"></select>
             <filters>
-                <in filter-id="roles" domain="integer[]" mapping="roles"/>
+                <in filter-id="roles" domain="integer[]" mapping="['criteria'].roles"/>
             </filters>
         </field>
     </fields>

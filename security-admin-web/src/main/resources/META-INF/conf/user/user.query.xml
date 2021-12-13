@@ -5,7 +5,7 @@
         <java method="findAll" class="net.n2oapp.security.admin.api.service.UserService">
             <spring/>
             <arguments>
-                <argument class="net.n2oapp.security.admin.api.criteria.UserCriteria" type="criteria"/>
+                <argument class="net.n2oapp.security.admin.api.criteria.UserCriteria" type="criteria" name="criteria"/>
             </arguments>
         </java>
     </list>
@@ -31,13 +31,13 @@
             <select mapping="username"/>
             <sorting/>
             <filters>
-                <like filter-id="username" mapping="username"/>
+                <like filter-id="username" mapping="['criteria'].username"/>
             </filters>
         </field>
         <field id="surname" domain="string" name="Фамилия">
             <select mapping="surname"/>
             <filters>
-                <like filter-id="surname" mapping="surname"/>
+                <like filter-id="surname" mapping="['criteria'].surname"/>
             </filters>
         </field>
         <field id="name" domain="string" name="Имя">
@@ -49,13 +49,13 @@
         <field id="patronymic" domain="string" name="Отчество">
             <select mapping="patronymic"/>
             <filters>
-                <eq filter-id="patronymic" mapping="patronymic"/>
+                <eq filter-id="patronymic" mapping="['criteria'].patronymic"/>
             </filters>
         </field>
         <field id="email" domain="string" name="E-mail">
             <select mapping="email"/>
             <filters>
-                <eq filter-id="email" mapping="email"/>
+                <eq filter-id="email" mapping="['criteria'].email"/>
             </filters>
         </field>
 
@@ -63,27 +63,27 @@
             <select mapping="isActive"/>
             <sorting/>
             <filters>
-                <eq filter-id="isActive" mapping="isActive" domain="string"/>
+                <eq filter-id="isActive" mapping="['criteria'].isActive" domain="string"/>
             </filters>
         </field>
         <field id="fio" domain="string" name="ФИО">
             <select mapping="['fio']"/>
             <sorting/>
             <filters>
-                <eq filter-id="fio" mapping="fio"/>
+                <eq filter-id="fio" mapping="['criteria'].fio"/>
             </filters>
         </field>
         <field id="roleIds" domain="integer[]" name="Роли">
             <select mapping="['roles'].![id]"></select>
             <filters>
-                <in mapping="['roleIds']" filter-id="roleIds"></in>
+                <in mapping="['roleIds']" filter-id="['criteria'].roleIds"></in>
             </filters>
         </field>
 
         <field id="roleNames" domain="string[]" name="Роли">
             <select mapping="['roles'].![name]"></select>
             <filters>
-                <in mapping="['roleNames']" filter-id="roleNames"></in>
+                <in mapping="['roleNames']" filter-id="['criteria'].roleNames"></in>
             </filters>
         </field>
 
@@ -95,7 +95,7 @@
         <field id="roles" domain="object[]" name="Роли">
             <select mapping="['roles']"></select>
             <filters>
-                <in filter-id="roles*.id" domain="integer[]" mapping="roleIds"/>
+                <in filter-id="roles*.id" domain="integer[]" mapping="['criteria'].roleIds"/>
             </filters>
         </field>
 
@@ -105,7 +105,7 @@
 
         <field id="system" domain="object">
             <filters>
-                <eq filter-id="system.id" domain="string[]" mapping="systems"/>
+                <eq filter-id="system.id" domain="string[]" mapping="['criteria'].systems"/>
             </filters>
         </field>
 
@@ -116,28 +116,28 @@
         <field id="userLevel.id" domain="string" name="Уровень пользователя">
             <select mapping="userLevel?.name"></select>
             <filters>
-                <eq filter-id="userLevel.id" domain="string" mapping="userLevel"></eq>
+                <eq filter-id="userLevel.id" domain="string" mapping="['criteria'].userLevel"></eq>
             </filters>
         </field>
 
         <field id="department" domain="object">
             <select mapping="department"></select>
             <filters>
-                <eq filter-id="department.id" domain="integer" mapping="departmentId"></eq>
+                <eq filter-id="department.id" domain="integer" mapping="['criteria'].departmentId"></eq>
             </filters>
         </field>
 
         <field id="region">
             <select mapping="region"></select>
             <filters>
-                <eq filter-id="region.id" domain="integer" mapping="regionId"></eq>
+                <eq filter-id="region.id" domain="integer" mapping="['criteria'].regionId"></eq>
             </filters>
         </field>
 
         <field id="organization">
             <select mapping="organization"></select>
             <filters>
-                <eq filter-id="organization.id" domain="integer[]" mapping="organizations"></eq>
+                <eq filter-id="organization.id" domain="integer[]" mapping="['criteria'].organizations"></eq>
             </filters>
         </field>
 

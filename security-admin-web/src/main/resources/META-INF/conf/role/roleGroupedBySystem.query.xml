@@ -6,7 +6,7 @@
         <java method="findAll" class="net.n2oapp.security.admin.api.service.RoleService">
             <spring/>
             <arguments>
-                <argument class="net.n2oapp.security.admin.api.criteria.RoleCriteria" type="criteria"/>
+                <argument class="net.n2oapp.security.admin.api.criteria.RoleCriteria" type="criteria" name="criteria"/>
             </arguments>
         </java>
     </list>
@@ -23,20 +23,20 @@
             <select mapping="name"/>
             <sorting/>
             <filters>
-                <eq filter-id="name" mapping="name"/>
+                <eq filter-id="name" mapping="['criteria'].name"/>
             </filters>
         </field>
         <field id="code" domain="string" name="Код">
             <select mapping="code"/>
             <filters>
-                <eq filter-id="code" mapping="code"/>
+                <eq filter-id="code" mapping="['criteria'].code"/>
             </filters>
         </field>
         <field id="description" domain="string" name="Описание">
             <select/>
             <sorting/>
             <filters>
-                <eq filter-id="description" mapping="description"/>
+                <eq filter-id="description" mapping="['criteria'].description"/>
             </filters>
         </field>
 
@@ -44,7 +44,7 @@
         <field id="system" domain="object" name="Система">
             <select mapping="['system']"></select>
             <filters>
-                <eq filter-id="system.id" domain="string" mapping="systemCodes"></eq>
+                <eq filter-id="system.id" domain="string" mapping="['criteria'].systemCodes"></eq>
             </filters>
         </field>
 
@@ -62,18 +62,18 @@
         <field id="userLevel.id" domain="string" name="Уровень пользователя">
             <select mapping="userLevel?.name"></select>
             <filters>
-                <eq filter-id="userLevel.id" domain="string" mapping="userLevel"></eq>
+                <eq filter-id="userLevel.id" domain="string" mapping="['criteria'].userLevel"></eq>
             </filters>
         </field>
 
         <field id="groupBySystem" domain="boolean">
             <filters>
-                <eq domain="boolean" mapping="groupBySystem" default-value="true"></eq>
+                <eq domain="boolean" mapping="['criteria'].groupBySystem" default-value="true"></eq>
             </filters>
         </field>
         <field id="forForm" domain="boolean">
             <filters>
-                <eq domain="boolean" mapping="forForm" filter-id="forForm"/>
+                <eq domain="boolean" mapping="['criteria'].forForm" filter-id="forForm"/>
             </filters>
         </field>
     </fields>

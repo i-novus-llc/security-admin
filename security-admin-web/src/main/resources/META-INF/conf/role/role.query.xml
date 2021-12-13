@@ -6,7 +6,7 @@
         <java method="findAll" class="net.n2oapp.security.admin.api.service.RoleService">
             <spring/>
             <arguments>
-                <argument class="net.n2oapp.security.admin.api.criteria.RoleCriteria" type="criteria"/>
+                <argument class="net.n2oapp.security.admin.api.criteria.RoleCriteria" type="criteria" name="criteria"/>
             </arguments>
         </java>
     </list>
@@ -31,27 +31,27 @@
             <select mapping="name"/>
             <sorting/>
             <filters>
-                <eq filter-id="name" mapping="name"/>
+                <eq filter-id="name" mapping="['criteria'].name"/>
             </filters>
         </field>
         <field id="code" domain="string" name="Код">
             <select mapping="code"/>
             <filters>
-                <eq filter-id="code" mapping="code"/>
+                <eq filter-id="code" mapping="['criteria'].code"/>
             </filters>
         </field>
         <field id="description" domain="string" name="Описание">
             <select/>
             <sorting/>
             <filters>
-                <eq filter-id="description" mapping="description"/>
+                <eq filter-id="description" mapping="['criteria'].description"/>
             </filters>
         </field>
 
         <field id="permissionIds" domain="string[]" name="Права">
             <select mapping="['permissions'].![code]"></select>
             <filters>
-                <in mapping="['permissionIds']" filter-id="permissionIds"></in>
+                <in mapping="['permissionIds']" filter-id="['criteria'].permissionIds"></in>
             </filters>
         </field>
 
@@ -63,7 +63,7 @@
         <field id="permissions" domain="object[]" name="Права">
             <select mapping="['permissions']"/>
             <filters>
-                <in filter-id="permissions*.id" domain="string[]" mapping="permissionCodes"/>
+                <in filter-id="permissions*.id" domain="string[]" mapping="['criteria'].permissionCodes"/>
             </filters>
         </field>
 
@@ -78,7 +78,7 @@
         <field id="system" domain="object" name="Система">
             <select mapping="['system']"></select>
             <filters>
-                <eq filter-id="system.id" domain="string" mapping="systemCodes"></eq>
+                <eq filter-id="system.id" domain="string" mapping="['criteria'].systemCodes"></eq>
             </filters>
         </field>
 
@@ -96,7 +96,7 @@
         <field id="userLevel.id" domain="string" name="Уровень пользователя">
             <select mapping="userLevel?.name"></select>
             <filters>
-                <eq filter-id="userLevel.id" domain="string" mapping="userLevel"></eq>
+                <eq filter-id="userLevel.id" domain="string" mapping="['criteria'].userLevel"></eq>
             </filters>
         </field>
     </fields>

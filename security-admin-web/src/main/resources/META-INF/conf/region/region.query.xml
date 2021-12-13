@@ -5,7 +5,9 @@
         <java method="findAll" class="net.n2oapp.security.admin.api.service.RegionService">
             <spring/>
             <arguments>
-                <argument class="net.n2oapp.security.admin.api.criteria.RegionCriteria" type="criteria"/>
+                <argument class="net.n2oapp.security.admin.api.criteria.RegionCriteria"
+                          type="criteria"
+                          name="criteria"/>
             </arguments>
         </java>
     </list>
@@ -14,7 +16,7 @@
         <field id="name" domain="string" name="Название">
             <select mapping="name"/>
             <filters>
-                <like filter-id="name" mapping="name"/>
+                <like filter-id="name" mapping="['criteria'].name"/>
             </filters>
         </field>
         <field id="id" name="Идентификатор">
