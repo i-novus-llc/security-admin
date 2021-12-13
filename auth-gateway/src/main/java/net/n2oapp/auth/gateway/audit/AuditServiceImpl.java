@@ -1,9 +1,8 @@
-package net.n2oapp.security.admin.impl.audit;
+package net.n2oapp.auth.gateway.audit;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import net.n2oapp.security.admin.api.audit.AuditService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import ru.i_novus.ms.audit.client.AuditClient;
@@ -13,19 +12,20 @@ import ru.i_novus.ms.audit.client.model.AuditClientRequest;
  * Создание сообщений для аудит-сервиса
  */
 
-public class AuditHelper {
+public class AuditServiceImpl implements AuditService {
 
-    private static final Logger log = LoggerFactory.getLogger(AuditHelper.class);
-
+    @Autowired
     private AuditClient auditClient;
+
+    @Autowired
     private MessageSourceAccessor messageSourceAccessor;
+
+    @Autowired
     private ObjectMapper mapper;
 
+
+    @Override
     public void audit(String action, Object object, String objectId, String objectName) {
-        if (auditClient == null) {
-            log.warn("Audit service is disabled, please set 'audit.client.enabled' and 'audit.service.url' properties.");
-            return;
-        }
         AuditClientRequest request = new AuditClientRequest();
         request.setEventType(messageSourceAccessor.getMessage(action));
         request.setObjectType(object.getClass().getSimpleName());
@@ -44,20 +44,5 @@ public class AuditHelper {
 //          нужно, чтобы security-admin отдавал статус связанный с её ошибкой, а не возникшей в аудите
             throw new RuntimeException(e.getMessage(), e);
         }
-    }
-
-    @Autowired(required = false)
-    public void setAuditClient(AuditClient auditClient) {
-        this.auditClient = auditClient;
-    }
-
-    @Autowired
-    public void setMessageSourceAccessor(MessageSourceAccessor messageSourceAccessor) {
-        this.messageSourceAccessor = messageSourceAccessor;
-    }
-
-    @Autowired
-    public void setMapper(ObjectMapper mapper) {
-        this.mapper = mapper;
     }
 }

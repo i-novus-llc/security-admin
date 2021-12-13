@@ -6,7 +6,7 @@ import net.n2oapp.security.admin.api.model.*;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.MailService;
 import net.n2oapp.security.admin.api.service.UserService;
-import net.n2oapp.security.admin.impl.audit.AuditHelper;
+import net.n2oapp.security.admin.api.audit.AuditService;
 import net.n2oapp.security.admin.impl.entity.*;
 import net.n2oapp.security.admin.impl.repository.AccountTypeRepository;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserValidations userValidations;
     @Autowired
-    private AuditHelper audit;
+    private AuditService auditService;
 
     @Value("${access.user.send-mail-delete-user:false}")
     private Boolean sendMailDelete;
@@ -515,7 +515,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private User audit(String action, User user) {
-        audit.audit(action, user, "" + user.getId(), "audit.user");
+        auditService.audit(action, user, "" + user.getId(), "audit.user");
         return user;
     }
 

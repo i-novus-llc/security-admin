@@ -66,12 +66,6 @@
             <artifactId>n2o-platform-test-autoconfigure</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>ru.i-novus.ms.rdm</groupId>
-            <artifactId>rdm-sync-spring-boot-starter</artifactId>
-            <version>${rdm.version}</version>
-        </dependency>
-
     </dependencies>
 
 

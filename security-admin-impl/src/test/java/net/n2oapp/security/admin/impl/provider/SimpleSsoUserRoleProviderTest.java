@@ -27,7 +27,6 @@ import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)

@@ -35,8 +35,7 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE,
         classes = TestApplication.class,
-        properties = {"access.keycloak.serverUrl=http://127.0.0.1:8085/auth", "spring.liquibase.enabled=false",
-                "audit.service.url=Mocked", "audit.client.enabled=false"})
+        properties = {"access.keycloak.serverUrl=http://127.0.0.1:8085/auth", "spring.liquibase.enabled=false"})
 @Import(TestConfig.class)
 public class KeycloakSsoUserRoleProviderTest {
 
