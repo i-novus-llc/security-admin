@@ -13,7 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import ru.i_novus.ms.audit.client.UserAccessor;
 
 @Configuration
-public class AppConfiguration {
+public class CommonsConfiguration {
 
     @Bean
     AuditService auditService() {
