@@ -6,7 +6,9 @@
         <java method="getAll" class="net.n2oapp.security.admin.api.service.PermissionService">
             <spring/>
             <arguments>
-                <argument class="net.n2oapp.security.admin.api.criteria.PermissionCriteria" type="criteria"/>
+                <argument class="net.n2oapp.security.admin.api.criteria.PermissionCriteria"
+                          type="criteria"
+                          name="criteria"/>
             </arguments>
         </java>
     </list>
@@ -24,13 +26,13 @@
             <select mapping="code"/>
             <filters>
                 <eq filter-id="id" mapping="[0]"/>
-                <like filter-id="code" mapping="code"/>
+                <like filter-id="code" mapping="['criteria'].code"/>
             </filters>
         </field>
         <field id="name" domain="string" name="Наименование">
             <select mapping="name"/>
             <filters>
-                <like filter-id="name" mapping="name"/>
+                <like filter-id="name" mapping="['criteria'].name"/>
             </filters>
         </field>
         <field id="parent" domain="object">
@@ -48,13 +50,13 @@
         <field id="system" domain="object">
             <select mapping="system"/>
             <filters>
-                <eq filter-id="system.id" domain="string" mapping="systemCode"/>
+                <eq filter-id="system.id" domain="string" mapping="['criteria'].systemCode"/>
             </filters>
         </field>
         <field id="systemCode" domain="string">
             <select mapping="system?.code"/>
             <filters>
-                <eq filter-id="systemCode" domain="string[]" mapping="systemCode"/>
+                <eq filter-id="systemCode" domain="string[]" mapping="['criteria'].systemCode"/>
             </filters>
         </field>
         <field id="systemName" domain="string" name="Система">
@@ -62,12 +64,12 @@
         </field>
         <field id="withSystem">
             <filters>
-                <eq filter-id="withSystem" domain="boolean" mapping="withSystem"/>
+                <eq filter-id="withSystem" domain="boolean" mapping="['criteria'].withSystem"/>
             </filters>
         </field>
         <field id="forForm">
             <filters>
-                <eq filter-id="forForm" domain="boolean" mapping="forForm"/>
+                <eq filter-id="forForm" domain="boolean" mapping="['criteria'].forForm"/>
             </filters>
         </field>
         <field id="userLevel.name" domain="string" name="Уровень пользователя">
@@ -76,12 +78,12 @@
         <field id="userLevel.id" domain="string" name="Уровень пользователя">
             <select mapping="userLevel?.name"/>
             <filters>
-                <eq filter-id="userLevel.id" domain="string" mapping="userLevel"/>
+                <eq filter-id="userLevel.id" domain="string" mapping="['criteria'].userLevel"/>
             </filters>
         </field>
         <field id="withoutParent">
             <filters>
-                <eq filter-id="withoutParent" domain="boolean" mapping="withoutParent"/>
+                <eq filter-id="withoutParent" domain="boolean" mapping="['criteria'].withoutParent"/>
             </filters>
         </field>
         <field id="hasChildren">

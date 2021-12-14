@@ -10,22 +10,16 @@ import java.util.List;
 
 public class BaseCriteriaConstructor implements CriteriaConstructor {
     @Override
-    public <T> T construct(N2oPreparedCriteria criteria, Class<T> criteriaClass) {
-        T instance;
-        try {
-            instance = criteriaClass.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new IllegalArgumentException(e);
-        }
+    public Object construct(N2oPreparedCriteria criteria, Object instance) {
         if (instance instanceof BaseCriteria) {
-            ((BaseCriteria)instance).setPage(criteria.getPage() - 1);
-            ((BaseCriteria)instance).setSize(criteria.getSize());
+            ((BaseCriteria) instance).setPage(criteria.getPage() - 1);
+            ((BaseCriteria) instance).setSize(criteria.getSize());
             List<Sort.Order> orders = new ArrayList<>();
             if (criteria.getSorting() != null) {
                 orders.add(new Sort.Order(Sort.Direction.fromString(criteria.getSorting()
                         .getDirection().getExpression()), criteria.getSorting().getField()));
             }
-            ((BaseCriteria)instance).setOrders(orders);
+            ((BaseCriteria) instance).setOrders(orders);
         }
         return instance;
     }

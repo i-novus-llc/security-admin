@@ -4,7 +4,9 @@
         <java method="findAllCategories" class="net.n2oapp.security.admin.api.service.OrganizationService">
             <spring/>
             <arguments>
-                <argument class="net.n2oapp.security.admin.api.criteria.OrgCategoryCriteria" type="criteria"/>
+                <argument class="net.n2oapp.security.admin.api.criteria.OrgCategoryCriteria"
+                          type="criteria"
+                          name="criteria"/>
             </arguments>
         </java>
     </list>
@@ -24,7 +26,7 @@
         <field id="code" domain="string" name="Код">
             <select mapping="code"/>
             <filters>
-                <like filter-id="code" mapping="code"/>
+                <like filter-id="code" mapping="['criteria'].code"/>
             </filters>
         </field>
         <field id="description" domain="string" name="Описание">
@@ -33,7 +35,7 @@
         <field id="name" domain="string" name="Наименование">
             <select mapping="name"/>
             <filters>
-                <eq filter-id="name" mapping="name"/>
+                <eq filter-id="name" mapping="['criteria'].name"/>
             </filters>
         </field>
     </fields>

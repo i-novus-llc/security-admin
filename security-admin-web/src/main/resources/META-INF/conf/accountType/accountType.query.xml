@@ -4,7 +4,9 @@
         <java method="findAll" class="net.n2oapp.security.admin.api.service.AccountTypeService">
             <spring/>
             <arguments>
-                <argument class="net.n2oapp.security.admin.api.criteria.AccountTypeCriteria" type="criteria"/>
+                <argument class="net.n2oapp.security.admin.api.criteria.AccountTypeCriteria"
+                          type="criteria"
+                          name="criteria"/>
             </arguments>
         </java>
     </list>
@@ -27,7 +29,7 @@
         <field id="code" domain="string" name="Код">
             <select mapping="code"/>
             <filters>
-                <like filter-id="code" mapping="code"/>
+                <like filter-id="code" mapping="['criteria'].code"/>
             </filters>
         </field>
         <field id="description" domain="string" name="Описание">
@@ -37,7 +39,7 @@
             <select mapping="name"/>
             <sorting/>
             <filters>
-                <like filter-id="name" mapping="name"/>
+                <like filter-id="name" mapping="['criteria'].name"/>
             </filters>
         </field>
         <field id="roles" domain="object[]">
@@ -52,7 +54,7 @@
         <field id="userLevel.id" domain="string">
             <select mapping="userLevel?.name"/>
             <filters>
-                <eq filter-id="userLevel.id" domain="string" mapping="userLevel"/>
+                <eq filter-id="userLevel.id" domain="string" mapping="['criteria'].userLevel"/>
             </filters>
         </field>
         <field id="status" domain="string">

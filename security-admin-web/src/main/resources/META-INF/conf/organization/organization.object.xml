@@ -7,7 +7,9 @@
                 <java method="create" class="net.n2oapp.security.admin.api.service.OrganizationService">
                     <spring/>
                     <arguments>
-                        <argument name="organization" class="net.n2oapp.security.admin.api.model.Organization"/>
+                        <argument name="organization"
+                                  class="net.n2oapp.security.admin.api.model.Organization"
+                                  type="entity"/>
                     </arguments>
                 </java>
             </invocation>
@@ -35,7 +37,9 @@
                 <java method="update" class="net.n2oapp.security.admin.api.service.OrganizationService">
                     <spring/>
                     <arguments>
-                        <argument name="organization" class="net.n2oapp.security.admin.api.model.Organization"/>
+                        <argument name="organization"
+                                  class="net.n2oapp.security.admin.api.model.Organization"
+                                  type="entity"/>
                     </arguments>
                 </java>
             </invocation>
@@ -66,7 +70,7 @@
                 <java method="delete" class="net.n2oapp.security.admin.api.service.OrganizationService">
                     <spring/>
                     <arguments>
-                        <argument name="id" class="java.lang.Integer"/>
+                        <argument name="id" type="primitive"/>
                     </arguments>
                 </java>
             </invocation>
@@ -81,7 +85,7 @@
                 <java method="find" class="net.n2oapp.security.admin.api.service.OrganizationService">
                     <spring/>
                     <arguments>
-                        <argument name="ogrn" class="java.lang.Integer"/>
+                        <argument name="ogrn" type="primitive"/>
                     </arguments>
                 </java>
             </invocation>
