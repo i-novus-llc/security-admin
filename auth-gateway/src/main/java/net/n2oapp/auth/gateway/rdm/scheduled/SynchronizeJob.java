@@ -1,4 +1,4 @@
-package net.n2oapp.security.admin.impl.scheduled;
+package net.n2oapp.auth.gateway.rdm.scheduled;
 
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;

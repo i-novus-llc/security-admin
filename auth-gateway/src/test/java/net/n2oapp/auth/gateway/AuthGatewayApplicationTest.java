@@ -15,7 +15,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 @EnableEmbeddedPg
-@SpringBootTest
+@SpringBootTest(classes = AuthGatewayApplication.class)
 @TestPropertySource("classpath:test.properties")
 public class AuthGatewayApplicationTest {
 

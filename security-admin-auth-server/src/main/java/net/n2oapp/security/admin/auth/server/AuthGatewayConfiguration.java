@@ -29,8 +29,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
@@ -43,7 +41,6 @@ import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.filter.CompositeFilter;
-import ru.i_novus.ms.audit.client.UserAccessor;
 
 import javax.servlet.Filter;
 import javax.servlet.http.HttpServletRequest;
@@ -185,25 +182,6 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
         tokenServices.setPrincipalExtractor(extractor);
         filter.setTokenServices(tokenServices);
         return filter;
-    }
-
-    @Bean
-    public UserAccessor userAccessor() {
-        return () -> {
-            String userId, userName;
-            userId = userName = "-";
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            if (auth != null && auth.getPrincipal() != null) {
-                if (auth.getPrincipal() instanceof net.n2oapp.security.auth.common.User) {
-                    net.n2oapp.security.auth.common.User user = (net.n2oapp.security.auth.common.User) auth.getPrincipal();
-                    userId = user.getEmail();
-                    userName = user.getUsername();
-                } else {
-                    userId = "" + auth.getPrincipal();
-                }
-            }
-            return new ru.i_novus.ms.audit.client.model.User(userId, userName);
-        };
     }
 
     /**
