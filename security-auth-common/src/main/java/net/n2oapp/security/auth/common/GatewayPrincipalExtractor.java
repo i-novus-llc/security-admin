@@ -15,8 +15,6 @@
  */
 package net.n2oapp.security.auth.common;
 
-import net.n2oapp.security.auth.common.User;
-import net.n2oapp.security.auth.common.UserParamsUtil;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.AuthoritiesExtractor;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
 import org.springframework.security.core.GrantedAuthority;

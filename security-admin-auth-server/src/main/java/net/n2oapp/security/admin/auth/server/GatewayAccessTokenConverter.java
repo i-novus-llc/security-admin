@@ -1,6 +1,7 @@
 package net.n2oapp.security.admin.auth.server;
 
 import net.n2oapp.security.auth.common.User;
+import net.n2oapp.security.auth.common.UserAttributeKeys;
 import net.n2oapp.security.auth.common.UserTokenConverter;
 import net.n2oapp.security.auth.common.authority.PermissionGrantedAuthority;
 import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
@@ -21,8 +22,8 @@ public class GatewayAccessTokenConverter extends DefaultAccessTokenConverter {
     private Boolean includeRoles;
     private Boolean includePermissions;
 
-    public GatewayAccessTokenConverter(Boolean includeRoles, Boolean includePermissions, Boolean includeSystems) {
-        setUserTokenConverter(new UserTokenConverter(includeRoles, includePermissions, includeSystems));
+    public GatewayAccessTokenConverter(UserAttributeKeys userAttributeKeys, Boolean includeRoles, Boolean includePermissions, Boolean includeSystems) {
+        setUserTokenConverter(new UserTokenConverter(userAttributeKeys, includeRoles, includePermissions, includeSystems));
         this.includeRoles = includeRoles;
         this.includePermissions = includePermissions;
     }

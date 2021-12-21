@@ -224,7 +224,7 @@ public class UserParamsUtil {
      * @param keys Список ключей для поиска
      * @param map  Информация о пользователе
      */
-    public static Object extractFromMap(String[] keys, Map<String, ?> map) {
+    public static Object extractFromMap(List<String> keys, Map<String, ?> map) {
         for (String key : keys) {
             if (map.containsKey(key)) {
                 return map.get(key);

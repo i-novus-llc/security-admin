@@ -35,7 +35,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
-import static net.n2oapp.security.auth.common.UserAttributeKeysEnum.*;
 import static net.n2oapp.security.auth.common.UserParamsUtil.extractFromMap;
 
 /**
@@ -46,15 +45,19 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
     private static final String GRANTED_AUTHORITY_KEY = "GrantedAuthorityKey";
     private final UserDetailsChecker userDetailsChecker = new AccountStatusUserDetailsChecker();
 
-    private String[] principalKeys = PRINCIPAL.keys;
+    private List<String> principalKeys;
 
     private final UserDetailsService userDetailsService;
 
     private final String externalSystem;
 
-    public AuthoritiesPrincipalExtractor(UserDetailsService userDetailsService, String externalSystem) {
+    private final UserAttributeKeys userAttributeKeys;
+
+    public AuthoritiesPrincipalExtractor(UserDetailsService userDetailsService, String externalSystem, UserAttributeKeys userAttributeKeys) {
         this.userDetailsService = userDetailsService;
         this.externalSystem = externalSystem;
+        this.userAttributeKeys = userAttributeKeys;
+        principalKeys = userAttributeKeys.principal;
     }
 
     @Override
@@ -95,7 +98,7 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
         return getAuthorities(map, null);
     }
 
-    public AuthoritiesPrincipalExtractor setPrincipalKeys(String... pKeys) {
+    public AuthoritiesPrincipalExtractor setPrincipalKeys(List<String> pKeys) {
         principalKeys = pKeys;
         return this;
     }
@@ -105,20 +108,20 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
         Object usernameObj = extractFromMap(principalKeys, map);
         if (usernameObj == null)
             return null;
-        Object roles = extractFromMap(AUTHORITIES.keys, map);
+        Object roles = extractFromMap(userAttributeKeys.authorities, map);
         List<String> roleList = new ArrayList<>();
         if (roles instanceof Collection)
             roleList = new ArrayList<>((Collection<String>) roles);
         String username = (String) usernameObj;
-        String surname = (String) extractFromMap(SURNAME.keys, map);
-        String name = (String) extractFromMap(NAME.keys, map);
-        String email = (String) extractFromMap(EMAIL.keys, map);
-        String patronymic = (String) extractFromMap(PATRONYMIC.keys, map);
+        String surname = (String) extractFromMap(userAttributeKeys.surname, map);
+        String name = (String) extractFromMap(userAttributeKeys.name, map);
+        String email = (String) extractFromMap(userAttributeKeys.email, map);
+        String patronymic = (String) extractFromMap(userAttributeKeys.patronymic, map);
 
         UserDetailsToken token = new UserDetailsToken();
         token.setUsername(username);
         token.setRoleNames(roleList);
-        token.setExtUid((String) extractFromMap(GUID.keys, map));
+        token.setExtUid((String) extractFromMap(userAttributeKeys.guid, map));
         token.setName(name);
         token.setSurname(surname);
         token.setPatronymic(patronymic);
