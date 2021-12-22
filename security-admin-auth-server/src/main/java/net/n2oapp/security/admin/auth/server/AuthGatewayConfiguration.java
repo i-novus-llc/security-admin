@@ -11,6 +11,7 @@ import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.UserDetailsServiceImpl;
 import net.n2oapp.security.auth.common.AuthoritiesPrincipalExtractor;
 import net.n2oapp.security.auth.common.LogoutHandler;
+import net.n2oapp.security.auth.common.UserAttributeKeys;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -49,6 +50,7 @@ import java.io.IOException;
 import java.security.Security;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Configuration
@@ -76,6 +78,9 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private Pkcs7Util pkcs7Util;
+
+    @Autowired
+    private UserAttributeKeys userAttributeKeys;
 
     @Autowired
     private UserRepository userRepository;
@@ -160,7 +165,7 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
         filter.setAuthenticationFailureHandler(new AuthenticationExceptionHandler());
         UserInfoTokenServices tokenServices = new UserInfoTokenServices(client.getResource().getUserInfoUri(), client.getClient().getClientId());
         tokenServices.setRestTemplate(template);
-        AuthoritiesPrincipalExtractor extractor = new AuthoritiesPrincipalExtractor(gatewayUserDetailsService, "KEYCLOAK");
+        AuthoritiesPrincipalExtractor extractor = new AuthoritiesPrincipalExtractor(gatewayUserDetailsService, "KEYCLOAK", userAttributeKeys);
         tokenServices.setAuthoritiesExtractor(extractor);
         tokenServices.setPrincipalExtractor(extractor);
         filter.setTokenServices(tokenServices);
@@ -176,8 +181,8 @@ public class AuthGatewayConfiguration extends WebSecurityConfigurerAdapter {
         filter.setAuthenticationFailureHandler(new AuthenticationExceptionHandler());
         EsiaUserInfoTokenServices tokenServices = new EsiaUserInfoTokenServices(client.getResource().getUserInfoUri(), client.getClient().getClientId());
         tokenServices.setRestTemplate(template);
-        AuthoritiesPrincipalExtractor extractor = new AuthoritiesPrincipalExtractor(esiaUserDetailsService, "ESIA")
-                .setPrincipalKeys("snils");
+        AuthoritiesPrincipalExtractor extractor = new AuthoritiesPrincipalExtractor(esiaUserDetailsService, "ESIA", userAttributeKeys)
+                .setPrincipalKeys(Collections.singletonList("snils"));
         tokenServices.setAuthoritiesExtractor(extractor);
         tokenServices.setPrincipalExtractor(extractor);
         filter.setTokenServices(tokenServices);

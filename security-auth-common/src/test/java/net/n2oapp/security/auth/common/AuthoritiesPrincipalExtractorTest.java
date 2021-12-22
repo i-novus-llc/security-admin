@@ -7,25 +7,28 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static net.n2oapp.security.auth.common.TestConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
+@SpringBootTest(classes = PropertySourceAutoConfiguration.class)
 public class AuthoritiesPrincipalExtractorTest {
 
     @MockBean
     private UserDetailsService userDetailsService;
 
     private User testPrincipal;
+
+    @Autowired
+    private UserAttributeKeys userAttributeKeys;
 
     @BeforeEach
     public void setup() {
@@ -137,7 +140,7 @@ public class AuthoritiesPrincipalExtractorTest {
 
         AuthoritiesPrincipalExtractor extractor = getExtractor();
 
-        extractor.setPrincipalKeys(new String[]{PRINCIPIAL_OTHER_USERNAME_ATTR});
+        extractor.setPrincipalKeys(Collections.singletonList(PRINCIPIAL_OTHER_USERNAME_ATTR));
 
         Map<String, Object> map = new HashMap<>();
         map.put(PRINCIPIAL_OTHER_USERNAME_ATTR, SOME_USERNAME);
@@ -151,7 +154,7 @@ public class AuthoritiesPrincipalExtractorTest {
 
     private AuthoritiesPrincipalExtractor getExtractor() {
 
-        AuthoritiesPrincipalExtractor extractor = new AuthoritiesPrincipalExtractor(userDetailsService, SOME_SYSTEM);
+        AuthoritiesPrincipalExtractor extractor = new AuthoritiesPrincipalExtractor(userDetailsService, SOME_SYSTEM, userAttributeKeys);
 
         assertNotNull(extractor);
 

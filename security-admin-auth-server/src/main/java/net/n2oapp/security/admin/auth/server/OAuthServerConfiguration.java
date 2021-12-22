@@ -10,6 +10,7 @@ import net.minidev.json.JSONObject;
 import net.n2oapp.security.admin.api.service.ClientService;
 import net.n2oapp.security.admin.auth.server.logout.OIDCBackChannelLogoutHandler;
 import net.n2oapp.security.auth.common.LogoutHandler;
+import net.n2oapp.security.auth.common.UserAttributeKeys;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -121,7 +122,6 @@ public class OAuthServerConfiguration {
             if (this.properties.getRealm() != null) {
                 security.realm(this.properties.getRealm());
             }
-
         }
     }
 
@@ -187,13 +187,13 @@ public class OAuthServerConfiguration {
         }
 
         @Bean
-        public AccessTokenEnhancer accessTokenConverter(KeyPair keyPair) {
+        public AccessTokenEnhancer accessTokenConverter(KeyPair keyPair, UserAttributeKeys userAttributeKeys) {
             AccessTokenEnhancer converter = new AccessTokenEnhancer();
             converter.setKeyPair(keyPair);
             Boolean includeRoles = tokenIncludeClaims.contains("roles");
             Boolean includePermissions = tokenIncludeClaims.contains("permissions");
             Boolean includeSystems = tokenIncludeClaims.contains("systems");
-            converter.setAccessTokenConverter(new GatewayAccessTokenConverter(includeRoles, includePermissions, includeSystems));
+            converter.setAccessTokenConverter(new GatewayAccessTokenConverter(userAttributeKeys, includeRoles, includePermissions, includeSystems));
             converter.setKid(properties.getKeyId());
             return converter;
         }
