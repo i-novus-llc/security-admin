@@ -27,8 +27,8 @@ public class RoleSpecifications implements Specification<RoleEntity> {
         if (nonNull(criteria.getName()))
             predicate = builder.and(predicate, builder.like(builder.lower(root.get(RoleEntity_.name)), "%" + criteria.getName().toLowerCase() + "%"));
         if (nonNull(criteria.getDescription()))
-            predicate = builder.and(predicate, builder.like(root.get(RoleEntity_.description),
-                    criteria.getDescription() + "%"));
+            predicate = builder.and(predicate, builder.like(builder.lower(root.get(RoleEntity_.description)),
+                    criteria.getDescription().toLowerCase() + "%"));
         if (criteria.getPermissionCodes() != null && !criteria.getPermissionCodes().isEmpty()) {
             Subquery sub = criteriaQuery.subquery(Integer.class);
             Root subRoot = sub.from(PermissionEntity.class);

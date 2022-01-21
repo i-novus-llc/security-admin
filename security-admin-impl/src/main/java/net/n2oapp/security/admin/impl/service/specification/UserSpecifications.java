@@ -3,11 +3,13 @@ package net.n2oapp.security.admin.impl.service.specification;
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import net.n2oapp.security.admin.api.model.UserLevel;
 import net.n2oapp.security.admin.impl.entity.*;
+import net.n2oapp.security.admin.impl.util.SnilsNormalizer;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.CollectionUtils;
 
 import javax.persistence.criteria.*;
 import java.util.Arrays;
+import java.util.Optional;
 
 import static java.util.Objects.nonNull;
 
@@ -26,7 +28,7 @@ public class UserSpecifications implements Specification<UserEntity> {
     public Predicate toPredicate(Root<UserEntity> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder builder) {
         Predicate predicate = builder.and();
         if (nonNull(criteria.getUsername()))
-            predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.username), criteria.getUsername()));
+            predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.username), SnilsNormalizer.normalize(criteria.getUsername()).orElse(null)));
         if (nonNull(criteria.getEmail()))
             predicate = builder.and(predicate, builder.like(root.get(UserEntity_.email), "%" + criteria.getEmail() + "%"));
         if (nonNull(criteria.getFio())) {
