@@ -60,7 +60,7 @@
         </region>
         <line place="bottom">
             <table id="services" query-id="service" depends-on="main" master-field-id="id"
-                   detail-field-id="systemCode" name="Приложения" route="/applications">
+                   detail-field-id="systemCode" name="Приложения">
                 <columns>
                     <column text-field-id="id" label="Код"/>
                     <column text-field-id="name" label="Наименование"/>
