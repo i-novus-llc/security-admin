@@ -103,4 +103,16 @@
         <sqlFile path="access/db/changelog/sql/V8_add_user_expiration_date.sql"/>
     </changeSet>
 
+    <changeSet id="V9_add_account" author="aarifullin" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/V9_add_account.sql"/>
+    </changeSet>
+
+    <changeSet id="V9_user_account_migration" author="aarifullin" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/V9_user_account_migration.sql"/>
+    </changeSet>
+
+    <changeSet id="V9_remove_old_tables_and_column" author="aarifullin" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/V9_remove_old_tables_and_column.sql"/>
+    </changeSet>
+
 </databaseChangeLog>
