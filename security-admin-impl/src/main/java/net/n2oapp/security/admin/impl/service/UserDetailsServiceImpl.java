@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
@@ -58,47 +57,51 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (isNull(userEntity) && createUser) {
             userEntity = new UserEntity();
             userEntity.setUsername(Boolean.TRUE.equals(emailAsUsername) ? userDetails.getEmail() : userDetails.getUsername());
-            userEntity.setExtUid(userDetails.getExtUid());
             userEntity.setEmail(userDetails.getEmail());
             userEntity.setSurname(userDetails.getSurname());
             userEntity.setPatronymic(userDetails.getPatronymic());
             userEntity.setName(userDetails.getName());
             userEntity.setIsActive(true);
-            userEntity.setExtSys(userDetails.getExternalSystem());
-            if (nonNull(userDetails.getRoleNames()) && !userDetails.getRoleNames().isEmpty()) {
-                userEntity.setRoleList(userDetails.getRoleNames().stream().map(this::getOrCreateRole).filter(Objects::nonNull).collect(Collectors.toList()));
-            }
+            //            todo SECURITY-396
+//            userEntity.setExtUid(userDetails.getExtUid());
+//            userEntity.setExtSys(userDetails.getExternalSystem());
+//            if (nonNull(userDetails.getRoleNames()) && !userDetails.getRoleNames().isEmpty()) {
+//                userEntity.setRoleList(userDetails.getRoleNames().stream().map(this::getOrCreateRole).filter(Objects::nonNull).collect(Collectors.toList()));
+//            }
             userRepository.save(userEntity);
         } else if (isNull(userEntity) && !createUser) {
             throw new UserNotFoundAuthenticationException("User " + userDetails.getName() + " " + userDetails.getSurname() + " doesn't registered in system");
         } else if (updateUser) {
             userEntity.setIsActive(true);
-            userEntity.setExtUid(hasText(userDetails.getExtUid()) ? userDetails.getExtUid() : null);
+            //        todo SECURITY-396
+//            userEntity.setExtUid(hasText(userDetails.getExtUid()) ? userDetails.getExtUid() : null);
             userEntity.setEmail(hasText(userDetails.getEmail()) ? userDetails.getEmail() : null);
             userEntity.setPatronymic(hasText(userDetails.getPatronymic()) ? userDetails.getPatronymic() : userEntity.getPatronymic());
             userEntity.setSurname(hasText(userDetails.getSurname()) ? userDetails.getSurname() : null);
             userEntity.setName(hasText(userDetails.getName()) ? userDetails.getName() : null);
             if (isNull(userDetails.getRoleNames()) && updateRoles) {
-                userEntity.getRoleList().clear();
+                //            todo SECURITY-396
+//                userEntity.getRoleList().clear();
             } else if (updateRoles) {
                 List<String> roleNamesCopy = new ArrayList<>(userDetails.getRoleNames());
                 List<RoleEntity> roleForRemove = new ArrayList<>();
-                for (RoleEntity r : userEntity.getRoleList()) {
-                    if (!userDetails.getRoleNames().contains(r.getCode())) {
-                        roleForRemove.add(r);
-                    } else {
-                        roleNamesCopy.remove(r.getCode());
-                    }
-                }
-                for (String s : ignoreRoles) {
-                    roleNamesCopy.remove(s);
-                }
-                for (RoleEntity r : roleForRemove) {
-                    userEntity.getRoleList().remove(r);
-                }
-                for (String r : roleNamesCopy) {
-                    userEntity.getRoleList().add(getOrCreateRole(r));
-                }
+                //            todo SECURITY-396
+//                for (RoleEntity r : userEntity.getRoleList()) {
+//                    if (!userDetails.getRoleNames().contains(r.getCode())) {
+//                        roleForRemove.add(r);
+//                    } else {
+//                        roleNamesCopy.remove(r.getCode());
+//                    }
+//                }
+//                for (String s : ignoreRoles) {
+//                    roleNamesCopy.remove(s);
+//                }
+//                for (RoleEntity r : roleForRemove) {
+//                    userEntity.getRoleList().remove(r);
+//                }
+//                for (String r : roleNamesCopy) {
+//                    userEntity.getRoleList().add(getOrCreateRole(r));
+//                }
             }
         }
 
@@ -145,42 +148,43 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
         model.setFio(builder.toString());
 
-        if (nonNull(entity.getRoleList()) && !entity.getRoleList().isEmpty()) {
-            model.setRoles(entity.getRoleList().stream().map(this::model).collect(Collectors.toList()));
-        } else if (!defaultRoles.isEmpty()) {
-            model.setRoles(defaultRoles.stream().map(this::getRoleModel).filter(Objects::nonNull).collect(Collectors.toList()));
-        }
-
-
-        if (nonNull(entity.getDepartment())) {
-            Department d = new Department();
-            d.setId(entity.getDepartment().getId());
-            d.setCode(entity.getDepartment().getCode());
-            d.setName(entity.getDepartment().getName());
-            model.setDepartment(d);
-        }
-
-        if (nonNull(entity.getRegion())) {
-            Region r = new Region();
-            r.setId(entity.getRegion().getId());
-            r.setCode(entity.getRegion().getCode());
-            r.setOkato(entity.getRegion().getOkato());
-            r.setName(entity.getRegion().getName());
-            model.setRegion(r);
-        }
-
-        if (nonNull(entity.getOrganization())) {
-            Organization o = new Organization();
-            o.setId(entity.getOrganization().getId());
-            o.setCode(entity.getOrganization().getCode());
-            o.setFullName(entity.getOrganization().getFullName());
-            o.setOgrn(entity.getOrganization().getOgrn());
-            o.setOkpo(entity.getOrganization().getOkpo());
-            o.setShortName(entity.getOrganization().getShortName());
-            model.setOrganization(o);
-        }
-
-        model.setUserLevel(entity.getUserLevel());
+        //            todo SECURITY-396
+//        if (nonNull(entity.getRoleList()) && !entity.getRoleList().isEmpty()) {
+//            model.setRoles(entity.getRoleList().stream().map(this::model).collect(Collectors.toList()));
+//        } else if (!defaultRoles.isEmpty()) {
+//            model.setRoles(defaultRoles.stream().map(this::getRoleModel).filter(Objects::nonNull).collect(Collectors.toList()));
+//        }
+//
+//
+//        if (nonNull(entity.getDepartment())) {
+//            Department d = new Department();
+//            d.setId(entity.getDepartment().getId());
+//            d.setCode(entity.getDepartment().getCode());
+//            d.setName(entity.getDepartment().getName());
+//            model.setDepartment(d);
+//        }
+//
+//        if (nonNull(entity.getRegion())) {
+//            Region r = new Region();
+//            r.setId(entity.getRegion().getId());
+//            r.setCode(entity.getRegion().getCode());
+//            r.setOkato(entity.getRegion().getOkato());
+//            r.setName(entity.getRegion().getName());
+//            model.setRegion(r);
+//        }
+//
+//        if (nonNull(entity.getOrganization())) {
+//            Organization o = new Organization();
+//            o.setId(entity.getOrganization().getId());
+//            o.setCode(entity.getOrganization().getCode());
+//            o.setFullName(entity.getOrganization().getFullName());
+//            o.setOgrn(entity.getOrganization().getOgrn());
+//            o.setOkpo(entity.getOrganization().getOkpo());
+//            o.setShortName(entity.getOrganization().getShortName());
+//            model.setOrganization(o);
+//        }
+//
+//        model.setUserLevel(entity.getUserLevel());
 
         model.setExpirationDate(entity.getExpirationDate());
 

@@ -12,7 +12,9 @@ import static java.util.Objects.isNull;
 public class DepartmentEnricher implements UserInfoEnricher<UserEntity> {
     @Override
     public Object buildValue(UserEntity source) {
-        DepartmentEntity departmentEntity = source.getDepartment();
+        //        todo SECURITY-396
+        DepartmentEntity departmentEntity = null;
+//        departmentEntity = source.getDepartment();
         if (isNull(departmentEntity)) return null;
 
         Department department = new Department();

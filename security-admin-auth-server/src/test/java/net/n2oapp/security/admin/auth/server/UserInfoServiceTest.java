@@ -3,7 +3,6 @@ package net.n2oapp.security.admin.auth.server;
 import net.n2oapp.security.admin.api.model.Department;
 import net.n2oapp.security.admin.api.model.Organization;
 import net.n2oapp.security.admin.api.model.Region;
-import net.n2oapp.security.admin.api.model.UserLevel;
 import net.n2oapp.security.admin.api.oauth.UserInfoEnricher;
 import net.n2oapp.security.admin.auth.server.oauth.*;
 import net.n2oapp.security.admin.impl.entity.*;
@@ -102,8 +101,9 @@ public class UserInfoServiceTest {
         department.setId(1);
         department.setCode("testCode");
         department.setName("testName");
-        entity.setDepartment(department);
-        entity.setUserLevel(UserLevel.PERSONAL);
+        //        todo SECURITY-396
+//        entity.setDepartment(department);
+//        entity.setUserLevel(UserLevel.PERSONAL);
         RoleEntity role = new RoleEntity();
         role.setId(1);
         role.setCode("testRoleCode");
@@ -116,20 +116,23 @@ public class UserInfoServiceTest {
         system.setName("testSystemName");
         permission.setSystemCode(system);
         role.setPermissionList(Collections.singletonList(permission));
-        entity.setRoleList(Collections.singletonList(role));
+        //        todo SECURITY-396
+//        entity.setRoleList(Collections.singletonList(role));
         OrganizationEntity organization = new OrganizationEntity();
         organization.setId(1);
         organization.setInn("testInn");
         organization.setCode("testCode");
         organization.setKpp("testKpp");
-        entity.setOrganization(organization);
+//        todo SECURITY-396
+//        entity.setOrganization(organization);
 
         RegionEntity regionEntity = new RegionEntity();
         regionEntity.setId(1);
         regionEntity.setName("testName");
         regionEntity.setCode("testCode");
         regionEntity.setOkato("testOkato");
-        entity.setRegion(regionEntity);
+        //        todo SECURITY-396
+//        entity.setRegion(regionEntity);
 
         return entity;
     }

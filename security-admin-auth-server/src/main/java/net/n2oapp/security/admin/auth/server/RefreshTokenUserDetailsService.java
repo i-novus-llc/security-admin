@@ -3,7 +3,6 @@ package net.n2oapp.security.admin.auth.server;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserDetailsToken;
 import net.n2oapp.security.admin.api.service.UserDetailsService;
-import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.auth.common.authority.PermissionGrantedAuthority;
@@ -44,11 +43,13 @@ public class RefreshTokenUserDetailsService implements org.springframework.secur
         if (userEntity != null) {
             userDetailsToken.setUsername(userEntity.getUsername() == null ? username : userEntity.getUsername());
             userDetailsToken.setEmail(userEntity.getEmail());
-            userDetailsToken.setExtUid(userEntity.getExtUid());
+            //        todo SECURITY-396
+//            userDetailsToken.setExtUid(userEntity.getExtUid());
             userDetailsToken.setName(userEntity.getName());
             userDetailsToken.setSurname(userEntity.getSurname());
             userDetailsToken.setPatronymic(userEntity.getPatronymic());
-            userDetailsToken.setRoleNames(userEntity.getRoleList().stream().map(RoleEntity::getCode).collect(Collectors.toList()));
+            //        todo SECURITY-396
+//            userDetailsToken.setRoleNames(userEntity.getRoleList().stream().map(RoleEntity::getCode).collect(Collectors.toList()));
         }
         return userDetailsToken;
     }

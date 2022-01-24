@@ -8,8 +8,6 @@ import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.ClientService;
-import net.n2oapp.security.admin.impl.entity.PermissionEntity;
-import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
@@ -395,16 +393,17 @@ public class AuthProcessingTest {
         user.setName("testName");
         user.setSurname("testSurname");
         user.setPatronymic("testPatronymic");
-        user.setRoleList(Stream.of(1, 2).map(id -> {
-            RoleEntity role = new RoleEntity();
-            role.setId(id);
-            role.setName("testRoleName" + id);
-            role.setCode("testRoleCode" + id);
-            PermissionEntity p = new PermissionEntity();
-            p.setCode("testPermission" + id);
-            role.setPermissionList(List.of(p));
-            return role;
-        }).collect(Collectors.toList()));
+        //        todo SECURITY-396
+//        user.setRoleList(Stream.of(1, 2).map(id -> {
+//            RoleEntity role = new RoleEntity();
+//            role.setId(id);
+//            role.setName("testRoleName" + id);
+//            role.setCode("testRoleCode" + id);
+//            PermissionEntity p = new PermissionEntity();
+//            p.setCode("testPermission" + id);
+//            role.setPermissionList(List.of(p));
+//            return role;
+//        }).collect(Collectors.toList()));
         return user;
     }
 }

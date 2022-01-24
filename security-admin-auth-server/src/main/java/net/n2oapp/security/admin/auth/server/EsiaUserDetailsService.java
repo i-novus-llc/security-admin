@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.stream.Collectors;
-
 import static java.util.Objects.isNull;
 
 
@@ -45,14 +43,15 @@ public class EsiaUserDetailsService extends UserDetailsServiceImpl {
         if (entity == null) return null;
         SsoUser model = new SsoUser();
         model.setId(entity.getId());
-        model.setExtUid(entity.getExtUid());
         model.setUsername(entity.getUsername());
         model.setName(entity.getName());
         model.setSurname(entity.getSurname());
         model.setPatronymic(entity.getPatronymic());
         model.setIsActive(entity.getIsActive());
         model.setEmail(entity.getEmail());
-        model.setExtSys(entity.getExtSys());
+        //        todo SECURITY-396
+//        model.setExtUid(entity.getExtUid());
+//        model.setExtSys(entity.getExtSys());
         StringBuilder builder = new StringBuilder();
         if (entity.getSurname() != null) {
             builder.append(entity.getSurname()).append(" ");
@@ -64,9 +63,10 @@ public class EsiaUserDetailsService extends UserDetailsServiceImpl {
             builder.append(entity.getPatronymic());
         }
         model.setFio(builder.toString());
-        if (entity.getRoleList() != null) {
-            model.setRoles(entity.getRoleList().stream().map(this::model).collect(Collectors.toList()));
-        }
+        //        todo SECURITY-396
+//        if (entity.getRoleList() != null) {
+//            model.setRoles(entity.getRoleList().stream().map(this::model).collect(Collectors.toList()));
+//        }
 
         model.setExpirationDate(entity.getExpirationDate());
 
