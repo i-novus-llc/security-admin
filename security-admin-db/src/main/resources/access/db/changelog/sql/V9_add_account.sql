@@ -9,6 +9,7 @@ CREATE TABLE sec.account
     user_level      varchar,
     external_system varchar,
     external_uid    varchar,
+    is_active       boolean,
     CONSTRAINT account_user_fk FOREIGN KEY (user_id) references sec."user" (id),
     CONSTRAINT account_region_fk FOREIGN KEY (region_id) references sec.region (id),
     CONSTRAINT account_department_fk FOREIGN KEY (department_id) references sec.department (id),

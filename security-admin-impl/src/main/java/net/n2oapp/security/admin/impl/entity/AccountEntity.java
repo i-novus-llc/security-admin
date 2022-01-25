@@ -64,6 +64,12 @@ public class AccountEntity {
     private UserLevel userLevel;
 
     /**
+     * Активен ли данный аккаунт
+     */
+    @Column(name = "is_active")
+    private Boolean isActive;
+
+    /**
      * Роли пользователя
      */
     @ManyToMany(fetch = FetchType.LAZY)

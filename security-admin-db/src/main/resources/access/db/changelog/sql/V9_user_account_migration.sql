@@ -1,5 +1,5 @@
 INSERT INTO sec.account(user_id, name, region_id, organization_id, department_id, user_level, external_system,
-                        external_uid)
+                        external_uid, is_active)
 SELECT id,
        username,
        region_id,
@@ -7,7 +7,8 @@ SELECT id,
        department_id,
        user_level,
        ext_sys,
-       ext_uid
+       ext_uid,
+       true
 FROM sec."user";
 
 INSERT INTO sec.account_role(account_id, role_id)
