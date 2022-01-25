@@ -49,13 +49,6 @@ public class RoleServiceRestClient implements RoleService {
         return findAll(criteria);
     }
 
-
-    @Override
-    public Integer countUsersWithRole(Integer roleId) {
-        //todo Реализовать
-        return 0;
-    }
-
     private RestRoleCriteria toRestCriteria(RoleCriteria criteria) {
         RestRoleCriteria roleCriteria = new RestRoleCriteria();
         roleCriteria.setPage(criteria.getPageNumber());

@@ -71,7 +71,7 @@ public class RoleEntity {
 
 
     @ManyToMany(mappedBy = "roleList")
-    private List<UserEntity> userList;
+    private List<AccountEntity> accountList;
 
     @ManyToMany(mappedBy = "roleList")
     private List<ClientEntity> clientList;

@@ -1,6 +1,8 @@
 package net.n2oapp.security.admin.sso.keycloak.synchronization;
 
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
+import net.n2oapp.security.admin.impl.entity.UserEntity;
+import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.UserSpecifications;
 import net.n2oapp.security.admin.sso.keycloak.AdminSsoKeycloakProperties;
 import net.n2oapp.security.admin.sso.keycloak.KeycloakRestUserService;
@@ -12,9 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
-
-import net.n2oapp.security.admin.impl.entity.UserEntity;
-import net.n2oapp.security.admin.impl.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,31 +109,32 @@ public class KeycloakUserSynchronizeProvider {
 
     private List<Integer> syncUsers(List<UserRepresentation> users, List<String> errors) {
         final List<Integer> result = new ArrayList<>();
-        for (UserRepresentation user : users) {
-            try {
-                transaction.execute(status -> {
-                    UserEntity admEntity = userRepository.findOneByExtUid(user.getId());
-
-                    if (admEntity == null) {
-                        admEntity = userRepository.findOneByUsernameIgnoreCase(user.getUsername());
-                        if (admEntity == null) {
-                            admEntity = new UserEntity();
-                            logger.info("User created ExtUid:" + user.getId());
-                        }
-                        admEntity = userRepository.save(mapUser(user, admEntity));
-                    } else if (!isEqual(user, admEntity)) {
-                        admEntity = userRepository.save(mapUser(user, admEntity));
-                    }
-                    logger.info("User updated ID:" + admEntity.getId());
-                    result.add(admEntity.getId());
-                    return user.getId();
-                });
-            } catch (Exception e) {
-                String message = "Failed synchronize user id:" + user.getId() + " " + e.getLocalizedMessage();
-                logger.error(message);
-                errors.add(message);
-            }
-        }
+        //        todo SECURITY-396
+//        for (UserRepresentation user : users) {
+//            try {
+//                transaction.execute(status -> {
+//                    UserEntity admEntity = userRepository.findOneByExtUid(user.getId());
+//
+//                    if (admEntity == null) {
+//                        admEntity = userRepository.findOneByUsernameIgnoreCase(user.getUsername());
+//                        if (admEntity == null) {
+//                            admEntity = new UserEntity();
+//                            logger.info("User created ExtUid:" + user.getId());
+//                        }
+//                        admEntity = userRepository.save(mapUser(user, admEntity));
+//                    } else if (!isEqual(user, admEntity)) {
+//                        admEntity = userRepository.save(mapUser(user, admEntity));
+//                    }
+//                    logger.info("User updated ID:" + admEntity.getId());
+//                    result.add(admEntity.getId());
+//                    return user.getId();
+//                });
+//            } catch (Exception e) {
+//                String message = "Failed synchronize user id:" + user.getId() + " " + e.getLocalizedMessage();
+//                logger.error(message);
+//                errors.add(message);
+//            }
+//        }
         return result;
     }
 
@@ -142,8 +142,9 @@ public class KeycloakUserSynchronizeProvider {
         if (entity == null) {
             entity = new UserEntity();
         }
-        entity.setExtUid(user.getId());
-        entity.setExtSys(EXT_SYS);
+        //        todo SECURITY-396
+//        entity.setExtUid(user.getId());
+//        entity.setExtSys(EXT_SYS);
         entity.setIsActive(user.isEnabled());
         entity.setUsername(user.getUsername());
         entity.setName(user.getFirstName());
@@ -154,12 +155,14 @@ public class KeycloakUserSynchronizeProvider {
     }
 
     private boolean isEqual(UserRepresentation urep, UserEntity ent2) {
-        return Objects.equals(urep.getId(), ent2.getExtUid()) &&
+        //        todo SECURITY-396
+        return //Objects.equals(urep.getId(), ent2.getExtUid()) &&
                 Objects.equals(urep.isEnabled(), ent2.getIsActive()) &&
-                Objects.equals(urep.getUsername(), ent2.getUsername()) &&
-                Objects.equals(urep.getFirstName(), ent2.getName()) &&
-                Objects.equals(urep.getLastName(), ent2.getSurname()) &&
-                Objects.equals(urep.getEmail(), ent2.getEmail()) &&
-                Objects.equals(EXT_SYS, ent2.getExtUid());
+                        Objects.equals(urep.getUsername(), ent2.getUsername()) &&
+                        Objects.equals(urep.getFirstName(), ent2.getName()) &&
+                        Objects.equals(urep.getLastName(), ent2.getSurname()) &&
+                        Objects.equals(urep.getEmail(), ent2.getEmail()) //&&
+                //Objects.equals(EXT_SYS, ent2.getExtUid())
+                ;
     }
 }

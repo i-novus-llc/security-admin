@@ -1,12 +1,12 @@
 package net.n2oapp.security.admin.impl.service;
 
 import net.n2oapp.platform.i18n.UserException;
+import net.n2oapp.security.admin.api.audit.AuditService;
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import net.n2oapp.security.admin.api.model.*;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.MailService;
 import net.n2oapp.security.admin.api.service.UserService;
-import net.n2oapp.security.admin.api.audit.AuditService;
 import net.n2oapp.security.admin.impl.entity.*;
 import net.n2oapp.security.admin.impl.repository.AccountTypeRepository;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
@@ -25,7 +25,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.ws.rs.NotFoundException;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
@@ -102,31 +105,33 @@ public class UserServiceImpl implements UserService {
                             return roleEntity;
                         }).collect(Collectors.toList());
             }
-            if (accountTypeRoles != null) {
-                if (user.getRoles() == null)
-                    entity.setRoleList(accountTypeRoles);
-                else
-                    entity.getRoleList().addAll(accountTypeRoles);
-            }
-            entity.setUserLevel(accountType.getUserLevel());
+            //        todo SECURITY-396
+//            if (accountTypeRoles != null) {
+//                if (user.getRoles() == null)
+//                    entity.setRoleList(accountTypeRoles);
+//                else
+//                    entity.getRoleList().addAll(accountTypeRoles);
+//            }
+//            entity.setUserLevel(accountType.getUserLevel());
             entity.setStatus(accountType.getStatus());
         }
         UserEntity savedUser = userRepository.save(entity);
         // получаем модель для сохранения SSO провайдером, ему надо передать незакодированный пароль
-        if (provider.isSupports(savedUser.getExtSys())) {
-            SsoUser ssoUser = model(savedUser);
-            ssoUser.setPassword(password);
-            // если пароль временный, то требуем смены пароля при следующем входе пользователя
-            if (user.getTemporaryPassword() != null)
-                ssoUser.setRequiredActions(Collections.singletonList("UPDATE_PASSWORD"));
-            ssoUser = provider.createUser(ssoUser);
-            if (nonNull(ssoUser)) {
-                UserEntity changedSsoUser = entityProvider(ssoUser);
-                changedSsoUser.setPasswordHash(passwordHash);
-                changedSsoUser.setExpirationDate(savedUser.getExpirationDate());
-                savedUser = userRepository.save(changedSsoUser);
-            }
-        }
+//               todo SECURITY-396
+//        if (provider.isSupports(savedUser.getExtSys())) {
+//            SsoUser ssoUser = model(savedUser);
+//            ssoUser.setPassword(password);
+//            // если пароль временный, то требуем смены пароля при следующем входе пользователя
+//            if (user.getTemporaryPassword() != null)
+//                ssoUser.setRequiredActions(Collections.singletonList("UPDATE_PASSWORD"));
+//            ssoUser = provider.createUser(ssoUser);
+//            if (nonNull(ssoUser)) {
+//                UserEntity changedSsoUser = entityProvider(ssoUser);
+//                changedSsoUser.setPasswordHash(passwordHash);
+//                changedSsoUser.setExpirationDate(savedUser.getExpirationDate());
+//                savedUser = userRepository.save(changedSsoUser);
+//            }
+//        }
         if (Boolean.TRUE.equals(user.getSendOnEmail()) && user.getEmail() != null) {
             mailService.sendWelcomeMail(user);
         }
@@ -197,15 +202,16 @@ public class UserServiceImpl implements UserService {
             entityUser.setPasswordHash(passwordEncoder.encode(user.getPassword()));
         UserEntity updatedUser = userRepository.save(entityUser);
         //в провайдер отправляем незакодированный пароль, если он изменился, и отправляем null, если не изменялся пароль
-        if (provider.isSupports(updatedUser.getExtSys())) {
-            SsoUser ssoUser = model(updatedUser);
-            if (isNull(user.getPassword())) {
-                ssoUser.setPassword(null);
-            } else {
-                ssoUser.setPassword(user.getPassword());
-            }
-            provider.updateUser(ssoUser);
-        }
+        //        todo SECURITY-396
+//        if (provider.isSupports(updatedUser.getExtSys())) {
+//            SsoUser ssoUser = model(updatedUser);
+//            if (isNull(user.getPassword())) {
+//                ssoUser.setPassword(null);
+//            } else {
+//                ssoUser.setPassword(user.getPassword());
+//            }
+//            provider.updateUser(ssoUser);
+//        }
         User result = model(updatedUser);
         if (sendMailActivate && isActiveChanged) {
             mailService.sendChangeActivateMail(result);
@@ -262,9 +268,10 @@ public class UserServiceImpl implements UserService {
         }
         userEntity.setIsActive(!userEntity.getIsActive());
         SsoUser result = model(userRepository.save(userEntity));
-        if (provider.isSupports(userEntity.getExtSys())) {
-            provider.changeActivity(result);
-        }
+        //        todo SECURITY-396
+//        if (provider.isSupports(userEntity.getExtSys())) {
+//            provider.changeActivity(result);
+//        }
         if (sendMailActivate) {
             mailService.sendChangeActivateMail(model(userEntity));
         }
@@ -326,22 +333,22 @@ public class UserServiceImpl implements UserService {
             }
             userEntity.setPasswordHash(passwordEncoder.encode(password));
             UserEntity updatedUser = userRepository.save(userEntity);
-
+//        todo SECURITY-396
             //в провайдер отправляем незакодированный пароль
-            if (provider.isSupports(updatedUser.getExtSys())) {
-                SsoUser ssoUser = model(updatedUser);
-                ssoUser.setPassword(password);
-                // если пароль временный, то требуем смены пароля при следующем входе пользователя
-                if (isNull(user.getPassword()) || user.getTemporaryPassword() != null) {
-                    user.setPassword(password);
-                    ssoUser.setRequiredActions(Collections.singletonList("UPDATE_PASSWORD"));
-                }
-                provider.resetPassword(ssoUser);
-            }
-
-            if (Boolean.TRUE.equals(user.getSendOnEmail()) && nonNull(user.getEmail())) {
-                mailService.sendResetPasswordMail(user);
-            }
+//            if (provider.isSupports(updatedUser.getExtSys())) {
+//                SsoUser ssoUser = model(updatedUser);
+//                ssoUser.setPassword(password);
+            // если пароль временный, то требуем смены пароля при следующем входе пользователя
+//                if (isNull(user.getPassword()) || user.getTemporaryPassword() != null) {
+//                    user.setPassword(password);
+//                    ssoUser.setRequiredActions(Collections.singletonList("UPDATE_PASSWORD"));
+//                }
+//                provider.resetPassword(ssoUser);
+//            }
+//
+//            if (Boolean.TRUE.equals(user.getSendOnEmail()) && nonNull(user.getEmail())) {
+//                mailService.sendResetPasswordMail(user);
+//            }
         }
     }
 
@@ -364,13 +371,14 @@ public class UserServiceImpl implements UserService {
         entity.setIsActive(model.getIsActive());
         entity.setEmail(model.getEmail());
         entity.setSnils(model.getSnils());
-        entity.setUserLevel(nonNull(model.getUserLevel()) ? UserLevel.valueOf(model.getUserLevel()) : null);
-        entity.setDepartment(nonNull(model.getDepartmentId()) ? new DepartmentEntity(model.getDepartmentId()) : null);
-        entity.setOrganization(nonNull(model.getOrganizationId()) ? new OrganizationEntity(model.getOrganizationId()) : null);
-        entity.setRegion(nonNull(model.getRegionId()) ? new RegionEntity(model.getRegionId()) : null);
         entity.setStatus(model.getStatus());
-        if (nonNull(model.getRoles()))
-            entity.setRoleList(model.getRoles().stream().map(RoleEntity::new).collect(Collectors.toList()));
+        //        todo SECURITY-396
+//        entity.setUserLevel(nonNull(model.getUserLevel()) ? UserLevel.valueOf(model.getUserLevel()) : null);
+//        entity.setDepartment(nonNull(model.getDepartmentId()) ? new DepartmentEntity(model.getDepartmentId()) : null);
+//        entity.setOrganization(nonNull(model.getOrganizationId()) ? new OrganizationEntity(model.getOrganizationId()) : null);
+//        entity.setRegion(nonNull(model.getRegionId()) ? new RegionEntity(model.getRegionId()) : null);
+//        if (nonNull(model.getRoles()))
+//            entity.setRoleList(model.getRoles().stream().map(RoleEntity::new).collect(Collectors.toList()));
         entity.setExpirationDate(model.getExpirationDate());
         return entity;
     }
@@ -378,25 +386,26 @@ public class UserServiceImpl implements UserService {
     private UserEntity entityProvider(SsoUser modelFromProvider) {
         UserEntity entity = new UserEntity();
         entity.setId(modelFromProvider.getId());
-        entity.setExtUid(modelFromProvider.getExtUid());
         entity.setUsername(modelFromProvider.getUsername());
         entity.setName(modelFromProvider.getName());
         entity.setSurname(modelFromProvider.getSurname());
         entity.setPatronymic(modelFromProvider.getPatronymic());
         entity.setIsActive(modelFromProvider.getIsActive());
-        entity.setExtSys(modelFromProvider.getExtSys());
         entity.setEmail(modelFromProvider.getEmail());
         entity.setSnils(modelFromProvider.getSnils());
-        entity.setUserLevel(modelFromProvider.getUserLevel());
         entity.setStatus(modelFromProvider.getStatus());
-        if (nonNull(modelFromProvider.getDepartment()))
-            entity.setDepartment(new DepartmentEntity(modelFromProvider.getDepartment().getId()));
-        if (nonNull(modelFromProvider.getOrganization()))
-            entity.setOrganization(new OrganizationEntity(modelFromProvider.getOrganization().getId()));
-        if (nonNull(modelFromProvider.getRegion()))
-            entity.setRegion(new RegionEntity(modelFromProvider.getRegion().getId()));
-        if (nonNull(modelFromProvider.getRoles()))
-            entity.setRoleList(modelFromProvider.getRoles().stream().map(r -> new RoleEntity(r.getId())).collect(Collectors.toList()));
+        //        todo SECURITY-396
+//        entity.setExtUid(modelFromProvider.getExtUid());
+//        entity.setUserLevel(modelFromProvider.getUserLevel());
+//        entity.setExtSys(modelFromProvider.getExtSys());
+//        if (nonNull(modelFromProvider.getDepartment()))
+//            entity.setDepartment(new DepartmentEntity(modelFromProvider.getDepartment().getId()));
+//        if (nonNull(modelFromProvider.getOrganization()))
+//            entity.setOrganization(new OrganizationEntity(modelFromProvider.getOrganization().getId()));
+//        if (nonNull(modelFromProvider.getRegion()))
+//            entity.setRegion(new RegionEntity(modelFromProvider.getRegion().getId()));
+//        if (nonNull(modelFromProvider.getRoles()))
+//            entity.setRoleList(modelFromProvider.getRoles().stream().map(r -> new RoleEntity(r.getId())).collect(Collectors.toList()));
         return entity;
     }
 
@@ -424,12 +433,13 @@ public class UserServiceImpl implements UserService {
         model.setEmail(entity.getEmail());
         model.setSnils(entity.getSnils());
         model.setPasswordHash(entity.getPasswordHash());
-        model.setUserLevel(entity.getUserLevel());
-        model.setDepartment(model(entity.getDepartment()));
-        model.setOrganization(model(entity.getOrganization()));
-        model.setRegion(model(entity.getRegion()));
-        model.setExtSys(entity.getExtSys());
-        model.setExtUid(entity.getExtUid());
+//        todo SECURITY-396
+        //        model.setUserLevel(entity.getUserLevel());
+//        model.setDepartment(model(entity.getDepartment()));
+//        model.setOrganization(model(entity.getOrganization()));
+//        model.setRegion(model(entity.getRegion()));
+//        model.setExtSys(entity.getExtSys());
+//        model.setExtUid(entity.getExtUid());
         model.setStatus(entity.getStatus());
         model.setExpirationDate(entity.getExpirationDate());
 
@@ -445,12 +455,13 @@ public class UserServiceImpl implements UserService {
         }
         String fio = builder.toString().strip();
         model.setFio(hasText(fio) ? fio : null);
-        if (nonNull(entity.getRoleList())) {
-            model.setRoles(entity.getRoleList().stream().map(e -> {
-                RoleEntity re = roleRepository.findById(e.getId()).get();
-                return model(re);
-            }).collect(Collectors.toList()));
-        }
+//        todo SECURITY-396
+//        if (nonNull(entity.getRoleList())) {
+//            model.setRoles(entity.getRoleList().stream().map(e -> {
+//                RoleEntity re = roleRepository.findById(e.getId()).get();
+//                return model(re);
+//            }).collect(Collectors.toList()));
+//        }
         return model;
     }
 
@@ -523,8 +534,9 @@ public class UserServiceImpl implements UserService {
         UserForm userForm = new UserForm();
         userForm.setId((Integer) userInfo.getOrDefault(ID, entity.getId()));
         userForm.setUsername((String) userInfo.getOrDefault(USERNAME, entity.getUsername()));
-        userForm.setExtSys((String) userInfo.getOrDefault("extSys", entity.getExtSys()));
-        userForm.setExtUid((String) userInfo.getOrDefault("extUid", entity.getExtUid()));
+        //            todo SECURITY-396
+//        userForm.setExtSys((String) userInfo.getOrDefault("extSys", entity.getExtSys()));
+//        userForm.setExtUid((String) userInfo.getOrDefault("extUid", entity.getExtUid()));
         userForm.setEmail((String) userInfo.getOrDefault("email", entity.getEmail()));
         userForm.setSurname((String) userInfo.getOrDefault("surname", entity.getSurname()));
         userForm.setName((String) userInfo.getOrDefault("name", entity.getName()));
@@ -534,12 +546,13 @@ public class UserServiceImpl implements UserService {
         userForm.setTemporaryPassword((String) userInfo.getOrDefault("temporaryPassword", null));
         userForm.setSendOnEmail((Boolean) userInfo.getOrDefault("sendOnEmail", false));
         userForm.setIsActive((Boolean) userInfo.getOrDefault("isActive", entity.getIsActive()));
-        userForm.setRoles((List<Integer>) userInfo.getOrDefault("roles", entity.getRoleList().stream().map(RoleEntity::getId).collect(Collectors.toList())));
         userForm.setSnils((String) userInfo.getOrDefault("snils", entity.getSnils()));
-        userForm.setUserLevel((String) userInfo.getOrDefault("userLevel", entity.getUserLevel() != null ? entity.getUserLevel().getName() : null));
-        userForm.setDepartmentId((Integer) userInfo.getOrDefault("departmentId", entity.getDepartment() != null ? entity.getDepartment().getId() : null));
-        userForm.setRegionId((Integer) userInfo.getOrDefault("regionId", entity.getRegion() != null ? entity.getRegion().getId() : null));
-        userForm.setOrganizationId((Integer) userInfo.getOrDefault("organizationId", entity.getOrganization() != null ? entity.getOrganization().getId() : null));
+        //            todo SECURITY-396
+//        userForm.setRoles((List<Integer>) userInfo.getOrDefault("roles", entity.getRoleList().stream().map(RoleEntity::getId).collect(Collectors.toList())));
+//        userForm.setUserLevel((String) userInfo.getOrDefault("userLevel", entity.getUserLevel() != null ? entity.getUserLevel().getName() : null));
+//        userForm.setDepartmentId((Integer) userInfo.getOrDefault("departmentId", entity.getDepartment() != null ? entity.getDepartment().getId() : null));
+//        userForm.setRegionId((Integer) userInfo.getOrDefault("regionId", entity.getRegion() != null ? entity.getRegion().getId() : null));
+//        userForm.setOrganizationId((Integer) userInfo.getOrDefault("organizationId", entity.getOrganization() != null ? entity.getOrganization().getId() : null));
         userForm.setStatus(userInfo.containsKey(STATUS) ? UserStatus.valueOf((String) userInfo.get(STATUS)) : entity.getStatus());
         userForm.setAccountTypeCode((String) userInfo.getOrDefault("accountTypeCode", null));
         userForm.setExpirationDate((LocalDateTime) userInfo.getOrDefault("expirationDate", null));

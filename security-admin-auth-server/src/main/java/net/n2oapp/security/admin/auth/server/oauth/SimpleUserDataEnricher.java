@@ -39,10 +39,10 @@ public class SimpleUserDataEnricher implements UserInfoEnricher<UserEntity> {
         if (nonNull(source.getPatronymic())) {
             userInfo.put(PATRONYMIC, source.getPatronymic());
         }
-
-        if (nonNull(source.getUserLevel())) {
-            userInfo.put(USER_LEVEL, source.getUserLevel());
-        }
+//        todo SECURITY-396
+//        if (nonNull(source.getUserLevel())) {
+//            userInfo.put(USER_LEVEL, source.getUserLevel());
+//        }
     }
 
     @Override

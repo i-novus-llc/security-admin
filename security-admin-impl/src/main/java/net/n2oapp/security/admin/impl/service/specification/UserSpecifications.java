@@ -2,11 +2,14 @@ package net.n2oapp.security.admin.impl.service.specification;
 
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import net.n2oapp.security.admin.api.model.UserLevel;
-import net.n2oapp.security.admin.impl.entity.*;
+import net.n2oapp.security.admin.impl.entity.UserEntity;
+import net.n2oapp.security.admin.impl.entity.UserEntity_;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.util.CollectionUtils;
 
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.Arrays;
 
 import static java.util.Objects.nonNull;
@@ -48,62 +51,65 @@ public class UserSpecifications implements Specification<UserEntity> {
                 predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.isActive), false));
             }
         }
+//            todo SECURITY-396
+//        if (!CollectionUtils.isEmpty(criteria.getRoleCodes())) {
+//            Subquery sub = criteriaQuery.subquery(String.class);
+//            Root subRoot = sub.from(RoleEntity.class);
+//            ListJoin<RoleEntity, UserEntity> subUsers = subRoot.join(RoleEntity_.userList);
+//            sub.select(subRoot.get(RoleEntity_.code));
+//            sub.where(builder.and(builder.equal(root.get(UserEntity_.id), subUsers.get(UserEntity_.id)),
+//                    subRoot.get(RoleEntity_.code).in(criteria.getRoleCodes())));
+//            predicate = builder.and(predicate, builder.exists(sub));
+//        }
+//
+//        if (!CollectionUtils.isEmpty(criteria.getRoleIds())) {
+//            Subquery sub = criteriaQuery.subquery(Integer.class);
+//            Root subRoot = sub.from(RoleEntity.class);
+//            ListJoin<RoleEntity, UserEntity> subUsers = subRoot.join(RoleEntity_.userList);
+//            sub.select(subRoot.get(RoleEntity_.id));
+//            sub.where(builder.and(builder.equal(root.get(UserEntity_.id), subUsers.get(UserEntity_.id)),
+//                    subRoot.get(RoleEntity_.id).in(criteria.getRoleIds())));
+//            predicate = builder.and(predicate, builder.exists(sub));
+//        }
+//
+//        if (!CollectionUtils.isEmpty(criteria.getSystems())) {
+//            Subquery subquery = criteriaQuery.subquery(String.class);
+//            Root subRoot = subquery.from(RoleEntity.class);
+//            ListJoin<RoleEntity, UserEntity> listJoin = subRoot.join(RoleEntity_.userList);
+//            subquery.select(subRoot.get(RoleEntity_.systemCode));
+//            subquery.where(builder.and(builder.equal(root.get(UserEntity_.id), listJoin.get(UserEntity_.id)),
+//                    subRoot.get(RoleEntity_.systemCode).get(SystemEntity_.CODE).in(criteria.getSystems())));
+//            predicate = builder.and(predicate, builder.exists(subquery));
+//        }
 
-        if (!CollectionUtils.isEmpty(criteria.getRoleCodes())) {
-            Subquery sub = criteriaQuery.subquery(String.class);
-            Root subRoot = sub.from(RoleEntity.class);
-            ListJoin<RoleEntity, UserEntity> subUsers = subRoot.join(RoleEntity_.userList);
-            sub.select(subRoot.get(RoleEntity_.code));
-            sub.where(builder.and(builder.equal(root.get(UserEntity_.id), subUsers.get(UserEntity_.id)),
-                    subRoot.get(RoleEntity_.code).in(criteria.getRoleCodes())));
-            predicate = builder.and(predicate, builder.exists(sub));
-        }
-
-        if (!CollectionUtils.isEmpty(criteria.getRoleIds())) {
-            Subquery sub = criteriaQuery.subquery(Integer.class);
-            Root subRoot = sub.from(RoleEntity.class);
-            ListJoin<RoleEntity, UserEntity> subUsers = subRoot.join(RoleEntity_.userList);
-            sub.select(subRoot.get(RoleEntity_.id));
-            sub.where(builder.and(builder.equal(root.get(UserEntity_.id), subUsers.get(UserEntity_.id)),
-                    subRoot.get(RoleEntity_.id).in(criteria.getRoleIds())));
-            predicate = builder.and(predicate, builder.exists(sub));
-        }
-
-        if (!CollectionUtils.isEmpty(criteria.getSystems())) {
-            Subquery subquery = criteriaQuery.subquery(String.class);
-            Root subRoot = subquery.from(RoleEntity.class);
-            ListJoin<RoleEntity, UserEntity> listJoin = subRoot.join(RoleEntity_.userList);
-            subquery.select(subRoot.get(RoleEntity_.systemCode));
-            subquery.where(builder.and(builder.equal(root.get(UserEntity_.id), listJoin.get(UserEntity_.id)),
-                    subRoot.get(RoleEntity_.systemCode).get(SystemEntity_.CODE).in(criteria.getSystems())));
-            predicate = builder.and(predicate, builder.exists(subquery));
-        }
-        if (criteria.getExtSys() != null) {
-            predicate = builder.and(predicate, builder.equal(builder.upper(root.get(UserEntity_.extSys)), criteria.getExtSys().toUpperCase()));
-        }
+//        if (criteria.getExtSys() != null) {
+//            predicate = builder.and(predicate, builder.equal(builder.upper(root.get(UserEntity_.extSys)), criteria.getExtSys().toUpperCase()));
+//        }
         if (nonNull(criteria.getUserLevel())) {
             String userLevel = criteria.getUserLevel().toUpperCase();
             // если userLevel не существует, то возвращаем false-предикат
             if (Arrays.stream(UserLevel.values()).map(UserLevel::getName).noneMatch(u -> u.equals(userLevel))) {
                 return builder.disjunction();
             }
-            if (UserLevel.NOT_SET.getName().equals(userLevel)) {
-                predicate = builder.and(predicate, builder.isNull(root.get(UserEntity_.userLevel)));
-            } else {
-                predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.userLevel), UserLevel.valueOf(userLevel)));
-            }
+            //            todo SECURITY-396
+//            if (UserLevel.NOT_SET.getName().equals(userLevel)) {
+//                predicate = builder.and(predicate, builder.isNull(root.get(UserEntity_.userLevel)));
+//            } else {
+//                predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.userLevel), UserLevel.valueOf(userLevel)));
+//            }
         }
-        if (nonNull(criteria.getRegionId())) {
-            predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.region).get(RegionEntity_.id), criteria.getRegionId()));
-        }
-        if (nonNull(criteria.getDepartmentId())) {
-            predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.department).get(DepartmentEntity_.id), criteria.getDepartmentId()));
-        }
-        if (!CollectionUtils.isEmpty(criteria.getOrganizations())) {
-            CriteriaBuilder.In<Integer> in = builder.in(root.get(UserEntity_.organization).get(OrganizationEntity_.id));
-            criteria.getOrganizations().forEach(in::value);
-            predicate = builder.and(predicate, in);
-        }
+        //            todo SECURITY-396
+//        if (nonNull(criteria.getRegionId())) {
+//            predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.region).get(RegionEntity_.id), criteria.getRegionId()));
+//        }
+//        if (nonNull(criteria.getDepartmentId())) {
+//            predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.department).get(DepartmentEntity_.id), criteria.getDepartmentId()));
+//        }
+//        if (!CollectionUtils.isEmpty(criteria.getOrganizations())) {
+//            CriteriaBuilder.In<Integer> in = builder.in(root.get(UserEntity_.organization).get(OrganizationEntity_.id));
+//            criteria.getOrganizations().forEach(in::value);
+//            predicate = builder.and(predicate, in);
+//        }
         if (nonNull(criteria.getLastActionDate())) {
             predicate = builder.and(predicate, builder.greaterThanOrEqualTo(root.get(UserEntity_.lastActionDate), criteria.getLastActionDate()));
         }

@@ -13,7 +13,9 @@ public class OrganizationEnricher implements UserInfoEnricher<UserEntity> {
 
     @Override
     public Object buildValue(UserEntity source) {
-        OrganizationEntity org = source.getOrganization();
+        //        todo SECURITY-396
+        OrganizationEntity org = null;
+//        org = source.getOrganization();
         if (isNull(org)) return null;
 
         Organization orgModel = new Organization();

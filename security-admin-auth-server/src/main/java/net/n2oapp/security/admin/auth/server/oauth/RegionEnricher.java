@@ -12,7 +12,9 @@ import static java.util.Objects.isNull;
 public class RegionEnricher implements UserInfoEnricher<UserEntity> {
     @Override
     public Object buildValue(UserEntity source) {
-        RegionEntity regionEntity = source.getRegion();
+        //        todo SECURITY-396
+        RegionEntity regionEntity = null;
+//        regionEntity = source.getRegion();
         if (isNull(regionEntity)) return null;
 
         Region region = new Region();

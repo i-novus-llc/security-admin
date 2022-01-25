@@ -72,7 +72,7 @@ public class KeycloakUserSynchronizeProviderTest {
         newUsers.add(getUserRep("User_4"));
         reset(restUserService);
         when(restUserService.getUsersCount()).thenReturn(2);
-        when(restUserService.searchUsers(anyString(),anyInt(),anyInt())).thenReturn(newUsers);
+        when(restUserService.searchUsers(anyString(), anyInt(), anyInt())).thenReturn(newUsers);
 
         synchronizeProvider.startSynchronization();
 
@@ -81,8 +81,9 @@ public class KeycloakUserSynchronizeProviderTest {
         assertEquals(before.size(), after.size() - 1);
 
         UserEntity user5 = getByUserName(after, "user_5_name");
-        assertEquals(user5.getExtUid(), "User_5_id");
-        assertEquals(user5.getExtSys(), "KEYCLOAK");
+        //        todo SECURITY-396
+//        assertEquals(user5.getExtUid(), "User_5_id");
+//        assertEquals(user5.getExtSys(), "KEYCLOAK");
 
         before.add(user5);
 
@@ -99,7 +100,7 @@ public class KeycloakUserSynchronizeProviderTest {
         newUsers.add(getUserRep("User_6"));
         reset(restUserService);
         when(restUserService.getUsersCount()).thenReturn(2);
-        when(restUserService.searchUsers(anyString(),anyInt(),anyInt())).thenReturn(newUsers);
+        when(restUserService.searchUsers(anyString(), anyInt(), anyInt())).thenReturn(newUsers);
 
         synchronizeProvider.startSynchronization();
 
@@ -108,18 +109,21 @@ public class KeycloakUserSynchronizeProviderTest {
         assertEquals(before.size(), after.size() - 2);
 
         UserEntity user4 = getByUserName(after, "user_4_name");
-        assertEquals(user4.getExtUid(), "User_4_id");
-        assertEquals(user4.getExtSys(), "KEYCLOAK");
+        //        todo SECURITY-396
+//        assertEquals(user4.getExtUid(), "User_4_id");
+//        assertEquals(user4.getExtSys(), "KEYCLOAK");
         assertEquals(user4.getIsActive(), Boolean.FALSE);
         user4.setIsActive(null);
 
         UserEntity user5 = getByUserName(after, "user_5_name");
-        assertEquals(user5.getExtUid(), "User_5_id");
-        assertEquals(user5.getExtSys(), "KEYCLOAK");
+        //        todo SECURITY-396
+//        assertEquals(user5.getExtUid(), "User_5_id");
+//        assertEquals(user5.getExtSys(), "KEYCLOAK");
 
         UserEntity user6 = getByUserName(after, "user_6_name");
-        assertEquals(user6.getExtUid(), "User_6_id");
-        assertEquals(user6.getExtSys(), "KEYCLOAK");
+        //        todo SECURITY-396
+//        assertEquals(user6.getExtUid(), "User_6_id");
+//        assertEquals(user6.getExtSys(), "KEYCLOAK");
 
         before.add(user5);
         before.add(user6);
@@ -140,7 +144,7 @@ public class KeycloakUserSynchronizeProviderTest {
         newUsers.add(user4rep);
         reset(restUserService);
         when(restUserService.getUsersCount()).thenReturn(2);
-        when(restUserService.searchUsers(anyString(),anyInt(),anyInt())).thenReturn(newUsers);
+        when(restUserService.searchUsers(anyString(), anyInt(), anyInt())).thenReturn(newUsers);
 
         synchronizeProvider.startSynchronization();
 
@@ -149,12 +153,14 @@ public class KeycloakUserSynchronizeProviderTest {
         assertEquals(before.size(), after.size() - 1);
 
         UserEntity user4 = getByUserName(after, "User_4_new_name");
-        assertEquals(user4.getExtUid(), "User_4_id");
-        assertEquals(user4.getExtSys(), "KEYCLOAK");
+        //        todo SECURITY-396
+//        assertEquals(user4.getExtUid(), "User_4_id");
+//        assertEquals(user4.getExtSys(), "KEYCLOAK");
 
         UserEntity user5 = getByUserName(after, "user_5_name");
-        assertEquals(user5.getExtUid(), "User_5_id");
-        assertEquals(user5.getExtSys(), "KEYCLOAK");
+        //        todo SECURITY-396
+//        assertEquals(user5.getExtUid(), "User_5_id");
+//        assertEquals(user5.getExtSys(), "KEYCLOAK");
 
         getByUserName(before, "user_4_name").setUsername("User_4_new_name");
         before.add(user5);
@@ -180,19 +186,22 @@ public class KeycloakUserSynchronizeProviderTest {
 
         entity = new UserEntity();
         entity.setUsername("user_2");
-        entity.setExtUid("user_2");
+        //        todo SECURITY-396
+//        entity.setExtUid("user_2");
         result.add(entity);
 
         entity = new UserEntity();
         entity.setUsername("user_3");
-        entity.setExtUid("user_3");
-        entity.setExtSys("ESIA");
+        //        todo SECURITY-396
+//        entity.setExtUid("user_3");
+//        entity.setExtSys("ESIA");
         result.add(entity);
 
         entity = new UserEntity();
         entity.setUsername("User_4_name");
-        entity.setExtUid("User_4_id");
-        entity.setExtSys("KEYCLOAK");
+        //        todo SECURITY-396
+//        entity.setExtUid("User_4_id");
+//        entity.setExtSys("KEYCLOAK");
         result.add(entity);
 
         return result;
@@ -209,8 +218,9 @@ public class KeycloakUserSynchronizeProviderTest {
     private void assertIsEquals(UserEntity entity1, UserEntity entity2) {
         assertEquals(entity1.getUsername().toLowerCase(), entity2.getUsername().toLowerCase());
         assertEquals(entity1.getIsActive(), entity2.getIsActive());
-        assertEquals(entity1.getExtSys(), entity2.getExtSys());
-        assertEquals(entity1.getExtUid(), entity2.getExtUid());
+        //        todo SECURITY-396
+//        assertEquals(entity1.getExtSys(), entity2.getExtSys());
+//        assertEquals(entity1.getExtUid(), entity2.getExtUid());
     }
 
     private UserEntity getById(List<UserEntity> entities2, Integer id) {

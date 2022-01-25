@@ -46,14 +46,6 @@ public class RoleServiceImplTest extends UserRoleServiceTestBase {
         checkSystemCodeValidation();
     }
 
-    @Test
-    public void testCountUsersWithRole() {
-        assertEquals(Integer.valueOf(0), roleService.countUsersWithRole(0));
-        assertEquals(Integer.valueOf(2), roleService.countUsersWithRole(1));
-        assertEquals(Integer.valueOf(1), roleService.countUsersWithRole(2));
-        assertEquals(Integer.valueOf(0), roleService.countUsersWithRole(3));
-    }
-
     private void checkValidationRoleName(Role role) {
         Throwable thrown = catchThrowable(() -> {
             RoleForm roleForm = newRole();

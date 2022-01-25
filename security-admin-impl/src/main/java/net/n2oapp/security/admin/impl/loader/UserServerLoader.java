@@ -2,11 +2,7 @@ package net.n2oapp.security.admin.impl.loader;
 
 import net.n2oapp.platform.loader.server.ServerLoader;
 import net.n2oapp.platform.loader.server.ServerLoaderSettings;
-import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.model.User;
-import net.n2oapp.security.admin.impl.entity.DepartmentEntity;
-import net.n2oapp.security.admin.impl.entity.OrganizationEntity;
-import net.n2oapp.security.admin.impl.entity.RegionEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
@@ -17,8 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static java.util.Objects.nonNull;
 
 @Component
 public class UserServerLoader extends ServerLoaderSettings<User> implements ServerLoader<User> {
@@ -53,12 +47,13 @@ public class UserServerLoader extends ServerLoaderSettings<User> implements Serv
             userEntity.setIsActive(model.getIsActive());
             userEntity.setEmail(model.getEmail());
             userEntity.setSnils(model.getSnils());
-            userEntity.setUserLevel(model.getUserLevel());
-            userEntity.setDepartment(nonNull(model.getDepartment()) ? new DepartmentEntity(model.getDepartment().getId()) : null);
-            userEntity.setOrganization(nonNull(model.getOrganization()) ? new OrganizationEntity(model.getOrganization().getId()) : null);
-            userEntity.setRegion(nonNull(model.getRegion()) ? new RegionEntity(model.getRegion().getId()) : null);
-            if (nonNull(model.getRoles()))
-                userEntity.setRoleList(model.getRoles().stream().map(role -> roleRepository.findOneByCode(role.getCode())).collect(Collectors.toList()));
+//            todo SECURITY-396
+//            userEntity.setUserLevel(model.getUserLevel());
+//            userEntity.setDepartment(nonNull(model.getDepartment()) ? new DepartmentEntity(model.getDepartment().getId()) : null);
+//            userEntity.setOrganization(nonNull(model.getOrganization()) ? new OrganizationEntity(model.getOrganization().getId()) : null);
+//            userEntity.setRegion(nonNull(model.getRegion()) ? new RegionEntity(model.getRegion().getId()) : null);
+//            if (nonNull(model.getRoles()))
+//                userEntity.setRoleList(model.getRoles().stream().map(role -> roleRepository.findOneByCode(role.getCode())).collect(Collectors.toList()));
             freshUsers.add(userEntity);
         }
         return freshUsers;
