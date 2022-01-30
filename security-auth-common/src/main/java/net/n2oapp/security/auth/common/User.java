@@ -15,20 +15,21 @@
  */
 package net.n2oapp.security.auth.common;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.n2oapp.security.auth.common.authority.PermissionGrantedAuthority;
 import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.util.StringUtils;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * Пользователь с расширенными атрибутами
  */
+@Getter
+@Setter
 public class User extends org.springframework.security.core.userdetails.User {
     private static final String DEFAULT_ROLE = "ROLE_USER";
 
@@ -41,6 +42,7 @@ public class User extends org.springframework.security.core.userdetails.User {
     private String department;
     private String departmentName;
     private String userLevel;
+    private Integer accountId;
 
     public User(String username) {
         super(username, "", Collections.singleton(new RoleGrantedAuthority(DEFAULT_ROLE)));
@@ -74,18 +76,6 @@ public class User extends org.springframework.security.core.userdetails.User {
         this.name = name;
         this.patronymic = patronymic;
         this.email = email;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public String getName() {
-        return name;
     }
 
     /**
@@ -136,77 +126,17 @@ public class User extends org.springframework.security.core.userdetails.User {
         return String.join(" ", parts);
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPatronymic() {
-        return patronymic;
-    }
-
-    public void setPatronymic(String patronymic) {
-        this.patronymic = patronymic;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getOrganization() {
-        return organization;
-    }
-
-    public void setOrganization(String organization) {
-        this.organization = organization;
-    }
-
-    public String getRegion() {
-        return region;
-    }
-
-    public void setRegion(String region) {
-        this.region = region;
-    }
-
-    public String getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(String department) {
-        this.department = department;
-    }
-
-    public String getDepartmentName() {
-        return departmentName;
-    }
-
-    public void setDepartmentName(String departmentName) {
-        this.departmentName = departmentName;
-    }
-
-    public String getUserLevel() {
-        return userLevel;
-    }
-
-    public void setUserLevel(String userLevel) {
-        this.userLevel = userLevel;
-    }
-
     public List<String> getRoles() {
         return getAuthorities()
                 .stream()
-                .filter(a -> a instanceof RoleGrantedAuthority)
+                .filter(RoleGrantedAuthority.class::isInstance)
                 .map(a -> ((RoleGrantedAuthority) a).getRole()).collect(Collectors.toList());
     }
 
     public List<String> getPermissions() {
         return getAuthorities()
                 .stream()
-                .filter(a -> a instanceof PermissionGrantedAuthority)
+                .filter(PermissionGrantedAuthority.class::isInstance)
                 .map(p -> ((PermissionGrantedAuthority) p).getPermission()).collect(Collectors.toList());
     }
 }
