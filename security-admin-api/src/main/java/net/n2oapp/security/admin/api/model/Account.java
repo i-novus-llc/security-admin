@@ -16,6 +16,12 @@ import java.util.List;
 @ApiModel("Аккаунт пользователя")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Account {
+    @ApiModelProperty(value = "Идентификатор аккаунта")
+    private Integer id;
+
+    @ApiModelProperty(value = "Наименование аккаунта")
+    private String name;
+
     @ApiModelProperty(value = "Список ролей")
     private List<Role> roles;
 
