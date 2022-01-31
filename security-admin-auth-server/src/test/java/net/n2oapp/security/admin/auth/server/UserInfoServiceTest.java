@@ -3,10 +3,11 @@ package net.n2oapp.security.admin.auth.server;
 import net.n2oapp.security.admin.api.model.Department;
 import net.n2oapp.security.admin.api.model.Organization;
 import net.n2oapp.security.admin.api.model.Region;
+import net.n2oapp.security.admin.api.model.UserLevel;
 import net.n2oapp.security.admin.api.oauth.UserInfoEnricher;
 import net.n2oapp.security.admin.auth.server.oauth.*;
 import net.n2oapp.security.admin.impl.entity.*;
-import net.n2oapp.security.admin.impl.repository.UserRepository;
+import net.n2oapp.security.admin.impl.repository.AccountRepository;
 import net.n2oapp.security.auth.common.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -26,15 +27,16 @@ public class UserInfoServiceTest {
 
     @Test
     public void testUserInfoService() {
-        UserRepository repository = mock(UserRepository.class);
+        AccountRepository repository = mock(AccountRepository.class);
 
-        when(repository.findOneByUsernameIgnoreCase("testUser")).thenReturn(initUserEntity());
+        when(repository.getOne(1)).thenReturn(initAccountEntity());
         UserInfoService userInfoService = new UserInfoService(repository,
                 List.of(new OrganizationEnricher(), new RolesEnricher(), new SystemsEnricher(true),
                         new RegionEnricher(), new DepartmentEnricher(), new PermissionsEnricher(true),
                         new SimpleUserDataEnricher()));
         OAuth2Authentication authentication = mock(OAuth2Authentication.class);
         User user = new User("testUser");
+        user.setAccountId(1);
         when(authentication.getPrincipal()).thenReturn(user);
 
         Map<String, Object> userinfo = userInfoService.buildUserInfo(authentication);
@@ -62,7 +64,7 @@ public class UserInfoServiceTest {
                 .UserInfoEnrichersConfigurer(Set.of("test1", "test2"), Arrays.asList(
                 new UserInfoEnricher<>() {
                     @Override
-                    public Object buildValue(UserEntity source) {
+                    public Object buildValue(AccountEntity source) {
                         return null;
                     }
 
@@ -74,7 +76,7 @@ public class UserInfoServiceTest {
                 new UserInfoEnricher<>() {
 
                     @Override
-                    public Object buildValue(UserEntity source) {
+                    public Object buildValue(AccountEntity source) {
                         return null;
                     }
 
@@ -84,56 +86,61 @@ public class UserInfoServiceTest {
                     }
                 }
         ));
-        List<UserInfoEnricher<UserEntity>> configured = configurer.configure();
+        List<UserInfoEnricher<AccountEntity>> configured = configurer.configure();
         assertThat(configured.size(), is(1));
         assertThat(configured.get(0).getAlias(), is("test1"));
     }
 
-    private UserEntity initUserEntity() {
-        UserEntity entity = new UserEntity();
-        entity.setUsername("testUser");
-        entity.setName("testName");
-        entity.setSurname("testSurname");
-        entity.setPatronymic("testPatronymic");
-        entity.setEmail("testEmail");
-        entity.setPatronymic("testPatronymic");
+    private AccountEntity initAccountEntity() {
+        AccountEntity account = new AccountEntity();
+        UserEntity user = new UserEntity();
+        account.setUser(user);
+
+        user.setUsername("testUser");
+        user.setName("testName");
+        user.setSurname("testSurname");
+        user.setPatronymic("testPatronymic");
+        user.setEmail("testEmail");
+        user.setPatronymic("testPatronymic");
+        user.setAccounts(Collections.singletonList(account));
+
         DepartmentEntity department = new DepartmentEntity();
         department.setId(1);
         department.setCode("testCode");
         department.setName("testName");
-        //        todo SECURITY-396
-//        entity.setDepartment(department);
-//        entity.setUserLevel(UserLevel.PERSONAL);
+        account.setDepartment(department);
+        account.setUserLevel(UserLevel.PERSONAL);
+
         RoleEntity role = new RoleEntity();
         role.setId(1);
         role.setCode("testRoleCode");
         role.setName("testRoleName");
+
         PermissionEntity permission = new PermissionEntity();
         permission.setCode("testPermissionCode");
         permission.setName("testPermissionName");
+
         SystemEntity system = new SystemEntity();
         system.setCode("testSystemCode");
         system.setName("testSystemName");
         permission.setSystemCode(system);
         role.setPermissionList(Collections.singletonList(permission));
-        //        todo SECURITY-396
-//        entity.setRoleList(Collections.singletonList(role));
+        account.setRoleList(Collections.singletonList(role));
+
         OrganizationEntity organization = new OrganizationEntity();
         organization.setId(1);
         organization.setInn("testInn");
         organization.setCode("testCode");
         organization.setKpp("testKpp");
-//        todo SECURITY-396
-//        entity.setOrganization(organization);
+        account.setOrganization(organization);
 
         RegionEntity regionEntity = new RegionEntity();
         regionEntity.setId(1);
         regionEntity.setName("testName");
         regionEntity.setCode("testCode");
         regionEntity.setOkato("testOkato");
-        //        todo SECURITY-396
-//        entity.setRegion(regionEntity);
+        account.setRegion(regionEntity);
 
-        return entity;
+        return account;
     }
 }
