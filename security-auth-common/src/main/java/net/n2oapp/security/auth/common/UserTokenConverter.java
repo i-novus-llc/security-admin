@@ -97,6 +97,8 @@ public class UserTokenConverter implements UserAuthenticationConverter {
             principal.setOrganization((String) extractFromMap(userAttributeKeys.organization, map));
             principal.setUserLevel((String) extractFromMap(userAttributeKeys.userLevel, map));
             principal.setRegion((String) extractFromMap(userAttributeKeys.region, map));
+            // todo SECURITY-396 (исправить после выбора контекста с ui)
+            principal.setAccountId(1);
             AbstractAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(principal, "N/A", authorities);
             authentication.setDetails(map);
             return authentication;
