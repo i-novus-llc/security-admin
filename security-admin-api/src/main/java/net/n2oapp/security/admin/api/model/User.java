@@ -69,11 +69,15 @@ public class User {
     @ApiModelProperty(value = "Активен ли пользователь")
     private Boolean isActive;
 
-    @ApiModelProperty(value = "Список ролей")
-    private List<Role> roles;
-
     @ApiModelProperty(value = "СНИЛС пользователя")
     private String snils;
+
+    @ApiModelProperty(value = "Аккаунт пользователя")
+    private Account account;
+
+    // todo SECURITY-396    удалить roles, userLevel, department, region, organization
+    @ApiModelProperty(value = "Список ролей")
+    private List<Role> roles;
 
     @ApiModelProperty(value = "Уровень пользователя, для которого предназначена роль")
     private UserLevel userLevel;
