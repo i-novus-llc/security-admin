@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<object xmlns="http://n2oapp.net/framework/config/schema/object-3.0" name="Пользователи">
+<object xmlns="http://n2oapp.net/framework/config/schema/object-4.0" 
+        name="Пользователи">
 
     <operations>
         <operation id="create" success-text="Данные о пользователе сохранены">
@@ -11,33 +12,33 @@
                     </arguments>
                 </java>
             </invocation>
-            <in-parameters>
-                <param id="username" mapping="[0].username" domain="string" required="true"/>
-                <param id="email" mapping="[0].email" domain="string" required="${access.user.email-required}"/>
-                <param id="surname" mapping="[0].surname" domain="string" required="${access.user.surname.required}"/>
-                <param id="name" mapping="[0].name" domain="string" required="${access.user.name.required}"/>
-                <param id="patronymic" mapping="[0].patronymic" domain="string"/>
-                <param id="password" mapping="[0].password" domain="string" required="${access.user.password.input}"/>
-                <param id="passwordCheck" mapping="[0].passwordCheck" domain="string"/>
-                <param id="temporaryPassword" mapping="[0].temporaryPassword" domain="string" required="${access.user.password.generate}"/>
-                <param id="sendOnEmail" mapping="[0].sendOnEmail" domain="boolean"
+            <in>
+                <field id="username" mapping="[0].username" domain="string" required="true"/>
+                <field id="email" mapping="[0].email" domain="string" required="${access.user.email-required}"/>
+                <field id="surname" mapping="[0].surname" domain="string" required="${access.user.surname.required}"/>
+                <field id="name" mapping="[0].name" domain="string" required="${access.user.name.required}"/>
+                <field id="patronymic" mapping="[0].patronymic" domain="string"/>
+                <field id="password" mapping="[0].password" domain="string" required="${access.user.password.input}"/>
+                <field id="passwordCheck" mapping="[0].passwordCheck" domain="string"/>
+                <field id="temporaryPassword" mapping="[0].temporaryPassword" domain="string" required="${access.user.password.generate}"/>
+                <field id="sendOnEmail" mapping="[0].sendOnEmail" domain="boolean"
                        normalize="#this != null ? #this : ${access.user.choice-send-password}"/>
-                <param id="isActive" mapping="[0].isActive" domain="boolean" default-value="true"/>
-                <param id="roles*.id" mapping="[0].roles" domain="integer[]" required="true"/>
-                <param id="snils" mapping="[0].snils" domain="string"/>
-                <param id="status" mapping="[0].status" default-value="REGISTERED" domain="string"/>
-                <param id="userLevel.id" mapping="[0].userLevel" domain="string"
-                       mapping-condition="${access.level.enabled}"/>
-                <param id="department.id" mapping="[0].departmentId" domain="integer"
-                       mapping-condition="${access.level.enabled}"/>
-                <param id="region.id" mapping="[0].regionId" domain="integer"
-                       mapping-condition="${access.level.enabled}"/>
-                <param id="organization.id" mapping="[0].organizationId" domain="integer"
-                       mapping-condition="${access.level.enabled}"/>
-            </in-parameters>
-            <out-parameters>
-                <param id="id" mapping="id"/>
-            </out-parameters>
+                <field id="isActive" mapping="[0].isActive" domain="boolean" default-value="true"/>
+                <field id="roles*.id" mapping="[0].roles" domain="integer[]" required="true"/>
+                <field id="snils" mapping="[0].snils" domain="string"/>
+                <field id="status" mapping="[0].status" default-value="REGISTERED" domain="string"/>
+                <field id="userLevel.id" mapping="[0].userLevel" domain="string"
+                       enabled="${access.level.enabled}"/>
+                <field id="department.id" mapping="[0].departmentId" domain="integer"
+                       enabled="${access.level.enabled}"/>
+                <field id="region.id" mapping="[0].regionId" domain="integer"
+                       enabled="${access.level.enabled}"/>
+                <field id="organization.id" mapping="[0].organizationId" domain="integer"
+                       enabled="${access.level.enabled}"/>
+            </in>
+            <out>
+                <field id="id" mapping="id"/>
+            </out>
             <validations/>
         </operation>
 
@@ -50,31 +51,31 @@
                     </arguments>
                 </java>
             </invocation>
-            <in-parameters>
-                <param id="id" mapping="[0].id" domain="integer" required="true"/>
-                <param id="username" mapping="[0].username" domain="string" required="true"/>
-                <param id="email" mapping="[0].email" domain="string" required="${access.user.email-required}"/>
-                <param id="surname" mapping="[0].surname" domain="string" required="true"/>
-                <param id="name" mapping="[0].name" domain="string" required="true"/>
-                <param id="patronymic" mapping="[0].patronymic" domain="string"/>
-                <param id="password" mapping="[0].password" domain="string"/>
-                <param id="passwordCheck" mapping="[0].passwordCheck" domain="string"/>
-                <param id="isActive" mapping="[0].isActive" domain="boolean" default-value="true"/>
-                <param id="roles*.id" mapping="[0].roles" domain="integer[]" required="true"/>
-                <param id="snils" mapping="[0].snils" domain="string"/>
-                <param id="status" mapping="[0].status" default-value="REGISTERED" domain="string"/>
-                <param id="userLevel.id" mapping="[0].userLevel" domain="string"
-                       mapping-condition="${access.level.enabled}"/>
-                <param id="department.id" mapping="[0].departmentId" domain="string"
-                       mapping-condition="${access.level.enabled}"/>
-                <param id="region.id" mapping="[0].regionId" domain="string"
-                       mapping-condition="${access.level.enabled}"/>
-                <param id="organization.id" mapping="[0].organizationId" domain="string"
-                       mapping-condition="${access.level.enabled}"/>
-            </in-parameters>
-            <out-parameters>
-                <param id="id" mapping="id"/>
-            </out-parameters>
+            <in>
+                <field id="id" mapping="[0].id" domain="integer" required="true"/>
+                <field id="username" mapping="[0].username" domain="string" required="true"/>
+                <field id="email" mapping="[0].email" domain="string" required="${access.user.email-required}"/>
+                <field id="surname" mapping="[0].surname" domain="string" required="true"/>
+                <field id="name" mapping="[0].name" domain="string" required="true"/>
+                <field id="patronymic" mapping="[0].patronymic" domain="string"/>
+                <field id="password" mapping="[0].password" domain="string"/>
+                <field id="passwordCheck" mapping="[0].passwordCheck" domain="string"/>
+                <field id="isActive" mapping="[0].isActive" domain="boolean" default-value="true"/>
+                <field id="roles*.id" mapping="[0].roles" domain="integer[]" required="true"/>
+                <field id="snils" mapping="[0].snils" domain="string"/>
+                <field id="status" mapping="[0].status" default-value="REGISTERED" domain="string"/>
+                <field id="userLevel.id" mapping="[0].userLevel" domain="string"
+                       enabled="${access.level.enabled}"/>
+                <field id="department.id" mapping="[0].departmentId" domain="string"
+                       enabled="${access.level.enabled}"/>
+                <field id="region.id" mapping="[0].regionId" domain="string"
+                       enabled="${access.level.enabled}"/>
+                <field id="organization.id" mapping="[0].organizationId" domain="string"
+                       enabled="${access.level.enabled}"/>
+            </in>
+            <out>
+                <field id="id" mapping="id"/>
+            </out>
             <validations/>
         </operation>
 
@@ -89,9 +90,9 @@
                     </arguments>
                 </java>
             </invocation>
-            <in-parameters>
-                <param id="id" mapping="[0]" domain="integer" required="true"/>
-            </in-parameters>
+            <in>
+                <field id="id" mapping="[0]" domain="integer" required="true"/>
+            </in>
             <validations black-list="usernameValidation"/>
         </operation>
 
@@ -104,9 +105,9 @@
                     </arguments>
                 </java>
             </invocation>
-            <in-parameters>
-                <param id="id" mapping="[0]" domain="integer" required="true"/>
-            </in-parameters>
+            <in>
+                <field id="id" mapping="[0]" domain="integer" required="true"/>
+            </in>
         </operation>
 
         <operation id="resetPassword" success-text="Пароль сброшен">
@@ -118,19 +119,19 @@
                     </arguments>
                 </java>
             </invocation>
-            <in-parameters>
-                <param id="id" mapping="[0].id" domain="integer" required="true"/>
-                <param id="username" mapping="[0].username" domain="string" required="!${access.email-as-username}"/>
-                <param id="email"
+            <in>
+                <field id="id" mapping="[0].id" domain="integer" required="true"/>
+                <field id="username" mapping="[0].username" domain="string" required="!${access.email-as-username}"/>
+                <field id="email"
                        mapping="[0].email"
                        domain="string"
                        required="${access.user.email-required} || ${access.email-as-username}"/>
-                <param id="password" mapping="[0].password" domain="string" required="${access.user.password.input}"/>
-                <param id="passwordCheck" mapping="[0].passwordCheck" domain="string"/>
-                <param id="temporaryPassword" mapping="[0].temporaryPassword" domain="string" required="${access.user.password.generate}"/>
-                <param id="sendOnEmail" mapping="[0].sendOnEmail" domain="boolean"
+                <field id="password" mapping="[0].password" domain="string" required="${access.user.password.input}"/>
+                <field id="passwordCheck" mapping="[0].passwordCheck" domain="string"/>
+                <field id="temporaryPassword" mapping="[0].temporaryPassword" domain="string" required="${access.user.password.generate}"/>
+                <field id="sendOnEmail" mapping="[0].sendOnEmail" domain="boolean"
                        normalize="#this != null ? #this : ${access.user.choice-send-password}"/>
-            </in-parameters>
+            </in>
             <validations/>
         </operation>
     </operations>

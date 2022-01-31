@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0" object-id="service"
+<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0"
+       object-id="service"
        name="Системы">
     <list result-mapping="['content']" count-mapping="['totalElements']">
         <java method="findAllApplications" class="net.n2oapp.security.admin.api.service.ApplicationSystemService">
@@ -76,7 +77,7 @@
         </field>
 
         <field id="clientRoles" domain="integer[]" name="Роли">
-            <select mapping="client?.roles"></select>
+            <select mapping="client?.roles"/>
             <filters>
                 <in filter-id="roles" domain="integer[]" mapping="['criteria'].roles"/>
             </filters>

@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<object xmlns="http://n2oapp.net/framework/config/schema/object-3.0" name="Типы аккаунтов">
+<object xmlns="http://n2oapp.net/framework/config/schema/object-4.0"
+        name="Типы аккаунтов">
 
     <operations>
         <operation id="create">
@@ -11,18 +12,18 @@
                     </arguments>
                 </java>
             </invocation>
-            <in-parameters>
-                <param id="code" mapping="[0].code" domain="string" required="true"/>
-                <param id="name" mapping="[0].name" domain="string" required="true"/>
-                <param id="description" mapping="[0].description" domain="string"/>
-                <param id="roles*.id" mapping="[0].roleIds" domain="integer[]"/>
-                <param id="orgRoles*.id" mapping="[0].orgRoleIds" domain="integer[]"/>
-                <param id="userLevel.id" mapping="[0].userLevel" domain="string"
-                       mapping-condition="${access.level.enabled}"/>
-            </in-parameters>
-            <out-parameters>
-                <param id="id" mapping="code"/>
-            </out-parameters>
+            <in>
+                <field id="code" mapping="[0].code" domain="string" required="true"/>
+                <field id="name" mapping="[0].name" domain="string" required="true"/>
+                <field id="description" mapping="[0].description" domain="string"/>
+                <field id="roles*.id" mapping="[0].roleIds" domain="integer[]"/>
+                <field id="orgRoles*.id" mapping="[0].orgRoleIds" domain="integer[]"/>
+                <field id="userLevel.id" mapping="[0].userLevel" domain="string"
+                       enabled="${access.level.enabled}"/>
+            </in>
+            <out>
+                <field id="id" mapping="code"/>
+            </out>
         </operation>
 
         <operation id="update">
@@ -34,20 +35,20 @@
                     </arguments>
                 </java>
             </invocation>
-            <in-parameters>
-                <param id="id" mapping="[0].id" domain="integer" required="true"/>
-                <param id="code" mapping="[0].code" domain="string" required="true"/>
-                <param id="name" mapping="[0].name" domain="string" required="true"/>
-                <param id="description" mapping="[0].description" domain="string"/>
-                <param id="roles*.id" mapping="[0].roleIds" domain="integer[]"/>
-                <param id="orgRoles*.id" mapping="[0].orgRoleIds" domain="integer[]"/>
-                <param id="userLevel.id" mapping="[0].userLevel" domain="string"
-                       mapping-condition="${access.level.enabled}"/>
-                <param id="status" mapping="[0].status" domain="string"/>
-            </in-parameters>
-            <out-parameters>
-                <param id="id" mapping="code"/>
-            </out-parameters>
+            <in>
+                <field id="id" mapping="[0].id" domain="integer" required="true"/>
+                <field id="code" mapping="[0].code" domain="string" required="true"/>
+                <field id="name" mapping="[0].name" domain="string" required="true"/>
+                <field id="description" mapping="[0].description" domain="string"/>
+                <field id="roles*.id" mapping="[0].roleIds" domain="integer[]"/>
+                <field id="orgRoles*.id" mapping="[0].orgRoleIds" domain="integer[]"/>
+                <field id="userLevel.id" mapping="[0].userLevel" domain="string"
+                       enabled="${access.level.enabled}"/>
+                <field id="status" mapping="[0].status" domain="string"/>
+            </in>
+            <out>
+                <field id="id" mapping="code"/>
+            </out>
         </operation>
 
         <operation id="delete"
@@ -61,9 +62,9 @@
                     </arguments>
                 </java>
             </invocation>
-            <in-parameters>
-                <param id="id" mapping="[0]" domain="integer" required="true"/>
-            </in-parameters>
+            <in>
+                <field id="id" mapping="[0]" domain="integer" required="true"/>
+            </in>
         </operation>
     </operations>
 </object>

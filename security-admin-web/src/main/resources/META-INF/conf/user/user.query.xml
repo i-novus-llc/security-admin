@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0" object-id="${access.user.object.id}"
-       name="Пользователи">
+<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0"
+       object-id="${access.user.object.id}" name="Пользователи">
     <list result-mapping="['content']" count-mapping="['totalElements']">
         <java method="findAll" class="net.n2oapp.security.admin.api.service.UserService">
             <spring/>
@@ -74,33 +74,33 @@
             </filters>
         </field>
         <field id="roleIds" domain="integer[]" name="Роли">
-            <select mapping="['roles'].![id]"></select>
+            <select mapping="['roles'].![id]"/>
             <filters>
-                <in mapping="['roleIds']" filter-id="['criteria'].roleIds"></in>
+                <in mapping="['roleIds']" filter-id="['criteria'].roleIds"/>
             </filters>
         </field>
 
         <field id="roleNames" domain="string[]" name="Роли">
-            <select mapping="['roles'].![name]"></select>
+            <select mapping="['roles'].![name]"/>
             <filters>
-                <in mapping="['roleNames']" filter-id="['criteria'].roleNames"></in>
+                <in mapping="['roleNames']" filter-id="['criteria'].roleNames"/>
             </filters>
         </field>
 
         <field id="roleNamesWithSystem" domain="string[]" name="Роли">
             <sorting/>
-            <select mapping="['roles'].![nameWithSystem]"></select>
+            <select mapping="['roles'].![nameWithSystem]"/>
         </field>
 
         <field id="roles" domain="object[]" name="Роли">
-            <select mapping="['roles']"></select>
+            <select mapping="['roles']"/>
             <filters>
                 <in filter-id="roles*.id" domain="integer[]" mapping="['criteria'].roleIds"/>
             </filters>
         </field>
 
         <field id="snils" domain="string" name="СНИЛС">
-            <select mapping="snils"></select>
+            <select mapping="snils"/>
         </field>
 
         <field id="system" domain="object">
