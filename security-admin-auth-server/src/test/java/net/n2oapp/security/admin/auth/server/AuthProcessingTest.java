@@ -3,12 +3,13 @@ package net.n2oapp.security.admin.auth.server;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.n2oapp.security.admin.api.criteria.ClientCriteria;
 import net.n2oapp.security.admin.api.model.Client;
-import net.n2oapp.security.admin.api.model.Permission;
-import net.n2oapp.security.admin.api.model.Role;
-import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.ClientService;
+import net.n2oapp.security.admin.impl.entity.AccountEntity;
+import net.n2oapp.security.admin.impl.entity.PermissionEntity;
+import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
+import net.n2oapp.security.admin.impl.repository.AccountRepository;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import org.apache.cxf.jaxrs.client.WebClient;
@@ -19,7 +20,6 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -53,6 +53,7 @@ import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -70,6 +71,9 @@ public class AuthProcessingTest {
 
     @MockBean
     private UserRepository userRepository;
+
+    @MockBean
+    private AccountRepository accountRepository;
 
     @MockBean
     private RoleRepository roleRepository;
@@ -91,11 +95,10 @@ public class AuthProcessingTest {
         host = "http://localhost:" + port;
         when(clientService.findByClientId("test")).thenReturn(client());
 
-        when(clientService.findAll(Mockito.any(ClientCriteria.class))).thenReturn(
+        when(clientService.findAll(any(ClientCriteria.class))).thenReturn(
                 new PageImpl<>(List.of(client()))
         );
-        when(userRepository.findOneByUsernameIgnoreCase("testUser")).thenReturn(userEntity());
-//        when(userDetailsService.loadUserDetails(Mockito.any(UserDetailsToken.class))).thenReturn(user());
+        when(accountRepository.getOne(any())).thenReturn(accountEntity());
     }
 
     @Test
@@ -299,9 +302,9 @@ public class AuthProcessingTest {
     }
 
     private void checkExpiredAccountAuthentication() {
-        UserEntity userEntity = userEntity();
-        userEntity.setExpirationDate(LocalDateTime.now(Clock.systemUTC()));
-        when(userRepository.findOneByUsernameIgnoreCase("testUser")).thenReturn(userEntity);
+        AccountEntity accountEntity = accountEntity();
+        accountEntity.getUser().setExpirationDate(LocalDateTime.now(Clock.systemUTC()));
+        when(accountRepository.getOne(any())).thenReturn(accountEntity);
 
         Response response = WebClient.create(
                 host + "/oauth/authorize?client_id=test&redirect_uri=https://localhost:8080/login&response_type=code&scope=read%20write&state=T45FVY"
@@ -366,44 +369,26 @@ public class AuthProcessingTest {
         return client;
     }
 
-    private static User user() {
-        User user = new User();
-        user.setUsername("testUser");
-        user.setEmail("testEmail");
-        user.setName("testName");
-        user.setSurname("testSurname");
-        user.setPatronymic("testPatronymic");
-        user.setRoles(Stream.of(1, 2).map(id -> {
-            Role role = new Role();
-            role.setId(id);
-            role.setName("testRoleName" + id);
-            role.setCode("testRoleCode" + id);
-            Permission p = new Permission();
-            p.setCode("testPermission" + id);
-            role.setPermissions(List.of(p));
-            return role;
-        }).collect(Collectors.toList()));
-        return user;
-    }
-
-    private static UserEntity userEntity() {
+    private static AccountEntity accountEntity() {
         UserEntity user = new UserEntity();
         user.setUsername("testUser");
         user.setEmail("testEmail");
         user.setName("testName");
         user.setSurname("testSurname");
         user.setPatronymic("testPatronymic");
-        //        todo SECURITY-396
-//        user.setRoleList(Stream.of(1, 2).map(id -> {
-//            RoleEntity role = new RoleEntity();
-//            role.setId(id);
-//            role.setName("testRoleName" + id);
-//            role.setCode("testRoleCode" + id);
-//            PermissionEntity p = new PermissionEntity();
-//            p.setCode("testPermission" + id);
-//            role.setPermissionList(List.of(p));
-//            return role;
-//        }).collect(Collectors.toList()));
-        return user;
+
+        AccountEntity account = new AccountEntity();
+        account.setUser(user);
+        account.setRoleList(Stream.of(1, 2).map(id -> {
+            RoleEntity role = new RoleEntity();
+            role.setId(id);
+            role.setName("testRoleName" + id);
+            role.setCode("testRoleCode" + id);
+            PermissionEntity p = new PermissionEntity();
+            p.setCode("testPermission" + id);
+            role.setPermissionList(List.of(p));
+            return role;
+        }).collect(Collectors.toList()));
+        return account;
     }
 }

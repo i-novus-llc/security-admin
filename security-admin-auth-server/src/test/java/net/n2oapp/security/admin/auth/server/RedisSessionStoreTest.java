@@ -4,6 +4,7 @@ import net.n2oapp.security.admin.api.criteria.ClientCriteria;
 import net.n2oapp.security.admin.api.model.Client;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.ClientService;
+import net.n2oapp.security.admin.impl.repository.AccountRepository;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import org.apache.cxf.jaxrs.client.WebClient;
@@ -34,6 +35,9 @@ public class RedisSessionStoreTest {
 
     @MockBean
     private UserRepository userRepository;
+
+    @MockBean
+    private AccountRepository accountRepository;
 
     @MockBean
     private RoleRepository roleRepository;
