@@ -442,15 +442,16 @@ public class UserServiceImpl implements UserService {
         model.setExpirationDate(entity.getExpirationDate());
 //        todo SECURITY-396 перенести в сервис аккаунтов
         if (!CollectionUtils.isEmpty(entity.getAccounts())) {
+            AccountEntity accountEntity = entity.getAccounts().get(0);
             Account account = new Account();
-            account.setUserLevel(entity.getAccounts().get(0).getUserLevel());
-            account.setDepartment(model(entity.getAccounts().get(0).getDepartment()));
-            account.setOrganization(model(entity.getAccounts().get(0).getOrganization()));
-            account.setRegion(model(entity.getAccounts().get(0).getRegion()));
-            account.setExtSys(entity.getAccounts().get(0).getExternalSystem());
-            account.setExtUid(entity.getAccounts().get(0).getExternalUid());
-            if (nonNull(entity.getAccounts().get(0).getRoleList())) {
-                account.setRoles(entity.getAccounts().get(0).getRoleList().stream().map(e -> {
+            account.setUserLevel(accountEntity.getUserLevel());
+            account.setDepartment(model(accountEntity.getDepartment()));
+            account.setOrganization(model(accountEntity.getOrganization()));
+            account.setRegion(model(accountEntity.getRegion()));
+            account.setExtSys(accountEntity.getExternalSystem());
+            account.setExtUid(accountEntity.getExternalUid());
+            if (nonNull(accountEntity.getRoleList())) {
+                account.setRoles(accountEntity.getRoleList().stream().map(e -> {
                     RoleEntity re = roleRepository.findById(e.getId()).get();
                     return model(re);
                 }).collect(Collectors.toList()));
