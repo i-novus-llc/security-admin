@@ -1,60 +1,57 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<page xmlns="http://n2oapp.net/framework/config/schema/page-2.0"
+<page xmlns="http://n2oapp.net/framework/config/schema/page-3.0"
       xmlns:pointer="http://n2oapp.net/security/schema/pointer"
       name="Организации">
     <regions>
-        <region place="single">
-            <table id="organization" name="Организации" query-id="organization">
-                <columns>
-                    <column text-field-id="ogrn"/>
-                    <column text-field-id="fullName"/>
-                    <column text-field-id="shortName"/>
-                    <column text-field-id="inn"/>
-                    <column text-field-id="kpp"/>
-                    <column text-field-id="actions">
-                        <toolbar>
-                            <button confirm="true"
-                                    icon="fa fa-trash"
-                                    type="icon"
-                                    pointer:organization-persist-function="true"
-                                    confirm-text="Вы действительно хотите удалить организацию?">
-                                <invoke operation-id="delete"/>
-                            </button>
-                        </toolbar>
-                    </column>
-                </columns>
-                <rows>
-                    <click>
-                        <show-modal page-id="organizationUpdateForm"
-                                    submit-operation-id="update"
-                                    object-id="organization"
-                                    route="/:id/update">
-                            <path-param name="id" value="{id}"/>
-                        </show-modal>
-                    </click>
-                </rows>
-                <filters>
-                    <row>
-                        <input-text id="name" label="Наименование"/>
-                        <input-text id="ogrn"/>
-                        <input-text id="inn"/>
-                    </row>
-                </filters>
-                <toolbar>
-                    <button id="create"
-                            label="Создать"
-                            color="primary"
-                            model="filter"
-                            pointer:organization-persist-function="true">
-                        <show-modal page-id="organizationForm"
-                                    submit-operation-id="create"
-                                    model="filter"
-                                    object-id="organization"
-                                    upload="defaults"
-                                    route="create"/>
-                    </button>
-                </toolbar>
-            </table>
-        </region>
+        <table id="organization" name="Организации" query-id="organization">
+            <columns>
+                <column text-field-id="ogrn"/>
+                <column text-field-id="fullName"/>
+                <column text-field-id="shortName"/>
+                <column text-field-id="inn"/>
+                <column text-field-id="kpp"/>
+                <column text-field-id="actions">
+                    <toolbar>
+                        <button confirm="true"
+                                icon="fa fa-trash"
+                                type="icon"
+                                pointer:organization-persist-function="true"
+                                confirm-text="Вы действительно хотите удалить организацию?">
+                            <invoke operation-id="delete"/>
+                        </button>
+                    </toolbar>
+                </column>
+            </columns>
+            <rows>
+                <click>
+                    <show-modal page-id="organizationUpdateForm"
+                                submit-operation-id="update"
+                                object-id="organization"
+                                route="/:id/update">
+                        <path-param name="id" value="{id}"/>
+                    </show-modal>
+                </click>
+            </rows>
+            <filters>
+                <row>
+                    <input-text id="name" label="Наименование"/>
+                    <input-text id="ogrn"/>
+                    <input-text id="inn"/>
+                </row>
+            </filters>
+            <toolbar>
+                <button id="create"
+                        label="Создать"
+                        color="primary"
+                        disable-on-empty-model="false"
+                        pointer:organization-persist-function="true">
+                    <show-modal page-id="organizationForm"
+                                submit-operation-id="create"
+                                object-id="organization"
+                                upload="defaults"
+                                route="create"/>
+                </button>
+            </toolbar>
+        </table>
     </regions>
 </page>

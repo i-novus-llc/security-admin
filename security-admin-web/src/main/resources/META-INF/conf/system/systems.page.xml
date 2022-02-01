@@ -1,54 +1,52 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<page xmlns="http://n2oapp.net/framework/config/schema/page-2.0"
+<page xmlns="http://n2oapp.net/framework/config/schema/page-3.0"
       object-id="system"
       name="Системы">
     <regions>
-        <region place="single">
-            <table name="Системы" query-id="system" route="/">
-                <columns>
-                    <column text-field-id="id" label="Код" sorting-field-id="code"/>
-                    <column text-field-id="name" label="Наименование"/>
-                    <column text-field-id="services" label="Приложения">
-                        <list label-field-id="name"/>
-                    </column>
-                    <column text-field-id="actions" label=" ">
-                        <toolbar>
-                            <button id="delete" label="Удалить" icon="fa fa-trash"
-                                    confirm="true" confirm-text="Вы уверены, что хотите удалить систему?">
-                                <invoke operation-id="delete"/>
-                            </button>
-                        </toolbar>
-                    </column>
-                </columns>
-                <rows>
-                    <click>
-                        <open-page page-id="systemFormUpdate" submit-operation-id="update" object-id="system"
-                                   route="/:id/update">
-                            <path-param name="id" value="{id}"/>
-                        </open-page>
-                    </click>
-                </rows>
-                <filters>
-                    <row>
-                        <col>
-                            <input-text id="code" label="Код системы"/>
-                        </col>
-                        <col>
-                            <input-text id="name" label="Наименование системы" class="n2o-control-10"/>
-                        </col>
-                        <col>
-                            <search-buttons id="def"/>
-                        </col>
-                    </row>
-                </filters>
-                <toolbar>
-                    <button id="create" label="Создать" model="filter" color="primary">
-                        <open-page page-id="systemForm" submit-operation-id="create" model="filter"
-                                   object-id="system" upload="defaults" route="/create" close-after-submit="true"
-                                   redirect-url-after-submit="../:id/update"/>
-                    </button>
-                </toolbar>
-            </table>
-        </region>
+        <table name="Системы" query-id="system" route="/">
+            <columns>
+                <column text-field-id="id" label="Код" sorting-field-id="code"/>
+                <column text-field-id="name" label="Наименование"/>
+                <column text-field-id="services" label="Приложения">
+                    <list label-field-id="name"/>
+                </column>
+                <column text-field-id="actions" label=" ">
+                    <toolbar>
+                        <button id="delete" label="Удалить" icon="fa fa-trash"
+                                confirm="true" confirm-text="Вы уверены, что хотите удалить систему?">
+                            <invoke operation-id="delete"/>
+                        </button>
+                    </toolbar>
+                </column>
+            </columns>
+            <rows>
+                <click>
+                    <open-page page-id="systemFormUpdate" submit-operation-id="update" object-id="system"
+                               route="/:id/update">
+                        <path-param name="id" value="{id}"/>
+                    </open-page>
+                </click>
+            </rows>
+            <filters>
+                <row>
+                    <col>
+                        <input-text id="code" label="Код системы"/>
+                    </col>
+                    <col>
+                        <input-text id="name" label="Наименование системы" class="n2o-control-10"/>
+                    </col>
+                    <col>
+                        <search-buttons id="def"/>
+                    </col>
+                </row>
+            </filters>
+            <toolbar>
+                <button id="create" label="Создать" disable-on-empty-model="false" color="primary">
+                    <open-page page-id="systemForm" submit-operation-id="create"
+                               object-id="system" upload="defaults" route="/create" close-after-submit="true"
+                               redirect-url-after-submit="../:id/update"/>
+                </button>
+            </toolbar>
+        </table>
     </regions>
 </page>

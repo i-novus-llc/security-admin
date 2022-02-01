@@ -51,7 +51,7 @@
         </field>
 
         <field id="clientRoles" domain="integer[]" name="Роли">
-            <select mapping="roles"></select>
+            <select mapping="roles"/>
             <filters>
                 <in filter-id="roles" domain="integer[]" mapping="roles"/>
             </filters>

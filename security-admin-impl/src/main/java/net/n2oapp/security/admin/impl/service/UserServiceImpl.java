@@ -438,23 +438,25 @@ public class UserServiceImpl implements UserService {
         model.setEmail(entity.getEmail());
         model.setSnils(entity.getSnils());
         model.setPasswordHash(entity.getPasswordHash());
-//        todo SECURITY-396
+        model.setStatus(entity.getStatus());
+        model.setExpirationDate(entity.getExpirationDate());
+//        todo SECURITY-396 перенести в сервис аккаунтов
         if (!CollectionUtils.isEmpty(entity.getAccounts())) {
-            model.setUserLevel(entity.getAccounts().get(0).getUserLevel());
-            model.setDepartment(model(entity.getAccounts().get(0).getDepartment()));
-            model.setOrganization(model(entity.getAccounts().get(0).getOrganization()));
-            model.setRegion(model(entity.getAccounts().get(0).getRegion()));
-            model.setExtSys(entity.getAccounts().get(0).getExternalSystem());
-            model.setExtUid(entity.getAccounts().get(0).getExternalUid());
+            Account account = new Account();
+            account.setUserLevel(entity.getAccounts().get(0).getUserLevel());
+            account.setDepartment(model(entity.getAccounts().get(0).getDepartment()));
+            account.setOrganization(model(entity.getAccounts().get(0).getOrganization()));
+            account.setRegion(model(entity.getAccounts().get(0).getRegion()));
+            account.setExtSys(entity.getAccounts().get(0).getExternalSystem());
+            account.setExtUid(entity.getAccounts().get(0).getExternalUid());
             if (nonNull(entity.getAccounts().get(0).getRoleList())) {
-                model.setRoles(entity.getAccounts().get(0).getRoleList().stream().map(e -> {
+                account.setRoles(entity.getAccounts().get(0).getRoleList().stream().map(e -> {
                     RoleEntity re = roleRepository.findById(e.getId()).get();
                     return model(re);
                 }).collect(Collectors.toList()));
             }
+            model.setAccount(account);
         }
-        model.setStatus(entity.getStatus());
-        model.setExpirationDate(entity.getExpirationDate());
 
         StringBuilder builder = new StringBuilder();
         if (nonNull(entity.getSurname())) {
@@ -468,7 +470,13 @@ public class UserServiceImpl implements UserService {
         }
         String fio = builder.toString().strip();
         model.setFio(hasText(fio) ? fio : null);
-
+//        todo SECURITY-396
+//        if (nonNull(entity.getRoleList())) {
+//            model.setRoles(entity.getRoleList().stream().map(e -> {
+//                RoleEntity re = roleRepository.findById(e.getId()).get();
+//                return model(re);
+//            }).collect(Collectors.toList()));
+//        }
         return model;
     }
 
