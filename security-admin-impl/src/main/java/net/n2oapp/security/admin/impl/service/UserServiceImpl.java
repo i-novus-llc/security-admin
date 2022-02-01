@@ -376,12 +376,13 @@ public class UserServiceImpl implements UserService {
         //        todo SECURITY-396
         if (isNull(CollectionUtils.firstElement(entity.getAccounts())))
             entity.getAccounts().add(new AccountEntity());
-        entity.getAccounts().get(0).setUserLevel(nonNull(model.getUserLevel()) ? UserLevel.valueOf(model.getUserLevel()) : null);
-        entity.getAccounts().get(0).setDepartment(nonNull(model.getDepartmentId()) ? new DepartmentEntity(model.getDepartmentId()) : null);
-        entity.getAccounts().get(0).setOrganization(nonNull(model.getOrganizationId()) ? new OrganizationEntity(model.getOrganizationId()) : null);
-        entity.getAccounts().get(0).setRegion(nonNull(model.getRegionId()) ? new RegionEntity(model.getRegionId()) : null);
+        AccountEntity accountEntity = entity.getAccounts().get(0);
+        accountEntity.setUserLevel(nonNull(model.getUserLevel()) ? UserLevel.valueOf(model.getUserLevel()) : null);
+        accountEntity.setDepartment(nonNull(model.getDepartmentId()) ? new DepartmentEntity(model.getDepartmentId()) : null);
+        accountEntity.setOrganization(nonNull(model.getOrganizationId()) ? new OrganizationEntity(model.getOrganizationId()) : null);
+        accountEntity.setRegion(nonNull(model.getRegionId()) ? new RegionEntity(model.getRegionId()) : null);
         if (nonNull(model.getRoles()))
-            entity.getAccounts().get(0).setRoleList(model.getRoles().stream().map(RoleEntity::new).collect(Collectors.toList()));
+            accountEntity.setRoleList(model.getRoles().stream().map(RoleEntity::new).collect(Collectors.toList()));
         entity.setExpirationDate(model.getExpirationDate());
         return entity;
     }
@@ -400,17 +401,18 @@ public class UserServiceImpl implements UserService {
         //        todo SECURITY-396
         if (isNull(CollectionUtils.firstElement(entity.getAccounts())))
             entity.getAccounts().add(new AccountEntity());
-        entity.getAccounts().get(0).setExternalUid(modelFromProvider.getExtUid());
-        entity.getAccounts().get(0).setUserLevel(modelFromProvider.getUserLevel());
-        entity.getAccounts().get(0).setExternalSystem(modelFromProvider.getExtSys());
+        AccountEntity accountEntity = entity.getAccounts().get(0);
+        accountEntity.setExternalUid(modelFromProvider.getExtUid());
+        accountEntity.setUserLevel(modelFromProvider.getUserLevel());
+        accountEntity.setExternalSystem(modelFromProvider.getExtSys());
         if (nonNull(modelFromProvider.getDepartment()))
-            entity.getAccounts().get(0).setDepartment(new DepartmentEntity(modelFromProvider.getDepartment().getId()));
+            accountEntity.setDepartment(new DepartmentEntity(modelFromProvider.getDepartment().getId()));
         if (nonNull(modelFromProvider.getOrganization()))
-            entity.getAccounts().get(0).setOrganization(new OrganizationEntity(modelFromProvider.getOrganization().getId()));
+            accountEntity.setOrganization(new OrganizationEntity(modelFromProvider.getOrganization().getId()));
         if (nonNull(modelFromProvider.getRegion()))
-            entity.getAccounts().get(0).setRegion(new RegionEntity(modelFromProvider.getRegion().getId()));
+            accountEntity.setRegion(new RegionEntity(modelFromProvider.getRegion().getId()));
         if (nonNull(modelFromProvider.getRoles()))
-            entity.getAccounts().get(0).setRoleList(modelFromProvider.getRoles().stream().map(r -> new RoleEntity(r.getId())).collect(Collectors.toList()));
+            accountEntity.setRoleList(modelFromProvider.getRoles().stream().map(r -> new RoleEntity(r.getId())).collect(Collectors.toList()));
         return entity;
     }
 
