@@ -471,13 +471,7 @@ public class UserServiceImpl implements UserService {
         }
         String fio = builder.toString().strip();
         model.setFio(hasText(fio) ? fio : null);
-//        todo SECURITY-396
-//        if (nonNull(entity.getRoleList())) {
-//            model.setRoles(entity.getRoleList().stream().map(e -> {
-//                RoleEntity re = roleRepository.findById(e.getId()).get();
-//                return model(re);
-//            }).collect(Collectors.toList()));
-//        }
+
         return model;
     }
 
