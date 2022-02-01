@@ -3,6 +3,8 @@ package net.n2oapp.security.admin.auth.server;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserDetailsToken;
 import net.n2oapp.security.admin.api.service.UserDetailsService;
+import net.n2oapp.security.admin.impl.entity.AccountEntity;
+import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.auth.common.authority.PermissionGrantedAuthority;
@@ -12,6 +14,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,13 +46,16 @@ public class RefreshTokenUserDetailsService implements org.springframework.secur
         if (userEntity != null) {
             userDetailsToken.setUsername(userEntity.getUsername() == null ? username : userEntity.getUsername());
             userDetailsToken.setEmail(userEntity.getEmail());
-            //        todo SECURITY-396
-//            userDetailsToken.setExtUid(userEntity.getExtUid());
             userDetailsToken.setName(userEntity.getName());
             userDetailsToken.setSurname(userEntity.getSurname());
             userDetailsToken.setPatronymic(userEntity.getPatronymic());
-            //        todo SECURITY-396
-//            userDetailsToken.setRoleNames(userEntity.getRoleList().stream().map(RoleEntity::getCode).collect(Collectors.toList()));
+            //  todo SECURITY-396
+
+            AccountEntity account = CollectionUtils.firstElement(userEntity.getAccounts());
+            if (nonNull(account)) {
+                userDetailsToken.setExtUid(account.getExternalUid());
+                userDetailsToken.setRoleNames(account.getRoleList().stream().map(RoleEntity::getCode).collect(Collectors.toList()));
+            }
         }
         return userDetailsToken;
     }
