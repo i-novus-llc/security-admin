@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-2.0" name="Настройки типов аккаунтов для саморегистрации">
+<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-3.0"
+             name="Настройки типов аккаунтов для саморегистрации">
     <form query-id="accountType" object-id="accountType">
         <fields>
             <input-text id="name" required="true" label="Наименование"/>

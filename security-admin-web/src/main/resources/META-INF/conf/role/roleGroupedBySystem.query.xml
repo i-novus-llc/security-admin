@@ -42,33 +42,33 @@
 
 
         <field id="system" domain="object" name="Система">
-            <select mapping="['system']"></select>
+            <select mapping="['system']"/>
             <filters>
-                <eq filter-id="system.id" domain="string" mapping="['criteria'].systemCodes"></eq>
+                <eq filter-id="system.id" domain="string" mapping="['criteria'].systemCodes"/>
             </filters>
         </field>
 
         <field id="systemId" domain="string" name="Система">
-            <select mapping="system?.code"></select>
+            <select mapping="system?.code"/>
         </field>
 
         <field id="systemName" domain="string" name="Система">
-            <select mapping="system?.name"></select>
+            <select mapping="system?.name"/>
         </field>
 
         <field id="userLevel.name" domain="string" name="Уровень пользователя">
-            <select mapping="userLevel?.desc"></select>
+            <select mapping="userLevel?.desc"/>
         </field>
         <field id="userLevel.id" domain="string" name="Уровень пользователя">
-            <select mapping="userLevel?.name"></select>
+            <select mapping="userLevel?.name"/>
             <filters>
-                <eq filter-id="userLevel.id" domain="string" mapping="['criteria'].userLevel"></eq>
+                <eq filter-id="userLevel.id" domain="string" mapping="['criteria'].userLevel"/>
             </filters>
         </field>
 
         <field id="groupBySystem" domain="boolean">
             <filters>
-                <eq domain="boolean" mapping="['criteria'].groupBySystem" default-value="true"></eq>
+                <eq domain="boolean" mapping="['criteria'].groupBySystem" default-value="true"/>
             </filters>
         </field>
         <field id="forForm" domain="boolean">

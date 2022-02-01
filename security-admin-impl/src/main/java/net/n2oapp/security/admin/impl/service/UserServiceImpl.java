@@ -433,15 +433,17 @@ public class UserServiceImpl implements UserService {
         model.setEmail(entity.getEmail());
         model.setSnils(entity.getSnils());
         model.setPasswordHash(entity.getPasswordHash());
-//        todo SECURITY-396
-        //        model.setUserLevel(entity.getUserLevel());
-//        model.setDepartment(model(entity.getDepartment()));
-//        model.setOrganization(model(entity.getOrganization()));
-//        model.setRegion(model(entity.getRegion()));
-//        model.setExtSys(entity.getExtSys());
-//        model.setExtUid(entity.getExtUid());
         model.setStatus(entity.getStatus());
         model.setExpirationDate(entity.getExpirationDate());
+//        todo SECURITY-396 перенести в сервис аккаунтов
+        Account account = new Account();
+        account.setUserLevel(entity.getAccounts().get(0).getUserLevel());
+        account.setDepartment(model(entity.getAccounts().get(0).getDepartment()));
+        account.setOrganization(model(entity.getAccounts().get(0).getOrganization()));
+        account.setRegion(model(entity.getAccounts().get(0).getRegion()));
+        account.setExtSys(entity.getAccounts().get(0).getExternalSystem());
+        account.setExtUid(entity.getAccounts().get(0).getExternalUid());
+        model.setAccount(account);
 
         StringBuilder builder = new StringBuilder();
         if (nonNull(entity.getSurname())) {
@@ -455,13 +457,15 @@ public class UserServiceImpl implements UserService {
         }
         String fio = builder.toString().strip();
         model.setFio(hasText(fio) ? fio : null);
-//        todo SECURITY-396
-//        if (nonNull(entity.getRoleList())) {
-//            model.setRoles(entity.getRoleList().stream().map(e -> {
-//                RoleEntity re = roleRepository.findById(e.getId()).get();
-//                return model(re);
-//            }).collect(Collectors.toList()));
-//        }
+
+//        todo SECURITY-396 перенести в сервис аккаунтов
+        List<RoleEntity> roleList = entity.getAccounts().get(0).getRoleList();
+        if (nonNull(roleList)) {
+            account.setRoles(roleList.stream().map(e -> {
+                RoleEntity re = roleRepository.findById(e.getId()).get();
+                return model(re);
+            }).collect(Collectors.toList()));
+        }
         return model;
     }
 

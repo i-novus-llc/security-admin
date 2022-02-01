@@ -27,6 +27,7 @@ import java.util.List;
 @Setter
 public class SsoUser extends User {
 
+    // todo SECURITY-396 убрать extSys, extUid
     private String extSys;
 
     private String extUid;
