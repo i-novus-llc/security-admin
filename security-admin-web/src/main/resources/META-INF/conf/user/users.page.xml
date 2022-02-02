@@ -21,7 +21,7 @@
                 </column>
                 <column text-field-id="fio"/>
                 <column text-field-id="userLevel.name" sorting-field-id="userLevel"/>
-                <column text-field-id="roleNamesWithSystem" label="Роли" sorting-field-id="roleCount">
+                <column text-field-id="roleNamesWithSystem" label="Роли">
                     <list label-field-id="name"/>
                 </column>
                 <column text-field-id="isActive">
