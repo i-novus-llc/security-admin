@@ -16,6 +16,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 @Table(name = "user", schema = "sec")
 public class UserEntity {
 
@@ -100,6 +101,10 @@ public class UserEntity {
      */
     @Column(name = "expiration_date")
     private LocalDateTime expirationDate;
+
+    public UserEntity(Integer id) {
+        this.id = id;
+    }
 
     @PrePersist
     @PreUpdate

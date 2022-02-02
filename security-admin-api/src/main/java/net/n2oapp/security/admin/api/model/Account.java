@@ -25,6 +25,9 @@ public class Account {
     @ApiModelProperty(value = "Наименование аккаунта")
     private String name;
 
+    @ApiModelProperty(value = "Активен ли аккаунт")
+    private Boolean isActive;
+
     @ApiModelProperty(value = "Список ролей")
     private List<Role> roles;
 
