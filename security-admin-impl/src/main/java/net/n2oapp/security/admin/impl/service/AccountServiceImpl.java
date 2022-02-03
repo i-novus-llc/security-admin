@@ -36,7 +36,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account findById(Integer id) {
-        return model(accountRepository.findById(id).orElse(null));
+        return model(accountRepository.findById(id)
+                .orElseThrow(() -> new UserException("exception.accountNotFound")));
     }
 
     @Override
@@ -45,7 +46,7 @@ public class AccountServiceImpl implements AccountService {
         accountEntity.setUser(new UserEntity(account.getUserId()));
         Account createdAccount = model(accountRepository.save(accountEntity));
 
-        return audit("audit.accountCreate", accountEntity);
+        return audit("audit.accountCreate", createdAccount);
     }
 
     @Override
@@ -70,12 +71,12 @@ public class AccountServiceImpl implements AccountService {
 
     private AccountEntity entityForm(AccountEntity entity, Account model) {
         entity.setName(model.getName());
-        entity.setUserLevel(nonNull(model.getUserLevel()) ? UserLevel.valueOf(model.getUserLevel()) : null);
-        entity.setDepartment(nonNull(model.getDepartmentId()) ? new DepartmentEntity(model.getDepartmentId()) : null);
-        entity.setOrganization(nonNull(model.getOrganizationId()) ? new OrganizationEntity(model.getOrganizationId()) : null);
-        entity.setRegion(nonNull(model.getRegionId()) ? new RegionEntity(model.getRegionId()) : null);
+        entity.setUserLevel(nonNull(model.getUserLevel()) ? model.getUserLevel() : null);
+        entity.setDepartment(nonNull(model.getDepartment()) ? new DepartmentEntity(model.getDepartment().getId()) : null);
+        entity.setOrganization(nonNull(model.getOrganization()) ? new OrganizationEntity(model.getOrganization().getId()) : null);
+        entity.setRegion(nonNull(model.getRegion()) ? new RegionEntity(model.getRegion().getId()) : null);
         if (nonNull(model.getRoles()))
-            entity.set.setRoleList(model.getRoles().stream().map(RoleEntity::new).collect(Collectors.toList()));
+            entity.setRoleList(model.getRoles().stream().map(r -> new RoleEntity()).collect(Collectors.toList()));
         entity.setIsActive(model.getIsActive());
         return entity;
     }
