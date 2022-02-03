@@ -9,13 +9,15 @@ INSERT INTO sec.role(id, name, code, description) VALUES (100, 'test','test','te
 INSERT INTO sec.role(name, code, description) VALUES ('user','code1','description1');
 INSERT INTO sec.role(name, code, description) VALUES ('admin','code2','description2');
 --USER
-INSERT INTO sec.user(username, email, name, surname, patronymic, password, is_active, user_level)
-            VALUES ('test', 'test@example.com', 'name1', 'surname1', 'patronymic1', 'password1', TRUE, 'FEDERAL');
-INSERT INTO sec.user(username, email, name, surname, patronymic, password, is_active, user_level)
-            VALUES ('test2', 'test@example.com', 'name1', 'surname1', 'patronymic1', 'password1', TRUE, 'ORGANIZATION');
-INSERT INTO sec.user_role(user_id, role_id) VALUES (1,1);
-INSERT INTO sec.user_role(user_id, role_id) VALUES (2,1);
-INSERT INTO sec.user_role(user_id, role_id) VALUES (1,2);
+INSERT INTO sec.user(username, email, name, surname, patronymic, password, is_active)
+            VALUES ('test', 'test@example.com', 'name1', 'surname1', 'patronymic1', 'password1', TRUE);
+INSERT INTO sec.user(username, email, name, surname, patronymic, password, is_active)
+            VALUES ('test2', 'test@example.com', 'name1', 'surname1', 'patronymic1', 'password1', TRUE);
+INSERT INTO sec.account(id, user_id, user_level) VALUES (1, 1, 'FEDERAL');
+INSERT INTO sec.account(id, user_id, user_level) VALUES (2, 2, 'ORGANIZATION');
+INSERT INTO sec.account_role(account_id, role_id) VALUES (1,1);
+INSERT INTO sec.account_role(account_id, role_id) VALUES (2,1);
+INSERT INTO sec.account_role(account_id, role_id) VALUES (1,2);
 INSERT INTO sec.role_permission (role_id, permission_code) VALUES (1,'test');
 INSERT INTO sec.role_permission (role_id, permission_code) VALUES (1,'test2');
 

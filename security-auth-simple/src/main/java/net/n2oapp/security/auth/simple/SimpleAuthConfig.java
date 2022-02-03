@@ -36,11 +36,6 @@ public class SimpleAuthConfig {
     }
 
     @Bean
-    public CurrentUserUpdatePasswordService currentUserUpdatePasswordService() {
-        return new CurrentUserUpdatePasswordService();
-    }
-
-    @Bean
     public RegistrationServlet registrationServlet() {
         return new RegistrationServlet();
     }
