@@ -20,7 +20,7 @@ public class AccountRestServiceImpl implements AccountRestService {
 
     @Override
     public Account findById(Integer accountId) {
-        return accountService.findById(accountId);
+        return accountService.getById(accountId);
     }
 
     @Override

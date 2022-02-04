@@ -20,7 +20,7 @@ public interface AccountService {
      * @param id Идентификатор
      * @return Аккаунт
      */
-    Account findById(Integer id);
+    Account getById(Integer id);
 
     /**
      * Создать аккаунт
