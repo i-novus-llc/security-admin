@@ -13,8 +13,8 @@ INSERT INTO sec.user(username, email, name, surname, patronymic, password, is_ac
             VALUES ('test', 'test@example.com', 'name1', 'surname1', 'patronymic1', 'password1', TRUE);
 INSERT INTO sec.user(username, email, name, surname, patronymic, password, is_active)
             VALUES ('test2', 'test@example.com', 'name1', 'surname1', 'patronymic1', 'password1', TRUE);
-INSERT INTO sec.account(id, user_id, user_level) VALUES (1, 1, 'FEDERAL');
-INSERT INTO sec.account(id, user_id, user_level) VALUES (2, 2, 'ORGANIZATION');
+INSERT INTO sec.account(user_id, user_level) VALUES (1, 'FEDERAL');
+INSERT INTO sec.account(user_id, user_level) VALUES (2, 'ORGANIZATION');
 INSERT INTO sec.account_role(account_id, role_id) VALUES (1,1);
 INSERT INTO sec.account_role(account_id, role_id) VALUES (2,1);
 INSERT INTO sec.account_role(account_id, role_id) VALUES (1,2);

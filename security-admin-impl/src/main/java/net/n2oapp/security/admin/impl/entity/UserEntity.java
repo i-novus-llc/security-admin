@@ -1,6 +1,7 @@
 package net.n2oapp.security.admin.impl.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.n2oapp.security.admin.api.model.UserStatus;
 
@@ -16,6 +17,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 @Table(name = "user", schema = "sec")
 public class UserEntity {
 
@@ -100,6 +102,10 @@ public class UserEntity {
      */
     @Column(name = "expiration_date")
     private LocalDateTime expirationDate;
+
+    public UserEntity(Integer id) {
+        this.id = id;
+    }
 
     @PrePersist
     @PreUpdate

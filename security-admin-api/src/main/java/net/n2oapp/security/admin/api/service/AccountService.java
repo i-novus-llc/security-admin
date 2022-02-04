@@ -15,7 +15,7 @@ public interface AccountService {
     Page<Account> findAll(AccountCriteria criteria);
 
     /**
-     * Найти  аккаунт по идентификатору
+     * Найти аккаунт по идентификатору
      *
      * @param id Идентификатор
      * @return Аккаунт
