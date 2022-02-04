@@ -65,7 +65,7 @@
                 </row>
             </fields>
         </form>
-        <line collapsible="false">
+        <line collapsible="false" label="Аккаунты пользователя">
             <table id="accounts" query-id="account" depends-on="main" master-field-id="id"
                    detail-field-id="userId" name="Аккаунты">
                 <columns>
