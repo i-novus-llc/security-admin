@@ -44,14 +44,14 @@ public class AccountServiceImplTest {
     @Test
     public void deleteTest() {
         Integer accountId = service.create(getAccount()).getId();
-        assertNotNull(service.findById(accountId));
+        assertNotNull(service.getById(accountId));
         service.delete(accountId);
-        assertThrows(UserException.class, () -> service.findById(accountId));
+        assertThrows(UserException.class, () -> service.getById(accountId));
     }
 
     @Test(expected = UserException.class)
     public void getAccountByNotExistsIdTest() {
-        service.findById(-1);
+        service.getById(-1);
     }
 
     @Test(expected = UserException.class)

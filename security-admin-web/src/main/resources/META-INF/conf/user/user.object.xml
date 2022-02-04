@@ -20,21 +20,24 @@
                 <field id="patronymic" mapping="[0].patronymic" domain="string"/>
                 <field id="password" mapping="[0].password" domain="string" required="${access.user.password.input}"/>
                 <field id="passwordCheck" mapping="[0].passwordCheck" domain="string"/>
-                <field id="temporaryPassword" mapping="[0].temporaryPassword" domain="string" required="${access.user.password.generate}"/>
+                <field id="temporaryPassword"
+                       mapping="[0].temporaryPassword"
+                       domain="string"
+                       required="${access.user.password.generate}"/>
                 <field id="sendOnEmail" mapping="[0].sendOnEmail" domain="boolean"
                        normalize="#this != null ? #this : ${access.user.choice-send-password}"/>
                 <field id="isActive" mapping="[0].isActive" domain="boolean" default-value="true"/>
-                <field id="roles*.id" mapping="[0].roles" domain="integer[]" required="true"/>
                 <field id="snils" mapping="[0].snils" domain="string"/>
                 <field id="status" mapping="[0].status" default-value="REGISTERED" domain="string"/>
-                <field id="userLevel.id" mapping="[0].userLevel" domain="string"
-                       enabled="${access.level.enabled}"/>
-                <field id="department.id" mapping="[0].departmentId" domain="integer"
-                       enabled="${access.level.enabled}"/>
-                <field id="region.id" mapping="[0].regionId" domain="integer"
-                       enabled="${access.level.enabled}"/>
-                <field id="organization.id" mapping="[0].organizationId" domain="integer"
-                       enabled="${access.level.enabled}"/>
+                <!--                <field id="roles*.id" mapping="[0].roles" domain="integer[]" required="true"/>-->
+                <!--                <field id="userLevel.id" mapping="[0].userLevel" domain="string"-->
+                <!--                       enabled="${access.level.enabled}"/>-->
+                <!--                <field id="department.id" mapping="[0].departmentId" domain="integer"-->
+                <!--                       enabled="${access.level.enabled}"/>-->
+                <!--                <field id="region.id" mapping="[0].regionId" domain="integer"-->
+                <!--                       enabled="${access.level.enabled}"/>-->
+                <!--                <field id="organization.id" mapping="[0].organizationId" domain="integer"-->
+                <!--                       enabled="${access.level.enabled}"/>-->
             </in>
             <out>
                 <field id="id" mapping="id"/>

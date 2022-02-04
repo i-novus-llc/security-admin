@@ -29,7 +29,7 @@ public class AccountServiceRestClient implements AccountService {
     }
 
     @Override
-    public Account findById(Integer id) {
+    public Account getById(Integer id) {
         return client.findById(id);
     }
 

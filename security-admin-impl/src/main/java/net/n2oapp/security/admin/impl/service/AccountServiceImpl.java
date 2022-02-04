@@ -10,6 +10,7 @@ import net.n2oapp.security.admin.impl.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Collectors;
 
@@ -17,6 +18,7 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 @Service
+@Transactional
 public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
@@ -35,7 +37,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Account findById(Integer id) {
+    public Account getById(Integer id) {
         return model(accountRepository.findById(id)
                 .orElseThrow(() -> new UserException("exception.accountNotFound")));
     }

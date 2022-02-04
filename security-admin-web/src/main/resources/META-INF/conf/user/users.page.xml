@@ -20,10 +20,6 @@
                     </dependencies>
                 </column>
                 <column text-field-id="fio"/>
-                <column text-field-id="userLevel.name" sorting-field-id="userLevel"/>
-                <column text-field-id="roleNamesWithSystem" label="Роли">
-                    <list label-field-id="name"/>
-                </column>
                 <column text-field-id="isActive">
                     <checkbox enabled="${access.users.change-activity-enabled}">
                         <invoke route="/changeUserActive" operation-id="changeUserActive"/>
@@ -45,8 +41,8 @@
             <rows>
                 <click>
                     <open-page page-id="userUpdateForm" submit-operation-id="update" object-id="user"
-                               detail-field-id="id" route="/:id/update">
-                        <path-param name="id" value="{id}"/>
+                               detail-field-id="id" route="/:user_id/update">
+                        <path-param name="user_id" value="{id}"/>
                     </open-page>
                 </click>
             </rows>
