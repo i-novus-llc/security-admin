@@ -7,6 +7,7 @@ import net.n2oapp.security.admin.api.model.*;
 import net.n2oapp.security.admin.api.service.AccountService;
 import net.n2oapp.security.admin.impl.entity.*;
 import net.n2oapp.security.admin.impl.repository.AccountRepository;
+import net.n2oapp.security.admin.impl.service.specification.AccountSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Page<Account> findAll(AccountCriteria criteria) {
-        final Page<AccountEntity> all = accountRepository.findAll(criteria);
+        final Page<AccountEntity> all = accountRepository.findAll(new AccountSpecifications(criteria), criteria);
         return all.map(this::model);
     }
 

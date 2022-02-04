@@ -374,8 +374,10 @@ public class UserServiceImpl implements UserService {
         entity.setSnils(model.getSnils());
         entity.setStatus(model.getStatus());
         //        todo SECURITY-396
-        if (isNull(CollectionUtils.firstElement(entity.getAccounts())))
+        if (isNull(CollectionUtils.firstElement(entity.getAccounts()))) {
+            entity.setAccounts(new ArrayList<>());
             entity.getAccounts().add(new AccountEntity());
+        }
         AccountEntity accountEntity = entity.getAccounts().get(0);
         accountEntity.setUserLevel(nonNull(model.getUserLevel()) ? UserLevel.valueOf(model.getUserLevel()) : null);
         accountEntity.setDepartment(nonNull(model.getDepartmentId()) ? new DepartmentEntity(model.getDepartmentId()) : null);
@@ -398,10 +400,9 @@ public class UserServiceImpl implements UserService {
         entity.setEmail(modelFromProvider.getEmail());
         entity.setSnils(modelFromProvider.getSnils());
         entity.setStatus(modelFromProvider.getStatus());
-        //        todo SECURITY-396
-        if (isNull(CollectionUtils.firstElement(entity.getAccounts())))
-            entity.getAccounts().add(new AccountEntity());
-        AccountEntity accountEntity = entity.getAccounts().get(0);
+        entity.setAccounts(new ArrayList<>());
+        AccountEntity accountEntity = new AccountEntity();
+        entity.getAccounts().add(accountEntity);
         accountEntity.setExternalUid(modelFromProvider.getExtUid());
         accountEntity.setUserLevel(modelFromProvider.getUserLevel());
         accountEntity.setExternalSystem(modelFromProvider.getExtSys());
