@@ -69,7 +69,6 @@ public class UserDetailsServiceImplTest {
         UserForm userForm = new UserForm();
         userForm.setUsername("testUserName");
         userForm.setEmail("test@test.test");
-        userForm.setAccountTypeCode("testAccountTypeCode");
         userForm.setPassword("1234ABCabc,");
         userForm.setPasswordCheck(userForm.getPassword());
         userForm.setDepartmentId(1);

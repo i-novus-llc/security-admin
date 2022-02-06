@@ -9,7 +9,6 @@ import net.n2oapp.security.admin.api.service.MailService;
 import net.n2oapp.security.admin.api.service.UserService;
 import net.n2oapp.security.admin.impl.entity.AccountEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
-import net.n2oapp.security.admin.impl.repository.AccountTypeRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.UserSpecifications;
 import net.n2oapp.security.admin.impl.util.PasswordGenerator;
@@ -22,14 +21,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import javax.ws.rs.NotFoundException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Objects;
-import java.util.StringJoiner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
@@ -43,9 +38,7 @@ import static org.springframework.util.StringUtils.hasText;
 public class UserServiceImpl implements UserService {
     private static final String ID = "id";
     private static final String USERNAME = "username";
-    private static final String STATUS = "status";
     private final UserRepository userRepository;
-    private final AccountTypeRepository accountTypeRepository;
     private final SsoUserRoleProvider provider;
 
     @Autowired
@@ -68,10 +61,8 @@ public class UserServiceImpl implements UserService {
     @Value("${access.email-as-username:false}")
     private Boolean emailAsUsername;
 
-    public UserServiceImpl(UserRepository userRepository, SsoUserRoleProvider provider,
-                           AccountTypeRepository accountTypeRepository) {
+    public UserServiceImpl(UserRepository userRepository, SsoUserRoleProvider provider) {
         this.userRepository = userRepository;
-        this.accountTypeRepository = accountTypeRepository;
         this.provider = provider;
     }
 
@@ -213,14 +204,15 @@ public class UserServiceImpl implements UserService {
         }
         userEntity.setIsActive(!userEntity.getIsActive());
         SsoUser result = model(userRepository.save(userEntity));
-//                todo SECURITY-396
-        AccountEntity account = CollectionUtils.firstElement(userEntity.getAccounts());
-        if (nonNull(account) && provider.isSupports(account.getExternalSystem())) {
+
+        List<AccountEntity> accounts = userEntity.getAccounts();
+        if (nonNull(accounts) && accounts.stream().anyMatch(a -> provider.isSupports(a.getExternalSystem())))
             provider.changeActivity(result);
-        }
+
         if (sendMailActivate) {
             mailService.sendChangeActivateMail(model(userEntity));
         }
+
         return audit("audit.userChangeActive", result);
     }
 
@@ -305,7 +297,6 @@ public class UserServiceImpl implements UserService {
         entity.setIsActive(model.getIsActive());
         entity.setEmail(model.getEmail());
         entity.setSnils(model.getSnils());
-        entity.setStatus(model.getStatus());
         entity.setExpirationDate(model.getExpirationDate());
         return entity;
     }
@@ -334,7 +325,6 @@ public class UserServiceImpl implements UserService {
         model.setEmail(entity.getEmail());
         model.setSnils(entity.getSnils());
         model.setPasswordHash(entity.getPasswordHash());
-        model.setStatus(entity.getStatus());
         model.setExpirationDate(entity.getExpirationDate());
 
         StringJoiner joiner = new StringJoiner(" ");

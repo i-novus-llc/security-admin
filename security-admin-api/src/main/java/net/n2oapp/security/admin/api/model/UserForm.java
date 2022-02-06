@@ -88,12 +88,6 @@ public class UserForm {
     @ApiModelProperty(value = "Код организации")
     private Integer organizationId;
 
-    @ApiModelProperty(value = "Статус регистрации пользователя")
-    private UserStatus status;
-
-    @ApiModelProperty(value = "Тип аккаунта")
-    private String accountTypeCode;
-
     @ApiParam("Срок действия учётной записи пользователя")
     private LocalDateTime expirationDate;
 }
