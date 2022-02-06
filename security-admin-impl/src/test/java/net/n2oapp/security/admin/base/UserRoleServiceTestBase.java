@@ -43,20 +43,15 @@ public abstract class UserRoleServiceTestBase {
         UserForm userForm = new UserForm();
         userForm.setUsername("username");
         userForm.setEmail("username@username.username");
-        userForm.setAccountTypeCode("testAccountTypeCode");
         userForm.setPassword("1234ABCabc,");
         userForm.setPasswordCheck(userForm.getPassword());
-        userForm.setDepartmentId(1);
         userForm.setName("name");
         userForm.setSurname("surname");
         userForm.setPatronymic("patronymic");
-        userForm.setRegionId(1);
-        userForm.setOrganizationId(1);
         userForm.setSnils("124-985-753 00");
 
         User result = userService.create(userForm);
 
-        assertEquals(1, result.getRoles().size());
         assertEquals("username", result.getUsername());
         assertEquals("surname name patronymic", result.getFio());
         assertEquals("username@username.username", result.getEmail());
@@ -64,11 +59,6 @@ public abstract class UserRoleServiceTestBase {
         assertEquals("name", result.getName());
         assertEquals("patronymic", result.getPatronymic());
         assertEquals("124-985-753 00", result.getSnils());
-        assertEquals(UserLevel.PERSONAL, result.getUserLevel());
-        assertEquals(UserStatus.REGISTERED, result.getStatus());
-        assertThat(result.getDepartment().getId()).isEqualTo(1);
-        assertThat(result.getRegion().getId()).isEqualTo(1);
-        assertThat(result.getOrganization().getId()).isEqualTo(1);
 
         Map<String, Object> userInfo = new HashMap<>();
 
@@ -83,7 +73,6 @@ public abstract class UserRoleServiceTestBase {
 
         result = userService.patch(userInfo);
 
-        assertEquals(1, result.getRoles().size());
         assertEquals("username", result.getUsername());
         assertEquals("surname name patronymic", result.getFio());
         assertEquals("username@username.username", result.getEmail());
@@ -91,10 +80,6 @@ public abstract class UserRoleServiceTestBase {
         assertEquals("name", result.getName());
         assertEquals("patronymic", result.getPatronymic());
         assertEquals("124-985-753 00", result.getSnils());
-        assertEquals(UserLevel.PERSONAL, result.getUserLevel());
-        assertEquals(UserStatus.REGISTERED, result.getStatus());
-        assertThat(result.getDepartment().getId()).isEqualTo(1);
-        assertThat(result.getRegion().getId()).isEqualTo(1);
         assertEquals(userInfo.get("expirationDate"), result.getExpirationDate());
 
         UserEntity entity = userRepository.findById(result.getId()).get();
@@ -106,7 +91,6 @@ public abstract class UserRoleServiceTestBase {
 
         result = userService.patch(userInfo);
 
-        assertEquals(1, result.getRoles().size());
         assertEquals("supapupausername", result.getUsername());
         assertEquals("supasurname name patronymic", result.getFio());
         assertEquals("username@username.username", result.getEmail());
@@ -114,10 +98,6 @@ public abstract class UserRoleServiceTestBase {
         assertEquals("name", result.getName());
         assertEquals("patronymic", result.getPatronymic());
         assertEquals("124-985-753 00", result.getSnils());
-        assertEquals(UserLevel.PERSONAL, result.getUserLevel());
-        assertEquals(UserStatus.REGISTERED, result.getStatus());
-        assertThat(result.getDepartment().getId()).isEqualTo(1);
-        assertThat(result.getRegion().getId()).isEqualTo(1);
 
         userInfo = new HashMap<>();
         userInfo.put("id", result.getId());
@@ -126,19 +106,13 @@ public abstract class UserRoleServiceTestBase {
         userInfo.put("accountTypeCode", "testAccountTypeCode");
         userInfo.put("password", "1234ABCabc,");
         userInfo.put("passwordCheck", "1234ABCabc,");
-        userInfo.put("departmentId", 1);
         userInfo.put("name", "name");
         userInfo.put("surname", "surname");
         userInfo.put("patronymic", "patronymic");
-        userInfo.put("regionId", 1);
         userInfo.put("snils", "124-985-753 00");
-        List<Integer> roles = new ArrayList<>();
-        roles.add(100);
-        userInfo.put("roles", roles);
 
         result = userService.patch(userInfo);
 
-        assertEquals(1, result.getRoles().size());
         assertEquals("username", result.getUsername());
         assertEquals("surname name patronymic", result.getFio());
         assertEquals("username@username.username", result.getEmail());
@@ -146,10 +120,6 @@ public abstract class UserRoleServiceTestBase {
         assertEquals("name", result.getName());
         assertEquals("patronymic", result.getPatronymic());
         assertEquals("124-985-753 00", result.getSnils());
-        assertEquals(UserLevel.PERSONAL, result.getUserLevel());
-        assertEquals(UserStatus.REGISTERED, result.getStatus());
-        assertThat(result.getDepartment().getId()).isEqualTo(1);
-        assertThat(result.getRegion().getId()).isEqualTo(1);
 
         userService.delete(result.getId());
 
@@ -181,10 +151,6 @@ public abstract class UserRoleServiceTestBase {
         result = userService.patch(Map.of("id", 1));
         assertThat(result.getId()).isEqualTo(1);
         assertThat(result.getUsername()).isEqualTo("test");
-
-    }
-
-    protected void checkChangeActive() {
 
     }
 
@@ -299,10 +265,6 @@ public abstract class UserRoleServiceTestBase {
         user.setPassword("userPassword1$");
         user.setPasswordCheck("userPassword1$");
         user.setIsActive(true);
-        List<Integer> roles = new ArrayList<>();
-        roles.add(100);
-        user.setRoles(roles);
-        user.setStatus(UserStatus.REGISTERED);
         return user;
     }
 
@@ -317,7 +279,6 @@ public abstract class UserRoleServiceTestBase {
         form.setPassword(user.getPassword());
         form.setPasswordCheck(user.getPasswordCheck());
         form.setIsActive(true);
-        form.setRoles(user.getRoles().stream().map(Role::getId).collect(Collectors.toList()));
         return form;
     }
 

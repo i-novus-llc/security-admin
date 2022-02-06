@@ -79,9 +79,6 @@ public class UserForm {
     @ApiModelProperty(value = "СНИЛС пользователя")
     private String snils;
 
-    @ApiModelProperty(value = "Уровень пользователя")
-    private String userLevel;
-
     @ApiModelProperty(value = "Код департамента")
     private Integer departmentId;
 

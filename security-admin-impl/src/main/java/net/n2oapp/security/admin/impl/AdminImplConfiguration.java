@@ -42,9 +42,9 @@ public class AdminImplConfiguration {
     private Boolean userLevelValueOrg;
 
     @Bean
-    public UserService userService(UserRepository userRepository, RoleRepository roleRepository,
-                                   SsoUserRoleProvider ssoUserRoleProvider, AccountTypeRepository accountTypeRepository) {
-        return new UserServiceImpl(userRepository, roleRepository, ssoUserRoleProvider, accountTypeRepository);
+    public UserService userService(UserRepository userRepository, SsoUserRoleProvider ssoUserRoleProvider,
+                                   AccountTypeRepository accountTypeRepository) {
+        return new UserServiceImpl(userRepository, ssoUserRoleProvider, accountTypeRepository);
     }
 
     @Bean

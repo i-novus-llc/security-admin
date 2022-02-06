@@ -112,7 +112,7 @@
                             return null;
                             } else if (activeList.length == 2) {
                             return null;
-                            }else if (activeList[0].id == 1) {
+                            } else if (activeList[0].id == 1) {
                             return 'yes';
                             } else if (activeList[0].id == 2) {
                             return 'no';
@@ -124,9 +124,9 @@
                 </input-text>
             </filters>
             <toolbar>
-                <button id="create" label="Создать" color="primary" disable-on-empty-model="false">
+                <button id="create" label="Создать" color="primary" disable-on-empty-model="false" >
                     <open-page page-id="userForm" submit-operation-id="create" object-id="user"
-                               upload="defaults" route="create"/>
+                               upload="defaults" route="/create"/>
                 </button>
             </toolbar>
         </table>
