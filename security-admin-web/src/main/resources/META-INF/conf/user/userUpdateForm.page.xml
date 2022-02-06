@@ -30,7 +30,8 @@
                     <col size="4">
                         <password id="password" label="Новый пароль"
                                   visible="${access.user.password.input}" eye="false">
-                            <validations white-list="passwordLengthValidation,passwordLowerCaseValidation,passwordUpperCaseValidation,passwordDigitsValidation,passwordSpecialSymbolsValidation,passwordCorrectSymbolsValidation"/>
+                            <validations
+                                    white-list="passwordLengthValidation,passwordLowerCaseValidation,passwordUpperCaseValidation,passwordDigitsValidation,passwordSpecialSymbolsValidation,passwordCorrectSymbolsValidation"/>
                         </password>
                     </col>
                     <col size="4">
@@ -71,32 +72,35 @@
                 <columns>
                     <column text-field-id="name" label="Наименование"/>
                     <column text-field-id="roleNames" label="Роли"/>
-                    <!--                    <column text-field-id="actions" label=" ">-->
-                    <!--                        <toolbar>-->
-                    <!--                            <button id="delete" label="Удалить" type="icon" icon="fa fa-trash">-->
-                    <!--                                <invoke operation-id="delete"/>-->
-                    <!--                            </button>-->
-                    <!--                        </toolbar>-->
-                    <!--                    </column>-->
+                    <column text-field-id="isActive" label="Активность">
+                        <checkbox enabled="${access.accounts.change-activity-enabled}">
+                            <invoke route="/changeAccountActive" operation-id="changeAccountActive"/>
+                        </checkbox>
+                    </column>
+                    <column text-field-id="actions" label=" ">
+                        <toolbar>
+                            <button id="delete" label="Удалить" type="icon" icon="fa fa-trash">
+                                <invoke operation-id="delete"/>
+                            </button>
+                        </toolbar>
+                    </column>
                 </columns>
-                <!--                <rows>-->
-                <!--                    <click>-->
-                <!--                        <open-page page-id="accountUpdateForm" submit-operation-id="update" route="/:code/update"-->
-                <!--                                   object-id="account"-->
-                <!--                                   detail-field-id="id">-->
-                <!--                            <path-param name="code" value="{id}"/>-->
-                <!--                        </open-page>-->
-                <!--                    </click>-->
-                <!--                </rows>-->
-                <!--                <toolbar>-->
-                <!--                    <button id="createAccount" label="Создать" disable-on-empty-model="false">-->
-                <!--                        <open-page page-id="accountForm" submit-operation-id="create"-->
-                <!--                                   object-id="account" upload="defaults" route="/create" close-after-submit="true">-->
-                <!--                        </open-page>-->
-                <!--                    </button>-->
-                <!--                </toolbar>-->
+                <rows>
+                    <click>
+                        <open-page page-id="accountUpdateForm" submit-operation-id="update" route="/:account_id/update"
+                                   object-id="account" detail-field-id="id">
+                            <path-param name="account_id" value="{id}"/>
+                        </open-page>
+                    </click>
+                </rows>
+                <toolbar>
+                    <button id="createAccount" label="Создать" disable-on-empty-model="false">
+                        <open-page page-id="accountForm" submit-operation-id="create"
+                                   object-id="account" upload="defaults" route="/create">
+                        </open-page>
+                    </button>
+                </toolbar>
             </table>
         </line>
     </regions>
-
 </page>

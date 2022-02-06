@@ -19,7 +19,7 @@ public class Account {
     @ApiModelProperty(value = "Идентификатор аккаунта")
     private Integer id;
 
-    @ApiModelProperty(value = "Идентификатор пользователя связанного с аккаунтом")
+    @ApiModelProperty(value = "Идентификатор пользователя, связанного с аккаунтом")
     private Integer userId;
 
     @ApiModelProperty(value = "Наименование аккаунта")

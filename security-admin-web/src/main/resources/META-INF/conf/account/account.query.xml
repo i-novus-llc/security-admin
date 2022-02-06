@@ -22,7 +22,7 @@
     </unique>
 
     <fields>
-        <field id="id" name="Идентификатор" domain="integer">
+        <field id="id" domain="integer">
             <select mapping="id"/>
             <filters>
                 <eq filter-id="id" mapping="[0]" domain="integer"/>
@@ -34,8 +34,11 @@
                 <eq filter-id="usedId" mapping="['criteria'].userId"/>
             </filters>
         </field>
-        <field id="name" domain="string" name="Наименование">
+        <field id="name" domain="string">
             <select mapping="name"/>
+        </field>
+        <field id="isActive" domain="boolean">
+            <select mapping="isActive"/>
         </field>
         <field id="roles" domain="object[]">
             <select mapping="roles"/>

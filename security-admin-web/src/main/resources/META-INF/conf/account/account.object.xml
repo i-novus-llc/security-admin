@@ -1,14 +1,98 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<object xmlns="http://n2oapp.net/framework/config/schema/object-3.0">
+<object xmlns="http://n2oapp.net/framework/config/schema/object-4.0">
+    <fields>
+        <field id="id" mapping="[0].id" domain="integer" required="true"/>
+        <field id="userId" mapping="[0].userId" domain="integer" required="true"/>
+        <field id="name" mapping="[0].name" required="true"/>
+        <list id="roles" mapping="[0].roles" entity-class="net.n2oapp.security.admin.api.model.Role">
+            <field id="id" mapping="id" domain="integer"/>
+        </list>
+        <field id="userLevel.id" mapping="[0].userLevel" domain="string"
+               enabled="${access.level.enabled}"/>
+        <field id="department.id" mapping="[0].department.id" domain="integer"
+               enabled="${access.level.enabled}"/>
+        <field id="region.id" mapping="[0].region.id" domain="integer"
+               enabled="${access.level.enabled}"/>
+        <field id="organization.id" mapping="[0].organization.id" domain="integer"
+               enabled="${access.level.enabled}"/>
+        <field id="isActive" mapping="[0].isActive" domain="boolean" default-value="true"/>
+    </fields>
+
     <operations>
-        <operation id="submit">
-            <invocation></invocation>
+        <operation id="create" success-text="Данные об аккаунте сохранены">
+            <invocation>
+                <java method="create" class="net.n2oapp.security.admin.api.service.AccountService">
+                    <spring/>
+                    <arguments>
+                        <argument name="account" class="net.n2oapp.security.admin.api.model.Account" type="class"/>
+                    </arguments>
+                </java>
+            </invocation>
+            <in>
+                <field id="userId" param="user_id"/>
+                <field id="name"/>
+                <list id="roles"/>
+                <field id="userLevel.id"/>
+                <field id="department.id"/>
+                <field id="region.id"/>
+                <field id="organization.id"/>
+                <field id="isActive"/>
+            </in>
         </operation>
-        <operation id="update">
-            <invocation></invocation>
+
+        <operation id="update" success-text="Данные об аккаунте сохранены">
+            <invocation>
+                <java method="update" class="net.n2oapp.security.admin.api.service.AccountService">
+                    <spring/>
+                    <arguments>
+                        <argument name="account" class="net.n2oapp.security.admin.api.model.Account" type="class"/>
+                    </arguments>
+                </java>
+            </invocation>
+            <in>
+                <field id="id"/>
+                <field id="userId"/>
+                <field id="name"/>
+                <list id="roles"/>
+                <field id="userLevel.id"/>
+                <field id="department.id"/>
+                <field id="region.id"/>
+                <field id="organization.id"/>
+                <field id="isActive"/>
+            </in>
+            <out>
+                <field id="id" mapping="id"/>
+            </out>
         </operation>
-        <operation id="delete">
-            <invocation></invocation>
+
+        <operation id="delete"
+                   confirm-text="Вы уверены, что хотите удалить аккаунт?"
+                   success-text="Аккаунт удален">
+            <invocation>
+                <java method="delete" class="net.n2oapp.security.admin.api.service.AccountService">
+                    <spring/>
+                    <arguments>
+                        <argument name="id" class="java.lang.Integer"/>
+                    </arguments>
+                </java>
+            </invocation>
+            <in>
+                <field id="id" mapping="[0]" domain="integer" required="true"/>
+            </in>
+        </operation>
+
+        <operation id="changeAccountActive" success-text="Активность аккаунта изменена!">
+            <invocation>
+                <java method="changeActive" class="net.n2oapp.security.admin.api.service.AccountService">
+                    <spring/>
+                    <arguments>
+                        <argument name="id" class="java.lang.Integer"/>
+                    </arguments>
+                </java>
+            </invocation>
+            <in>
+                <field id="id" mapping="[0]" domain="integer" required="true"/>
+            </in>
         </operation>
     </operations>
 </object>

@@ -1013,6 +1013,10 @@ insert into sec.permission(name, code) values('Право доступа к мо
 |boolean
 |Возможность изменения активности на списке пользователей
 
+|access.accounts.change-activity-enabled
+|boolean
+|Возможность изменения активности на списке аккаунтов
+
 |access.token.include-claims
 |roles,
 permissions,

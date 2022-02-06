@@ -79,24 +79,25 @@ public class AccountServiceImpl implements AccountService {
         entity.setOrganization(nonNull(model.getOrganization()) ? new OrganizationEntity(model.getOrganization().getId()) : null);
         entity.setRegion(nonNull(model.getRegion()) ? new RegionEntity(model.getRegion().getId()) : null);
         if (nonNull(model.getRoles()))
-            entity.setRoleList(model.getRoles().stream().map(r -> new RoleEntity()).collect(Collectors.toList()));
+            entity.setRoleList(model.getRoles().stream().map(r -> new RoleEntity(r.getId())).collect(Collectors.toList()));
         entity.setIsActive(model.getIsActive());
         return entity;
     }
 
-    private Account model(AccountEntity accountEntity) {
-        if (isNull(accountEntity)) return null;
+    private Account model(AccountEntity entity) {
+        if (isNull(entity)) return null;
         Account account = new Account();
-        account.setId(accountEntity.getId());
-        account.setUserId(accountEntity.getUser().getId());
-        account.setName(accountEntity.getName());
-        account.setRoles(accountEntity.getRoleList().stream().map(this::model).collect(Collectors.toList()));
-        account.setUserLevel(accountEntity.getUserLevel());
-        account.setDepartment(model(accountEntity.getDepartment()));
-        account.setRegion(model(accountEntity.getRegion()));
-        account.setOrganization(model(accountEntity.getOrganization()));
-        account.setExtSys(accountEntity.getExternalSystem());
-        account.setExtUid(accountEntity.getExternalUid());
+        account.setId(entity.getId());
+        account.setUserId(entity.getUser().getId());
+        account.setName(entity.getName());
+        account.setIsActive(entity.getIsActive());
+        account.setRoles(entity.getRoleList().stream().map(this::model).collect(Collectors.toList()));
+        account.setUserLevel(entity.getUserLevel());
+        account.setDepartment(model(entity.getDepartment()));
+        account.setRegion(model(entity.getRegion()));
+        account.setOrganization(model(entity.getOrganization()));
+        account.setExtSys(entity.getExternalSystem());
+        account.setExtUid(entity.getExternalUid());
         return account;
     }
 

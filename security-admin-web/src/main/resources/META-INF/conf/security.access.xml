@@ -41,6 +41,7 @@
 
     <permission id="access.admin.user.edit">
         <object-access object-id="${access.user.object.id}" operations="*"/>
+        <object-access object-id="account" operations="*"/>
     </permission>
 
     <permission id="access.admin.role.edit">
