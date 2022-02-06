@@ -23,10 +23,10 @@ public interface AccountRestService {
     Page<Account> findAll(@BeanParam RestAccountCriteria criteria);
 
     @GET
-    @Path("/{accountId}")
+    @Path("/{id}")
     @ApiOperation("Получить аккаунт по идентификатору")
     @ApiResponse(code = 200, message = "Найденный аккаунт")
-    Account findById(@ApiParam(value = "Идентификатор аккаунта") @PathParam("accountId") Integer accountId);
+    Account findById(@ApiParam(value = "Идентификатор аккаунта") @PathParam("id") Integer accountId);
 
     @POST
     @Path("/")
@@ -41,8 +41,17 @@ public interface AccountRestService {
     Account update(@ApiParam(value = "Аккаунт") Account accountType);
 
     @DELETE
-    @Path("/{accountId}")
+    @Path("/{id}")
     @ApiOperation("Удалить аккаунт")
     @ApiResponse(code = 204, message = "Аккаунт удален")
-    void delete(@ApiParam(value = "Идентификатор аккаунта") @PathParam("accountId") Integer accountId);
+    void delete(@ApiParam(value = "Идентификатор аккаунта") @PathParam("id") Integer accountId);
+
+    @PUT
+    @Path("/changeActive/{id}")
+    @ApiOperation("Изменить статус пользователя")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Аккаунт с измененным статусом"),
+            @ApiResponse(code = 400, message = "Некорректный запрос. Отсутствуют обязательные поля или заполнены некорректными данными")
+    })
+    Account changeActive(@ApiParam(value = "Идентификатор аккаунта") @PathParam("id") Integer id);
 }

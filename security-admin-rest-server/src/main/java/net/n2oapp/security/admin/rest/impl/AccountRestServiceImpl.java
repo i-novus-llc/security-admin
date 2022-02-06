@@ -11,30 +11,35 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class AccountRestServiceImpl implements AccountRestService {
     @Autowired
-    private AccountService accountService;
+    private AccountService service;
 
     @Override
     public Page<Account> findAll(RestAccountCriteria criteria) {
-        return accountService.findAll(criteria);
+        return service.findAll(criteria);
     }
 
     @Override
-    public Account findById(Integer accountId) {
-        return accountService.getById(accountId);
+    public Account findById(Integer id) {
+        return service.getById(id);
     }
 
     @Override
     public Account create(Account account) {
-        return accountService.create(account);
+        return service.create(account);
     }
 
     @Override
     public Account update(Account account) {
-        return accountService.update(account);
+        return service.update(account);
     }
 
     @Override
-    public void delete(Integer accountId) {
-        accountService.delete(accountId);
+    public void delete(Integer id) {
+        service.delete(id);
+    }
+
+    @Override
+    public Account changeActive(Integer id) {
+        return service.changeActive(id);
     }
 }

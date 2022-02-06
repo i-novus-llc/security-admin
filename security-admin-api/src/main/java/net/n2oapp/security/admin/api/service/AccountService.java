@@ -44,4 +44,12 @@ public interface AccountService {
      * @param id Идентификатор аккаунта
      */
     void delete(Integer id);
+
+    /**
+     * Изменить статус аккаунта
+     *
+     * @param id Идентификатор аккаунта
+     * @return Аккаунт
+     */
+    Account changeActive(Integer id);
 }

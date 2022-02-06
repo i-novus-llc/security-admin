@@ -72,6 +72,18 @@ public class AccountServiceImpl implements AccountService {
             audit("audit.accountDelete", account);
     }
 
+    @Override
+    public Account changeActive(Integer id) {
+        AccountEntity accountEntity = accountRepository.findById(id)
+                .orElseThrow(() -> new UserException("exception.accountNotFound"));
+        // TODO SECURITY-396 change current account activity exception
+
+        accountEntity.setIsActive(!accountEntity.getIsActive());
+        Account account = model(accountRepository.save(accountEntity));
+
+        return audit("audit.accountChangeActive", account);
+    }
+
     private AccountEntity entityForm(AccountEntity entity, Account model) {
         entity.setName(model.getName());
         entity.setUserLevel(nonNull(model.getUserLevel()) ? model.getUserLevel() : null);

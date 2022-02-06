@@ -68,7 +68,7 @@
         </form>
         <line collapsible="false" label="Аккаунты пользователя">
             <table id="accounts" query-id="account" depends-on="main" master-field-id="id"
-                   detail-field-id="userId" name="Аккаунты">
+                   detail-field-id="userId">
                 <columns>
                     <column text-field-id="name" label="Наименование"/>
                     <column text-field-id="roleNames" label="Роли"/>

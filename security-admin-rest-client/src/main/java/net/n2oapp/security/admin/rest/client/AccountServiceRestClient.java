@@ -47,4 +47,9 @@ public class AccountServiceRestClient implements AccountService {
     public void delete(Integer id) {
         client.delete(id);
     }
+
+    @Override
+    public Account changeActive(Integer id) {
+        return client.changeActive(id);
+    }
 }
