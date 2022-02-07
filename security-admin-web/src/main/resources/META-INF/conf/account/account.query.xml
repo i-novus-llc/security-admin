@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0"
+       object-id="account"
+       name="Аккаунты">
+    <list result-mapping="['content']" count-mapping="['totalElements']">
+        <java method="findAll" class="net.n2oapp.security.admin.api.service.AccountService">
+            <spring/>
+            <arguments>
+                <argument class="net.n2oapp.security.admin.api.criteria.AccountCriteria"
+                          type="criteria"
+                          name="criteria"/>
+            </arguments>
+        </java>
+    </list>
+    <unique result-mapping="#this">
+        <java method="getById" class="net.n2oapp.security.admin.api.service.AccountService">
+            <spring/>
+            <arguments>
+                <argument type="primitive"/>
+            </arguments>
+        </java>
+    </unique>
+
+    <fields>
+        <field id="id" domain="integer">
+            <select mapping="id"/>
+            <filters>
+                <eq filter-id="id" mapping="[0]" domain="integer"/>
+            </filters>
+        </field>
+        <field id="userId" domain="string">
+            <select mapping="userId"/>
+            <filters>
+                <eq filter-id="usedId" mapping="['criteria'].userId"/>
+            </filters>
+        </field>
+        <field id="name" domain="string">
+            <select mapping="name"/>
+        </field>
+        <field id="isActive" domain="boolean">
+            <select mapping="isActive"/>
+        </field>
+        <field id="roles" domain="object[]">
+            <select mapping="roles"/>
+        </field>
+
+        <field id="roleNames" domain="string[]">
+            <select mapping="roles.![name]"/>
+        </field>
+
+        <field id="department" domain="object">
+            <select mapping="department"/>
+        </field>
+
+        <field id="region">
+            <select mapping="region"/>
+        </field>
+
+        <field id="organization">
+            <select mapping="organization"/>
+        </field>
+
+        <field id="userLevel.name" domain="string">
+            <select mapping="userLevel?.desc"/>
+        </field>
+
+        <field id="userLevel.id" domain="string">
+            <select mapping="userLevel?.name"/>
+        </field>
+    </fields>
+</query>

@@ -20,10 +20,6 @@
                     </dependencies>
                 </column>
                 <column text-field-id="fio"/>
-                <column text-field-id="userLevel.name" sorting-field-id="userLevel"/>
-                <column text-field-id="roleNamesWithSystem" label="Роли" sorting-field-id="roleCount">
-                    <list label-field-id="name"/>
-                </column>
                 <column text-field-id="isActive">
                     <checkbox enabled="${access.users.change-activity-enabled}">
                         <invoke route="/changeUserActive" operation-id="changeUserActive"/>
@@ -45,8 +41,8 @@
             <rows>
                 <click>
                     <open-page page-id="userUpdateForm" submit-operation-id="update" object-id="user"
-                               detail-field-id="id" route="/:id/update">
-                        <path-param name="id" value="{id}"/>
+                               detail-field-id="id" route="/:user_id/update">
+                        <path-param name="user_id" value="{id}"/>
                     </open-page>
                 </click>
             </rows>
@@ -116,7 +112,7 @@
                             return null;
                             } else if (activeList.length == 2) {
                             return null;
-                            }else if (activeList[0].id == 1) {
+                            } else if (activeList[0].id == 1) {
                             return 'yes';
                             } else if (activeList[0].id == 2) {
                             return 'no';
@@ -128,9 +124,9 @@
                 </input-text>
             </filters>
             <toolbar>
-                <button id="create" label="Создать" color="primary" disable-on-empty-model="false">
+                <button id="create" label="Создать" color="primary" disable-on-empty-model="false" >
                     <open-page page-id="userForm" submit-operation-id="create" object-id="user"
-                               upload="defaults" route="create"/>
+                               upload="defaults" route="/create"/>
                 </button>
             </toolbar>
         </table>

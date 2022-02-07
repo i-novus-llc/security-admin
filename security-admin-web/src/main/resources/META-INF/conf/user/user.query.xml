@@ -27,6 +27,7 @@
                 <eq filter-id="id" mapping="[0]"/>
             </filters>
         </field>
+
         <field id="username" domain="string" name="Имя пользователя">
             <select mapping="username"/>
             <sorting/>
@@ -34,24 +35,28 @@
                 <like filter-id="username" mapping="['criteria'].username"/>
             </filters>
         </field>
+
         <field id="surname" domain="string" name="Фамилия">
             <select mapping="surname"/>
             <filters>
                 <like filter-id="surname" mapping="['criteria'].surname"/>
             </filters>
         </field>
+
         <field id="name" domain="string" name="Имя">
             <select mapping="name"/>
             <filters>
                 <eq filter-id="name" mapping="name"/>
             </filters>
         </field>
+
         <field id="patronymic" domain="string" name="Отчество">
             <select mapping="patronymic"/>
             <filters>
                 <eq filter-id="patronymic" mapping="['criteria'].patronymic"/>
             </filters>
         </field>
+
         <field id="email" domain="string" name="E-mail">
             <select mapping="email"/>
             <filters>
@@ -66,36 +71,12 @@
                 <eq filter-id="isActive" mapping="['criteria'].isActive" domain="string"/>
             </filters>
         </field>
+
         <field id="fio" domain="string" name="ФИО">
             <select mapping="['fio']"/>
             <sorting/>
             <filters>
                 <eq filter-id="fio" mapping="['criteria'].fio"/>
-            </filters>
-        </field>
-        <field id="roleIds" domain="integer[]" name="Роли">
-            <select mapping="account.roles.![id]"/>
-            <filters>
-                <in mapping="['roleIds']" filter-id="['criteria'].roleIds"/>
-            </filters>
-        </field>
-
-        <field id="roleNames" domain="string[]" name="Роли">
-            <select mapping="account.roles.![name]"/>
-            <filters>
-                <in mapping="['roleNames']" filter-id="['criteria'].roleNames"/>
-            </filters>
-        </field>
-
-        <field id="roleNamesWithSystem" domain="string[]" name="Роли">
-            <sorting/>
-            <select mapping="account.roles.![nameWithSystem]"/>
-        </field>
-
-        <field id="roles" domain="object[]" name="Роли">
-            <select mapping="account.roles"/>
-            <filters>
-                <in filter-id="roles*.id" domain="integer[]" mapping="['criteria'].roleIds"/>
             </filters>
         </field>
 
@@ -109,35 +90,21 @@
             </filters>
         </field>
 
-        <field id="userLevel.name" domain="string" name="Уровень пользователя">
-            <sorting/>
-            <select mapping="account.userLevel?.desc"/>
-        </field>
-        <field id="userLevel.id" domain="string" name="Уровень пользователя">
-            <select mapping="account.userLevel?.name"/>
+        <field id="userLevel">
             <filters>
                 <eq filter-id="userLevel.id" domain="string" mapping="['criteria'].userLevel"/>
             </filters>
         </field>
 
-        <field id="department" domain="object">
-            <select mapping="account.department"/>
+        <field id="department">
             <filters>
                 <eq filter-id="department.id" domain="integer" mapping="['criteria'].departmentId"/>
             </filters>
         </field>
 
         <field id="region">
-            <select mapping="account.region"/>
             <filters>
                 <eq filter-id="region.id" domain="integer" mapping="['criteria'].regionId"/>
-            </filters>
-        </field>
-
-        <field id="organization">
-            <select mapping="account.organization"/>
-            <filters>
-                <eq filter-id="organization.id" domain="integer[]" mapping="['criteria'].organizations"/>
             </filters>
         </field>
 

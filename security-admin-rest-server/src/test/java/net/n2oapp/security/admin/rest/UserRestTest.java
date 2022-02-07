@@ -192,7 +192,6 @@ public class UserRestTest {
         UserForm userForm = new UserForm();
         userForm.setUsername("username");
         userForm.setEmail("username@username.username");
-        userForm.setAccountTypeCode("testAccountType1");
         userForm.setPassword("1234ABCabc,");
         userForm.setPasswordCheck(userForm.getPassword());
         userForm.setDepartmentId(1);
