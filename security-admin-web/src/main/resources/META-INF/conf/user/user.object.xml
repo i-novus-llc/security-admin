@@ -26,7 +26,6 @@
                        normalize="#this != null ? #this : ${access.user.choice-send-password}"/>
                 <field id="isActive" mapping="[0].isActive" domain="boolean" default-value="true"/>
                 <field id="snils" mapping="[0].snils" domain="string"/>
-                <field id="status" mapping="[0].status" default-value="REGISTERED" domain="string"/>
             </in>
             <out>
                 <field id="id" mapping="id"/>
@@ -53,7 +52,6 @@
                 <field id="passwordCheck" mapping="[0].passwordCheck" domain="string"/>
                 <field id="isActive" mapping="[0].isActive" domain="boolean" default-value="true"/>
                 <field id="snils" mapping="[0].snils" domain="string"/>
-                <field id="status" mapping="[0].status" default-value="REGISTERED" domain="string"/>
             </in>
             <out>
                 <field id="id" mapping="id"/>

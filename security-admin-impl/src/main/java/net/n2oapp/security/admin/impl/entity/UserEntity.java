@@ -3,7 +3,6 @@ package net.n2oapp.security.admin.impl.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.n2oapp.security.admin.api.model.UserStatus;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -83,13 +82,6 @@ public class UserEntity {
      */
     @Column(name = "snils")
     private String snils;
-
-    /**
-     * Статус регистрации пользователя
-     */
-    @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    private UserStatus status;
 
     /**
      * Дата и время последних изменений
