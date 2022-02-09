@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
@@ -85,6 +87,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     private AccountEntity entityForm(AccountEntity entity, Account model) {
+        model.setRoles(excludeDummyRoles(model.getRoles()));
         entity.setName(model.getName());
         entity.setUserLevel(nonNull(model.getUserLevel()) ? model.getUserLevel() : null);
         entity.setDepartment(nonNull(model.getDepartment()) ? new DepartmentEntity(model.getDepartment().getId()) : null);
@@ -162,5 +165,18 @@ public class AccountServiceImpl implements AccountService {
     private Account audit(String action, Account account) {
         auditService.audit(action, account, "" + account.getId(), "audit.account");
         return account;
+    }
+
+    /**
+     * Значение roleId > 0, потому что в наборе могут присутствовать dummy роли, которые не должны быть учтены
+     * и имеют отрицательное значение id.
+     *
+     * @param roles список ролей пользователя
+     * @return отфильтрованный список ролей
+     */
+    private List<Role> excludeDummyRoles(List<Role> roles) {
+        if (nonNull(roles))
+            return roles.stream().filter(role -> role.getId() > 0).collect(Collectors.toList());
+        return new ArrayList<>();
     }
 }
