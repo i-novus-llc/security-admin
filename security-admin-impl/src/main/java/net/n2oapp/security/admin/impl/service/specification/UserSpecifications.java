@@ -4,6 +4,7 @@ import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import net.n2oapp.security.admin.api.model.UserLevel;
 import net.n2oapp.security.admin.impl.entity.*;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.util.CollectionUtils;
 
 import javax.persistence.criteria.*;
 import java.util.Arrays;
@@ -58,36 +59,36 @@ public class UserSpecifications implements Specification<UserEntity> {
                 predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.isActive), false));
             }
         }
-//            todo SECURITY-396
-//        if (!CollectionUtils.isEmpty(criteria.getRoleCodes())) {
-//            Subquery sub = criteriaQuery.subquery(String.class);
-//            Root subRoot = sub.from(RoleEntity.class);
-//            ListJoin<RoleEntity, UserEntity> subUsers = subRoot.join(RoleEntity_.userList);
-//            sub.select(subRoot.get(RoleEntity_.code));
-//            sub.where(builder.and(builder.equal(root.get(UserEntity_.id), subUsers.get(UserEntity_.id)),
-//                    subRoot.get(RoleEntity_.code).in(criteria.getRoleCodes())));
-//            predicate = builder.and(predicate, builder.exists(sub));
-//        }
-//
-//        if (!CollectionUtils.isEmpty(criteria.getRoleIds())) {
-//            Subquery sub = criteriaQuery.subquery(Integer.class);
-//            Root subRoot = sub.from(RoleEntity.class);
-//            ListJoin<RoleEntity, UserEntity> subUsers = subRoot.join(RoleEntity_.userList);
-//            sub.select(subRoot.get(RoleEntity_.id));
-//            sub.where(builder.and(builder.equal(root.get(UserEntity_.id), subUsers.get(UserEntity_.id)),
-//                    subRoot.get(RoleEntity_.id).in(criteria.getRoleIds())));
-//            predicate = builder.and(predicate, builder.exists(sub));
-//        }
-//
-//        if (!CollectionUtils.isEmpty(criteria.getSystems())) {
-//            Subquery subquery = criteriaQuery.subquery(String.class);
-//            Root subRoot = subquery.from(RoleEntity.class);
-//            ListJoin<RoleEntity, UserEntity> listJoin = subRoot.join(RoleEntity_.userList);
-//            subquery.select(subRoot.get(RoleEntity_.systemCode));
-//            subquery.where(builder.and(builder.equal(root.get(UserEntity_.id), listJoin.get(UserEntity_.id)),
-//                    subRoot.get(RoleEntity_.systemCode).get(SystemEntity_.CODE).in(criteria.getSystems())));
-//            predicate = builder.and(predicate, builder.exists(subquery));
-//        }
+
+        if (!CollectionUtils.isEmpty(criteria.getRoleCodes())) {
+            Subquery<String> sub = criteriaQuery.subquery(String.class);
+            Root<RoleEntity> subRoot = sub.from(RoleEntity.class);
+            ListJoin<RoleEntity, AccountEntity> subAccounts = subRoot.join(RoleEntity_.accountList);
+            sub.select(subRoot.get(RoleEntity_.code));
+            sub.where(builder.and(builder.equal(subqueryRoot.get(AccountEntity_.id), subAccounts.get(AccountEntity_.id)),
+                    subRoot.get(RoleEntity_.code).in(criteria.getRoleCodes())));
+            subQueryPredicate = builder.and(subQueryPredicate, builder.exists(sub));
+        }
+
+        if (!CollectionUtils.isEmpty(criteria.getRoleIds())) {
+            Subquery<Integer> sub = criteriaQuery.subquery(Integer.class);
+            Root<RoleEntity> subRoot = sub.from(RoleEntity.class);
+            ListJoin<RoleEntity, AccountEntity> subAccounts = subRoot.join(RoleEntity_.accountList);
+            sub.select(subRoot.get(RoleEntity_.id));
+            sub.where(builder.and(builder.equal(subqueryRoot.get(AccountEntity_.id), subAccounts.get(AccountEntity_.id)),
+                    subRoot.get(RoleEntity_.id).in(criteria.getRoleIds())));
+            subQueryPredicate = builder.and(subQueryPredicate, builder.exists(sub));
+        }
+
+        if (!CollectionUtils.isEmpty(criteria.getSystems())) {
+            Subquery<String> sub = criteriaQuery.subquery(String.class);
+            Root subRoot = sub.from(RoleEntity.class);
+            ListJoin<RoleEntity, AccountEntity> listJoin = subRoot.join(RoleEntity_.accountList);
+            sub.select(subRoot.get(RoleEntity_.systemCode));
+            sub.where(builder.and(builder.equal(subqueryRoot.get(AccountEntity_.id), listJoin.get(AccountEntity_.id)),
+                    subRoot.get(RoleEntity_.systemCode).get(SystemEntity_.CODE).in(criteria.getSystems())));
+            subQueryPredicate = builder.and(subQueryPredicate, builder.exists(sub));
+        }
 
 //        if (criteria.getExtSys() != null) {
 //            predicate = builder.and(predicate, builder.equal(builder.upper(root.get(UserEntity_.extSys)), criteria.getExtSys().toUpperCase()));
