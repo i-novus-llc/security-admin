@@ -80,6 +80,18 @@
             </filters>
         </field>
 
+        <field id="roleIds" domain="integer[]" name="Роли">
+            <filters>
+                <in mapping="['roleIds']" filter-id="['criteria'].roleIds"/>
+            </filters>
+        </field>
+
+        <field id="roles" domain="object[]" name="Роли">
+            <filters>
+                <in filter-id="roles*.id" domain="integer[]" mapping="['criteria'].roleIds"/>
+            </filters>
+        </field>
+
         <field id="snils" domain="string" name="СНИЛС">
             <select mapping="snils"/>
         </field>
