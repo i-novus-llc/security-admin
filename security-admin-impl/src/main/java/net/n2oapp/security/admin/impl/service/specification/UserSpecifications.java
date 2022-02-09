@@ -28,10 +28,7 @@ public class UserSpecifications implements Specification<UserEntity> {
         // account subquery
         Subquery<AccountEntity> subquery = criteriaQuery.subquery(AccountEntity.class);
         Root<AccountEntity> subqueryRoot = subquery.from(AccountEntity.class);
-        subquery.select(subqueryRoot);
         Predicate subQueryPredicate = builder.and();
-        subQueryPredicate = builder.and(subQueryPredicate, builder.equal(root.get(UserEntity_.id),
-                subqueryRoot.get(AccountEntity_.USER).get(UserEntity_.ID)));
 
         if (nonNull(criteria.getUsername()))
             predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.username), criteria.getUsername()));
@@ -128,8 +125,13 @@ public class UserSpecifications implements Specification<UserEntity> {
             predicate = builder.and(predicate, builder.greaterThanOrEqualTo(root.get(UserEntity_.lastActionDate), criteria.getLastActionDate()));
         }
 
-        subquery.select(subqueryRoot).where(subQueryPredicate);
-        predicate = builder.and(predicate, builder.exists(subquery));
+        // add subquery only if criteria has any subquery condition
+        if (subQueryPredicate.getExpressions().size() > 1) {
+            subQueryPredicate = builder.and(subQueryPredicate, builder.equal(root.get(UserEntity_.id),
+                    subqueryRoot.get(AccountEntity_.USER).get(UserEntity_.ID)));
+            subquery.select(subqueryRoot).where(subQueryPredicate);
+            predicate = builder.and(predicate, builder.exists(subquery));
+        }
         return predicate;
     }
 }

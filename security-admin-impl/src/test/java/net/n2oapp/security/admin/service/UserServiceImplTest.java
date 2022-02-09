@@ -14,7 +14,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.TestPropertySource;
@@ -53,7 +52,7 @@ public class UserServiceImplTest extends UserRoleServiceTestBase {
     }
 
     @Test
-    public void testUp() throws Exception {
+    public void testUp() {
         assertNotNull(userService);
     }
 
@@ -312,7 +311,6 @@ public class UserServiceImplTest extends UserRoleServiceTestBase {
         user.setUsername("testUser2");
         user.setEmail("test2@test.ru");
         user.setPassword("1234ABCabc,");
-        user.setAccountTypeCode("testAccountTypeCode");
         User result = userService.register(user);
         assertThat(userService.findAll(criteria).getTotalElements()).isEqualTo(1);
         userService.delete(result.getId());
