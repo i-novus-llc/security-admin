@@ -99,21 +99,21 @@ public class RestUserCriteria extends UserCriteria {
 
     @QueryParam("regionId")
     @Override
-    @ApiParam(value = "id региона")
+    @ApiParam(value = "Идентификатор региона")
     public void setRegionId(Integer regionId) {
         super.setRegionId(regionId);
     }
 
     @QueryParam("organizations")
     @Override
-    @ApiParam(value = "Список идентификаторов организаций")
-    public void setOrganizations(List<Integer> organizations) {
-        super.setOrganizations(organizations);
+    @ApiParam(value = "Идентификатор организации")
+    public void setOrganizationId(Integer organizationId) {
+        super.setOrganizationId(organizationId);
     }
 
     @QueryParam("departmentId")
     @Override
-    @ApiParam(value = "id департамента")
+    @ApiParam(value = "Идентификатор департамента")
     public void setDepartmentId(Integer departmentId) {
         super.setDepartmentId(departmentId);
     }
