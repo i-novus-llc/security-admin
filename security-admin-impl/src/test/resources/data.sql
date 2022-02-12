@@ -6,7 +6,7 @@ INSERT INTO sec.permission (name, code, parent_code, system_code) VALUES ('test2
 --for search
 --ROLE
 INSERT INTO sec.role(id, name, code, description) VALUES (100, 'test','test','test');
-INSERT INTO sec.role(name, code, description, system_code) VALUES ('user','code1','description1', 'system1');
+INSERT INTO sec.role(name, code, description) VALUES ('user','code1','description1');
 INSERT INTO sec.role(name, code, description, system_code) VALUES ('admin','code2','description2', 'system2');
 
 --USER

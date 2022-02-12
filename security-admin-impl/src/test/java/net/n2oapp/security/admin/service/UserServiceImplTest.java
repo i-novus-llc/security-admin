@@ -360,10 +360,6 @@ public class UserServiceImplTest extends UserRoleServiceTestBase {
 
         // find by system
         criteria.setDepartmentId(null);
-        criteria.setSystems(Collections.singletonList("system1"));
-        users = userService.findAll(criteria).getContent();
-        assertEquals(2, users.size());
-
         criteria.setSystems(Collections.singletonList("system2"));
         users = userService.findAll(criteria).getContent();
         assertEquals(1, users.size());
