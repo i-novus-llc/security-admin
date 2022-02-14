@@ -28,6 +28,7 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
@@ -357,9 +358,33 @@ public class UserServiceImplTest extends UserRoleServiceTestBase {
         assertEquals(1, users.size());
         assertEquals(1, (int) users.get(0).getId());
 
-        // find by organizationId
-        // find by roleIds
         // find by system
+        criteria.setDepartmentId(null);
+        criteria.setSystems(Collections.singletonList("system2"));
+        users = userService.findAll(criteria).getContent();
+        assertEquals(1, users.size());
+        assertEquals(1, (int) users.get(0).getId());
+
+        // find by roleIds
+        criteria.setSystems(null);
+        criteria.setRoleIds(Collections.singletonList(2));
+        users = userService.findAll(criteria).getContent();
+        assertEquals(1, users.size());
+        assertEquals(1, (int) users.get(0).getId());
+
+        // find by roleCodes
+        criteria.setRoleIds(null);
+        criteria.setRoleCodes(Collections.singletonList("code2"));
+        users = userService.findAll(criteria).getContent();
+        assertEquals(1, users.size());
+        assertEquals(1, (int) users.get(0).getId());
+
+        // find by organizationId
+        criteria.setRoleCodes(null);
+        criteria.setOrganizationId(2);
+        users = userService.findAll(criteria).getContent();
+        assertEquals(1, users.size());
+        assertEquals(2, (int) users.get(0).getId());
     }
 
     @Test

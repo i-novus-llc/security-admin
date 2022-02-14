@@ -207,8 +207,6 @@ public class UserRestTest {
         userForm.setRoles(roleIds);
         List<String> roleCodes = new ArrayList<>();
         roleCodes.add("code1");
-        List<Integer> orgIds = new ArrayList<>();
-        orgIds.add(1);
 
         User user = client.create(userForm);
 
@@ -226,7 +224,7 @@ public class UserRestTest {
         criteria.setRoleIds(roleIds);
         criteria.setDepartmentId(1);
         criteria.setRegionId(1);
-        criteria.setOrganizations(orgIds);
+        criteria.setOrganizationId(1);
 
         Page<User> users = client.findAll(criteria);
 
