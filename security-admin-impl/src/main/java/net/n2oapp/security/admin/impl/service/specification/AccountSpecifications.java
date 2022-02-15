@@ -26,6 +26,9 @@ public class AccountSpecifications implements Specification<AccountEntity> {
         Predicate predicate = builder.and();
         if (nonNull(criteria.getUserId()))
             predicate = builder.equal(root.get(AccountEntity_.user).get(UserEntity_.id), criteria.getUserId());
+        if (nonNull(criteria.getUserName()))
+            predicate = builder.equal(root.get(AccountEntity_.user).get(UserEntity_.username), criteria.getUserName());
+
 
         return predicate;
     }

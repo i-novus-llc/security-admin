@@ -3,8 +3,8 @@ package net.n2oapp.security.admin.auth.server;
 import net.n2oapp.security.admin.api.oauth.UserInfoEnricher;
 import net.n2oapp.security.admin.auth.server.oauth.UserInfoService;
 import net.n2oapp.security.admin.impl.entity.AccountEntity;
-import net.n2oapp.security.admin.impl.entity.UserEntity;
 import net.n2oapp.security.admin.impl.repository.AccountRepository;
+import net.n2oapp.security.admin.impl.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,9 +21,9 @@ public class UserInfoEnrichmentConfiguration {
     private Set<String> wantedEnrichers;
 
     @Bean
-    public UserInfoService userInfoService(AccountRepository accountRepository, List<UserInfoEnricher<AccountEntity>> enrichers) {
+    public UserInfoService userInfoService(UserRepository userRepository, AccountRepository accountRepository, List<UserInfoEnricher<AccountEntity>> enrichers) {
         UserInfoEnrichersConfigurer configurer = new UserInfoEnrichersConfigurer(wantedEnrichers, enrichers);
-        return new UserInfoService(accountRepository, configurer.configure());
+        return new UserInfoService(userRepository, accountRepository, configurer.configure());
     }
 
     public static class UserInfoEnrichersConfigurer {

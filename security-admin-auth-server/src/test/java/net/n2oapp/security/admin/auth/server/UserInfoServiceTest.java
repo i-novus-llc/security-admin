@@ -8,6 +8,7 @@ import net.n2oapp.security.admin.api.oauth.UserInfoEnricher;
 import net.n2oapp.security.admin.auth.server.oauth.*;
 import net.n2oapp.security.admin.impl.entity.*;
 import net.n2oapp.security.admin.impl.repository.AccountRepository;
+import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.auth.common.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -27,19 +28,20 @@ public class UserInfoServiceTest {
 
     @Test
     public void testUserInfoService() {
-        AccountRepository repository = mock(AccountRepository.class);
+        AccountRepository accountRepository = mock(AccountRepository.class);
+        UserRepository userRepository = mock(UserRepository.class);
 
-        when(repository.getOne(1)).thenReturn(initAccountEntity());
-        UserInfoService userInfoService = new UserInfoService(repository,
+        when(accountRepository.getOne(1)).thenReturn(initAccountEntity());
+        UserInfoService userInfoService = new UserInfoService(userRepository, accountRepository,
                 List.of(new OrganizationEnricher(), new RolesEnricher(), new SystemsEnricher(true),
                         new RegionEnricher(), new DepartmentEnricher(), new PermissionsEnricher(true),
-                        new SimpleUserDataEnricher()));
+                        new UserLevelEnricher()));
         OAuth2Authentication authentication = mock(OAuth2Authentication.class);
         User user = new User("testUser");
         user.setAccountId(1);
         when(authentication.getPrincipal()).thenReturn(user);
 
-        Map<String, Object> userinfo = userInfoService.buildUserInfo(authentication);
+        Map<String, Object> userinfo = userInfoService.buildUserInfo(authentication, 1);
         assertThat(userinfo.get("patronymic"), is("testPatronymic"));
         assertThat(userinfo.get("surname"), is("testSurname"));
         assertThat(userinfo.get("name"), is("testName"));
