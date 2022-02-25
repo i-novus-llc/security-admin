@@ -22,6 +22,7 @@ public class AccountServiceRestClient implements AccountService {
     public Page<Account> findAll(AccountCriteria criteria) {
         RestAccountCriteria restCriteria = new RestAccountCriteria();
         restCriteria.setUserId(criteria.getUserId());
+        restCriteria.setUsername(criteria.getUsername());
         restCriteria.setPage(criteria.getPage());
         restCriteria.setOrders(criteria.getOrders());
         restCriteria.setSize(criteria.getSize());

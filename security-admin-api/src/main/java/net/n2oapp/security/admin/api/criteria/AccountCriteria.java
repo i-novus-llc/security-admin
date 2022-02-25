@@ -12,10 +12,10 @@ public class AccountCriteria extends BaseCriteria {
 
     public AccountCriteria(String userName) {
         super(0, 100);
-        this.userName = userName;
+        this.username = userName;
     }
 
     private Integer userId;
 
-    private String userName;
+    private String username;
 }
