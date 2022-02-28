@@ -3,7 +3,11 @@ package net.n2oapp.security.admin.loader;
 import net.n2oapp.platform.loader.server.ServerLoader;
 import net.n2oapp.platform.loader.server.repository.RepositoryServerLoader;
 import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
+import net.n2oapp.security.admin.api.model.Account;
+import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
+import net.n2oapp.security.admin.impl.entity.AccountEntity;
+import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
@@ -19,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 
@@ -58,20 +63,20 @@ public class UserServerLoaderTest {
      * Вставка двух новых записей, в БД нет записей
      */
     private void case1(BiConsumer<List<User>, String> loader) {
-        User User1 = UserBuilder.buildUser1();
-        User User2 = UserBuilder.buildUser2();
-        List<User> data = Arrays.asList(User1, User2);
+        User user1 = UserBuilder.buildUser1();
+        User user2 = UserBuilder.buildUser2();
+        List<User> data = Arrays.asList(user1, user2);
 
 
         loader.accept(data, "ignored");
 
-        UserEntity userEntity1 = userRepository.findOneByUsernameIgnoreCase(User1.getUsername());
-        UserEntity userEntity2 = userRepository.findOneByUsernameIgnoreCase(User2.getUsername());
+        UserEntity userEntity1 = userRepository.findOneByUsernameIgnoreCase(user1.getUsername());
+        UserEntity userEntity2 = userRepository.findOneByUsernameIgnoreCase(user2.getUsername());
         userIds.add(userEntity1.getId());
         userIds.add(userEntity2.getId());
 
-        userAssertEquals(User1, userEntity1);
-        userAssertEquals(User2, userEntity2);
+        userAssertEquals(user1, userEntity1);
+        userAssertEquals(user2, userEntity2);
     }
 
     /**
@@ -112,9 +117,15 @@ public class UserServerLoaderTest {
         assertEquals(expected.getUsername(), actual.getUsername());
         assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getEmail(), actual.getEmail());
-        //        todo SECURITY-396
-//        assertEquals(expected.getUserLevel().getName(), actual.getUserLevel().toString());
-//        assertEquals(expected.getRoles().stream().map(Role::getCode).collect(Collectors.toList()),
-//                actual.getRoleList().stream().map(RoleEntity::getCode).collect(Collectors.toList()));
+        assertEquals(expected.getAccounts().size(), actual.getAccounts().size());
+        for (int i = 0; i < expected.getAccounts().size(); i++)
+            accountAssertEquals(expected.getAccounts().get(i), actual.getAccounts().get(i));
+    }
+
+    private void accountAssertEquals(Account expected, AccountEntity actual) {
+        assertEquals(expected.getName(), actual.getName());
+        assertEquals(expected.getUserLevel(), actual.getUserLevel());
+        assertEquals(expected.getRoles().stream().map(Role::getCode).collect(Collectors.toList()),
+                actual.getRoleList().stream().map(RoleEntity::getCode).collect(Collectors.toList()));
     }
 }
