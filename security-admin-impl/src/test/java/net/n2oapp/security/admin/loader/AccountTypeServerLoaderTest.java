@@ -1,17 +1,18 @@
 package net.n2oapp.security.admin.loader;
 
 import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
+import net.n2oapp.security.admin.TestApplication;
 import net.n2oapp.security.admin.api.criteria.AccountTypeCriteria;
 import net.n2oapp.security.admin.api.model.AccountType;
 import net.n2oapp.security.admin.api.model.UserStatus;
 import net.n2oapp.security.admin.impl.loader.AccountTypeServerLoader;
 import net.n2oapp.security.admin.impl.service.AccountTypeServiceImpl;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,8 +21,9 @@ import static net.n2oapp.security.admin.loader.builder.AccountTypeBuilder.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(classes = TestApplication.class,
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test.properties")
 @EnableEmbeddedPg
 public class AccountTypeServerLoaderTest {

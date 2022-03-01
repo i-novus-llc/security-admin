@@ -19,7 +19,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -51,12 +50,9 @@ public class RoleServerLoaderTest {
      * Тест {@link ServerLoader}
      */
     @Test
-    @Transactional
     public void repositoryLoader() {
         Mockito.when(provider.createRole(Mockito.any())).then(AdditionalAnswers.returnsFirstArg());
         BiConsumer<List<RoleForm>, String> loader = serverLoader::load;
-        repository.removeBySystemCode(SystemEntityBuilder.buildSystemEntity1());
-        repository.removeBySystemCode(SystemEntityBuilder.buildSystemEntity2());
         case1(loader);
         case3(loader);
         case6(loader);
@@ -105,7 +101,7 @@ public class RoleServerLoaderTest {
 
         loader.accept(data, "system2");
 
-        assertThat(repository.findBySystemCode(SystemEntityBuilder.buildSystemEntity2()).size(), is(2));
+        assertThat(repository.findBySystemCode(SystemEntityBuilder.buildSystemEntity2()).size(), is(3));
         roleAssertEquals(roleForm4, repository.findOneByCode("rcode4"));
         roleAssertEquals(roleForm5, repository.findOneByCode("rcode5"));
     }
