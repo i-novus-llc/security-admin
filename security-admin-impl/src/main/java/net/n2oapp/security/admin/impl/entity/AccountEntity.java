@@ -24,7 +24,7 @@ public class AccountEntity {
     private Integer id;
 
     /**
-     * Пользователь которому принадлежит аккаунт
+     * Пользователь, которому принадлежит аккаунт
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

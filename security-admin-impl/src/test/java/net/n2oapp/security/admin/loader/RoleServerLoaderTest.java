@@ -19,6 +19,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -50,6 +51,7 @@ public class RoleServerLoaderTest {
      * Тест {@link ServerLoader}
      */
     @Test
+    @Transactional
     public void repositoryLoader() {
         Mockito.when(provider.createRole(Mockito.any())).then(AdditionalAnswers.returnsFirstArg());
         BiConsumer<List<RoleForm>, String> loader = serverLoader::load;

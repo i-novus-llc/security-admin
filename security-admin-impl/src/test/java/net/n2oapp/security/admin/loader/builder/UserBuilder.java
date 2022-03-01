@@ -58,13 +58,6 @@ public class UserBuilder {
         user.setUsername("username3");
         user.setName("name3");
         user.setEmail("email3");
-        Account account = new Account();
-        account.setName("account3");
-        account.setUserLevel(UserLevel.ORGANIZATION);
-        Role role = new Role();
-        role.setCode("102");
-        account.setRoles(List.of(role));
-        user.setAccounts(List.of(account));
         return user;
     }
 }

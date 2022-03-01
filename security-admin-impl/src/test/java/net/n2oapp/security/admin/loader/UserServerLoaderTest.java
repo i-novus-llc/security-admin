@@ -45,8 +45,6 @@ public class UserServerLoaderTest {
     @Autowired
     private RoleRepository roleRepository;
 
-    private List<Integer> userIds = new ArrayList<>();
-
     /**
      * Тест {@link RepositoryServerLoader}
      */
@@ -72,8 +70,6 @@ public class UserServerLoaderTest {
 
         UserEntity userEntity1 = userRepository.findOneByUsernameIgnoreCase(user1.getUsername());
         UserEntity userEntity2 = userRepository.findOneByUsernameIgnoreCase(user2.getUsername());
-        userIds.add(userEntity1.getId());
-        userIds.add(userEntity2.getId());
 
         userAssertEquals(user1, userEntity1);
         userAssertEquals(user2, userEntity2);
@@ -83,43 +79,44 @@ public class UserServerLoaderTest {
      * Вставка двух записей, обе есть в БД, но одна будет обновлена
      */
     private void case2(BiConsumer<List<User>, String> loader) {
-        User User1 = UserBuilder.buildUser1();
-        User User2 = UserBuilder.buildUser2Updated();
-        List<User> data = Arrays.asList(User1, User2);
+        User user1 = UserBuilder.buildUser1();
+        User user2 = UserBuilder.buildUser2Updated();
+        List<User> data = Arrays.asList(user1, user2);
 
 
         loader.accept(data, "ignored");
 
-        userAssertEquals(User1, userRepository.findOneByUsernameIgnoreCase(User1.getUsername()));
-        userAssertEquals(User2, userRepository.findOneByUsernameIgnoreCase(User2.getUsername()));
+        userAssertEquals(user1, userRepository.findOneByUsernameIgnoreCase(user1.getUsername()));
+        userAssertEquals(user2, userRepository.findOneByUsernameIgnoreCase(user2.getUsername()));
     }
 
     /**
      * Вставка двух записей, две есть в БД, одна будет обновлена, одна добавлена
      */
     private void case3(BiConsumer<List<User>, String> loader) {
-        User User1 = UserBuilder.buildUser1();
-        User User2 = UserBuilder.buildUser2();
-        User User3 = UserBuilder.buildUser3();
-        List<User> data = Arrays.asList(User2, User3);
+        User user1 = UserBuilder.buildUser1();
+        User user2 = UserBuilder.buildUser2();
+        User user3 = UserBuilder.buildUser3();
+        List<User> data = Arrays.asList(user2, user3);
 
         loader.accept(data, "ignored");
 
-        UserEntity userEntity3 = userRepository.findOneByUsernameIgnoreCase(User3.getUsername());
-        userIds.add(userEntity3.getId());
+        UserEntity userEntity3 = userRepository.findOneByUsernameIgnoreCase(user3.getUsername());
 
-        userAssertEquals(User1, userRepository.findOneByUsernameIgnoreCase(User1.getUsername()));
-        userAssertEquals(User2, userRepository.findOneByUsernameIgnoreCase(User2.getUsername()));
-        userAssertEquals(User3, userEntity3);
+        userAssertEquals(user1, userRepository.findOneByUsernameIgnoreCase(user1.getUsername()));
+        userAssertEquals(user2, userRepository.findOneByUsernameIgnoreCase(user2.getUsername()));
+        userAssertEquals(user3, userEntity3);
     }
 
     private void userAssertEquals(User expected, UserEntity actual) {
         assertEquals(expected.getUsername(), actual.getUsername());
         assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getEmail(), actual.getEmail());
-        assertEquals(expected.getAccounts().size(), actual.getAccounts().size());
-        for (int i = 0; i < expected.getAccounts().size(); i++)
-            accountAssertEquals(expected.getAccounts().get(i), actual.getAccounts().get(i));
+        if (expected.getAccounts() != null) {
+            assertEquals(expected.getAccounts().size(), actual.getAccounts().size());
+            for (int i = 0; i < expected.getAccounts().size(); i++)
+                accountAssertEquals(expected.getAccounts().get(i), actual.getAccounts().get(i));
+        }
     }
 
     private void accountAssertEquals(Account expected, AccountEntity actual) {

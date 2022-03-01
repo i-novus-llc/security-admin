@@ -75,6 +75,8 @@ public class UserServerLoader extends ServerLoaderSettings<User> implements Serv
                         accountEntity.setRoleList(account.getRoles().stream().map(role -> roleRepository.findOneByCode(role.getCode())).collect(Collectors.toList()));
                     freshAccounts.add(accountEntity);
                 }
+            } else {
+                userEntity.setAccounts(null);
             }
             freshUsers.add(userEntity);
         }
