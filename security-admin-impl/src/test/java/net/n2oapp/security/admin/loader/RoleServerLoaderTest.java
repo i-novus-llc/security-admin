@@ -9,29 +9,28 @@ import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.loader.builder.RoleFormBuilder;
 import net.n2oapp.security.admin.loader.builder.SystemEntityBuilder;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.AdditionalAnswers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 /**
  * Тесты лоадера ролей
  */
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test.properties")
 @EnableEmbeddedPg
@@ -68,7 +67,7 @@ public class RoleServerLoaderTest {
 
         loader.accept(data, "system1");
 
-        assertThat(repository.findBySystemCode(SystemEntityBuilder.buildSystemEntity1()).size(), is(2));
+        assertEquals(2, repository.findBySystemCode(SystemEntityBuilder.buildSystemEntity1()).size());
         roleAssertEquals(roleForm1, repository.findOneByCode("rcode1"));
         roleAssertEquals(roleForm2, repository.findOneByCode("rcode2"));
     }
@@ -85,7 +84,7 @@ public class RoleServerLoaderTest {
 
         loader.accept(data, "system1");
 
-        assertThat(repository.findBySystemCode(SystemEntityBuilder.buildSystemEntity1()).size(), is(3));
+        assertEquals(3, repository.findBySystemCode(SystemEntityBuilder.buildSystemEntity1()).size());
         roleAssertEquals(roleForm1, repository.findOneByCode("rcode1"));
         roleAssertEquals(RoleFormBuilder.buildRoleForm2Updated(), repository.findOneByCode("rcode2"));
         roleAssertEquals(roleForm3, repository.findOneByCode("rcode3"));
@@ -101,7 +100,7 @@ public class RoleServerLoaderTest {
 
         loader.accept(data, "system2");
 
-        assertThat(repository.findBySystemCode(SystemEntityBuilder.buildSystemEntity2()).size(), is(3));
+        assertEquals(3, repository.findBySystemCode(SystemEntityBuilder.buildSystemEntity2()).size());
         roleAssertEquals(roleForm4, repository.findOneByCode("rcode4"));
         roleAssertEquals(roleForm5, repository.findOneByCode("rcode5"));
     }

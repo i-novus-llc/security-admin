@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test.properties")
 @EnableEmbeddedPg
-class RegionServerLoaderTest {
+public class RegionServerLoaderTest {
     @LocalServerPort
     private String port;
 

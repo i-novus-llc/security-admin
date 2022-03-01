@@ -3,13 +3,13 @@ package net.n2oapp.security.admin.util;
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.impl.util.UserValidations;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class UserValidationsTest {
 
