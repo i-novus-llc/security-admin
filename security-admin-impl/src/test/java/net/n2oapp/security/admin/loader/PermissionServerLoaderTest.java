@@ -8,25 +8,24 @@ import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.repository.PermissionRepository;
 import net.n2oapp.security.admin.loader.builder.PermissionBuilder;
 import net.n2oapp.security.admin.loader.builder.SystemEntityBuilder;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 /**
  * Тесты лоадера прав доступа
  */
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test.properties")
 @EnableEmbeddedPg
@@ -64,7 +63,7 @@ public class PermissionServerLoaderTest {
 
         loader.accept(data, "system1");
 
-        assertThat(repository.findBySystemCodeOrderByCodeDesc(SystemEntityBuilder.buildSystemEntity1()).size(), is(2));
+        assertEquals(2, repository.findBySystemCodeOrderByCodeDesc(SystemEntityBuilder.buildSystemEntity1()).size());
         permissionAssertEquals(permission1, repository.findById("pcode1").get());
         permissionAssertEquals(permission2, repository.findById("pcode2").get());
     }
@@ -80,7 +79,7 @@ public class PermissionServerLoaderTest {
 
         loader.accept(data, "system1");
 
-        assertThat(repository.findBySystemCodeOrderByCodeDesc(SystemEntityBuilder.buildSystemEntity1()).size(), is(2));
+        assertEquals(2, repository.findBySystemCodeOrderByCodeDesc(SystemEntityBuilder.buildSystemEntity1()).size());
         permissionAssertEquals(permission1, repository.findById("pcode1").get());
         permissionAssertEquals(permission2, repository.findById("pcode2").get());
     }
@@ -96,7 +95,7 @@ public class PermissionServerLoaderTest {
 
         loader.accept(data, "system1");
 
-        assertThat(repository.findBySystemCodeOrderByCodeDesc(SystemEntityBuilder.buildSystemEntity1()).size(), is(3));
+        assertEquals(3, repository.findBySystemCodeOrderByCodeDesc(SystemEntityBuilder.buildSystemEntity1()).size());
         permissionAssertEquals(permission1, repository.findById("pcode1").get());
         permissionAssertEquals(permission2, repository.findById("pcode2").get());
         permissionAssertEquals(permission3, repository.findById("pcode3").get());
@@ -112,7 +111,7 @@ public class PermissionServerLoaderTest {
 
         loader.accept(data, "system1");
 
-        assertThat(repository.findBySystemCodeOrderByCodeDesc(SystemEntityBuilder.buildSystemEntity1()).size(), is(1));
+        assertEquals(1, repository.findBySystemCodeOrderByCodeDesc(SystemEntityBuilder.buildSystemEntity1()).size());
         permissionAssertEquals(permission1, repository.findById("pcode1").get());
     }
 
@@ -126,7 +125,7 @@ public class PermissionServerLoaderTest {
 
         loader.accept(data, "system1");
 
-        assertThat(repository.findBySystemCodeOrderByCodeDesc(SystemEntityBuilder.buildSystemEntity1()).size(), is(2));
+        assertEquals(2, repository.findBySystemCodeOrderByCodeDesc(SystemEntityBuilder.buildSystemEntity1()).size());
         permissionAssertEquals(permission1, repository.findById("pcode1").get());
         permissionAssertEquals(permission3, repository.findById("pcode3").get());
     }
@@ -141,7 +140,7 @@ public class PermissionServerLoaderTest {
 
         loader.accept(data, "system2");
 
-        assertThat(repository.findBySystemCodeOrderByCodeDesc(SystemEntityBuilder.buildSystemEntity2()).size(), is(2));
+        assertEquals(2, repository.findBySystemCodeOrderByCodeDesc(SystemEntityBuilder.buildSystemEntity2()).size());
         permissionAssertEquals(permission4, repository.findById("pcode4").get());
         permissionAssertEquals(permission5, repository.findById("pcode5").get());
     }

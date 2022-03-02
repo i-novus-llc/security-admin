@@ -36,6 +36,7 @@ INSERT INTO sec.department(id, code, name, is_deleted) VALUES
 INSERT INTO sec.region(id, code, name, okato, is_deleted) VALUES
         (1, 'test_code', 'test_name', 'test_okato', false),
         (2, 'test_code2', 'test_name2', 'test_okato2', true);
+SELECT setval('sec.region_id_seq', 3, false);
 
 INSERT INTO sec.organization(code, short_name, full_name, ogrn, okpo, legal_address, email, inn)
         VALUES ('test_code', 'test_short_name', 'test_full_name' ,'test_ogrn', 'test_okpo', 'test_legal_address', 'test_email', 'test_inn'),

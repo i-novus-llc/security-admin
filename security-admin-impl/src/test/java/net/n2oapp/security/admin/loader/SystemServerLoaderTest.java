@@ -5,20 +5,20 @@ import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
 import net.n2oapp.security.admin.api.model.AppSystem;
 import net.n2oapp.security.admin.impl.entity.SystemEntity;
 import net.n2oapp.security.admin.impl.repository.SystemRepository;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@RunWith(SpringRunner.class)
+
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test.properties")
 @EnableEmbeddedPg
@@ -40,8 +40,8 @@ public class SystemServerLoaderTest {
         int n = systemRepository.findAll().size();
         systemLoader.load(systems, "systems");
 
-        assertThat(systemRepository.findAll().size(), is(n + 1));
-        assertThat(systemRepository.findOneByCode("testCode").getName(), is("testName"));
+        assertEquals(n + 1, systemRepository.findAll().size());
+        assertEquals("testName", systemRepository.findOneByCode("testCode").getName());
 
         AppSystem system2 = new AppSystem();
         system2.setCode("testCode2");
@@ -50,7 +50,7 @@ public class SystemServerLoaderTest {
 
         systemLoader.load(systems, "systems");
 
-        assertThat(systemRepository.findAll().size(), is(n + 2));
-        assertThat(systemRepository.findOneByCode("testCode2").getName(), is("testName2"));
+        assertEquals(n + 2, systemRepository.findAll().size());
+        assertEquals("testName2", systemRepository.findOneByCode("testCode2").getName());
     }
 }

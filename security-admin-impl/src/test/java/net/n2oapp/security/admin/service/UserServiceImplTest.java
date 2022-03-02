@@ -1,16 +1,17 @@
 package net.n2oapp.security.admin.service;
 
 import net.n2oapp.platform.i18n.UserException;
+import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.api.model.UserRegisterForm;
 import net.n2oapp.security.admin.base.UserRoleServiceTestBase;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mockito;
@@ -18,7 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -32,22 +33,21 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Тест сервиса управления пользователями
  */
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @TestPropertySource("classpath:test.properties")
+@EnableEmbeddedPg
 public class UserServiceImplTest extends UserRoleServiceTestBase {
 
     @Captor
     private ArgumentCaptor<MimeMessage> mimeMessageArgumentCaptor;
 
-    @Before
+    @BeforeEach
     public void before() {
         Mockito.doNothing().when(emailSender).send(mimeMessageArgumentCaptor.capture());
         Mockito.doReturn(new MimeMessage(Session.getDefaultInstance(new Properties()))).when(emailSender).createMimeMessage();
@@ -58,7 +58,7 @@ public class UserServiceImplTest extends UserRoleServiceTestBase {
         assertNotNull(userService);
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() {
         org.springframework.security.core.userdetails.User contextUser = new org.springframework.security.core.userdetails.User("SelfDelete", "pass", new ArrayList<>());
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(contextUser, new Object());
@@ -265,10 +265,7 @@ public class UserServiceImplTest extends UserRoleServiceTestBase {
         user.setEmail("SelfDelete@gmail.com");
         User result = userService.create(user);
 
-        Throwable thrown = catchThrowable(() -> {
-            userService.delete(result.getId());
-        });
-        assertThat(thrown).isInstanceOf(UserException.class);
+        Throwable thrown = assertThrows(UserException.class, () -> userService.delete(result.getId()));
         assertEquals("exception.selfDelete", thrown.getMessage());
 
         SecurityContextHolder.getContext().setAuthentication(null);
@@ -296,13 +293,13 @@ public class UserServiceImplTest extends UserRoleServiceTestBase {
     public void findAllUsersByLastActionDate() {
         UserCriteria criteria = new UserCriteria();
         criteria.setLastActionDate(LocalDateTime.now(Clock.systemUTC()));
-        assertThat(userService.findAll(criteria).getTotalElements()).isZero();
+        assertEquals(0, userService.findAll(criteria).getTotalElements());
         UserRegisterForm user = new UserRegisterForm();
         user.setUsername("testUser2");
         user.setEmail("test2@test.ru");
         user.setPassword("1234ABCabc,");
         User result = userService.register(user);
-        assertThat(userService.findAll(criteria).getTotalElements()).isEqualTo(1);
+        assertEquals(1, userService.findAll(criteria).getTotalElements());
         userService.delete(result.getId());
     }
 

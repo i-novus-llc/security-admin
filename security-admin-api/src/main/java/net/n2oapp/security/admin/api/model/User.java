@@ -72,8 +72,8 @@ public class User {
     @ApiModelProperty(value = "СНИЛС пользователя")
     private String snils;
 
-    @ApiModelProperty(value = "Аккаунт пользователя")
-    private Account account;
+    @ApiModelProperty(value = "Аккаунты пользователя")
+    private List<Account> accounts;
 
     // todo SECURITY-396    удалить roles, userLevel, department, region, organization
     @ApiModelProperty(value = "Список ролей")
