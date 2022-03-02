@@ -29,7 +29,6 @@ public class RegionServerLoader extends ServerLoaderSettings<Region> implements 
     @Transactional
     public void load(List<Region> data, String subject) {
         if (isCreateRequired()) {
-            regionRepository.deleteAllInBatch();
             for (Region region : data) {
                 create(region);
             }
