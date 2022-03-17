@@ -8,6 +8,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.persistence.criteria.*;
 import java.util.Arrays;
+import java.util.Collection;
 
 import static java.util.Objects.nonNull;
 
@@ -26,9 +27,13 @@ public class UserSpecifications implements Specification<UserEntity> {
     public Predicate toPredicate(Root<UserEntity> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder builder) {
         Predicate predicate = builder.and();
         // account subquery
-        Subquery<AccountEntity> subquery = criteriaQuery.subquery(AccountEntity.class);
-        Root<AccountEntity> subqueryRoot = subquery.from(AccountEntity.class);
-        Predicate subQueryPredicate = builder.and();
+        Subquery<AccountEntity> accountSubquery = criteriaQuery.subquery(AccountEntity.class);
+        Root<AccountEntity> accountSubqueryRoot = accountSubquery.from(AccountEntity.class);
+        Predicate accountSubQueryPredicate = builder.and();
+        // role subquery
+        Subquery<RoleEntity> roleSubquery = criteriaQuery.subquery(RoleEntity.class);
+        Root<RoleEntity> roleSubqueryRoot = roleSubquery.from(RoleEntity.class);
+        Predicate roleSubQueryPredicate = builder.and();
 
         if (nonNull(criteria.getUsername()))
             predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.username), criteria.getUsername()));
@@ -58,38 +63,24 @@ public class UserSpecifications implements Specification<UserEntity> {
         }
 
         if (!CollectionUtils.isEmpty(criteria.getRoleCodes())) {
-            Subquery<String> sub = criteriaQuery.subquery(String.class);
-            Root<RoleEntity> subRoot = sub.from(RoleEntity.class);
-            ListJoin<RoleEntity, AccountEntity> subAccounts = subRoot.join(RoleEntity_.accountList);
-            sub.select(subRoot.get(RoleEntity_.code));
-            sub.where(builder.and(builder.equal(subqueryRoot.get(AccountEntity_.id), subAccounts.get(AccountEntity_.id)),
-                    subRoot.get(RoleEntity_.code).in(criteria.getRoleCodes())));
-            subQueryPredicate = builder.and(subQueryPredicate, builder.exists(sub));
+            roleSubQueryPredicate = builder.and(roleSubQueryPredicate,
+                    roleSubqueryRoot.get(RoleEntity_.code).in(criteria.getRoleCodes()));
         }
 
         if (!CollectionUtils.isEmpty(criteria.getRoleIds())) {
-            Subquery<Integer> sub = criteriaQuery.subquery(Integer.class);
-            Root<RoleEntity> subRoot = sub.from(RoleEntity.class);
-            ListJoin<RoleEntity, AccountEntity> subAccounts = subRoot.join(RoleEntity_.accountList);
-            sub.select(subRoot.get(RoleEntity_.id));
-            sub.where(builder.and(builder.equal(subqueryRoot.get(AccountEntity_.id), subAccounts.get(AccountEntity_.id)),
-                    subRoot.get(RoleEntity_.id).in(criteria.getRoleIds())));
-            subQueryPredicate = builder.and(subQueryPredicate, builder.exists(sub));
+            roleSubQueryPredicate = builder.and(roleSubQueryPredicate,
+                    roleSubqueryRoot.get(RoleEntity_.id).in(criteria.getRoleIds()));
         }
 
         if (!CollectionUtils.isEmpty(criteria.getSystems())) {
-            Subquery<String> sub = criteriaQuery.subquery(String.class);
-            Root subRoot = sub.from(RoleEntity.class);
-            ListJoin<RoleEntity, AccountEntity> listJoin = subRoot.join(RoleEntity_.accountList);
-            sub.select(subRoot.get(RoleEntity_.systemCode));
-            sub.where(builder.and(builder.equal(subqueryRoot.get(AccountEntity_.id), listJoin.get(AccountEntity_.id)),
-                    subRoot.get(RoleEntity_.systemCode).get(SystemEntity_.CODE).in(criteria.getSystems())));
-            subQueryPredicate = builder.and(subQueryPredicate, builder.exists(sub));
+            roleSubQueryPredicate = builder.and(roleSubQueryPredicate,
+                    roleSubqueryRoot.get(RoleEntity_.systemCode).get(SystemEntity_.code).in(criteria.getSystems()));
         }
 
 //        if (criteria.getExtSys() != null) {
 //            predicate = builder.and(predicate, builder.equal(builder.upper(root.get(UserEntity_.extSys)), criteria.getExtSys().toUpperCase()));
 //        }
+
         if (nonNull(criteria.getUserLevel())) {
             String userLevel = criteria.getUserLevel().toUpperCase();
             // если userLevel не существует, то возвращаем false-предикат
@@ -97,40 +88,45 @@ public class UserSpecifications implements Specification<UserEntity> {
                 return builder.disjunction();
 
             if (UserLevel.NOT_SET.getName().equals(userLevel))
-                subQueryPredicate = builder.and(subQueryPredicate,
-                        builder.isNull(subqueryRoot.get(AccountEntity_.USER_LEVEL)));
+                accountSubQueryPredicate = builder.and(accountSubQueryPredicate,
+                        builder.isNull(accountSubqueryRoot.get(AccountEntity_.userLevel)));
             else
-                subQueryPredicate = builder.and(subQueryPredicate,
-                        builder.equal(subqueryRoot.get(AccountEntity_.USER_LEVEL), UserLevel.valueOf(userLevel)));
+                accountSubQueryPredicate = builder.and(accountSubQueryPredicate,
+                        builder.equal(accountSubqueryRoot.get(AccountEntity_.userLevel), UserLevel.valueOf(userLevel)));
         }
 
         if (nonNull(criteria.getRegionId())) {
-            subQueryPredicate = builder.and(subQueryPredicate,
-                    builder.equal(subqueryRoot.get(AccountEntity_.REGION).get(RegionEntity_.ID), criteria.getRegionId()));
+            accountSubQueryPredicate = builder.and(accountSubQueryPredicate,
+                    builder.equal(accountSubqueryRoot.get(AccountEntity_.region).get(RegionEntity_.id), criteria.getRegionId()));
         }
 
         if (nonNull(criteria.getDepartmentId())) {
-            subQueryPredicate = builder.and(subQueryPredicate,
-                    builder.equal(subqueryRoot.get(AccountEntity_.DEPARTMENT).get(DepartmentEntity_.ID), criteria.getDepartmentId()));
+            accountSubQueryPredicate = builder.and(accountSubQueryPredicate,
+                    builder.equal(accountSubqueryRoot.get(AccountEntity_.department).get(DepartmentEntity_.id), criteria.getDepartmentId()));
         }
 
-        // TODO Для организаций в фильтре таблицы используется не мульти, а сингл режим, а здесь обрабатывается, как мульти
-        //    В чем смысл, Карл?
-//        if (!CollectionUtils.isEmpty(criteria.getOrganizations())) {
-//            CriteriaBuilder.In<Integer> in = builder.in(root.get(UserEntity_.organization).get(OrganizationEntity_.id));
-//            criteria.getOrganizations().forEach(in::value);
-//            predicate = builder.and(predicate, in);
-//        }
+        if (nonNull(criteria.getOrganizationId())) {
+            accountSubQueryPredicate = builder.and(accountSubQueryPredicate,
+                    builder.equal(accountSubqueryRoot.get(AccountEntity_.organization).get(OrganizationEntity_.id), criteria.getOrganizationId()));
+        }
+
         if (nonNull(criteria.getLastActionDate())) {
             predicate = builder.and(predicate, builder.greaterThanOrEqualTo(root.get(UserEntity_.lastActionDate), criteria.getLastActionDate()));
         }
 
         // add subquery only if criteria has any subquery condition
-        if (subQueryPredicate.getExpressions().size() > 1) {
-            subQueryPredicate = builder.and(subQueryPredicate, builder.equal(root.get(UserEntity_.id),
-                    subqueryRoot.get(AccountEntity_.USER).get(UserEntity_.ID)));
-            subquery.select(subqueryRoot).where(subQueryPredicate);
-            predicate = builder.and(predicate, builder.exists(subquery));
+        if (roleSubQueryPredicate.getExpressions().size() > 1) {
+            Expression<Collection<RoleEntity>> accountRoles = accountSubqueryRoot.get(AccountEntity_.ROLE_LIST);
+            roleSubQueryPredicate = builder.and(roleSubQueryPredicate,
+                    builder.isMember(roleSubqueryRoot, accountRoles));
+            roleSubquery.select(roleSubqueryRoot).where(roleSubQueryPredicate);
+            accountSubQueryPredicate = builder.and(accountSubQueryPredicate, builder.exists(roleSubquery));
+        }
+        if (accountSubQueryPredicate.getExpressions().size() > 1) {
+            accountSubQueryPredicate = builder.and(accountSubQueryPredicate, builder.equal(root.get(UserEntity_.id),
+                    accountSubqueryRoot.get(AccountEntity_.user).get(UserEntity_.id)));
+            accountSubquery.select(accountSubqueryRoot).where(accountSubQueryPredicate);
+            predicate = builder.and(predicate, builder.exists(accountSubquery));
         }
         return predicate;
     }

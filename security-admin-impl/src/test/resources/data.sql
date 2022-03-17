@@ -7,7 +7,7 @@ INSERT INTO sec.permission (name, code, parent_code, system_code) VALUES ('test2
 --ROLE
 INSERT INTO sec.role(id, name, code, description) VALUES (100, 'test','test','test');
 INSERT INTO sec.role(name, code, description) VALUES ('user','code1','description1');
-INSERT INTO sec.role(name, code, description) VALUES ('admin','code2','description2');
+INSERT INTO sec.role(name, code, description, system_code) VALUES ('admin','code2','description2', 'system2');
 
 --USER
 INSERT INTO sec.user(username, email, name, surname, patronymic, password, is_active)
@@ -36,6 +36,7 @@ INSERT INTO sec.department(id, code, name, is_deleted) VALUES
 INSERT INTO sec.region(id, code, name, okato, is_deleted) VALUES
         (1, 'test_code', 'test_name', 'test_okato', false),
         (2, 'test_code2', 'test_name2', 'test_okato2', true);
+SELECT setval('sec.region_id_seq', 3, false);
 
 INSERT INTO sec.organization(code, short_name, full_name, ogrn, okpo, legal_address, email, inn)
         VALUES ('test_code', 'test_short_name', 'test_full_name' ,'test_ogrn', 'test_okpo', 'test_legal_address', 'test_email', 'test_inn'),
@@ -45,13 +46,13 @@ INSERT INTO sec.organization(code, short_name, full_name, ogrn, okpo, legal_addr
                ('test_code5', 'test_short_name5', 'test_full_name5', 'test_ogrn5', 'test_okpo5', 'test_legal_address5', 'test_email5', 'test_inn5'),
                ('test_code6', 'test_short_name6', 'test_full_name6', 'test_ogrn6', 'test_okpo6', 'test_legal_address6', 'test_email6', 'test_inn6');
 
-INSERT INTO sec.account(user_id, user_level, region_id, department_id)
-            VALUES (1, 'FEDERAL', 1, 1);
-INSERT INTO sec.account(user_id, user_level, region_id, department_id)
-            VALUES (2, 'ORGANIZATION', 2, 2);
+INSERT INTO sec.account(user_id, user_level, region_id, department_id, organization_id)
+            VALUES (1, 'FEDERAL', 1, 1, 1);
+INSERT INTO sec.account(user_id, user_level, region_id, department_id, organization_id)
+            VALUES (2, 'ORGANIZATION', 2, 2, 2);
 INSERT INTO sec.account_role(account_id, role_id) VALUES (1,1);
-INSERT INTO sec.account_role(account_id, role_id) VALUES (2,1);
 INSERT INTO sec.account_role(account_id, role_id) VALUES (1,2);
+INSERT INTO sec.account_role(account_id, role_id) VALUES (2,1);
 
 --for testing account_type
 INSERT INTO sec.account_type (code, name, description, user_level, status) VALUES ('testAccountTypeCode', 'testAccountTypeName', 'testDescription', 'PERSONAL', 'REGISTERED');

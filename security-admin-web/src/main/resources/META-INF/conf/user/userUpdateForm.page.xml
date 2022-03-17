@@ -71,7 +71,9 @@
                    detail-field-id="userId">
                 <columns>
                     <column text-field-id="name" label="Наименование"/>
-                    <column text-field-id="roleNames" label="Роли"/>
+                    <column text-field-id="roleNames" label="Роли">
+                        <list/>
+                    </column>
                     <column text-field-id="isActive" label="Активность">
                         <checkbox enabled="${access.accounts.change-activity-enabled}">
                             <invoke route="/changeAccountActive" operation-id="changeAccountActive"/>

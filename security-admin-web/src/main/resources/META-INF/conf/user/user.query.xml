@@ -80,12 +80,6 @@
             </filters>
         </field>
 
-        <field id="roleIds" domain="integer[]" name="Роли">
-            <filters>
-                <in mapping="['roleIds']" filter-id="['criteria'].roleIds"/>
-            </filters>
-        </field>
-
         <field id="roles" domain="object[]" name="Роли">
             <filters>
                 <in filter-id="roles*.id" domain="integer[]" mapping="['criteria'].roleIds"/>
@@ -117,6 +111,12 @@
         <field id="region">
             <filters>
                 <eq filter-id="region.id" domain="integer" mapping="['criteria'].regionId"/>
+            </filters>
+        </field>
+
+        <field id="organization">
+            <filters>
+                <eq filter-id="organization.id" domain="integer" mapping="['criteria'].organizationId"/>
             </filters>
         </field>
 

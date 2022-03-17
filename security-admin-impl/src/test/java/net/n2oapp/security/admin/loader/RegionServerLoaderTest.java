@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test.properties")
 @EnableEmbeddedPg
-class RegionServerLoaderTest {
+public class RegionServerLoaderTest {
     @LocalServerPort
     private String port;
 
@@ -46,8 +46,9 @@ class RegionServerLoaderTest {
     @Test
     void testLoadNewRegions() {
 
-        Region region1 = buildRegionModel(1, "01", "Республика Татарстан", "92000000000");
-        Region region2 = buildRegionModel(2, "002", "Республика Тыва", "93000000000");
+        int n = (int) repository.count();
+        Region region1 = buildRegionModel("01", "Республика Татарстан", "92000000000");
+        Region region2 = buildRegionModel("002", "Республика Тыва", "93000000000");
 
         List<Region> data = new ArrayList<>();
         data.add(region1);
@@ -59,18 +60,22 @@ class RegionServerLoaderTest {
         HttpEntity<List<Region>> httpEntity = new HttpEntity<>(data, headers);
         restTemplate.postForLocation(uri, httpEntity);
 
-        List<RegionEntity> allRegions = repository.findAll();
+        List<RegionEntity> regions = repository.findAll();
 
-        assertEquals(2, allRegions.size());
-        assertTrue(allRegions.stream().allMatch(r -> "01".equals(r.getCode()) || "002".equals(r.getCode())));
-        assertTrue(allRegions.stream().allMatch(r -> "Республика Татарстан".equals(r.getName()) || "Республика Тыва".equals(r.getName())));
-        assertTrue(allRegions.stream().allMatch(r -> "92000000000".equals(r.getOkato()) || "93000000000".equals(r.getOkato())));
-        assertTrue(allRegions.stream().allMatch(r -> r.getIsDeleted() == null));
+        assertEquals(n + 2, regions.size());
+        assertEquals("01", regions.get(n).getCode());
+        assertEquals("Республика Татарстан", regions.get(n).getName());
+        assertEquals("92000000000", regions.get(n).getOkato());
+        assertNull(regions.get(n).getIsDeleted());
+        assertEquals("002", regions.get(n + 1).getCode());
+        assertEquals("Республика Тыва", regions.get(n + 1).getName());
+        assertEquals("93000000000", regions.get(n + 1).getOkato());
+        assertNull(regions.get(n + 1).getIsDeleted());
     }
 
     @Test
     void testLoadRegionWithoutRequiredFields() {
-        Region region1 = buildRegionModel(3, null, null, null);
+        Region region1 = buildRegionModel(null, null, null);
 
         List<Region> data = new ArrayList<>();
         data.add(region1);
@@ -88,7 +93,7 @@ class RegionServerLoaderTest {
         }
 
 
-        Region region2 = buildRegionModel(3, "003", null, null);
+        Region region2 = buildRegionModel("003", null, null);
 
         List<Region> data2 = new ArrayList<>();
         data2.add(region2);
@@ -103,9 +108,8 @@ class RegionServerLoaderTest {
         }
     }
 
-    private Region buildRegionModel(Integer id, String code, String name, String okato) {
+    private Region buildRegionModel(String code, String name, String okato) {
         Region region = new Region();
-        region.setId(id);
         region.setCode(code);
         region.setName(name);
         region.setOkato(okato);

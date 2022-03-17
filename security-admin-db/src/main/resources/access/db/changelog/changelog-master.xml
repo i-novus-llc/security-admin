@@ -115,4 +115,8 @@
         <sqlFile path="access/db/changelog/sql/V9_remove_old_tables_and_column.sql"/>
     </changeSet>
 
+    <changeSet id="V9_alter_foreign_key" author="ilebedenko" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/V9_alter_foreign_key.sql"/>
+    </changeSet>
+
 </databaseChangeLog>

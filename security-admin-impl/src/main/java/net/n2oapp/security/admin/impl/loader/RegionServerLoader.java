@@ -3,7 +3,6 @@ package net.n2oapp.security.admin.impl.loader;
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.platform.loader.server.ServerLoader;
 import net.n2oapp.platform.loader.server.ServerLoaderSettings;
-import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.model.Region;
 import net.n2oapp.security.admin.impl.entity.RegionEntity;
 import net.n2oapp.security.admin.impl.repository.RegionRepository;
@@ -30,7 +29,6 @@ public class RegionServerLoader extends ServerLoaderSettings<Region> implements 
     @Transactional
     public void load(List<Region> data, String subject) {
         if (isCreateRequired()) {
-            regionRepository.deleteAllInBatch();
             for (Region region : data) {
                 create(region);
             }

@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public abstract class UserRoleServiceTestBase {
 
@@ -39,7 +39,7 @@ public abstract class UserRoleServiceTestBase {
     protected JavaMailSender emailSender;
 
 
-    protected void checkUpdateUser(){
+    protected void checkUpdateUser() {
         UserForm userForm = new UserForm();
         userForm.setUsername("username");
         userForm.setEmail("username@username.username");

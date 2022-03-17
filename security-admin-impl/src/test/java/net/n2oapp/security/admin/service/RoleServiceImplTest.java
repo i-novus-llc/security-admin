@@ -1,17 +1,18 @@
 package net.n2oapp.security.admin.service;
 
 import net.n2oapp.platform.i18n.UserException;
+import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
 import net.n2oapp.security.admin.api.criteria.RoleCriteria;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.RoleForm;
 import net.n2oapp.security.admin.base.UserRoleServiceTestBase;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.ws.rs.NotFoundException;
@@ -20,14 +21,15 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Тест сервиса управления ролями пользователя
  */
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @TestPropertySource("classpath:test.properties")
+@EnableEmbeddedPg
 public class RoleServiceImplTest extends UserRoleServiceTestBase {
 
     @Test
@@ -131,17 +133,17 @@ public class RoleServiceImplTest extends UserRoleServiceTestBase {
     /**
      * Проверка, что получение роли по несуществующему идентификатору приводит к NotFoundException
      */
-    @Test(expected = NotFoundException.class)
+    @Test
     public void getRoleByNotExistsId() {
-        roleService.getById(-1);
+        assertThrows(NotFoundException.class, () -> roleService.getById(-1));
     }
 
     /**
      * Проверка, что удаление роли по несуществующему идентификатору приводит к NotFoundException
      */
-    @Test(expected = NotFoundException.class)
+    @Test
     public void deleteRoleByNotExistsId() {
-        roleService.delete(-1);
+        assertThrows(NotFoundException.class, () -> roleService.delete(-1));
     }
 
     /**

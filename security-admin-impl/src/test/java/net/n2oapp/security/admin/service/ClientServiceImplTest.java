@@ -1,29 +1,31 @@
 package net.n2oapp.security.admin.service;
 
 import net.n2oapp.platform.i18n.UserException;
+import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
 import net.n2oapp.security.admin.api.criteria.ClientCriteria;
 import net.n2oapp.security.admin.api.model.AppSystemForm;
 import net.n2oapp.security.admin.api.model.Application;
 import net.n2oapp.security.admin.api.model.Client;
 import net.n2oapp.security.admin.impl.service.ApplicationSystemServiceImpl;
 import net.n2oapp.security.admin.impl.service.ClientServiceImpl;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Тест сервиса управления клиентами
  */
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @TestPropertySource("classpath:test.properties")
+@EnableEmbeddedPg
 public class ClientServiceImplTest {
 
     @Autowired
@@ -40,9 +42,9 @@ public class ClientServiceImplTest {
     @Test
     public void testPersistAndGet() {
         Client client = service.getDefaultClient("notExists");
-        assertEquals(client.getClientId(), "notExists");
-        assertEquals(client.getEnabled(), false);
-        assertEquals(client.getIsAuthorizationCode(), true);
+        assertEquals("notExists", client.getClientId());
+        assertFalse(client.getEnabled());
+        assertTrue(client.getIsAuthorizationCode());
         assertNotNull(client.getClientSecret());
 
         AppSystemForm appSystem = new AppSystemForm();

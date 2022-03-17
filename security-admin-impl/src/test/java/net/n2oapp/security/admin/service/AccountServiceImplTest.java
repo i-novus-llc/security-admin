@@ -1,27 +1,30 @@
 package net.n2oapp.security.admin.service;
 
 import net.n2oapp.platform.i18n.UserException;
+import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
 import net.n2oapp.security.admin.api.criteria.AccountCriteria;
 import net.n2oapp.security.admin.api.model.*;
 import net.n2oapp.security.admin.api.service.AccountService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 /**
  * Тест сервиса управления аккаунтами
  */
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @TestPropertySource("classpath:test.properties")
+@EnableEmbeddedPg
 public class AccountServiceImplTest {
 
     @Autowired
@@ -55,21 +58,21 @@ public class AccountServiceImplTest {
         delete(accountId);
     }
 
-    @Test(expected = UserException.class)
+    @Test
     public void getAccountByNotExistsIdTest() {
-        service.getById(-1);
+        assertThrows(UserException.class, () -> service.getById(-1));
     }
 
-    @Test(expected = UserException.class)
+    @Test
     public void updateAccountByNotExistsIdTest() {
         Account account = new Account();
         account.setId(-1);
-        service.update(account);
+        assertThrows(UserException.class, () -> service.update(account));
     }
 
-    @Test(expected = UserException.class)
+    @Test
     public void deleteAccountByNotExistsIdTest() {
-        service.delete(-1);
+        assertThrows(UserException.class, () -> service.delete(-1));
     }
 
     private Integer create() {

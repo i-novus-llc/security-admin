@@ -1,13 +1,14 @@
 package net.n2oapp.security.admin.impl.provider;
 
+import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.api.model.UserRegisterForm;
 import net.n2oapp.security.admin.base.UserRoleServiceTestBase;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mockito;
@@ -17,7 +18,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.support.TestPropertySourceUtils;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,12 +27,13 @@ import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ContextConfiguration(initializers = SimpleSsoUserRoleProviderTest.SecurityAdminContextInitializer.class)
 @TestPropertySource("classpath:test.properties")
+@EnableEmbeddedPg
 public class SimpleSsoUserRoleProviderTest extends UserRoleServiceTestBase {
 
     @Captor
@@ -45,7 +47,7 @@ public class SimpleSsoUserRoleProviderTest extends UserRoleServiceTestBase {
         }
     }
 
-    @Before
+    @BeforeEach
     public void before() {
         Mockito.doNothing().when(emailSender).send(mimeMessageArgumentCaptor.capture());
         Mockito.doReturn(new MimeMessage(Session.getDefaultInstance(new Properties()))).when(emailSender).createMimeMessage();
