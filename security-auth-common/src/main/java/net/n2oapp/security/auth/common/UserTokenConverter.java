@@ -42,7 +42,6 @@ public class UserTokenConverter implements UserAuthenticationConverter {
         this.includePermissions = includePermissions;
         this.includeSystems = includeSystems;
     }
-
     @Override
     public Map<String, ?> convertUserAuthentication(Authentication authentication) {
         Map<String, Object> response = new LinkedHashMap<>();

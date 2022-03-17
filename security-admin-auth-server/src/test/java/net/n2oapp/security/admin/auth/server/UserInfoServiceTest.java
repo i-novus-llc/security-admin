@@ -31,6 +31,7 @@ public class UserInfoServiceTest {
         AccountRepository accountRepository = mock(AccountRepository.class);
         UserRepository userRepository = mock(UserRepository.class);
 
+        when(userRepository.findOneByUsernameIgnoreCase("testUser")).thenReturn(initUserEntity());
         when(accountRepository.getOne(1)).thenReturn(initAccountEntity());
         UserInfoService userInfoService = new UserInfoService(userRepository, accountRepository,
                 List.of(new OrganizationEnricher(), new RolesEnricher(), new SystemsEnricher(true),
@@ -144,5 +145,16 @@ public class UserInfoServiceTest {
         account.setRegion(regionEntity);
 
         return account;
+    }
+
+    private UserEntity initUserEntity() {
+        UserEntity entity = new UserEntity();
+        entity.setUsername("testUser");
+        entity.setName("testName");
+        entity.setSurname("testSurname");
+        entity.setPatronymic("testPatronymic");
+        entity.setEmail("testEmail");
+        entity.setPatronymic("testPatronymic");
+        return entity;
     }
 }
