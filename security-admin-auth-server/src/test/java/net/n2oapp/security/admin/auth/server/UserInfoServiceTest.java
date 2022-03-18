@@ -98,6 +98,7 @@ public class UserInfoServiceTest {
         AccountEntity account = new AccountEntity();
         UserEntity user = new UserEntity();
         account.setUser(user);
+        account.setId(1);
 
         user.setUsername("testUser");
         user.setName("testName");
