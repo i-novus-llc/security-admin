@@ -108,7 +108,6 @@ public class ContextFilter implements Filter {
     private void selectAccount(Integer accountId, Authentication currentAuthentication) {
         OAuth2Authentication oAuth2Authentication = userInfoTokenServices.loadAuthentication(((OAuth2AuthenticationDetails) currentAuthentication.getDetails()).getTokenValue(), accountId);
         oAuth2Authentication.setDetails(currentAuthentication.getDetails());
-        ((User) oAuth2Authentication.getPrincipal()).setAccountId(accountId);
         SecurityContextHolder.getContext().setAuthentication(oAuth2Authentication);
     }
 }

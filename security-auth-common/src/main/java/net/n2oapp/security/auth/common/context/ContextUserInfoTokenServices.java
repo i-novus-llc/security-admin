@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.security.oauth2.resource.Authoriti
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.BaseOAuth2ProtectedResourceDetails;
@@ -22,6 +21,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+/**
+ * Сервис для получения UserInfo с данными контекста
+ * ex org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices
+ */
 
 public class ContextUserInfoTokenServices {
 
@@ -58,8 +61,7 @@ public class ContextUserInfoTokenServices {
         this.principalExtractor = principalExtractor;
     }
 
-    public OAuth2Authentication loadAuthentication(String accessToken, Integer accountId)
-            throws AuthenticationException, InvalidTokenException {
+    public OAuth2Authentication loadAuthentication(String accessToken, Integer accountId) {
         Map<String, Object> map = getMap(this.userInfoEndpointUrl + "/" + accountId, accessToken);
         if (map.containsKey("error")) {
             if (this.logger.isDebugEnabled()) {
@@ -72,10 +74,9 @@ public class ContextUserInfoTokenServices {
 
     private OAuth2Authentication extractAuthentication(Map<String, Object> map) {
         Object principal = getPrincipal(map);
-        List<GrantedAuthority> authorities = this.authoritiesExtractor.extractAuthorities(map);
         OAuth2Request request = new OAuth2Request(null, this.clientId, null, true, null, null, null, null, null);
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(principal, "N/A",
-                authorities);
+        List<GrantedAuthority> authorities = this.authoritiesExtractor.extractAuthorities(map);
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(principal, "N/A", authorities);
         token.setDetails(map);
         return new OAuth2Authentication(request, token);
     }

@@ -39,7 +39,7 @@ public class UserInfoServiceTest {
                         new UserLevelEnricher()));
         OAuth2Authentication authentication = mock(OAuth2Authentication.class);
         User user = new User("testUser");
-        user.setAccountId(1);
+        user.setAccountId("1");
         when(authentication.getPrincipal()).thenReturn(user);
 
         Map<String, Object> userinfo = userInfoService.buildUserInfo(authentication, 1);

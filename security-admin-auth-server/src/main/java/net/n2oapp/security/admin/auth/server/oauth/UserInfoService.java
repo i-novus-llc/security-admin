@@ -26,6 +26,8 @@ public class UserInfoService {
     private final Collection<UserInfoEnricher<AccountEntity>> userInfoEnrichers;
     private final SimpleUserDataEnricher simpleUserDataEnricher = new SimpleUserDataEnricher();
 
+    private static final String ACCOUNT_ID = "accountId";
+
     public UserInfoService(UserRepository userRepository, AccountRepository accountRepository, Collection<UserInfoEnricher<AccountEntity>> userInfoEnrichers) {
         this.userRepository = userRepository;
         this.accountRepository = accountRepository;
@@ -38,6 +40,7 @@ public class UserInfoService {
             AccountEntity account = accountRepository.getOne(accountId);
             if (!account.getUser().getUsername().equals(((User) authentication.getPrincipal()).getUsername()))
                 return userInfo;
+            userInfo.put(ACCOUNT_ID, account.getId().toString());
             for (UserInfoEnricher<AccountEntity> enricher : userInfoEnrichers)
                 enricher.enrich(userInfo, account);
         }
