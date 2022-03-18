@@ -22,7 +22,10 @@ import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.util.StringUtils;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -42,7 +45,7 @@ public class User extends org.springframework.security.core.userdetails.User {
     private String department;
     private String departmentName;
     private String userLevel;
-    private Integer accountId;
+    private String accountId;
 
     public User(String username) {
         super(username, "", Collections.singleton(new RoleGrantedAuthority(DEFAULT_ROLE)));

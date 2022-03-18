@@ -23,7 +23,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * Модель пользователя для actions
@@ -72,9 +71,6 @@ public class UserForm {
 
     @ApiModelProperty(value = "Активен ли пользователь")
     private Boolean isActive;
-
-    @ApiModelProperty(value = "Список идентификаторов ролей")
-    private List<Integer> roles;
 
     @ApiModelProperty(value = "СНИЛС пользователя")
     private String snils;

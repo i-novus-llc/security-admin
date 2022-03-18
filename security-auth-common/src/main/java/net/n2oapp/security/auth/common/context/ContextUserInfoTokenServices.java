@@ -1,15 +1,13 @@
-package net.n2oapp.security.admin.auth.server.esia;
+package net.n2oapp.security.auth.common.context;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import net.n2oapp.security.auth.common.GatewayPrincipalExtractor;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.AuthoritiesExtractor;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.FixedAuthoritiesExtractor;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.FixedPrincipalExtractor;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.client.OAuth2RestOperations;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.BaseOAuth2ProtectedResourceDetails;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
@@ -17,40 +15,39 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Request;
-import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
 import org.springframework.util.Assert;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
 /**
- * Сервис для получения UserInfo с сервера ЕСИА
+ * Сервис для получения UserInfo с данными контекста
  * ex org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices
  */
 
-public class EsiaUserInfoTokenServices implements ResourceServerTokenServices {
+public class ContextUserInfoTokenServices {
+
+    protected final Log logger = LogFactory.getLog(getClass());
 
     private final String userInfoEndpointUrl;
 
     private final String clientId;
 
-    private OAuth2RestOperations restTemplate;
+    private OAuth2RestTemplate restTemplate;
 
+    private String tokenType = DefaultOAuth2AccessToken.BEARER_TYPE;
 
-    private AuthoritiesExtractor authoritiesExtractor = new FixedAuthoritiesExtractor();
+    private AuthoritiesExtractor authoritiesExtractor = new GatewayPrincipalExtractor();
 
-    private PrincipalExtractor principalExtractor = new FixedPrincipalExtractor();
+    private PrincipalExtractor principalExtractor = new GatewayPrincipalExtractor();
 
-    public EsiaUserInfoTokenServices(String userInfoEndpointUrl, String clientId) {
+    public ContextUserInfoTokenServices(String userInfoEndpointUrl, String clientId) {
         this.userInfoEndpointUrl = userInfoEndpointUrl;
         this.clientId = clientId;
     }
 
-    public void setRestTemplate(OAuth2RestOperations restTemplate) {
+    public void setRestTemplate(OAuth2RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
@@ -64,11 +61,12 @@ public class EsiaUserInfoTokenServices implements ResourceServerTokenServices {
         this.principalExtractor = principalExtractor;
     }
 
-    @Override
-    public OAuth2Authentication loadAuthentication(String accessToken)
-            throws AuthenticationException, InvalidTokenException {
-        Map<String, Object> map = getMap(this.userInfoEndpointUrl, accessToken);
+    public OAuth2Authentication loadAuthentication(String accessToken, Integer accountId) {
+        Map<String, Object> map = getMap(this.userInfoEndpointUrl + "/" + accountId, accessToken);
         if (map.containsKey("error")) {
+            if (this.logger.isDebugEnabled()) {
+                this.logger.debug("userinfo returned error: " + map.get("error"));
+            }
             throw new InvalidTokenException(accessToken);
         }
         return extractAuthentication(map);
@@ -76,8 +74,8 @@ public class EsiaUserInfoTokenServices implements ResourceServerTokenServices {
 
     private OAuth2Authentication extractAuthentication(Map<String, Object> map) {
         Object principal = getPrincipal(map);
-        List<GrantedAuthority> authorities = this.authoritiesExtractor.extractAuthorities(map);
         OAuth2Request request = new OAuth2Request(null, this.clientId, null, true, null, null, null, null, null);
+        List<GrantedAuthority> authorities = this.authoritiesExtractor.extractAuthorities(map);
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(principal, "N/A", authorities);
         token.setDetails(map);
         return new OAuth2Authentication(request, token);
@@ -88,44 +86,32 @@ public class EsiaUserInfoTokenServices implements ResourceServerTokenServices {
         return (principal == null ? "unknown" : principal);
     }
 
-    @Override
-    public OAuth2AccessToken readAccessToken(String accessToken) {
-        throw new UnsupportedOperationException("Not supported: read access token");
-    }
-
     @SuppressWarnings({"unchecked"})
     private Map<String, Object> getMap(String path, String accessToken) {
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("Getting user info from: " + path);
+        }
         try {
-            OAuth2RestOperations restTemplate = this.restTemplate;
+            OAuth2RestTemplate restTemplate = this.restTemplate;
             if (restTemplate == null) {
                 BaseOAuth2ProtectedResourceDetails resource = new BaseOAuth2ProtectedResourceDetails();
                 resource.setClientId(this.clientId);
                 restTemplate = new OAuth2RestTemplate(resource);
+                restTemplate.getInterceptors().add((request, body, execution) -> {
+                    request.getHeaders().setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+                    return execution.execute(request, body);
+                });
             }
-            OAuth2AccessToken existingToken = restTemplate.getOAuth2ClientContext()
-                    .getAccessToken();
+            OAuth2AccessToken existingToken = restTemplate.getOAuth2ClientContext().getAccessToken();
             if (existingToken == null || !accessToken.equals(existingToken.getValue())) {
-                DefaultOAuth2AccessToken token = new DefaultOAuth2AccessToken(
-                        accessToken);
-                token.setTokenType(DefaultOAuth2AccessToken.BEARER_TYPE);
+                DefaultOAuth2AccessToken token = new DefaultOAuth2AccessToken(accessToken);
+                token.setTokenType(this.tokenType);
                 restTemplate.getOAuth2ClientContext().setAccessToken(token);
             }
-            String oid = getOID(accessToken);
-            Map result = restTemplate.getForEntity(path + "/" + oid, Map.class).getBody();
-            if (result != null) result.put("oid", oid);
-            return result;
+            return restTemplate.getForEntity(path, Map.class).getBody();
         } catch (Exception ex) {
-            return Collections.singletonMap("error",
-                    "Could not fetch user details");
+            this.logger.warn("Could not fetch user details: " + ex.getClass() + ", " + ex.getMessage());
+            return Collections.<String, Object>singletonMap("error", "Could not fetch user details");
         }
-    }
-
-    private String getOID(String accessToken) throws IOException {
-        String[] accessParts = accessToken.split("\\.");
-        ObjectMapper mapper = new ObjectMapper();
-        Map<String, Object> info = mapper.readValue(new String(Base64.getUrlDecoder().decode(accessParts[1]), StandardCharsets.UTF_8),
-                new TypeReference<Map<String, Object>>() {
-                });
-        return info.get("urn:esia:sbj_id").toString();
     }
 }

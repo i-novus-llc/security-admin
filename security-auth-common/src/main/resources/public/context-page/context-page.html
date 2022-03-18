@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" th:href="@{${css}}" type="text/css">
+    <title>Выбор контекста пользователя</title>
+</head>
+<body class="context-page">
+<header class="context-page__header">
+    <img class="context-page__logo"
+         th:src="${emblem}"
+         alt="герб Российской Федерации"
+         width="50"
+         height="50"/>
+    <h1 class="context-page__title">
+        Единая подсистема прав доступа
+    </h1>
+</header>
+<main class="context-page__main container">
+    <section class="accounts">
+        <h2 class="accounts__title">Вход</h2>
+        <h3 class="accounts__subtitle">
+            Укажите, пожалуйста, аккаунт, под которым необходимо авторизоваться в
+            системе:
+        </h3>
+        <form action="selectAccount" method="post">
+
+            <ul class="accounts__list" th:if="${!accounts.isEmpty()}">
+                <li class="accounts__item" th:each="account : ${accounts}">
+                    <label class="accounts__label">
+                        <input class="accounts__input-radio"
+                               type="radio"
+                               name="accountId"
+                               th:value="${account.id}"
+                               checked/>
+                        <span class="accounts__radio"></span>
+                        <span class="accounts__name-wrapper">
+                            <span class="accounts__name" th:text="${account.name}">имя аккаунта</span>
+                        </span>
+                    </label>
+                </li>
+            </ul>
+
+            <span th:if="${accounts.isEmpty()}" class="accounts__label">У вас нет зарегистрированного аккаунта, пожалуйста обратитесь в СТП</span>
+
+            <button class="accounts__button btn btn-primary" type="submit" th:if="${!accounts.isEmpty()}">
+                <span class="btn__text">Войти</span>
+            </button>
+        </form>
+    </section>
+</main>
+<footer class="context-page__footer"></footer>
+</body>
+</html>

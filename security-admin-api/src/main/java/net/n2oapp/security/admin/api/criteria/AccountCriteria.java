@@ -7,5 +7,15 @@ import lombok.Setter;
 @Setter
 public class AccountCriteria extends BaseCriteria {
 
+    public AccountCriteria() {
+    }
+
+    public AccountCriteria(String userName) {
+        super(0, 100);
+        this.username = userName;
+    }
+
     private Integer userId;
+
+    private String username;
 }

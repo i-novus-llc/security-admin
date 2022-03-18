@@ -16,6 +16,13 @@ public class RestAccountCriteria extends AccountCriteria {
         super.setUserId(userId);
     }
 
+    @QueryParam("username")
+    @Override
+    @ApiParam(value = "Уникальное имя пользователя")
+    public void setUsername(String username) {
+        super.setUsername(username);
+    }
+
     @QueryParam("page")
     @Override
     @ApiParam(value = "Номер страницы")
