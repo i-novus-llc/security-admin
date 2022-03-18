@@ -387,6 +387,7 @@ public class AuthProcessingTest {
         user.setPatronymic("testPatronymic");
 
         AccountEntity account = new AccountEntity();
+        account.setId(1);
         account.setUser(user);
         account.setRoleList(Stream.of(1, 2).map(id -> {
             RoleEntity role = new RoleEntity();
