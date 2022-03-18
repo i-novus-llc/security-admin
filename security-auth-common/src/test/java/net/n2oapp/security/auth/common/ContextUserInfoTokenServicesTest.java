@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.DefaultOAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -17,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -50,6 +52,13 @@ public class ContextUserInfoTokenServicesTest {
         assertTrue(oAuth2Authentication.getAuthorities().stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("PERMISSION_testPermission1")));
         assertTrue(oAuth2Authentication.getAuthorities().stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("PERMISSION_testPermission2")));
         assertTrue(oAuth2Authentication.getAuthorities().stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("SYSTEM_testSystems1")));
+    }
+
+    @Test
+    public void errorLoad() {
+        ContextUserInfoTokenServices tokenServices = new ContextUserInfoTokenServices("userInfoUri", "clientId");
+        Throwable thrown = catchThrowable(() -> tokenServices.loadAuthentication("token", 1));
+        assertTrue(thrown instanceof InvalidTokenException);
     }
 
     private ResponseEntity response() {
