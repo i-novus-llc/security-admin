@@ -5,6 +5,7 @@ import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserDetailsToken;
 import net.n2oapp.security.admin.api.model.UserForm;
+import net.n2oapp.security.admin.impl.repository.AccountRepository;
 import net.n2oapp.security.admin.impl.service.UserDetailsServiceImpl;
 import net.n2oapp.security.admin.impl.service.UserServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -32,6 +33,9 @@ public class UserDetailsServiceImplTest {
     @Autowired
     private UserServiceImpl userService;
 
+    @Autowired
+    private AccountRepository accountRepository;
+
     @Test
     public void loadUserDetailsTest() {
         User userDetails = detailsService.loadUserDetails(userDetailsToken());
@@ -39,16 +43,14 @@ public class UserDetailsServiceImplTest {
         assertEquals("testName", userDetails.getName());
         assertEquals("test@test.test", userDetails.getEmail());
         assertEquals("testSurname", userDetails.getSurname());
-        // todo SECURITY-396 нужна синхронизация пользователя
+        // todo SECURITY-396 UserDetailsServiceImpl.loadUserDetails на данный момент не отдает роли
 //        assertEquals(2, userDetails.getRoles().size());
+        assertEquals(2, accountRepository.findByUser_Id(userDetails.getId()).get(0).getRoleList().size());
         userService.delete(userDetails.getId());
 
         detailsService.setCreateUser(false);
         Throwable thrown = catchThrowable(() -> detailsService.loadUserDetails(userDetailsToken()));
         assertEquals("User testName testSurname doesn't registered in system", thrown.getMessage());
-
-        detailsService.setUpdateUser(true);
-        detailsService.setUpdateRoles(true);
 
         UserForm userForm = createUserForm();
 
@@ -60,11 +62,9 @@ public class UserDetailsServiceImplTest {
         assertEquals("testName", userDetails.getName());
         assertEquals("test@test.test", userDetails.getEmail());
         assertEquals("testSurname", userDetails.getSurname());
-//        todo SECURITY-396 нужна синхронизация пользователя
-//        assertEquals(1, userDetails.getOrganization().getId().intValue());
-//        assertEquals(1, userDetails.getDepartment().getId().intValue());
-//        assertEquals(1, userDetails.getRegion().getId().intValue());
+// todo SECURITY-396 UserDetailsServiceImpl.loadUserDetails на данный момент не отдает роли
 //        assertEquals(2, userDetails.getRoles().size());
+        assertEquals(2, accountRepository.findByUser_Id(userDetails.getId()).get(0).getRoleList().size());
 
         userService.delete(userDetails.getId());
     }

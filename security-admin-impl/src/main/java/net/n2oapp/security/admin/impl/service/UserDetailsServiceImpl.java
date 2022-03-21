@@ -2,10 +2,12 @@ package net.n2oapp.security.admin.impl.service;
 
 import net.n2oapp.security.admin.api.model.*;
 import net.n2oapp.security.admin.api.service.UserDetailsService;
+import net.n2oapp.security.admin.impl.entity.AccountEntity;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
 import net.n2oapp.security.admin.impl.exception.UserNotFoundAuthenticationException;
+import net.n2oapp.security.admin.impl.repository.AccountRepository;
 import net.n2oapp.security.admin.impl.repository.RoleRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,25 +24,25 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-import static org.springframework.util.StringUtils.hasText;
 
 @Service
 @Transactional
 @Primary
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    @Autowired
-    protected UserRepository userRepository;
+    private final static String DEFAULT_ACCOUNT_PREFIX = "Базовый аккаунт пользователя ";
 
     @Autowired
+    protected UserRepository userRepository;
+    @Autowired
     protected RoleRepository roleRepository;
+    @Autowired
+    protected AccountRepository accountRepository;
 
     @Value("${access.keycloak.ignore-roles:offline_access,uma_authorization}")
     private String[] ignoreRoles;
-
     @Value("${access.permission.enabled}")
     private Boolean permissionEnabled;
-
     @Value("${access.email-as-username:false}")
     private Boolean emailAsUsername;
 
@@ -47,62 +50,57 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private List<String> defaultRoles = new ArrayList<>();
 
-    private Boolean updateUser = true;
-
-    private Boolean updateRoles = true;
-
     @Override
     public User loadUserDetails(UserDetailsToken userDetails) {
         UserEntity userEntity = userRepository.findOneByUsernameIgnoreCase(Boolean.TRUE.equals(emailAsUsername) ? userDetails.getEmail() : userDetails.getUsername());
-        if (isNull(userEntity) && createUser) {
-            userEntity = new UserEntity();
-            userEntity.setUsername(Boolean.TRUE.equals(emailAsUsername) ? userDetails.getEmail() : userDetails.getUsername());
-            userEntity.setEmail(userDetails.getEmail());
-            userEntity.setSurname(userDetails.getSurname());
-            userEntity.setPatronymic(userDetails.getPatronymic());
-            userEntity.setName(userDetails.getName());
-            userEntity.setIsActive(true);
-            //            todo SECURITY-396
-//            userEntity.setExtUid(userDetails.getExtUid());
-//            userEntity.setExtSys(userDetails.getExternalSystem());
-//            if (nonNull(userDetails.getRoleNames()) && !userDetails.getRoleNames().isEmpty()) {
-//                userEntity.setRoleList(userDetails.getRoleNames().stream().map(this::getOrCreateRole).filter(Objects::nonNull).collect(Collectors.toList()));
-//            }
-            userRepository.save(userEntity);
-        } else if (isNull(userEntity) && !createUser) {
+        if (isNull(userEntity) && !createUser)
             throw new UserNotFoundAuthenticationException("User " + userDetails.getName() + " " + userDetails.getSurname() + " doesn't registered in system");
-        } else if (updateUser) {
-            userEntity.setIsActive(true);
-            //        todo SECURITY-396
-//            userEntity.setExtUid(hasText(userDetails.getExtUid()) ? userDetails.getExtUid() : null);
-            userEntity.setEmail(hasText(userDetails.getEmail()) ? userDetails.getEmail() : null);
-            userEntity.setPatronymic(hasText(userDetails.getPatronymic()) ? userDetails.getPatronymic() : userEntity.getPatronymic());
-            userEntity.setSurname(hasText(userDetails.getSurname()) ? userDetails.getSurname() : null);
-            userEntity.setName(hasText(userDetails.getName()) ? userDetails.getName() : null);
-            if (isNull(userDetails.getRoleNames()) && updateRoles) {
-                //            todo SECURITY-396
-//                userEntity.getRoleList().clear();
-            } else if (updateRoles) {
-                List<String> roleNamesCopy = new ArrayList<>(userDetails.getRoleNames());
-                List<RoleEntity> roleForRemove = new ArrayList<>();
-                //            todo SECURITY-396
-//                for (RoleEntity r : userEntity.getRoleList()) {
-//                    if (!userDetails.getRoleNames().contains(r.getCode())) {
-//                        roleForRemove.add(r);
-//                    } else {
-//                        roleNamesCopy.remove(r.getCode());
-//                    }
-//                }
-//                for (String s : ignoreRoles) {
-//                    roleNamesCopy.remove(s);
-//                }
-//                for (RoleEntity r : roleForRemove) {
-//                    userEntity.getRoleList().remove(r);
-//                }
-//                for (String r : roleNamesCopy) {
-//                    userEntity.getRoleList().add(getOrCreateRole(r));
-//                }
+
+        if (isNull(userEntity))
+            userEntity = new UserEntity();
+        userEntity.setUsername(Boolean.TRUE.equals(emailAsUsername) ? userDetails.getEmail() : userDetails.getUsername());
+        userEntity.setEmail(userDetails.getEmail());
+        userEntity.setSurname(userDetails.getSurname());
+        userEntity.setPatronymic(userDetails.getPatronymic());
+        userEntity.setName(userDetails.getName());
+        userEntity.setIsActive(true);
+        userRepository.save(userEntity);
+        if (isNull(userEntity.getAccounts()) || userEntity.getAccounts().size() < 2) {
+            AccountEntity accountEntity = CollectionUtils.firstElement(userEntity.getAccounts());
+            if (isNull(accountEntity)) {
+                accountEntity = new AccountEntity();
+                accountEntity.setUser(userEntity);
+                userEntity.setAccounts(List.of(accountEntity));
             }
+            accountEntity.setName(DEFAULT_ACCOUNT_PREFIX + userEntity.getUsername());
+            accountEntity.setUser(userEntity);
+            accountEntity.setIsActive(true);
+            accountEntity.setExternalSystem(userDetails.getExternalSystem());
+            accountEntity.setExternalUid(userDetails.getExtUid());
+
+
+            List<String> roleNamesCopy = new ArrayList<>(userDetails.getRoleNames());
+            List<RoleEntity> roleForRemove = new ArrayList<>();
+            if (isNull(accountEntity.getRoleList()))
+                accountEntity.setRoleList(new ArrayList<>());
+            for (RoleEntity r : accountEntity.getRoleList()) {
+                if (!userDetails.getRoleNames().contains(r.getCode())) {
+                    roleForRemove.add(r);
+                } else {
+                    roleNamesCopy.remove(r.getCode());
+                }
+            }
+            for (String s : ignoreRoles) {
+                roleNamesCopy.remove(s);
+            }
+            for (RoleEntity r : roleForRemove) {
+                accountEntity.getRoleList().remove(r);
+            }
+            for (String r : roleNamesCopy) {
+                accountEntity.getRoleList().add(getOrCreateRole(r));
+            }
+
+            accountRepository.save(accountEntity);
         }
 
         return model(userEntity);
@@ -120,10 +118,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             roleEntity = roleRepository.save(roleEntity);
         }
         return roleEntity;
-    }
-
-    private Role getRoleModel(String code) {
-        return model(roleRepository.findOneByCode(code));
     }
 
     private User model(UserEntity entity) {
@@ -147,44 +141,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             builder.append(entity.getPatronymic());
         }
         model.setFio(builder.toString());
-
-        //            todo SECURITY-396
-//        if (nonNull(entity.getRoleList()) && !entity.getRoleList().isEmpty()) {
-//            model.setRoles(entity.getRoleList().stream().map(this::model).collect(Collectors.toList()));
-//        } else if (!defaultRoles.isEmpty()) {
-//            model.setRoles(defaultRoles.stream().map(this::getRoleModel).filter(Objects::nonNull).collect(Collectors.toList()));
-//        }
-//
-//
-//        if (nonNull(entity.getDepartment())) {
-//            Department d = new Department();
-//            d.setId(entity.getDepartment().getId());
-//            d.setCode(entity.getDepartment().getCode());
-//            d.setName(entity.getDepartment().getName());
-//            model.setDepartment(d);
-//        }
-//
-//        if (nonNull(entity.getRegion())) {
-//            Region r = new Region();
-//            r.setId(entity.getRegion().getId());
-//            r.setCode(entity.getRegion().getCode());
-//            r.setOkato(entity.getRegion().getOkato());
-//            r.setName(entity.getRegion().getName());
-//            model.setRegion(r);
-//        }
-//
-//        if (nonNull(entity.getOrganization())) {
-//            Organization o = new Organization();
-//            o.setId(entity.getOrganization().getId());
-//            o.setCode(entity.getOrganization().getCode());
-//            o.setFullName(entity.getOrganization().getFullName());
-//            o.setOgrn(entity.getOrganization().getOgrn());
-//            o.setOkpo(entity.getOrganization().getOkpo());
-//            o.setShortName(entity.getOrganization().getShortName());
-//            model.setOrganization(o);
-//        }
-//
-//        model.setUserLevel(entity.getUserLevel());
 
         model.setExpirationDate(entity.getExpirationDate());
 
@@ -230,16 +186,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     public UserDetailsServiceImpl addDefaultRoles(String... role) {
         this.defaultRoles.addAll(Arrays.asList(role));
-        return this;
-    }
-
-    public UserDetailsServiceImpl setUpdateUser(Boolean updateUser) {
-        this.updateUser = updateUser;
-        return this;
-    }
-
-    public UserDetailsServiceImpl setUpdateRoles(Boolean updateRoles) {
-        this.updateRoles = updateRoles;
         return this;
     }
 }
