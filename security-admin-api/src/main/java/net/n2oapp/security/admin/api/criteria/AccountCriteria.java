@@ -11,7 +11,7 @@ public class AccountCriteria extends BaseCriteria {
     }
 
     public AccountCriteria(String userName) {
-        super(0, 100);
+        super(0, Integer.MAX_VALUE);
         this.username = userName;
     }
 
