@@ -2,16 +2,16 @@ package net.n2oapp.security.admin.auth.server.oauth;
 
 import net.n2oapp.security.admin.api.model.Department;
 import net.n2oapp.security.admin.api.oauth.UserInfoEnricher;
+import net.n2oapp.security.admin.impl.entity.AccountEntity;
 import net.n2oapp.security.admin.impl.entity.DepartmentEntity;
-import net.n2oapp.security.admin.impl.entity.UserEntity;
 import org.springframework.stereotype.Component;
 
 import static java.util.Objects.isNull;
 
 @Component
-public class DepartmentEnricher implements UserInfoEnricher<UserEntity> {
+public class DepartmentEnricher implements UserInfoEnricher<AccountEntity> {
     @Override
-    public Object buildValue(UserEntity source) {
+    public Object buildValue(AccountEntity source) {
         DepartmentEntity departmentEntity = source.getDepartment();
         if (isNull(departmentEntity)) return null;
 

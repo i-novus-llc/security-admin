@@ -1,23 +1,25 @@
 package net.n2oapp.security.admin.service;
 
 import net.n2oapp.platform.i18n.UserException;
+import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
-import net.n2oapp.security.admin.api.model.*;
+import net.n2oapp.security.admin.api.model.User;
+import net.n2oapp.security.admin.api.model.UserForm;
+import net.n2oapp.security.admin.api.model.UserRegisterForm;
 import net.n2oapp.security.admin.base.UserRoleServiceTestBase;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -27,36 +29,36 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Тест сервиса управления пользователями
  */
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @TestPropertySource("classpath:test.properties")
+@EnableEmbeddedPg
 public class UserServiceImplTest extends UserRoleServiceTestBase {
 
     @Captor
     private ArgumentCaptor<MimeMessage> mimeMessageArgumentCaptor;
 
-    @Before
+    @BeforeEach
     public void before() {
         Mockito.doNothing().when(emailSender).send(mimeMessageArgumentCaptor.capture());
         Mockito.doReturn(new MimeMessage(Session.getDefaultInstance(new Properties()))).when(emailSender).createMimeMessage();
     }
 
     @Test
-    public void testUp() throws Exception {
+    public void testUp() {
         assertNotNull(userService);
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() {
         org.springframework.security.core.userdetails.User contextUser = new org.springframework.security.core.userdetails.User("SelfDelete", "pass", new ArrayList<>());
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(contextUser, new Object());
@@ -69,16 +71,12 @@ public class UserServiceImplTest extends UserRoleServiceTestBase {
         user.setUsername("testUser");
         user.setEmail("test@test.ru");
         user.setPassword("1234ABCabc,");
-        user.setAccountTypeCode("testAccountTypeCode");
         user.setName("name");
         user.setSurname("surname");
         user.setPatronymic("patronymic");
         user.setIsActive(true);
         user.setSendPasswordToEmail(true);
         User result = userService.register(user);
-        assertEquals(1, result.getRoles().size());
-        assertEquals(UserLevel.PERSONAL, result.getUserLevel());
-        assertEquals(UserStatus.REGISTERED, result.getStatus());
         assertEquals("testUser", result.getUsername());
         assertEquals("test@test.ru", result.getEmail());
         assertEquals("name", result.getName());
@@ -104,7 +102,6 @@ public class UserServiceImplTest extends UserRoleServiceTestBase {
         user.setUsername("testTemporaryUser");
         user.setEmail("testTemporary@test.ru");
         user.setPassword("1234ABCabc,");
-        user.setAccountTypeCode("testAccountTypeCode");
         user.setName("name");
         user.setSurname("surname");
         user.setPatronymic("patronymic");
@@ -118,9 +115,6 @@ public class UserServiceImplTest extends UserRoleServiceTestBase {
 
         assertEquals(user.getExpirationDate(), userEntity.getExpirationDate());
 
-        assertEquals(1, result.getRoles().size());
-        assertEquals(UserLevel.PERSONAL, result.getUserLevel());
-        assertEquals(UserStatus.REGISTERED, result.getStatus());
         assertEquals("testTemporaryUser", result.getUsername());
         assertEquals("testTemporary@test.ru", result.getEmail());
         assertEquals("name", result.getName());
@@ -271,10 +265,7 @@ public class UserServiceImplTest extends UserRoleServiceTestBase {
         user.setEmail("SelfDelete@gmail.com");
         User result = userService.create(user);
 
-        Throwable thrown = catchThrowable(() -> {
-            userService.delete(result.getId());
-        });
-        assertThat(thrown).isInstanceOf(UserException.class);
+        Throwable thrown = assertThrows(UserException.class, () -> userService.delete(result.getId()));
         assertEquals("exception.selfDelete", thrown.getMessage());
 
         SecurityContextHolder.getContext().setAuthentication(null);
@@ -298,86 +289,99 @@ public class UserServiceImplTest extends UserRoleServiceTestBase {
         assertTrue(userService.findAll(criteria).isEmpty());
     }
 
-    /**
-     * Проверка, что при заданном критерии по уровню пользователя, будет возвращено корректное число пользователей
-     * Также проверяется, что поиск не чувствителен к регистру
-     */
-    @Test
-    public void findAllUsersByUserLevel() {
-        UserCriteria criteria = new UserCriteria();
-        criteria.setUserLevel("federal");
-        assertThat(userService.findAll(criteria).getTotalElements()).isEqualTo(1);
-    }
-
     @Test
     public void findAllUsersByLastActionDate() {
         UserCriteria criteria = new UserCriteria();
         criteria.setLastActionDate(LocalDateTime.now(Clock.systemUTC()));
-        assertThat(userService.findAll(criteria).getTotalElements()).isEqualTo(0);
+        assertEquals(0, userService.findAll(criteria).getTotalElements());
         UserRegisterForm user = new UserRegisterForm();
         user.setUsername("testUser2");
         user.setEmail("test2@test.ru");
         user.setPassword("1234ABCabc,");
-        user.setAccountTypeCode("testAccountTypeCode");
         User result = userService.register(user);
-        assertThat(userService.findAll(criteria).getTotalElements()).isEqualTo(1);
+        assertEquals(1, userService.findAll(criteria).getTotalElements());
         userService.delete(result.getId());
     }
 
     @Test
     public void testFindAllByCriteria() {
-        UserForm userForm = new UserForm();
-        userForm.setUsername("username");
-        userForm.setEmail("username@username.username");
-        userForm.setAccountTypeCode("testAccountTypeCode");
-        userForm.setPassword("1234ABCabc,");
-        userForm.setPasswordCheck(userForm.getPassword());
-        userForm.setDepartmentId(1);
-        userForm.setName("name");
-        userForm.setSurname("surname");
-        userForm.setPatronymic("patronymic");
-        userForm.setRegionId(1);
-        userForm.setOrganizationId(1);
-        userForm.setSnils("124-985-753 00");
-        userForm.setIsActive(true);
-        List<Integer> roleIds = new ArrayList<>();
-        roleIds.add(1);
-        userForm.setRoles(roleIds);
-        List<String> roleCodes = new ArrayList<>();
-        roleCodes.add("code1");
-        List<Integer> orgIds = new ArrayList<>();
-        orgIds.add(1);
-
-        User user = userService.create(userForm);
-
+        // empty criteria
         UserCriteria criteria = new UserCriteria();
-        criteria.setUsername("username");
-        criteria.setEmail("username@username.username");
-        criteria.setFio("surname name patronymic");
+        List<User> users = userService.findAll(criteria).getContent();
+        assertEquals(2, users.size());
+
+        // find by username
+        criteria.setUsername("test");
+        users = userService.findAll(criteria).getContent();
+        assertEquals(1, users.size());
+        assertEquals(1, (int) users.get(0).getId());
+        assertEquals("test", users.get(0).getUsername());
+
+        // find by email
+        criteria.setUsername(null);
+        criteria.setEmail("example2");
+        users = userService.findAll(criteria).getContent();
+        assertEquals(1, users.size());
+        assertEquals(2, (int) users.get(0).getId());
+        assertEquals("test@example2.com", users.get(0).getEmail());
+
+        // find by fio
+        criteria.setEmail(null);
+        criteria.setFio("surname2");
+        users = userService.findAll(criteria).getContent();
+        assertEquals(1, users.size());
+        assertEquals(2, (int) users.get(0).getId());
+        assertEquals("surname2", users.get(0).getSurname());
+
+        // find by isActive
+        criteria.setFio(null);
         criteria.setIsActive("yes");
-        criteria.setRoleIds(roleIds);
-        criteria.setRoleCodes(roleCodes);
-        criteria.setRegionId(1);
+        users = userService.findAll(criteria).getContent();
+        assertEquals(1, users.size());
+        assertEquals(1, (int) users.get(0).getId());
+        assertEquals(true, users.get(0).getIsActive());
+
+        // find by regionId
+        criteria.setIsActive(null);
+        criteria.setRegionId(2);
+        users = userService.findAll(criteria).getContent();
+        assertEquals(1, users.size());
+        assertEquals(2, (int) users.get(0).getId());
+
+        // find by departmentId
+        criteria.setRegionId(null);
         criteria.setDepartmentId(1);
-        criteria.setOrganizations(orgIds);
+        users = userService.findAll(criteria).getContent();
+        assertEquals(1, users.size());
+        assertEquals(1, (int) users.get(0).getId());
 
-        Page<User> users = userService.findAll(criteria);
+        // find by system
+        criteria.setDepartmentId(null);
+        criteria.setSystems(Collections.singletonList("system2"));
+        users = userService.findAll(criteria).getContent();
+        assertEquals(1, users.size());
+        assertEquals(1, (int) users.get(0).getId());
 
-        assertEquals(1, users.getContent().size());
-        assertEquals("username", users.getContent().get(0).getUsername());
-        assertEquals("surname name patronymic", users.getContent().get(0).getFio());
-        assertEquals("username@username.username", users.getContent().get(0).getEmail());
-        assertEquals("surname", users.getContent().get(0).getSurname());
-        assertEquals("name", users.getContent().get(0).getName());
-        assertEquals("patronymic", users.getContent().get(0).getPatronymic());
-        assertEquals("124-985-753 00", users.getContent().get(0).getSnils());
-        assertEquals(UserLevel.PERSONAL, users.getContent().get(0).getUserLevel());
-        assertEquals(UserStatus.REGISTERED, users.getContent().get(0).getStatus());
-        assertThat(users.getContent().get(0).getDepartment().getId()).isEqualTo(1);
-        assertThat(users.getContent().get(0).getRegion().getId()).isEqualTo(1);
-        assertThat(users.getContent().get(0).getOrganization().getId()).isEqualTo(1);
-        assertTrue(users.getContent().get(0).getIsActive());
-        userService.delete(user.getId());
+        // find by roleIds
+        criteria.setSystems(null);
+        criteria.setRoleIds(Collections.singletonList(2));
+        users = userService.findAll(criteria).getContent();
+        assertEquals(1, users.size());
+        assertEquals(1, (int) users.get(0).getId());
+
+        // find by roleCodes
+        criteria.setRoleIds(null);
+        criteria.setRoleCodes(Collections.singletonList("code2"));
+        users = userService.findAll(criteria).getContent();
+        assertEquals(1, users.size());
+        assertEquals(1, (int) users.get(0).getId());
+
+        // find by organizationId
+        criteria.setRoleCodes(null);
+        criteria.setOrganizationId(2);
+        users = userService.findAll(criteria).getContent();
+        assertEquals(1, users.size());
+        assertEquals(2, (int) users.get(0).getId());
     }
 
     @Test

@@ -120,7 +120,7 @@ public interface UserRestService {
     @ApiOperation("Сбросить пароль")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Пароль сброшен"),
-            @ApiResponse(code = 400, message = "Неккоректный запрос. Отсутвуют обязательные поля или заполнены некорректными данными")
+            @ApiResponse(code = 400, message = "Некорректный запрос. Отсутствуют обязательные поля или заполнены некорректными данными")
     })
     void resetPassword(@ApiParam(value = "Пользователь") UserForm user);
 

@@ -38,6 +38,7 @@ public class GatewayPrincipalExtractor implements PrincipalExtractor, Authoritie
     private static final String NAME_KEY = "name";
     private static final String ORGANIZATION = "organization";
     private static final String REGION = "region";
+    private static final String ACCOUNT_ID = "accountId";
 
     @Override
     public List<GrantedAuthority> extractAuthorities(Map<String, Object> map) {
@@ -49,6 +50,7 @@ public class GatewayPrincipalExtractor implements PrincipalExtractor, Authoritie
         //todo учесть что параметры в кейклок могут быть названы по разному, смотри AuthoritiesPrincipalExtractor
         User user = new User((String) map.get(USERNAME), "N/A", extractAuthorities(map), (String) map.get(SURNAME), (String) map.get(NAME),
                 (String) map.get(PATRONYMIC), (String) map.get(EMAIL));
+        user.setAccountId((String) map.get(ACCOUNT_ID));
 
         LinkedHashMap department = (LinkedHashMap) map.get(DEPARTMENT);
 

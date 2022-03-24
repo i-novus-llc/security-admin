@@ -2,13 +2,11 @@ package net.n2oapp.security.admin.auth.server.oauth;
 
 import net.n2oapp.security.admin.api.oauth.UserInfoEnricher;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
-import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
 import static java.util.Objects.nonNull;
 
-@Component
 public class SimpleUserDataEnricher implements UserInfoEnricher<UserEntity> {
 
     public static final String NAME = "name";
@@ -16,7 +14,6 @@ public class SimpleUserDataEnricher implements UserInfoEnricher<UserEntity> {
     public static final String EMAIL = "email";
     public static final String SURNAME = "surname";
     public static final String PATRONYMIC = "patronymic";
-    public static final String USER_LEVEL = "userLevel";
 
     @Override
     public void enrich(Map<String, Object> userInfo, UserEntity source) {
@@ -38,10 +35,6 @@ public class SimpleUserDataEnricher implements UserInfoEnricher<UserEntity> {
 
         if (nonNull(source.getPatronymic())) {
             userInfo.put(PATRONYMIC, source.getPatronymic());
-        }
-
-        if (nonNull(source.getUserLevel())) {
-            userInfo.put(USER_LEVEL, source.getUserLevel());
         }
     }
 

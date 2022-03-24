@@ -1,11 +1,11 @@
 package net.n2oapp.security.admin.impl.service;
 
 import net.n2oapp.platform.i18n.UserException;
+import net.n2oapp.security.admin.api.audit.AuditService;
 import net.n2oapp.security.admin.api.criteria.RoleCriteria;
 import net.n2oapp.security.admin.api.model.*;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.RoleService;
-import net.n2oapp.security.admin.api.audit.AuditService;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.entity.RoleEntity;
 import net.n2oapp.security.admin.impl.entity.SystemEntity;
@@ -156,11 +156,6 @@ public class RoleServiceImpl implements RoleService {
         return new PageImpl<>(modelRoles);
     }
 
-    @Override
-    public Integer countUsersWithRole(Integer roleId) {
-        return userRepository.countUsersWithRoleId(roleId);
-    }
-
     private RoleEntity entity(RoleForm model) {
         if (model == null) return null;
         RoleEntity entity = new RoleEntity();
@@ -253,7 +248,7 @@ public class RoleServiceImpl implements RoleService {
      * Запрещено удалять роль, если существует пользователь, клиент, организация или тип аккаунта с такой ролью
      */
     private void checkRoleIsUsed(RoleEntity entity) {
-        if (!entity.getUserList().isEmpty())
+        if (!entity.getAccountList().isEmpty())
             throw new UserException("exception.usernameWithSuchRoleExists");
         if (!entity.getAccountTypeRoleList().isEmpty())
             throw new UserException("exception.accountTypeWithSuchRoleExists");

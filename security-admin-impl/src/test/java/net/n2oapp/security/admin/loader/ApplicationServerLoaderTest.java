@@ -7,20 +7,20 @@ import net.n2oapp.security.admin.impl.loader.model.AppModel;
 import net.n2oapp.security.admin.impl.repository.ApplicationRepository;
 import net.n2oapp.security.admin.impl.repository.ClientRepository;
 import net.n2oapp.security.admin.impl.repository.SystemRepository;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test.properties")
 @EnableEmbeddedPg
@@ -44,7 +44,7 @@ public class ApplicationServerLoaderTest {
         system.setName("name");
         systemRepository.save(system);
 
-        assertThat(applicationRepository.findAll().size(), is(0));
+        assertEquals(0, applicationRepository.findAll().size());
 
         //создание
         AppModel app1 = new AppModel();
@@ -55,10 +55,10 @@ public class ApplicationServerLoaderTest {
         apps.add(app1);
 
         appLoader.load(apps, "testSystem");
-        assertThat(applicationRepository.findAll().size(), is(1));
-        assertThat(applicationRepository.findById("testApp1").isPresent(), is(true));
-        assertThat(clientRepository.findAll().size(), is(2));
-        assertThat(clientRepository.findById("testApp1").isPresent(), is(true));
+        assertEquals(1, applicationRepository.findAll().size());
+        assertTrue(applicationRepository.findById("testApp1").isPresent());
+        assertEquals(2, clientRepository.findAll().size());
+        assertTrue(clientRepository.findById("testApp1").isPresent());
 
         //удаление ранее добавленного, создание нового
         apps.clear();
@@ -69,10 +69,10 @@ public class ApplicationServerLoaderTest {
         apps.add(app2);
 
         appLoader.load(apps, "testSystem");
-        assertThat(applicationRepository.findAll().size(), is(1));
-        assertThat(applicationRepository.findById("testApp2").isPresent(), is(true));
-        assertThat(clientRepository.findAll().size(), is(2));
-        assertThat(clientRepository.findById("testApp2").isPresent(), is(true));
+        assertEquals(1, applicationRepository.findAll().size());
+        assertTrue(applicationRepository.findById("testApp2").isPresent());
+        assertEquals(2, clientRepository.findAll().size());
+        assertTrue(clientRepository.findById("testApp2").isPresent());
 
         //Приложение без клиента
         AppModel app3 = new AppModel();
@@ -81,7 +81,7 @@ public class ApplicationServerLoaderTest {
         apps.add(app3);
 
         appLoader.load(apps, "testSystem");
-        assertThat(applicationRepository.findAll().size(), is(2));
-        assertThat(clientRepository.findAll().size(), is(2));
+        assertEquals(2, applicationRepository.findAll().size());
+        assertEquals(2, clientRepository.findAll().size());
     }
 }

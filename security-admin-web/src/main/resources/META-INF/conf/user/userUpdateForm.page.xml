@@ -1,113 +1,108 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-2.0"
-             name="Изменение карточки пользователя" object-id="${access.user.object.id}">
-    <form query-id="${access.user.query.id}">
-        <fields>
-            <row>
-                <col size="4">
-                    <input-text id="username" enabled="false">
-                        <dependencies>
-                            <requiring>!${access.email-as-username}</requiring>
-                            <visibility>!${access.email-as-username}</visibility>
-                        </dependencies>
-                    </input-text>
-                </col>
-                <col size="4">
-                    <input-text id="email" label="e-mail">
-                        <dependencies>
-                            <requiring>${access.user.email-required} || ${access.email-as-username}</requiring>
-                            <enabling>!${access.email-as-username}</enabling>
-                        </dependencies>
-                        <validations white-list="emailValidation"/>
-                    </input-text>
-                </col>
-            </row>
-            <row>
-                <col size="4">
-                    <password id="password" label="Новый пароль"
-                              visible="${access.user.password.input}" eye="false">
-                        <validations white-list="passwordLengthValidation,passwordLowerCaseValidation,passwordUpperCaseValidation,passwordDigitsValidation,passwordSpecialSymbolsValidation,passwordCorrectSymbolsValidation"/>
-                    </password>
-                </col>
-                <col size="4">
-                    <password id="passwordCheck" label="Подтвердить пароль"
-                              visible="${access.user.password.input}" eye="false">
-                        <validations white-list="passwordCheckValidation"/>
-                        <dependencies>
-                            <enabling on="password">typeof password != 'undefined' &amp;&amp; password != null &amp;&amp;
-                                password != ''
-                            </enabling>
-                        </dependencies>
-                    </password>
-                </col>
-            </row>
-            <row>
-                <col size="4">
-                    <input-text id="surname" required="${access.user.surname.required}" length="100"/>
-                </col>
-                <col size="4">
-                    <input-text id="name" required="${access.user.name.required}" length="100"/>
-                </col>
-                <col size="4">
-                    <input-text id="patronymic" length="100"/>
-                </col>
-            </row>
-            <row>
-                <col size="4">
-                    <masked-input id="snils" mask="999-999-999 99" visible="${access.user.snils-visible}">
-                        <validations white-list="snilsValidation"/>
-                    </masked-input>
-                </col>
-            </row>
-            <row>
-                <col size="4">
-                    <input-select id="userLevel" query-id="userLevel" label-field-id="name"
-                                  visible="${access.level.enabled}" label="Уровень пользователя">
-                    </input-select>
-                </col>
-                <col size="4">
-                    <input-select id="department" query-id="department" label-field-id="name" label="Департамент">
-                        <dependencies>
-                            <visibility on="userLevel">userLevel.id == 'FEDERAL' &amp;&amp; ${access.level.department}
-                            </visibility>
-                            <set-value on="userLevel" apply-on-init="false">return null;</set-value>
-                        </dependencies>
-                    </input-select>
-                    <input-select id="region" query-id="region" label-field-id="name" label="Регион">
-                        <dependencies>
-                            <requiring on="userLevel">userLevel.id == 'REGIONAL'</requiring>
-                            <visibility on="userLevel">userLevel.id == 'REGIONAL' || userLevel.id == 'ORGANIZATION'</visibility>
-                            <set-value on="userLevel" apply-on-init="false">return null;</set-value>
-                        </dependencies>
-                    </input-select>
-                </col>
-                <col size="4">
-                    <input-select id="organization" query-id="organization" label-field-id="shortName" label="Организация">
-                        <dependencies>
-                            <requiring on="userLevel">userLevel.id == 'ORGANIZATION'</requiring>
-                            <visibility on="userLevel">userLevel.id == 'ORGANIZATION'</visibility>
-                            <set-value on="userLevel" apply-on-init="false">return null;</set-value>
-                        </dependencies>
-                    </input-select>
-                </col>
-            </row>
-            <row>
-                <col size="10">
-                    <input-select-tree id="roles" ajax="false" label="Роли" checkboxes="true" required="true"
-                                       size="1000" checking-strategy="child"
-                                       parent-field-id="systemId" query-id="roleGroupedBySystem" search-field-id="name">
-                        <dependencies>
-                            <set-value on="userLevel" apply-on-init="false">return null;</set-value>
-                        </dependencies>
-                        <pre-filters>
-                            <eq field-id="userLevel.id" value="{userLevel.id}"/>
-                        </pre-filters>
-                    </input-select-tree>
-                </col>
-                <col size="2" class="d-flex align-items-end">
-                    <checkbox id="isActive" default-value="true"/>
-                </col>
-            </row>
-        </fields>
-    </form>
-</simple-page>
+<page xmlns="http://n2oapp.net/framework/config/schema/page-3.0"
+      name="Изменение карточки пользователя" object-id="${access.user.object.id}">
+    <regions>
+        <form id="main" query-id="${access.user.query.id}" route="/">
+            <pre-filters>
+                <eq field-id="id" param="user_id"/>
+            </pre-filters>
+            <fields>
+                <row>
+                    <col size="4">
+                        <input-text id="username" enabled="false">
+                            <dependencies>
+                                <requiring>!${access.email-as-username}</requiring>
+                                <visibility>!${access.email-as-username}</visibility>
+                            </dependencies>
+                        </input-text>
+                    </col>
+                    <col size="4">
+                        <input-text id="email" label="e-mail">
+                            <dependencies>
+                                <requiring>${access.user.email-required} || ${access.email-as-username}</requiring>
+                                <enabling>!${access.email-as-username}</enabling>
+                            </dependencies>
+                            <validations white-list="emailValidation"/>
+                        </input-text>
+                    </col>
+                </row>
+                <row>
+                    <col size="4">
+                        <password id="password" label="Новый пароль"
+                                  visible="${access.user.password.input}" eye="false">
+                            <validations
+                                    white-list="passwordLengthValidation,passwordLowerCaseValidation,passwordUpperCaseValidation,passwordDigitsValidation,passwordSpecialSymbolsValidation,passwordCorrectSymbolsValidation"/>
+                        </password>
+                    </col>
+                    <col size="4">
+                        <password id="passwordCheck" label="Подтвердить пароль"
+                                  visible="${access.user.password.input}" eye="false">
+                            <validations white-list="passwordCheckValidation"/>
+                            <dependencies>
+                                <enabling on="password">typeof password != 'undefined' &amp;&amp; password != null &amp;&amp;
+                                    password != ''
+                                </enabling>
+                            </dependencies>
+                        </password>
+                    </col>
+                </row>
+                <row>
+                    <col size="4">
+                        <input-text id="surname" required="${access.user.surname.required}" length="100"/>
+                    </col>
+                    <col size="4">
+                        <input-text id="name" required="${access.user.name.required}" length="100"/>
+                    </col>
+                    <col size="4">
+                        <input-text id="patronymic" length="100"/>
+                    </col>
+                </row>
+                <row>
+                    <col size="4">
+                        <masked-input id="snils" mask="999-999-999 99" visible="${access.user.snils-visible}">
+                            <validations white-list="snilsValidation"/>
+                        </masked-input>
+                    </col>
+                </row>
+            </fields>
+        </form>
+        <line collapsible="false" label="Аккаунты пользователя">
+            <table id="accounts" query-id="account" depends-on="main" master-field-id="id"
+                   detail-field-id="userId">
+                <columns>
+                    <column text-field-id="name" label="Наименование"/>
+                    <column text-field-id="roleNames" label="Роли">
+                        <list/>
+                    </column>
+                    <column text-field-id="isActive" label="Активность">
+                        <checkbox enabled="${access.accounts.change-activity-enabled}">
+                            <invoke route="/changeAccountActive" operation-id="changeAccountActive"/>
+                        </checkbox>
+                    </column>
+                    <column text-field-id="actions" label=" ">
+                        <toolbar>
+                            <button id="delete" label="Удалить" type="icon" icon="fa fa-trash">
+                                <invoke operation-id="delete"/>
+                            </button>
+                        </toolbar>
+                    </column>
+                </columns>
+                <rows>
+                    <click>
+                        <open-page page-id="accountUpdateForm" submit-operation-id="update" route="/:account_id/update"
+                                   object-id="account" detail-field-id="id">
+                            <path-param name="account_id" value="{id}"/>
+                        </open-page>
+                    </click>
+                </rows>
+                <toolbar>
+                    <button id="createAccount" label="Создать" disable-on-empty-model="false">
+                        <open-page page-id="accountForm" submit-operation-id="create"
+                                   object-id="account" upload="defaults" route="/create">
+                        </open-page>
+                    </button>
+                </toolbar>
+            </table>
+        </line>
+    </regions>
+</page>

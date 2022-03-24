@@ -1,30 +1,31 @@
 package net.n2oapp.security.admin.service;
 
+import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
 import net.n2oapp.security.admin.api.criteria.OrgCategoryCriteria;
 import net.n2oapp.security.admin.api.criteria.OrganizationCriteria;
 import net.n2oapp.security.admin.api.model.Organization;
 import net.n2oapp.security.admin.impl.service.OrganizationServiceImpl;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Тест сервиса управления организациями
  */
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @TestPropertySource("classpath:test.properties")
+@EnableEmbeddedPg
 public class OrganizationServiceImplTest {
 
     @Autowired
@@ -35,19 +36,19 @@ public class OrganizationServiceImplTest {
         String id = "2";
         Organization organizationResponse = organizationService.create(prepareOrgRequest(id));
         assertNotNull(organizationResponse.getId());
-        assertThat(organizationResponse.getCode(), is(id));
-        assertThat(organizationResponse.getShortName(), is(id));
-        assertThat(organizationResponse.getOgrn(), is(id));
-        assertThat(organizationResponse.getOkpo(), is(id));
-        assertThat(organizationResponse.getFullName(), is(id));
-        assertThat(organizationResponse.getInn(), is(id));
-        assertThat(organizationResponse.getKpp(), is(id));
-        assertThat(organizationResponse.getLegalAddress(), is(id));
-        assertThat(organizationResponse.getEmail(), is(id));
-        assertThat(organizationResponse.getExtUid(), is(id));
-        assertThat(organizationResponse.getRoles().size(), is(2));
-        assertThat(organizationResponse.getRoles().get(0).getId(), is(100));
-        assertThat(organizationResponse.getRoles().get(1).getId(), is(101));
+        assertEquals(id, organizationResponse.getCode());
+        assertEquals(id, organizationResponse.getShortName());
+        assertEquals(id, organizationResponse.getOgrn());
+        assertEquals(id, organizationResponse.getOkpo());
+        assertEquals(id, organizationResponse.getFullName());
+        assertEquals(id, organizationResponse.getInn());
+        assertEquals(id, organizationResponse.getKpp());
+        assertEquals(id, organizationResponse.getLegalAddress());
+        assertEquals(id, organizationResponse.getEmail());
+        assertEquals(id, organizationResponse.getExtUid());
+        assertEquals(2, organizationResponse.getRoles().size());
+        assertEquals(100, organizationResponse.getRoles().get(0).getId());
+        assertEquals(101, organizationResponse.getRoles().get(1).getId());
     }
 
     @Test
@@ -55,17 +56,17 @@ public class OrganizationServiceImplTest {
         Organization organizationResponse = organizationService.create(prepareOrgRequest("8"));
 
         Throwable thrown = catchThrowable(() -> organizationService.create(organizationResponse));
-        assertThat(thrown.getMessage(), is("exception.uniqueOrganization"));
+        assertEquals("exception.uniqueOrganization", thrown.getMessage());
 
         organizationResponse.setId(null);
         organizationResponse.setCode("8");
         thrown = catchThrowable(() -> organizationService.create(organizationResponse));
-        assertThat(thrown.getMessage(), is("exception.uniqueOrganizationCode"));
+        assertEquals("exception.uniqueOrganizationCode", thrown.getMessage());
 
         organizationResponse.setCode("2463242");
         organizationResponse.setOgrn("8");
         thrown = catchThrowable(() -> organizationService.create(organizationResponse));
-        assertThat(thrown.getMessage(), is("exception.uniqueOgrn"));
+        assertEquals("exception.uniqueOgrn", thrown.getMessage());
     }
 
     @Test
@@ -75,18 +76,18 @@ public class OrganizationServiceImplTest {
 
         organizationResponse.setId(null);
         Throwable thrown = catchThrowable(() -> organizationService.update(organizationResponse));
-        assertThat(thrown.getMessage(), is("exception.NullOrganizationId"));
+        assertEquals("exception.NullOrganizationId", thrown.getMessage());
 
         organizationResponse.setId(9999999);
         thrown = catchThrowable(() -> organizationService.update(organizationResponse));
-        assertThat(thrown.getMessage(), is("exception.OrganizationNotFound"));
+        assertEquals("exception.OrganizationNotFound", thrown.getMessage());
 
         organizationService.create(prepareOrgRequest("10"));
 
         organizationResponse.setId(orgId);
         organizationResponse.setCode("10");
         thrown = catchThrowable(() -> organizationService.update(organizationResponse));
-        assertThat(thrown.getMessage(), is("exception.uniqueOrganizationCode"));
+        assertEquals("exception.uniqueOrganizationCode", thrown.getMessage());
     }
 
     @Test
@@ -104,16 +105,16 @@ public class OrganizationServiceImplTest {
         organizationResponse.setEmail("4");
         organizationResponse = organizationService.update(organizationResponse);
 
-        assertThat(organizationResponse.getId(), is(orgId));
-        assertThat(organizationResponse.getCode(), is("99"));
-        assertThat(organizationResponse.getShortName(), is("4"));
-        assertThat(organizationResponse.getOgrn(), is("4"));
-        assertThat(organizationResponse.getOkpo(), is("4"));
-        assertThat(organizationResponse.getFullName(), is("4"));
-        assertThat(organizationResponse.getInn(), is("4"));
-        assertThat(organizationResponse.getKpp(), is("4"));
-        assertThat(organizationResponse.getLegalAddress(), is("4"));
-        assertThat(organizationResponse.getEmail(), is("4"));
+        assertEquals(orgId, organizationResponse.getId());
+        assertEquals("99", organizationResponse.getCode());
+        assertEquals("4", organizationResponse.getShortName());
+        assertEquals("4", organizationResponse.getOgrn());
+        assertEquals("4", organizationResponse.getOkpo());
+        assertEquals("4", organizationResponse.getFullName());
+        assertEquals("4", organizationResponse.getInn());
+        assertEquals("4", organizationResponse.getKpp());
+        assertEquals("4", organizationResponse.getLegalAddress());
+        assertEquals("4", organizationResponse.getEmail());
     }
 
     @Test
@@ -121,14 +122,14 @@ public class OrganizationServiceImplTest {
         Organization organizationResponse = organizationService.create(prepareOrgRequest("6"));
         organizationService.delete(organizationResponse.getId());
         Throwable thrown = catchThrowable(() -> organizationService.delete(organizationResponse.getId()));
-        assertThat(thrown.getMessage(), is("exception.OrganizationNotFound"));
+        assertEquals("exception.OrganizationNotFound", thrown.getMessage());
     }
 
     @Test
     public void findOrg() {
         Organization organization = organizationService.create(prepareOrgRequest("7"));
         Organization response = organizationService.find(organization.getId());
-        assertThat(response.getId(), is(organization.getId()));
+        assertEquals(organization.getId(), response.getId());
     }
 
     @Test
@@ -136,28 +137,28 @@ public class OrganizationServiceImplTest {
         OrganizationCriteria criteria = new OrganizationCriteria();
         criteria.setInn("test_inn6");
         List<Organization> organizations = organizationService.findAll(criteria).getContent();
-        assertThat(organizations.size(), is(1));
-        assertThat(organizations.get(0).getCode(), is("test_code6"));
+        assertEquals(1, organizations.size());
+        assertEquals("test_code6", organizations.get(0).getCode());
         criteria.setOrders(null);
         assertNotNull(organizationService.findAll(criteria).getContent());
 
         criteria = new OrganizationCriteria();
         criteria.setOgrn("test_ogrn4");
         organizations = organizationService.findAll(criteria).getContent();
-        assertThat(organizations.size(), is(1));
-        assertThat(organizations.get(0).getCode(), is("test_code4"));
+        assertEquals(1, organizations.size());
+        assertEquals("test_code4", organizations.get(0).getCode());
 
         criteria = new OrganizationCriteria();
         criteria.setName("test_full_name5");
         organizations = organizationService.findAll(criteria).getContent();
-        assertThat(organizations.size(), is(1));
-        assertThat(organizations.get(0).getCode(), is("test_code5"));
+        assertEquals(1, organizations.size());
+        assertEquals("test_code5", organizations.get(0).getCode());
 
         criteria = new OrganizationCriteria();
         criteria.setShortName("test_short_name2");
         organizations = organizationService.findAll(criteria).getContent();
-        assertThat(organizations.size(), is(1));
-        assertThat(organizations.get(0).getCode(), is("test_code2"));
+        assertEquals(1, organizations.size());
+        assertEquals("test_code2", organizations.get(0).getCode());
     }
 
     @Test

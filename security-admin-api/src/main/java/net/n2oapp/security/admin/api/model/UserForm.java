@@ -23,7 +23,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * Модель пользователя для actions
@@ -73,14 +72,8 @@ public class UserForm {
     @ApiModelProperty(value = "Активен ли пользователь")
     private Boolean isActive;
 
-    @ApiModelProperty(value = "Список идентификаторов ролей")
-    private List<Integer> roles;
-
     @ApiModelProperty(value = "СНИЛС пользователя")
     private String snils;
-
-    @ApiModelProperty(value = "Уровень пользователя")
-    private String userLevel;
 
     @ApiModelProperty(value = "Код департамента")
     private Integer departmentId;
@@ -90,12 +83,6 @@ public class UserForm {
 
     @ApiModelProperty(value = "Код организации")
     private Integer organizationId;
-
-    @ApiModelProperty(value = "Статус регистрации пользователя")
-    private UserStatus status;
-
-    @ApiModelProperty(value = "Тип аккаунта")
-    private String accountTypeCode;
 
     @ApiParam("Срок действия учётной записи пользователя")
     private LocalDateTime expirationDate;

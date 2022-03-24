@@ -1,7 +1,7 @@
 package net.n2oapp.security.admin.auth.server.oauth;
 
 import net.n2oapp.security.admin.api.oauth.UserInfoEnricher;
-import net.n2oapp.security.admin.impl.entity.UserEntity;
+import net.n2oapp.security.admin.impl.entity.AccountEntity;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import static java.util.Objects.nonNull;
 
 @Component
-public class SystemsEnricher implements UserInfoEnricher<UserEntity> {
+public class SystemsEnricher implements UserInfoEnricher<AccountEntity> {
 
     private final Boolean permissionEnabled;
 
@@ -22,7 +22,7 @@ public class SystemsEnricher implements UserInfoEnricher<UserEntity> {
     }
 
     @Override
-    public Object buildValue(UserEntity source) {
+    public Object buildValue(AccountEntity source) {
         if (nonNull(source.getRoleList())) {
             List<String> systems = new ArrayList<>();
             if (Boolean.TRUE.equals((permissionEnabled))) {

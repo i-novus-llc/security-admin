@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 
 @EnableJaxRsProxyClient(
-        classes = {UserRestService.class, RoleRestService.class, PermissionRestService.class,
+        classes = {UserRestService.class, AccountRestService.class, RoleRestService.class, PermissionRestService.class,
                 ApplicationSystemRestService.class, ClientRestService.class, UserDetailsRestService.class,
                 RegionRestService.class, OrganizationRestService.class, DepartmentRestService.class,
                 UserLevelRestService.class, AccountTypeRestService.class},
@@ -21,6 +21,11 @@ public class AdminRestClientConfiguration {
     @Bean
     public UserServiceRestClient userService(@Qualifier("userRestServiceJaxRsProxyClient") UserRestService client) {
         return new UserServiceRestClient(client);
+    }
+
+    @Bean
+    public AccountServiceRestClient accountService(@Qualifier("accountRestServiceJaxRsProxyClient") AccountRestService client) {
+        return new AccountServiceRestClient(client);
     }
 
     @Bean

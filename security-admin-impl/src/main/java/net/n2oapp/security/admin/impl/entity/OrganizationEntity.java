@@ -107,7 +107,7 @@ public class OrganizationEntity implements Serializable {
     private List<RoleEntity> roleList;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "organization")
-    private List<UserEntity> users;
+    private List<AccountEntity> accounts;
 
     /**
      * Признак что запись была удалена из справочника

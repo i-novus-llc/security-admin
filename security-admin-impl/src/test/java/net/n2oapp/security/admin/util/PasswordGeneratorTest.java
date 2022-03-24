@@ -2,23 +2,24 @@ package net.n2oapp.security.admin.util;
 
 
 import net.n2oapp.security.admin.impl.util.PasswordGenerator;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 /**
  * Проверка корректности работы генератора временных паролей
  */
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 public class PasswordGeneratorTest {
 
     private PasswordGenerator passwordGenerator;
 
-    @Before
+    @BeforeEach
     public void init() {
         passwordGenerator = new PasswordGenerator();
         passwordGenerator.setLength(8);

@@ -18,14 +18,10 @@ public interface RoleRepository extends JpaRepository<RoleEntity, Integer>, JpaS
 
     RoleEntity findOneByCode(String code);
 
-    RoleEntity findOneByName(String name);
-
     @Query("select count(r) from RoleEntity r where r.systemCode.code = :systemCode")
     Integer countRolesWithSystemCode(@Param("systemCode") String systemCode);
 
     List<RoleEntity> findBySystemCode(SystemEntity systemEntity);
-
-    void removeBySystemCode(SystemEntity systemEntity);
 
     @Query("SELECT CASE WHEN (COUNT(r) > 0) THEN false ELSE true END " +
             "FROM RoleEntity r WHERE r.id != :id AND (r.name = :name OR r.code = :code)")

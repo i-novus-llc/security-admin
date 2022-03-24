@@ -1,140 +1,134 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<page xmlns="http://n2oapp.net/framework/config/schema/page-2.0"
+<page xmlns="http://n2oapp.net/framework/config/schema/page-3.0"
       object-id="${access.user.object.id}"
       name="Пользователи">
     <regions>
-        <region place="single">
-            <table name="Пользователи" query-id="${access.user.query.id}">
-                <columns>
-                    <column text-field-id="username">
+        <table name="Пользователи" query-id="${access.user.query.id}">
+            <columns>
+                <column text-field-id="username">
+                    <dependencies>
+                        <visibility>
+                            !${access.email-as-username}
+                        </visibility>
+                    </dependencies>
+                </column>
+                <column text-field-id="email">
+                    <dependencies>
+                        <visibility>
+                            ${access.email-as-username}
+                        </visibility>
+                    </dependencies>
+                </column>
+                <column text-field-id="fio"/>
+                <column text-field-id="isActive">
+                    <checkbox enabled="${access.users.change-activity-enabled}">
+                        <invoke route="/changeUserActive" operation-id="changeUserActive"/>
+                    </checkbox>
+                </column>
+                <column text-field-id="actions" label=" ">
+                    <toolbar>
+                        <button label="Удалить" confirm="true" icon="fa fa-trash" type="icon"
+                                confirm-text="Вы действительно хотите удалить пользователя?">
+                            <invoke operation-id="delete"/>
+                        </button>
+                        <button label="Сбросить пароль" icon="fa fa-key" type="icon">
+                            <show-modal page-id="passwordResetForm" upload="defaults" detail-field-id="id"
+                                        object-id="user" submit-operation-id="resetPassword"/>
+                        </button>
+                    </toolbar>
+                </column>
+            </columns>
+            <rows>
+                <click>
+                    <open-page page-id="userUpdateForm" submit-operation-id="update" object-id="user"
+                               detail-field-id="id" route="/:user_id/update">
+                        <path-param name="user_id" value="{id}"/>
+                    </open-page>
+                </click>
+            </rows>
+            <filters>
+                <row>
+                    <input-text id="username">
                         <dependencies>
                             <visibility>
                                 !${access.email-as-username}
                             </visibility>
                         </dependencies>
-                    </column>
-                    <column text-field-id="email">
+                    </input-text>
+                    <input-text id="email" visible="false">
                         <dependencies>
                             <visibility>
                                 ${access.email-as-username}
                             </visibility>
                         </dependencies>
-                    </column>
-                    <column text-field-id="fio"/>
-                    <column text-field-id="userLevel.name" sorting-field-id="userLevel"/>
-                    <column text-field-id="roleNamesWithSystem" label="Роли" sorting-field-id="roleCount">
-                        <list label-field-id="name"/>
-                    </column>
-                    <column text-field-id="isActive">
-                        <checkbox enabled="${access.users.change-activity-enabled}">
-                            <invoke route="/changeUserActive" operation-id="changeUserActive"/>
-                        </checkbox>
-                    </column>
-                    <column text-field-id="actions" label=" ">
-                        <toolbar>
-                                <button label="Удалить" confirm="true" icon="fa fa-trash" type="icon"
-                                           confirm-text="Вы действительно хотите удалить пользователя?">
-                                    <invoke operation-id="delete"/>
-                                </button>
-                                <button label="Сбросить пароль" icon="fa fa-key" type="icon">
-                                    <show-modal page-id="passwordResetForm" upload="defaults" detail-field-id="id"
-                                                object-id="user" submit-operation-id="resetPassword"/>
-                                </button>
-                        </toolbar>
-                    </column>
-                </columns>
-                <rows>
-                    <click>
-                        <open-page page-id="userUpdateForm" submit-operation-id="update" object-id="user"
-                                    detail-field-id="id" route="/:id/update">
-                            <path-param name="id" value="{id}"/>
-                        </open-page>
-                    </click>
-                </rows>
-                <filters>
-                    <row>
-                        <input-text id="username">
-                            <dependencies>
-                                <visibility>
-                                    !${access.email-as-username}
-                                </visibility>
-                            </dependencies>
-                        </input-text>
-                        <input-text id="email" visible="false">
-                            <dependencies>
-                                <visibility>
-                                    ${access.email-as-username}
-                                </visibility>
-                            </dependencies>
-                        </input-text>
-                        <input-text id="fio" class="n2o-control-10"/>
-                        <input-select id="system" label="Система" visible="${access.system.enabled}"
-                                      query-id="system" label-field-id="name"/>
-                    </row>
-                    <row>
-                        <input-select-tree id="roles" ajax="false" label="Роли" checkboxes="true"
-                                           parent-field-id="systemId" query-id="roleGroupedBySystem"
-                                           search-field-id="name" size="1000">
-                            <pre-filters>
-                                <eq field-id="system" value="{system.id}"/>
-                            </pre-filters>
-                        </input-select-tree>
-
-                        <checkbox-group id="activeList" label="Активность" inline="true">
-                            <options>
-                                <option id="1" name="Да"/>
-                                <option id="2" name="Нет"/>
-                            </options>
-                        </checkbox-group>
-                        <input-select id="userLevel" label-field-id="name" query-id="userLevelForFilter"
-                                      visible="${access.level.enabled}" label="Уровень пользователя"/>
-
-                    </row>
-                    <row>
-                        <!--                        <input-select id="userLevel" label="Уровень пользователя" query-id="userLevel" visible="${access.level.enabled}"/>-->
-                        <input-select id="department" label="Департамент" query-id="department" search-field-id="name">
-                            <dependencies>
-                                <visibility apply-on-init="true">${access.level.federal} &amp;&amp;
-                                    ${access.level.department}
-                                </visibility>
-                            </dependencies>
-                        </input-select>
-                        <input-select id="region" label="Регион" query-id="region" label-field-id="name">
-                            <dependencies>
-                                <visibility apply-on-init="true">${access.level.regional} ||
-                                    ${access.level.org}
-                                </visibility>
-                            </dependencies>
-                        </input-select>
-                        <input-select id="organization" label-field-id="shortName" label="Организация"
-                                      query-id="organization" visible="${access.level.org}"/>
-                    </row>
-                    <input-text id="isActive" visible="false">
-                        <dependencies>
-                            <set-value on="activeList" apply-on-init="false">
-                                if ((typeof activeList == 'undefined') || (activeList == null) ||
-                                (activeList.length==0)) {
-                                return null;
-                                } else if (activeList.length == 2) {
-                                return null;
-                                }else if (activeList[0].id == 1) {
-                                return 'yes';
-                                } else if (activeList[0].id == 2) {
-                                return 'no';
-                                } else {
-                                return null;
-                                }
-                            </set-value>
-                        </dependencies>
                     </input-text>
-                </filters>
-                <toolbar>
-                    <button id="create" label="Создать" color="primary" model="filter">
-                        <open-page page-id="userForm" submit-operation-id="create" model="filter" object-id="user"
-                                    upload="defaults" route="create"/>
-                    </button>
-                </toolbar>
-            </table>
-        </region>
+                    <input-text id="fio" class="n2o-control-10"/>
+                    <input-select id="system" label="Система" visible="${access.system.enabled}"
+                                  query-id="system" label-field-id="name"/>
+                </row>
+                <row>
+                    <input-select-tree id="roles" ajax="false" label="Роли" checkboxes="true"
+                                       parent-field-id="systemId" query-id="roleGroupedBySystem"
+                                       search-field-id="name" size="1000">
+                        <pre-filters>
+                            <eq field-id="system" value="{system.id}"/>
+                        </pre-filters>
+                    </input-select-tree>
+
+                    <checkbox-group id="activeList" label="Активность" inline="true">
+                        <options>
+                            <option id="1" name="Да"/>
+                            <option id="2" name="Нет"/>
+                        </options>
+                    </checkbox-group>
+                    <input-select id="userLevel" label-field-id="name" query-id="userLevelForFilter"
+                                  visible="${access.level.enabled}" label="Уровень пользователя"/>
+
+                </row>
+                <row>
+                    <!--                        <input-select id="userLevel" label="Уровень пользователя" query-id="userLevel" visible="${access.level.enabled}"/>-->
+                    <input-select id="department" label="Департамент" query-id="department" search-field-id="name">
+                        <dependencies>
+                            <visibility apply-on-init="true">${access.level.federal} &amp;&amp;
+                                ${access.level.department}
+                            </visibility>
+                        </dependencies>
+                    </input-select>
+                    <input-select id="region" label="Регион" query-id="region" label-field-id="name">
+                        <dependencies>
+                            <visibility apply-on-init="true">${access.level.regional} ||
+                                ${access.level.org}
+                            </visibility>
+                        </dependencies>
+                    </input-select>
+                    <input-select id="organization" label-field-id="shortName" label="Организация"
+                                  query-id="organization" visible="${access.level.org}"/>
+                </row>
+                <input-text id="isActive" visible="false">
+                    <dependencies>
+                        <set-value on="activeList" apply-on-init="false">
+                            if ((typeof activeList == 'undefined') || (activeList == null) ||
+                            (activeList.length==0)) {
+                            return null;
+                            } else if (activeList.length == 2) {
+                            return null;
+                            } else if (activeList[0].id == 1) {
+                            return 'yes';
+                            } else if (activeList[0].id == 2) {
+                            return 'no';
+                            } else {
+                            return null;
+                            }
+                        </set-value>
+                    </dependencies>
+                </input-text>
+            </filters>
+            <toolbar>
+                <button id="create" label="Создать" color="primary" disable-on-empty-model="false" >
+                    <open-page page-id="userForm" submit-operation-id="create" object-id="user"
+                               upload="defaults" route="/create"/>
+                </button>
+            </toolbar>
+        </table>
     </regions>
 </page>

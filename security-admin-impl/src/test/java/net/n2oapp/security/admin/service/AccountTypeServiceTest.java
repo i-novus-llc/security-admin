@@ -1,29 +1,31 @@
 package net.n2oapp.security.admin.service;
 
+import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
 import net.n2oapp.security.admin.api.criteria.AccountTypeCriteria;
 import net.n2oapp.security.admin.api.model.AccountType;
 import net.n2oapp.security.admin.api.model.UserLevel;
 import net.n2oapp.security.admin.api.model.UserStatus;
 import net.n2oapp.security.admin.api.service.AccountTypeService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 /**
  * Тест сервиса типов аккаунтов
  */
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @TestPropertySource("classpath:test.properties")
+@EnableEmbeddedPg
 public class AccountTypeServiceTest {
 
     @Autowired
@@ -35,29 +37,29 @@ public class AccountTypeServiceTest {
         criteria.setName("testAccountTypeName");
         criteria.setUserLevel("PERSONAL");
         Page<AccountType> accountTypes = service.findAll(criteria);
-        assertThat(accountTypes.getTotalElements(), is(1L));
-        assertThat(accountTypes.getContent().get(0).getId(), is(1));
-        assertThat(accountTypes.getContent().get(0).getCode(), is("testAccountTypeCode"));
-        assertThat(accountTypes.getContent().get(0).getName(), is("testAccountTypeName"));
-        assertThat(accountTypes.getContent().get(0).getDescription(), is("testDescription"));
-        assertThat(accountTypes.getContent().get(0).getUserLevel(), is(UserLevel.PERSONAL));
-        assertThat(accountTypes.getContent().get(0).getStatus(), is(UserStatus.REGISTERED));
+        assertEquals(1L, accountTypes.getTotalElements());
+        assertEquals(1, accountTypes.getContent().get(0).getId());
+        assertEquals("testAccountTypeCode", accountTypes.getContent().get(0).getCode());
+        assertEquals("testAccountTypeName", accountTypes.getContent().get(0).getName());
+        assertEquals("testDescription", accountTypes.getContent().get(0).getDescription());
+        assertEquals(UserLevel.PERSONAL, accountTypes.getContent().get(0).getUserLevel());
+        assertEquals(UserStatus.REGISTERED, accountTypes.getContent().get(0).getStatus());
     }
 
     @Test
     public void testFindById() {
         AccountType accountType = service.findById(1);
-        assertThat(accountType.getId(), is(1));
-        assertThat(accountType.getCode(), is("testAccountTypeCode"));
-        assertThat(accountType.getName(), is("testAccountTypeName"));
-        assertThat(accountType.getDescription(), is("testDescription"));
-        assertThat(accountType.getUserLevel(), is(UserLevel.PERSONAL));
-        assertThat(accountType.getStatus(), is(UserStatus.REGISTERED));
+        assertEquals(1, accountType.getId());
+        assertEquals("testAccountTypeCode", accountType.getCode());
+        assertEquals("testAccountTypeName", accountType.getName());
+        assertEquals("testDescription", accountType.getDescription());
+        assertEquals(UserLevel.PERSONAL, accountType.getUserLevel());
+        assertEquals(UserStatus.REGISTERED, accountType.getStatus());
     }
 
     @Test
     public void testCreate() {
-        assertThat(service.findAll(new AccountTypeCriteria()).getTotalElements(), is(1L));
+        assertEquals(1L, service.findAll(new AccountTypeCriteria()).getTotalElements());
 
         AccountType newAccountType = new AccountType();
         newAccountType.setCode("testCode22");
@@ -69,18 +71,18 @@ public class AccountTypeServiceTest {
         newAccountType.setOrgRoleIds(Arrays.asList(100, 101));
         service.create(newAccountType);
 
-        assertThat(service.findAll(new AccountTypeCriteria()).getTotalElements(), is(2L));
+        assertEquals(2L, service.findAll(new AccountTypeCriteria()).getTotalElements());
 
         AccountType result = service.findById(2);
-        assertThat(result.getId(), is(2));
-        assertThat(result.getName(), is("testName2"));
-        assertThat(result.getCode(), is("testCode22"));
-        assertThat(result.getDescription(), is("testDescription2"));
-        assertThat(result.getStatus(), is(UserStatus.REGISTERED));
-        assertThat(result.getUserLevel(), is(UserLevel.REGIONAL));
-        assertThat(result.getRoles().get(0).getId(), is(100));
-        assertThat(result.getOrgRoles().get(0).getId(), is(100));
-        assertThat(result.getOrgRoles().get(1).getId(), is(101));
+        assertEquals(2, result.getId());
+        assertEquals("testName2", result.getName());
+        assertEquals("testCode22", result.getCode());
+        assertEquals("testDescription2", result.getDescription());
+        assertEquals(UserStatus.REGISTERED, result.getStatus());
+        assertEquals(UserLevel.REGIONAL, result.getUserLevel());
+        assertEquals(100, result.getRoles().get(0).getId());
+        assertEquals(100, result.getOrgRoles().get(0).getId());
+        assertEquals(101, result.getOrgRoles().get(1).getId());
 
         service.delete(2);
     }
@@ -104,12 +106,12 @@ public class AccountTypeServiceTest {
         newAccountType.setDescription("testDescription22");
         AccountType result = service.update(newAccountType);
 
-        assertThat(result.getId(), is(id));
-        assertThat(result.getCode(), is("testCode22"));
-        assertThat(result.getName(), is("testName22"));
-        assertThat(result.getStatus(), is(UserStatus.AWAITING_MODERATION));
-        assertThat(result.getUserLevel(), is(UserLevel.ORGANIZATION));
-        assertThat(result.getDescription(), is("testDescription22"));
+        assertEquals(id, result.getId());
+        assertEquals("testCode22", result.getCode());
+        assertEquals("testName22", result.getName());
+        assertEquals(UserStatus.AWAITING_MODERATION, result.getStatus());
+        assertEquals(UserLevel.ORGANIZATION, result.getUserLevel());
+        assertEquals("testDescription22", result.getDescription());
 
         service.delete(id);
     }
@@ -127,6 +129,6 @@ public class AccountTypeServiceTest {
         Long before = service.findAll(new AccountTypeCriteria()).getTotalElements();
         service.delete(id);
         Long after = service.findAll(new AccountTypeCriteria()).getTotalElements();
-        assertThat(before - after, is(1L));
+        assertEquals(1L, before - after);
     }
 }
