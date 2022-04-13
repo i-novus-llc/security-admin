@@ -4,7 +4,7 @@
         <fields>
             <row>
                 <col size="4">
-                    <input-text id="name" required="true"/>
+                    <input-text id="name" label="Имя аккаунта" required="true"/>
                 </col>
                 <col size="4" class="d-flex align-items-center">
                     <checkbox id="isActive" label="Активность" default-value="true"/>
