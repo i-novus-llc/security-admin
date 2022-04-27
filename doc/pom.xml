@@ -9,7 +9,7 @@
     <parent>
         <artifactId>security-admin</artifactId>
         <groupId>net.n2oapp.framework.security</groupId>
-        <version>5.0.19</version>
+        <version>5.0.19-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
 
