@@ -24,18 +24,18 @@ public class PermissionServerLoader extends ServerLoaderSettings<Permission> imp
     @Override
     @Transactional
     public void load(List<Permission> uploadedData, String subject) {
-        List<PermissionEntity> old = permissionRepository.findBySystemCodeOrderByCodeDesc(new SystemEntity(subject));
         List<PermissionEntity> fresh = uploadedData.stream().map(permission -> map(permission, subject)).collect(Collectors.toList());
         if (isCreateRequired())
             permissionRepository.saveAll(fresh);
-        old.removeAll(fresh);
-        if (isUpdateRequired()) {
-            fresh.forEach(permissionEntity -> old.remove(old.stream().
-                    filter(permissionOldEntity -> permissionOldEntity.getCode().equals(permissionEntity.getCode())).findFirst().orElse(null)));
+
+        if (isDeleteRequired()) {
+            List<PermissionEntity> old = permissionRepository.findBySystemCodeOrderByCodeDesc(new SystemEntity(subject));
+            for (PermissionEntity freshPermission : fresh) {
+                old.removeIf(permissionEntity -> permissionEntity.getCode().equals(freshPermission.getCode()));
+            }
             old.forEach(permissionEntity -> permissionEntity.getRoleList().forEach(roleEntity -> roleEntity.getPermissionList().remove(permissionEntity)));
-        }
-        if (isDeleteRequired())
             permissionRepository.deleteAll(old);
+        }
     }
 
     private static PermissionEntity map(Permission model, String systemCode) {
