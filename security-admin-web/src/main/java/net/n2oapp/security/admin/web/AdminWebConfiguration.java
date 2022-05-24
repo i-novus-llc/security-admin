@@ -3,9 +3,6 @@ package net.n2oapp.security.admin.web;
 import net.n2oapp.framework.api.MetadataEnvironment;
 import net.n2oapp.framework.api.data.QueryExceptionHandler;
 import net.n2oapp.framework.api.data.QueryProcessor;
-import net.n2oapp.framework.config.register.InfoConstructor;
-import net.n2oapp.framework.config.register.scanner.DefaultInfoScanner;
-import net.n2oapp.framework.config.register.scanner.DefaultXmlInfoScanner;
 import net.n2oapp.framework.engine.data.N2oInvocationFactory;
 import net.n2oapp.framework.engine.data.N2oQueryProcessor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -14,13 +11,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class AdminWebConfiguration {
-
-    public static final String DEFAULT_PATTERN = "net/n2oapp/security/admin/web/default/**/*.xml";
-
-    @Bean
-    public DefaultInfoScanner<InfoConstructor> defaultInfoScanner() {
-        return new DefaultXmlInfoScanner(DEFAULT_PATTERN);
-    }
 
     @Bean
     public QueryProcessor saQueryProcessor(MetadataEnvironment environment,

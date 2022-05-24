@@ -7,25 +7,27 @@
                 <eq field-id="id" param="user_id"/>
             </pre-filters>
             <fields>
-                <row>
-                    <col size="4">
-                        <input-text id="username" enabled="false">
-                            <dependencies>
-                                <requiring>!${access.email-as-username}</requiring>
-                                <visibility>!${access.email-as-username}</visibility>
-                            </dependencies>
-                        </input-text>
-                    </col>
-                    <col size="4">
-                        <input-text id="email" label="e-mail">
-                            <dependencies>
-                                <requiring>${access.user.email-required} || ${access.email-as-username}</requiring>
-                                <enabling>!${access.email-as-username}</enabling>
-                            </dependencies>
-                            <validations white-list="emailValidation"/>
-                        </input-text>
-                    </col>
-                </row>
+                <set field-label-location="left">
+                    <row>
+                        <col size="4">
+                            <input-text id="username" enabled="false">
+                                <dependencies>
+                                    <requiring>!${access.email-as-username}</requiring>
+                                    <visibility>!${access.email-as-username}</visibility>
+                                </dependencies>
+                            </input-text>
+                        </col>
+                        <col size="4">
+                            <input-text id="email" label="e-mail">
+                                <dependencies>
+                                    <requiring>${access.user.email-required} || ${access.email-as-username}</requiring>
+                                    <enabling>!${access.email-as-username}</enabling>
+                                </dependencies>
+                                <validations white-list="emailValidation"/>
+                            </input-text>
+                        </col>
+                    </row>
+                </set>
                 <row>
                     <col size="4">
                         <password id="password" label="Новый пароль"
@@ -96,7 +98,7 @@
                     </click>
                 </rows>
                 <toolbar>
-                    <button id="createAccount" label="Создать" disable-on-empty-model="false">
+                    <button id="createAccount" label="Создать" color="primary" disable-on-empty-model="false">
                         <open-page page-id="accountForm" submit-operation-id="create"
                                    object-id="account" upload="defaults" route="/create">
                         </open-page>
