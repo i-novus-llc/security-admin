@@ -27,45 +27,45 @@
                             </input-text>
                         </col>
                     </row>
+                    <row>
+                        <col size="4">
+                            <password id="password" label="Новый пароль"
+                                      visible="${access.user.password.input}" eye="false">
+                                <validations
+                                        white-list="passwordLengthValidation,passwordLowerCaseValidation,passwordUpperCaseValidation,passwordDigitsValidation,passwordSpecialSymbolsValidation,passwordCorrectSymbolsValidation"/>
+                            </password>
+                        </col>
+                        <col size="4">
+                            <password id="passwordCheck" label="Подтвердить пароль"
+                                      visible="${access.user.password.input}" eye="false">
+                                <validations white-list="passwordCheckValidation"/>
+                                <dependencies>
+                                    <enabling on="password">typeof password != 'undefined' &amp;&amp; password != null &amp;&amp;
+                                        password != ''
+                                    </enabling>
+                                </dependencies>
+                            </password>
+                        </col>
+                    </row>
+                    <row>
+                        <col size="4">
+                            <input-text id="surname" required="${access.user.surname.required}" length="100"/>
+                        </col>
+                        <col size="4">
+                            <input-text id="name" required="${access.user.name.required}" length="100"/>
+                        </col>
+                        <col size="4">
+                            <input-text id="patronymic" length="100"/>
+                        </col>
+                    </row>
+                    <row>
+                        <col size="4">
+                            <masked-input id="snils" mask="999-999-999 99" visible="${access.user.snils-visible}">
+                                <validations white-list="snilsValidation"/>
+                            </masked-input>
+                        </col>
+                    </row>
                 </set>
-                <row>
-                    <col size="4">
-                        <password id="password" label="Новый пароль"
-                                  visible="${access.user.password.input}" eye="false">
-                            <validations
-                                    white-list="passwordLengthValidation,passwordLowerCaseValidation,passwordUpperCaseValidation,passwordDigitsValidation,passwordSpecialSymbolsValidation,passwordCorrectSymbolsValidation"/>
-                        </password>
-                    </col>
-                    <col size="4">
-                        <password id="passwordCheck" label="Подтвердить пароль"
-                                  visible="${access.user.password.input}" eye="false">
-                            <validations white-list="passwordCheckValidation"/>
-                            <dependencies>
-                                <enabling on="password">typeof password != 'undefined' &amp;&amp; password != null &amp;&amp;
-                                    password != ''
-                                </enabling>
-                            </dependencies>
-                        </password>
-                    </col>
-                </row>
-                <row>
-                    <col size="4">
-                        <input-text id="surname" required="${access.user.surname.required}" length="100"/>
-                    </col>
-                    <col size="4">
-                        <input-text id="name" required="${access.user.name.required}" length="100"/>
-                    </col>
-                    <col size="4">
-                        <input-text id="patronymic" length="100"/>
-                    </col>
-                </row>
-                <row>
-                    <col size="4">
-                        <masked-input id="snils" mask="999-999-999 99" visible="${access.user.snils-visible}">
-                            <validations white-list="snilsValidation"/>
-                        </masked-input>
-                    </col>
-                </row>
             </fields>
         </form>
         <line collapsible="false" label="Аккаунты пользователя">
