@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class AdminWebConfiguration {
+
     @Bean
     public QueryProcessor saQueryProcessor(MetadataEnvironment environment,
                                            N2oInvocationFactory invocationFactory,
