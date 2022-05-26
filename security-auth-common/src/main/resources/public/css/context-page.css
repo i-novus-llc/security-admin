@@ -476,7 +476,8 @@ body {
 }
 
 .accounts__name,
-.accounts__organization {
+.accounts__organization,
+.accounts__region{
   margin-top: 0;
 }
 
@@ -542,7 +543,8 @@ body {
 }
 
 .accounts__name:last-child,
-.accounts__organization:last-child {
+.accounts__organization:last-child,
+.accounts__region:last-child {
   margin-bottom: 0;
 }
 
@@ -552,7 +554,8 @@ body {
   padding-right: 30px;
 }
 
-.accounts__organization {
+.accounts__organization,
+.accounts__region {
   font-size: 16px;
   color: var(--context-gray-text);
 }
