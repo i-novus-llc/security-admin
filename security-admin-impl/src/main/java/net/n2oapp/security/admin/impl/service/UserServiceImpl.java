@@ -327,6 +327,9 @@ public class UserServiceImpl implements UserService {
         model.setPasswordHash(entity.getPasswordHash());
         model.setExpirationDate(entity.getExpirationDate());
 
+        if (nonNull(entity.getRegion()))
+            model.setRegion(new Region(entity.getRegion().getId(), entity.getRegion().getName()));
+
         StringJoiner joiner = new StringJoiner(" ");
         if (nonNull(entity.getSurname()))
             joiner.add(entity.getSurname());
