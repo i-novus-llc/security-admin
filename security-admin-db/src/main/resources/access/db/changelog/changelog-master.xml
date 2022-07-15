@@ -125,7 +125,6 @@
             <tableExists tableName="user" schemaName="sec"/>
             <not>
                 <columnExists tableName="user" schemaName="sec" columnName="region_id"/>
-                <foreignKeyConstraintExists schemaName="user" foreignKeyName="user_region_id_fk"/>
             </not>
         </preConditions>
         <sqlFile path="access/db/changelog/sql/V10_add_column_user_table.sql"/>
