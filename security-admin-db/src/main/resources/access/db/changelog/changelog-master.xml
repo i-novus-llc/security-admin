@@ -119,4 +119,8 @@
         <sqlFile path="access/db/changelog/sql/V9_alter_foreign_key.sql"/>
     </changeSet>
 
+    <changeSet id="V10_add_column_user_table" author="anigmatullin" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/V10_add_column_user_table.sql"/>
+    </changeSet>
+
 </databaseChangeLog>
