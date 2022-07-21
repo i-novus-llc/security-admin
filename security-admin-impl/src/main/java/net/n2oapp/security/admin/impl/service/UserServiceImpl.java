@@ -8,6 +8,7 @@ import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.MailService;
 import net.n2oapp.security.admin.api.service.UserService;
 import net.n2oapp.security.admin.impl.entity.AccountEntity;
+import net.n2oapp.security.admin.impl.entity.RegionEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.UserSpecifications;
@@ -326,9 +327,7 @@ public class UserServiceImpl implements UserService {
         model.setSnils(entity.getSnils());
         model.setPasswordHash(entity.getPasswordHash());
         model.setExpirationDate(entity.getExpirationDate());
-
-        if (nonNull(entity.getRegion()))
-            model.setRegion(new Region(entity.getRegion().getId(), entity.getRegion().getName()));
+        model.setRegion(model(entity.getRegion()));
 
         StringJoiner joiner = new StringJoiner(" ");
         if (nonNull(entity.getSurname()))
@@ -341,6 +340,16 @@ public class UserServiceImpl implements UserService {
         model.setFio(hasText(fio) ? fio : null);
 
         return model;
+    }
+
+    private Region model(RegionEntity entity) {
+        if (isNull(entity)) return null;
+        Region region = new Region();
+        region.setId(entity.getId());
+        region.setName(entity.getName());
+        region.setCode(entity.getCode());
+        region.setOkato(entity.getOkato());
+        return region;
     }
 
     private void validateUsernameEmailSnils(UserForm user) {

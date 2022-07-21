@@ -29,7 +29,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @ApiModel("Регион")
-@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Region {
 
@@ -48,9 +47,4 @@ public class Region {
     @JsonProperty
     @ApiModelProperty(value = "Код ОКАТО региона (субъекта РФ)")
     private String okato;
-
-    public Region(Integer id, String name) {
-        this.id = id;
-        this.name = name;
-    }
 }
