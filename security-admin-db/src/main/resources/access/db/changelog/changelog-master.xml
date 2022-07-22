@@ -84,7 +84,8 @@
     </changeSet>
 
     <changeSet id="account_type_code_unique" author="imolostvov" dbms="postgresql">
-        <preConditions onFailMessage="Невозможно создать уникальный индекс для account_type.code - присутствуют дубликаты">
+        <preConditions
+                onFailMessage="Невозможно создать уникальный индекс для account_type.code - присутствуют дубликаты">
             <sqlCheck expectedResult="0">
                 SELECT CASE WHEN exists(
                 SELECT code, COUNT(*)
@@ -117,6 +118,16 @@
 
     <changeSet id="V9_alter_foreign_key" author="ilebedenko" dbms="postgresql">
         <sqlFile path="access/db/changelog/sql/V9_alter_foreign_key.sql"/>
+    </changeSet>
+
+    <changeSet id="V10_add_column_user_table" author="anigmatullin" dbms="postgresql">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="user" schemaName="sec"/>
+            <not>
+                <columnExists tableName="user" schemaName="sec" columnName="region_id"/>
+            </not>
+        </preConditions>
+        <sqlFile path="access/db/changelog/sql/V10_add_column_user_table.sql"/>
     </changeSet>
 
 </databaseChangeLog>
