@@ -95,6 +95,13 @@ public class UserEntity {
     @Column(name = "expiration_date")
     private LocalDateTime expirationDate;
 
+    /**
+     * Регион пользователя из токена
+     */
+    @JoinColumn(name = "region_id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    private RegionEntity region;
+
     public UserEntity(Integer id) {
         this.id = id;
     }

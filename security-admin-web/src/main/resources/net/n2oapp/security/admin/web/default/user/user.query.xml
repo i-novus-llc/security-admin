@@ -109,6 +109,7 @@
         </field>
 
         <field id="region">
+            <select/>
             <filters>
                 <eq filter-id="region.id" domain="integer" mapping="['criteria'].regionId"/>
             </filters>

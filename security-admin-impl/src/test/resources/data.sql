@@ -9,11 +9,16 @@ INSERT INTO sec.role(id, name, code, description) VALUES (100, 'test','test','te
 INSERT INTO sec.role(name, code, description) VALUES ('user','code1','description1');
 INSERT INTO sec.role(name, code, description, system_code) VALUES ('admin','code2','description2', 'system2');
 
+INSERT INTO sec.region(id, code, name, okato, is_deleted) VALUES
+        (1, 'test_code', 'test_name', 'test_okato', false),
+        (2, 'test_code2', 'test_name2', 'test_okato2', true);
+SELECT setval('sec.region_id_seq', 3, false);
+
 --USER
-INSERT INTO sec.user(username, email, name, surname, patronymic, password, is_active)
-            VALUES ('test', 'test@example.com', 'name1', 'surname1', 'patronymic1', 'password1', TRUE);
-INSERT INTO sec.user(username, email, name, surname, patronymic, password, is_active)
-            VALUES ('test2', 'test@example2.com', 'name2', 'surname2', 'patronymic2', 'password2', FALSE);
+INSERT INTO sec.user(username, email, name, surname, patronymic, password, is_active, region_id)
+            VALUES ('test', 'test@example.com', 'name1', 'surname1', 'patronymic1', 'password1', TRUE, 1);
+INSERT INTO sec.user(username, email, name, surname, patronymic, password, is_active, region_id)
+            VALUES ('test2', 'test@example2.com', 'name2', 'surname2', 'patronymic2', 'password2', FALSE, 2);
 INSERT INTO sec.role_permission (role_id, permission_code) VALUES (1,'test');
 INSERT INTO sec.role_permission (role_id, permission_code) VALUES (1,'test2');
 
@@ -32,11 +37,6 @@ INSERT INTO sec.role_permission(role_id, permission_code) VALUES (102, 'test-cod
 INSERT INTO sec.department(id, code, name, is_deleted) VALUES
         (1, 'test_code', 'test_name', false),
         (2, 'test_code2', 'test_name2', true);
-
-INSERT INTO sec.region(id, code, name, okato, is_deleted) VALUES
-        (1, 'test_code', 'test_name', 'test_okato', false),
-        (2, 'test_code2', 'test_name2', 'test_okato2', true);
-SELECT setval('sec.region_id_seq', 3, false);
 
 INSERT INTO sec.organization(code, short_name, full_name, ogrn, okpo, legal_address, email, inn)
         VALUES ('test_code', 'test_short_name', 'test_full_name' ,'test_ogrn', 'test_okpo', 'test_legal_address', 'test_email', 'test_inn'),
