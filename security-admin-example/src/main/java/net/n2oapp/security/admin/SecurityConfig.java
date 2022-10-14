@@ -1,10 +1,10 @@
 package net.n2oapp.security.admin;
 
 import net.n2oapp.security.auth.simple.SimpleSecurityConfigurerAdapter;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 
 @Configuration
@@ -18,5 +18,11 @@ public class SecurityConfig extends SimpleSecurityConfigurerAdapter {
     protected void authorize(ExpressionUrlAuthorizationConfigurer<HttpSecurity>
                                      .ExpressionInterceptUrlRegistry url) throws Exception {
         url.anyRequest().authenticated().and().headers().frameOptions().disable();
+    }
+
+    @Override
+    protected void ignore(WebSecurity.IgnoredRequestConfigurer ignore) {
+        super.ignore(ignore);
+        ignore.antMatchers("/css/**", "/serviceWorker.js");
     }
 }
