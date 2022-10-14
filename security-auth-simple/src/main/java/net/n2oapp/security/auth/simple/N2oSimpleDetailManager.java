@@ -1,8 +1,11 @@
 package net.n2oapp.security.auth.simple;
 
+import net.n2oapp.security.admin.api.criteria.AccountCriteria;
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
+import net.n2oapp.security.admin.api.model.Account;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.UserForm;
+import net.n2oapp.security.admin.api.service.AccountService;
 import net.n2oapp.security.admin.api.service.RoleService;
 import net.n2oapp.security.admin.api.service.UserService;
 import net.n2oapp.security.auth.common.User;
@@ -44,11 +47,12 @@ public class N2oSimpleDetailManager implements UserDetailsManager {
     @Autowired
     private RoleService roleService;
 
+    @Autowired
+    private AccountService accountService;
 
     public void setAuthenticationProvider(AuthenticationProvider authenticationProvider) {
         this.authenticationProvider = authenticationProvider;
     }
-
 
     @Override
     public void createUser(UserDetails userDetails) {
@@ -174,17 +178,15 @@ public class N2oSimpleDetailManager implements UserDetailsManager {
     private List<GrantedAuthority> loadAuthorities(String username) {
         List<GrantedAuthority> authorities = new ArrayList<>();
         List<Integer> tempRoleAuthorities = new ArrayList<>();
-        UserCriteria criteria = new UserCriteria();
+        AccountCriteria criteria = new AccountCriteria();
         criteria.setUsername(username);
-        criteria.setSize(1);
-        criteria.setOrders(new ArrayList<>());
-        Page<net.n2oapp.security.admin.api.model.User> users = userService.findAll(criteria);
-        if (users.getTotalElements() > 1) {
+        Page<Account> accounts = accountService.findAll(criteria);
+        if (accounts.getTotalElements() > 1) {
             throw new IncorrectResultSizeDataAccessException(
-                    "More than one user found with name '" + username + "'", 1);
+                    "More than one account found for this user '" + username + "'", 1);
         }
-        if (users.getTotalElements() == 1 && users.getContent().get(0).getRoles() != null) {
-            tempRoleAuthorities = users.getContent().get(0).getRoles().stream().map(Role::getId).collect(Collectors.toList());
+        if (accounts.getTotalElements() == 1 && accounts.getContent().get(0).getRoles() != null) {
+            tempRoleAuthorities = accounts.getContent().get(0).getRoles().stream().map(Role::getId).collect(Collectors.toList());
         }
         if (tempRoleAuthorities == null) return null;
         tempRoleAuthorities.forEach(r -> {
