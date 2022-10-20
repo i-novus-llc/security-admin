@@ -17,7 +17,7 @@ public class BaseCriteriaConstructor implements CriteriaConstructor {
             List<Sort.Order> orders = new ArrayList<>();
             if (criteria.getSorting() != null) {
                 orders.add(new Sort.Order(Sort.Direction.fromString(criteria.getSorting()
-                        .getDirection().getExpression()), criteria.getSorting().getField()));
+                        .getDirection().name()), criteria.getSorting().getField()));
             }
             ((BaseCriteria) instance).setOrders(orders);
         }

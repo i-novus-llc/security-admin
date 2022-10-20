@@ -1,11 +1,23 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<page xmlns="http://n2oapp.net/framework/config/schema/page-3.0"
-      name="Изменение карточки пользователя" object-id="${access.user.object.id}">
-    <regions>
-        <form id="main" query-id="${access.user.query.id}" route="/">
-            <pre-filters>
+<page xmlns="http://n2oapp.net/framework/config/schema/page-4.0"
+      name="Изменение карточки пользователя">
+    <datasources>
+        <datasource id="usersDs" query-id="${access.user.query.id}" object-id="${access.user.object.id}">
+            <filters>
                 <eq field-id="id" param="user_id"/>
-            </pre-filters>
+            </filters>
+        </datasource>
+        <datasource id="accountsDs" query-id="account" object-id="account">
+            <dependencies>
+                <fetch model="resolve" on="usersDs"/>
+            </dependencies>
+            <filters>
+                <eq field-id="userId" value="{id}" datasource="usersDs"/>
+            </filters>
+        </datasource>
+    </datasources>
+    <regions>
+        <form id="main" route="/" datasource="usersDs">
             <fields>
                 <set field-label-location="left">
                     <row>
@@ -69,8 +81,7 @@
             </fields>
         </form>
         <line collapsible="false" label="Аккаунты пользователя">
-            <table id="accounts" query-id="account" depends-on="main" master-field-id="id"
-                   detail-field-id="userId">
+            <table id="accounts" datasource="accountsDs">
                 <columns>
                     <column text-field-id="name" label="Наименование"/>
                     <column text-field-id="roleNames" label="Роли">
@@ -92,15 +103,17 @@
                 <rows>
                     <click>
                         <open-page page-id="accountUpdateForm" submit-operation-id="update" route="/:account_id/update"
-                                   object-id="account" detail-field-id="id">
-                            <path-param name="account_id" value="{id}"/>
+                                   object-id="account">
+                            <params>
+                                <path-param name="account_id" value="{id}"/>
+                            </params>
                         </open-page>
                     </click>
                 </rows>
                 <toolbar>
                     <button id="createAccount" label="Создать" color="primary" disable-on-empty-model="false">
                         <open-page page-id="accountForm" submit-operation-id="create"
-                                   object-id="account" upload="defaults" route="/create">
+                                   object-id="account" route="/create">
                         </open-page>
                     </button>
                 </toolbar>

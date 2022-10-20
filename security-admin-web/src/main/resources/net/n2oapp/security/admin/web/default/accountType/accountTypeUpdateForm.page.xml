@@ -1,7 +1,12 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-3.0"
+<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-4.0"
              name="Настройки типов аккаунтов для саморегистрации">
-    <form query-id="accountType" object-id="accountType">
+    <form>
+        <datasource query-id="accountType" object-id="accountType">
+            <filters>
+                <eq field-id="id" param="account_type_id"/>
+            </filters>
+        </datasource>
         <fields>
             <input-text id="name" required="true" label="Наименование"/>
             <input-text id="code" required="true" label="Код" enabled="false"/>
@@ -12,10 +17,10 @@
             <input-select-tree id="orgRoles" label="Набор ролей организации" checkboxes="true"
                                parent-field-id="systemId" query-id="roleForForm"
                                search-field-id="name" size="1000" checking-strategy="child">
-                <pre-filters>
+                <filters>
                     <eq field-id="userLevel.id" value="{userLevel.id}"/>
                     <eq field-id="groupBySystem" value="true"/>
-                </pre-filters>
+                </filters>
                 <dependencies>
                     <visibility on="userLevel">
                         return userLevel.id == 'ORGANIZATION';
@@ -27,12 +32,12 @@
             <input-select-tree id="roles" label="Набор ролей пользователя" checkboxes="true"
                                parent-field-id="systemId" query-id="roleForForm"
                                search-field-id="name" size="1000" checking-strategy="child">
-                <pre-filters>
+                <filters>
                     <eq field-id="groupBySystem" value="true"/>
                     <eq field-id="userLevel.id" value="{userLevel.id}"/>
                     <in field-id="orgRoles" values="{orgRoles*.id}"/>
                     <eq field-id="filterByOrgRoles" value="{userLevel.id == 'ORGANIZATION'}"/>
-                </pre-filters>
+                </filters>
                 <dependencies>
                     <set-value on="orgRoles,userLevel" apply-on-init="false">
                         return null;

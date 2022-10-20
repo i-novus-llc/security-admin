@@ -1,11 +1,24 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<page xmlns="http://n2oapp.net/framework/config/schema/page-3.0"
-      name="Изменение карточки системы" object-id="system">
-    <regions>
-        <form id="main" query-id="system" route="/">
-            <pre-filters>
+<page xmlns="http://n2oapp.net/framework/config/schema/page-4.0"
+      name="Изменение карточки системы">
+
+    <datasources>
+        <datasource id="systemsDs" query-id="system">
+            <filters>
                 <eq field-id="id" param="id"/>
-            </pre-filters>
+            </filters>
+        </datasource>
+        <datasource id="serviceDs" query-id="service">
+            <dependencies>
+                <fetch on="systemsDs" model="resolve"/>
+            </dependencies>
+            <filters>
+                <eq field-id="systemCode" datasource="systemsDs" value="{id}"/>
+            </filters>
+        </datasource>
+    </datasources>
+    <regions>
+        <form id="main" datasource="systemsDs">
             <fields>
                 <input-text id="name" label="Наименование" required="true"/>
                 <input-text id="id" label="Код" required="true" enabled="false"/>
@@ -57,8 +70,7 @@
         </form>
 
         <line>
-            <table id="services" query-id="service" depends-on="main" master-field-id="id"
-                   detail-field-id="systemCode" name="Приложения">
+            <table id="services" datasource="serviceDs" name="Приложения">
                 <columns>
                     <column text-field-id="id" label="Код"/>
                     <column text-field-id="name" label="Наименование"/>
@@ -76,16 +88,17 @@
                 <rows>
                     <click>
                         <open-page page-id="serviceUpdateForm" submit-operation-id="update" route="/:code/update"
-                                   object-id="service"
-                                   detail-field-id="id">
-                            <path-param name="code" value="{id}"/>
+                                   object-id="service">
+                            <params>
+                                <path-param name="code" value="{id}"/>
+                            </params>
                         </open-page>
                     </click>
                 </rows>
                 <toolbar>
                     <button id="createService" label="Создать" disable-on-empty-model="false">
                         <open-page page-id="serviceForm" submit-operation-id="create"
-                                   object-id="service" upload="defaults" route="/create" close-after-submit="true">
+                                   object-id="service" route="/create" close-after-submit="true">
                         </open-page>
                     </button>
                 </toolbar>
