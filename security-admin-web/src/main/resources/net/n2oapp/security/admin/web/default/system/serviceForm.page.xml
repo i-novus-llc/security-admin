@@ -1,10 +1,12 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-3.0"
+<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-4.0"
              name="Добавление приложения">
-    <form upload="defaults" query-id="service" default-values-query-id="serviceDefault" object-id="service">
-        <pre-filters>
-            <eq field-id="systemCode" param="id"/>
-        </pre-filters>
+    <form>
+        <datasource query-id="serviceDefault" object-id="service">
+            <filters>
+                <eq field-id="systemCode" param="id"/>
+            </filters>
+        </datasource>
         <fields>
             <input-text id="id" label="Код приложения" required="true"/>
             <hidden id="code">

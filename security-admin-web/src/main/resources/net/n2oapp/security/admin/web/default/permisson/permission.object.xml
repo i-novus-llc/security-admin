@@ -28,7 +28,9 @@
                 <java method="update" class="net.n2oapp.security.admin.api.service.PermissionService">
                     <spring/>
                     <arguments>
-                        <argument name="permission" class="net.n2oapp.security.admin.api.model.PermissionUpdateForm"/>
+                        <argument name="permission"
+                                  class="net.n2oapp.security.admin.api.model.PermissionUpdateForm"
+                                  type="class"/>
                     </arguments>
                 </java>
             </invocation>

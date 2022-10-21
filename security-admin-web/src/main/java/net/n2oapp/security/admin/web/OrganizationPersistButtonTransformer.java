@@ -7,6 +7,8 @@ import net.n2oapp.framework.api.metadata.compile.CompileProcessor;
 import net.n2oapp.framework.api.metadata.compile.CompileTransformer;
 import net.n2oapp.framework.api.metadata.meta.widget.toolbar.PerformButton;
 
+import java.util.Objects;
+
 public class OrganizationPersistButtonTransformer implements CompileTransformer<PerformButton, CompileContext<?, ?>>, CompiledClassAware {
 
     private final String VALIDATED_WIDGET_ID = "organizations_organization_update_main";
@@ -19,7 +21,7 @@ public class OrganizationPersistButtonTransformer implements CompileTransformer<
 
     @Override
     public boolean matches(PerformButton compiled, CompileContext<?, ?> context) {
-        return VALIDATED_WIDGET_ID.equals(compiled.getValidateWidgetId());
+        return Objects.nonNull(compiled.getValidate()) && compiled.getValidate().contains(VALIDATED_WIDGET_ID);
     }
 
     @Override

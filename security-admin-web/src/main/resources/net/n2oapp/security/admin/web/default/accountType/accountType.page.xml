@@ -1,14 +1,18 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-3.0"
+<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-4.0"
              name="Настройки типов аккаунтов для саморегистрации">
-    <table query-id="accountType" object-id="accountType">
+    <table>
+        <datasource query-id="accountType" object-id="accountType"/>
         <filters>
             <row>
                 <col>
                     <input-text id="name" label="Наименование"/>
                 </col>
                 <col>
-                    <input-select id="userLevel" enabled="${access.level.enabled}" label="Уровень пользователя" query-id="userLevelForFilter"/>
+                    <input-select id="userLevel"
+                                  enabled="${access.level.enabled}"
+                                  label="Уровень пользователя"
+                                  query-id="userLevelForFilter"/>
                 </col>
                 <col>
                     <search-buttons id="def"/>
@@ -18,7 +22,7 @@
         <toolbar>
             <button label="Создать" disable-on-empty-model="false">
                 <show-modal page-id="accountTypeForm" submit-operation-id="create" object-id="accountType"
-                             upload="defaults" route="/create"/>
+                            route="/create"/>
             </button>
         </toolbar>
         <columns>
@@ -37,7 +41,11 @@
         <rows>
             <click>
                 <show-modal page-id="accountTypeUpdateForm" submit-operation-id="update" object-id="accountType"
-                            detail-field-id="id" route="/update"/>
+                            route="/:account_type_id/update">
+                    <params>
+                        <path-param name="account_type_id" value="{id}"/>
+                    </params>
+                </show-modal>
             </click>
         </rows>
     </table>

@@ -1,9 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<page xmlns="http://n2oapp.net/framework/config/schema/page-3.0"
+<page xmlns="http://n2oapp.net/framework/config/schema/page-4.0"
       xmlns:pointer="http://n2oapp.net/security/schema/pointer"
       name="Организации">
     <regions>
-        <table id="organization" name="Организации" query-id="organization">
+        <table id="organization" name="Организации">
+            <datasource query-id="organization"/>
             <columns>
                 <column text-field-id="ogrn"/>
                 <column text-field-id="fullName"/>
@@ -28,7 +29,9 @@
                                 submit-operation-id="update"
                                 object-id="organization"
                                 route="/:id/update">
-                        <path-param name="id" value="{id}"/>
+                        <params>
+                            <path-param name="id" value="{id}"/>
+                        </params>
                     </show-modal>
                 </click>
             </rows>
@@ -48,7 +51,6 @@
                     <show-modal page-id="organizationForm"
                                 submit-operation-id="create"
                                 object-id="organization"
-                                upload="defaults"
                                 route="create"/>
                 </button>
             </toolbar>
