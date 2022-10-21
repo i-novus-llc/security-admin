@@ -1,7 +1,12 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-3.0"
+<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-4.0"
              name="Обновление приложения">
-    <form query-id="service" object-id="service">
+    <form>
+        <datasource query-id="service" object-id="service">
+            <filters>
+                <eq field-id="id" param="code"/>
+            </filters>
+        </datasource>
         <fields>
             <input-text id="id" label="Код приложения" required="true" enabled="false"/>
             <input-text id="name" label="Наименование приложения" required="true"/>

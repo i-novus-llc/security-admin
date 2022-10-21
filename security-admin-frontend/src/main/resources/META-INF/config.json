@@ -1,7 +1,7 @@
 {
   "user": {
     "username": "#{username}",
-    "token" : "#{token}",
+    "token": "#{token}",
     "roles": "#{roles}",
     "permissions": "#{permissions}"
   }

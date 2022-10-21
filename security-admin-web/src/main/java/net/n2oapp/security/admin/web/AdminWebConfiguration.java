@@ -17,7 +17,7 @@ public class AdminWebConfiguration {
                                            N2oInvocationFactory invocationFactory,
                                            QueryExceptionHandler exceptionHandler) {
         N2oQueryProcessor queryProcessor = new N2oQueryProcessor(invocationFactory, exceptionHandler);
-        queryProcessor.setCriteriaResolver(new BaseCriteriaConstructor());
+        queryProcessor.setCriteriaConstructor(new BaseCriteriaConstructor());
         queryProcessor.setPageStartsWith0(true);
         queryProcessor.setEnvironment(environment);
         return queryProcessor;

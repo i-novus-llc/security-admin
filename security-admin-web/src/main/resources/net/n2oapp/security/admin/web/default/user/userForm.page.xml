@@ -1,7 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-3.0"
+<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-4.0"
              name="Создание карточки пользователя">
-    <form default-values-query-id="simpleUser" object-id="user" upload="defaults">
+    <form>
+        <datasource query-id="simpleUser" object-id="user"/>
         <fields>
             <row>
                 <col size="4">

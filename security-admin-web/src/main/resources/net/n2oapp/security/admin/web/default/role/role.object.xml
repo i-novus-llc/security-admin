@@ -68,26 +68,6 @@
             <in>
                 <field id="id" mapping="[0]" domain="integer" required="true"/>
             </in>
-            <validations white-list="usedRole"/>
         </operation>
     </operations>
-
-    <validations>
-        <constraint id="usedRole"
-                    severity="danger"
-                    message="Удаление невозможно, так как имеются пользователи с такой ролью!"
-                    result="#this == 0">
-            <invocation>
-                <java method="countUsersWithRole" class="net.n2oapp.security.admin.api.service.RoleService">
-                    <spring/>
-                    <arguments>
-                        <argument name="id" type="primitive"/>
-                    </arguments>
-                </java>
-            </invocation>
-            <in>
-                <field id="id" mapping="[0]" domain="integer"/>
-            </in>
-        </constraint>
-    </validations>
 </object>

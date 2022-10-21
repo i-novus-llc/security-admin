@@ -1,7 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-3.0"
+<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-4.0"
              name="Создание карточки права доступа">
-    <form upload="defaults" query-id="${access.permission.query.id}">
+    <form>
+        <datasource object-id="permission"/>
         <fields>
             <input-select id="system" label="Система" query-id="system" required="${access.system.enabled}"
                           visible="${access.system.enabled}" label-field-id="name"/>
@@ -9,9 +10,9 @@
             <input-text id="id" required="true"/>
             <input-select id="parent" ajax="false" label="Родительское право доступа" checkboxes="true"
                           query-id="permission">
-                <pre-filters>
+                <filters>
                     <eq field-id="systemCode" value="{system.id}"/>
-                </pre-filters>
+                </filters>
                 <dependencies>
                     <set-value on="system" apply-on-init="false">
                         return null;

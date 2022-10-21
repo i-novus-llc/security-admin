@@ -1,10 +1,13 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-3.0"
+<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-4.0"
              name="Редактирование организации">
-    <form upload="query" query-id="organization" object-id="organization">
-        <pre-filters>
-            <eq field-id="id" param="id"/>
-        </pre-filters>
+    <form>
+        <datasource object-id="organization" query-id="organization">
+            <filters>
+                <eq field-id="id" param="id"/>
+
+            </filters>
+        </datasource>
         <fields>
             <row>
                 <input-text id="shortName" label="Краткое наименование" required="true"/>

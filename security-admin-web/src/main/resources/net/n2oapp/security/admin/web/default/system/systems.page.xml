@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<page xmlns="http://n2oapp.net/framework/config/schema/page-3.0"
-      object-id="system"
+<page xmlns="http://n2oapp.net/framework/config/schema/page-4.0"
       name="Системы">
     <regions>
-        <table name="Системы" query-id="system" route="/">
+        <table name="Системы">
+            <datasource object-id="system" query-id="system"/>
             <columns>
                 <column text-field-id="id" label="Код" sorting-field-id="code"/>
                 <column text-field-id="name" label="Наименование"/>
@@ -23,7 +23,9 @@
                 <click>
                     <open-page page-id="systemFormUpdate" submit-operation-id="update" object-id="system"
                                route="/:id/update">
-                        <path-param name="id" value="{id}"/>
+                        <params>
+                            <path-param name="id" value="{id}"/>
+                        </params>
                     </open-page>
                 </click>
             </rows>
@@ -43,7 +45,7 @@
             <toolbar>
                 <button id="create" label="Создать" disable-on-empty-model="false" color="primary">
                     <open-page page-id="systemForm" submit-operation-id="create"
-                               object-id="system" upload="defaults" route="/create" close-after-submit="true"
+                               object-id="system" route="/create" close-after-submit="true"
                                redirect-url-after-submit="../:id/update"/>
                 </button>
             </toolbar>

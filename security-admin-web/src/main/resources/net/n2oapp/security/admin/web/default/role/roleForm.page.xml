@@ -1,24 +1,32 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-3.0"
+<simple-page xmlns="http://n2oapp.net/framework/config/schema/page-4.0"
              name="Создание карточки роли">
-    <form upload="defaults" query-id="${access.role.query.id}">
+    <form>
+        <datasource object-id="role"/>
         <fields>
             <input-text id="name" label="Наименование" required="true"/>
-            <input-text id="code" label="Код" required="${access.role.code.required}" visible="${access.role.code.visible}"/>
+            <input-text id="code"
+                        label="Код"
+                        required="${access.role.code.required}"
+                        visible="${access.role.code.visible}"/>
             <input-text id="description" label="Описание"/>
             <input-select id="system" label="Система" query-id="system" required="${access.system.enabled}"
                           visible="${access.system.enabled}" label-field-id="name"/>
             <input-select id="userLevel" query-id="userLevel" label-field-id="name"
                           visible="${access.level.enabled}" label="Уровень пользователя">
             </input-select>
-            <input-select-tree id="permissions" ajax="false" label="Права доступа" checkboxes="true" parent-field-id="parentCode"
+            <input-select-tree id="permissions"
+                               ajax="false"
+                               label="Права доступа"
+                               checkboxes="true"
+                               parent-field-id="parentCode"
                                query-id="${access.permission.query.id}" has-children-field-id="hasChildren"
                                search-field-id="name" required="${access.role.permissions.required}" size="1000">
-                <pre-filters>
+                <filters>
                     <eq field-id="systemCode" value="{system.id}"/>
                     <eq field-id="userLevel.id" value="{userLevel.id}"/>
                     <eq field-id="forForm" value="true"/>
-                </pre-filters>
+                </filters>
                 <dependencies>
                     <set-value on="system,userLevel" apply-on-init="false">
                         return null;
