@@ -1,9 +1,9 @@
 package net.n2oapp.security.admin.frontend;
 
+import net.n2oapp.security.account.context.ContextFilter;
+import net.n2oapp.security.account.context.ContextUserInfoTokenServices;
 import net.n2oapp.security.admin.rest.client.AccountServiceRestClient;
 import net.n2oapp.security.auth.OpenIdSecurityConfigurerAdapter;
-import net.n2oapp.security.auth.common.context.ContextFilter;
-import net.n2oapp.security.auth.common.context.ContextUserInfoTokenServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +18,7 @@ public class SecurityConfig extends OpenIdSecurityConfigurerAdapter {
     @Value("${security.oauth2.client.client-id}")
     private String clientId;
 
-    @Value("${security.oauth2.resource.user-info-uri}")
+    @Value("${access.service.userinfo-url}")
     private String userInfoUri;
 
     @Autowired

@@ -1,8 +1,10 @@
 package net.n2oapp.security.admin.frontend;
 
-import net.n2oapp.security.auth.common.GatewayPrincipalExtractor;
+import net.n2oapp.security.admin.api.service.UserDetailsService;
 import net.n2oapp.security.admin.rest.client.AdminRestClientConfiguration;
 import net.n2oapp.security.admin.web.AdminWebConfiguration;
+import net.n2oapp.security.auth.common.AuthoritiesPrincipalExtractor;
+import net.n2oapp.security.auth.common.UserAttributeKeys;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -25,7 +27,7 @@ public class AdminFrontendApplication extends SpringBootServletInitializer {
 
     @Bean
     @Primary
-    public GatewayPrincipalExtractor gatewayPrincipalExtractor() {
-        return new GatewayPrincipalExtractor();
+    public AuthoritiesPrincipalExtractor gatewayPrincipalExtractor(UserDetailsService userDetailsService, UserAttributeKeys userAttributeKeys) {
+        return new AuthoritiesPrincipalExtractor(userDetailsService, "keycloak", userAttributeKeys);
     }
 }
