@@ -4,5 +4,5 @@ services:
   frontend:
     image: "${DOCKER_REGISTRY}/security-admin/frontend:${TAG}"
 
-  auth-gateway:
-    image: "${DOCKER_REGISTRY}/security-admin/auth-gateway:${TAG}"
+  backend:
+    image: "${DOCKER_REGISTRY}/security-admin/backend:${TAG}"

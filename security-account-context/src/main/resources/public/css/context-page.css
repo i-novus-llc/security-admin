@@ -1,0 +1,589 @@
+/*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
+
+/* Document
+   ========================================================================== */
+
+/**
+ * 1. Correct the line height in all browsers.
+ * 2. Prevent adjustments of font size after orientation changes in iOS.
+ */
+
+html {
+    line-height: 1.15; /* 1 */
+    -webkit-text-size-adjust: 100%; /* 2 */
+}
+
+/* Sections
+   ========================================================================== */
+
+/**
+ * Remove the margin in all browsers.
+ */
+
+body {
+    margin: 0;
+}
+
+/**
+ * Render the `main` element consistently in IE.
+ */
+
+main {
+    display: block;
+}
+
+/**
+ * Correct the font size and margin on `h1` elements within `section` and
+ * `article` contexts in Chrome, Firefox, and Safari.
+ */
+
+h1 {
+    font-size: 2em;
+    margin: 0.67em 0;
+}
+
+/* Grouping content
+   ========================================================================== */
+
+/**
+ * 1. Add the correct box sizing in Firefox.
+ * 2. Show the overflow in Edge and IE.
+ */
+
+hr {
+    box-sizing: content-box; /* 1 */
+    height: 0; /* 1 */
+    overflow: visible; /* 2 */
+}
+
+/**
+ * 1. Correct the inheritance and scaling of font size in all browsers.
+ * 2. Correct the odd `em` font sizing in all browsers.
+ */
+
+pre {
+    font-family: monospace, monospace; /* 1 */
+    font-size: 1em; /* 2 */
+}
+
+/* Text-level semantics
+   ========================================================================== */
+
+/**
+ * Remove the gray background on active links in IE 10.
+ */
+
+a {
+    background-color: transparent;
+}
+
+/**
+ * 1. Remove the bottom border in Chrome 57-
+ * 2. Add the correct text decoration in Chrome, Edge, IE, Opera, and Safari.
+ */
+
+abbr[title] {
+    border-bottom: none; /* 1 */
+    text-decoration: underline; /* 2 */
+    text-decoration: underline dotted; /* 2 */
+}
+
+/**
+ * Add the correct font weight in Chrome, Edge, and Safari.
+ */
+
+b,
+strong {
+    font-weight: bolder;
+}
+
+/**
+ * 1. Correct the inheritance and scaling of font size in all browsers.
+ * 2. Correct the odd `em` font sizing in all browsers.
+ */
+
+code,
+kbd,
+samp {
+    font-family: monospace, monospace; /* 1 */
+    font-size: 1em; /* 2 */
+}
+
+/**
+ * Add the correct font size in all browsers.
+ */
+
+small {
+    font-size: 80%;
+}
+
+/**
+ * Prevent `sub` and `sup` elements from affecting the line height in
+ * all browsers.
+ */
+
+sub,
+sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+}
+
+sub {
+    bottom: -0.25em;
+}
+
+sup {
+    top: -0.5em;
+}
+
+/* Embedded content
+   ========================================================================== */
+
+/**
+ * Remove the border on images inside links in IE 10.
+ */
+
+img {
+    border-style: none;
+}
+
+/* Forms
+   ========================================================================== */
+
+/**
+ * 1. Change the font styles in all browsers.
+ * 2. Remove the margin in Firefox and Safari.
+ */
+
+button,
+input,
+optgroup,
+select,
+textarea {
+    font-family: inherit; /* 1 */
+    font-size: 100%; /* 1 */
+    line-height: 1.15; /* 1 */
+    margin: 0; /* 2 */
+}
+
+/**
+ * Show the overflow in IE.
+ * 1. Show the overflow in Edge.
+ */
+
+button,
+input { /* 1 */
+    overflow: visible;
+}
+
+/**
+ * Remove the inheritance of text transform in Edge, Firefox, and IE.
+ * 1. Remove the inheritance of text transform in Firefox.
+ */
+
+button,
+select { /* 1 */
+    text-transform: none;
+}
+
+/**
+ * Correct the inability to style clickable types in iOS and Safari.
+ */
+
+button,
+[type="button"],
+[type="reset"],
+[type="submit"] {
+    -webkit-appearance: button;
+}
+
+/**
+ * Remove the inner border and padding in Firefox.
+ */
+
+button::-moz-focus-inner,
+[type="button"]::-moz-focus-inner,
+[type="reset"]::-moz-focus-inner,
+[type="submit"]::-moz-focus-inner {
+    border-style: none;
+    padding: 0;
+}
+
+/**
+ * Restore the focus styles unset by the previous rule.
+ */
+
+button:-moz-focusring,
+[type="button"]:-moz-focusring,
+[type="reset"]:-moz-focusring,
+[type="submit"]:-moz-focusring {
+    outline: 1px dotted ButtonText;
+}
+
+/**
+ * Correct the padding in Firefox.
+ */
+
+fieldset {
+    padding: 0.35em 0.75em 0.625em;
+}
+
+/**
+ * 1. Correct the text wrapping in Edge and IE.
+ * 2. Correct the color inheritance from `fieldset` elements in IE.
+ * 3. Remove the padding so developers are not caught out when they zero out
+ *    `fieldset` elements in all browsers.
+ */
+
+legend {
+    box-sizing: border-box; /* 1 */
+    color: inherit; /* 2 */
+    display: table; /* 1 */
+    max-width: 100%; /* 1 */
+    padding: 0; /* 3 */
+    white-space: normal; /* 1 */
+}
+
+/**
+ * Add the correct vertical alignment in Chrome, Firefox, and Opera.
+ */
+
+progress {
+    vertical-align: baseline;
+}
+
+/**
+ * Remove the default vertical scrollbar in IE 10+.
+ */
+
+textarea {
+    overflow: auto;
+}
+
+/**
+ * 1. Add the correct box sizing in IE 10.
+ * 2. Remove the padding in IE 10.
+ */
+
+[type="checkbox"],
+[type="radio"] {
+    box-sizing: border-box; /* 1 */
+    padding: 0; /* 2 */
+}
+
+/**
+ * Correct the cursor style of increment and decrement buttons in Chrome.
+ */
+
+[type="number"]::-webkit-inner-spin-button,
+[type="number"]::-webkit-outer-spin-button {
+    height: auto;
+}
+
+/**
+ * 1. Correct the odd appearance in Chrome and Safari.
+ * 2. Correct the outline style in Safari.
+ */
+
+[type="search"] {
+    -webkit-appearance: textfield; /* 1 */
+    outline-offset: -2px; /* 2 */
+}
+
+/**
+ * Remove the inner padding in Chrome and Safari on macOS.
+ */
+
+[type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+}
+
+/**
+ * 1. Correct the inability to style clickable types in iOS and Safari.
+ * 2. Change font properties to `inherit` in Safari.
+ */
+
+::-webkit-file-upload-button {
+    -webkit-appearance: button; /* 1 */
+    font: inherit; /* 2 */
+}
+
+/* Interactive
+   ========================================================================== */
+
+/*
+ * Add the correct display in Edge, IE 10+, and Firefox.
+ */
+
+details {
+    display: block;
+}
+
+/*
+ * Add the correct display in all browsers.
+ */
+
+summary {
+    display: list-item;
+}
+
+/* Misc
+   ========================================================================== */
+
+/**
+ * Add the correct display in IE 10+.
+ */
+
+template {
+    display: none;
+}
+
+/**
+ * Add the correct display in IE 10.
+ */
+
+[hidden] {
+    display: none;
+}
+
+
+:root {
+    --primary: #51A8B9;
+    --context-gray-100: #E5E5EB;
+    --context-gray-200: #E8E8ED;
+    --context-gray-300: #CAD3E0;
+    --context-gray-text: #626B7A;
+    --disabled-color: #979797;
+    --button-active: #3F8A96;
+    --focus-color: rgb(0, 95, 204);
+    --active-color: var(--primary);
+}
+
+body {
+    height: 100vh;
+    font-family: 'Roboto', Arial, sans-serif;
+}
+
+.container {
+    width: 100%;
+    max-width: 1140px;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.btn {
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 0.25rem;
+    transition: opacity .15s ease-in-out, color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn:not(:disabled):not(.disabled) {
+    cursor: pointer;
+}
+
+.context-page {
+    display: grid;
+    grid-template-rows: minmax(70px, 100px) 1fr minmax(70px, 100px);
+    gap: 35px;
+}
+
+.context-page__header {
+    padding: 10px 40px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    box-shadow: 0 1px 0 var(--context-gray-100);
+}
+
+.context-page__title {
+    justify-self: center;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+}
+
+.context-page__main {
+    max-width: 620px;
+}
+
+.context-page__footer {
+    border-top: 1px solid var(--context-gray-100);
+}
+
+.accounts__title {
+    margin-top: 0;
+    margin-bottom: 24px;
+    font-size: 26px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.accounts__subtitle {
+    margin-bottom: 40px;
+    max-width: 550px;
+    font-size: 18px;
+    font-weight: 400;
+    text-align: center;
+}
+
+.accounts__list {
+    margin: 0 auto 40px;
+    padding: 0;
+    display: grid;
+    grid-auto-rows: minmax(100px, auto);
+    align-items: center;
+    list-style: none;
+    border: 1px solid var(--context-gray-300);
+    border-radius: 8px;
+}
+
+.accounts__list:empty {
+    display: none;
+}
+
+.accounts__item {
+    border-bottom: 1px solid var(--context-gray-200);
+}
+
+.accounts__item:last-child {
+    border-bottom: none;
+}
+
+.accounts__name {
+    letter-spacing: .515px;
+}
+
+.accounts__name,
+.accounts__organization,
+.accounts__region {
+    margin-top: 0;
+}
+
+.accounts__label {
+    margin: 0;
+    padding: 24px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+}
+
+.accounts__name-wrapper {
+    grid-row: 1 / 1;
+    grid-column: 1 / 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.accounts__input-radio {
+    position: absolute;
+    appearance: none;
+}
+
+.accounts__radio {
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    border-radius: 50%;
+    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0C16.0444 0 12.1776 1.17298 8.88863 3.37061C5.59965 5.56823 3.0362 8.69181 1.52245 12.3463C0.00869621 16.0008 -0.38737 20.0222 0.384334 23.9018C1.15604 27.7814 3.06085 31.3451 5.8579 34.1421C8.65495 36.9392 12.2186 38.844 16.0982 39.6157C19.9778 40.3874 23.9992 39.9913 27.6537 38.4776C31.3082 36.9638 34.4318 34.4004 36.6294 31.1114C38.8271 27.8224 40 23.9556 40 20C39.9939 14.6975 37.8848 9.61403 34.1354 5.86463C30.386 2.11523 25.3025 0.00612848 20 0ZM29.5253 16.4979L18.2422 27.2671C17.9553 27.5401 17.5745 27.6923 17.1785 27.6923C16.7825 27.6923 16.4017 27.5401 16.1148 27.2671L10.4748 21.8825C10.1801 21.6003 10.0096 21.2126 10.0005 20.8047C9.9915 20.3967 10.1448 20.0019 10.4266 19.7069C10.7085 19.4119 11.096 19.2408 11.5039 19.2312C11.9118 19.2217 12.3068 19.3744 12.6022 19.6559L17.1785 24.0264L27.3979 14.2713C27.6932 13.9898 28.0883 13.8371 28.4962 13.8466C28.9041 13.8562 29.2916 14.0272 29.5734 14.3223C29.8553 14.6173 30.0086 15.0121 29.9995 15.42C29.9905 15.828 29.8199 16.2156 29.5253 16.4979Z' fill='%23DADCDE'/%3E%3C/svg%3E%0A");
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: background-image .25s ease;
+    will-change: background-image;
+    cursor: pointer;
+}
+
+.accounts__radio:hover {
+    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0C16.0444 0 12.1776 1.17298 8.88863 3.37061C5.59965 5.56823 3.0362 8.69181 1.52245 12.3463C0.00869621 16.0008 -0.38737 20.0222 0.384334 23.9018C1.15604 27.7814 3.06085 31.3451 5.8579 34.1421C8.65495 36.9392 12.2186 38.844 16.0982 39.6157C19.9778 40.3874 23.9992 39.9913 27.6537 38.4776C31.3082 36.9638 34.4318 34.4004 36.6294 31.1114C38.8271 27.8224 40 23.9556 40 20C39.9939 14.6975 37.8848 9.61403 34.1354 5.86463C30.386 2.11523 25.3025 0.00612848 20 0ZM29.5253 16.4979L18.2422 27.2671C17.9553 27.5401 17.5745 27.6923 17.1785 27.6923C16.7825 27.6923 16.4017 27.5401 16.1148 27.2671L10.4748 21.8825C10.1801 21.6003 10.0096 21.2126 10.0005 20.8047C9.9915 20.3967 10.1448 20.0019 10.4266 19.7069C10.7085 19.4119 11.096 19.2408 11.5039 19.2312C11.9118 19.2217 12.3068 19.3744 12.6022 19.6559L17.1785 24.0264L27.3979 14.2713C27.6932 13.9898 28.0883 13.8371 28.4962 13.8466C28.9041 13.8562 29.2916 14.0272 29.5734 14.3223C29.8553 14.6173 30.0086 15.0121 29.9995 15.42C29.9905 15.828 29.8199 16.2156 29.5253 16.4979Z' fill='%23C2C3C6'/%3E%3C/svg%3E%0A");
+}
+
+/* Active */
+
+.accounts__radio:active {
+    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0C16.0444 0 12.1776 1.17298 8.88863 3.37061C5.59965 5.56823 3.0362 8.69181 1.52245 12.3463C0.00869621 16.0008 -0.38737 20.0222 0.384334 23.9018C1.15604 27.7814 3.06085 31.3451 5.8579 34.1421C8.65495 36.9392 12.2186 38.844 16.0982 39.6157C19.9778 40.3874 23.9992 39.9913 27.6537 38.4776C31.3082 36.9638 34.4318 34.4004 36.6294 31.1114C38.8271 27.8224 40 23.9556 40 20C39.9939 14.6975 37.8848 9.61403 34.1354 5.86463C30.386 2.11523 25.3025 0.00612848 20 0ZM29.5253 16.4979L18.2422 27.2671C17.9553 27.5401 17.5745 27.6923 17.1785 27.6923C16.7825 27.6923 16.4017 27.5401 16.1148 27.2671L10.4748 21.8825C10.1801 21.6003 10.0096 21.2126 10.0005 20.8047C9.9915 20.3967 10.1448 20.0019 10.4266 19.7069C10.7085 19.4119 11.096 19.2408 11.5039 19.2312C11.9118 19.2217 12.3068 19.3744 12.6022 19.6559L17.1785 24.0264L27.3979 14.2713C27.6932 13.9898 28.0883 13.8371 28.4962 13.8466C28.9041 13.8562 29.2916 14.0272 29.5734 14.3223C29.8553 14.6173 30.0086 15.0121 29.9995 15.42C29.9905 15.828 29.8199 16.2156 29.5253 16.4979Z' fill='%233F8A96'/%3E%3C/svg%3E%0A");
+}
+
+/* Checked */
+
+.accounts__input-radio:checked + .accounts__radio {
+    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0C16.0444 0 12.1776 1.17298 8.88863 3.37061C5.59965 5.56823 3.0362 8.69181 1.52245 12.3463C0.00869621 16.0008 -0.38737 20.0222 0.384334 23.9018C1.15604 27.7814 3.06085 31.3451 5.8579 34.1421C8.65495 36.9392 12.2186 38.844 16.0982 39.6157C19.9778 40.3874 23.9992 39.9913 27.6537 38.4776C31.3082 36.9638 34.4318 34.4004 36.6294 31.1114C38.8271 27.8224 40 23.9556 40 20C39.9939 14.6975 37.8848 9.61403 34.1354 5.86463C30.386 2.11523 25.3025 0.00612848 20 0V0ZM29.5253 16.4979L18.2422 27.2671C17.9553 27.5401 17.5745 27.6923 17.1785 27.6923C16.7825 27.6923 16.4017 27.5401 16.1148 27.2671L10.4748 21.8825C10.1801 21.6003 10.0096 21.2126 10.0005 20.8047C9.9915 20.3967 10.1448 20.0019 10.4266 19.7069C10.7085 19.4119 11.096 19.2408 11.5039 19.2312C11.9118 19.2217 12.3068 19.3744 12.6022 19.6559L17.1785 24.0264L27.3979 14.2713C27.6932 13.9898 28.0883 13.8371 28.4962 13.8466C28.9041 13.8562 29.2916 14.0272 29.5734 14.3223C29.8553 14.6173 30.0086 15.0121 29.9995 15.42C29.9905 15.828 29.8199 16.2156 29.5253 16.4979V16.4979Z' fill='%2352A8B6'/%3E%3C/svg%3E%0A");
+}
+
+.accounts__input-radio:checked + .accounts__radio + .accounts__name-wrapper .accounts__name {
+    font-weight: 700;
+    letter-spacing: 0;
+}
+
+/* Disabled */
+
+.accounts__input-radio:disabled + .accounts__radio {
+    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0C16.0444 0 12.1776 1.17298 8.88863 3.37061C5.59965 5.56823 3.0362 8.69181 1.52245 12.3463C0.00869621 16.0008 -0.38737 20.0222 0.384334 23.9018C1.15604 27.7814 3.06085 31.3451 5.8579 34.1421C8.65495 36.9392 12.2186 38.844 16.0982 39.6157C19.9778 40.3874 23.9992 39.9913 27.6537 38.4776C31.3082 36.9638 34.4318 34.4004 36.6294 31.1114C38.8271 27.8224 40 23.9556 40 20C39.9939 14.6975 37.8848 9.61403 34.1354 5.86463C30.386 2.11523 25.3025 0.00612848 20 0ZM29.5253 16.4979L18.2422 27.2671C17.9553 27.5401 17.5745 27.6923 17.1785 27.6923C16.7825 27.6923 16.4017 27.5401 16.1148 27.2671L10.4748 21.8825C10.1801 21.6003 10.0096 21.2126 10.0005 20.8047C9.9915 20.3967 10.1448 20.0019 10.4266 19.7069C10.7085 19.4119 11.096 19.2408 11.5039 19.2312C11.9118 19.2217 12.3068 19.3744 12.6022 19.6559L17.1785 24.0264L27.3979 14.2713C27.6932 13.9898 28.0883 13.8371 28.4962 13.8466C28.9041 13.8562 29.2916 14.0272 29.5734 14.3223C29.8553 14.6173 30.0086 15.0121 29.9995 15.42C29.9905 15.828 29.8199 16.2156 29.5253 16.4979Z' fill='%23979797'/%3E%3C/svg%3E%0A");
+    appearance: none;
+}
+
+.accounts__name:last-child,
+.accounts__organization:last-child,
+.accounts__region:last-child {
+    margin-bottom: 0;
+}
+
+.accounts__name {
+    margin-bottom: 5px;
+    font-size: 18px;
+    padding-right: 30px;
+}
+
+.accounts__organization,
+.accounts__region {
+    font-size: 16px;
+    color: var(--context-gray-text);
+}
+
+.accounts__button {
+    margin: 0 auto;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    display: block;
+    width: 100%;
+    max-width: 200px;
+    font-size: 18px;
+    border-radius: 8px;
+}
+
+.accounts__button:hover {
+    opacity: 0.9;
+}
+
+.accounts__button:active {
+    background-color: var(--button-active);
+}
+
+.accounts__button:disabled {
+    background-color: var(--disabled-color);
+    border-color: var(--disabled-color);
+}
+
+.accounts__button.text-muted {
+    color: white !important;
+}

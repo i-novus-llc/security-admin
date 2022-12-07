@@ -8,8 +8,8 @@ services:
       args:
         JAR_FILE: target/access-web.jar
 
-  auth-gateway:
+  backend:
     build:
-      context: auth-gateway
+      context: security-admin-backend
       args:
-        JAR_FILE: target/auth-gateway.jar
+        JAR_FILE: target/access-service.jar

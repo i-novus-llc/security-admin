@@ -5,7 +5,7 @@ services:
     ports:
       - 8277:8080
 
-  auth-gateway:
+  backend:
     ports:
       - 8278:8080
 

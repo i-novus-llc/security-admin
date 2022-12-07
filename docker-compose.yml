@@ -27,7 +27,7 @@ services:
         constraints:
           - node.labels.type == service
 
-  auth-gateway:
+  backend:
     environment:
       - JAVA_OPTS=-Xmx400m
       - SERVER_PORT=8080
@@ -35,7 +35,6 @@ services:
       - ACCESS_KEYCLOAK_SERVER_URL=https://keycloak8.i-novus.ru/auth
       - ACCESS_KEYCLOAK_REALM=security-admin
       - ACCESS_ORGANIZATION_PERSIST_MODE=rest
-      - JAXRS_SWAGGER_AUTH_TOKEN_URI=http://yandex.develop:8278/oauth/token
       - ACCESS_EMAIL_AS_USERNAME=true
       - AUDIT_CLIENT_ENABLED=false
       - SPRING_CLOUD_CONSUL_CONFIG_PREFIX=security-admin-master

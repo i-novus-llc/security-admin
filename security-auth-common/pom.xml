@@ -16,11 +16,6 @@
     <dependencies>
         <dependency>
             <groupId>net.n2oapp.framework.security</groupId>
-            <artifactId>security-admin-rest-client</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.n2oapp.framework.security</groupId>
             <artifactId>security-admin-api</artifactId>
             <version>${project.version}</version>
         </dependency>

@@ -1,8 +1,14 @@
-FROM inovus/openjdk:14-jdk
+FROM adoptopenjdk/openjdk14:jre as builder
+WORKDIR app
 
-EXPOSE 8080
-
-ARG JAR_FILE
+ARG JAR_FILE=target/access-service.jar
 COPY ${JAR_FILE} app.jar
+RUN java -Djarmode=layertools -jar app.jar extract
 
-ENTRYPOINT ["java","-jar","app.jar","--server.port=8080"]
+FROM adoptopenjdk/openjdk14:jre
+WORKDIR app
+COPY --from=builder app/dependencies/ ./
+COPY --from=builder app/spring-boot-loader/ ./
+COPY --from=builder app/snapshot-dependencies/ ./
+COPY --from=builder app/application/ ./
+ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
