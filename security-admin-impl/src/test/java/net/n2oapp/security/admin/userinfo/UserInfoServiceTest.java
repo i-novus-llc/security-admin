@@ -9,7 +9,7 @@ import net.n2oapp.security.admin.impl.AdminImplConfiguration;
 import net.n2oapp.security.admin.impl.entity.*;
 import net.n2oapp.security.admin.impl.repository.AccountRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
-import net.n2oapp.security.admin.impl.userInfo.*;
+import net.n2oapp.security.admin.impl.userinfo.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;

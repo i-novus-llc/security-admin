@@ -11,7 +11,7 @@ import net.n2oapp.security.admin.impl.repository.AccountRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.UserLevelServiceImpl;
 import net.n2oapp.security.admin.impl.service.UserServiceImpl;
-import net.n2oapp.security.admin.impl.userInfo.UserInfoService;
+import net.n2oapp.security.admin.impl.userinfo.UserInfoService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.domain.EntityScan;

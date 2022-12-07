@@ -1,4 +1,4 @@
-package net.n2oapp.security.admin.impl.userInfo;
+package net.n2oapp.security.admin.impl.userinfo;
 
 import net.n2oapp.security.admin.api.model.Region;
 import net.n2oapp.security.admin.api.oauth.UserInfoEnricher;

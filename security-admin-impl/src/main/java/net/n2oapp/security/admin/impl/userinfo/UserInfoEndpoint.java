@@ -1,4 +1,4 @@
-package net.n2oapp.security.admin.impl.userInfo;
+package net.n2oapp.security.admin.impl.userinfo;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

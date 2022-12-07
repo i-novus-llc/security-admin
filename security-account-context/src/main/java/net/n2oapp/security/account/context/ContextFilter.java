@@ -26,9 +26,9 @@ import static java.util.Objects.nonNull;
 
 public class ContextFilter implements Filter {
 
-    private final static String DEFAULT_SELECT_ACCOUNT_TEMPLATE_PATH = "classpath:public/context-page/context-page.html";
-    private final static String DEFAULT_SELECT_ACCOUNT_CSS_PATH = "css/context-page.css";
-    private final static String DEFAULT_SELECT_ACCOUNT_EMBLEM_PATH = "static/rusEmblem.svg";
+    private static final String DEFAULT_SELECT_ACCOUNT_TEMPLATE_PATH = "classpath:public/context-page/context-page.html";
+    private static final String DEFAULT_SELECT_ACCOUNT_CSS_PATH = "css/context-page.css";
+    private static final String DEFAULT_SELECT_ACCOUNT_EMBLEM_PATH = "static/rusEmblem.svg";
 
     private ContextUserInfoTokenServices userInfoTokenServices;
     private AccountServiceRestClient accountServiceRestClient;

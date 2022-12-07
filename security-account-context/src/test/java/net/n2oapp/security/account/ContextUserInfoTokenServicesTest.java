@@ -11,10 +11,9 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.client.DefaultOAuth2ClientContext;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ContextUserInfoTokenServicesTest {
 
     @Mock
-    private OAuth2RestTemplate oAuth2RestTemplate;
+    private RestTemplate oAuth2RestTemplate;
 
     @Test
     public void testLoadAuthentication() {
@@ -37,9 +36,7 @@ public class ContextUserInfoTokenServicesTest {
         tokenServices.setAuthoritiesExtractor(new GatewayPrincipalExtractor());
         tokenServices.setPrincipalExtractor(new GatewayPrincipalExtractor());
         tokenServices.setRestTemplate(oAuth2RestTemplate);
-
         Mockito.when(oAuth2RestTemplate.getForEntity("userInfoUri/1", Map.class)).thenReturn(response());
-        Mockito.when(oAuth2RestTemplate.getOAuth2ClientContext()).thenReturn(new DefaultOAuth2ClientContext());
         OAuth2Authentication oAuth2Authentication = tokenServices.loadAuthentication(1);
         User user = (User) oAuth2Authentication.getPrincipal();
         assertThat(user.getUsername(), is("admin"));

@@ -8,8 +8,6 @@ import org.springframework.boot.autoconfigure.security.oauth2.resource.Principal
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Request;
 import org.springframework.util.Assert;
@@ -32,9 +30,7 @@ public class ContextUserInfoTokenServices {
 
     private final String clientId;
 
-    private OAuth2RestTemplate restTemplate;
-
-    private String tokenType = DefaultOAuth2AccessToken.BEARER_TYPE;
+    private RestTemplate restTemplate;
 
     private AuthoritiesExtractor authoritiesExtractor = new GatewayPrincipalExtractor();
 
@@ -45,7 +41,7 @@ public class ContextUserInfoTokenServices {
         this.clientId = clientId;
     }
 
-    public void setRestTemplate(OAuth2RestTemplate restTemplate) {
+    public void setRestTemplate(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
@@ -84,7 +80,6 @@ public class ContextUserInfoTokenServices {
             this.logger.debug("Getting user info from: " + path);
         }
         try {
-            RestTemplate restTemplate = this.restTemplate;
             if (restTemplate == null) {
                 restTemplate = new RestTemplate();
                 restTemplate.getInterceptors().add((request, body, execution) -> {
