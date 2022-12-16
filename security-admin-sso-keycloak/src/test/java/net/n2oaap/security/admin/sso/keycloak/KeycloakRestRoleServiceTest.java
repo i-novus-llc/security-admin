@@ -1,59 +1,76 @@
 package net.n2oaap.security.admin.sso.keycloak;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.n2oapp.security.admin.sso.keycloak.AdminSsoKeycloakProperties;
 import net.n2oapp.security.admin.sso.keycloak.KeycloakRestRoleService;
-import org.apache.cxf.jaxrs.impl.ResponseImpl;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.keycloak.representations.idm.RoleRepresentation;
-import org.mockito.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.*;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.web.client.RestTemplate;
 
-import javax.ws.rs.core.Response;
-import java.net.URI;
+import java.io.IOException;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE,
         classes = TestApplication.class,
         properties = {"spring.liquibase.enabled=false",
                 "audit.service.url=Mocked", "audit.client.enabled=false"})
+@Import(TestConfig.class)
 public class KeycloakRestRoleServiceTest {
 
-    public static final String ROLES = "http://127.0.0.1:8085/auth/admin/realms/master/roles/";
-    public static final String COMPOSITES = "http://127.0.0.1:8085/auth/admin/realms/master/roles/test.role/composites";
+    public static final String ROLES = "/auth/admin/realms/master/roles/";
+    public static final String COMPOSITES = "/auth/admin/realms/master/roles/test.role/composites";
 
-    @Spy
+    @Autowired
+    private KeycloakRestRoleService roleService;
+    @Autowired
     private AdminSsoKeycloakProperties properties;
-    @Mock
-    private RestTemplate restTemplate;
-    @InjectMocks
-    private KeycloakRestRoleService roleService = new KeycloakRestRoleService(properties, restTemplate);
+    @Autowired
+    public ObjectMapper objectMapper;
+    public static MockWebServer mockBackEnd;
+
+    @BeforeEach
+    public void before() {
+        properties.setServerUrl(String.format("http://127.0.0.1:%s/auth", mockBackEnd.getPort()));
+    }
+
+    @BeforeAll
+    static void setUp() throws IOException {
+        mockBackEnd = new MockWebServer();
+        mockBackEnd.start();
+    }
+
+    @AfterAll
+    static void tearDown() throws IOException {
+        mockBackEnd.shutdown();
+    }
 
     @Test
-    public void testCreateCompositesRole() {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setLocation(URI.create("PathMock"));
-        ResponseEntity<ResponseImpl> responseEntity = new ResponseEntity<>(httpHeaders, HttpStatus.OK);
-        Mockito.doReturn(responseEntity).when(restTemplate).postForEntity(eq(ROLES), any(), eq(Response.class));
-        Mockito.doReturn(responseEntity).when(restTemplate).postForEntity(eq(COMPOSITES), any(), eq(Response.class));
+    public void testCreateCompositesRole() throws IOException, InterruptedException {
+        mockBackEnd.enqueue(new MockResponse());
+        mockBackEnd.enqueue(new MockResponse());
         RoleRepresentation roleRepresentation = new RoleRepresentation();
         roleRepresentation.setId("testId");
-        ResponseEntity<RoleRepresentation> representationResponseEntity = new ResponseEntity<>(roleRepresentation, HttpStatus.OK);
-        String roleName = "test.role";
-        Mockito.doReturn(representationResponseEntity).when(restTemplate).getForEntity(eq(ROLES + roleName), eq(RoleRepresentation.class));
-        ArgumentCaptor<HttpEntity> httpEntityCaptor = ArgumentCaptor.forClass(HttpEntity.class);
-
+        mockBackEnd.enqueue(new MockResponse().setBody(objectMapper.writeValueAsString(roleRepresentation)).addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON));
 
         RoleRepresentation role = new RoleRepresentation();
-        role.setName(roleName);
+        role.setName("test.role");
         role.setComposite(true);
         role.setDescription("test composite role");
         RoleRepresentation.Composites composites = new RoleRepresentation.Composites();
@@ -65,73 +82,62 @@ public class KeycloakRestRoleServiceTest {
 
         roleService.createRole(role);
 
-        Mockito.verify(restTemplate).postForEntity(
-                Mockito.eq(ROLES),
-                Mockito.any(), Mockito.eq(Response.class));
+        RecordedRequest recordedRequest = mockBackEnd.takeRequest();
+        assertEquals("POST", recordedRequest.getMethod());
+        assertEquals(ROLES, recordedRequest.getPath());
 
-        Mockito.verify(restTemplate).postForEntity(
-                Mockito.eq(COMPOSITES),
-                httpEntityCaptor.capture(), Mockito.eq(Response.class));
+        recordedRequest = mockBackEnd.takeRequest();
+        assertEquals("POST", recordedRequest.getMethod());
+        assertEquals(COMPOSITES, recordedRequest.getPath());
 
-        HttpEntity httpEntity = httpEntityCaptor.getValue();
-        Set<KeycloakRestRoleService.IdObject> body = (Set<KeycloakRestRoleService.IdObject>) httpEntity.getBody();
+        Set<KeycloakRestRoleService.IdObject> body = objectMapper.readValue(recordedRequest.getBody().readUtf8(), new TypeReference<Set<KeycloakRestRoleService.IdObject>>() {
+        });
         assertNotNull(body);
         assertTrue(body.stream().anyMatch(ob -> ob.getId().equals("master")));
         assertTrue(body.stream().anyMatch(ob -> ob.getId().equals("testClient")));
     }
 
     @Test
-    public void testUpdateRoleRemoveCompositeRole() {
-        ArgumentCaptor<HttpEntity> httpEntityCaptor = ArgumentCaptor.forClass(HttpEntity.class);
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setLocation(URI.create("PathMock"));
-        ResponseEntity<ResponseImpl> responseEntity = new ResponseEntity<>(httpHeaders, HttpStatus.OK);
-
-        ResponseEntity roleRepresentationsResponse = mock(ResponseEntity.class);
-
+    public void testUpdateRoleRemoveCompositeRole() throws JsonProcessingException, InterruptedException {
+        mockBackEnd.enqueue(new MockResponse());
         RoleRepresentation[] roleRepresentations = new RoleRepresentation[1];
         RoleRepresentation role = new RoleRepresentation();
         role.setId(UUID.randomUUID().toString());
         role.setName("test.role");
         role.setComposite(true);
         roleRepresentations[0] = role;
-
-        doReturn(responseEntity).when(restTemplate).exchange(eq(ROLES + "test.role"), eq(HttpMethod.PUT), any(), eq(Response.class));
-        doReturn(roleRepresentationsResponse).when(restTemplate).getForEntity(eq(COMPOSITES), any());
-        doReturn(roleRepresentations).when(roleRepresentationsResponse).getBody();
-        doReturn(responseEntity).when(restTemplate).exchange(eq(ROLES + "test.role"), eq(HttpMethod.DELETE), any(), eq(Response.class));
+        mockBackEnd.enqueue(new MockResponse().setBody(objectMapper.writeValueAsString(roleRepresentations)).addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON));
+        mockBackEnd.enqueue(new MockResponse());
 
         roleService.updateRole(role);
 
-        Mockito.verify(restTemplate).exchange(
-                Mockito.eq(ROLES + "test.role"),
-                Mockito.eq(HttpMethod.PUT), Mockito.any(HttpEntity.class), Mockito.eq(Response.class));
+        RecordedRequest recordedRequest = mockBackEnd.takeRequest();
+        assertEquals("PUT", recordedRequest.getMethod());
+        assertEquals(ROLES + "test.role", recordedRequest.getPath());
 
-        Mockito.verify(restTemplate).exchange(
-                Mockito.eq(COMPOSITES),
-                Mockito.eq(HttpMethod.DELETE), httpEntityCaptor.capture(), Mockito.eq(Response.class));
+        mockBackEnd.takeRequest();
 
-        HttpEntity httpEntity = httpEntityCaptor.getValue();
-        Set<KeycloakRestRoleService.IdObject> body = (Set<KeycloakRestRoleService.IdObject>) httpEntity.getBody();
+        recordedRequest = mockBackEnd.takeRequest();
+        assertEquals("DELETE", recordedRequest.getMethod());
+        assertEquals(COMPOSITES, recordedRequest.getPath());
+
+        Set<KeycloakRestRoleService.IdObject> body = objectMapper.readValue(recordedRequest.getBody().readUtf8(), new TypeReference<Set<KeycloakRestRoleService.IdObject>>() {
+        });
         assertNotNull(body);
         assertTrue(body.stream().anyMatch(ob -> ob.getId().equals(role.getId())));
-
-        roleService.deleteRole(role.getName());
     }
 
     @Test
-    public void testUpdateRoleAddCompositeRole() {
-        ArgumentCaptor<HttpEntity> httpEntityCaptor = ArgumentCaptor.forClass(HttpEntity.class);
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setLocation(URI.create("PathMock"));
-        ResponseEntity<ResponseImpl> responseEntity = new ResponseEntity<>(httpHeaders, HttpStatus.OK);
-
-        ResponseEntity roleRepresentationsResponse = mock(ResponseEntity.class);
+    public void testUpdateRoleAddCompositeRole() throws InterruptedException, JsonProcessingException {
+        mockBackEnd.enqueue(new MockResponse());
+        mockBackEnd.enqueue(new MockResponse().setBody(objectMapper.writeValueAsString(new RoleRepresentation[0])).addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON));
+        mockBackEnd.enqueue(new MockResponse());
 
         RoleRepresentation roleToUpdate = new RoleRepresentation();
         roleToUpdate.setId(UUID.randomUUID().toString());
         roleToUpdate.setName("test.role");
         roleToUpdate.setComposite(true);
+
         RoleRepresentation.Composites composites = new RoleRepresentation.Composites();
         composites.setRealm(Collections.singleton("master"));
         Map<String, List<String>> clients = new HashMap<>();
@@ -139,22 +145,20 @@ public class KeycloakRestRoleServiceTest {
         composites.setClient(clients);
         roleToUpdate.setComposites(composites);
 
-        doReturn(responseEntity).when(restTemplate).exchange(eq(ROLES + "test.role"), eq(HttpMethod.PUT), any(), eq(Response.class));
-        doReturn(roleRepresentationsResponse).when(restTemplate).getForEntity(eq(COMPOSITES), any());
-        doReturn(new RoleRepresentation[0]).when(roleRepresentationsResponse).getBody();
-        doReturn(responseEntity).when(restTemplate).exchange(eq(ROLES + "test.role"), eq(HttpMethod.DELETE), any(), eq(Response.class));
-        doReturn(responseEntity).when(restTemplate).postForEntity(eq(COMPOSITES), any(), eq(Response.class));
-
         roleService.updateRole(roleToUpdate);
 
-        Mockito.verify(restTemplate).exchange(
-                Mockito.eq(ROLES + "test.role"),
-                Mockito.eq(HttpMethod.PUT), Mockito.any(HttpEntity.class), Mockito.eq(Response.class));
+        RecordedRequest recordedRequest = mockBackEnd.takeRequest();
+        assertEquals("PUT", recordedRequest.getMethod());
+        assertEquals(ROLES + "test.role", recordedRequest.getPath());
 
-        Mockito.verify(restTemplate).postForEntity(eq(COMPOSITES), httpEntityCaptor.capture(), eq(Response.class));
+        mockBackEnd.takeRequest();
 
-        HttpEntity httpEntity = httpEntityCaptor.getValue();
-        Set<KeycloakRestRoleService.IdObject> body = (Set<KeycloakRestRoleService.IdObject>) httpEntity.getBody();
+        recordedRequest = mockBackEnd.takeRequest();
+        assertEquals("POST", recordedRequest.getMethod());
+        assertEquals(COMPOSITES, recordedRequest.getPath());
+
+        Set<KeycloakRestRoleService.IdObject> body = objectMapper.readValue(recordedRequest.getBody().readUtf8(), new TypeReference<Set<KeycloakRestRoleService.IdObject>>() {
+        });
         assertNotNull(body);
         assertTrue(body.stream().anyMatch(ob -> ob.getId().equals("master")));
         assertTrue(body.stream().anyMatch(ob -> ob.getId().equals("testClient")));

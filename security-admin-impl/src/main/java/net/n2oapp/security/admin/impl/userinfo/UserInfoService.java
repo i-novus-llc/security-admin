@@ -34,7 +34,7 @@ public class UserInfoService {
     public Map<String, Object> buildUserInfo(Integer accountId) {
         Map<String, Object> userInfo = new HashMap<>();
         if (nonNull(accountId)) {
-            AccountEntity account = accountRepository.getOne(accountId);
+            AccountEntity account = accountRepository.getReferenceById(accountId);
             userInfo.put(ACCOUNT_ID, account.getId().toString());
             for (UserInfoEnricher<AccountEntity> enricher : userInfoEnrichers)
                 enricher.enrich(userInfo, account);

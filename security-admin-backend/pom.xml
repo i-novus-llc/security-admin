@@ -36,10 +36,10 @@
             <version>${project.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>net.n2oapp.platform</groupId>
-            <artifactId>n2o-platform-starter-ms</artifactId>
-        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>net.n2oapp.platform</groupId>-->
+        <!--            <artifactId>n2o-platform-starter-ms</artifactId>-->
+        <!--        </dependency>-->
 
         <dependency>
             <groupId>net.n2oapp.platform</groupId>
@@ -58,7 +58,7 @@
         </dependency>
 
         <dependency>
-            <groupId>ru.i-novus.ms.rdm</groupId>
+            <groupId>ru.i-novus.ms.rdm.sync</groupId>
             <artifactId>rdm-sync-spring-boot-starter</artifactId>
             <version>${rdm.version}</version>
             <exclusions>

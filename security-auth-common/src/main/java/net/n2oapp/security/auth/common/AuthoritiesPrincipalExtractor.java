@@ -20,8 +20,6 @@ import net.n2oapp.security.admin.api.service.UserDetailsService;
 import net.n2oapp.security.auth.common.authority.PermissionGrantedAuthority;
 import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
 import net.n2oapp.security.auth.common.authority.SystemGrantedAuthority;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.AuthoritiesExtractor;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
 import org.springframework.security.authentication.AccountStatusUserDetailsChecker;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsChecker;
@@ -40,7 +38,7 @@ import static net.n2oapp.security.auth.common.UserParamsUtil.extractFromMap;
 /**
  * Извлекает Userinfo из ответа Keycloak
  */
-public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, AuthoritiesExtractor {
+public class AuthoritiesPrincipalExtractor /*implements PrincipalExtractor, AuthoritiesExtractor*/ {
 
     private static final String GRANTED_AUTHORITY_KEY = "GrantedAuthorityKey";
     private final UserDetailsChecker userDetailsChecker = new AccountStatusUserDetailsChecker();
@@ -60,7 +58,6 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
         principalKeys = userAttributeKeys.principal;
     }
 
-    @Override
     public Object extractPrincipal(Map<String, Object> map) {
         net.n2oapp.security.admin.api.model.User model = getUser(map);
         if (model == null) {
@@ -93,7 +90,6 @@ public class AuthoritiesPrincipalExtractor implements PrincipalExtractor, Author
         return user;
     }
 
-    @Override
     public List<GrantedAuthority> extractAuthorities(Map<String, Object> map) {
         return getAuthorities(map, null);
     }

@@ -17,20 +17,17 @@ package net.n2oapp.security.auth;
 
 import net.n2oapp.framework.access.data.SecurityProvider;
 import net.n2oapp.framework.api.MetadataEnvironment;
-import net.n2oapp.security.auth.N2oSecurityConfigurerAdapter;
-import net.n2oapp.security.auth.N2oUrlFilter;
 import net.n2oapp.security.auth.context.SpringSecurityUserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
-import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2SsoProperties;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthorizationCodeAuthenticationToken;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 
@@ -40,7 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Адаптер для настройки SSO аутентификации по протоколу OAuth2 OpenId Connect
  */
-@EnableOAuth2Sso
+@EnableWebSecurity
 public abstract class OpenIdSecurityConfigurerAdapter extends N2oSecurityConfigurerAdapter {
 
     @Value("${security.oauth2.sso.logout-uri}")
@@ -58,19 +55,15 @@ public abstract class OpenIdSecurityConfigurerAdapter extends N2oSecurityConfigu
     @Autowired
     private SecurityProvider securityProvider;
 
-    @Autowired
-    private OAuth2SsoProperties sso;
-
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         authorize(beforeAuthorize(http));
+        http.oauth2Login();
         configureExceptionHandling(http.exceptionHandling());
         configureLogout(http.logout());
         http.addFilterAfter(new N2oUrlFilter(schemaId, defaultUrlAccessDenied, environment, securityProvider), FilterSecurityInterceptor.class);
         http.csrf().disable();
     }
-
 
     @Override
     public SpringSecurityUserContext springSecurityUserContext() {
@@ -78,9 +71,9 @@ public abstract class OpenIdSecurityConfigurerAdapter extends N2oSecurityConfigu
             @Override
             public Object get(String param) {
                 if ("token".equals(param)) {
-                    OAuth2AuthenticationDetails details = getAuthenticationDetails();
+                    OAuth2AuthorizationCodeAuthenticationToken details = getAuthenticationDetails();
                     if (details != null) {
-                        return details.getTokenValue();
+                        return details.getAccessToken();
                     }
                 }
                 return super.get(param);
@@ -98,14 +91,14 @@ public abstract class OpenIdSecurityConfigurerAdapter extends N2oSecurityConfigu
         }
     }
 
-    private OAuth2AuthenticationDetails getAuthenticationDetails() {
+    private OAuth2AuthorizationCodeAuthenticationToken getAuthenticationDetails() {
         SecurityContext context = SecurityContextHolder.getContext();
         if (context != null) {
             Authentication authentication = context.getAuthentication();
             if (authentication != null) {
                 Object details = authentication.getDetails();
-                if (details instanceof OAuth2AuthenticationDetails) {
-                    return (OAuth2AuthenticationDetails) details;
+                if (details instanceof OAuth2AuthorizationCodeAuthenticationToken) {
+                    return (OAuth2AuthorizationCodeAuthenticationToken) details;
                 }
             }
         }

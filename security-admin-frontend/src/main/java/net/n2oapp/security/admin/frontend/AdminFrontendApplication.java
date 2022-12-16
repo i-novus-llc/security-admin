@@ -27,7 +27,7 @@ public class AdminFrontendApplication extends SpringBootServletInitializer {
 
     @Bean
     @Primary
-    public AuthoritiesPrincipalExtractor gatewayPrincipalExtractor(UserDetailsService userDetailsService, UserAttributeKeys userAttributeKeys) {
+    public AuthoritiesPrincipalExtractor keycloakPrincipalExtractor(UserDetailsService userDetailsService, UserAttributeKeys userAttributeKeys) {
         return new AuthoritiesPrincipalExtractor(userDetailsService, "keycloak", userAttributeKeys);
     }
 }

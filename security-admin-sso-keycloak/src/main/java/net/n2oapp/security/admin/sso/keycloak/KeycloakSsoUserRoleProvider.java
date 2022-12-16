@@ -12,6 +12,7 @@ import org.keycloak.representations.idm.UserRepresentation;
 import org.quartz.JobKey;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.HttpClientErrorException;
@@ -36,7 +37,8 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
     private SchedulerFactoryBean schedulerFactoryBean;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    @Qualifier("cxfObjectMapper")
+    public ObjectMapper objectMapper;
 
     public KeycloakSsoUserRoleProvider(AdminSsoKeycloakProperties properties) {
         this.properties = properties;

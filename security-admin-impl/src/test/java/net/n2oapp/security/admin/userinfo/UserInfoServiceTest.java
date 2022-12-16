@@ -30,7 +30,7 @@ public class UserInfoServiceTest {
         UserRepository userRepository = mock(UserRepository.class);
 
         when(userRepository.findOneByUsernameIgnoreCase("testUser")).thenReturn(initUserEntity());
-        when(accountRepository.getOne(1)).thenReturn(initAccountEntity());
+        when(accountRepository.getReferenceById(1)).thenReturn(initAccountEntity());
         UserInfoService userInfoService = new UserInfoService(userRepository, accountRepository,
                 List.of(new OrganizationEnricher(), new RolesEnricher(), new SystemsEnricher(true),
                         new RegionEnricher(), new DepartmentEnricher(), new PermissionsEnricher(true),

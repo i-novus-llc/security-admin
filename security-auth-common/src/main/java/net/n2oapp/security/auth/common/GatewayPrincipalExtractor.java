@@ -15,18 +15,10 @@
  */
 package net.n2oapp.security.auth.common;
 
-import org.springframework.boot.autoconfigure.security.oauth2.resource.AuthoritiesExtractor;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
-import org.springframework.security.core.GrantedAuthority;
-
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
  * Извлекает Userinfo из ответа auth-gateway
  */
-public class GatewayPrincipalExtractor implements PrincipalExtractor, AuthoritiesExtractor {
+public class GatewayPrincipalExtractor /*implements PrincipalExtractor, AuthoritiesExtractor*/ {
 
     private static final String USERNAME = "username";
     private static final String NAME = "name";
@@ -40,33 +32,33 @@ public class GatewayPrincipalExtractor implements PrincipalExtractor, Authoritie
     private static final String REGION = "region";
     private static final String ACCOUNT_ID = "accountId";
 
-    @Override
-    public List<GrantedAuthority> extractAuthorities(Map<String, Object> map) {
-        return UserParamsUtil.extractAuthorities(map);
-    }
-
-    @Override
-    public Object extractPrincipal(Map<String, Object> map) {
-        //todo учесть что параметры в кейклок могут быть названы по разному, смотри AuthoritiesPrincipalExtractor
-        User user = new User((String) map.get(USERNAME), "N/A", extractAuthorities(map), (String) map.get(SURNAME), (String) map.get(NAME),
-                (String) map.get(PATRONYMIC), (String) map.get(EMAIL));
-        user.setAccountId((String) map.get(ACCOUNT_ID));
-
-        LinkedHashMap department = (LinkedHashMap) map.get(DEPARTMENT);
-
-        if (department != null) {
-            user.setDepartment((String) department.get(CODE_KEY));
-            user.setDepartmentName((String) department.get(NAME_KEY));
-        }
-
-        LinkedHashMap organization = (LinkedHashMap) map.get(ORGANIZATION);
-        if (organization != null)
-            user.setOrganization((String) organization.get(CODE_KEY));
-
-        LinkedHashMap region = (LinkedHashMap) map.get(REGION);
-        if (region != null)
-            user.setRegion((String) region.get(CODE_KEY));
-
-        return user;
-    }
+//    @Override
+//    public List<GrantedAuthority> extractAuthorities(Map<String, Object> map) {
+//        return UserParamsUtil.extractAuthorities(map);
+//    }
+//
+//    @Override
+//    public Object extractPrincipal(Map<String, Object> map) {
+//        //todo учесть что параметры в кейклок могут быть названы по разному, смотри AuthoritiesPrincipalExtractor
+//        User user = new User((String) map.get(USERNAME), "N/A", extractAuthorities(map), (String) map.get(SURNAME), (String) map.get(NAME),
+//                (String) map.get(PATRONYMIC), (String) map.get(EMAIL));
+//        user.setAccountId((String) map.get(ACCOUNT_ID));
+//
+//        LinkedHashMap department = (LinkedHashMap) map.get(DEPARTMENT);
+//
+//        if (department != null) {
+//            user.setDepartment((String) department.get(CODE_KEY));
+//            user.setDepartmentName((String) department.get(NAME_KEY));
+//        }
+//
+//        LinkedHashMap organization = (LinkedHashMap) map.get(ORGANIZATION);
+//        if (organization != null)
+//            user.setOrganization((String) organization.get(CODE_KEY));
+//
+//        LinkedHashMap region = (LinkedHashMap) map.get(REGION);
+//        if (region != null)
+//            user.setRegion((String) region.get(CODE_KEY));
+//
+//        return user;
+//    }
 }

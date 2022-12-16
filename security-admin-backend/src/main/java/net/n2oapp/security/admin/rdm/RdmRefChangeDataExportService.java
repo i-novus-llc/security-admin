@@ -3,7 +3,7 @@ package net.n2oapp.security.admin.rdm;
 import net.n2oapp.security.admin.api.service.RefChangeDataExportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import ru.inovus.ms.rdm.sync.service.change_data.RdmChangeDataClient;
+import ru.i_novus.ms.rdm.sync.service.change_data.RdmChangeDataClient;
 
 import java.io.Serializable;
 import java.util.List;

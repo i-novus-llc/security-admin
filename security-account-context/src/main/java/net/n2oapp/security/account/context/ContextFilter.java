@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -105,8 +104,8 @@ public class ContextFilter implements Filter {
     }
 
     private void selectAccount(Integer accountId, Authentication currentAuthentication) {
-        OAuth2Authentication oAuth2Authentication = userInfoTokenServices.loadAuthentication(accountId);
-        oAuth2Authentication.setDetails(currentAuthentication.getDetails());
-        SecurityContextHolder.getContext().setAuthentication(oAuth2Authentication);
+//        OAuth2Authentication oAuth2Authentication = userInfoTokenServices.loadAuthentication(accountId);
+//        oAuth2Authentication.setDetails(currentAuthentication.getDetails());
+//        SecurityContextHolder.getContext().setAuthentication(oAuth2Authentication);
     }
 }

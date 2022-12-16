@@ -1,6 +1,6 @@
 package net.n2oapp.security.admin.loader;
 
-import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
+import net.n2oapp.platform.test.autoconfigure.pg.EnableEmbeddedPg;
 import net.n2oapp.security.admin.TestApplication;
 import net.n2oapp.security.admin.api.criteria.AccountTypeCriteria;
 import net.n2oapp.security.admin.api.model.AccountType;

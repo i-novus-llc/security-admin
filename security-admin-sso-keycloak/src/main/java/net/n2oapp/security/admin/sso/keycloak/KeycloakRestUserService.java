@@ -4,14 +4,17 @@ import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.ErrorRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestOperations;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.ws.rs.core.Response;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 /**
  * Сервис для создания, изменения, удаления пользователя в keycloak
@@ -28,12 +31,12 @@ public class KeycloakRestUserService {
     private static String USERS_COUNT = "%s/admin/realms/%s/users/count";
 
     private AdminSsoKeycloakProperties properties;
-    private RestOperations template;
+    private WebClient webClient;
     private KeycloakRestRoleService roleService;
 
-    public KeycloakRestUserService(AdminSsoKeycloakProperties properties, RestOperations template, KeycloakRestRoleService roleService) {
+    public KeycloakRestUserService(AdminSsoKeycloakProperties properties, WebClient webClient, KeycloakRestRoleService roleService) {
         this.properties = properties;
-        this.template = template;
+        this.webClient = webClient;
         this.roleService = roleService;
     }
 
@@ -43,7 +46,7 @@ public class KeycloakRestUserService {
     public Integer getUsersCount() {
         final String serverUrl = String.format(USERS_COUNT, properties.getServerUrl(), properties.getRealm());
         try {
-            return template.getForObject(serverUrl, Integer.class);
+            return webClient.get().uri(serverUrl).retrieve().bodyToMono(Integer.class).block();
         } catch (HttpClientErrorException ex) {
             if (ex.getRawStatusCode() == 404) {
                 return null;
@@ -61,7 +64,7 @@ public class KeycloakRestUserService {
     public UserRepresentation getById(String userGuid) {
         final String serverUrl = String.format(USER_BY_ID, properties.getServerUrl(), properties.getRealm(), userGuid);
         try {
-            ResponseEntity<UserRepresentation> response = template.getForEntity(serverUrl, UserRepresentation.class);
+            ResponseEntity<UserRepresentation> response = webClient.get().uri(serverUrl).retrieve().toEntity(UserRepresentation.class).block();
             return response.getBody();
         } catch (HttpClientErrorException ex) {
             if (ex.getRawStatusCode() == 404) {
@@ -90,8 +93,8 @@ public class KeycloakRestUserService {
 
         final String serverUrl = String.format(SEARCH_USERS, properties.getServerUrl(), properties.getRealm(), criteria.isEmpty() ? "" : "?" + criteria);
         try {
-            ResponseEntity<UserRepresentation[]> response = template.getForEntity(serverUrl, UserRepresentation[].class);
-            return Arrays.asList(response.getBody());
+            ResponseEntity<List<UserRepresentation>> response = webClient.get().uri(serverUrl).retrieve().toEntityList(UserRepresentation.class).block();
+            return response.getBody();
         } catch (HttpClientErrorException ex) {
             if (ex.getRawStatusCode() == 404) {
                 return Collections.EMPTY_LIST;
@@ -108,10 +111,7 @@ public class KeycloakRestUserService {
      */
     public String createUser(UserRepresentation user) {
         final String serverUrl = String.format(USERS, properties.getServerUrl(), properties.getRealm());
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        ResponseEntity<Response> response = template
-                .postForEntity(serverUrl, new HttpEntity<>(user, headers), Response.class);
+        ResponseEntity<Response> response = webClient.post().uri(serverUrl).contentType(APPLICATION_JSON).bodyValue(user).retrieve().toEntity(Response.class).block();
         if (response.getStatusCodeValue() >= 200 && response.getStatusCodeValue() < 300) {
             return response.getHeaders().getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
         } else {
@@ -126,10 +126,7 @@ public class KeycloakRestUserService {
      */
     public void updateUser(UserRepresentation user) {
         final String serverUrl = String.format(USER_BY_ID, properties.getServerUrl(), properties.getRealm(), user.getId());
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        ResponseEntity<Response> response = template
-                .exchange(serverUrl, HttpMethod.PUT, new HttpEntity<>(user, headers), Response.class);
+        ResponseEntity<Response> response = webClient.put().uri(serverUrl).contentType(APPLICATION_JSON).bodyValue(user).retrieve().toEntity(Response.class).block();
         if (response.getStatusCodeValue() < 200 || response.getStatusCodeValue() > 300) {
             throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
         }
@@ -142,10 +139,7 @@ public class KeycloakRestUserService {
      */
     public void deleteUser(String guid) {
         final String serverUrl = String.format(USER_BY_ID, properties.getServerUrl(), properties.getRealm(), guid);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        ResponseEntity<Response> response = template
-                .exchange(serverUrl, HttpMethod.DELETE, new HttpEntity<>(headers), Response.class);
+        ResponseEntity<Response> response = webClient.method(HttpMethod.DELETE).uri(serverUrl).contentType(APPLICATION_JSON).retrieve().toEntity(Response.class).block();
         if (response.getStatusCodeValue() < 200 || response.getStatusCodeValue() > 300) {
             throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
         }
@@ -171,9 +165,7 @@ public class KeycloakRestUserService {
                 }
             });
             final String serverUrl = String.format(USER_ROLES, properties.getServerUrl(), properties.getRealm(), userGuid);
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            ResponseEntity<Response> response = template.postForEntity(serverUrl, new HttpEntity<>(roles, headers), Response.class);
+            ResponseEntity<Response> response = webClient.post().uri(serverUrl).contentType(APPLICATION_JSON).bodyValue(roles).retrieve().toEntity(Response.class).block();
             if (response.getStatusCodeValue() < 200 || response.getStatusCodeValue() > 300) {
                 throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
             }
@@ -189,8 +181,8 @@ public class KeycloakRestUserService {
     public List<RoleRepresentation> getActualUserRoles(String userGuid) {
         final String serverUrl = String.format(USER_ROLES, properties.getServerUrl(), properties.getRealm(), userGuid);
         try {
-            ResponseEntity<RoleRepresentation[]> response = template.getForEntity(serverUrl, RoleRepresentation[].class);
-            return Arrays.asList(response.getBody());
+            ResponseEntity<List<RoleRepresentation>> response = webClient.get().uri(serverUrl).retrieve().toEntityList(RoleRepresentation.class).block();
+            return response.getBody();
         } catch (HttpClientErrorException ex) {
             if (ex.getRawStatusCode() == 404) {
                 return Collections.EMPTY_LIST;
@@ -208,9 +200,7 @@ public class KeycloakRestUserService {
     public void deleteUserRoles(String userGuid, List<RoleRepresentation> roles) {
         if (roles != null && !roles.isEmpty()) {
             final String serverUrl = String.format(USER_ROLES, properties.getServerUrl(), properties.getRealm(), userGuid);
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            ResponseEntity<Response> response = template.exchange(serverUrl, HttpMethod.DELETE, new HttpEntity<>(roles, headers), Response.class);
+            ResponseEntity<Response> response = webClient.method(HttpMethod.DELETE).uri(serverUrl).contentType(APPLICATION_JSON).bodyValue(roles).retrieve().toEntity(Response.class).block();
             if (response.getStatusCodeValue() < 200 || response.getStatusCodeValue() > 300) {
                 throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
             }
@@ -230,14 +220,14 @@ public class KeycloakRestUserService {
         passwordCred.setValue(newPassword);
         final String serverUrl = String.format(RESET_PASSWORD, properties.getServerUrl(), properties.getRealm(), userGuid);
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        ResponseEntity<Response> response = template.exchange(serverUrl, HttpMethod.PUT, new HttpEntity<>(passwordCred, headers), Response.class);
+        headers.setContentType(APPLICATION_JSON);
+        ResponseEntity<Response> response = webClient.put().uri(serverUrl).contentType(APPLICATION_JSON).bodyValue(passwordCred).retrieve().toEntity(Response.class).block();
         if (response.getStatusCodeValue() < 200 || response.getStatusCodeValue() > 300) {
             throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
         }
     }
 
-    public void setTemplate(RestOperations template) {
-        this.template = template;
+    public void setWebClient(WebClient webClient) {
+        this.webClient = webClient;
     }
 }
