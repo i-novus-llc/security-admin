@@ -16,7 +16,6 @@
 package net.n2oapp.security.admin.api.criteria;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
@@ -37,6 +36,13 @@ public class BaseCriteria implements Pageable {
 
     @DefaultValue("10")
     private int size;
+
+    //    used to avoid swagger type exception
+    private long offset;
+    private Sort sort;
+    private int pageSize;
+    private int pageNumber;
+    //    used to avoid swagger type exception
 
     private List<Sort.Order> orders;
 
@@ -74,14 +80,11 @@ public class BaseCriteria implements Pageable {
     }
 
     @Override
-//    @JsonIgnore()
-    @JsonIgnoreProperties()
     public long getOffset() {
         return this.page * this.size;
     }
 
     @Override
-//    @JsonIgnore
     public Sort getSort() {
         if (orders != null && !orders.isEmpty()) {
             return Sort.by(orders);
