@@ -3,7 +3,7 @@ package net.n2oapp.security.admin.frontend;
 import net.n2oapp.security.admin.api.service.UserDetailsService;
 import net.n2oapp.security.admin.rest.client.AdminRestClientConfiguration;
 import net.n2oapp.security.admin.web.AdminWebConfiguration;
-import net.n2oapp.security.auth.common.AuthoritiesPrincipalExtractor;
+import net.n2oapp.security.auth.common.KeycloakUserService;
 import net.n2oapp.security.auth.common.UserAttributeKeys;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,7 +11,6 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Primary;
 
 @SpringBootApplication
 @Import({AdminWebConfiguration.class, AdminRestClientConfiguration.class})
@@ -26,8 +25,7 @@ public class AdminFrontendApplication extends SpringBootServletInitializer {
     }
 
     @Bean
-    @Primary
-    public AuthoritiesPrincipalExtractor keycloakPrincipalExtractor(UserDetailsService userDetailsService, UserAttributeKeys userAttributeKeys) {
-        return new AuthoritiesPrincipalExtractor(userDetailsService, "keycloak", userAttributeKeys);
+    public KeycloakUserService keycloakUserService(UserDetailsService userDetailsService, UserAttributeKeys userAttributeKeys) {
+        return new KeycloakUserService(userAttributeKeys, userDetailsService, "keycloak");
     }
 }

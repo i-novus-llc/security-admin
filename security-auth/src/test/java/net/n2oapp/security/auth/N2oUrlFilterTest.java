@@ -11,8 +11,7 @@ import net.n2oapp.framework.access.metadata.schema.user.N2oUserAccess;
 import net.n2oapp.framework.api.MetadataEnvironment;
 import net.n2oapp.framework.api.metadata.pipeline.PipelineFunction;
 import net.n2oapp.framework.api.metadata.pipeline.ReadCompileBindTerminalPipeline;
-import net.n2oapp.security.auth.common.AuthoritiesPrincipalExtractor;
-import net.n2oapp.security.auth.common.User;
+import net.n2oapp.security.auth.common.OauthUser;
 import net.n2oapp.security.auth.common.authority.PermissionGrantedAuthority;
 import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,14 +27,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.time.Instant;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -52,8 +50,6 @@ public class N2oUrlFilterTest {
     ReadCompileBindTerminalPipeline readCompileBindTerminalPipeline;
     SimpleCompiledAccessSchema schema = new SimpleCompiledAccessSchema();
 
-    @MockBean
-    private AuthoritiesPrincipalExtractor authoritiesPrincipalExtractor;
     @MockBean
     private Authentication authentication;
     @MockBean
@@ -80,9 +76,8 @@ public class N2oUrlFilterTest {
         Mockito.doReturn(schema).when(readCompileBindTerminalPipeline).get(any(), any());
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
-        filter = new N2oUrlFilter("default",false, environment, securityProvider);
+        filter = new N2oUrlFilter("default", false, environment, securityProvider);
     }
-
 
     @Test
     public void doFilter_permit_all() {
@@ -96,7 +91,6 @@ public class N2oUrlFilterTest {
 
             Security.SecurityObject securityObject = securityCaptor.getValue().getSecurityMap().get(KEY);
             assertTrue(securityObject.getPermitAll());
-
         } catch (IOException | ServletException e) {
             fail();
         }
@@ -108,7 +102,7 @@ public class N2oUrlFilterTest {
             List<AccessPoint> accessPoints = Arrays.asList(obtainAccessPoints("http://test.test/authenticated"));
             schema.setAuthenticatedPoints(accessPoints);
 
-            User user = new User("testUser");
+            OauthUser user = new OauthUser("testUser", oidcIdToken());
             Mockito.doReturn(user).when(authentication).getPrincipal();
             Mockito.doReturn("http://test.test/authenticated").when(request).getServletPath();
             filter.doFilter(request, response, chain);
@@ -116,7 +110,6 @@ public class N2oUrlFilterTest {
 
             Security.SecurityObject securityObject = securityCaptor.getValue().getSecurityMap().get(KEY);
             assertTrue(securityObject.getAuthenticated());
-
         } catch (IOException | ServletException e) {
             fail();
         }
@@ -134,7 +127,6 @@ public class N2oUrlFilterTest {
 
             Security.SecurityObject securityObject = securityCaptor.getValue().getSecurityMap().get(KEY);
             assertTrue(securityObject.getAnonymous());
-
         } catch (IOException | ServletException e) {
             fail();
         }
@@ -156,7 +148,7 @@ public class N2oUrlFilterTest {
             List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
             grantedAuthorities.add(roleGrantedAuthority);
 
-            User user = new User("testUser", "", grantedAuthorities);
+            OauthUser user = new OauthUser("testUser", grantedAuthorities, oidcIdToken());
             Mockito.doReturn(user).when(authentication).getPrincipal();
             Mockito.doReturn("http://test.test/role").when(request).getServletPath();
             filter.doFilter(request, response, chain);
@@ -166,7 +158,6 @@ public class N2oUrlFilterTest {
 
             Set<String> roles = securityObject.getRoles();
             assertEquals("testAccessRole", roles.iterator().next());
-
         } catch (IOException | ServletException e) {
             fail();
         }
@@ -188,7 +179,7 @@ public class N2oUrlFilterTest {
             List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
             grantedAuthorities.add(permissionGrantedAuthority);
 
-            User user = new User("testUser", "", grantedAuthorities);
+            OauthUser user = new OauthUser("testUser", grantedAuthorities, oidcIdToken());
             Mockito.doReturn(user).when(authentication).getPrincipal();
             Mockito.doReturn("http://test.test/permission").when(request).getServletPath();
             filter.doFilter(request, response, chain);
@@ -198,7 +189,6 @@ public class N2oUrlFilterTest {
 
             Set<String> permissions = securityObject.getPermissions();
             assertEquals("testAccessPermission", permissions.iterator().next());
-
         } catch (IOException | ServletException e) {
             fail();
         }
@@ -215,7 +205,7 @@ public class N2oUrlFilterTest {
             n2oUserAccesses.add(userAccess);
             schema.setN2oUserAccesses(n2oUserAccesses);
 
-            User user = new User("testUser");
+            OauthUser user = new OauthUser("testUser", oidcIdToken());
             Mockito.doReturn(user).when(authentication).getPrincipal();
             Mockito.doReturn("http://test.test/user").when(request).getServletPath();
             filter.doFilter(request, response, chain);
@@ -225,7 +215,6 @@ public class N2oUrlFilterTest {
 
             Set<String> usernames = securityObject.getUsernames();
             assertEquals("testUser", usernames.iterator().next());
-
         } catch (IOException | ServletException e) {
             fail();
         }
@@ -240,7 +229,6 @@ public class N2oUrlFilterTest {
 
             Security.SecurityObject securityObject = securityCaptor.getValue().getSecurityMap().get(KEY);
             assertTrue(securityObject.getPermitAll());
-
         } catch (IOException | ServletException e) {
             fail();
         }
@@ -249,8 +237,12 @@ public class N2oUrlFilterTest {
     private AccessPoint[] obtainAccessPoints(String urlPattern) {
         N2oUrlAccessPoint urlAccessPoint = new N2oUrlAccessPoint();
         urlAccessPoint.setPattern(urlPattern);
-        AccessPoint [] accessPoints = new AccessPoint[1];
+        AccessPoint[] accessPoints = new AccessPoint[1];
         accessPoints[0] = urlAccessPoint;
         return accessPoints;
+    }
+
+    private OidcIdToken oidcIdToken() {
+        return new OidcIdToken("token_value", Instant.MIN, Instant.MAX, Map.of("sub", "test"));
     }
 }

@@ -17,10 +17,10 @@ package net.n2oapp.security.auth;
 
 import net.n2oapp.framework.access.simple.PermissionApi;
 import net.n2oapp.framework.api.user.UserContext;
+import net.n2oapp.security.auth.common.OauthUser;
 import net.n2oapp.security.auth.common.UserParamsUtil;
 import net.n2oapp.security.auth.common.authority.PermissionGrantedAuthority;
 import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 
 /**
@@ -30,7 +30,7 @@ public class SecuritySimplePermissionApi implements PermissionApi {
 
     @Deprecated
     public boolean hasPermission(UserContext user, String permissionId) {
-        UserDetails userDetails = UserParamsUtil.getUserDetails();
+        OauthUser userDetails = UserParamsUtil.getUserDetails();
         return userDetails != null && userDetails.getAuthorities().stream()
                 .filter(a -> a instanceof PermissionGrantedAuthority)
                 .anyMatch(grantedAuthority -> ((PermissionGrantedAuthority) grantedAuthority).getPermission().equalsIgnoreCase(permissionId));
@@ -38,7 +38,7 @@ public class SecuritySimplePermissionApi implements PermissionApi {
 
     @Override
     public boolean hasRole(UserContext user, String roleId) {
-        UserDetails userDetails = UserParamsUtil.getUserDetails();
+        OauthUser userDetails = UserParamsUtil.getUserDetails();
         return userDetails != null && userDetails.getAuthorities().stream()
                 .filter(a -> a instanceof RoleGrantedAuthority)
                 .anyMatch(grantedAuthority -> ((RoleGrantedAuthority) grantedAuthority).getRole().equalsIgnoreCase(roleId));
@@ -46,8 +46,8 @@ public class SecuritySimplePermissionApi implements PermissionApi {
 
     @Override
     public boolean hasAuthentication(UserContext user) {
-        UserDetails userDetails = UserParamsUtil.getUserDetails();
-        return userDetails != null && userDetails.isEnabled();
+        OauthUser userDetails = UserParamsUtil.getUserDetails();
+        return userDetails != null;
     }
 
     @Override

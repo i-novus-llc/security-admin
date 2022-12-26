@@ -10,7 +10,7 @@
     <parent>
         <groupId>net.n2oapp.platform</groupId>
         <artifactId>n2o-boot-platform-parent</artifactId>
-        <version>5.1.0-SNAPSHOT</version>
+        <version>5.1.0</version>
         <relativePath />
     </parent>
 
@@ -45,7 +45,6 @@
         <module>security-admin-sso-keycloak</module>
         <module>security-admin-db</module>
         <module>security-admin-backend</module>
-        <module>security-account-context</module>
         <module>security-admin-frontend</module>
         <module>security-admin-example</module>
         <module>keycloak-theme</module>
@@ -53,15 +52,15 @@
         <module>coverage</module>
     </modules>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.nimbusds</groupId>
-                <artifactId>nimbus-jose-jwt</artifactId>
-                <version>${nimbusds.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+    <!--    <dependencyManagement>-->
+    <!--        <dependencies>-->
+    <!--            <dependency>-->
+    <!--                <groupId>com.nimbusds</groupId>-->
+    <!--                <artifactId>nimbus-jose-jwt</artifactId>-->
+    <!--                <version>${nimbusds.version}</version>-->
+    <!--            </dependency>-->
+    <!--        </dependencies>-->
+    <!--    </dependencyManagement>-->
 
     <profiles>
         <profile>

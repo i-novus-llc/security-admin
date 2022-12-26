@@ -4,6 +4,7 @@ access:
   keycloak:
     redirect-url: http://localhost:8080
     realm: security-admin
+    logout-uri: /
   service:
     url: http://localhost:9090/api
     userinfo-url: http://localhost:9090/userinfo
@@ -28,17 +29,17 @@ spring:
           admin-web:
             client-id: admin-web
             client-secret: fbcf4023-afe0-4ba1-944e-7a0f675b0b98
-            redirect-uri: ${access.keycloak.redirect-url}
+            provider: keycloak
             authorization-grant-type: authorization_code
             scope:
-              - read
-              - write
+              - openid
 
         provider:
           keycloak:
-            token-uri: ${access.auth-server-uri}/token
-            authorization-uri: ${access.auth-server-uri}/auth
-            user-info-uri: ${security.oauth2.auth-server-uri}/userinfo
+            issuer-uri: https://keycloak8.i-novus.ru/auth/realms/security-admin
+#            token-uri: ${access.auth-server-uri}/token
+#            authorization-uri: ${access.auth-server-uri}/auth
+#            user-info-uri: ${security.oauth2.auth-server-uri}/userinfo
 
 
 

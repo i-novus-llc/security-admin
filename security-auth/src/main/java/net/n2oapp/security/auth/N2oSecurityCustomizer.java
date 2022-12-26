@@ -21,11 +21,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.ExceptionHandlingConfigurer;
-import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
+import org.springframework.security.web.SecurityFilterChain;
 
-public abstract class N2oSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
+public abstract class N2oSecurityCustomizer implements WebSecurityCustomizer {
 
     @Value("${n2o.api.url:/n2o}")
     private String n2oUrl;
@@ -41,7 +41,7 @@ public abstract class N2oSecurityConfigurerAdapter extends WebSecurityConfigurer
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void customize(WebSecurity web) {
         ignore(web.ignoring());
     }
 
@@ -49,20 +49,19 @@ public abstract class N2oSecurityConfigurerAdapter extends WebSecurityConfigurer
         ignore.antMatchers("/static/**", "/public/**", "/dist/**", "/webjars/**", "/lib/**", "/build/**", "/bundle/**", "/error", "/serviceWorker.js");
     }
 
-    protected abstract void authorize(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry url)
-            throws Exception;
-
-    protected ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry beforeAuthorize(HttpSecurity http)
-            throws Exception {
-        return http.authorizeRequests();
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//        возможно потребуется для simple
+//        configureExceptionHandling(http.exceptionHandling());
+        http.csrf().disable();
+        configureHttpSecurity(http);
+        return http.build();
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        authorize(beforeAuthorize(http));
+    protected void configureHttpSecurity(HttpSecurity http) throws Exception {
     }
 
-    protected HttpSecurity configureExceptionHandling(ExceptionHandlingConfigurer<HttpSecurity> exceptionHandling) throws Exception {
+    protected HttpSecurity configureExceptionHandling(ExceptionHandlingConfigurer<HttpSecurity> exceptionHandling) {
         return exceptionHandling
                 .authenticationEntryPoint(new N2oUrlAuthenticationEntryPoint("/login", n2oUrl))
                 .and();

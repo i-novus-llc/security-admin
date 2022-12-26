@@ -1,13 +1,14 @@
-package net.n2oapp.security.account.context;
+package net.n2oapp.security.auth.context.account;
 
 import net.n2oapp.security.admin.api.criteria.AccountCriteria;
 import net.n2oapp.security.admin.api.model.Account;
 import net.n2oapp.security.admin.rest.client.AccountServiceRestClient;
-import net.n2oapp.security.auth.common.User;
+import net.n2oapp.security.auth.common.OauthUser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -67,11 +68,11 @@ public class ContextFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
-        if (isNull(currentAuthentication) || nonNull(((User) currentAuthentication.getPrincipal()).getAccountId())) {
+        if (isNull(currentAuthentication) || nonNull(((OauthUser) currentAuthentication.getPrincipal()).getAccountId())) {
             chain.doFilter(request, response);
             return;
         }
-        User user = (User) currentAuthentication.getPrincipal();
+        OauthUser user = (OauthUser) currentAuthentication.getPrincipal();
 
         if (((HttpServletRequest) request).getRequestURI().contains("/selectAccount")) {
             String accountId = request.getParameter("accountId");
@@ -80,7 +81,7 @@ public class ContextFilter implements Filter {
             return;
         }
 
-        List<Account> accountList = accountServiceRestClient.findAll(new AccountCriteria(user.getUsername())).getContent();
+        List<Account> accountList = accountServiceRestClient.findAll(new AccountCriteria(user.getName())).getContent();
         if (accountList.size() == 1) {
             selectAccount(accountList.get(0).getId(), currentAuthentication);
             chain.doFilter(request, response);
@@ -104,8 +105,8 @@ public class ContextFilter implements Filter {
     }
 
     private void selectAccount(Integer accountId, Authentication currentAuthentication) {
-//        OAuth2Authentication oAuth2Authentication = userInfoTokenServices.loadAuthentication(accountId);
-//        oAuth2Authentication.setDetails(currentAuthentication.getDetails());
-//        SecurityContextHolder.getContext().setAuthentication(oAuth2Authentication);
+        OAuth2AuthenticationToken oAuth2Authentication = userInfoTokenServices.loadAccountAuthentication(accountId, currentAuthentication);
+        oAuth2Authentication.setDetails(currentAuthentication.getDetails());
+        SecurityContextHolder.getContext().setAuthentication(oAuth2Authentication);
     }
 }

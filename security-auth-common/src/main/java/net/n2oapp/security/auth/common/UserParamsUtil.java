@@ -20,11 +20,11 @@ import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
 import net.n2oapp.security.auth.common.authority.SystemGrantedAuthority;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import java.beans.PropertyDescriptor;
@@ -99,9 +99,9 @@ public class UserParamsUtil {
         String username = "";
         if (principal instanceof String) {
             username = (String) principal;
-        } else if (principal instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) principal;
-            username = userDetails.getUsername();
+        } else if (principal instanceof AuthenticatedPrincipal) {
+            AuthenticatedPrincipal userDetails = (AuthenticatedPrincipal) principal;
+            username = userDetails.getName();
         }
         return username;
     }
@@ -112,7 +112,7 @@ public class UserParamsUtil {
      * @param <T> Класс детальнйо информации о пользователе
      * @return Детальная информация о пользователе
      */
-    public static <T extends UserDetails> T getUserDetails() {
+    public static <T extends OauthUser> T getUserDetails() {
         SecurityContext context = SecurityContextHolder.getContext();
         if (context == null)
             return null;
@@ -120,10 +120,10 @@ public class UserParamsUtil {
         if (authentication == null)
             return null;
         Object details = authentication.getPrincipal();
-        if (details instanceof UserDetails)
+        if (details instanceof OauthUser)
             return (T) details;
         details = authentication.getDetails();
-        if (details instanceof UserDetails)
+        if (details instanceof OauthUser)
             return (T) details;
         return null;
     }
@@ -133,7 +133,7 @@ public class UserParamsUtil {
      *
      * @return Детальная информация о пользователе в виде ключ-значение
      */
-    public static <T extends UserDetails> Map<String, Object> getUserDetailsAsMap(T userDetails) {
+    public static <T extends OauthUser> Map<String, Object> getUserDetailsAsMap(T userDetails) {
         if (userDetails == null)
             return Collections.emptyMap();
         PropertyDescriptor[] propertyDescriptors = BeanUtils.getPropertyDescriptors(userDetails.getClass());
@@ -161,7 +161,7 @@ public class UserParamsUtil {
      * @param <T>         Тип значения
      * @return Детальная информация о пользователе по имени свойства
      */
-    public static <T, U extends UserDetails> T getUserDetailsProperty(U userDetails, String property) {
+    public static <T, U extends OauthUser> T getUserDetailsProperty(U userDetails, String property) {
         if (userDetails == null)
             return null;
         PropertyDescriptor propertyDescriptor = BeanUtils.getPropertyDescriptor(userDetails.getClass(), property);

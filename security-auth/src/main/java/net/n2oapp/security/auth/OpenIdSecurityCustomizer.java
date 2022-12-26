@@ -20,6 +20,8 @@ import net.n2oapp.framework.api.MetadataEnvironment;
 import net.n2oapp.security.auth.context.SpringSecurityUserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -29,18 +31,15 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthorizationCodeAuthenticationToken;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
-import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Адаптер для настройки SSO аутентификации по протоколу OAuth2 OpenId Connect
  */
 @EnableWebSecurity
-public abstract class OpenIdSecurityConfigurerAdapter extends N2oSecurityConfigurerAdapter {
+@ComponentScan(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = KeycloakLogoutHandler.class))
+public abstract class OpenIdSecurityCustomizer extends N2oSecurityCustomizer {
 
-    @Value("${security.oauth2.sso.logout-uri}")
+    @Value("${access.keycloak.logout-uri}")
     private String ssoLogoutUri;
 
     @Value("${n2o.access.schema.id}")
@@ -51,18 +50,16 @@ public abstract class OpenIdSecurityConfigurerAdapter extends N2oSecurityConfigu
     @Lazy
     @Autowired
     private MetadataEnvironment environment;
-
+    @Autowired
+    private KeycloakLogoutHandler keycloakLogoutHandler;
     @Autowired
     private SecurityProvider securityProvider;
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        authorize(beforeAuthorize(http));
-        http.oauth2Login();
-        configureExceptionHandling(http.exceptionHandling());
+    protected void configureHttpSecurity(HttpSecurity http) throws Exception {
         configureLogout(http.logout());
+        http.oauth2Login();
         http.addFilterAfter(new N2oUrlFilter(schemaId, defaultUrlAccessDenied, environment, securityProvider), FilterSecurityInterceptor.class);
-        http.csrf().disable();
     }
 
     @Override
@@ -81,13 +78,12 @@ public abstract class OpenIdSecurityConfigurerAdapter extends N2oSecurityConfigu
         };
     }
 
-    protected LogoutConfigurer<HttpSecurity> configureLogout(LogoutConfigurer<HttpSecurity> logout) throws Exception {
+    protected LogoutConfigurer<HttpSecurity> configureLogout(LogoutConfigurer<HttpSecurity> logout) {
         if (ssoLogoutUri == null)
             return logout.logoutSuccessUrl("/logout");
         else {
-            AutoRedirectLogoutSuccessHandler logoutSuccessHandler = new AutoRedirectLogoutSuccessHandler();
-            logoutSuccessHandler.setDefaultTargetUrl(ssoLogoutUri);
-            return logout.logoutSuccessHandler(logoutSuccessHandler);
+            logout.logoutSuccessUrl(ssoLogoutUri);
+            return logout.addLogoutHandler(keycloakLogoutHandler);
         }
     }
 
@@ -103,25 +99,5 @@ public abstract class OpenIdSecurityConfigurerAdapter extends N2oSecurityConfigu
             }
         }
         return null;
-    }
-
-    /**
-     * Gives support of login-like behaviour. Makes possible redirect back to application from sso server without any manual back-url configuration.
-     */
-    protected static class AutoRedirectLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
-        /**
-         * Adds server and servlet base path part of url from request to redirect parameter value.<br/>
-         * Base target url should end with parameter "redirect_uri=".<br/>
-         * For example, if request contains "http://mydomain.com/app/base/path/some/service" then "http://mydomain.com/app/base/path" will be added to target url.
-         *
-         * @param request
-         * @param response
-         * @return Extended target URL.
-         */
-        @Override
-        protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response) {
-            StringBuffer requestURL = request.getRequestURL();
-            return super.determineTargetUrl(request, response) + requestURL.substring(0, requestURL.lastIndexOf(request.getServletPath()));
-        }
     }
 }
