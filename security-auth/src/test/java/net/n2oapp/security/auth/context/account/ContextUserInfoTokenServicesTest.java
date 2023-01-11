@@ -37,7 +37,7 @@ public class ContextUserInfoTokenServicesTest {
         Mockito.when(oAuth2RestTemplate.getForEntity("userInfoUri/1", Map.class)).thenReturn(response());
         OAuth2AuthenticationToken oAuth2Authentication = tokenServices.loadAccountAuthentication(1, oAuth2AuthenticationToken());
         OauthUser user = (OauthUser) oAuth2Authentication.getPrincipal();
-        assertThat(user.getUserName(), is("admin"));
+        assertThat(user.getUsername(), is("admin"));
         assertThat(user.getEmail(), is("test@i-novus.ru"));
         assertThat(user.getSurname(), is("admin"));
         assertThat(user.getAccountId(), is("1"));

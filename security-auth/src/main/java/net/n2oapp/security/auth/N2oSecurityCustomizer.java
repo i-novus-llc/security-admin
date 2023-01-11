@@ -20,12 +20,10 @@ import net.n2oapp.security.auth.context.SpringSecurityUserContext;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.ExceptionHandlingConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
-public abstract class N2oSecurityCustomizer implements WebSecurityCustomizer {
+public abstract class N2oSecurityCustomizer {
 
     @Value("${n2o.api.url:/n2o}")
     private String n2oUrl;
@@ -40,13 +38,8 @@ public abstract class N2oSecurityCustomizer implements WebSecurityCustomizer {
         return new SpringSecurityUserContext();
     }
 
-    @Override
-    public void customize(WebSecurity web) {
-        ignore(web.ignoring());
-    }
-
-    protected void ignore(WebSecurity.IgnoredRequestConfigurer ignore) {
-        ignore.antMatchers("/static/**", "/public/**", "/dist/**", "/webjars/**", "/lib/**", "/build/**", "/bundle/**", "/error", "/serviceWorker.js");
+    protected void ignore(HttpSecurity http) throws Exception {
+        http.authorizeRequests().antMatchers("/static/**", "/public/**", "/dist/**", "/webjars/**", "/lib/**", "/build/**", "/bundle/**", "/error", "/serviceWorker.js", "/css/**").permitAll();
     }
 
     @Bean
@@ -54,6 +47,7 @@ public abstract class N2oSecurityCustomizer implements WebSecurityCustomizer {
 //        возможно потребуется для simple
 //        configureExceptionHandling(http.exceptionHandling());
         http.csrf().disable();
+        ignore(http);
         configureHttpSecurity(http);
         return http.build();
     }

@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
@@ -41,8 +40,7 @@ public class SecurityConfig extends OpenIdSecurityCustomizer {
     }
 
     @Override
-    protected void ignore(WebSecurity.IgnoredRequestConfigurer ignore) {
-        super.ignore(ignore);
-        ignore.antMatchers("/css/**");
+    protected void ignore(HttpSecurity http) throws Exception {
+        super.ignore(http);
     }
 }

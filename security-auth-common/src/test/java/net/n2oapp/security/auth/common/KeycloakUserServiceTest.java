@@ -94,7 +94,7 @@ public class KeycloakUserServiceTest {
 
         assertNotNull(user);
 
-        assertEquals(SOME_USERNAME, user.getUserName());
+        assertEquals(SOME_USERNAME, user.getUsername());
         assertEquals(SOME_EMAIL, user.getEmail());
         assertEquals(SOME_SURNAME, user.getSurname());
         assertEquals(SOME_NAME, user.getFirstName());
@@ -133,7 +133,7 @@ public class KeycloakUserServiceTest {
 
         assertNotNull(user);
 
-        assertEquals(SOME_USERNAME, user.getUserName());
+        assertEquals(SOME_USERNAME, user.getUsername());
     }
 
     private KeycloakUserService getExtractor() {

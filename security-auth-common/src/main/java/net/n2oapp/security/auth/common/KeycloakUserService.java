@@ -45,7 +45,7 @@ public class KeycloakUserService implements OAuth2UserService<OidcUserRequest, O
         oauthUser.setFirstName(user.getName());
         oauthUser.setPatronymic(user.getPatronymic());
         oauthUser.setEmail(user.getEmail());
-        oauthUser.setUserName(user.getUsername());
+        oauthUser.setUsername(user.getUsername());
 
         if (nonNull(user.getDepartment())) {
             oauthUser.setDepartment(user.getDepartment().getCode());

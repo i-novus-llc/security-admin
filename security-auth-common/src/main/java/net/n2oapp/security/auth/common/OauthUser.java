@@ -30,7 +30,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static net.n2oapp.security.auth.common.UserParamsUtil.getUsername;
 import static org.springframework.util.StringUtils.hasLength;
 
 /**
@@ -51,11 +50,11 @@ public class OauthUser extends DefaultOidcUser {
     private String departmentName;
     private String userLevel;
     private String accountId;
-    private String userName;
+    private String username;
 
     @Override
     public String getName() {
-        return userName;
+        return username;
     }
 
     public OauthUser(String username, OidcIdToken idToken) {
@@ -82,7 +81,7 @@ public class OauthUser extends DefaultOidcUser {
 
     public OauthUser(String username, Collection<? extends GrantedAuthority> authorities, OidcIdToken idToken, OidcUserInfo userInfo) {
         super(authorities, idToken, userInfo);
-        this.userName = username;
+        this.username = username;
     }
 
     /**
