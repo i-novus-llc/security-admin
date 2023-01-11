@@ -1,16 +1,26 @@
-INSERT INTO sec.permission(name, code) VALUES('Пользователи', 'access.admin.user');
-INSERT INTO sec.permission(name, code, parent_code) VALUES('Просмотр пользователей', 'access.admin.user.read', 'access.admin.user');
-INSERT INTO sec.permission(name, code, parent_code) VALUES('Добавление, редактирование и удаление пользователей', 'access.admin.user.edit', 'access.admin.user');
+INSERT INTO sec.permission(name, system_code, code)
+VALUES ('Пользователи', 'access', 'access.admin.user');
+INSERT INTO sec.permission(name, system_code, code, parent_code)
+VALUES ('Просмотр пользователей', 'access', 'access.admin.user.read', 'access.admin.user');
+INSERT INTO sec.permission(name, system_code, code, parent_code)
+VALUES ('Добавление, редактирование и удаление пользователей', 'access', 'access.admin.user.edit', 'access.admin.user');
 
-INSERT INTO sec.permission(name, code) VALUES('Роли', 'access.admin.role');
-INSERT INTO sec.permission(name, code, parent_code) VALUES('Просмотр ролей', 'access.admin.role.read', 'access.admin.role');
-INSERT INTO sec.permission(name, code, parent_code) VALUES('Добавление, редактирование и удаление ролей', 'access.admin.role.edit', 'access.admin.role');
+INSERT INTO sec.permission(name, system_code, code)
+VALUES ('Роли', 'access', 'access.admin.role');
+INSERT INTO sec.permission(name, system_code, code, parent_code)
+VALUES ('Просмотр ролей', 'access', 'access.admin.role.read', 'access.admin.role');
+INSERT INTO sec.permission(name, system_code, code, parent_code)
+VALUES ('Добавление, редактирование и удаление ролей', 'access', 'access.admin.role.edit', 'access.admin.role');
 
-INSERT INTO sec.permission(name, code) VALUES('Системы', 'access.admin.system');
-INSERT INTO sec.permission(name, code, parent_code) VALUES('Просмотр систем', 'access.admin.system.read', 'access.admin.system');
-INSERT INTO sec.permission(name, code, parent_code) VALUES('Добавление, редактирование и удаление систем', 'access.admin.system.edit', 'access.admin.system');
+INSERT INTO sec.permission(name, system_code, code)
+VALUES ('Системы', 'access', 'access.admin.system');
+INSERT INTO sec.permission(name, system_code, code, parent_code)
+VALUES ('Просмотр систем', 'access', 'access.admin.system.read', 'access.admin.system');
+INSERT INTO sec.permission(name, system_code, code, parent_code)
+VALUES ('Добавление, редактирование и удаление систем', 'access', 'access.admin.system.edit', 'access.admin.system');
 
-INSERT INTO sec.role(name, code) SELECT 'Администратор прав доступа', 'access.admin' WHERE NOT EXISTS (SELECT code FROM sec.role r WHERE r.code = 'access.admin');
+INSERT INTO sec.role(name, system_code, code)
+SELECT 'Администратор прав доступа', 'access', 'access.admin' WHERE NOT EXISTS (SELECT code FROM sec.role r WHERE r.code = 'access.admin');
 
 INSERT INTO sec.role_permission(permission_code, role_id)
 VALUES ('access.admin.user.read', (SELECT id FROM sec.role WHERE code = 'access.admin'));

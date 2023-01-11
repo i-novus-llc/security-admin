@@ -20,6 +20,7 @@ import lombok.Setter;
 import net.n2oapp.security.auth.common.authority.PermissionGrantedAuthority;
 import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
@@ -37,7 +38,7 @@ import static org.springframework.util.StringUtils.hasLength;
  */
 @Getter
 @Setter
-public class OauthUser extends DefaultOidcUser {
+public class OauthUser extends DefaultOidcUser implements UserDetails {
     private static final String DEFAULT_ROLE = "ROLE_USER";
 
     private String surname;
@@ -51,6 +52,11 @@ public class OauthUser extends DefaultOidcUser {
     private String userLevel;
     private String accountId;
     private String username;
+
+    private boolean accountNonExpired;
+    private boolean accountNonLocked;
+    private boolean credentialsNonExpired;
+    private boolean enabled;
 
     @Override
     public String getName() {
@@ -144,5 +150,30 @@ public class OauthUser extends DefaultOidcUser {
                 .stream()
                 .filter(PermissionGrantedAuthority.class::isInstance)
                 .map(p -> ((PermissionGrantedAuthority) p).getPermission()).collect(Collectors.toList());
+    }
+
+    @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.enabled;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return this.accountNonExpired;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return this.accountNonLocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return this.credentialsNonExpired;
     }
 }

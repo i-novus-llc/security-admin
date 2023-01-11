@@ -3,6 +3,7 @@ package net.n2oapp.security.auth.simple;
 import net.n2oapp.framework.access.data.SecurityProvider;
 import net.n2oapp.framework.api.MetadataEnvironment;
 import net.n2oapp.security.auth.N2oSecurityCustomizer;
+import net.n2oapp.security.auth.N2oUrlAuthenticationEntryPoint;
 import net.n2oapp.security.auth.N2oUrlFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.ExceptionHandlingConfigurer;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
 import static net.n2oapp.security.auth.simple.SpringConfigUtil.*;
@@ -28,6 +30,9 @@ public abstract class SimpleSecurityCustomizer extends N2oSecurityCustomizer {
 
     @Value("${n2o.access.deny_urls}")
     private Boolean defaultUrlAccessDenied;
+
+    @Value("${n2o.api.url:/n2o}")
+    private String n2oUrl;
 
     @Lazy
     @Autowired
@@ -56,5 +61,11 @@ public abstract class SimpleSecurityCustomizer extends N2oSecurityCustomizer {
         http.addFilterAfter(new N2oUrlFilter(schemaId, defaultUrlAccessDenied, environment, securityProvider), FilterSecurityInterceptor.class);
         http.headers().contentTypeOptions().disable();
         http.csrf().disable();
+    }
+
+    protected HttpSecurity configureExceptionHandling(ExceptionHandlingConfigurer<HttpSecurity> exceptionHandling) {
+        return exceptionHandling
+                .authenticationEntryPoint(new N2oUrlAuthenticationEntryPoint("/login", n2oUrl))
+                .and();
     }
 }

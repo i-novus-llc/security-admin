@@ -17,16 +17,11 @@ package net.n2oapp.security.auth;
 
 import net.n2oapp.framework.access.simple.PermissionApi;
 import net.n2oapp.security.auth.context.SpringSecurityUserContext;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.ExceptionHandlingConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
 public abstract class N2oSecurityCustomizer {
-
-    @Value("${n2o.api.url:/n2o}")
-    private String n2oUrl;
 
     @Bean
     public PermissionApi securitySimplePermissionApi() {
@@ -44,8 +39,6 @@ public abstract class N2oSecurityCustomizer {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        возможно потребуется для simple
-//        configureExceptionHandling(http.exceptionHandling());
         http.csrf().disable();
         ignore(http);
         configureHttpSecurity(http);
@@ -53,11 +46,5 @@ public abstract class N2oSecurityCustomizer {
     }
 
     protected void configureHttpSecurity(HttpSecurity http) throws Exception {
-    }
-
-    protected HttpSecurity configureExceptionHandling(ExceptionHandlingConfigurer<HttpSecurity> exceptionHandling) {
-        return exceptionHandling
-                .authenticationEntryPoint(new N2oUrlAuthenticationEntryPoint("/login", n2oUrl))
-                .and();
     }
 }
