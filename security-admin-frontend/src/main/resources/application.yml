@@ -22,44 +22,21 @@ n2o:
     id: users
 
 spring:
-  security:
-    oauth2:
-      client:
-        registration:
-          admin-web:
-            client-id: admin-web
-            client-secret: fbcf4023-afe0-4ba1-944e-7a0f675b0b98
-            provider: keycloak
-            authorization-grant-type: authorization_code
-            scope:
-              - openid
+  security.oauth2.client:
+    registration:
+      admin-web:
+        client-id: admin-web
+        client-secret: fbcf4023-afe0-4ba1-944e-7a0f675b0b98
+        provider: keycloak
+        authorization-grant-type: authorization_code
+        scope:
+          - openid
 
-        provider:
-          keycloak:
-            issuer-uri: https://keycloak8.i-novus.ru/auth/realms/security-admin
-#            token-uri: ${access.auth-server-uri}/token
-#            authorization-uri: ${access.auth-server-uri}/auth
-#            user-info-uri: ${security.oauth2.auth-server-uri}/userinfo
+    provider:
+      keycloak:
+        issuer-uri: https://keycloak8.i-novus.ru/auth/realms/${access.keycloak.realm}
 
 
-
-
-#        access-token-uri: ${security.oauth2.auth-server-uri}/token
-#        client-id: admin-web
-#        client-secret: fbcf4023-afe0-4ba1-944e-7a0f675b0b98
-#        scope: read,write
-#        user-authorization-uri: ${security.oauth2.auth-server-uri}/auth
-
-
-
-#      resource:
-#        user-info-uri: ${security.oauth2.auth-server-uri}/userinfo
-#      sso:
-#        logout-uri: ${security.oauth2.auth-server-uri}/logout?redirect_uri=${keycloak.redirect-url}
-#      auth-server-uri: https://keycloak8.i-novus.ru/auth/realms/${access.keycloak.realm}/protocol/openid-connect
-
-server:
-  servlet:
-    encoding:
-      force: true
-      force-response: true
+server.servlet.encoding:
+  force: true
+  force-response: true
