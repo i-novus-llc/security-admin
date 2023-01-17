@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -121,6 +122,15 @@ public class ContextFilterTest {
         assertThat(accounts.size(), is(2));
         assertThat(accounts.get(0).getId(), is(2));
         assertThat(accounts.get(1).getId(), is(3));
+    }
+
+    @Test
+    public void testConstructor() {
+        new ContextFilter(userInfoTokenServices, accountServiceRestClient, "test", "test", "test", Set.of("test"));
+        new ContextFilter(userInfoTokenServices, accountServiceRestClient, Set.of("test"));
+        new ContextFilter(userInfoTokenServices, accountServiceRestClient, "test", "test");
+        new ContextFilter(userInfoTokenServices, accountServiceRestClient, "test");
+        new ContextFilter(userInfoTokenServices, accountServiceRestClient);
     }
 
     private OAuth2AuthenticationToken oAuth2AuthenticationToken() {
