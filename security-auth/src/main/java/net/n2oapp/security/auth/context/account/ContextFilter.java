@@ -1,5 +1,6 @@
 package net.n2oapp.security.auth.context.account;
 
+import lombok.Setter;
 import net.n2oapp.security.admin.api.criteria.AccountCriteria;
 import net.n2oapp.security.admin.api.model.Account;
 import net.n2oapp.security.admin.rest.client.AccountServiceRestClient;
@@ -14,6 +15,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.thymeleaf.ITemplateEngine;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -44,7 +46,8 @@ public class ContextFilter extends OncePerRequestFilter {
 
     private ContextUserInfoTokenServices userInfoTokenServices;
     private AccountServiceRestClient accountServiceRestClient;
-    private TemplateEngine templateEngine;
+    @Setter
+    private ITemplateEngine templateEngine;
 
     private String selectAccountTemplatePath;
     private String selectAccountCssPath;
@@ -62,7 +65,7 @@ public class ContextFilter extends OncePerRequestFilter {
         AbstractConfigurableTemplateResolver resolver = new UrlTemplateResolver();
         resolver.setTemplateMode(TemplateMode.HTML);
         resolver.setCharacterEncoding("UTF-8");
-        templateEngine.setTemplateResolver(resolver);
+        ((TemplateEngine) templateEngine).setTemplateResolver(resolver);
         List<RequestMatcher> requestMatchers = new ArrayList<>();
         for (String pattern : isEmpty(ignoredUrls) ? defaultIgnoredUrls : ignoredUrls) {
             requestMatchers.add(new AntPathRequestMatcher(pattern, HttpMethod.GET.name()));
