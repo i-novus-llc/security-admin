@@ -83,18 +83,18 @@ public class ContextUserInfoTokenServices {
     private void enrichWithAccountClaims(Map<String, Object> map, OauthUser user) {
         user.setAccountId((String) map.get(ACCOUNT_ID));
 
-        LinkedHashMap department = (LinkedHashMap) map.get(DEPARTMENT);
+        LinkedHashMap<String, Object> department = (LinkedHashMap) map.get(DEPARTMENT);
 
         if (department != null) {
             user.setDepartment((String) department.get(CODE_KEY));
             user.setDepartmentName((String) department.get(NAME_KEY));
         }
 
-        LinkedHashMap organization = (LinkedHashMap) map.get(ORGANIZATION);
+        LinkedHashMap<String, Object> organization = (LinkedHashMap) map.get(ORGANIZATION);
         if (organization != null)
             user.setOrganization((String) organization.get(CODE_KEY));
 
-        LinkedHashMap region = (LinkedHashMap) map.get(REGION);
+        LinkedHashMap<String, Object> region = (LinkedHashMap) map.get(REGION);
         if (region != null)
             user.setRegion((String) region.get(CODE_KEY));
     }

@@ -6,7 +6,6 @@ import net.n2oapp.security.admin.api.service.UserDetailsService;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
-import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 
@@ -35,7 +34,7 @@ public class KeycloakUserService implements OAuth2UserService<OidcUserRequest, O
     }
 
     @Override
-    public OauthUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
+    public OauthUser loadUser(OidcUserRequest userRequest) {
         // Delegate to the default implementation for loading a user
         DefaultOidcUser defaultOidcUser = (DefaultOidcUser) delegateOidcUserService.loadUser(userRequest);
 
@@ -87,9 +86,7 @@ public class KeycloakUserService implements OAuth2UserService<OidcUserRequest, O
         token.setPatronymic(patronymic);
         token.setEmail(email);
         token.setExternalSystem(externalSystem);
-        net.n2oapp.security.admin.api.model.User user = userDetailsService.loadUserDetails(token);
-
-        return user;
+        return userDetailsService.loadUserDetails(token);
     }
 
     public KeycloakUserService setPrincipalKeys(List<String> pKeys) {
