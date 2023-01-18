@@ -17,7 +17,7 @@ import ru.i_novus.ms.rdm.api.model.draft.PublishRequest;
 import ru.i_novus.ms.rdm.api.model.refbook.RefBook;
 import ru.i_novus.ms.rdm.api.model.refbook.RefBookCriteria;
 import ru.i_novus.ms.rdm.api.model.refdata.*;
-import ru.i_novus.ms.rdm.api.service.DraftService;
+import ru.i_novus.ms.rdm.api.rest.DraftRestService;
 import ru.i_novus.ms.rdm.api.service.PublishService;
 import ru.i_novus.ms.rdm.api.service.RefBookService;
 import ru.i_novus.ms.rdm.api.service.VersionService;
@@ -50,7 +50,7 @@ public class ApplicationSystemExportServiceImpl implements ApplicationSystemExpo
 
     private RefBookService refBookService;
     private ApplicationSystemService applicationSystemService;
-    private DraftService draftService;
+    private DraftRestService draftRestService;
     private PublishService publishService;
     private VersionService versionService;
 
@@ -85,7 +85,7 @@ public class ApplicationSystemExportServiceImpl implements ApplicationSystemExpo
     }
 
     private void update(Map<String, ?> source, String refBookCode) {
-        if (draftService == null || publishService == null || refBookService == null || versionService == null) {
+        if (draftRestService == null || publishService == null || refBookService == null || versionService == null) {
             log.warn("Export to the RDM disabled, please set 'rdm.client.export.url' property.");
             return;
         }
@@ -117,14 +117,14 @@ public class ApplicationSystemExportServiceImpl implements ApplicationSystemExpo
 
     private void publish(RefBook refBook, Map<String, Object> forCreate, List<RefBookRowValue> forRemove, Map<Long, Object> forUpdate) {
         if (!forCreate.isEmpty() || !forUpdate.isEmpty() || !forRemove.isEmpty()) {
-            Draft draft = draftService.createFromVersion(refBook.getId());
-            forCreate.values().forEach(s -> draftService.updateData(draft.getId(), new UpdateDataRequest(draft.getOptLockValue(), createRow(s))));
+            Draft draft = draftRestService.createFromVersion(refBook.getId());
+            forCreate.values().forEach(s -> draftRestService.updateData(draft.getId(), new UpdateDataRequest(draft.getOptLockValue(), createRow(s))));
             forUpdate.forEach((k, v) -> {
                 Row row = createRow(v);
                 row.setSystemId(k);
-                draftService.updateData(draft.getId(), new UpdateDataRequest(draft.getOptLockValue(), row));
+                draftRestService.updateData(draft.getId(), new UpdateDataRequest(draft.getOptLockValue(), row));
             });
-            forRemove.forEach(rowValue -> draftService.deleteData(draft.getId(), new DeleteDataRequest(draft.getOptLockValue(), new Row(rowValue.getSystemId(), emptyMap()))));
+            forRemove.forEach(rowValue -> draftRestService.deleteData(draft.getId(), new DeleteDataRequest(draft.getOptLockValue(), new Row(rowValue.getSystemId(), emptyMap()))));
             publishService.publish(draft.getId(), new PublishRequest(draft.getOptLockValue()));
         }
     }
@@ -184,8 +184,8 @@ public class ApplicationSystemExportServiceImpl implements ApplicationSystemExpo
     }
 
     @Autowired(required = false)
-    public void setDraftService(DraftService draftService) {
-        this.draftService = draftService;
+    public void setDraftRestService(DraftRestService draftRestService) {
+        this.draftRestService = draftRestService;
     }
 
     @Autowired(required = false)
