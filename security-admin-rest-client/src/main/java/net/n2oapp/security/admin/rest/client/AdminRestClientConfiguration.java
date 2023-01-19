@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 
 @EnableJaxRsProxyClient(
         classes = {UserRestService.class, AccountRestService.class, RoleRestService.class, PermissionRestService.class,
-                ApplicationSystemRestService.class, ClientRestService.class, UserDetailsRestService.class,
+                SystemRestService.class, UserDetailsRestService.class,
                 RegionRestService.class, OrganizationRestService.class, DepartmentRestService.class,
                 UserLevelRestService.class, AccountTypeRestService.class},
         address = "${access.service.url}")
@@ -54,7 +54,6 @@ public class AdminRestClientConfiguration {
         return new OrganizationServiceRestClient(organizationRestService, organizationPersistRestService);
     }
 
-
     @Bean
     public RegionServiceRestClient regionService(@Qualifier("regionRestServiceJaxRsProxyClient") RegionRestService client) {
         return new RegionServiceRestClient(client);
@@ -66,14 +65,8 @@ public class AdminRestClientConfiguration {
     }
 
     @Bean
-    public ApplicationSystemServiceRestClient appServiceService(@Qualifier(
-            "applicationSystemRestServiceJaxRsProxyClient") ApplicationSystemRestService client) {
-        return new ApplicationSystemServiceRestClient(client);
-    }
-
-    @Bean
-    public ClientServiceRestClient clientService(@Qualifier("clientRestServiceJaxRsProxyClient") ClientRestService client) {
-        return new ClientServiceRestClient(client);
+    public SystemServiceRestClient appServiceService(@Qualifier("systemRestServiceJaxRsProxyClient") SystemRestService client) {
+        return new SystemServiceRestClient(client);
     }
 
     @Bean

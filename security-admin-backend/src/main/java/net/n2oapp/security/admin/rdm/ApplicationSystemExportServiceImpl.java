@@ -1,11 +1,9 @@
 package net.n2oapp.security.admin.rdm;
 
-import net.n2oapp.security.admin.api.criteria.ApplicationCriteria;
 import net.n2oapp.security.admin.api.criteria.SystemCriteria;
 import net.n2oapp.security.admin.api.model.AppSystem;
-import net.n2oapp.security.admin.api.model.Application;
 import net.n2oapp.security.admin.api.service.ApplicationSystemExportService;
-import net.n2oapp.security.admin.api.service.ApplicationSystemService;
+import net.n2oapp.security.admin.api.service.SystemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +19,6 @@ import ru.i_novus.ms.rdm.api.rest.DraftRestService;
 import ru.i_novus.ms.rdm.api.service.PublishService;
 import ru.i_novus.ms.rdm.api.service.RefBookService;
 import ru.i_novus.ms.rdm.api.service.VersionService;
-import ru.i_novus.platform.datastorage.temporal.model.Reference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,23 +46,14 @@ public class ApplicationSystemExportServiceImpl implements ApplicationSystemExpo
     private static final String SYSTEM_CODE = "system";
 
     private RefBookService refBookService;
-    private ApplicationSystemService applicationSystemService;
+    private SystemService systemService;
     private DraftRestService draftRestService;
     private PublishService publishService;
     private VersionService versionService;
 
     @Override
-    public void exportApplications() {
-        Map<String, Application> apps = applicationSystemService
-                .findAllApplications(new ApplicationCriteria(0, Integer.MAX_VALUE))
-                .get().collect(Collectors.toMap(Application::getCode, application -> application));
-
-        update(apps, applicationRefBookCode);
-    }
-
-    @Override
     public void exportSystems() {
-        Map<String, AppSystem> systems = applicationSystemService
+        Map<String, AppSystem> systems = systemService
                 .findAllSystems(new SystemCriteria(0, Integer.MAX_VALUE))
                 .get().collect(Collectors.toMap(AppSystem::getCode, system -> system));
 
@@ -104,8 +92,7 @@ public class ApplicationSystemExportServiceImpl implements ApplicationSystemExpo
             if (!source.containsKey(code)) {
                 forRemove.add(refBookRowValue);
             } else {
-                if (source.get(code) instanceof AppSystem && !checkSystemEquivalence(refBookRowValue, (AppSystem) source.get(code))
-                        || source.get(code) instanceof Application && !checkAppEquivalence(refBookRowValue, (Application) source.get(code))) {
+                if (source.get(code) instanceof AppSystem && !checkSystemEquivalence(refBookRowValue, (AppSystem) source.get(code))) {
                     forUpdate.put(refBookRowValue.getSystemId(), source.get(code));
                 }
             }
@@ -144,12 +131,6 @@ public class ApplicationSystemExportServiceImpl implements ApplicationSystemExpo
                 && checkEquivalence(system::getName, refBookRowValue.getFieldValue(NAME)::getValue);
     }
 
-    private boolean checkAppEquivalence(RefBookRowValue refBookRowValue, Application app) {
-        return checkEquivalence(app::getOAuth, refBookRowValue.getFieldValue(OAUTH)::getValue)
-                && checkEquivalence(app::getName, refBookRowValue.getFieldValue(NAME)::getValue)
-                && checkEquivalence(app::getSystemCode, ((Reference) refBookRowValue.getFieldValue(SYSTEM_CODE).getValue())::getValue);
-    }
-
     private boolean checkEquivalence(Supplier val1, Supplier val2) {
         return (val1.get() == null || val2.get() != null)
                 && (val1.get() != null || val2.get() == null)
@@ -158,13 +139,7 @@ public class ApplicationSystemExportServiceImpl implements ApplicationSystemExpo
 
     private Row createRow(Object obj) {
         Map<String, Object> data = new HashMap<>();
-        if (obj instanceof Application) {
-            Application app = (Application) obj;
-            data.put(CODE, app.getCode());
-            data.put(NAME, app.getName());
-            data.put(OAUTH, app.getOAuth());
-            data.put(SYSTEM_CODE, app.getSystemCode());
-        } else if (obj instanceof AppSystem) {
+        if (obj instanceof AppSystem) {
             AppSystem system = (AppSystem) obj;
             data.put(CODE, system.getCode());
             data.put(NAME, system.getName());
@@ -179,8 +154,8 @@ public class ApplicationSystemExportServiceImpl implements ApplicationSystemExpo
     }
 
     @Autowired
-    public void setApplicationSystemService(ApplicationSystemService applicationSystemService) {
-        this.applicationSystemService = applicationSystemService;
+    public void setApplicationSystemService(SystemService systemService) {
+        this.systemService = systemService;
     }
 
     @Autowired(required = false)

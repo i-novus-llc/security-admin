@@ -22,8 +22,5 @@ public class ApplicationSystemExportJob implements Job {
         logger.info("Systems export is started");
         service.exportSystems();
         logger.info("Systems export is completed");
-        logger.info("Applications export is started");
-        service.exportApplications();
-        logger.info("Applications export is completed");
     }
 }

@@ -2,7 +2,7 @@
 <query xmlns="http://n2oapp.net/framework/config/schema/query-4.0" object-id="system"
        name="Системы">
     <list result-mapping="['content']" count-mapping="['totalElements']">
-        <java method="findAllSystems" class="net.n2oapp.security.admin.api.service.ApplicationSystemService">
+        <java method="findAllSystems" class="net.n2oapp.security.admin.api.service.SystemService">
             <spring/>
             <arguments>
                 <argument class="net.n2oapp.security.admin.api.criteria.SystemCriteria"
@@ -12,7 +12,7 @@
         </java>
     </list>
     <unique result-mapping="#this">
-        <java method="getSystem" class="net.n2oapp.security.admin.api.service.ApplicationSystemService">
+        <java method="getSystem" class="net.n2oapp.security.admin.api.service.SystemService">
             <spring/>
             <arguments>
                 <argument type="class" class="java.lang.String"/>
@@ -56,9 +56,5 @@
         <field id="showOnInterface" domain="boolean" name="Включить отображение системы в едином интерфейсе">
             <select mapping="showOnInterface"/>
         </field>
-        <field id="services" domain="object[]" name="Приложения">
-            <select mapping="applications"/>
-        </field>
-
     </fields>
 </query>
