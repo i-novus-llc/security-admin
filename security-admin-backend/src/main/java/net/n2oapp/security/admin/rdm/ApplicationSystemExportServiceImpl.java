@@ -36,14 +36,10 @@ public class ApplicationSystemExportServiceImpl implements ApplicationSystemExpo
 
     @Value("${rdm.sync.ref-book-code.system}")
     private String systemRefBookCode;
-    @Value("${rdm.sync.ref-book-code.application}")
-    private String applicationRefBookCode;
 
     private static final String CODE = "code";
     private static final String NAME = "name";
     private static final String DESCRIPTION = "description";
-    private static final String OAUTH = "oauth";
-    private static final String SYSTEM_CODE = "system";
 
     private RefBookService refBookService;
     private SystemService systemService;
