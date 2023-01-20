@@ -3,7 +3,6 @@ package net.n2oapp.security.admin.rdm;
 import net.n2oapp.security.admin.TestApplication;
 import net.n2oapp.security.admin.api.criteria.SystemCriteria;
 import net.n2oapp.security.admin.api.model.AppSystem;
-import net.n2oapp.security.admin.api.service.ApplicationSystemExportService;
 import net.n2oapp.security.admin.api.service.SystemService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,7 +51,7 @@ public class ApplicationSystemExportServiceImplTest {
     @SpyBean
     private SystemService systemService;
     @Autowired
-    private ApplicationSystemExportService exportService;
+    private ApplicationSystemExportServiceImpl exportService;
 
     @Test
     public void testSysExport() {
