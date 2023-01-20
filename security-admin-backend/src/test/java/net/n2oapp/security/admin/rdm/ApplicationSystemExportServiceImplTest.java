@@ -3,6 +3,7 @@ package net.n2oapp.security.admin.rdm;
 import net.n2oapp.security.admin.TestApplication;
 import net.n2oapp.security.admin.api.criteria.SystemCriteria;
 import net.n2oapp.security.admin.api.model.AppSystem;
+import net.n2oapp.security.admin.api.service.ApplicationSystemExportService;
 import net.n2oapp.security.admin.api.service.SystemService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,6 +11,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -22,7 +24,7 @@ import ru.i_novus.ms.rdm.api.model.refbook.RefBookCriteria;
 import ru.i_novus.ms.rdm.api.model.refdata.RefBookRowValue;
 import ru.i_novus.ms.rdm.api.model.refdata.SearchDataCriteria;
 import ru.i_novus.ms.rdm.api.model.refdata.UpdateDataRequest;
-import ru.i_novus.ms.rdm.api.service.DraftService;
+import ru.i_novus.ms.rdm.api.rest.DraftRestService;
 import ru.i_novus.ms.rdm.api.service.PublishService;
 import ru.i_novus.ms.rdm.api.service.RefBookService;
 import ru.i_novus.ms.rdm.api.service.VersionService;
@@ -43,15 +45,15 @@ public class ApplicationSystemExportServiceImplTest {
     private VersionService versionService;
     @SpyBean
     private RefBookService refBookService;
-    @SpyBean
-    private DraftService draftService;
+    @MockBean
+    private DraftRestService draftService;
     @SpyBean
     private PublishService publishService;
 
     @SpyBean
     private SystemService systemService;
     @Autowired
-    private ApplicationSystemExportServiceImpl exportService;
+    private ApplicationSystemExportService exportService;
 
     @Test
     public void testSysExport() {
