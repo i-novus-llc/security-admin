@@ -1,6 +1,6 @@
 package net.n2oapp.security.admin;
 
-import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
+import net.n2oapp.platform.test.autoconfigure.pg.EnableEmbeddedPg;
 import net.n2oapp.security.admin.impl.scheduled.SynchronizationInfo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

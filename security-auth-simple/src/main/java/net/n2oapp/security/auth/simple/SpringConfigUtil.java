@@ -1,12 +1,9 @@
 package net.n2oapp.security.auth.simple;
 
-import net.n2oapp.security.auth.N2oSecurityPermissionEvaluator;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
-import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 
 /**
  * Утилита для конфигурации аутентификации spring security
@@ -25,7 +22,6 @@ public class SpringConfigUtil {
                 .failureUrl("/login?error=true")
                 .defaultSuccessUrl("/")
                 .and();
-
     }
 
     public static HttpSecurity configureLogout(LogoutConfigurer<HttpSecurity> logout) throws Exception {
@@ -34,14 +30,5 @@ public class SpringConfigUtil {
                 .deleteCookies("JSESSIONID")
                 .and().rememberMe().key("uniqueKey").and();
     }
-
-    public static WebSecurity configurePermissionEvaluator(WebSecurity webSecurity) {
-        DefaultWebSecurityExpressionHandler handler = new DefaultWebSecurityExpressionHandler();
-        handler.setDefaultRolePrefix("");
-        handler.setPermissionEvaluator(new N2oSecurityPermissionEvaluator());
-        webSecurity.expressionHandler(handler);
-        return webSecurity;
-    }
-
 }
 

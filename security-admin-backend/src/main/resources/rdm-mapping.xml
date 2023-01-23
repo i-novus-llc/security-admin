@@ -1,19 +1,38 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <mapping>
 
-    <refbook code="S001" sys-table="sec.department" unique-sys-field="code" deleted-field="is_deleted"
-             mapping-version="1">
+    <refbook code="S001"
+             sys-table="sec.department"
+             source="RDM"
+             unique-sys-field="code"
+             deleted-field="is_deleted"
+             type="SIMPLE_VERSIONED"
+             mapping-version="1"
+             name="department">
         <field sys-field="code" sys-data-type="varchar" rdm-field="code"/>
         <field sys-field="name" sys-data-type="varchar" rdm-field="name"/>
     </refbook>
 
-    <refbook code="S002" sys-table="sec.region" unique-sys-field="code" deleted-field="is_deleted" mapping-version="1">
+    <refbook code="S002"
+             name="region"
+             sys-table="sec.region"
+             unique-sys-field="code"
+             source="RDM"
+             deleted-field="is_deleted"
+             mapping-version="1"
+             type="SIMPLE_VERSIONED">
         <field sys-field="code" sys-data-type="varchar" rdm-field="code"/>
         <field sys-field="name" sys-data-type="varchar" rdm-field="name"/>
         <field sys-field="okato" sys-data-type="varchar" rdm-field="okato"/>
     </refbook>
 
-    <refbook code="S003" sys-table="sec.organization" unique-sys-field="code" deleted-field="is_deleted"
+    <refbook code="S003"
+             name="organization"
+             sys-table="sec.organization"
+             unique-sys-field="code"
+             source="RDM"
+             deleted-field="is_deleted"
+             type="SIMPLE_VERSIONED"
              mapping-version="2">
         <field sys-field="code" sys-data-type="varchar" rdm-field="code"/>
         <field sys-field="short_name" sys-data-type="varchar" rdm-field="short_name"/>

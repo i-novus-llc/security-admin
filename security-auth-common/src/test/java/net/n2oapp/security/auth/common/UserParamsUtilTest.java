@@ -15,9 +15,11 @@ import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.time.Instant;
 import java.util.*;
 
 import static net.n2oapp.security.auth.common.TestConstants.*;
@@ -65,7 +67,7 @@ public class UserParamsUtilTest {
 
     private WebAuthenticationDetails authenticationDetails;
 
-    private User testPrincipal;
+    private OauthUser testPrincipal;
 
     @BeforeEach
     public void setup() {
@@ -79,9 +81,11 @@ public class UserParamsUtilTest {
         request.setSession(new MockHttpSession());
         authenticationDetails = new WebAuthenticationDetails(request);
 
-        testPrincipal = new User(SOME_USERNAME, SOME_PASSWORD, Collections.singleton(SOME_GRANTED_AUTHORITY));
+//        testPrincipal = new User(SOME_USERNAME, SOME_PASSWORD, Collections.singleton(SOME_GRANTED_AUTHORITY));
+        testPrincipal = new OauthUser(SOME_USERNAME, Collections.singleton(SOME_GRANTED_AUTHORITY), new OidcIdToken("token_value", Instant.MIN, Instant.MAX, Map.of("sub", "some_sub")));
+
         testPrincipal.setSurname(SOME_SURNAME);
-        testPrincipal.setName(SOME_NAME);
+        testPrincipal.setFirstName(SOME_NAME);
         testPrincipal.setPatronymic(SOME_PATRONYMIC);
         testPrincipal.setDepartment(SOME_DEPARTMENT);
         testPrincipal.setDepartmentName(SOME_DEPARTMENT_NAME);
@@ -217,7 +221,7 @@ public class UserParamsUtilTest {
 
     @Test
     public void testGetUserDetailsProperty() {
-        User user = new User(SOME_USERNAME);
+        OauthUser user = new OauthUser(SOME_USERNAME, new OidcIdToken("token_value", Instant.MIN, Instant.MAX, Map.of("sub", "some_sub")));
         user.setSurname(SOME_SURNAME);
         assertEquals(SOME_SURNAME, UserParamsUtil.getUserDetailsProperty(user, PRINCIPIAL_SURNAME_ATTR));
     }
@@ -266,27 +270,27 @@ public class UserParamsUtilTest {
     private void assertUserDetailsMap(Map<String, Object> map) {
         assertNotNull(map);
 
+//        assertEquals(Boolean.TRUE, map.get(PRINCIPIAL_CREDENTIAL_NON_EXPIRED_ATTR));
+//        assertEquals(Boolean.TRUE, map.get(PRINCIPIAL_ENABLED_EXPIRED_ATTR));
+//        assertEquals(SOME_PASSWORD, map.get(PRINCIPIAL_PASSWORD_ATTR));
+//        assertEquals(Boolean.TRUE, map.get(PRINCIPIAL_ACCOUNT_NON_EXPIRED_ATTR));
+//        assertEquals(Boolean.TRUE, map.get(PRINCIPIAL_ACCOUNT_NON_LOCKED_ATTR));
         assertEquals(SOME_DEPARTMENT_NAME, map.get(PRINCIPIAL_DEPARTMENT_NAME_ATTR));
         assertEquals(SOME_DEPARTMENT, map.get(PRINCIPIAL_DEPARTMENT_ATTR));
-        assertEquals(Boolean.TRUE, map.get(PRINCIPIAL_CREDENTIAL_NON_EXPIRED_ATTR));
         assertEquals(SOME_ROLE_LIST, map.get(PRINCIPIAL_ROLES_ATTR));
         assertEquals(getUserFullName(), map.get(PRINCIPIAL_USER_FULL_NAME_ATTR));
         assertEquals(SOME_AUTHORITEIES, map.get(PRINCIPIAL_AUTHORITEIES_ATTR));
-        assertEquals(Boolean.TRUE, map.get(PRINCIPIAL_ENABLED_EXPIRED_ATTR));
         assertEquals(getUserShortName(), map.get(PRINCIPIAL_USER_SHORT_NAME_ATTR));
-        assertEquals(SOME_PASSWORD, map.get(PRINCIPIAL_PASSWORD_ATTR));
         assertEquals(SOME_SURNAME, map.get(PRINCIPIAL_SURNAME_ATTR));
         assertEquals(SOME_NAME, map.get(PRINCIPIAL_NAME_ATTR));
         assertEquals(SOME_PATRONYMIC, map.get(PRINCIPIAL_PATRONYMIC_ATTR));
         assertEquals(SOME_USER_LEVEL, map.get(PRINCIPIAL_USER_LEVEL_ATTR));
         assertEquals(new ArrayList<>(), map.get(PRINCIPIAL_PERMISSIONS_ATTR));
         assertEquals(SOME_ORGANIZATION, map.get(PRINCIPIAL_ORGANIZATION_ATTR));
-        assertEquals(Boolean.TRUE, map.get(PRINCIPIAL_ACCOUNT_NON_EXPIRED_ATTR));
         assertEquals(SOME_REGION, map.get(PRINCIPIAL_REGION_ATTR));
-        assertEquals(User.class, map.get(PRINCIPIAL_CLASS_ATTR));
+        assertEquals(OauthUser.class, map.get(PRINCIPIAL_CLASS_ATTR));
         assertEquals(getUserNameSurname(), map.get(PRINCIPIAL_USER_NAME_SURNAME_ATTR));
         assertEquals(SOME_EMAIL, map.get(PRINCIPIAL_EMAIL_ATTR));
-        assertEquals(Boolean.TRUE, map.get(PRINCIPIAL_ACCOUNT_NON_LOCKED_ATTR));
         assertEquals(SOME_USERNAME, map.get(PRINCIPIAL_USERNAME_ATTR));
     }
 }

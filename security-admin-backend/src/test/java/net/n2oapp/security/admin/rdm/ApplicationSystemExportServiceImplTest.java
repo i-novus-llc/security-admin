@@ -19,27 +19,27 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+import ru.i_novus.ms.rdm.api.model.draft.Draft;
+import ru.i_novus.ms.rdm.api.model.draft.PublishRequest;
+import ru.i_novus.ms.rdm.api.model.refbook.RefBook;
+import ru.i_novus.ms.rdm.api.model.refbook.RefBookCriteria;
+import ru.i_novus.ms.rdm.api.model.refdata.RefBookRowValue;
+import ru.i_novus.ms.rdm.api.model.refdata.SearchDataCriteria;
+import ru.i_novus.ms.rdm.api.model.refdata.UpdateDataRequest;
+import ru.i_novus.ms.rdm.api.service.DraftService;
+import ru.i_novus.ms.rdm.api.service.PublishService;
+import ru.i_novus.ms.rdm.api.service.RefBookService;
+import ru.i_novus.ms.rdm.api.service.VersionService;
 import ru.i_novus.platform.datastorage.temporal.model.Reference;
 import ru.i_novus.platform.datastorage.temporal.model.value.BooleanFieldValue;
 import ru.i_novus.platform.datastorage.temporal.model.value.ReferenceFieldValue;
 import ru.i_novus.platform.datastorage.temporal.model.value.StringFieldValue;
-import ru.inovus.ms.rdm.api.model.draft.Draft;
-import ru.inovus.ms.rdm.api.model.refbook.RefBook;
-import ru.inovus.ms.rdm.api.model.refbook.RefBookCriteria;
-import ru.inovus.ms.rdm.api.model.refdata.RefBookRowValue;
-import ru.inovus.ms.rdm.api.model.refdata.Row;
-import ru.inovus.ms.rdm.api.model.refdata.SearchDataCriteria;
-import ru.inovus.ms.rdm.api.service.DraftService;
-import ru.inovus.ms.rdm.api.service.PublishService;
-import ru.inovus.ms.rdm.api.service.RefBookService;
-import ru.inovus.ms.rdm.api.service.VersionService;
 
 import java.util.Arrays;
 import java.util.Collections;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
@@ -89,16 +89,16 @@ public class ApplicationSystemExportServiceImplTest {
         ArgumentCaptor<SearchDataCriteria> versionServiceSecondArgCaptor = ArgumentCaptor.forClass(SearchDataCriteria.class);
         ArgumentCaptor<Integer> versionArgCaptor = ArgumentCaptor.forClass(Integer.class);
         ArgumentCaptor<Integer> updateDataFirstArgCaptor = ArgumentCaptor.forClass(Integer.class);
-        ArgumentCaptor<Row> updateDataSecondArgCaptor = ArgumentCaptor.forClass(Row.class);
+        ArgumentCaptor<UpdateDataRequest> updateDataSecondArgCaptor = ArgumentCaptor.forClass(UpdateDataRequest.class);
         ArgumentCaptor<Integer> publishFirstArgCaptor = ArgumentCaptor.forClass(Integer.class);
-        ArgumentCaptor<Boolean> publishSecondArgCaptor = ArgumentCaptor.forClass(Boolean.class);
+        ArgumentCaptor<PublishRequest> publishSecondArgCaptor = ArgumentCaptor.forClass(PublishRequest.class);
 
         verify(refBookService).search(refBookCriteriaCaptor.capture());
         verify(applicationSystemService).findAllApplications(appCriteriaCaptor.capture());
         verify(versionService).search(versionServiceFirstArgCaptor.capture(), versionServiceSecondArgCaptor.capture());
         verify(draftService).createFromVersion(versionArgCaptor.capture());
         verify(draftService).updateData(updateDataFirstArgCaptor.capture(), updateDataSecondArgCaptor.capture());
-        verify(publishService).publish(publishFirstArgCaptor.capture(), any(), any(), any(), publishSecondArgCaptor.capture());
+        verify(publishService).publish(publishFirstArgCaptor.capture(), publishSecondArgCaptor.capture());
 
         assertThat(refBookCriteriaCaptor.getValue().getCode(), is("APP001"));
         assertThat(appCriteriaCaptor.getValue().getSize(), is(Integer.MAX_VALUE));
@@ -106,12 +106,12 @@ public class ApplicationSystemExportServiceImplTest {
         assertThat(versionServiceFirstArgCaptor.getValue(), is("APP001"));
         assertThat(versionArgCaptor.getValue(), is(refBook.getId()));
         assertThat(updateDataFirstArgCaptor.getValue(), is(3));
-        assertThat(updateDataSecondArgCaptor.getValue().getData().get("code"), is(application.getCode()));
-        assertThat(updateDataSecondArgCaptor.getValue().getData().get("system"), is(application.getSystemCode()));
-        assertThat(updateDataSecondArgCaptor.getValue().getData().get("name"), is(application.getName()));
-        assertThat(updateDataSecondArgCaptor.getValue().getData().get("oauth"), is(application.getOAuth()));
+        assertThat(updateDataSecondArgCaptor.getValue().getRows().get(0).getData().get("code"), is(application.getCode()));
+        assertThat(updateDataSecondArgCaptor.getValue().getRows().get(0).getData().get("system"), is(application.getSystemCode()));
+        assertThat(updateDataSecondArgCaptor.getValue().getRows().get(0).getData().get("name"), is(application.getName()));
+        assertThat(updateDataSecondArgCaptor.getValue().getRows().get(0).getData().get("oauth"), is(application.getOAuth()));
         assertThat(publishFirstArgCaptor.getValue(), is(3));
-        assertThat(publishSecondArgCaptor.getValue(), is(false));
+        assertThat(publishSecondArgCaptor.getValue().getOptLockValue(), is(2));
     }
 
     @Test
@@ -153,13 +153,14 @@ public class ApplicationSystemExportServiceImplTest {
         Page<RefBookRowValue> page = new PageImpl<>(Collections.singletonList(refBookRowValue));
         Draft draft = new Draft();
         draft.setId(3);
+        draft.setOptLockValue(2);
 
         doReturn(new PageImpl<>(Collections.singletonList(refBook))).when(refBookService).search(Mockito.any(RefBookCriteria.class));
         doReturn(appPage).when(applicationSystemService).findAllApplications(Mockito.any());
         doReturn(appSystemPage).when(applicationSystemService).findAllSystems(Mockito.any());
         doReturn(draft).when(draftService).createFromVersion(Mockito.anyInt());
         doReturn(page).when(versionService).search(Mockito.anyString(), Mockito.any());
-        doNothing().when(draftService).updateData(Mockito.anyInt(), Mockito.any(Row.class));
-        doNothing().when(publishService).publish(Mockito.anyInt(), Mockito.isNull(), Mockito.isNull(), Mockito.isNull(), Mockito.anyBoolean());
+        doNothing().when(draftService).updateData(Mockito.anyInt(), Mockito.any(UpdateDataRequest.class));
+        doNothing().when(publishService).publish(Mockito.anyInt(), Mockito.any(PublishRequest.class));
     }
 }

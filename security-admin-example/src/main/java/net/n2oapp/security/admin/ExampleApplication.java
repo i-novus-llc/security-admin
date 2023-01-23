@@ -1,6 +1,6 @@
 package net.n2oapp.security.admin;
 
-import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
+import net.n2oapp.platform.test.autoconfigure.pg.EnableEmbeddedPg;
 import net.n2oapp.security.admin.impl.AdminImplConfiguration;
 import net.n2oapp.security.admin.rest.client.AdminRestClientConfiguration;
 import net.n2oapp.security.admin.web.AdminWebConfiguration;

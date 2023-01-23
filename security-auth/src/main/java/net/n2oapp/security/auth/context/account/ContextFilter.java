@@ -1,38 +1,53 @@
-package net.n2oapp.security.account.context;
+package net.n2oapp.security.auth.context.account;
 
+import lombok.Setter;
 import net.n2oapp.security.admin.api.criteria.AccountCriteria;
 import net.n2oapp.security.admin.api.model.Account;
 import net.n2oapp.security.admin.rest.client.AccountServiceRestClient;
-import net.n2oapp.security.auth.common.User;
+import net.n2oapp.security.auth.common.OauthUser;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.web.filter.OncePerRequestFilter;
+import org.thymeleaf.ITemplateEngine;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.AbstractConfigurableTemplateResolver;
 import org.thymeleaf.templateresolver.UrlTemplateResolver;
 
-import javax.servlet.*;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static org.springframework.util.CollectionUtils.isEmpty;
 
-public class ContextFilter implements Filter {
+public class ContextFilter extends OncePerRequestFilter {
 
     private static final String DEFAULT_SELECT_ACCOUNT_TEMPLATE_PATH = "classpath:public/context-page/context-page.html";
     private static final String DEFAULT_SELECT_ACCOUNT_CSS_PATH = "css/context-page.css";
     private static final String DEFAULT_SELECT_ACCOUNT_EMBLEM_PATH = "static/rusEmblem.svg";
 
+    private Set<String> defaultIgnoredUrls = Set.of("/static/**", "/public/**", "/dist/**", "/webjars/**", "/lib/**", "/build/**", "/bundle/**", "/error", "/serviceWorker.js", "/css/**");
+    private final OrRequestMatcher orRequestMatcher;
+
     private ContextUserInfoTokenServices userInfoTokenServices;
     private AccountServiceRestClient accountServiceRestClient;
-    private TemplateEngine templateEngine;
+    @Setter
+    private ITemplateEngine templateEngine;
 
     private String selectAccountTemplatePath;
     private String selectAccountCssPath;
@@ -40,7 +55,7 @@ public class ContextFilter implements Filter {
 
     public ContextFilter(ContextUserInfoTokenServices userInfoTokenServices,
                          AccountServiceRestClient accountServiceRestClient,
-                         String selectAccountTemplatePath, String selectAccountCssPath, String selectAccountEmblemPath) {
+                         String selectAccountTemplatePath, String selectAccountCssPath, String selectAccountEmblemPath, Set<String> ignoredUrls) {
         this.userInfoTokenServices = userInfoTokenServices;
         this.accountServiceRestClient = accountServiceRestClient;
         this.selectAccountTemplatePath = selectAccountTemplatePath;
@@ -50,43 +65,52 @@ public class ContextFilter implements Filter {
         AbstractConfigurableTemplateResolver resolver = new UrlTemplateResolver();
         resolver.setTemplateMode(TemplateMode.HTML);
         resolver.setCharacterEncoding("UTF-8");
-        templateEngine.setTemplateResolver(resolver);
+        ((TemplateEngine) templateEngine).setTemplateResolver(resolver);
+        List<RequestMatcher> requestMatchers = new ArrayList<>();
+        for (String pattern : isEmpty(ignoredUrls) ? defaultIgnoredUrls : ignoredUrls) {
+            requestMatchers.add(new AntPathRequestMatcher(pattern, HttpMethod.GET.name()));
+        }
+        orRequestMatcher = new OrRequestMatcher(requestMatchers);
     }
 
     public ContextFilter(ContextUserInfoTokenServices userInfoTokenServices, AccountServiceRestClient accountServiceRestClient, String selectAccountCssPath) {
-        this(userInfoTokenServices, accountServiceRestClient, DEFAULT_SELECT_ACCOUNT_TEMPLATE_PATH, selectAccountCssPath, DEFAULT_SELECT_ACCOUNT_EMBLEM_PATH);
+        this(userInfoTokenServices, accountServiceRestClient, DEFAULT_SELECT_ACCOUNT_TEMPLATE_PATH, selectAccountCssPath, DEFAULT_SELECT_ACCOUNT_EMBLEM_PATH, null);
     }
 
     public ContextFilter(ContextUserInfoTokenServices userInfoTokenServices, AccountServiceRestClient accountServiceRestClient, String selectAccountCssPath, String selectAccountEmblemPath) {
-        this(userInfoTokenServices, accountServiceRestClient, DEFAULT_SELECT_ACCOUNT_TEMPLATE_PATH, selectAccountCssPath, selectAccountEmblemPath);
+        this(userInfoTokenServices, accountServiceRestClient, DEFAULT_SELECT_ACCOUNT_TEMPLATE_PATH, selectAccountCssPath, selectAccountEmblemPath, null);
+    }
+
+    public ContextFilter(ContextUserInfoTokenServices userInfoTokenServices, AccountServiceRestClient accountServiceRestClient, Set<String> ignoredUrls) {
+        this(userInfoTokenServices, accountServiceRestClient, DEFAULT_SELECT_ACCOUNT_TEMPLATE_PATH, DEFAULT_SELECT_ACCOUNT_CSS_PATH, DEFAULT_SELECT_ACCOUNT_EMBLEM_PATH, ignoredUrls);
     }
 
     public ContextFilter(ContextUserInfoTokenServices userInfoTokenServices, AccountServiceRestClient accountServiceRestClient) {
-        this(userInfoTokenServices, accountServiceRestClient, DEFAULT_SELECT_ACCOUNT_TEMPLATE_PATH, DEFAULT_SELECT_ACCOUNT_CSS_PATH, DEFAULT_SELECT_ACCOUNT_EMBLEM_PATH);
+        this(userInfoTokenServices, accountServiceRestClient, DEFAULT_SELECT_ACCOUNT_TEMPLATE_PATH, DEFAULT_SELECT_ACCOUNT_CSS_PATH, DEFAULT_SELECT_ACCOUNT_EMBLEM_PATH, null);
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
-        if (isNull(currentAuthentication) || nonNull(((User) currentAuthentication.getPrincipal()).getAccountId())) {
-            chain.doFilter(request, response);
+        if (isNull(currentAuthentication) || nonNull(((OauthUser) currentAuthentication.getPrincipal()).getAccountId())) {
+            filterChain.doFilter(request, response);
             return;
         }
-        User user = (User) currentAuthentication.getPrincipal();
+        OauthUser user = (OauthUser) currentAuthentication.getPrincipal();
 
-        if (((HttpServletRequest) request).getRequestURI().contains("/selectAccount")) {
+        if (request.getRequestURI().contains("/selectAccount")) {
             String accountId = request.getParameter("accountId");
             selectAccount(Integer.valueOf(accountId), currentAuthentication);
-            ((HttpServletResponse) response).sendRedirect("/");
+            response.sendRedirect("/");
             return;
         }
 
-        List<Account> accountList = accountServiceRestClient.findAll(new AccountCriteria(user.getUsername())).getContent();
+        List<Account> accountList = accountServiceRestClient.findAll(new AccountCriteria(user.getName())).getContent();
         if (accountList.size() == 1) {
             selectAccount(accountList.get(0).getId(), currentAuthentication);
-            chain.doFilter(request, response);
+            filterChain.doFilter(request, response);
         } else {
-            writePage((HttpServletRequest) request, (HttpServletResponse) response, accountList);
+            writePage(request, response, accountList);
         }
     }
 
@@ -105,8 +129,13 @@ public class ContextFilter implements Filter {
     }
 
     private void selectAccount(Integer accountId, Authentication currentAuthentication) {
-        OAuth2Authentication oAuth2Authentication = userInfoTokenServices.loadAuthentication(accountId);
+        OAuth2AuthenticationToken oAuth2Authentication = userInfoTokenServices.loadAccountAuthentication(accountId, currentAuthentication);
         oAuth2Authentication.setDetails(currentAuthentication.getDetails());
         SecurityContextHolder.getContext().setAuthentication(oAuth2Authentication);
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        return orRequestMatcher.matches(request);
     }
 }

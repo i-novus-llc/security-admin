@@ -37,6 +37,13 @@ public class BaseCriteria implements Pageable {
     @DefaultValue("10")
     private int size;
 
+    //    used to avoid swagger type exception
+    private long offset;
+    private Sort sort;
+    private int pageSize;
+    private int pageNumber;
+    //    used to avoid swagger type exception
+
     private List<Sort.Order> orders;
 
     public BaseCriteria() {
@@ -83,22 +90,6 @@ public class BaseCriteria implements Pageable {
             return Sort.by(orders);
         } else
             return Sort.unsorted();
-    }
-
-    public void setPageSize(int size) {
-        this.size = size;
-    }
-
-    public void setPageNumber(int page) {
-        this.page = page;
-    }
-
-    public void setOffset(long offset) {
-        throw new UnsupportedOperationException();
-    }
-
-    public void setSort(Sort sort) {
-        throw new UnsupportedOperationException();
     }
 
     public void setPage(int page) {
@@ -164,6 +155,11 @@ public class BaseCriteria implements Pageable {
     @Override
     public Pageable first() {
         return new BaseCriteria(0, this.getPageSize(), this.getSort());
+    }
+
+    @Override
+    public Pageable withPage(int pageNumber) {
+        return new BaseCriteria(pageNumber, this.getPageSize(), this.getSort());
     }
 
     @Override

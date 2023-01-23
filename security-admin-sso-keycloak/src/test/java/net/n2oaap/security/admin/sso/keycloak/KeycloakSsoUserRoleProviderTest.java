@@ -1,60 +1,61 @@
 package net.n2oaap.security.admin.sso.keycloak;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.SsoUser;
+import net.n2oapp.security.admin.sso.keycloak.AdminSsoKeycloakProperties;
 import net.n2oapp.security.admin.sso.keycloak.KeycloakSsoUserRoleProvider;
-import org.apache.cxf.jaxrs.impl.ResponseImpl;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.web.client.RestTemplate;
 
-import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE,
         classes = TestApplication.class,
-        properties = {"access.keycloak.serverUrl=http://127.0.0.1:8085/auth", "spring.liquibase.enabled=false"})
+        properties = {"spring.liquibase.enabled=false"})
 @Import(TestConfig.class)
 public class KeycloakSsoUserRoleProviderTest {
 
-    private static final String USERS = "http://127.0.0.1:8085/auth/admin/realms/master/users/";
-    private static final String ROLES = "http://127.0.0.1:8085/auth/admin/realms/master/roles/";
+    private static final String USERS = "/auth/admin/realms/master/users/";
+    private static final String ROLES = "/auth/admin/realms/master/roles/";
     public static final String ROLE_MAPPINGS_REALM = "/role-mappings/realm";
     private String externalUuid;
 
-    @MockBean
-    private RestTemplate restTemplate;
     @Autowired
     private KeycloakSsoUserRoleProvider provider;
 
-    @Mock
-    private ResponseEntity roleRepresentationsResponse;
-    @Mock
-    private ResponseEntity oneRoleRepresentationResponse;
+    @Autowired
+    private AdminSsoKeycloakProperties properties;
 
-    private ResponseEntity<ResponseImpl> responseEntity;
+    @Autowired
+    public ObjectMapper objectMapper;
+
+    public static MockWebServer mockBackEnd;
+
     private SsoUser ssoUser;
 
     @BeforeEach
@@ -68,24 +69,25 @@ public class KeycloakSsoUserRoleProviderTest {
         ssoUser.setPassword("123");
 
         externalUuid = UUID.randomUUID().toString();
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setLocation(URI.create(externalUuid));
-
-        responseEntity = new ResponseEntity<>(httpHeaders, HttpStatus.OK);
-
-        RoleRepresentation[] roleRepresentations = new RoleRepresentation[1];
-        RoleRepresentation role = new RoleRepresentation();
-        role.setId(UUID.randomUUID().toString());
-        role.setName("test.role");
-        role.setComposite(true);
-        roleRepresentations[0] = role;
-
-        mockRestTemplate(roleRepresentations);
+        properties.setServerUrl(String.format("http://127.0.0.1:%s/auth", mockBackEnd.getPort()));
     }
 
+    @BeforeAll
+    static void setUp() throws IOException {
+        mockBackEnd = new MockWebServer();
+        mockBackEnd.start();
+    }
+
+    @AfterAll
+    static void tearDown() throws IOException {
+        mockBackEnd.shutdown();
+    }
 
     @Test
-    public void testCreateUser() {
+    public void testCreateUser() throws InterruptedException, JsonProcessingException {
+        mockBackEnd.enqueue(new MockResponse().addHeader(HttpHeaders.LOCATION, URI.create(externalUuid)));
+        mockBackEnd.enqueue(new MockResponse().setBody(provider.objectMapper.writeValueAsString(roleRepresentation()[0])).setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON));
+        mockBackEnd.enqueue(new MockResponse());
 
         List<String> requiredActions = new ArrayList<>();
         requiredActions.add("requiredAction");
@@ -100,29 +102,31 @@ public class KeycloakSsoUserRoleProviderTest {
 
         SsoUser user = provider.createUser(ssoUser);
 
-        ArgumentCaptor<HttpEntity> httpEntityCaptor = ArgumentCaptor.forClass(HttpEntity.class);
-        verify(restTemplate).postForEntity(eq(USERS), httpEntityCaptor.capture(), eq(Response.class));
+        RecordedRequest recordedRequest = mockBackEnd.takeRequest();
+        assertEquals("POST", recordedRequest.getMethod());
+        assertEquals(USERS, recordedRequest.getPath());
 
-        HttpEntity captorValue = httpEntityCaptor.getValue();
-        UserRepresentation capturedUserRepresentation = (UserRepresentation) captorValue.getBody();
-
+        String body = recordedRequest.getBody().readUtf8();
+        UserRepresentation capturedUserRepresentation = objectMapper.readValue(body, UserRepresentation.class);
         assertNotNull(capturedUserRepresentation);
         assertEquals(ssoUser.getUsername(), capturedUserRepresentation.getUsername());
         assertEquals(ssoUser.getName(), capturedUserRepresentation.getFirstName());
         assertEquals(ssoUser.getSurname(), capturedUserRepresentation.getLastName());
         assertEquals(ssoUser.getEmail(), capturedUserRepresentation.getEmail());
 
-        verify(restTemplate).getForEntity(eq(ROLES + role.getCode()), any());
+        recordedRequest = mockBackEnd.takeRequest();
+        assertEquals("GET", recordedRequest.getMethod());
+        assertEquals(ROLES + role.getCode(), recordedRequest.getPath());
 
-        httpEntityCaptor = ArgumentCaptor.forClass(HttpEntity.class);
-        verify(restTemplate).postForEntity(eq(USERS + externalUuid + ROLE_MAPPINGS_REALM), httpEntityCaptor.capture(), eq(Response.class));
+        recordedRequest = mockBackEnd.takeRequest();
+        assertEquals("POST", recordedRequest.getMethod());
+        assertEquals(USERS + externalUuid + ROLE_MAPPINGS_REALM, recordedRequest.getPath());
 
-        captorValue = httpEntityCaptor.getValue();
-        List<RoleRepresentation> capturedRoleRepresentations = (List<RoleRepresentation>) captorValue.getBody();
-
+        body = recordedRequest.getBody().readUtf8();
+        List<RoleRepresentation> capturedRoleRepresentations = objectMapper.readValue(body, new TypeReference<List<RoleRepresentation>>() {
+        });
         assertNotNull(capturedRoleRepresentations);
         assertEquals("test.role", capturedRoleRepresentations.get(0).getName());
-
         assertEquals(externalUuid, user.getExtUid());
         assertEquals("KEYCLOAK", user.getExtSys());
         assertEquals(ssoUser.getUsername(), user.getUsername());
@@ -131,40 +135,47 @@ public class KeycloakSsoUserRoleProviderTest {
     }
 
     @Test
-    public void testUpdateUserRemoveRolesUpdatePassword() {
+    public void testUpdateUserRemoveRolesUpdatePassword() throws InterruptedException, JsonProcessingException {
+        mockBackEnd.enqueue(new MockResponse());
+        mockBackEnd.enqueue(new MockResponse().setBody(provider.objectMapper.writeValueAsString(roleRepresentation())).setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON));
+        mockBackEnd.enqueue(new MockResponse());
+        mockBackEnd.enqueue(new MockResponse());
         ssoUser.setExtUid(externalUuid);
-
         provider.updateUser(ssoUser);
 
-        ArgumentCaptor<HttpEntity> httpEntityCaptor = ArgumentCaptor.forClass(HttpEntity.class);
-        verify(restTemplate).exchange(eq(USERS + externalUuid), eq(HttpMethod.PUT), httpEntityCaptor.capture(), eq(Response.class));
+        RecordedRequest recordedRequest = mockBackEnd.takeRequest();
+        assertEquals("PUT", recordedRequest.getMethod());
+        assertEquals(USERS + externalUuid, recordedRequest.getPath());
 
-        HttpEntity captorValue = httpEntityCaptor.getValue();
-        UserRepresentation capturedUserRepresentation = (UserRepresentation) captorValue.getBody();
+        String body = recordedRequest.getBody().readUtf8();
+        UserRepresentation userRepresentation = objectMapper.readValue(body, UserRepresentation.class);
+        assertNotNull(userRepresentation);
+        assertEquals(ssoUser.getUsername(), userRepresentation.getUsername());
+        assertEquals(ssoUser.getName(), userRepresentation.getFirstName());
+        assertEquals(ssoUser.getSurname(), userRepresentation.getLastName());
+        assertEquals(ssoUser.getEmail(), userRepresentation.getEmail());
 
-        assertNotNull(capturedUserRepresentation);
-        assertEquals(ssoUser.getUsername(), capturedUserRepresentation.getUsername());
-        assertEquals(ssoUser.getName(), capturedUserRepresentation.getFirstName());
-        assertEquals(ssoUser.getSurname(), capturedUserRepresentation.getLastName());
-        assertEquals(ssoUser.getEmail(), capturedUserRepresentation.getEmail());
+        recordedRequest = mockBackEnd.takeRequest();
+        assertEquals("GET", recordedRequest.getMethod());
+        assertEquals(USERS + externalUuid + ROLE_MAPPINGS_REALM, recordedRequest.getPath());
 
-        verify(restTemplate).getForEntity(eq(USERS + externalUuid + ROLE_MAPPINGS_REALM), any());
+        recordedRequest = mockBackEnd.takeRequest();
+        assertEquals("DELETE", recordedRequest.getMethod());
+        assertEquals(USERS + externalUuid + ROLE_MAPPINGS_REALM, recordedRequest.getPath());
 
-        httpEntityCaptor = ArgumentCaptor.forClass(HttpEntity.class);
-        verify(restTemplate).exchange(eq(USERS + externalUuid + ROLE_MAPPINGS_REALM), eq(HttpMethod.DELETE), httpEntityCaptor.capture(), eq(Response.class));
-
-        captorValue = httpEntityCaptor.getValue();
-        List<RoleRepresentation> capturedRoleRepresentations = (List<RoleRepresentation>) captorValue.getBody();
-
+        body = recordedRequest.getBody().readUtf8();
+        List<RoleRepresentation> capturedRoleRepresentations = objectMapper.readValue(body, new TypeReference<List<RoleRepresentation>>() {
+        });
         assertNotNull(capturedRoleRepresentations);
         assertEquals("test.role", capturedRoleRepresentations.get(0).getName());
 
-        httpEntityCaptor = ArgumentCaptor.forClass(HttpEntity.class);
-        verify(restTemplate).exchange(eq(USERS + externalUuid + "/reset-password"), eq(HttpMethod.PUT), httpEntityCaptor.capture(), eq(Response.class));
 
-        captorValue = httpEntityCaptor.getValue();
-        CredentialRepresentation credentialRepresentation = (CredentialRepresentation) captorValue.getBody();
+        recordedRequest = mockBackEnd.takeRequest();
+        assertEquals("PUT", recordedRequest.getMethod());
+        assertEquals(USERS + externalUuid + "/reset-password", recordedRequest.getPath());
 
+        body = recordedRequest.getBody().readUtf8();
+        CredentialRepresentation credentialRepresentation = objectMapper.readValue(body, CredentialRepresentation.class);
         assertNotNull(credentialRepresentation);
         assertEquals("password", credentialRepresentation.getType());
         assertEquals("123", credentialRepresentation.getValue());
@@ -172,7 +183,11 @@ public class KeycloakSsoUserRoleProviderTest {
     }
 
     @Test
-    public void testUpdateUserAddRoles() {
+    public void testUpdateUserAddRoles() throws InterruptedException, JsonProcessingException {
+        mockBackEnd.enqueue(new MockResponse());
+        mockBackEnd.enqueue(new MockResponse());
+        mockBackEnd.enqueue(new MockResponse().setBody(objectMapper.writeValueAsString(roleRepresentation()[0])).addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON));
+        mockBackEnd.enqueue(new MockResponse());
         ssoUser.setExtUid(externalUuid);
         ssoUser.setPassword(null);
 
@@ -182,33 +197,39 @@ public class KeycloakSsoUserRoleProviderTest {
         role.setCode("test");
         roles.add(role);
         ssoUser.setRoles(roles);
-
-        doReturn(oneRoleRepresentationResponse).when(restTemplate).getForEntity(eq(ROLES + "test"), any());
-
         provider.updateUser(ssoUser);
 
-        verify(restTemplate).getForEntity(eq(ROLES + "test"), any());
+        mockBackEnd.takeRequest();
+        mockBackEnd.takeRequest();
+        RecordedRequest recordedRequest = mockBackEnd.takeRequest();
+        assertEquals("GET", recordedRequest.getMethod());
+        assertEquals(ROLES + "test", recordedRequest.getPath());
 
-        ArgumentCaptor<HttpEntity> httpEntityCaptor = ArgumentCaptor.forClass(HttpEntity.class);
-        verify(restTemplate).postForEntity(eq(USERS + externalUuid + ROLE_MAPPINGS_REALM), httpEntityCaptor.capture(), eq(Response.class));
+        recordedRequest = mockBackEnd.takeRequest();
+        assertEquals("POST", recordedRequest.getMethod());
+        assertEquals(USERS + externalUuid + ROLE_MAPPINGS_REALM, recordedRequest.getPath());
 
-        HttpEntity captorValue = httpEntityCaptor.getValue();
-        List<RoleRepresentation> capturedRoleRepresentations = (List<RoleRepresentation>) captorValue.getBody();
-
+        String body = recordedRequest.getBody().readUtf8();
+        List<RoleRepresentation> capturedRoleRepresentations = objectMapper.readValue(body, new TypeReference<List<RoleRepresentation>>() {
+        });
         assertNotNull(capturedRoleRepresentations);
         assertEquals("test", capturedRoleRepresentations.get(0).getName());
-
     }
 
     @Test
-    public void testDeleteUsers() {
+    public void testDeleteUsers() throws InterruptedException {
+        mockBackEnd.enqueue(new MockResponse());
         ssoUser.setExtUid(externalUuid);
         provider.deleteUser(ssoUser);
-        verify(restTemplate).exchange(eq(USERS + externalUuid), eq(HttpMethod.DELETE), any(), eq(Response.class));
+
+        RecordedRequest recordedRequest = mockBackEnd.takeRequest();
+        assertEquals("DELETE", recordedRequest.getMethod());
+        assertEquals(USERS + externalUuid, recordedRequest.getPath());
     }
 
     @Test
-    public void testChangeActive() {
+    public void testChangeActive() throws InterruptedException, JsonProcessingException {
+        mockBackEnd.enqueue(new MockResponse());
         ssoUser.setExtUid(externalUuid);
         ssoUser.setUsername(null);
         ssoUser.setSurname(null);
@@ -217,18 +238,19 @@ public class KeycloakSsoUserRoleProviderTest {
         ssoUser.setIsActive(false);
         provider.changeActivity(ssoUser);
 
-        ArgumentCaptor<HttpEntity> httpEntityCaptor = ArgumentCaptor.forClass(HttpEntity.class);
-        verify(restTemplate).exchange(eq(USERS + externalUuid), eq(HttpMethod.PUT), httpEntityCaptor.capture(), eq(Response.class));
+        RecordedRequest recordedRequest = mockBackEnd.takeRequest();
+        assertEquals("PUT", recordedRequest.getMethod());
+        assertEquals(USERS + externalUuid, recordedRequest.getPath());
 
-        HttpEntity captorValue = httpEntityCaptor.getValue();
-        UserRepresentation capturedUserRepresentation = (UserRepresentation) captorValue.getBody();
-
+        String body = recordedRequest.getBody().readUtf8();
+        UserRepresentation capturedUserRepresentation = objectMapper.readValue(body, UserRepresentation.class);
         assertNotNull(capturedUserRepresentation);
         assertFalse(capturedUserRepresentation.isEnabled());
     }
 
     @Test
-    public void testResetPassword() {
+    public void testResetPassword() throws InterruptedException, JsonProcessingException {
+        mockBackEnd.enqueue(new MockResponse());
         ssoUser.setExtUid(externalUuid);
         List<String> requiredActions = new ArrayList<>();
         requiredActions.add("resetPassword");
@@ -236,32 +258,23 @@ public class KeycloakSsoUserRoleProviderTest {
 
         provider.resetPassword(ssoUser);
 
-        ArgumentCaptor<HttpEntity> httpEntityCaptor = ArgumentCaptor.forClass(HttpEntity.class);
-        verify(restTemplate).exchange(eq(USERS + externalUuid), eq(HttpMethod.PUT), httpEntityCaptor.capture(), eq(Response.class));
+        RecordedRequest recordedRequest = mockBackEnd.takeRequest();
+        assertEquals("PUT", recordedRequest.getMethod());
+        assertEquals(USERS + externalUuid, recordedRequest.getPath());
 
-        HttpEntity captorValue = httpEntityCaptor.getValue();
-        UserRepresentation capturedUserRepresentation = (UserRepresentation) captorValue.getBody();
-
+        String body = recordedRequest.getBody().readUtf8();
+        UserRepresentation capturedUserRepresentation = objectMapper.readValue(body, UserRepresentation.class);
         assertNotNull(capturedUserRepresentation);
         assertEquals("resetPassword", capturedUserRepresentation.getRequiredActions().get(0));
     }
 
-
-
-    private void mockRestTemplate(RoleRepresentation[] roleRepresentations) {
-        doReturn(responseEntity).when(restTemplate).postForEntity(eq(USERS), any(), eq(Response.class));
-        doReturn(roleRepresentationsResponse).when(restTemplate).getForEntity(eq(USERS + externalUuid + ROLE_MAPPINGS_REALM), any());
-        doReturn(responseEntity).when(restTemplate).postForEntity(eq(USERS + externalUuid + ROLE_MAPPINGS_REALM), any(), eq(Response.class));
-        doReturn(responseEntity).when(restTemplate).exchange(eq(USERS + externalUuid), eq(HttpMethod.PUT), any(), eq(Response.class));
-        doReturn(responseEntity).when(restTemplate).exchange(eq(USERS + externalUuid + "/reset-password"), eq(HttpMethod.PUT), any(), eq(Response.class));
-        doReturn(responseEntity).when(restTemplate).exchange(eq(USERS + externalUuid + ROLE_MAPPINGS_REALM), eq(HttpMethod.DELETE), any(), eq(Response.class));
-        doReturn(responseEntity).when(restTemplate).exchange(eq(USERS + externalUuid), eq(HttpMethod.DELETE), any(), eq(Response.class));
-
-        doReturn(roleRepresentationsResponse).when(restTemplate).getForEntity(eq(ROLES), any());
-        doReturn(oneRoleRepresentationResponse).when(restTemplate).getForEntity(eq(ROLES + roleRepresentations[0].getName()), eq(RoleRepresentation.class));
-
-        doReturn(roleRepresentations).when(roleRepresentationsResponse).getBody();
-        doReturn(roleRepresentations[0]).when(oneRoleRepresentationResponse).getBody();
-
+    private RoleRepresentation[] roleRepresentation() {
+        RoleRepresentation[] roleRepresentations = new RoleRepresentation[1];
+        RoleRepresentation role = new RoleRepresentation();
+        role.setId(UUID.randomUUID().toString());
+        role.setName("test.role");
+        role.setComposite(true);
+        roleRepresentations[0] = role;
+        return roleRepresentations;
     }
 }

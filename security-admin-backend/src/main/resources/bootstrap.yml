@@ -1,7 +1,0 @@
-spring:
-  application:
-    name: ${project.artifactId}
-  cloud:
-    consul:
-      config:
-        enabled: ${config.server.enable}

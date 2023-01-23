@@ -20,6 +20,7 @@ import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
 import net.n2oapp.security.auth.common.authority.SystemGrantedAuthority;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -99,6 +100,9 @@ public class UserParamsUtil {
         String username = "";
         if (principal instanceof String) {
             username = (String) principal;
+        } else if (principal instanceof AuthenticatedPrincipal) {
+            AuthenticatedPrincipal userDetails = (AuthenticatedPrincipal) principal;
+            username = userDetails.getName();
         } else if (principal instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) principal;
             username = userDetails.getUsername();
@@ -120,9 +124,14 @@ public class UserParamsUtil {
         if (authentication == null)
             return null;
         Object details = authentication.getPrincipal();
-        if (details instanceof UserDetails)
+        if (details instanceof OauthUser)
             return (T) details;
         details = authentication.getDetails();
+        if (details instanceof OauthUser)
+            return (T) details;
+        if (details instanceof UserDetails)
+            return (T) details;
+        details = authentication.getPrincipal();
         if (details instanceof UserDetails)
             return (T) details;
         return null;

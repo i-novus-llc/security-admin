@@ -3,12 +3,12 @@ package net.n2oapp.security.admin.rdm.scheduled;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.SchedulerException;
-import ru.inovus.ms.rdm.sync.rest.RdmSyncRest;
+import ru.i_novus.ms.rdm.sync.api.service.RdmSyncService;
 
 public abstract class SynchronizeJob implements Job {
-    public static final String KEY = RdmSyncRest.class.getSimpleName();
+    public static final String KEY = RdmSyncService.class.getSimpleName();
 
-    protected RdmSyncRest getRdmSyncRest(JobExecutionContext context) throws SchedulerException {
-        return (RdmSyncRest) context.getScheduler().getContext().get(KEY);
+    protected RdmSyncService getRdmSyncRest(JobExecutionContext context) throws SchedulerException {
+        return (RdmSyncService) context.getScheduler().getContext().get(KEY);
     }
 }

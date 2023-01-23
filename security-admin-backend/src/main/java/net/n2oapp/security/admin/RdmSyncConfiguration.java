@@ -16,10 +16,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
-import ru.inovus.ms.rdm.api.provider.RdmMapperConfigurer;
-import ru.inovus.ms.rdm.api.service.DraftService;
-import ru.inovus.ms.rdm.api.service.PublishService;
-import ru.inovus.ms.rdm.sync.rest.RdmSyncRest;
+import ru.i_novus.ms.rdm.api.provider.RdmMapperConfigurer;
+import ru.i_novus.ms.rdm.api.service.DraftService;
+import ru.i_novus.ms.rdm.api.service.PublishService;
+import ru.i_novus.ms.rdm.sync.api.service.RdmSyncService;
 
 import java.util.List;
 import java.util.Map;
@@ -50,7 +50,7 @@ public class RdmSyncConfiguration {
     private String departmentUpdateCronExpression;
 
     @Autowired(required = false)
-    private RdmSyncRest rdmSyncRest;
+    private RdmSyncService rdmSyncRest;
 
     @Bean
     public SynchronizationInfo appSysExportJobAndTrigger() {
@@ -115,7 +115,7 @@ public class RdmSyncConfiguration {
         Map<JobDetail, Set<? extends Trigger>> scheduleJobs = synchronizationInfos.stream().collect(Collectors.toMap(SynchronizationInfo::getJob, SynchronizationInfo::getTrigger));
         Scheduler scheduler = schedulerFactoryBean.getScheduler();
         scheduler.scheduleJobs(scheduleJobs, true);
-        scheduler.getContext().put(RdmSyncRest.class.getSimpleName(), rdmSyncRest);
+        scheduler.getContext().put(RdmSyncService.class.getSimpleName(), rdmSyncRest);
 
         return scheduler;
     }

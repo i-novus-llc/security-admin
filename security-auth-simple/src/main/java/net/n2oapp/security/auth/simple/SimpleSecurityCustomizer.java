@@ -2,16 +2,19 @@ package net.n2oapp.security.auth.simple;
 
 import net.n2oapp.framework.access.data.SecurityProvider;
 import net.n2oapp.framework.api.MetadataEnvironment;
-import net.n2oapp.security.auth.N2oSecurityConfigurerAdapter;
+import net.n2oapp.security.auth.N2oSecurityCustomizer;
+import net.n2oapp.security.auth.N2oUrlAuthenticationEntryPoint;
 import net.n2oapp.security.auth.N2oUrlFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
+import org.springframework.security.config.annotation.web.configurers.ExceptionHandlingConfigurer;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
 import static net.n2oapp.security.auth.simple.SpringConfigUtil.*;
@@ -20,13 +23,16 @@ import static net.n2oapp.security.auth.simple.SpringConfigUtil.*;
  * Адаптер для настройки безопасности с простой аутентификацией по логину и паролю
  */
 @Import({SimpleAuthConfig.class, SimpleAuthController.class})
-public abstract class SimpleSecurityConfigurerAdapter extends N2oSecurityConfigurerAdapter {
+public abstract class SimpleSecurityCustomizer extends N2oSecurityCustomizer {
 
     @Value("${n2o.access.schema.id}")
     private String schemaId;
 
     @Value("${n2o.access.deny_urls}")
     private Boolean defaultUrlAccessDenied;
+
+    @Value("${n2o.api.url:/n2o}")
+    private String n2oUrl;
 
     @Lazy
     @Autowired
@@ -37,32 +43,29 @@ public abstract class SimpleSecurityConfigurerAdapter extends N2oSecurityConfigu
 
     private DaoAuthenticationProvider daoAuthenticationProvider;
 
-    public SimpleSecurityConfigurerAdapter(DaoAuthenticationProvider daoAuthenticationProvider) {
+    public SimpleSecurityCustomizer(DaoAuthenticationProvider daoAuthenticationProvider) {
         this.daoAuthenticationProvider = daoAuthenticationProvider;
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) {
-        auth.authenticationProvider(daoAuthenticationProvider);
+    @Bean
+    public AuthenticationManager authenticationManager() {
+        return new ProviderManager(daoAuthenticationProvider);
     }
 
     @Override
-    protected ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry beforeAuthorize(HttpSecurity http) throws Exception {
-        return configureAuthorizeAuthRequests(super.beforeAuthorize(http));
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    protected void configureHttpSecurity(HttpSecurity http) throws Exception {
+        configureAuthorizeAuthRequests(http.authorizeRequests());
         configureExceptionHandling(http.exceptionHandling());
-        authorize(beforeAuthorize(http));
         configureLogin(http.formLogin());
         configureLogout(http.logout());
         http.addFilterAfter(new N2oUrlFilter(schemaId, defaultUrlAccessDenied, environment, securityProvider), FilterSecurityInterceptor.class);
         http.headers().contentTypeOptions().disable();
         http.csrf().disable();
-
     }
 
-    protected abstract void authorize(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry url)
-            throws Exception;
+    protected HttpSecurity configureExceptionHandling(ExceptionHandlingConfigurer<HttpSecurity> exceptionHandling) {
+        return exceptionHandling
+                .authenticationEntryPoint(new N2oUrlAuthenticationEntryPoint("/login", n2oUrl))
+                .and();
+    }
 }

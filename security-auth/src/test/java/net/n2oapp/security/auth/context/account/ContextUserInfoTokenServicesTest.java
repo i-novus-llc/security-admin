@@ -1,9 +1,7 @@
-package net.n2oapp.security.account;
+package net.n2oapp.security.auth.context.account;
 
-import net.n2oapp.security.account.context.ContextUserInfoTokenServices;
-import net.n2oapp.security.auth.common.GatewayPrincipalExtractor;
+import net.n2oapp.security.auth.common.OauthUser;
 import net.n2oapp.security.auth.common.PropertySourceAutoConfiguration;
-import net.n2oapp.security.auth.common.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -11,10 +9,12 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,13 +32,11 @@ public class ContextUserInfoTokenServicesTest {
 
     @Test
     public void testLoadAuthentication() {
-        ContextUserInfoTokenServices tokenServices = new ContextUserInfoTokenServices("userInfoUri", "clientId");
-        tokenServices.setAuthoritiesExtractor(new GatewayPrincipalExtractor());
-        tokenServices.setPrincipalExtractor(new GatewayPrincipalExtractor());
+        ContextUserInfoTokenServices tokenServices = new ContextUserInfoTokenServices("userInfoUri");
         tokenServices.setRestTemplate(oAuth2RestTemplate);
         Mockito.when(oAuth2RestTemplate.getForEntity("userInfoUri/1", Map.class)).thenReturn(response());
-        OAuth2Authentication oAuth2Authentication = tokenServices.loadAuthentication(1);
-        User user = (User) oAuth2Authentication.getPrincipal();
+        OAuth2AuthenticationToken oAuth2Authentication = tokenServices.loadAccountAuthentication(1, oAuth2AuthenticationToken());
+        OauthUser user = (OauthUser) oAuth2Authentication.getPrincipal();
         assertThat(user.getUsername(), is("admin"));
         assertThat(user.getEmail(), is("test@i-novus.ru"));
         assertThat(user.getSurname(), is("admin"));
@@ -54,10 +52,6 @@ public class ContextUserInfoTokenServicesTest {
 
     private ResponseEntity response() {
         Map body = new HashMap();
-        body.put("surname", "admin");
-        body.put("email", "test@i-novus.ru");
-        body.put("username", "admin");
-        body.put("sid", "F70AD32914B5B53A6476909FF06B9FEC");
         body.put("permissions", List.of("testPermission1", "testPermission2"));
         body.put("systems", List.of("testSystems1"));
         body.put("roles", List.of("testRole1", "testRole2"));
@@ -66,5 +60,14 @@ public class ContextUserInfoTokenServicesTest {
         ResponseEntity responseEntity = new ResponseEntity(body, HttpStatus.OK);
 
         return responseEntity;
+    }
+
+    private OAuth2AuthenticationToken oAuth2AuthenticationToken() {
+        OidcIdToken oidcIdToken = new OidcIdToken("token_value", Instant.MIN, Instant.MAX, Map.of("sub", "sub"));
+        OauthUser oauthUser = new OauthUser("admin", oidcIdToken);
+        oauthUser.setEmail("test@i-novus.ru");
+        oauthUser.setSurname("admin");
+        OAuth2AuthenticationToken oAuth2AuthenticationToken = new OAuth2AuthenticationToken(oauthUser, null, "test");
+        return oAuth2AuthenticationToken;
     }
 }

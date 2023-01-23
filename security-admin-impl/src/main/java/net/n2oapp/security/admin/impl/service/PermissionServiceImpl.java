@@ -51,7 +51,7 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public Permission update(PermissionUpdateForm permission) {
-        PermissionEntity permissionForUpdate = permissionRepository.getOne(permission.getCode());
+        PermissionEntity permissionForUpdate = permissionRepository.getReferenceById(permission.getCode());
         permissionForUpdate.setName(permission.getName());
         permissionForUpdate.setUserLevel(permission.getUserLevel());
         if (permission.getParent() != null && permission.getParent().getCode() != null) {

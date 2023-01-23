@@ -10,9 +10,18 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.oidc.OidcIdToken;
+import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.time.Instant;
 import java.util.*;
 
 import static net.n2oapp.security.auth.common.TestConstants.*;
@@ -20,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = PropertySourceAutoConfiguration.class)
-public class AuthoritiesPrincipalExtractorTest {
+public class KeycloakUserServiceTest {
 
     @MockBean
     private UserDetailsService userDetailsService;
@@ -81,22 +90,22 @@ public class AuthoritiesPrincipalExtractorTest {
         map.put(PRINCIPIAL_PATRONYMIC_ATTR, SOME_PATRONYMIC);
         map.put(PRINCIPIAL_EMAIL_ATTR, SOME_EMAIL);
 
-        net.n2oapp.security.auth.common.User user = (net.n2oapp.security.auth.common.User) getExtractor().extractPrincipal(map);
+        OauthUser user = getExtractor().loadUser(prepareUserRequest(map));
 
         assertNotNull(user);
 
         assertEquals(SOME_USERNAME, user.getUsername());
         assertEquals(SOME_EMAIL, user.getEmail());
         assertEquals(SOME_SURNAME, user.getSurname());
-        assertEquals(SOME_NAME, user.getName());
+        assertEquals(SOME_NAME, user.getFirstName());
         assertEquals(SOME_PATRONYMIC, user.getPatronymic());
         assertEquals(SOME_DEPARTMENT_CODE, user.getDepartment());
         assertEquals(SOME_DEPARTMENT_NAME, user.getDepartmentName());
         assertEquals(getUserShortName(), user.getUserShortName());
         assertEquals(getUserFullName(), user.getUserFullName());
-        assertEquals(Boolean.TRUE, user.isEnabled());
-        assertEquals(Boolean.TRUE, user.isAccountNonExpired());
-        assertEquals(VALUE_NOT_AVAILABLE, user.getPassword());
+//        assertEquals(Boolean.TRUE, user.isEnabled());
+//        assertEquals(Boolean.TRUE, user.isAccountNonExpired());
+//        assertEquals(VALUE_NOT_AVAILABLE, user.getPassword());
         assertEquals(SOME_ORGANIZATION_CODE, user.getOrganization());
         assertEquals(SOME_USER_LEVEL, user.getUserLevel());
         assertEquals(SOME_REGION_CODE, user.getRegion());
@@ -111,53 +120,48 @@ public class AuthoritiesPrincipalExtractorTest {
     }
 
     @Test
-    public void testExtractPrincipal_whenNullUserName() {
-
-        Map<String, Object> map = new HashMap<>();
-
-        map.put(PRINCIPIAL_USERNAME_ATTR, null);
-
-        net.n2oapp.security.auth.common.User user = (net.n2oapp.security.auth.common.User) getExtractor().extractPrincipal(map);
-
-        assertNull(user);
-    }
-
-    @Test
-    public void testExtractAuthorities_withGrantedAuthorityKey() {
-
-        Map<String, Object> map = new HashMap<>();
-        map.put(GRANTED_AUTHORITY_KEY, Arrays.asList(SOME_GRANTED_AUTHORITY));
-
-        List<GrantedAuthority> authorities = getExtractor().extractAuthorities(map);
-        assertNotNull(authorities);
-        assertEquals(1, authorities.size());
-
-        assertEquals(SOME_GRANTED_AUTHORITY, authorities.get(0));
-    }
-
-    @Test
     public void testSetPrincipalKeys() {
 
-        AuthoritiesPrincipalExtractor extractor = getExtractor();
+        KeycloakUserService extractor = getExtractor();
 
         extractor.setPrincipalKeys(Collections.singletonList(PRINCIPIAL_OTHER_USERNAME_ATTR));
 
         Map<String, Object> map = new HashMap<>();
         map.put(PRINCIPIAL_OTHER_USERNAME_ATTR, SOME_USERNAME);
 
-        net.n2oapp.security.auth.common.User user = (net.n2oapp.security.auth.common.User) extractor.extractPrincipal(map);
+        OauthUser user = extractor.loadUser(prepareUserRequest(map));
 
         assertNotNull(user);
 
         assertEquals(SOME_USERNAME, user.getUsername());
     }
 
-    private AuthoritiesPrincipalExtractor getExtractor() {
+    private KeycloakUserService getExtractor() {
 
-        AuthoritiesPrincipalExtractor extractor = new AuthoritiesPrincipalExtractor(userDetailsService, SOME_SYSTEM, userAttributeKeys);
+        KeycloakUserService extractor = new KeycloakUserService(userAttributeKeys, userDetailsService, SOME_SYSTEM);
+        extractor.setDelegateOidcUserService(new OidcUserService() {
+            @Override
+            public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
+                OauthUser oauthUser = new OauthUser(null, null, userRequest.getIdToken(), new OidcUserInfo(userRequest.getIdToken().getClaims()));
+                return oauthUser;
+            }
+        });
 
         assertNotNull(extractor);
 
         return extractor;
+    }
+
+    private OidcUserRequest prepareUserRequest(Map map) {
+        OAuth2AccessToken oAuth2AccessToken = new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER, "token_vaue", Instant.MIN, Instant.MAX);
+        map.putIfAbsent("sub", "sub");
+        OidcIdToken oidcIdToken = new OidcIdToken("token_value", Instant.MIN, Instant.MAX, map);
+        return new OidcUserRequest(
+                ClientRegistration
+                        .withRegistrationId("test")
+                        .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+                        .clientId("test")
+                        .clientSecret("test")
+                        .tokenUri("test").build(), oAuth2AccessToken, oidcIdToken);
     }
 }

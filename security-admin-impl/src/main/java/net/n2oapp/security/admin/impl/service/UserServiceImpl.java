@@ -139,7 +139,7 @@ public class UserServiceImpl implements UserService {
         if (nonNull(user.getPassword())) {
             userValidations.checkPassword(user.getPassword(), user.getPasswordCheck(), user.getId());
         }
-        UserEntity entityUser = userRepository.getOne(user.getId());
+        UserEntity entityUser = userRepository.getReferenceById(user.getId());
         boolean isActiveChanged = false;
         if (nonNull(user.getIsActive()))
             isActiveChanged = !Objects.equals(entityUser.getIsActive(), user.getIsActive());
@@ -253,7 +253,7 @@ public class UserServiceImpl implements UserService {
 
         UserEntity userEntity = null;
         if (user.getId() != null)
-            userEntity = userRepository.getOne(user.getId());
+            userEntity = userRepository.getReferenceById(user.getId());
         if (userEntity == null && user.getEmail() != null)
             userEntity = userRepository.findOneByEmailIgnoreCase(user.getEmail());
         if (userEntity == null && user.getUsername() != null)
