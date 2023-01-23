@@ -40,7 +40,7 @@ import static org.mockito.Mockito.*;
 @RunWith(SpringRunner.class)
 @TestPropertySource("classpath:test.properties")
 @SpringBootTest(classes = TestApplication.class)
-public class ApplicationSystemExportServiceImplTest {
+public class SystemExportServiceImplTest {
     @SpyBean
     private VersionService versionService;
     @SpyBean
