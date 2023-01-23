@@ -26,10 +26,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthorizationCodeAuthenticationToken;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
 /**
@@ -64,18 +60,7 @@ public abstract class OpenIdSecurityCustomizer extends N2oSecurityCustomizer {
 
     @Override
     public SpringSecurityUserContext springSecurityUserContext() {
-        return new SpringSecurityUserContext() {
-            @Override
-            public Object get(String param) {
-                if ("token".equals(param)) {
-                    OAuth2AuthorizationCodeAuthenticationToken details = getAuthenticationDetails();
-                    if (details != null) {
-                        return details.getAccessToken();
-                    }
-                }
-                return super.get(param);
-            }
-        };
+        return new SpringUserContextWithToken();
     }
 
     protected LogoutConfigurer<HttpSecurity> configureLogout(LogoutConfigurer<HttpSecurity> logout) {
@@ -85,19 +70,5 @@ public abstract class OpenIdSecurityCustomizer extends N2oSecurityCustomizer {
             logout.logoutSuccessUrl(ssoLogoutUri);
             return logout.addLogoutHandler(keycloakLogoutHandler);
         }
-    }
-
-    private OAuth2AuthorizationCodeAuthenticationToken getAuthenticationDetails() {
-        SecurityContext context = SecurityContextHolder.getContext();
-        if (context != null) {
-            Authentication authentication = context.getAuthentication();
-            if (authentication != null) {
-                Object details = authentication.getDetails();
-                if (details instanceof OAuth2AuthorizationCodeAuthenticationToken) {
-                    return (OAuth2AuthorizationCodeAuthenticationToken) details;
-                }
-            }
-        }
-        return null;
     }
 }

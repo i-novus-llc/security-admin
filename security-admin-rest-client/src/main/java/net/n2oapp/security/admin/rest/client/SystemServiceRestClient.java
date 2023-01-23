@@ -1,60 +1,22 @@
 package net.n2oapp.security.admin.rest.client;
 
-import net.n2oapp.security.admin.api.criteria.ApplicationCriteria;
 import net.n2oapp.security.admin.api.criteria.SystemCriteria;
 import net.n2oapp.security.admin.api.model.AppSystem;
 import net.n2oapp.security.admin.api.model.AppSystemForm;
-import net.n2oapp.security.admin.api.model.Application;
-import net.n2oapp.security.admin.api.service.ApplicationSystemService;
-import net.n2oapp.security.admin.rest.api.ApplicationSystemRestService;
-import net.n2oapp.security.admin.rest.api.criteria.RestApplicationCriteria;
+import net.n2oapp.security.admin.api.service.SystemService;
+import net.n2oapp.security.admin.rest.api.SystemRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestSystemCriteria;
 import org.springframework.data.domain.Page;
 
 /**
  * Прокси реализация сервиса управления ролями, для вызова rest
  */
-public class ApplicationSystemServiceRestClient implements ApplicationSystemService {
+public class SystemServiceRestClient implements SystemService {
 
-    private ApplicationSystemRestService client;
+    private SystemRestService client;
 
-    public ApplicationSystemServiceRestClient(ApplicationSystemRestService client) {
+    public SystemServiceRestClient(SystemRestService client) {
         this.client = client;
-    }
-
-    @Override
-    public Application createApplication(Application system) {
-        return client.createApplication(system);
-    }
-
-    @Override
-    public Application updateApplication(Application system) {
-        return client.updateApplication(system);
-    }
-
-    @Override
-    public void deleteApplication(String code) {
-        client.deleteApplication(code);
-    }
-
-    @Override
-    public Application getApplication(String id) {
-        return client.getApplication(id);
-    }
-
-    @Override
-    public Page<Application> findAllApplications(ApplicationCriteria criteria) {
-        RestApplicationCriteria serviceCriteria = new RestApplicationCriteria();
-        serviceCriteria.setPage(criteria.getPageNumber());
-        serviceCriteria.setSize(criteria.getPageSize());
-        serviceCriteria.setSystemCode(criteria.getSystemCode());
-        serviceCriteria.setOrders(criteria.getOrders());
-        return client.findAllApplications(serviceCriteria);
-    }
-
-    @Override
-    public Boolean isApplicationExist(String code) {
-        return client.getApplication(code) != null;
     }
 
     @Override

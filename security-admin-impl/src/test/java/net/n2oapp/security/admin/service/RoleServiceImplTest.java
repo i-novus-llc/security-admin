@@ -125,9 +125,6 @@ public class RoleServiceImplTest extends UserRoleServiceTestBase {
         thrown = catchThrowable(() -> roleService.delete(103));
         assertThat(thrown).isInstanceOf(UserException.class);
         assertEquals("exception.organizationWithSuchRoleExists", thrown.getMessage());
-        thrown = catchThrowable(() -> roleService.delete(105));
-        assertThat(thrown).isInstanceOf(UserException.class);
-        assertEquals("exception.clientWithSuchRoleExists", thrown.getMessage());
     }
 
     /**
