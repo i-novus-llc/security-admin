@@ -2,7 +2,7 @@ package net.n2oapp.security.admin.rdm;
 
 import net.n2oapp.security.admin.api.criteria.SystemCriteria;
 import net.n2oapp.security.admin.api.model.AppSystem;
-import net.n2oapp.security.admin.api.service.ApplicationSystemExportService;
+import net.n2oapp.security.admin.api.service.SystemExportService;
 import net.n2oapp.security.admin.api.service.SystemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,9 +30,9 @@ import java.util.stream.Collectors;
 import static java.util.Collections.emptyMap;
 
 @Service
-public class ApplicationSystemExportServiceImpl implements ApplicationSystemExportService {
+public class SystemExportServiceImpl implements SystemExportService {
 
-    private static final Logger log = LoggerFactory.getLogger(ApplicationSystemExportServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(SystemExportServiceImpl.class);
 
     @Value("${rdm.sync.ref-book-code.system}")
     private String systemRefBookCode;

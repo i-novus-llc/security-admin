@@ -3,7 +3,7 @@ package net.n2oapp.security.admin;
 import net.n2oapp.platform.jaxrs.MapperConfigurer;
 import net.n2oapp.platform.jaxrs.autoconfigure.EnableJaxRsProxyClient;
 import net.n2oapp.security.admin.impl.scheduled.SynchronizationInfo;
-import net.n2oapp.security.admin.rdm.ApplicationSystemExportJob;
+import net.n2oapp.security.admin.rdm.SystemExportJob;
 import net.n2oapp.security.admin.rdm.scheduled.DepartmentSynchronizeJob;
 import net.n2oapp.security.admin.rdm.scheduled.OrganizationSynchronizeJob;
 import net.n2oapp.security.admin.rdm.scheduled.RegionSynchronizeJob;
@@ -54,7 +54,7 @@ public class RdmSyncConfiguration {
 
     @Bean
     public SynchronizationInfo appSysExportJobAndTrigger() {
-        JobDetail appSysExportJobDetail = JobBuilder.newJob().ofType(ApplicationSystemExportJob.class)
+        JobDetail appSysExportJobDetail = JobBuilder.newJob().ofType(SystemExportJob.class)
                 .storeDurably()
                 .withIdentity(APP_SYS_EXPORT_JOB_NAME)
                 .withDescription("Export Applications and Systems")

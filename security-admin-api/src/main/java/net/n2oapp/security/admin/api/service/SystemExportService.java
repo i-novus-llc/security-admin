@@ -17,9 +17,8 @@ package net.n2oapp.security.admin.api.service;
 
 
 /**
- * Сервис экспорта Приложений и Систем в сервис НСИ
+ * Сервис экспорта Систем в сервис НСИ
  */
-public interface ApplicationSystemExportService {
+public interface SystemExportService {
     void exportSystems();
-
 }
