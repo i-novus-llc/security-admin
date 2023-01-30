@@ -35,7 +35,7 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 @ComponentScan(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = KeycloakLogoutHandler.class))
 public abstract class OpenIdSecurityCustomizer extends N2oSecurityCustomizer {
 
-    @Value("${access.keycloak.logout-uri}")
+    @Value("${access.keycloak.logout-uri:/}")
     private String ssoLogoutUri;
 
     @Value("${n2o.access.schema.id}")
@@ -64,11 +64,7 @@ public abstract class OpenIdSecurityCustomizer extends N2oSecurityCustomizer {
     }
 
     protected LogoutConfigurer<HttpSecurity> configureLogout(LogoutConfigurer<HttpSecurity> logout) {
-        if (ssoLogoutUri == null)
-            return logout.logoutSuccessUrl("/logout");
-        else {
-            logout.logoutSuccessUrl(ssoLogoutUri);
-            return logout.addLogoutHandler(keycloakLogoutHandler);
-        }
+        logout.logoutSuccessUrl(ssoLogoutUri);
+        return logout.addLogoutHandler(keycloakLogoutHandler);
     }
 }
