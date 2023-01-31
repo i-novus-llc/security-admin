@@ -2,16 +2,21 @@ package net.n2oapp.security.admin.sso.keycloak;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.keycloak.representations.idm.ErrorRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestOperations;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.ws.rs.core.Response;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 /**
  * Сервис для создания, изменения, удаления ролей в keycloak
@@ -22,15 +27,15 @@ public class KeycloakRestRoleService {
     private static String ROLE_COMPOSITES = "%s/admin/realms/%s/roles/%s/composites";
 
     private AdminSsoKeycloakProperties properties;
-    private RestOperations template;
+    private WebClient webClient;
 
-    public KeycloakRestRoleService(AdminSsoKeycloakProperties properties, RestOperations template) {
+    public KeycloakRestRoleService(AdminSsoKeycloakProperties properties, WebClient webClient) {
         this.properties = properties;
-        this.template = template;
+        this.webClient = webClient;
     }
 
-    public void setTemplate(RestOperations template) {
-        this.template = template;
+    public void setWebClient(WebClient webClient) {
+        this.webClient = webClient;
     }
 
     /**
@@ -42,7 +47,7 @@ public class KeycloakRestRoleService {
     public RoleRepresentation getByName(String roleName) {
         final String serverUrl = String.format(ROLE_BY_NAME, properties.getServerUrl(), properties.getRealm(), roleName);
         try {
-            ResponseEntity<RoleRepresentation> response = template.getForEntity(serverUrl, RoleRepresentation.class);
+            ResponseEntity<RoleRepresentation> response = webClient.get().uri(serverUrl).retrieve().toEntity(RoleRepresentation.class).block();
             return response.getBody();
         } catch (HttpClientErrorException ex) {
             if (ex.getRawStatusCode() == 404) {
@@ -60,8 +65,8 @@ public class KeycloakRestRoleService {
     public List<RoleRepresentation> getAllRoles() {
         final String serverUrl = String.format(ROLES, properties.getServerUrl(), properties.getRealm());
         try {
-            ResponseEntity<RoleRepresentation[]> response = template.getForEntity(serverUrl, RoleRepresentation[].class);
-            return Arrays.asList(response.getBody());
+            ResponseEntity<List<RoleRepresentation>> response = webClient.get().uri(serverUrl).retrieve().toEntityList(RoleRepresentation.class).block();
+            return response.getBody();
         } catch (HttpClientErrorException ex) {
             if (ex.getRawStatusCode() == 404) {
                 return Collections.emptyList();
@@ -79,10 +84,7 @@ public class KeycloakRestRoleService {
     public String createRole(RoleRepresentation role) {
         final String serverUrl = String.format(ROLES, properties.getServerUrl(), properties.getRealm());
         final String roleCompositesServerUrl = String.format(ROLE_COMPOSITES, properties.getServerUrl(), properties.getRealm(), role.getName());
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        ResponseEntity<Response> response = template
-                .postForEntity(serverUrl, new HttpEntity<>(role, headers), Response.class);
+        ResponseEntity<Response> response = webClient.post().uri(serverUrl).contentType(APPLICATION_JSON).bodyValue(role).retrieve().toEntity(Response.class).block();
         if (response.getStatusCodeValue() >= 200 && response.getStatusCodeValue() < 300) {
             if (role.getComposites() != null) {
                 Set<IdObject> composites = new HashSet<>();
@@ -93,8 +95,7 @@ public class KeycloakRestRoleService {
                     composites.addAll(role.getComposites().getClient().values().stream().filter(Objects::nonNull)
                             .flatMap(Collection::stream).map(IdObject::new).collect(Collectors.toSet()));
                 }
-                ResponseEntity<Response> compositesResponse = template
-                        .postForEntity(roleCompositesServerUrl, new HttpEntity<>(composites, headers), Response.class);
+                ResponseEntity<Response> compositesResponse = webClient.post().uri(roleCompositesServerUrl).contentType(APPLICATION_JSON).bodyValue(composites).retrieve().toEntity(Response.class).block();
                 if (compositesResponse.getStatusCodeValue() < 200 || compositesResponse.getStatusCodeValue() > 300) {
                     throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
                 }
@@ -113,16 +114,13 @@ public class KeycloakRestRoleService {
     public void updateRole(RoleRepresentation role) {
         final String serverUrl = String.format(ROLE_BY_NAME, properties.getServerUrl(), properties.getRealm(), role.getName());
         final String roleCompositesServerUrl = String.format(ROLE_COMPOSITES, properties.getServerUrl(), properties.getRealm(), role.getName());
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        ResponseEntity<Response> response = template
-                .exchange(serverUrl, HttpMethod.PUT, new HttpEntity<>(role, headers), Response.class);
+        ResponseEntity<Response> response = webClient.put().uri(serverUrl).contentType(APPLICATION_JSON).bodyValue(role).retrieve().toEntity(Response.class).block();
         if (response.getStatusCodeValue() < 200 || response.getStatusCodeValue() > 300) {
             throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
         }
         if (response.getStatusCodeValue() >= 200 && response.getStatusCodeValue() < 300) {
             if (role.isComposite()) {
-                RoleRepresentation[] currentCompositesRes = getRoleComposites(role.getName());
+                List<RoleRepresentation> currentCompositesRes = getRoleComposites(role.getName());
                 Set<String> currentComposites = new HashSet<>();
                 for (RoleRepresentation r : currentCompositesRes) {
                     currentComposites.add(r.getId());
@@ -143,15 +141,14 @@ public class KeycloakRestRoleService {
                     Set<IdObject> newComposites = composites.stream().filter(r -> !currentComposites.contains(r))
                             .map(IdObject::new).collect(Collectors.toSet());
                     if (newComposites != null) {
-                        ResponseEntity<Response> compositesResponse = template
-                                .postForEntity(roleCompositesServerUrl, new HttpEntity<>(newComposites, headers), Response.class);
+                        ResponseEntity<Response> compositesResponse = webClient.post().uri(roleCompositesServerUrl).contentType(APPLICATION_JSON).bodyValue(newComposites).retrieve().toEntity(Response.class).block();
                         if (compositesResponse.getStatusCodeValue() < 200 || compositesResponse.getStatusCodeValue() > 300) {
                             throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
                         }
                     }
                 }
                 if (!forRemove.isEmpty()) {
-                    template.exchange(roleCompositesServerUrl, HttpMethod.DELETE, new HttpEntity<>(forRemove, headers), Response.class);
+                    webClient.method(HttpMethod.DELETE).uri(roleCompositesServerUrl).contentType(APPLICATION_JSON).bodyValue(forRemove).retrieve().toEntity(Response.class).block();
                 }
             }
         } else {
@@ -165,9 +162,9 @@ public class KeycloakRestRoleService {
      * @param roleName имя роли
      * @return список ролей
      */
-    public RoleRepresentation[] getRoleComposites(String roleName) {
+    public List<RoleRepresentation> getRoleComposites(String roleName) {
         final String roleCompositesServerUrl = String.format(ROLE_COMPOSITES, properties.getServerUrl(), properties.getRealm(), roleName);
-        return template.getForEntity(roleCompositesServerUrl, RoleRepresentation[].class).getBody();
+        return webClient.get().uri(roleCompositesServerUrl).retrieve().toEntityList(RoleRepresentation.class).block().getBody();
     }
 
     /**
@@ -178,9 +175,8 @@ public class KeycloakRestRoleService {
     public void deleteRole(String roleName) {
         final String serverUrl = String.format(ROLE_BY_NAME, properties.getServerUrl(), properties.getRealm(), roleName);
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        ResponseEntity<Response> response = template
-                .exchange(serverUrl, HttpMethod.DELETE, new HttpEntity<>(headers), Response.class);
+        headers.setContentType(APPLICATION_JSON);
+        ResponseEntity<Response> response = webClient.method(HttpMethod.DELETE).uri(serverUrl).contentType(APPLICATION_JSON).retrieve().toEntity(Response.class).block();
         if (response.getStatusCodeValue() < 200 || response.getStatusCodeValue() > 300) {
             throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
         }
@@ -189,6 +185,7 @@ public class KeycloakRestRoleService {
     @Getter
     @Setter
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class IdObject {
         private String id;
     }

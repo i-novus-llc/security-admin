@@ -7,9 +7,6 @@
             <columns>
                 <column text-field-id="id" label="Код" sorting-field-id="code"/>
                 <column text-field-id="name" label="Наименование"/>
-                <column text-field-id="services" label="Приложения">
-                    <list label-field-id="name"/>
-                </column>
                 <column text-field-id="actions" label=" ">
                     <toolbar>
                         <button id="delete" label="Удалить" icon="fa fa-trash"

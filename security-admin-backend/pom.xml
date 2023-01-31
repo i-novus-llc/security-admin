@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>security-admin-backend</artifactId>
@@ -9,15 +11,15 @@
         <artifactId>security-admin</artifactId>
         <groupId>net.n2oapp.framework.security</groupId>
         <version>6.2.0-SNAPSHOT</version>
-        <relativePath>..</relativePath>
     </parent>
 
     <properties>
         <maven.deploy.skip>true</maven.deploy.skip>
+        <jacoco.skip>false</jacoco.skip>
     </properties>
 
     <dependencies>
-          <dependency>
+        <dependency>
             <groupId>net.n2oapp.framework.security</groupId>
             <artifactId>security-admin-impl</artifactId>
             <version>${project.version}</version>
@@ -40,7 +42,46 @@
             <artifactId>n2o-platform-starter-ms</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>net.n2oapp.platform</groupId>
+            <artifactId>n2o-platform-starter-loader-server</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.n2oapp.platform</groupId>
+            <artifactId>n2o-platform-starter-quartz</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.i-novus.ms.audit</groupId>
+            <artifactId>audit-client-spring-boot-starter</artifactId>
+            <version>${audit.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.i-novus.ms.rdm.sync</groupId>
+            <artifactId>rdm-sync-spring-boot-starter</artifactId>
+            <version>${rdm.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-activemq</artifactId>
+        </dependency>
+
         <!-- TEST -->
+        <dependency>
+            <groupId>net.n2oapp.platform</groupId>
+            <artifactId>n2o-platform-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -68,15 +109,11 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
                 <configuration>
                     <executable>true</executable>
+                    <layers>
+                        <enabled>true</enabled>
+                    </layers>
                 </configuration>
             </plugin>
         </plugins>

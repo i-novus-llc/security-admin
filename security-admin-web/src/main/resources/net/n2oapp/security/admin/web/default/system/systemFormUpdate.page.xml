@@ -8,14 +8,6 @@
                 <eq field-id="id" param="id"/>
             </filters>
         </datasource>
-        <datasource id="serviceDs" query-id="service">
-            <dependencies>
-                <fetch on="systemsDs" model="resolve"/>
-            </dependencies>
-            <filters>
-                <eq field-id="systemCode" datasource="systemsDs" value="{id}"/>
-            </filters>
-        </datasource>
     </datasources>
     <regions>
         <form id="main" datasource="systemsDs">
@@ -68,41 +60,5 @@
                 </set>
             </fields>
         </form>
-
-        <line>
-            <table id="services" datasource="serviceDs" name="Приложения">
-                <columns>
-                    <column text-field-id="id" label="Код"/>
-                    <column text-field-id="name" label="Наименование"/>
-                    <column text-field-id="enableClient" label="OAuth 2.0">
-                        <checkbox enabled="false"/>
-                    </column>
-                    <column text-field-id="actions" label=" ">
-                        <toolbar>
-                            <button id="delete" label="Удалить" type="icon" icon="fa fa-trash">
-                                <invoke operation-id="delete"/>
-                            </button>
-                        </toolbar>
-                    </column>
-                </columns>
-                <rows>
-                    <click>
-                        <open-page page-id="serviceUpdateForm" submit-operation-id="update" route="/:code/update"
-                                   object-id="service">
-                            <params>
-                                <path-param name="code" value="{id}"/>
-                            </params>
-                        </open-page>
-                    </click>
-                </rows>
-                <toolbar>
-                    <button id="createService" label="Создать" disable-on-empty-model="false">
-                        <open-page page-id="serviceForm" submit-operation-id="create"
-                                   object-id="service" route="/create" close-after-submit="true">
-                        </open-page>
-                    </button>
-                </toolbar>
-            </table>
-        </line>
     </regions>
 </page>

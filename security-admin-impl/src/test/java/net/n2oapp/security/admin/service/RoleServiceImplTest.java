@@ -1,7 +1,7 @@
 package net.n2oapp.security.admin.service;
 
 import net.n2oapp.platform.i18n.UserException;
-import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
+import net.n2oapp.platform.test.autoconfigure.pg.EnableEmbeddedPg;
 import net.n2oapp.security.admin.api.criteria.RoleCriteria;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.RoleForm;
@@ -125,9 +125,6 @@ public class RoleServiceImplTest extends UserRoleServiceTestBase {
         thrown = catchThrowable(() -> roleService.delete(103));
         assertThat(thrown).isInstanceOf(UserException.class);
         assertEquals("exception.organizationWithSuchRoleExists", thrown.getMessage());
-        thrown = catchThrowable(() -> roleService.delete(105));
-        assertThat(thrown).isInstanceOf(UserException.class);
-        assertEquals("exception.clientWithSuchRoleExists", thrown.getMessage());
     }
 
     /**

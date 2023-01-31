@@ -2,7 +2,6 @@ package net.n2oapp.security.auth.common;
 
 import lombok.NoArgsConstructor;
 import net.n2oapp.security.admin.api.model.UserLevel;
-import net.n2oapp.security.auth.common.authority.PermissionGrantedAuthority;
 import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -11,9 +10,9 @@ import java.util.*;
 @NoArgsConstructor
 public final class TestConstants {
 
-    public static final String PRINCIPIAL_USERNAME_ATTR = "username";
+    public static final String PRINCIPIAL_USERNAME_ATTR = "name";
     public static final String PRINCIPIAL_SURNAME_ATTR = "surname";
-    public static final String PRINCIPIAL_NAME_ATTR = "name";
+    public static final String PRINCIPIAL_NAME_ATTR = "firstName";
     public static final String PRINCIPIAL_PATRONYMIC_ATTR = "patronymic";
     public static final String PRINCIPIAL_EMAIL_ATTR = "email";
     public static final String PRINCIPIAL_ID_ATTR = "oid";

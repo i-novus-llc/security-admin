@@ -4,9 +4,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 /**
  * Сущность Система
@@ -67,12 +69,6 @@ public class SystemEntity {
      */
     @Column(name = "view_order")
     private Integer viewOrder;
-
-    /**
-     * Приложения системы
-     */
-    @OneToMany(mappedBy = "systemCode", fetch = FetchType.LAZY)
-    private List<ApplicationEntity> applicationList;
 
     /**
      * Отображение системы в едином интерфейсе

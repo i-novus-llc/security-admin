@@ -22,17 +22,7 @@
         </dependency>
         <dependency>
             <groupId>net.n2oapp.framework.security</groupId>
-            <artifactId>security-admin-auth-server</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.n2oapp.framework.security</groupId>
             <artifactId>security-admin-backend</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.n2oapp.framework.security</groupId>
-            <artifactId>auth-gateway</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

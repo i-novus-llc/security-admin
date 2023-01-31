@@ -22,13 +22,12 @@ import net.n2oapp.security.auth.common.authority.PermissionGrantedAuthority;
 import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-
 /**
  * Интерфейс для проверки прав и ролей пользователя с помощью Spring Security
  */
 public class SecuritySimplePermissionApi implements PermissionApi {
 
-    @Deprecated
+    @Override
     public boolean hasPermission(UserContext user, String permissionId) {
         UserDetails userDetails = UserParamsUtil.getUserDetails();
         return userDetails != null && userDetails.getAuthorities().stream()
@@ -47,7 +46,7 @@ public class SecuritySimplePermissionApi implements PermissionApi {
     @Override
     public boolean hasAuthentication(UserContext user) {
         UserDetails userDetails = UserParamsUtil.getUserDetails();
-        return userDetails != null && userDetails.isEnabled();
+        return userDetails != null;
     }
 
     @Override

@@ -16,11 +16,6 @@
     <dependencies>
         <dependency>
             <groupId>net.n2oapp.framework.security</groupId>
-            <artifactId>security-admin-rest-client</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.n2oapp.framework.security</groupId>
             <artifactId>security-admin-api</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -38,13 +33,18 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.security.oauth.boot</groupId>
-            <artifactId>spring-security-oauth2-autoconfigure</artifactId>
+            <groupId>org.thymeleaf</groupId>
+            <artifactId>thymeleaf</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.thymeleaf</groupId>
-            <artifactId>thymeleaf</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-client</artifactId>
         </dependency>
 
 

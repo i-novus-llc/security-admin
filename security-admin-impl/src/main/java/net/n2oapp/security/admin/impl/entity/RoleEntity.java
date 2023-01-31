@@ -69,12 +69,8 @@ public class RoleEntity {
     )
     private List<PermissionEntity> permissionList;
 
-
     @ManyToMany(mappedBy = "roleList")
     private List<AccountEntity> accountList;
-
-    @ManyToMany(mappedBy = "roleList")
-    private List<ClientEntity> clientList;
 
     @OneToMany(mappedBy = "id.role")
     private List<AccountTypeRoleEntity> accountTypeRoleList;

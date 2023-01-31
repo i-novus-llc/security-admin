@@ -252,12 +252,8 @@ public class RoleServiceImpl implements RoleService {
             throw new UserException("exception.usernameWithSuchRoleExists");
         if (!entity.getAccountTypeRoleList().isEmpty())
             throw new UserException("exception.accountTypeWithSuchRoleExists");
-        if (!entity.getClientList().isEmpty())
-            throw new UserException("exception.clientWithSuchRoleExists");
         if (organizationRepository.countOrgsWithRoleId(entity.getId()) != 0)
             throw new UserException("exception.organizationWithSuchRoleExists");
-
-
     }
 
     private Role audit(String action, Role role) {

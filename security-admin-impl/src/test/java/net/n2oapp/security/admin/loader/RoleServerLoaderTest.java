@@ -1,7 +1,7 @@
 package net.n2oapp.security.admin.loader;
 
 import net.n2oapp.platform.loader.server.ServerLoader;
-import net.n2oapp.platform.test.autoconfigure.EnableEmbeddedPg;
+import net.n2oapp.platform.test.autoconfigure.pg.EnableEmbeddedPg;
 import net.n2oapp.security.admin.api.model.RoleForm;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
