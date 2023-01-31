@@ -5,12 +5,11 @@ services:
   frontend:
     environment:
       - JAVA_OPTS=-Xmx300m
-      - SECURITY_OAUTH2_AUTH_SERVER_URI=http://yandex.develop:8278
-      - SECURITY_OAUTH2_CLIENT_CLIENT_ID=frontend
-      - SECURITY_OAUTH2_CLIENT_CLIENT_SECRET=ca12a678-b275-499b-a778-750bad4d0a77
-      - SECURITY_OAUTH2_CLIENT_ACCESS_TOKEN_URI=http://auth-gateway:8080/oauth/token
-      - SECURITY_OAUTH2_RESOURCE_USER_INFO_URI=http://auth-gateway:8080/userinfo
-      - ACCESS_SERVICE_URL=http://auth-gateway:8080/api
+      - SECURITY_OAUTH2_CLIENT_CLIENT_ID=admin-web
+      - SECURITY_OAUTH2_CLIENT_CLIENT_SECRET=fbcf4023-afe0-4ba1-944e-7a0f675b0b98
+      - ACCESS_KEYCLOAK_SERVER_URL=https://keycloak8.i-novus.ru/auth
+      - ACCESS_SERVICE_USERINFO_URL=http://backend:8080/userinfo
+      - ACCESS_SERVICE_URL=http://backend:8080/api
       - JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
       - SPRING_CLOUD_CONSUL_CONFIG_PREFIX=security-admin-master
       - ACCESS_EMAIL_AS_USERNAME=true
