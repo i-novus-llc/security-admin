@@ -108,7 +108,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <executable>true</executable>
+                    <executable>false</executable>
                     <layers>
                         <enabled>true</enabled>
                     </layers>
