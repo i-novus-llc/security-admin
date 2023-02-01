@@ -52,16 +52,6 @@
         <module>coverage</module>
     </modules>
 
-    <!--    <dependencyManagement>-->
-    <!--        <dependencies>-->
-    <!--            <dependency>-->
-    <!--                <groupId>com.nimbusds</groupId>-->
-    <!--                <artifactId>nimbus-jose-jwt</artifactId>-->
-    <!--                <version>${nimbusds.version}</version>-->
-    <!--            </dependency>-->
-    <!--        </dependencies>-->
-    <!--    </dependencyManagement>-->
-
     <profiles>
         <profile>
             <id>production</id>
