@@ -6,10 +6,12 @@ services:
     environment:
       - POSTGRES_PASSWORD=postgres
     volumes:
-      - db-data:/pg/11/data
+      - db-data:/pg/14/data
     ports:
       - 5432
     deploy:
+      restart_policy:
+        max_attempts: 3
       resources:
         limits:
           cpus: '0.5'
@@ -22,6 +24,8 @@ services:
     environment:
       - REDIS_PASSWORD=0b4d68e7-a887-4a45-b40f-c477aa382e33
     deploy:
+      restart_policy:
+        max_attempts: 3
       resources:
         limits:
           cpus: '0.5'

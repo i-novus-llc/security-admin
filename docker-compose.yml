@@ -49,6 +49,8 @@ services:
         limits:
           cpus: '0.5'
           memory: 1024m
+      restart_policy:
+        max_attempts: 3
       placement:
         constraints:
           - node.labels.type == service
