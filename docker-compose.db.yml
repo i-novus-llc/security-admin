@@ -3,6 +3,8 @@ version: "3.7"
 services:
 
   db:
+    environment:
+      - POSTGRES_PASSWORD=postgres
     volumes:
       - db-data:/pg/11/data
     ports:
