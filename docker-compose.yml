@@ -5,9 +5,6 @@ services:
   frontend:
     environment:
       - JAVA_OPTS=-Xmx300m
-      - SECURITY_OAUTH2_CLIENT_CLIENT_ID=admin-web
-      - SECURITY_OAUTH2_CLIENT_CLIENT_SECRET=fbcf4023-afe0-4ba1-944e-7a0f675b0b98
-      - ACCESS_KEYCLOAK_SERVER_URL=https://keycloak8.i-novus.ru/auth
       - ACCESS_SERVICE_USERINFO_URL=http://backend:8080/userinfo
       - ACCESS_SERVICE_URL=http://backend:8080/api
       - JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
