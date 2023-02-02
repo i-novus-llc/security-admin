@@ -4,7 +4,7 @@ services:
 
   db:
     volumes:
-      - db-data:/pg/12/data
+      - db-data-15:/pg/15/data
     ports:
       - 5432
     command: postgres -c 'max_connections=500'
@@ -40,4 +40,4 @@ services:
       - db
 
 volumes:
-  db-data:
+  db-data-15:
