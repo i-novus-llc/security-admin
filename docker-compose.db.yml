@@ -3,19 +3,18 @@ version: "3.7"
 services:
 
   db:
-    environment:
-      - PGDATA=/pg/11/data
     volumes:
-      - db-data:/pg/11/data
+      - db-data:/pg/12/data
     ports:
       - 5432
+    command: postgres -c 'max_connections=500'
     deploy:
       restart_policy:
         max_attempts: 3
       resources:
         limits:
-          cpus: '0.5'
-          memory: 512m
+          cpus: '0.75'
+          memory: 1024M
       placement:
         constraints:
           - node.labels.type == db

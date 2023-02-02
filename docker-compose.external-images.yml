@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   db:
-    image: 'postgres:11.5'
+    image: 'inovus/postgres:12'
 
   redis:
     image: 'bitnami/redis:latest'
