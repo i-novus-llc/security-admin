@@ -48,9 +48,23 @@ public class RestRegionCriteria extends RegionCriteria {
         super.setOrders(orders);
     }
 
+    @QueryParam("id")
+    @Override
+    @ApiParam(value = "id региона")
+    public void setId(Integer id) {
+        super.setId(id);
+    }
+
+    @QueryParam("code")
+    @Override
+    @ApiParam(value = "code региона")
+    public void setCode(String code) {
+        super.setCode(code);
+    }
+
     @QueryParam("name")
     @Override
-    @ApiParam(value = "Наименование роли")
+    @ApiParam(value = "Наименование региона")
     public void setName(String name) {
         super.setName(name);
     }
