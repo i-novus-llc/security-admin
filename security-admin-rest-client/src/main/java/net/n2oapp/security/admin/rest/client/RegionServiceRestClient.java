@@ -23,6 +23,8 @@ public class RegionServiceRestClient implements RegionService {
         RestRegionCriteria regionCriteria = new RestRegionCriteria();
         regionCriteria.setPage(criteria.getPageNumber());
         regionCriteria.setSize(criteria.getPageSize());
+        regionCriteria.setId(criteria.getId());
+        regionCriteria.setCode(criteria.getCode());
         regionCriteria.setName(criteria.getName());
         regionCriteria.setOrders(criteria.getOrders());
         return client.getAll(regionCriteria);

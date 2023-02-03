@@ -10,7 +10,7 @@
     <parent>
         <groupId>net.n2oapp.platform</groupId>
         <artifactId>n2o-boot-platform-parent</artifactId>
-        <version>4.4.0</version>
+        <version>4.10.0</version>
         <relativePath />
     </parent>
 
@@ -20,7 +20,7 @@
         <rdm.version>1.128.3</rdm.version>
         <spring.boot.version>2.3.3.RELEASE</spring.boot.version>
         <config.server.enable>false</config.server.enable>
-        <audit.version>2.4.27</audit.version>
+        <audit.version>2.4.32</audit.version>
         <nimbusds.version>7.9</nimbusds.version>
         <jacoco.skip>true</jacoco.skip>
     </properties>
