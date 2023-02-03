@@ -24,5 +24,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RegionCriteria extends BaseCriteria {
+    private Integer id;
+    private String code;
     private String name;
 }
