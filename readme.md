@@ -132,21 +132,50 @@ Auth Gateway - это SSO сервер авторизации, построен�
         security.oauth2.client.client-secret=33403217-430c-448e-aed5-5278873d5sda
         access.service.url=${security.oauth2.auth-server-uri}/api
    ```
- * Запустите приложение командой `java -jar access-web.jar`
- 
- # Миграция с security-admin 4+ на 5.0.0
- Модули security-admin-commons, security-auth-oauth2-gateway, security-auth-oauth2 были удалёны.
- Функциональность была перенесена в модули security-admin-impl, security-auth-common и security-auth соответственно.
- 
+* Запустите приложение командой `java -jar access-web.jar`
+
+# Миграция с security-admin 6+ на 7.0.0
+
+Модуль security-admin-auth-server и auth-gateway был удален. Функции бэкенда выполняет модуль security-admin-backend.
+Функционал по выпуску обогащённых токенов был упразднён, дополнительную информацию о пользователе можно получить через
+userinfo запрос при выборе аккаунта.
+
+Изменения настроек клиентского приложения. С переходом с библиотеки spring-security-oauth2 на реализацию,
+предоставляемую [spring security 5+](https://docs.spring.io/spring-security/reference/servlet/oauth2/login/core.html),
+используются новые настройки для указания данных клиента:
+
+    spring.security.oauth2.client.registration.admin-web.provider=keycloak
+    spring.security.oauth2.client.registration.admin-web.authorization-grant-type=authorization_code
+    spring.security.oauth2.client.registration.admin-web.scope=openid
+    spring.security.oauth2.client.registration.admin-web.client-id=
+    spring.security.oauth2.client.registration.admin-web.client-secret=
+    spring.security.oauth2.client.provider.keycloak.issuer-uri={server-url}/realms/{realm}
+
+Классы ContextFilter и ContextUserInfoTokenServices были перенесены из модуля security-auth-common в security-auth.
+
+Конфигурация OpenIdSecurityConfigurerAdapter была переименована в OpenIdSecurityCustomizer.
+Конфигурация N2oSecurityConfigurerAdapter была переименована в N2oSecurityCustomizer.
+Для конфигурирования HttpSecurity можно переопределить метод N2oSecurityCustomizer.configureHttpSecurity.
+
+Функционал классов AuthoritiesPrincipalExtractor/GatewayPrincipalExtractor
+был перенесён в net.n2oapp.security.auth.common.KeycloakUserService.
+
+Таблицы бд sec.client и sec.client_role более не используется и могут быть удалены.
+
+# Миграция с security-admin 4+ на 5.0.0
+
+Модули security-admin-commons, security-auth-oauth2-gateway, security-auth-oauth2 были удалёны.
+Функциональность была перенесена в модули security-admin-impl, security-auth-common и security-auth соответственно.
+
 Для перевода клиентского N2O приложения на с версий 4+ на 5.0.0 необходимо добавить в pom.xml зависимость:
- 
+
 ```
 <dependency>
     <groupId>net.n2oapp.framework.security</groupId>
     <artifactId>security-auth</artifactId>
 </dependency>
 ``` 
- 
+
 При этом удалив следующие зависимости:
 ```
 <dependency>
