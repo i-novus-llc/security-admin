@@ -11,13 +11,11 @@
     <artifactId>security-admin-db</artifactId>
 
     <dependencies>
-
-        <!-- Liquibase patched for working classpath*: -->
         <dependency>
-            <groupId>ru.i-novus.components</groupId>
+            <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
+            <version>4.19.1</version>
         </dependency>
-
 
         <dependency>
             <groupId>org.postgresql</groupId>
