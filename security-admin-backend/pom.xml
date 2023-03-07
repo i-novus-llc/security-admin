@@ -57,6 +57,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>4.19.1</version>
+        </dependency>
+
+        <dependency>
             <groupId>ru.i-novus.ms.rdm.sync</groupId>
             <artifactId>rdm-sync-spring-boot-starter</artifactId>
             <version>${rdm.version}</version>
