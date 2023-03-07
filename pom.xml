@@ -15,7 +15,7 @@
     </parent>
 
     <properties>
-        <java.version>14</java.version>
+        <java.version>11</java.version>
         <n2o.version>7.23.33</n2o.version>
         <rdm.version>1.34.0</rdm.version>
         <spring.boot.version>2.3.3.RELEASE</spring.boot.version>
