@@ -34,7 +34,7 @@ public abstract class N2oSecurityCustomizer {
     }
 
     protected void ignore(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/static/**", "/public/**", "/dist/**", "/webjars/**", "/lib/**", "/build/**", "/bundle/**", "/error", "/serviceWorker.js", "/css/**").permitAll();
+        http.authorizeRequests().antMatchers("/static/**", "/public/**", "/dist/**", "/webjars/**", "/lib/**", "/build/**", "/bundle/**", "/error", "/serviceWorker.js", "/css/**", "/manifest.json", "/favicon.ico").permitAll();
     }
 
     @Bean
