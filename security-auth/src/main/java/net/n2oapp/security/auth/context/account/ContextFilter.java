@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -86,7 +87,7 @@ public class ContextFilter extends OncePerRequestFilter {
     }
 
     public ContextFilter(ContextUserInfoTokenServices userInfoTokenServices, AccountServiceRestClient accountServiceRestClient) {
-        this(userInfoTokenServices, accountServiceRestClient, DEFAULT_SELECT_ACCOUNT_TEMPLATE_PATH, DEFAULT_SELECT_ACCOUNT_CSS_PATH, DEFAULT_SELECT_ACCOUNT_EMBLEM_PATH, null);
+        this(userInfoTokenServices, accountServiceRestClient, Collections.EMPTY_SET);
     }
 
     @Override
