@@ -42,7 +42,7 @@ public class ContextFilter extends OncePerRequestFilter {
     private static final String DEFAULT_SELECT_ACCOUNT_CSS_PATH = "css/context-page.css";
     private static final String DEFAULT_SELECT_ACCOUNT_EMBLEM_PATH = "static/rusEmblem.svg";
 
-    private Set<String> defaultIgnoredUrls = Set.of("/static/**", "/public/**", "/dist/**", "/webjars/**", "/lib/**", "/build/**", "/bundle/**", "/error", "/serviceWorker.js", "/css/**");
+    private Set<String> defaultIgnoredUrls = Set.of("/static/**", "/public/**", "/dist/**", "/webjars/**", "/lib/**", "/build/**", "/bundle/**", "/error", "/serviceWorker.js", "/css/**", "/manifest.json", "/favicon.ico");
     private final OrRequestMatcher orRequestMatcher;
 
     private ContextUserInfoTokenServices userInfoTokenServices;
