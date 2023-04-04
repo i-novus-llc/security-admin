@@ -18,6 +18,7 @@
             <input-select-tree id="permissions"
                                ajax="false"
                                label="Права доступа"
+                               checking-strategy="child"
                                checkboxes="true"
                                parent-field-id="parentCode"
                                query-id="${access.permission.query.id}" has-children-field-id="hasChildren"
