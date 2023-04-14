@@ -63,7 +63,7 @@ public class KeycloakUserService implements OAuth2UserService<OidcUserRequest, O
         return oauthUser;
     }
 
-    private User getUser(Map<String, Object> map) {
+    protected User getUser(Map<String, Object> map) {
         Object usernameObj = extractFromMap(principalKeys, map);
         if (usernameObj == null)
             return null;
