@@ -20,7 +20,7 @@
             <input-select-tree id="permissions" ajax="false" label="Права доступа" checkboxes="true"
                                required="${access.role.permissions.required}" parent-field-id="parentCode"
                                query-id="${access.permission.query.id}" has-children-field-id="hasChildren"
-                               search-field-id="name" size="1000">
+                               search-field-id="name" size="1000" checking-strategy="child">
                 <filters>
                     <eq field-id="systemCode" value="{system.id}"/>
                     <eq field-id="userLevel.id" value="{userLevel.id}"/>
