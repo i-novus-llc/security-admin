@@ -80,7 +80,7 @@ public class ContextUserInfoTokenServices {
         }
     }
 
-    private void enrichWithAccountClaims(Map<String, Object> map, OauthUser user) {
+    protected void enrichWithAccountClaims(Map<String, Object> map, OauthUser user) {
         user.setAccountId((String) map.get(ACCOUNT_ID));
 
         LinkedHashMap<String, Object> department = (LinkedHashMap) map.get(DEPARTMENT);
