@@ -49,7 +49,7 @@ public class ContextUserInfoTokenServices {
         return extractAuthentication(map, oAuth2AuthenticationToken);
     }
 
-    private OAuth2AuthenticationToken extractAuthentication(Map<String, Object> map, Authentication authentication) {
+    protected OAuth2AuthenticationToken extractAuthentication(Map<String, Object> map, Authentication authentication) {
         OAuth2AuthenticationToken oAuth2AuthenticationToken = (OAuth2AuthenticationToken) authentication;
         OauthUser currentOauthUser = (OauthUser) authentication.getPrincipal();
 
