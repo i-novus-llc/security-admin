@@ -32,7 +32,7 @@
         <!-- platform -->
         <dependency>
             <groupId>net.n2oapp.platform</groupId>
-            <artifactId>n2o-platform-starter-jaxrs-client</artifactId>
+            <artifactId>n2o-platform-starter-feign-client</artifactId>
         </dependency>
         <!-- /platform -->
 

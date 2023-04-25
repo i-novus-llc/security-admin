@@ -3,8 +3,8 @@ package net.n2oapp.security.admin.rest.client;
 import net.n2oapp.security.admin.api.criteria.RegionCriteria;
 import net.n2oapp.security.admin.api.model.Region;
 import net.n2oapp.security.admin.api.service.RegionService;
-import net.n2oapp.security.admin.rest.api.RegionRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestRegionCriteria;
+import net.n2oapp.security.admin.rest.client.feign.RegionServiceFeignClient;
 import org.springframework.data.domain.Page;
 
 /**
@@ -12,9 +12,9 @@ import org.springframework.data.domain.Page;
  */
 public class RegionServiceRestClient implements RegionService {
 
-    private RegionRestService client;
+    private RegionServiceFeignClient client;
 
-    public RegionServiceRestClient(RegionRestService client) {
+    public RegionServiceRestClient(RegionServiceFeignClient client) {
         this.client = client;
     }
 

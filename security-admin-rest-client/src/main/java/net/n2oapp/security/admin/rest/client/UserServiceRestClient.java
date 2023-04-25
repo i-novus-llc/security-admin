@@ -6,8 +6,8 @@ import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
 import net.n2oapp.security.admin.api.model.UserRegisterForm;
 import net.n2oapp.security.admin.api.service.UserService;
-import net.n2oapp.security.admin.rest.api.UserRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
+import net.n2oapp.security.admin.rest.client.feign.UserServiceFeignClient;
 import org.springframework.data.domain.Page;
 
 import java.util.Map;
@@ -17,9 +17,9 @@ import java.util.Map;
  */
 public class UserServiceRestClient implements UserService {
 
-    private final UserRestService client;
+    private final UserServiceFeignClient client;
 
-    public UserServiceRestClient(UserRestService client) {
+    public UserServiceRestClient(UserServiceFeignClient client) {
         this.client = client;
     }
 

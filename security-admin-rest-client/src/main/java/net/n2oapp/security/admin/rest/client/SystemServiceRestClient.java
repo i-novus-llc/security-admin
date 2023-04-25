@@ -4,8 +4,8 @@ import net.n2oapp.security.admin.api.criteria.SystemCriteria;
 import net.n2oapp.security.admin.api.model.AppSystem;
 import net.n2oapp.security.admin.api.model.AppSystemForm;
 import net.n2oapp.security.admin.api.service.SystemService;
-import net.n2oapp.security.admin.rest.api.SystemRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestSystemCriteria;
+import net.n2oapp.security.admin.rest.client.feign.SystemServiceFeignClient;
 import org.springframework.data.domain.Page;
 
 /**
@@ -13,9 +13,9 @@ import org.springframework.data.domain.Page;
  */
 public class SystemServiceRestClient implements SystemService {
 
-    private SystemRestService client;
+    private SystemServiceFeignClient client;
 
-    public SystemServiceRestClient(SystemRestService client) {
+    public SystemServiceRestClient(SystemServiceFeignClient client) {
         this.client = client;
     }
 

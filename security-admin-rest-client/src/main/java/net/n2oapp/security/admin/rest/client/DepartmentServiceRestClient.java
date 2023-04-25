@@ -3,8 +3,8 @@ package net.n2oapp.security.admin.rest.client;
 import net.n2oapp.security.admin.api.criteria.DepartmentCriteria;
 import net.n2oapp.security.admin.api.model.Department;
 import net.n2oapp.security.admin.api.service.DepartmentService;
-import net.n2oapp.security.admin.rest.api.DepartmentRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestDepartmentCriteria;
+import net.n2oapp.security.admin.rest.client.feign.DepartmentServiceFeignClient;
 import org.springframework.data.domain.Page;
 
 /**
@@ -12,9 +12,9 @@ import org.springframework.data.domain.Page;
  */
 public class DepartmentServiceRestClient implements DepartmentService {
 
-    private final DepartmentRestService client;
+    private final DepartmentServiceFeignClient client;
 
-    public DepartmentServiceRestClient(DepartmentRestService client) {
+    public DepartmentServiceRestClient(DepartmentServiceFeignClient client) {
         this.client = client;
     }
 
