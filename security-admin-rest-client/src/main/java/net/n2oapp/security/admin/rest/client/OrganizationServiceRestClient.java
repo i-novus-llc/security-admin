@@ -5,10 +5,10 @@ import net.n2oapp.security.admin.api.criteria.OrganizationCriteria;
 import net.n2oapp.security.admin.api.model.OrgCategory;
 import net.n2oapp.security.admin.api.model.Organization;
 import net.n2oapp.security.admin.api.service.OrganizationService;
-import net.n2oapp.security.admin.rest.api.OrganizationPersistRestService;
-import net.n2oapp.security.admin.rest.api.OrganizationRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestOrgCategoryCriteria;
 import net.n2oapp.security.admin.rest.api.criteria.RestOrganizationCriteria;
+import net.n2oapp.security.admin.rest.client.feign.OrganizationServiceFeignClient;
+import net.n2oapp.security.admin.rest.client.feign.OrganizationServicePersistFeignClient;
 import org.springframework.data.domain.Page;
 
 /**
@@ -16,11 +16,11 @@ import org.springframework.data.domain.Page;
  */
 public class OrganizationServiceRestClient implements OrganizationService {
 
-    private OrganizationRestService organizationRestClient;
+    private OrganizationServiceFeignClient organizationRestClient;
 
-    private OrganizationPersistRestService organizationPersistRestClient;
+    private OrganizationServicePersistFeignClient organizationPersistRestClient;
 
-    public OrganizationServiceRestClient(OrganizationRestService organizationRestClient, OrganizationPersistRestService organizationPersistRestClient) {
+    public OrganizationServiceRestClient(OrganizationServiceFeignClient organizationRestClient, OrganizationServicePersistFeignClient organizationPersistRestClient) {
         this.organizationRestClient = organizationRestClient;
         this.organizationPersistRestClient = organizationPersistRestClient;
     }
