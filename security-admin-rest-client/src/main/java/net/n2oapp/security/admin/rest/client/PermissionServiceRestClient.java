@@ -4,8 +4,8 @@ import net.n2oapp.security.admin.api.criteria.PermissionCriteria;
 import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.model.PermissionUpdateForm;
 import net.n2oapp.security.admin.api.service.PermissionService;
-import net.n2oapp.security.admin.rest.api.PermissionRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestPermissionCriteria;
+import net.n2oapp.security.admin.rest.client.feign.PermissionServiceFeignClient;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -15,9 +15,9 @@ import java.util.List;
  */
 public class PermissionServiceRestClient implements PermissionService {
 
-    private PermissionRestService client;
+    private PermissionServiceFeignClient client;
 
-    public PermissionServiceRestClient(PermissionRestService client) {
+    public PermissionServiceRestClient(PermissionServiceFeignClient client) {
         this.client = client;
     }
 

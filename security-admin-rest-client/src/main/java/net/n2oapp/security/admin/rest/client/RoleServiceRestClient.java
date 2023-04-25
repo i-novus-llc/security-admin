@@ -4,8 +4,8 @@ import net.n2oapp.security.admin.api.criteria.RoleCriteria;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.RoleForm;
 import net.n2oapp.security.admin.api.service.RoleService;
-import net.n2oapp.security.admin.rest.api.RoleRestService;
 import net.n2oapp.security.admin.rest.api.criteria.RestRoleCriteria;
+import net.n2oapp.security.admin.rest.client.feign.RoleServiceFeignClient;
 import org.springframework.data.domain.Page;
 
 /**
@@ -13,9 +13,9 @@ import org.springframework.data.domain.Page;
  */
 public class RoleServiceRestClient implements RoleService {
 
-    private RoleRestService client;
+    private RoleServiceFeignClient client;
 
-    public RoleServiceRestClient(RoleRestService client) {
+    public RoleServiceRestClient(RoleServiceFeignClient client) {
         this.client = client;
     }
 
