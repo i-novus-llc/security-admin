@@ -3,8 +3,8 @@ package net.n2oapp.security.admin.rest.client;
 import net.n2oapp.security.admin.api.criteria.AccountTypeCriteria;
 import net.n2oapp.security.admin.api.model.AccountType;
 import net.n2oapp.security.admin.api.service.AccountTypeService;
-import net.n2oapp.security.admin.rest.api.AccountTypeRestService;
 import net.n2oapp.security.admin.rest.api.criteria.AccountTypeRestCriteria;
+import net.n2oapp.security.admin.rest.client.feign.AccountTypeFeignClient;
 import org.springframework.data.domain.Page;
 
 /**
@@ -12,9 +12,9 @@ import org.springframework.data.domain.Page;
  */
 public class AccountTypeRestClient implements AccountTypeService {
 
-    private AccountTypeRestService client;
+    private AccountTypeFeignClient client;
 
-    public AccountTypeRestClient(AccountTypeRestService client) {
+    public AccountTypeRestClient(AccountTypeFeignClient client) {
         this.client = client;
     }
 

@@ -2,7 +2,7 @@ package net.n2oapp.security.admin.rest.client;
 
 import net.n2oapp.security.admin.api.model.UserLevel;
 import net.n2oapp.security.admin.api.service.UserLevelService;
-import net.n2oapp.security.admin.rest.api.UserLevelRestService;
+import net.n2oapp.security.admin.rest.client.feign.UserLevelServiceFeignClient;
 
 import java.util.List;
 
@@ -11,9 +11,9 @@ import java.util.List;
  */
 public class UserLevelServiceRestClient implements UserLevelService {
 
-    private UserLevelRestService client;
+    private UserLevelServiceFeignClient client;
 
-    public UserLevelServiceRestClient(UserLevelRestService client) {
+    public UserLevelServiceRestClient(UserLevelServiceFeignClient client) {
         this.client = client;
     }
 
