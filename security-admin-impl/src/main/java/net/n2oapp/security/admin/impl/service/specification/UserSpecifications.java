@@ -5,6 +5,7 @@ import net.n2oapp.security.admin.api.model.UserLevel;
 import net.n2oapp.security.admin.impl.entity.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.criteria.*;
 import java.util.Arrays;
@@ -98,6 +99,10 @@ public class UserSpecifications implements Specification<UserEntity> {
         if (nonNull(criteria.getRegionId())) {
             accountSubQueryPredicate = builder.and(accountSubQueryPredicate,
                     builder.equal(accountSubqueryRoot.get(AccountEntity_.region).get(RegionEntity_.id), criteria.getRegionId()));
+        }
+
+        if (StringUtils.hasText(criteria.getRegionCode())) {
+            predicate = builder.and(predicate, builder.equal(root.get(UserEntity_.region).get(RegionEntity_.code), criteria.getRegionCode()));
         }
 
         if (nonNull(criteria.getDepartmentId())) {

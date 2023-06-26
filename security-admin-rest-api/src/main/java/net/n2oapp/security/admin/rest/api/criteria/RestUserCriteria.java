@@ -104,6 +104,13 @@ public class RestUserCriteria extends UserCriteria {
         super.setRegionId(regionId);
     }
 
+    @QueryParam("regionCode")
+    @Override
+    @ApiParam(value = "code региона")
+    public void setRegionCode(String regionCode) {
+        super.setRegionCode(regionCode);
+    }
+
     @QueryParam("organizations")
     @Override
     @ApiParam(value = "Идентификатор организации")
