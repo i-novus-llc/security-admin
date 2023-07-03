@@ -57,5 +57,14 @@ public class BackendApplicationTest {
         User user = userAccessor.get();
         assert user.getUserId().equals(email);
         assert user.getUsername().equals(username);
+
+        SecurityContextHolder.setContext(new SecurityContextImpl());
+        user = userAccessor.get();
+        assert user.getUsername().equals("-");
+        assert user.getUserId().equals("-");
+
+        SecurityContextHolder.setContext(new SecurityContextImpl(new AnonymousAuthenticationToken("test", "some principal", List.of(new RoleGrantedAuthority("test")))));
+        user = userAccessor.get();
+        assert user.getUserId().equals("some principal");
     }
 }
