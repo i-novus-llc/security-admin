@@ -32,9 +32,6 @@ public abstract class UserRoleServiceTestBase {
     @Autowired
     protected RoleService roleService;
 
-    @Autowired
-    protected PasswordEncoder passwordEncoder;
-
     @MockBean
     protected JavaMailSender emailSender;
 

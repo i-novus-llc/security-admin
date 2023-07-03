@@ -215,7 +215,6 @@ public class UserServiceImplTest extends UserRoleServiceTestBase {
         assertEquals("name", changedUser.getName());
         assertEquals("surname", changedUser.getSurname());
         assertEquals("patronymic", changedUser.getPatronymic());
-        assertTrue(passwordEncoder.matches("Zz123456789!", changedUser.getPasswordHash()));
 
         userForm = new UserForm();
         userForm.setEmail("test242@test.ru");

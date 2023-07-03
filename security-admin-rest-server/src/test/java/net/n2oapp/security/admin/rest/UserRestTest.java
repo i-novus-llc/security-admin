@@ -106,7 +106,6 @@ public class UserRestTest {
         assertEquals(user.getName(), "name1");
         assertEquals(user.getPatronymic(), "patronymic1");
         assertNull(user.getPassword());
-        assertEquals(user.getPasswordHash(), "password1");
         assertNull(user.getPasswordCheck());
         assertNull(user.getTemporaryPassword());
         assertEquals(user.getIsActive(), Boolean.TRUE);

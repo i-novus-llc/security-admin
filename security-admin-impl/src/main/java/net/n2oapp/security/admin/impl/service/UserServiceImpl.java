@@ -45,8 +45,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordGenerator passwordGenerator;
     @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
     private MailService mailService;
     @Autowired
     private UserValidations userValidations;
@@ -70,6 +68,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public User create(UserForm user) {
         validateUsernameEmailSnils(user);
+
+//        todo без создания пользователя в кейклоке не имеет смысла, оставлено для тестов
         String password = (user.getPassword() != null) ? user.getPassword() : user.getTemporaryPassword();
         if (nonNull(user.getPassword()))
             userValidations.checkPassword(password, user.getPasswordCheck(), user.getId());
@@ -77,11 +77,8 @@ public class UserServiceImpl implements UserService {
             password = passwordGenerator.generate();
             user.setTemporaryPassword(password);
         }
-        UserEntity entity = entityForm(new UserEntity(), user);
-        String passwordHash = passwordEncoder.encode(password);
-        //сохраняем пароль в закодированном виде
-        entity.setPasswordHash(passwordHash);
-        UserEntity savedUser = userRepository.save(entity);
+
+        UserEntity savedUser = userRepository.save(entityForm(new UserEntity(), user));
 
         if (Boolean.TRUE.equals(user.getSendOnEmail()) && user.getEmail() != null) {
             mailService.sendWelcomeMail(user);
@@ -148,8 +145,6 @@ public class UserServiceImpl implements UserService {
         }
         entityUser = entityForm(entityUser, user);
         // кодируем пароль перед сохранением в бд если он изменился
-        if (nonNull(user.getPassword()))
-            entityUser.setPasswordHash(passwordEncoder.encode(user.getPassword()));
         UserEntity updatedUser = userRepository.save(entityUser);
         User result = model(updatedUser);
         if (sendMailActivate && isActiveChanged) {
@@ -270,7 +265,6 @@ public class UserServiceImpl implements UserService {
             if (isNull(password)) {
                 password = passwordGenerator.generate();
             }
-            userEntity.setPasswordHash(passwordEncoder.encode(password));
             userRepository.save(userEntity);
 
             if (Boolean.TRUE.equals(user.getSendOnEmail()) && nonNull(user.getEmail())) {
@@ -325,7 +319,6 @@ public class UserServiceImpl implements UserService {
         model.setIsActive(entity.getIsActive());
         model.setEmail(entity.getEmail());
         model.setSnils(entity.getSnils());
-        model.setPasswordHash(entity.getPasswordHash());
         model.setExpirationDate(entity.getExpirationDate());
         model.setRegion(model(entity.getRegion()));
 

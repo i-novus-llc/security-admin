@@ -58,9 +58,6 @@ public class User {
     private String password;
 
     @ApiModelProperty(value = "Пароль")
-    private String passwordHash;
-
-    @ApiModelProperty(value = "Пароль")
     private String passwordCheck;
 
     @ApiModelProperty(value = "Временный пароль")
