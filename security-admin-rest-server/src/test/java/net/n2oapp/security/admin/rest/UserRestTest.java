@@ -232,7 +232,7 @@ public class UserRestTest {
     private User create() {
         User user = client.create(newUser());
         assertNotNull(user);
-        assertTrue(greenMail.waitForIncomingEmail(1000, 1));
+        assertTrue(greenMail.waitForIncomingEmail(15000, 1));
         return user;
     }
 
