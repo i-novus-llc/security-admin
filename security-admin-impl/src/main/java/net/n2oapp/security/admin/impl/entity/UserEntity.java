@@ -66,12 +66,6 @@ public class UserEntity {
     private List<AccountEntity> accounts;
 
     /**
-     * Пароль пользователя
-     */
-    @Column(name = "password")
-    private String passwordHash;
-
-    /**
      * Активен ли пользователь
      */
     @Column(name = "is_active")

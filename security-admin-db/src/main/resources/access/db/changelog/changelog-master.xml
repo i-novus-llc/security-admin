@@ -130,4 +130,8 @@
         <sqlFile path="access/db/changelog/sql/V10_add_column_user_table.sql"/>
     </changeSet>
 
+    <changeSet id="V11_delete_password" author="aarifullin" dbms="postgresql">
+        <sqlFile path="access/db/changelog/sql/V11_delete_password.sql"/>
+    </changeSet>
+
 </databaseChangeLog>

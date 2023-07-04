@@ -43,10 +43,6 @@ public class AdminCommonsConfiguration {
         return new PasswordGenerator();
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     @Bean
     public JavaMailSender getJavaMailSender() {

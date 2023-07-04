@@ -1,9 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<application xmlns="http://n2oapp.net/framework/config/schema/application-1.0"
-             welcome-page-id="users">
-    <header title="Управление доступом" class="inverse">
-        <nav ref-id="security"/>
-        <extra-menu ref-id="user"/>
-    </header>
-
-</application>
