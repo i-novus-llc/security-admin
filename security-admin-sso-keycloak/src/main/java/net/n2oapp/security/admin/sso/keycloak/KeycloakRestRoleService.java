@@ -4,13 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 import org.keycloak.representations.idm.ErrorRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import javax.ws.rs.core.Response;
 import java.util.*;
@@ -21,6 +24,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 /**
  * Сервис для создания, изменения, удаления ролей в keycloak
  */
+@Log4j2
 public class KeycloakRestRoleService {
     private static String ROLE_BY_NAME = "%s/admin/realms/%s/roles/%s";
     private static String ROLES = "%s/admin/realms/%s/roles/";
@@ -84,7 +88,15 @@ public class KeycloakRestRoleService {
     public String createRole(RoleRepresentation role) {
         final String serverUrl = String.format(ROLES, properties.getServerUrl(), properties.getRealm());
         final String roleCompositesServerUrl = String.format(ROLE_COMPOSITES, properties.getServerUrl(), properties.getRealm(), role.getName());
-        ResponseEntity<Response> response = webClient.post().uri(serverUrl).contentType(APPLICATION_JSON).bodyValue(role).retrieve().toEntity(Response.class).block();
+        ResponseEntity<Response> response;
+        try {
+            response = webClient.post().uri(serverUrl).contentType(APPLICATION_JSON).bodyValue(role).retrieve().toEntity(Response.class).block();
+        } catch (WebClientResponseException e) {
+            if (e.getStatusCode().equals(HttpStatus.CONFLICT)) {
+                log.warn(String.format("Role with id:\'%s\' already exists in keycloak:\'%s\'", role.getName(), properties.getServerUrl()));
+                return role.getName();
+            } else throw e;
+        }
         if (response.getStatusCodeValue() >= 200 && response.getStatusCodeValue() < 300) {
             if (role.getComposites() != null) {
                 Set<IdObject> composites = new HashSet<>();
