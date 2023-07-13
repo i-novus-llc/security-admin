@@ -38,7 +38,7 @@ public class KeycloakUserService implements OAuth2UserService<OidcUserRequest, O
         // Delegate to the default implementation for loading a user
         DefaultOidcUser defaultOidcUser = (DefaultOidcUser) delegateOidcUserService.loadUser(userRequest);
 
-        User user = getUser(defaultOidcUser.getUserInfo().getClaims());
+        User user = getUser(defaultOidcUser.getAttributes());
         OauthUser oauthUser = new OauthUser(user.getUsername(), defaultOidcUser.getIdToken());
         oauthUser.setSurname(user.getSurname());
         oauthUser.setFirstName(user.getName());

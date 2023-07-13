@@ -33,6 +33,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import static java.util.Objects.nonNull;
+
 /**
  * Утилитный класс для получения username и sessionId
  */
@@ -235,9 +237,18 @@ public class UserParamsUtil {
      */
     public static Object extractFromMap(List<String> keys, Map<String, ?> map) {
         for (String key : keys) {
-            if (map.containsKey(key)) {
-                return map.get(key);
+            String[] parsedKey = key.split("\\.");
+            Object result = null;
+            Map<String, ?> copy = new HashMap(map);
+            for (int i = 0; i < parsedKey.length; i++) {
+                String keyPart = parsedKey[i];
+                if (!copy.containsKey(keyPart)) break;
+                if (i < parsedKey.length - 1) {
+                    copy = ((Map) copy.get(keyPart));
+                }else
+                    result = copy.get(keyPart);
             }
+            if (nonNull(result)) return result;
         }
         return null;
     }
