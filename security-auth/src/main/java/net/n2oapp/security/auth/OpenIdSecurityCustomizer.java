@@ -20,8 +20,6 @@ import net.n2oapp.framework.api.MetadataEnvironment;
 import net.n2oapp.security.auth.context.SpringSecurityUserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -32,10 +30,9 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
  * Адаптер для настройки SSO аутентификации по протоколу OAuth2 OpenId Connect
  */
 @EnableWebSecurity
-@ComponentScan(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = KeycloakLogoutHandler.class))
 public abstract class OpenIdSecurityCustomizer extends N2oSecurityCustomizer {
 
-    @Value("${access.keycloak.logout-uri:/}")
+    @Value("${access.keycloak.logout-uri}")
     private String ssoLogoutUri;
 
     @Value("${n2o.access.schema.id}")
@@ -46,8 +43,7 @@ public abstract class OpenIdSecurityCustomizer extends N2oSecurityCustomizer {
     @Lazy
     @Autowired
     private MetadataEnvironment environment;
-    @Autowired
-    private KeycloakLogoutHandler keycloakLogoutHandler;
+
     @Autowired
     private SecurityProvider securityProvider;
 
@@ -64,7 +60,8 @@ public abstract class OpenIdSecurityCustomizer extends N2oSecurityCustomizer {
     }
 
     protected LogoutConfigurer<HttpSecurity> configureLogout(LogoutConfigurer<HttpSecurity> logout) {
-        logout.logoutSuccessUrl(ssoLogoutUri);
-        return logout.addLogoutHandler(keycloakLogoutHandler);
+        AutoRedirectLogoutSuccessHandler logoutSuccessHandler = new AutoRedirectLogoutSuccessHandler();
+        logoutSuccessHandler.setDefaultTargetUrl(ssoLogoutUri);
+        return logout.logoutSuccessHandler(logoutSuccessHandler);
     }
 }
