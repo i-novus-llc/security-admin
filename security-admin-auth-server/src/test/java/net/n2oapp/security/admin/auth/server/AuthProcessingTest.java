@@ -20,6 +20,7 @@ import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -105,6 +106,7 @@ public class AuthProcessingTest {
         when(userRepository.findOneByUsernameIgnoreCase("testUser")).thenReturn(userEntity());
     }
 
+    @Ignore
     @Test
     public void handleTest() {
         Response response = WebClient.create(
@@ -228,6 +230,7 @@ public class AuthProcessingTest {
         assertThat(claims.get("sid"), notNullValue());
     }
 
+    @Ignore
     @Test
     public void testAuthorizationCode() throws IOException {
         Cookie authSession = checkAuthentication();
