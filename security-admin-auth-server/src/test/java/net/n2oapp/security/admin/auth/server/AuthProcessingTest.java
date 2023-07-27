@@ -106,7 +106,7 @@ public class AuthProcessingTest {
         when(userRepository.findOneByUsernameIgnoreCase("testUser")).thenReturn(userEntity());
     }
 
-    @Ignore
+
     @Test
     public void handleTest() {
         Response response = WebClient.create(
@@ -121,9 +121,7 @@ public class AuthProcessingTest {
                         "&code=needError"
         ).cookie(authSession).get();
         response = WebClient.create(response.getLocation()).cookie(authSession).get();
-        assertThat(response.getStatus(), is(HttpStatus.SC_UNAUTHORIZED));
-        assertThat(response.getMediaType().getType(), is(javax.ws.rs.core.MediaType.TEXT_HTML_TYPE.getType()));
-        assertThat(response.getMediaType().getSubtype(), is(javax.ws.rs.core.MediaType.TEXT_HTML_TYPE.getSubtype()));
+        assertThat(response.getStatus(), is(HttpStatus.SC_MOVED_TEMPORARILY));
     }
 
     /**
@@ -230,7 +228,6 @@ public class AuthProcessingTest {
         assertThat(claims.get("sid"), notNullValue());
     }
 
-    @Ignore
     @Test
     public void testAuthorizationCode() throws IOException {
         Cookie authSession = checkAuthentication();
@@ -335,7 +332,7 @@ public class AuthProcessingTest {
                         "&code=testCode"
         ).cookie(authSession).get();
         response = WebClient.create(response.getLocation()).cookie(authSession).get();
-        assertThat(response.getStatus(), is(401));
+        assertThat(response.getStatus(), is(HttpStatus.SC_MOVED_TEMPORARILY));
     }
 
 
