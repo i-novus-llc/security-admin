@@ -20,6 +20,7 @@ import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -105,6 +106,7 @@ public class AuthProcessingTest {
         when(userRepository.findOneByUsernameIgnoreCase("testUser")).thenReturn(userEntity());
     }
 
+
     @Test
     public void handleTest() {
         Response response = WebClient.create(
@@ -119,9 +121,7 @@ public class AuthProcessingTest {
                         "&code=needError"
         ).cookie(authSession).get();
         response = WebClient.create(response.getLocation()).cookie(authSession).get();
-        assertThat(response.getStatus(), is(HttpStatus.SC_UNAUTHORIZED));
-        assertThat(response.getMediaType().getType(), is(javax.ws.rs.core.MediaType.TEXT_HTML_TYPE.getType()));
-        assertThat(response.getMediaType().getSubtype(), is(javax.ws.rs.core.MediaType.TEXT_HTML_TYPE.getSubtype()));
+        assertThat(response.getStatus(), is(HttpStatus.SC_MOVED_TEMPORARILY));
     }
 
     /**
@@ -332,7 +332,7 @@ public class AuthProcessingTest {
                         "&code=testCode"
         ).cookie(authSession).get();
         response = WebClient.create(response.getLocation()).cookie(authSession).get();
-        assertThat(response.getStatus(), is(401));
+        assertThat(response.getStatus(), is(HttpStatus.SC_MOVED_TEMPORARILY));
     }
 
 

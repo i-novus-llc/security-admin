@@ -167,6 +167,11 @@ public class BaseCriteria implements Pageable {
     }
 
     @Override
+    public Pageable withPage(int pageNumber) {
+        return new BaseCriteria(pageNumber, this.getPageSize(), this.getSort());
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof BaseCriteria)) return false;
