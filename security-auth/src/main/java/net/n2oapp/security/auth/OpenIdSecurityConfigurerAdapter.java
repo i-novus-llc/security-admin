@@ -17,8 +17,6 @@ package net.n2oapp.security.auth;
 
 import net.n2oapp.framework.access.data.SecurityProvider;
 import net.n2oapp.framework.api.MetadataEnvironment;
-import net.n2oapp.security.auth.N2oSecurityConfigurerAdapter;
-import net.n2oapp.security.auth.N2oUrlFilter;
 import net.n2oapp.security.auth.context.SpringSecurityUserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

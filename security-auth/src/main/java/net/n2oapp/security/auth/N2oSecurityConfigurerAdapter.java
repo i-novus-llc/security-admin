@@ -15,25 +15,21 @@
  */
 package net.n2oapp.security.auth;
 
-import net.n2oapp.framework.access.simple.PermissionApi;
 import net.n2oapp.security.auth.context.SpringSecurityUserContext;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.ExceptionHandlingConfigurer;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 
+@Import(PermissionApiConfiguration.class)
 public abstract class N2oSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
     @Value("${n2o.api.url:/n2o}")
     private String n2oUrl;
-
-    @Bean
-    public PermissionApi securitySimplePermissionApi() {
-        return new SecuritySimplePermissionApi();
-    }
 
     @Bean
     public SpringSecurityUserContext springSecurityUserContext() {
