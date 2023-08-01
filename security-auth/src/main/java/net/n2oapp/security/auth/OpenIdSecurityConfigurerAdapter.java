@@ -55,6 +55,7 @@ public abstract class OpenIdSecurityConfigurerAdapter extends N2oSecurityConfigu
     @Autowired
     private MetadataEnvironment environment;
 
+    @Lazy
     @Autowired
     private SecurityProvider securityProvider;
 
