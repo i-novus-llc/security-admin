@@ -613,7 +613,7 @@ public class Application {
 [source]
 ----
 #Адрес REST сервисов администрирования
-access.service.url=http://localhost:9090/api
+access.service.api-url=http://localhost:9090/api
 ----
 +
 . Запустите ваше приложение
@@ -634,7 +634,7 @@ image::images/deploy4.png[]
 [source]
 ----
 #Адрес REST сервисов администрирования
-access.service.url=http://localhost:9090/api
+access.service.api-url=http://localhost:9090/api
 ----
 +
 . Запустите WEB сервер командой `java -jar access-web.jar`

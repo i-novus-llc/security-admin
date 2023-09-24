@@ -48,6 +48,10 @@
         <module>keycloak-theme</module>
         <module>doc</module>
         <module>coverage</module>
+        <module>security-autoconfigure</module>
+        <module>security-starters</module>
+        <module>security-starters/security-client-starter</module>
+        <module>security-starters/security-userinfo-starter</module>
     </modules>
 
     <profiles>

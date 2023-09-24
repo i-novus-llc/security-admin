@@ -1,0 +1,73 @@
+:toc:
+:toclevels: 3
+:toc-title: Содержание
+
+== Возможности
+
+* Конфигурация сервиса для авторизации в keycloak, выбора аккаунтов и получение информации о пользователе из security-admin.
+
+== Подключение
+
+Добавьте зависимость:
+
+[source,xml]
+----
+<dependency>
+  <groupId>net.n2oapp.framework.security</groupId>
+  <artifactId>security-userinfo-starter</artifactId>
+  <version>${security.version}</version>
+</dependency>
+----
+
+== Использование
+
+=== Настройки
+
+[source,properties]
+----
+#Адреса, которые будут не будут закрыты авторизацией
+access.security.ignored-urls=some_url1, some_url2
+
+#Идентификатор схемы доступа n2o(schema_id.access.xml)
+n2o.access.schema.id=schema_id
+
+#Базовый адрес сервера sec-admin
+access.service.url=https://sec-admin.ru
+#Базовый адрес сервера Keycloak
+access.keycloak.server-url=https://keycloak.ru/auth
+#Реалм в Keycloak
+access.keycloak.realm=sec-admin
+
+# * - имя клиента внутри приложения
+# https://docs.spring.io/spring-security/reference/servlet/oauth2/login/core.html#oauth2login-boot-property-mappings
+spring.security.oauth2.client.registration.*.provider=keycloak
+spring.security.oauth2.client.registration.*.authorization-grant-type=authorization_code
+spring.security.oauth2.client.registration.*.scope=openid
+spring.security.oauth2.client.registration.*.client-id=client_id
+spring.security.oauth2.client.registration.*.client-secret=client_secret
+
+----
+
+=== Расширение
+
+Для изменения процесса авторизации в Keycloak нужно переопределить KeycloakUserService или реализовать интерфейс OAuth2UserService<OidcUserRequest, OidcUser> и объявить бин.
+
+[source,java]
+----
+    @Bean
+    public OAuth2UserService<OidcUserRequest, OidcUser> keycloakUserService(UserDetailsService userDetailsService, UserAttributeKeys userAttributeKeys) {
+        return new CustomKeycloakUserService(userAttributeKeys, userDetailsService, "keycloak");
+    }
+----
+
+Для изменения процесса загрузки контекста аккаунта нужно переопределить ContextUserInfoTokenServices и объявить бин.
+
+[source,java]
+----
+    @Bean
+    public ContextUserInfoTokenServices contextUserInfoTokenServices(@Value("${access.service.userinfo-url}") String userInfoUri) {
+        return new CustomContextUserInfoTokenServices(userInfoUri);
+    }
+----
+
+

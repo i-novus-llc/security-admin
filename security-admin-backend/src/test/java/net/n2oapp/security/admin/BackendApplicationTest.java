@@ -1,7 +1,7 @@
 package net.n2oapp.security.admin;
 
+import net.n2oapp.framework.security.autoconfigure.userinfo.UserInfoModel;
 import net.n2oapp.platform.test.autoconfigure.pg.EnableEmbeddedPg;
-import net.n2oapp.platform.userinfo.UserInfoModel;
 import net.n2oapp.security.admin.impl.scheduled.SynchronizationInfo;
 import net.n2oapp.security.auth.common.authority.RoleGrantedAuthority;
 import org.junit.jupiter.api.Test;
