@@ -12,4 +12,9 @@
     <artifactId>security-starters</artifactId>
     <packaging>pom</packaging>
 
+    <modules>
+        <module>security-client-starter</module>
+        <module>security-userinfo-starter</module>
+    </modules>
+
 </project>

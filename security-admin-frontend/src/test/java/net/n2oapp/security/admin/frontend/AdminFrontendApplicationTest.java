@@ -8,7 +8,7 @@ import org.springframework.context.ApplicationContext;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
 
-@SpringBootTest(properties = "spring.profiles.active=dev")
+@SpringBootTest
 public class AdminFrontendApplicationTest {
 
     @Autowired
