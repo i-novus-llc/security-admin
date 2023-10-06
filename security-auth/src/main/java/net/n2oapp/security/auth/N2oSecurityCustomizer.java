@@ -23,10 +23,11 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
-@PropertySource("classpath:security.properties")
 public abstract class N2oSecurityCustomizer {
 
-    @Value("${access.security.ignored-urls}")
+    protected final String[] defaultIgnoredUrls = {"/static/**", "/public/**", "/dist/**", "/webjars/**", "/lib/**", "/build/**", "/bundle/**", "/error", "/serviceWorker.js", "/css/**", "/manifest.json", "/favicon.ico"};
+
+    @Value("${access.security.ignored-urls:}")
     private String[] ignoredUrls;
 
     @Bean
@@ -40,7 +41,7 @@ public abstract class N2oSecurityCustomizer {
     }
 
     protected void ignore(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers(ignoredUrls).permitAll();
+        http.authorizeRequests().antMatchers(defaultIgnoredUrls).permitAll().antMatchers(ignoredUrls).permitAll();
     }
 
     @Bean

@@ -23,14 +23,9 @@
 
 === Настройки
 
+Обязательные
 [source,properties]
 ----
-#Адреса, которые не будут закрыты авторизацией
-access.security.ignored-urls=some_url1, some_url2
-
-#Идентификатор схемы доступа n2o(schema_id.access.xml)
-n2o.access.schema.id=schema_id
-
 #Базовый адрес сервера sec-admin
 access.service.url=https://sec-admin.ru
 #Базовый адрес сервера Keycloak
@@ -45,6 +40,20 @@ spring.security.oauth2.client.registration.*.authorization-grant-type=authorizat
 spring.security.oauth2.client.registration.*.scope=openid
 spring.security.oauth2.client.registration.*.client-id=client_id
 spring.security.oauth2.client.registration.*.client-secret=client_secret
+
+----
+
+Дополнительные
+[source,properties]
+----
+#Адреса, которые не будут закрыты авторизацией
+#В примере указаны дефолтные значения
+access.security.ignored-urls=/static/**, /public/**, /dist/**, /webjars/**, /lib/**, /build/**, /bundle/**, /error, /serviceWorker.js, /css/**, /manifest.json, /favicon.ico
+
+#Запрещен ли доступ к url по умолчанию
+access.deny_urls=false
+#Идентификатор схемы доступа n2o(schema_id.access.xml)
+n2o.access.schema.id=schema_id
 
 ----
 
