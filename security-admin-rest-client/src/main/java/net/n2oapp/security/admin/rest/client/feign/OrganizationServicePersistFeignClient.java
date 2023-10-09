@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.openfeign.FeignClient;
 
 @ConditionalOnProperty(name = "access.organization-persist-mode", havingValue = "rest")
-@FeignClient(name = "OrganizationServicePersistFeignClient", url = "${access.service.url}")
+@FeignClient(name = "OrganizationServicePersistFeignClient", url = "${access.service.api-url}")
 public interface OrganizationServicePersistFeignClient extends OrganizationPersistRestService {
 
 }

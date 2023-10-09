@@ -1,8 +1,7 @@
 package net.n2oapp.security.admin;
 
-import net.n2oapp.platform.userinfo.UserInfoModel;
+import net.n2oapp.framework.security.autoconfigure.userinfo.UserInfoModel;
 import net.n2oapp.security.admin.api.audit.AuditService;
-import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.service.RefChangeDataExportService;
 import net.n2oapp.security.admin.audit.AuditServiceImpl;
 import net.n2oapp.security.admin.rdm.RdmRefChangeDataExportService;

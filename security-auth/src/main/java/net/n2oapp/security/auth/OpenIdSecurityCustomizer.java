@@ -37,7 +37,7 @@ public abstract class OpenIdSecurityCustomizer extends N2oSecurityCustomizer {
 
     @Value("${n2o.access.schema.id}")
     private String schemaId;
-    @Value("${n2o.access.deny_urls}")
+    @Value("${access.deny_urls}")
     private Boolean defaultUrlAccessDenied;
 
     @Lazy

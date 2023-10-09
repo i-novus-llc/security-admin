@@ -51,8 +51,9 @@
         </dependency>
 
         <dependency>
-            <groupId>net.n2oapp.platform</groupId>
-            <artifactId>n2o-platform-userinfo-starter</artifactId>
+            <groupId>net.n2oapp.framework.security</groupId>
+            <artifactId>security-userinfo-starter</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>

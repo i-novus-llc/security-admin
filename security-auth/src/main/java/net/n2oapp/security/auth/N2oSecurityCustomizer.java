@@ -17,11 +17,18 @@ package net.n2oapp.security.auth;
 
 import net.n2oapp.framework.access.simple.PermissionApi;
 import net.n2oapp.security.auth.context.SpringSecurityUserContext;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
 public abstract class N2oSecurityCustomizer {
+
+    protected final String[] defaultIgnoredUrls = {"/static/**", "/public/**", "/dist/**", "/webjars/**", "/lib/**", "/build/**", "/bundle/**", "/error", "/serviceWorker.js", "/css/**", "/manifest.json", "/favicon.ico"};
+
+    @Value("${access.security.ignored-urls:}")
+    private String[] ignoredUrls;
 
     @Bean
     public PermissionApi securitySimplePermissionApi() {
@@ -34,7 +41,7 @@ public abstract class N2oSecurityCustomizer {
     }
 
     protected void ignore(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/static/**", "/public/**", "/dist/**", "/webjars/**", "/lib/**", "/build/**", "/bundle/**", "/error", "/serviceWorker.js", "/css/**", "/manifest.json", "/favicon.ico").permitAll();
+        http.authorizeRequests().antMatchers(defaultIgnoredUrls).permitAll().antMatchers(ignoredUrls).permitAll();
     }
 
     @Bean

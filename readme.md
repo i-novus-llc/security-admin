@@ -130,7 +130,7 @@ Auth Gateway - это SSO сервер авторизации, построен�
         #Настройки клиента хранятся в auth-gateway в таблице sec.client
         security.oauth2.client.client-id=admin-web
         security.oauth2.client.client-secret=33403217-430c-448e-aed5-5278873d5sda
-        access.service.url=${security.oauth2.auth-server-uri}/api
+        access.service.api-url=${security.oauth2.auth-server-uri}/api
    ```
 * Запустите приложение командой `java -jar access-web.jar`
 

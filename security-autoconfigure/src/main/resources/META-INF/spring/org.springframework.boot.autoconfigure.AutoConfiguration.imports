@@ -1,0 +1,5 @@
+net.n2oapp.framework.security.autoconfigure.access.SecurityAutoConfiguration
+net.n2oapp.framework.security.autoconfigure.access.AccountContextAutoConfiguration
+net.n2oapp.framework.security.autoconfigure.userinfo.config.UserInfoConfig
+net.n2oapp.framework.security.autoconfigure.userinfo.config.InterceptorConfig
+
