@@ -21,6 +21,9 @@
         <config.server.enable>false</config.server.enable>
         <audit.version>2.4.33</audit.version>
         <nimbusds.version>7.9</nimbusds.version>
+        <liquibase-sessionlock.version>1.6.6</liquibase-sessionlock.version>
+        <liquibase.version>4.19.1</liquibase.version>
+        <config.server.enable>false</config.server.enable>
         <jacoco.skip>true</jacoco.skip>
     </properties>
 
@@ -87,6 +90,12 @@
                     <name>release</name>
                 </property>
             </activation>
+            <distributionManagement>
+                <repository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>
             <build>
                 <plugins>
                     <plugin>
@@ -108,19 +117,25 @@
                                 <goals>
                                     <goal>sign</goal>
                                 </goals>
+                                <configuration>
+                                    <gpgArguments>
+                                        <arg>--pinentry-mode</arg>
+                                        <arg>loopback</arg>
+                                    </gpgArguments>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
                     <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.7</version>
+                        <version>1.6.13</version>
                         <extensions>true</extensions>
                         <configuration>
                             <serverId>ossrh</serverId>
                             <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                             <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                            <stagingProgressTimeoutMinutes>10</stagingProgressTimeoutMinutes>
+                            <stagingProgressTimeoutMinutes>15</stagingProgressTimeoutMinutes>
                         </configuration>
                     </plugin>
                 </plugins>

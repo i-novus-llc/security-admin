@@ -11,12 +11,16 @@
     <artifactId>security-admin-db</artifactId>
 
     <dependencies>
-
-        <!-- Liquibase patched for working classpath*: -->
         <dependency>
-            <groupId>ru.i-novus.components</groupId>
+            <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
-            <version>3.6.2.2.inovus</version>
+            <version>${liquibase.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.blagerweij</groupId>
+            <artifactId>liquibase-sessionlock</artifactId>
+            <version>${liquibase-sessionlock.version}</version>
         </dependency>
 
 
