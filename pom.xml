@@ -21,9 +21,11 @@
         <n2o.version>7.23.33</n2o.version>
         <rdm.version>1.34.0</rdm.version>
         <spring.boot.version>2.3.3.RELEASE</spring.boot.version>
-        <config.server.enable>false</config.server.enable>
         <audit.version>2.4.27</audit.version>
         <nimbusds.version>7.9</nimbusds.version>
+        <liquibase-sessionlock.version>1.6.6</liquibase-sessionlock.version>
+        <liquibase.version>4.19.1</liquibase.version>
+        <config.server.enable>false</config.server.enable>
         <jacoco.skip>true</jacoco.skip>
     </properties>
 
