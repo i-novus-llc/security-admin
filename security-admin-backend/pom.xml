@@ -40,6 +40,12 @@
             <artifactId>n2o-platform-starter-ms</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.blagerweij</groupId>
+            <artifactId>liquibase-sessionlock</artifactId>
+            <version>${liquibase-sessionlock.version}</version>
+        </dependency>
+
         <!-- TEST -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

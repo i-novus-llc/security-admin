@@ -19,6 +19,11 @@
             <version>3.6.2.2.inovus</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.blagerweij</groupId>
+            <artifactId>liquibase-sessionlock</artifactId>
+            <version>${liquibase-sessionlock.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -28,3 +33,4 @@
     </dependencies>
 
 </project>
+
