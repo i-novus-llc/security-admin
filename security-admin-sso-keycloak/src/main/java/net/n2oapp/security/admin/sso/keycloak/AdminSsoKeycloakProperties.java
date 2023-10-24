@@ -42,19 +42,4 @@ public class AdminSsoKeycloakProperties {
      * Подтвержден ли email пользователя
      */
     private Boolean emailVerified = false;
-
-    /**
-     * Cron выражение частоты синхронизации пользователей
-     */
-    private String synchronizeFrequency = "0 0/30 * * * ? *";
-
-    /**
-     * Включение автоматической синхронизации пользователей
-     */
-    private Boolean synchronizeEnabled = false;
-
-    /**
-     * По сколько пользователей обрабатывать за один раз
-     */
-    private Integer synchronizeUserCount = 100;
 }

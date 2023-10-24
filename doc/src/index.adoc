@@ -5,15 +5,13 @@
 
 == Введение
 Эта документация предназначена для установки, настройки и разворачивания микросервиса
-универсального администрирования прав доступа, а так же подключение аутентификации
-и авторизации.
+универсального администрирования прав доступа, а так же подключение авторизации.
 
 === Описание
-Универсальное администрирование доступа - это набор java библиотек для разворачивания системы аутентификации, авторизации и администрирования доступа в Вашем приложении.
+Универсальное администрирование доступа - это набор java библиотек для разворачивания системы авторизации и администрирования доступа в Вашем приложении.
 
 === Функциональность
 - Различные схемы развертывания (Embedded, Standalone)
-- Быстрое подключение провайдера аутентификации (Basic, OAuth2)
 - Интеграция со сторонними серверами SSO (Keycloak, ESIA)
 - Настраиваемый пользовательский интерфейс
 
@@ -29,53 +27,11 @@
 - Java 14
 - JDBC
 - JMS
-- Spring Boot 2.1
+- Spring Boot 2.7.5
 - Apache CXF 3.3
 - Liquibase 3.6.2
-- N2O Platform 3
+- N2O Platform 5
 - N2O UI Framework 7
-
-== Simple Auth
-В этом разделе рассказывается как подключить простую авторизацию
-к вашему приложению.
-
-Требования к приложению::
-- Spring Boot 2.1
-- N2O Framework 7.3
-
-Установка::
-+
-. Для подключения simple аутентификации необходимо добавить
-зависимость:
-+
-[source,xml]
-----
-<dependency>
-    <groupId>net.n2oapp.framework.security</groupId>
-    <artifactId>security-auth-simple</artifactId>
-    <version>${security-admin.version}</version>
-</dependency>
-----
-+
-. Создать и подключить конфигурационный бин:
-+
-[source,java]
-----
-@Configuration
-@EnableWebSecurity
-public class SecurityConfig extends SimpleSecurityConfigurerAdapter {
-
-    public SecurityConfig(DaoAuthenticationProvider daoAuthenticationProvider) {
-        super(daoAuthenticationProvider);
-    }
-
-    @Override
-    protected void authorize(ExpressionUrlAuthorizationConfigurer<HttpSecurity>
-                                        .ExpressionInterceptUrlRegistry url) throws Exception {
-        url.anyRequest().authenticated();//все запросы авторизованы
-    }
-}
-----
 
 == SSO
 В этом разделе объясняется как разворачивать сервер SSO и подключить
@@ -171,48 +127,6 @@ image::images/keycloak7.png[]
 image::images/keycloak12.png[]
 +
 
-
-
-=== Auth Gateway
-Auth Gateway - это SSO сервер, построенный на базе Spring Cloud Security,
-интегрируемый с любыми другими серверами аутентификации по протоколу
-OAuth2 OpenId Connect, например, с Keycloak или ЕСИА.
-
-Установка::
-
-. Соберите Auth Gateway выполнив команду `mvn clean package`
-. Auth Gateway подписывает токены с помощью асинхронных ключей по алгоритму RSA.
-Задать ключи можно следующим образом:
-Вариант 1 keystore: :::
-
-* Сгенерируйте https://docs.oracle.com/cd/E19509-01/820-3503/gfzbf/index.html[Key Pair и Self-Signed Certificate].
-* Перейдите в модуль `security-admin-auth-server` и добавьте ваш keystore в папку resources/keystore.
-+
-[listing]
-@Bean @ConditionalOnExpression("T(org.springframework.util.StringUtils).isEmpty('${access.jwt.signing-key:}') && T(org.springframework.util.StringUtils).isEmpty('${access.jwt.verifier-key:}')") public KeyPair keyPairFromJKS() { return new KeyStoreKeyFactory(new ClassPathResource("keystore/gateway.jks"), properties.getPassword().toCharArray()).getKeyPair("gateway");
-}
-* В настройках `OAuthServerConfiguration` замените все `alias` (по умолчанию "gateway") на корректные.
-* Перейдите в модуль `auth-gateway` и в `application.properties` укажите
-корректные настройки для вашего keystore:
-+
-[listing]
-access.auth.keystore.key-id=hYyfxVDkchN9wXuLLjSLe5kQ2EUrW4Mr access.auth.keystore.password=youKeyStorePassword
-
-Вариант 2 pem формат: :::
-* Установите openssl
-* Выполните последовательно команды
-+
-[listing]
-openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout privateKey.pem -out cert.pem
-+
-[listing]
-openssl rsa -in privateKey.pem -pubout -out pubKey.pem
-
-* В файлах privateKey.pem и pubKey.pem будут лежать закрытый и открытый ключ соответственно.
-* Перейдите в модуль `auth-gateway` и в `application.properties` укажите корректные настройки ключей:
-+
-[listing]
-access.jwt.signing-key=-----BEGIN PRIVATE KEY-----.....-----END PRIVATE KEY----- access.jwt.verifier-key=-----BEGIN PUBLIC KEY-----.....-----END PUBLIC KEY-----
 . Для подключения Auth Gateway к Keycloak серверу необходимо задать следующие настройки:
 +
 [listing]
@@ -220,9 +134,9 @@ access.jwt.signing-key=-----BEGIN PRIVATE KEY-----.....-----END PRIVATE KEY-----
 #Название домена
 access.keycloak.realm=master
 #Идентификатор клиента Auth Gateway в Keycloak
-access.keycloak.client.client-id=auth-gateway
+access.keycloak.admin-client-id=auth-gateway
 #Секретное слово клиента Auth Gateway
-access.keycloak.client.client-secret=
+access.keycloak.admin-client-secret=
 
 +
 [NOTE]
@@ -255,6 +169,8 @@ Admin API: /api/info
 В этом разделе рассказывается как подключить к вашему приложению авторизацию
 по протоколу OAuth2 OpenId Connect через SSO сервер.
 
+Стартер для приложения клиента link:../../security-starters/security-client-starter/README.adoc[здесь]
+
 === Подключение к Keycloak
 
 Схема SSO аутентификации::
@@ -269,16 +185,16 @@ image::images/oauth1.png[]
 
 Требования к приложению::
 +
-. Spring Boot 2.1
-. N2O Framework 7.3
+. Spring Boot 2.7.5
+. N2O Framework 7.23
 
 Установка::
 +
 . Установите Keycloak (см. link:#_Keycloak[Keycloak])
 . Добавьте зависимость `security-auth`.
-Она содержит класс `OpenIdSecurityConfigurerAdapter`,
-транзитивные зависимости от spring-security-oauth2 и зависимость `security-auth-common`.
-`security-auth-common` содержит в себе реализацию интерфейса `PrincipalExtractor` с помощью которой
+Она содержит класс `OpenIdSecurityCustomizer`,
+зависимость `security-auth-common`.
+`security-auth-common` содержит в себе реализацию интерфейса `OAuth2UserService` с помощью которой
 атрибуты пользователя Keycloak будут дополнены информацией из администрирования доступа:
 +
 [source,xml]
@@ -296,18 +212,19 @@ image::images/oauth1.png[]
 ----
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends OpenIdSecurityConfigurerAdapter {
+public class SecurityConfig extends OpenIdSecurityCustomizer {
 
     @Override
-    protected void authorize(ExpressionUrlAuthorizationConfigurer<HttpSecurity>
-                                         .ExpressionInterceptUrlRegistry url) throws Exception {
-        url.anyRequest().authenticated();//все запросы авторизованы
+    protected void configureHttpSecurity(HttpSecurity http) throws Exception {
+        super.configureHttpSecurity(http);
+        http.authorizeRequests().anyRequest().authenticated().and().oauth2Login().userInfoEndpoint(userInfo -> userInfo.oidcUserService(keycloakUserService));
+        http.addFilterAfter(new ContextFilter(tokenServices, accountServiceRestClient), FilterSecurityInterceptor.class);
     }
 }
 ----
 +
 . Далее необходимо подключить реализацию security-admin-api. В зависимости
-от вашей схемы развертывания (см. Схемы развертывания) это может быть SQL или JPA или REST Client реализация:
+от вашей схемы развертывания (см. Схемы развертывания) это может быть JPA или REST Client реализация:
 +
 [source,xml]
 ----
@@ -349,132 +266,7 @@ security.oauth2.sso.logout-uri=${security.oauth2.auth-server-uri}/logout?redirec
 . Запустите ваше приложение. При открытии любой страницы через браузер должна
 произойти переадресация на страницу входа Keycloak.
 
-=== Подключение к Auth Gateway
 
-Схема SSO аутентификации::
-+
-image::images/auth_gateway_flow.png[]
-
-. Запросы не авторизованных пользователей перенаправляют на Auth Gateway сервер
-. Gateway пренаправляет пользователя на Keycloak
-. Keycloak показывает пользователю страницу входа
-. Auth Gateway получает Keycloak токен пользователя GET запросом `/token` к Keycloak
-. Приложение получает Auth Gateway токен пользователя GET запросом `/token` к Auth Gateway
-. Приложение получает информацию о пользователе выполняя авторизованный GET запрос `/userinfo` к Auth Gateway
-
-Требования к приложению::
-+
-. Spring Boot 2.1
-. N2O Framework 7.3
-
-Установка::
-+
-. Установите Auth Gateway (см. link:#_Auth_Gateway[Auth Gateway])
-. Добавьте зависимость `security-auth`.
-Она содержит класс `OpenIdSecurityConfigurerAdapter`,
-транзитивные зависимости от spring-security-oauth2 и зависимость `security-auth-common`.
-`security-auth-common` содержит в себе реализацию интерфейса `PrincipalExtractor` с помощью которой
-будут получены атрибуты пользователя из Auth Gateway:
-+
-[source,xml]
-----
-<dependency>
-    <groupId>net.n2oapp.framework.security</groupId>
-    <artifactId>security-auth</artifactId>
-    <version>${security-admin.version}</version>
-</dependency>
-----
-+
-. Создайте класс конфигурации правил доступа:
-+
-[source,java]
-----
-@Configuration
-@EnableWebSecurity
-public class SecurityConfig extends OpenIdSecurityConfigurerAdapter {
-
-    @Override
-    protected void authorize(ExpressionUrlAuthorizationConfigurer<HttpSecurity>
-                                         .ExpressionInterceptUrlRegistry url) throws Exception {
-        url.anyRequest().authenticated();//все запросы авторизованы
-    }
-}
-----
-+
-. Для соединения с Auth Gateway сервером задайте следующие настройки
-в файле `application.properties`:
-+
-[source]
-----
-#Базовый адрес сервиса аутентификации
-security.oauth2.auth-server-uri=http://localhost:9999
-#Идентификатор клиента OAuth2 OpenId Connect
-security.oauth2.client.client-id=myapp
-#Секретное слово клиента OAuth2 OpenId Connect
-security.oauth2.client.client-secret=
-#Запрашиваемый уровень доступа
-security.oauth2.client.scope=read,write
-#Адрес сервиса аутентификации через браузер
-security.oauth2.client.user-authorization-uri=${security.oauth2.auth-server-uri}/oauth/authorize
-#Адрес сервиса получения токена аутентификации
-security.oauth2.client.access-token-uri=${security.oauth2.auth-server-uri}/oauth/token
-#Адрес сервиса получения информации о пользователе
-security.oauth2.resource.user-info-uri=${security.oauth2.auth-server-uri}/userinfo
-#Адрес сервиса единого выхода
-security.oauth2.sso.logout-uri=${security.oauth2.auth-server-uri}/logout?redirect_uri=
-----
-+
-[NOTE]
-Значения client-id и client-secret необходимо зарегистрировать в Gateway (см link:#_Auth_Gateway[Auth Gateway])
-
-+
-. Запустите ваше приложение. При открытии любой страницы через браузер должна
-произойти переадресация на страницу входа Auth Gateway.
-
-== Single Logout
-В этом разделе рассказывается о возможности подключения технологии единого выхода к приложению, использующему авторизацию по протоколу OAuth2 OpenId Connect.
-
-=== Выход из Auth Gateway
-Технология единого выхода реализована согласно спецификации
-link:https://openid.net/specs/openid-connect-backchannel-1_0.html[OpenID Connect Back-Channel Logout]
-и включает в себя следующие этапы:
-
-. Получение сервером аутентификации запроса на выход от одного из клиентов.
-. Отправка запросов клиентам, в которых пользователь имеет активные сессии.
-. Обработка запросов на выход на стороне клиентов.
-
-Для обеспечения возможности единого выхода необходимо подключить auth-gateway-adapter и настроить конфигурацию приложения.
-
-Для подключения адаптера к приложению необходимо добавить следующую зависимость:
-[source,xml]
-----
-<dependency>
-    <groupId>net.n2oapp.framework.security</groupId>
-    <artifactId>auth-gateway-adapter</artifactId>
-    <version>${security-admin.version}</version>
-</dependency>
-----
-
-А также настроить конфигурацию, зарегистрировав `BackChannelLogoutServlet`:
-
-[source,java]
-----
-    @Autowired
-    private ClientServerSessionRegistry sessionRegistry;
-
-    @Value("${security.oauth2.client.token-key-uri}")
-    private String tokenKeyUri;
-
-    . . .
-
-    @Bean
-    public ServletRegistrationBean servletRegistrationBean() {
-        return new ServletRegistrationBean(new BackChannelLogoutServlet(sessionRegistry, tokenKeyUri), "/backchannel_logout");
-    }
-----
-
-[NOTE]
-Для обеспечения возможности единого выхода каждое приложение должно иметь уникальный client_id.
 
 == Схемы развертывания
 В этом разделе рассказывается об установке администрирования доступа в зависимости от выбранной Вами схемы развертывания.
@@ -740,11 +532,12 @@ spring.datasource.password=postgres
 . Проверьте, что в браузере доступен адрес: http://localhost:9090/api/info
 
 == Синхронизация с Keycloak
+Сейчас синхронизируются только роли.
 В этом разделе рассказывается как настроить синхронизацию данных между Keycloak и
 сервером администрирования доступа.
 
 Виды синхронизации::
-- Прямая событийная.
+- Прямая событийная.( На данный момент только роли)
 +
 image::images/sync1.png[]
 +
@@ -761,13 +554,6 @@ image::images/sync2.png[]
 полученная информация отправляется в сервис `/details` администрирования доступа (3)
 для синхронизации её с Базой Данных (4).
 +
-- Прямая асинхронная
-+
-image::images/sync3.png[]
-+
-Периодически вызывается сервис, который получает из Keycloak всех
-пользователей (1) и пытается связать их с пользователями в Базе Данных (2).
-Расписание вызова настраивается cron выражением.
 
 
 Установка::
@@ -800,10 +586,6 @@ access.keycloak.admin-client-secret=
 access.keycloak.temporary-password=true
 #Подтвержден ли email пользователя
 access.keycloak.email-verified=false
-#Включение автоматической синхронизации пользователей
-access.keycloak.synchronize-enabled=true
-#Настройка частоты синхронизации пользователей
-access.keycloak.synchronize-frequency=0 0/30 * * * ? *
 #Включение отправки синхронных запросов в Keycloak при изменении данных пользователей и их ролей
 access.keycloak.sync-persistence-enabled=true
 ----
@@ -812,7 +594,7 @@ access.keycloak.sync-persistence-enabled=true
 [source,java]
 ----
 @SpringBootApplication
-@Import(AdminSsoKeycloakConfiguration.class)
+@Import(SsoKeycloakConfiguration.class)
 public class Application {
   public static void main(String[] args) {
     SpringApplication.run(Application.class, args);
@@ -941,34 +723,6 @@ insert into sec.permission(name, code) values('Право доступа к мо
 |boolean
 |Отображение систем на UI
 
-|access.auth.login-entry-point
-|string
-|Адрес точки авторизации
-
-|access.auth.authenticated-user-redirect-url
-|string
-|Переадресация авторизованного пользователя на указанный путь, вместо index.html
-
-|access.esia.path-to-keystore
-|string
-|Путь к хранилищу ключей ЕСИА
-
-|access.esia.key-alias
-|string
-|Альяс ключа в хранилище ключей ЕСИА
-
-|access.esia.signing-key
-|string
-|Ключ для подписи запросов к ЕСИА
-
-|access.esia.certificate
-|string
-|Сертификат от ЕСИА
-
-|access.esia.key-store-password
-|string
-|Пароль для доступа к альясу
-
 |audit.client.enabled
 |boolean
 |Опция включения аудита
@@ -1001,13 +755,21 @@ insert into sec.permission(name, code) values('Право доступа к мо
 |boolean
 |Показывается ли поле департамент при выборе уровня пользвателя федеральный
 
-|access.auth.access-token-lifetime
-|integer
-|Время жизни access токена клиента в минутах
-
-|access.auth.refresh-token-lifetime
-|integer
-|Время жизни refresh токена клиента в минутах
+|access.user.attribute-keys.principal
+ access.user.attribute-keys.surname
+ access.user.attribute-keys.name
+ access.user.attribute-keys.patronymic
+ access.user.attribute-keys.email
+ access.user.attribute-keys.guid
+ access.user.attribute-keys.authorities
+ access.user.attribute-keys.department
+ access.user.attribute-keys.organization
+ access.user.attribute-keys.region
+ access.user.attribute-keys.userLevel
+|string
+| Ключи для извлечения данных из userinfo ответа keycloak.
+access.user.attribute-keys.email=email,contacts.e-mail,mail
+Может быть указано несколько ключей через запятую. Через точку можно указать вложенность.
 
 |access.users.change-activity-enabled
 |boolean
@@ -1016,13 +778,6 @@ insert into sec.permission(name, code) values('Право доступа к мо
 |access.accounts.change-activity-enabled
 |boolean
 |Возможность изменения активности на списке аккаунтов
-
-|access.token.include-claims
-|roles,
-permissions,
-systems
-|Наполнение токена ролями, пермишенами и системами.
-Указать одно или несколько значений через запятую.
 
 |access.user.send-mail-delete-user
 |boolean
@@ -1040,10 +795,6 @@ systems
 |sync,rest
 |Режим заполнения таблицы организаций 1) rest - через Rest сервисы 2) sync - режим синхронизации.
 Источник - НСИ.
-
-|access.keycloak.synchronize-enabled
-|boolean
-|Включение автоматической синхронизации пользователей
 
 |access.keycloak.sync-persistence-enabled
 |boolean
@@ -1068,37 +819,3 @@ systems
 
 |===
 
-== Кастомизация
-В этом разделе рассказывается как настроить внешний вид страниц администрирования и аутентификации под стиль Вашей системы.
-
-=== Тема Keycloak
-В keycloak стиль страниц аутентификации, регистрации, восстановления пароля и др. можно настраивать с помощью темы.
-
-Чтобы добавить новую тему нужно:
-
-. Выполните команду
-+
-[source]
-----
-$KEYCLOAK_HOME/bin/jboss-cli.sh --command="module add --name=net.n2oapp.security.theme.keycloak --resources=target/keycloak-n2o-theme.jar"
-----
-+
-. В файле `$KEYCLOAK_HOME/standalone/configuration/standalone.xml` добавьте:
-+
-[source,xml]
-----
-<theme>
-  ...
-  <modules>
-      <module>net.n2oapp.security.theme.keycloak</module>
-  </modules>
-</theme>
-----
-+
-. Выберите тему "n2o" в Realm настройках консоли администрирования Keycloak:
-+
-image::images/index-0c310.png[]
-
-== Расширение профиля пользователя
-В этом разделе рассказывается как расширить профиль пользователя новыми атрибутами, как встроить их в интерфейс и использовать в контексте приложения.
-//todo

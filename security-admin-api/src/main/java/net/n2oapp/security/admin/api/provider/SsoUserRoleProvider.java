@@ -79,9 +79,4 @@ public interface SsoUserRoleProvider {
      */
     void resetPassword(SsoUser user);
 
-    /**
-     * Запуск синхронизации пользователей
-     */
-    void startSynchronization();
-
 }
