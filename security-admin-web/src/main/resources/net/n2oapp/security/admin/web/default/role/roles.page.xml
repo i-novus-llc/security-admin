@@ -17,7 +17,7 @@
                 <column text-field-id="userLevel.name"/>
                 <column text-field-id="systemName" visible="${access.system.enabled}"/>
                 <column text-field-id="permissionNames" label="Права доступа">
-                    <list label-field-id="name"/>
+                    <list style="display: block"/>
                 </column>
                 <column text-field-id="actions" label=" ">
                     <toolbar>
