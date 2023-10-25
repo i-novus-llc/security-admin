@@ -32,11 +32,6 @@
         </dependency>
         <dependency>
             <groupId>net.n2oapp.framework.security</groupId>
-            <artifactId>security-admin-example</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.n2oapp.framework.security</groupId>
             <artifactId>security-admin-frontend</artifactId>
             <version>${project.version}</version>
         </dependency>
