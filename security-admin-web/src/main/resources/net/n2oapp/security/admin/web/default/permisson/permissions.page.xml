@@ -14,17 +14,36 @@
             </filters>
             <toolbar>
                 <button label="Создать" color="primary" disable-on-empty-model="false">
-                    <show-modal page-id="permissionForm" submit-operation-id="create"
-                                object-id="${access.permission.object.id}"/>
+                    <show-modal page-id="permissionForm">
+                        <toolbars>
+                            <toolbar>
+                                <button label="Сохранить" color="primary">
+                                    <invoke operation-id="create" object-id="permission" close-on-success="true"/>
+                                </button>
+                                <button label="Закрыть" validate="false">
+                                    <close/>
+                                </button>
+                            </toolbar>
+                        </toolbars>
+                    </show-modal>
                 </button>
             </toolbar>
             <rows>
                 <click>
-                    <show-modal page-id="permissionFormUpdate" submit-operation-id="update" object-id="permission"
-                                route="/:permission_code/update">
+                    <show-modal page-id="permissionFormUpdate" route="/:permission_code/update">
                         <params>
                             <path-param name="permission_code" value="{id}"/>
                         </params>
+                        <toolbars>
+                            <toolbar>
+                                <button label="Сохранить" color="primary">
+                                    <invoke operation-id="update" object-id="permission" close-on-success="true"/>
+                                </button>
+                                <button label="Закрыть" validate="false">
+                                    <close/>
+                                </button>
+                            </toolbar>
+                        </toolbars>
                     </show-modal>
                 </click>
             </rows>

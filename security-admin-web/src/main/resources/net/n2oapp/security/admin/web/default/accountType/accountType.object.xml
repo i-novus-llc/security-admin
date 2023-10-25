@@ -51,9 +51,7 @@
             </out>
         </operation>
 
-        <operation id="delete"
-                   confirm-text="Вы уверены, что хотите удалить тип аккаунта?"
-                   success-text="Тип аккаунта удалён">
+        <operation id="delete" success-text="Тип аккаунта удалён">
             <invocation>
                 <java method="delete" class="net.n2oapp.security.admin.api.service.AccountTypeService">
                     <spring/>

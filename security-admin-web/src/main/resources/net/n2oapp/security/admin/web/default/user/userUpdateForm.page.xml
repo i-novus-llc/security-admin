@@ -94,26 +94,44 @@
                     </column>
                     <column text-field-id="actions" label=" ">
                         <toolbar>
-                            <button id="delete" label="Удалить" type="icon" icon="fa fa-trash">
-                                <invoke operation-id="delete"/>
+                            <button id="delete" label="Удалить" type="icon" icon="fa fa-trash" confirm-text="Вы уверены, что хотите удалить аккаунт?" confirm="true">
+                                <invoke operation-id="delete" />
                             </button>
                         </toolbar>
                     </column>
                 </columns>
                 <rows>
                     <click>
-                        <open-page page-id="accountUpdateForm" submit-operation-id="update" route="/:account_id/update"
-                                   object-id="account">
+                        <open-page page-id="accountUpdateForm" route="/:account_id/update">
                             <params>
                                 <path-param name="account_id" value="{id}"/>
                             </params>
+                            <toolbars>
+                                <toolbar>
+                                    <button label="Сохранить" color="primary">
+                                        <invoke operation-id="update" object-id="account" close-on-success="true"/>
+                                    </button>
+                                    <button label="Закрыть" validate="false">
+                                        <close/>
+                                    </button>
+                                </toolbar>
+                            </toolbars>
                         </open-page>
                     </click>
                 </rows>
                 <toolbar>
                     <button id="createAccount" label="Создать" color="primary" disable-on-empty-model="false">
-                        <open-page page-id="accountForm" submit-operation-id="create"
-                                   object-id="account" route="/create">
+                        <open-page page-id="accountForm" route="/create">
+                            <toolbars>
+                                <toolbar>
+                                    <button label="Создать" color="primary">
+                                        <invoke operation-id="create" object-id="account" close-on-success="true"/>
+                                    </button>
+                                    <button label="Закрыть" validate="false">
+                                        <close/>
+                                    </button>
+                                </toolbar>
+                            </toolbars>
                         </open-page>
                     </button>
                 </toolbar>

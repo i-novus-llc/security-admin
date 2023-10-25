@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0" object-id="system"
+<query xmlns="http://n2oapp.net/framework/config/schema/query-5.0" object-id="system"
        name="Системы">
     <list result-mapping="['content']" count-mapping="['totalElements']">
         <java method="findAllSystems" class="net.n2oapp.security.admin.api.service.SystemService">
@@ -20,41 +20,21 @@
         </java>
     </unique>
 
+    <filters>
+        <eq filter-id="id" mapping="[0]" field-id="id"/>
+        <like filter-id="code" mapping="['criteria'].code" field-id="id"/>
+        <eq filter-id="name" mapping="['criteria'].name" field-id="name"/>
+        <eq filter-id="description" mapping="['criteria'].description" field-id="description"/>
+    </filters>
+
     <fields>
-        <field id="id" domain="string">
-            <select mapping="code"/>
-            <sorting/>
-            <filters>
-                <eq filter-id="id" mapping="[0]"/>
-                <like filter-id="code" mapping="['criteria'].code"/>
-            </filters>
-        </field>
-        <field id="name" domain="string" name="Имя">
-            <select mapping="name"/>
-            <filters>
-                <eq filter-id="name" mapping="['criteria'].name"/>
-            </filters>
-        </field>
-        <field id="description" domain="string" name="Описание">
-            <select mapping="description"/>
-            <filters>
-                <eq filter-id="description" mapping="['criteria'].description"/>
-            </filters>
-        </field>
-        <field id="shortName" domain="string" name="Короткое наименование">
-            <select mapping="shortName"/>
-        </field>
-        <field id="url" domain="string" name="Адрес">
-            <select mapping="url"/>
-        </field>
-        <field id="publicAccess" domain="boolean" name="Допускается работа в системе без авторизации">
-            <select mapping="publicAccess"/>
-        </field>
-        <field id="viewOrder" domain="integer" name="Порядок отображения системы">
-            <select mapping="viewOrder"/>
-        </field>
-        <field id="showOnInterface" domain="boolean" name="Включить отображение системы в едином интерфейсе">
-            <select mapping="showOnInterface"/>
-        </field>
+        <field id="id" domain="string" mapping="code" sorting="true"/>
+        <field id="name" domain="string" name="Имя" mapping="name"/>
+        <field id="description" domain="string" name="Описание" mapping="description"/>
+        <field id="shortName" domain="string" name="Короткое наименование" mapping="shortName"/>
+        <field id="url" domain="string" name="Адрес" mapping="url"/>
+        <field id="publicAccess" domain="boolean" name="Допускается работа в системе без авторизации" mapping="publicAccess"/>
+        <field id="viewOrder" domain="integer" name="Порядок отображения системы" mapping="viewOrder"/>
+        <field id="showOnInterface" domain="boolean" name="Включить отображение системы в едином интерфейсе" mapping="showOnInterface"/>
     </fields>
 </query>

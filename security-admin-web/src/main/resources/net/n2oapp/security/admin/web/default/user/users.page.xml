@@ -32,11 +32,20 @@
                             <invoke operation-id="delete"/>
                         </button>
                         <button label="Сбросить пароль" icon="fa fa-key" type="icon">
-                            <show-modal page-id="passwordResetForm" route="/:user_id/resetPassword"
-                                        object-id="user" submit-operation-id="resetPassword">
+                            <show-modal page-id="passwordResetForm" route="/:user_id/resetPassword">
                                 <params>
                                     <path-param name="user_id" value="{id}"/>
                                 </params>
+                                <toolbars>
+                                    <toolbar>
+                                        <button label="Сохранить" color="primary">
+                                            <invoke operation-id="resetPassword" close-on-success="true" object-id="user"/>
+                                        </button>
+                                        <button label="Закрыть" validate="false">
+                                            <close/>
+                                        </button>
+                                    </toolbar>
+                                </toolbars>
                             </show-modal>
                         </button>
                     </toolbar>
@@ -44,11 +53,20 @@
             </columns>
             <rows>
                 <click>
-                    <open-page page-id="userUpdateForm" submit-operation-id="update" object-id="user"
-                               detail-field-id="id" route="/:user_id/update">
+                    <open-page page-id="userUpdateForm" route="/:user_id/update">
                         <params>
                             <path-param name="user_id" value="{id}"/>
                         </params>
+                        <toolbars>
+                            <toolbar>
+                                <button label="Сохранить" color="primary">
+                                    <invoke operation-id="update" close-on-success="true" object-id="user"/>
+                                </button>
+                                <button label="Закрыть" validate="false">
+                                    <close/>
+                                </button>
+                            </toolbar>
+                        </toolbars>
                     </open-page>
                 </click>
             </rows>
@@ -131,8 +149,18 @@
             </filters>
             <toolbar>
                 <button id="create" label="Создать" color="primary" disable-on-empty-model="false">
-                    <open-page page-id="userForm" submit-operation-id="create" object-id="user"
-                               route="/create"/>
+                    <open-page page-id="userForm" route="/create">
+                        <toolbars>
+                            <toolbar>
+                                <button label="Сохранить" color="primary">
+                                    <invoke operation-id="create" close-on-success="true" object-id="user"/>
+                                </button>
+                                <button label="Закрыть" validate="false">
+                                    <close/>
+                                </button>
+                            </toolbar>
+                        </toolbars>
+                    </open-page>
                 </button>
             </toolbar>
         </table>

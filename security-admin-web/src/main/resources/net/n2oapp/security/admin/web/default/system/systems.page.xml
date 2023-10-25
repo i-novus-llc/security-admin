@@ -18,11 +18,20 @@
             </columns>
             <rows>
                 <click>
-                    <open-page page-id="systemFormUpdate" submit-operation-id="update" object-id="system"
-                               route="/:id/update">
+                    <open-page page-id="systemFormUpdate" route="/:id/update">
                         <params>
                             <path-param name="id" value="{id}"/>
                         </params>
+                        <toolbars>
+                            <toolbar>
+                                <button label="Сохранить" color="primary">
+                                    <invoke operation-id="update" close-on-success="true" object-id="system"/>
+                                </button>
+                                <button label="Закрыть" validate="false">
+                                    <close/>
+                                </button>
+                            </toolbar>
+                        </toolbars>
                     </open-page>
                 </click>
             </rows>
@@ -41,9 +50,18 @@
             </filters>
             <toolbar>
                 <button id="create" label="Создать" disable-on-empty-model="false" color="primary">
-                    <open-page page-id="systemForm" submit-operation-id="create"
-                               object-id="system" route="/create" close-after-submit="true"
-                               redirect-url-after-submit="../:id/update"/>
+                    <open-page page-id="systemForm" route="/create">
+                        <toolbars>
+                            <toolbar>
+                                <button label="Сохранить">
+                                    <invoke operation-id="create" object-id="system" close-on-success="true"/>
+                                </button>
+                                <button label="Закрыть" validate="false" color="primary">
+                                    <close/>
+                                </button>
+                            </toolbar>
+                        </toolbars>
+                    </open-page>
                 </button>
             </toolbar>
         </table>

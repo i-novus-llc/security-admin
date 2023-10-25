@@ -6,8 +6,8 @@
         <fields>
             <input-select id="system" label="Система" query-id="system" required="${access.system.enabled}"
                           visible="${access.system.enabled}" label-field-id="name"/>
-            <input-text id="name" required="true"/>
-            <input-text id="id" required="true"/>
+            <input-text id="name" required="true" label="Наименование"/>
+            <input-text id="id" required="true" label="Код"/>
             <input-select id="parent" ajax="false" label="Родительское право доступа" checkboxes="true"
                           query-id="permission">
                 <filters>

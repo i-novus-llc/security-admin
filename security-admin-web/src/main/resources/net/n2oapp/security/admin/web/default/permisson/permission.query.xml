@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0"
+<query xmlns="http://n2oapp.net/framework/config/schema/query-5.0"
        object-id="${access.permission.object.id}"
        name="Права доступа">
     <list result-mapping="['content']" count-mapping="['totalElements']">
@@ -21,77 +21,36 @@
         </java>
     </unique>
 
+    <filters>
+        <eq filter-id="id" mapping="[0]" field-id="id"/>
+        <like filter-id="code" mapping="['criteria'].code" field-id="id"/>
+        <like filter-id="name" mapping="['criteria'].name" field-id="name"/>
+        <eq filter-id="system.id" domain="string" mapping="['criteria'].systemCode" field-id="system"/>
+        <eq filter-id="systemCode" domain="string[]" mapping="['criteria'].systemCode" field-id="systemCode"/>
+        <eq filter-id="withSystem" domain="boolean" mapping="['criteria'].withSystem" field-id="withSystem"/>
+        <eq filter-id="forForm" domain="boolean" mapping="['criteria'].forForm" field-id="forForm"/>
+        <eq filter-id="userLevel.id" domain="string" mapping="['criteria'].userLevel" field-id="userLevel.id"/>
+        <eq filter-id="withoutParent" domain="boolean" mapping="['criteria'].withoutParent" field-id="withoutParent"/>
+
+    </filters>
+
     <fields>
-        <field id="id" domain="string" name="Код">
-            <select mapping="code"/>
-            <filters>
-                <eq filter-id="id" mapping="[0]"/>
-                <like filter-id="code" mapping="['criteria'].code"/>
-            </filters>
-        </field>
-        <field id="name" domain="string" name="Наименование">
-            <select mapping="name"/>
-            <filters>
-                <like filter-id="name" mapping="['criteria'].name"/>
-            </filters>
-        </field>
-        <field id="parent" domain="object">
-            <select mapping="parent"/>
-        </field>
-        <field id="parent.id" domain="string">
-            <select mapping="parent?.code"/>
-        </field>
-        <field id="parentCode" domain="string">
-            <select mapping="parent?.code"/>
-        </field>
-        <field id="parentName" domain="string" name="Родительское право доступа">
-            <select mapping="parent?.name"/>
-        </field>
-        <field id="system" domain="object">
-            <select mapping="system"/>
-            <filters>
-                <eq filter-id="system.id" domain="string" mapping="['criteria'].systemCode"/>
-            </filters>
-        </field>
-        <field id="systemCode" domain="string">
-            <select mapping="system?.code"/>
-            <filters>
-                <eq filter-id="systemCode" domain="string[]" mapping="['criteria'].systemCode"/>
-            </filters>
-        </field>
-        <field id="systemName" domain="string" name="Система">
-            <select mapping="system?.name"/>
-        </field>
-        <field id="withSystem">
-            <filters>
-                <eq filter-id="withSystem" domain="boolean" mapping="['criteria'].withSystem"/>
-            </filters>
-        </field>
-        <field id="forForm">
-            <filters>
-                <eq filter-id="forForm" domain="boolean" mapping="['criteria'].forForm"/>
-            </filters>
-        </field>
-        <field id="userLevel.name" domain="string" name="Уровень пользователя">
-            <select mapping="userLevel?.desc"/>
-        </field>
-        <field id="userLevel.id" domain="string" name="Уровень пользователя">
-            <select mapping="userLevel?.name"/>
-            <filters>
-                <eq filter-id="userLevel.id" domain="string" mapping="['criteria'].userLevel"/>
-            </filters>
-        </field>
-        <field id="withoutParent">
-            <filters>
-                <eq filter-id="withoutParent" domain="boolean" mapping="['criteria'].withoutParent"/>
-            </filters>
-        </field>
-        <field id="hasChildren">
-            <select mapping="hasChildren"/>
-        </field>
-        <field id="usedInRole">
-            <select mapping="usedInRole"/>
-        </field>
+        <field id="id" domain="string" name="Код" mapping="code"/>
+        <field id="name" domain="string" name="Наименование" mapping="name"/>
+        <field id="parent" domain="object" mapping="parent"/>
+        <field id="parent.id" domain="string" mapping="parent?.code"/>
+        <field id="parentCode" domain="string" mapping="parent?.code"/>
+        <field id="parentName" domain="string" name="Родительское право доступа" mapping="parent?.name"/>
+        <field id="system" domain="object" mapping="system"/>
+        <field id="systemCode" domain="string" mapping="system?.code"/>
+        <field id="systemName" domain="string" name="Система" mapping="system?.name"/>
+        <field id="withSystem" select="false"/>
+        <field id="forForm" select="false"/>
+        <field id="userLevel.name" domain="string" name="Уровень пользователя" mapping="userLevel?.desc"/>
+        <field id="userLevel.id" domain="string" name="Уровень пользователя" mapping="userLevel?.name"/>
+        <field id="withoutParent" select="false"/>
+        <field id="hasChildren" mapping="hasChildren"/>
+        <field id="usedInRole" mapping="usedInRole"/>
 
     </fields>
 </query>

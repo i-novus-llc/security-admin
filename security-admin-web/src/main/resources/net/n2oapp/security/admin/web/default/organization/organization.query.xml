@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0"
+<query xmlns="http://n2oapp.net/framework/config/schema/query-5.0"
        object-id="organization">
     <list result-mapping="['content']" count-mapping="['totalElements']">
         <java method="findAll" class="net.n2oapp.security.admin.api.service.OrganizationService">
@@ -20,59 +20,27 @@
         </java>
     </unique>
 
+    <filters>
+        <eq filter-id="id" mapping="[0]" field-id="id"/>
+        <like filter-id="shortName" mapping="['criteria'].shortName" field-id="shortName"/>
+        <eq filter-id="ogrn" mapping="['criteria'].ogrn" field-id="ogrn"/>
+        <eq filter-id="inn" mapping="['criteria'].inn" field-id="inn"/>
+        <eq filter-id="name" mapping="['criteria'].name" field-id="name"/>
+    </filters>
+
     <fields>
-        <field id="id" name="Идентификатор" domain="integer">
-            <select mapping="id"/>
-            <filters>
-                <eq filter-id="id" mapping="[0]"/>
-            </filters>
-        </field>
-        <field id="shortName" domain="string" name="Краткое наименование">
-            <select mapping="shortName"/>
-            <filters>
-                <like filter-id="shortName" mapping="['criteria'].shortName"/>
-            </filters>
-        </field>
-        <field id="ogrn" domain="string" name="ОГРН">
-            <select mapping="ogrn"/>
-            <filters>
-                <eq filter-id="ogrn" mapping="['criteria'].ogrn"/>
-            </filters>
-        </field>
-        <field id="code" domain="string">
-            <select mapping="code"/>
-        </field>
-        <field id="fullName" domain="string" name="Наименование">
-            <select mapping="fullName"/>
-        </field>
-        <field id="inn" domain="string" name="ИНН">
-            <select mapping="inn"/>
-            <filters>
-                <eq filter-id="inn" mapping="['criteria'].inn"/>
-            </filters>
-        </field>
-        <field id="kpp" domain="string" name="КПП">
-            <select mapping="kpp"/>
-        </field>
-        <field id="legalAddress" domain="string" name="Юридический адрес">
-            <select mapping="legalAddress"/>
-        </field>
-        <field id="email" domain="string" name="Электронная почта">
-            <select mapping="email"/>
-        </field>
-        <field id="okpo" domain="string" name="ОКПО">
-            <select mapping="okpo"/>
-        </field>
-        <field id="roles">
-            <select mapping="roles"/>
-        </field>
-        <field id="orgCategories">
-            <select mapping="orgCategories"/>
-        </field>
-        <field id="name" domain="string" name="Наименование">
-            <filters>
-                <eq filter-id="name" mapping="['criteria'].name"/>
-            </filters>
-        </field>
+        <field id="id" name="Идентификатор" domain="integer" mapping="id"/>
+        <field id="shortName" domain="string" name="Краткое наименование" mapping="shortName"/>
+        <field id="ogrn" domain="string" name="ОГРН" mapping="ogrn"/>
+        <field id="code" domain="string" mapping="code"/>
+        <field id="fullName" domain="string" name="Наименование" mapping="fullName"/>
+        <field id="inn" domain="string" name="ИНН" mapping="inn"/>
+        <field id="kpp" domain="string" name="КПП" mapping="kpp"/>
+        <field id="legalAddress" domain="string" name="Юридический адрес" mapping="legalAddress"/>
+        <field id="email" domain="string" name="Электронная почта" mapping="email"/>
+        <field id="okpo" domain="string" name="ОКПО" mapping="okpo"/>
+        <field id="roles" mapping="roles"/>
+        <field id="orgCategories" mapping="orgCategories"/>
+        <field id="name" domain="string" name="Наименование" select="false"/>
     </fields>
 </query>

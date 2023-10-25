@@ -1,9 +1,22 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<nav xmlns="http://n2oapp.net/framework/config/schema/menu-2.0">
-    <page page-id="systems" route="systems" label="Системы"/>
-    <page page-id="users" route="users" label="Пользователи"/>
-    <page page-id="roles" route="roles" label="Роли"/>
-    <page page-id="permissions" route="permissions" label="Права доступа"/>
-    <page page-id="organizations" route="organizations" label="Организации"/>
-    <page page-id="accountType" route="accountType" label="Типы аккаунтов"/>
+<nav xmlns="http://n2oapp.net/framework/config/schema/menu-3.0">
+
+    <menu-item name="Системы">
+        <open-page page-id="systems" route="systems"/>
+    </menu-item>
+    <menu-item name="Пользователи">
+        <open-page page-id="users" route="users"/>
+    </menu-item>
+    <menu-item name="Роли">
+        <open-page page-id="roles" route="roles"/>
+    </menu-item>
+    <menu-item name="Права доступа">
+        <open-page page-id="permissions" route="permissions"/>
+    </menu-item>
+    <menu-item name="Организации">
+        <open-page page-id="organizations" route="organizations"/>
+    </menu-item>
+    <menu-item name="Типы аккаунтов">
+        <open-page page-id="accountType" route="accountType"/>
+    </menu-item>
 </nav>
