@@ -59,9 +59,7 @@
             <validations/>
         </operation>
 
-        <operation id="delete"
-                   confirm-text="Вы уверены, что хотите удалить пользователя?"
-                   success-text="Пользователь удален">
+        <operation id="delete" success-text="Пользователь удален">
             <invocation>
                 <java method="delete" class="net.n2oapp.security.admin.api.service.UserService">
                     <spring/>

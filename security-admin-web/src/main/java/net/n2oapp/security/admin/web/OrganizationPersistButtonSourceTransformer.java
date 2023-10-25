@@ -17,7 +17,7 @@ public class OrganizationPersistButtonSourceTransformer implements SourceTransfo
 
     @Override
     public N2oButton transform(N2oButton source, SourceProcessor p) {
-        if (LabelType.icon.equals(source.getType()))
+        if (LabelType.ICON.equals(source.getType()))
             source.setVisible("{" + Boolean.FALSE + "}");
         else
             source.setVisible(Boolean.FALSE.toString());

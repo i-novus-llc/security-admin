@@ -7,12 +7,7 @@
             <input-text id="name" label="Наименование" required="true"/>
             <input-text id="id" label="Код" required="true"/>
             <text-area id="description" label="Описание"/>
-            <field id="showOnInterface" label="Включить отображение системы в едином интерфейсе"
-                   visible="${access.system.show-on-interface}">
-                <controls>
-                    <checkbox id="showOnInterface" src="Switch" default-value="false"/>
-                </controls>
-            </field>
+            <checkbox id="showOnInterface" visible="${access.system.show-on-interface}" label="Включить отображение системы в едином интерфейсе" src="Switch" default-value="false"/>
             <input-text id="shortName" label="Короткое наименование" visible="false">
                 <dependencies>
                     <visibility on="showOnInterface">

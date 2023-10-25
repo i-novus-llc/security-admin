@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0"
+<query xmlns="http://n2oapp.net/framework/config/schema/query-5.0"
        object-id="${access.role.object.id}"
        name="Роли">
     <list result-mapping="['content']" count-mapping="['totalElements']">
@@ -19,85 +19,31 @@
         </java>
     </unique>
 
+    <filters>
+        <eq filter-id="id" mapping="[0]" field-id="id"/>
+        <eq filter-id="name" mapping="['criteria'].name" field-id="name"/>
+        <eq filter-id="code" mapping="['criteria'].code" field-id="code"/>
+        <eq filter-id="description" mapping="['criteria'].description" field-id="description"/>
+        <in mapping="['permissionIds']" filter-id="['criteria'].permissionIds" field-id="permissionIds"/>
+        <in filter-id="permissions*.id" domain="string[]" mapping="['criteria'].permissionCodes" field-id="permissions"/>
+        <eq filter-id="system.id" domain="string" mapping="['criteria'].systemCodes" field-id="system"/>
+        <eq filter-id="userLevel.id" domain="string" mapping="['criteria'].userLevel" field-id="userLevel.id"/>
+    </filters>
+
     <fields>
-        <field id="id" domain="integer">
-            <select mapping="id"/>
-            <sorting/>
-            <filters>
-                <eq filter-id="id" mapping="[0]"/>
-            </filters>
-        </field>
-        <field id="name" domain="string" name="Наименование">
-            <select mapping="name"/>
-            <sorting/>
-            <filters>
-                <eq filter-id="name" mapping="['criteria'].name"/>
-            </filters>
-        </field>
-        <field id="code" domain="string" name="Код">
-            <select mapping="code"/>
-            <filters>
-                <eq filter-id="code" mapping="['criteria'].code"/>
-            </filters>
-        </field>
-        <field id="description" domain="string" name="Описание">
-            <select/>
-            <sorting/>
-            <filters>
-                <eq filter-id="description" mapping="['criteria'].description"/>
-            </filters>
-        </field>
-
-        <field id="permissionIds" domain="string[]" name="Права">
-            <select mapping="['permissions'].![code]"/>
-            <filters>
-                <in mapping="['permissionIds']" filter-id="['criteria'].permissionIds"/>
-            </filters>
-        </field>
-
-        <field id="permissionNames" domain="string[]" name="Права">
-            <select mapping="['permissions'].![name]"/>
-        </field>
-
-
-        <field id="permissions" domain="object[]" name="Права">
-            <select mapping="['permissions']"/>
-            <filters>
-                <in filter-id="permissions*.id" domain="string[]" mapping="['criteria'].permissionCodes"/>
-            </filters>
-        </field>
-
-
-        <field id="permissions*.id">
-            <select mapping="permissions.![code]"/>
-        </field>
-        <field id="permissions*.name" >
-            <select mapping="permissions.![name]"/>
-        </field>
-
-        <field id="system" domain="object" name="Система">
-            <select mapping="['system']"/>
-            <filters>
-                <eq filter-id="system.id" domain="string" mapping="['criteria'].systemCodes"/>
-            </filters>
-        </field>
-
-        <field id="system.id" domain="string" name="Система">
-            <select mapping="system?.code"/>
-        </field>
-
-        <field id="systemName" domain="string" name="Система">
-            <select mapping="system?.name"/>
-        </field>
-
-        <field id="userLevel.name" domain="string" name="Уровень пользователя">
-            <select mapping="userLevel?.desc"/>
-        </field>
-        <field id="userLevel.id" domain="string" name="Уровень пользователя">
-            <select mapping="userLevel?.name"/>
-            <filters>
-                <eq filter-id="userLevel.id" domain="string" mapping="['criteria'].userLevel"/>
-            </filters>
-        </field>
+        <field id="id" domain="integer" sorting="true" mapping="id"/>
+        <field id="name" domain="string" name="Наименование" mapping="name" sorting="true"/>
+        <field id="code" domain="string" name="Код" mapping="code"/>
+        <field id="description" domain="string" name="Описание" mapping="description" sorting="true"/>
+        <field id="permissionIds" domain="string[]" name="Права" mapping="['permissions'].![code]"/>
+        <field id="permissionNames" domain="string[]" name="Права" mapping="['permissions'].![name]"/>
+        <field id="permissions" domain="object[]" name="Права" mapping="['permissions']"/>
+        <field id="permissions*.id" mapping="permissions.![code]"/>
+        <field id="permissions*.name" mapping="permissions.![name]"/>
+        <field id="system" domain="object" name="Система" mapping="['system']"/>
+        <field id="system.id" domain="string" name="Система" mapping="system?.code"/>
+        <field id="systemName" domain="string" name="Система" mapping="system?.name"/>
+        <field id="userLevel.name" domain="string" name="Уровень пользователя" mapping="userLevel?.desc"/>
+        <field id="userLevel.id" domain="string" name="Уровень пользователя" mapping="userLevel?.name"/>
     </fields>
 </query>

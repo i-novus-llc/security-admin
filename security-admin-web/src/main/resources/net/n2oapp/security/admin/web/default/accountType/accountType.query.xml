@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0">
+<query xmlns="http://n2oapp.net/framework/config/schema/query-5.0">
     <list result-mapping="['content']" count-mapping="['totalElements']">
         <java method="findAll" class="net.n2oapp.security.admin.api.service.AccountTypeService">
             <spring/>
@@ -19,46 +19,22 @@
         </java>
     </unique>
 
+    <filters>
+        <eq filter-id="id" mapping="[0]" field-id="id"/>
+        <like filter-id="code" mapping="['criteria'].code" field-id="code"/>
+        <like filter-id="name" mapping="['criteria'].name" field-id="name"/>
+        <eq filter-id="userLevel.id" domain="string" mapping="['criteria'].userLevel" field-id="userLevel.id"/>
+    </filters>
+
     <fields>
-        <field id="id" name="Идентификатор" domain="integer">
-            <select mapping="id"/>
-            <filters>
-                <eq filter-id="id" mapping="[0]"/>
-            </filters>
-        </field>
-        <field id="code" domain="string" name="Код">
-            <select mapping="code"/>
-            <filters>
-                <like filter-id="code" mapping="['criteria'].code"/>
-            </filters>
-        </field>
-        <field id="description" domain="string" name="Описание">
-            <select mapping="description"/>
-        </field>
-        <field id="name" domain="string" name="Наименование">
-            <select mapping="name"/>
-            <sorting/>
-            <filters>
-                <like filter-id="name" mapping="['criteria'].name"/>
-            </filters>
-        </field>
-        <field id="roles" domain="object[]">
-            <select mapping="roles"/>
-        </field>
-        <field id="orgRoles" domain="object[]">
-            <select mapping="orgRoles"/>
-        </field>
-        <field id="userLevel.name" domain="string">
-            <select mapping="userLevel?.desc"/>
-        </field>
-        <field id="userLevel.id" domain="string">
-            <select mapping="userLevel?.name"/>
-            <filters>
-                <eq filter-id="userLevel.id" domain="string" mapping="['criteria'].userLevel"/>
-            </filters>
-        </field>
-        <field id="status" domain="string">
-            <select mapping="status"/>
-        </field>
+        <field id="id" name="Идентификатор" domain="integer" mapping="id"/>
+        <field id="code" domain="string" name="Код" mapping="code"/>
+        <field id="description" domain="string" name="Описание" mapping="description"/>
+        <field id="name" domain="string" name="Наименование" mapping="name" sorting="true"/>
+        <field id="roles" domain="object[]" mapping="roles"/>
+        <field id="orgRoles" domain="object[]" mapping="orgRoles"/>
+        <field id="userLevel.name" domain="string" mapping="userLevel?.desc"/>
+        <field id="userLevel.id" domain="string" mapping="userLevel?.name"/>
+        <field id="status" domain="string" mapping="status"/>
     </fields>
 </query>

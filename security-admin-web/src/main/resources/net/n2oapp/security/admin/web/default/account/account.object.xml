@@ -65,9 +65,7 @@
             </out>
         </operation>
 
-        <operation id="delete"
-                   confirm-text="Вы уверены, что хотите удалить аккаунт?"
-                   success-text="Аккаунт удален">
+        <operation id="delete" success-text="Аккаунт удален">
             <invocation>
                 <java method="delete" class="net.n2oapp.security.admin.api.service.AccountService">
                     <spring/>
