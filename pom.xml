@@ -6,7 +6,7 @@
     <groupId>net.n2oapp.framework.security</groupId>
     <artifactId>security-admin</artifactId>
     <packaging>pom</packaging>
-    <version>4.20.1</version>
+    <version>4.20.2-SNAPSHOT</version>
 
     <parent>
         <groupId>net.n2oapp.platform</groupId>
@@ -32,7 +32,7 @@
         <connection>scm:git:https://git.i-novus.ru/framework/security-admin.git</connection>
         <url>https://git.i-novus.ru/framework/security-admin</url>
         <developerConnection>scm:git:https://git.i-novus.ru/framework/security-admin.git</developerConnection>
-        <tag>4.20.1</tag>
+        <tag>4.20.2-SNAPSHOT</tag>
     </scm>
 
     <modules>
