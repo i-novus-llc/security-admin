@@ -58,6 +58,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.github.blagerweij</groupId>
+            <artifactId>liquibase-sessionlock</artifactId>
+            <version>${liquibase-sessionlock.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>ru.i-novus.ms.rdm</groupId>
             <artifactId>rdm-sync-spring-boot-starter</artifactId>
             <version>${rdm.version}</version>
