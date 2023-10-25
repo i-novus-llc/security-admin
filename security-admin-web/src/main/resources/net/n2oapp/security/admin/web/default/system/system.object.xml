@@ -53,9 +53,7 @@
             <validations black-list="uniqSystemCode"/>
         </operation>
 
-        <operation id="delete"
-                   confirm-text="Вы уверены, что хотите удалить систему?"
-                   success-text="Система удалена">
+        <operation id="delete" success-text="Система удалена">
             <invocation>
                 <java method="deleteSystem" class="net.n2oapp.security.admin.api.service.SystemService">
                     <spring/>

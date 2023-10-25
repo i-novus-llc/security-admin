@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0"
+<query xmlns="http://n2oapp.net/framework/config/schema/query-5.0"
        object-id="${access.role.object.id}"
        name="Роли">
     <list result-mapping="['content']" count-mapping="['totalElements']">
@@ -11,70 +11,29 @@
         </java>
     </list>
 
+    <filters>
+        <eq filter-id="id" mapping="[0]" field-id="id"/>
+        <eq filter-id="name" mapping="['criteria'].name" field-id="name"/>
+        <eq filter-id="code" mapping="['criteria'].code" field-id="code"/>
+        <eq filter-id="description" mapping="['criteria'].description" field-id="description"/>
+        <eq filter-id="system.id" domain="string" mapping="['criteria'].systemCodes" field-id="system"/>
+        <eq filter-id="userLevel.id" domain="string" mapping="['criteria'].userLevel" field-id="userLevel.id"/>
+        <eq domain="boolean" mapping="['criteria'].groupBySystem" default-value="true" field-id="groupBySystem"/>
+        <eq domain="boolean" mapping="['criteria'].forForm" filter-id="forForm" field-id="forForm"/>
+    </filters>
+
     <fields>
-        <field id="id" domain="integer">
-            <select mapping="id"/>
-            <sorting/>
-            <filters>
-                <eq filter-id="id" mapping="[0]"/>
-            </filters>
-        </field>
-        <field id="name" domain="string" name="Название">
-            <select mapping="name"/>
-            <sorting/>
-            <filters>
-                <eq filter-id="name" mapping="['criteria'].name"/>
-            </filters>
-        </field>
-        <field id="code" domain="string" name="Код">
-            <select mapping="code"/>
-            <filters>
-                <eq filter-id="code" mapping="['criteria'].code"/>
-            </filters>
-        </field>
-        <field id="description" domain="string" name="Описание">
-            <select/>
-            <sorting/>
-            <filters>
-                <eq filter-id="description" mapping="['criteria'].description"/>
-            </filters>
-        </field>
+        <field id="id" domain="integer" sorting="true" mapping="id"/>
+        <field id="name" domain="string" name="Название" sorting="true" mapping="name"/>
+        <field id="code" domain="string" name="Код" mapping="code"/>
+        <field id="description" domain="string" name="Описание" sorting="true" mapping="description"/>
+        <field id="system" domain="object" name="Система" mapping="['system']"/>
+        <field id="systemId" domain="string" name="Система" mapping="system?.code"/>
+        <field id="systemName" domain="string" name="Система" mapping="system?.name"/>
+        <field id="userLevel.name" domain="string" name="Уровень пользователя" mapping="userLevel?.desc"/>
+        <field id="userLevel.id" domain="string" name="Уровень пользователя" mapping="userLevel?.name"/>
 
-
-        <field id="system" domain="object" name="Система">
-            <select mapping="['system']"/>
-            <filters>
-                <eq filter-id="system.id" domain="string" mapping="['criteria'].systemCodes"/>
-            </filters>
-        </field>
-
-        <field id="systemId" domain="string" name="Система">
-            <select mapping="system?.code"/>
-        </field>
-
-        <field id="systemName" domain="string" name="Система">
-            <select mapping="system?.name"/>
-        </field>
-
-        <field id="userLevel.name" domain="string" name="Уровень пользователя">
-            <select mapping="userLevel?.desc"/>
-        </field>
-        <field id="userLevel.id" domain="string" name="Уровень пользователя">
-            <select mapping="userLevel?.name"/>
-            <filters>
-                <eq filter-id="userLevel.id" domain="string" mapping="['criteria'].userLevel"/>
-            </filters>
-        </field>
-
-        <field id="groupBySystem" domain="boolean">
-            <filters>
-                <eq domain="boolean" mapping="['criteria'].groupBySystem" default-value="true"/>
-            </filters>
-        </field>
-        <field id="forForm" domain="boolean">
-            <filters>
-                <eq domain="boolean" mapping="['criteria'].forForm" filter-id="forForm"/>
-            </filters>
-        </field>
+        <field id="groupBySystem" domain="boolean" select="false"/>
+        <field id="forForm" domain="boolean" select="false"/>
     </fields>
 </query>

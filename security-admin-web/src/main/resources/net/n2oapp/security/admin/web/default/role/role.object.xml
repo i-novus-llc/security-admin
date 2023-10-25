@@ -54,9 +54,7 @@
             </out>
         </operation>
 
-        <operation id="delete"
-                   confirm-text="Вы уверены, что хотите удалить роль?"
-                   success-text="Роль удалена">
+        <operation id="delete" success-text="Роль удалена">
             <invocation>
                 <java method="delete" class="net.n2oapp.security.admin.api.service.RoleService">
                     <spring/>

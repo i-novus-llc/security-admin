@@ -25,13 +25,20 @@
             </columns>
             <rows>
                 <click>
-                    <show-modal page-id="organizationUpdateForm"
-                                submit-operation-id="update"
-                                object-id="organization"
-                                route="/:id/update">
+                    <show-modal page-id="organizationUpdateForm" route="/:id/update">
                         <params>
                             <path-param name="id" value="{id}"/>
                         </params>
+                        <toolbars>
+                            <toolbar>
+                                <button label="Сохранить" color="primary">
+                                    <invoke operation-id="update" close-on-success="true" object-id="organization"/>
+                                </button>
+                                <button label="Закрыть" validate="false">
+                                    <close/>
+                                </button>
+                            </toolbar>
+                        </toolbars>
                     </show-modal>
                 </click>
             </rows>
@@ -48,10 +55,18 @@
                         color="primary"
                         disable-on-empty-model="false"
                         pointer:organization-persist-function="true">
-                    <show-modal page-id="organizationForm"
-                                submit-operation-id="create"
-                                object-id="organization"
-                                route="create"/>
+                    <show-modal page-id="organizationForm" route="create">
+                        <toolbars>
+                            <toolbar>
+                                <button label="Сохранить" color="primary">
+                                    <invoke operation-id="create" close-on-success="true" object-id="organization"/>
+                                </button>
+                                <button label="Закрыть" validate="false">
+                                    <close/>
+                                </button>
+                            </toolbar>
+                        </toolbars>
+                    </show-modal>
                 </button>
             </toolbar>
         </table>

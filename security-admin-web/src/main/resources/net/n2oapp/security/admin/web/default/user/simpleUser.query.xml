@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<query xmlns="http://n2oapp.net/framework/config/schema/query-4.0"
+<query xmlns="http://n2oapp.net/framework/config/schema/query-5.0"
        name="Временный пароль" object-id="user">
     <unique result-mapping="#this">
         <java method="loadSimpleDetails" class="net.n2oapp.security.admin.api.service.UserService">
@@ -10,25 +10,16 @@
         </java>
     </unique>
 
+    <filters>
+        <eq filter-id="id" mapping="[0]" field-id="id"/>
+
+    </filters>
+
     <fields>
-        <field id="id" domain="integer">
-            <select mapping="id"/>
-            <filters>
-                <eq filter-id="id" mapping="[0]"/>
-            </filters>
-        </field>
-
-        <field id="username" domain="string">
-            <select mapping="username"/>
-        </field>
-
-        <field id="email" domain="string">
-            <select mapping="email"/>
-        </field>
-
-        <field id="temporaryPassword" domain="string">
-            <select mapping="temporaryPassword"/>
-        </field>
+        <field id="id" domain="integer" mapping="id"/>
+        <field id="username" domain="string" mapping="username"/>
+        <field id="email" domain="string" mapping="email"/>
+        <field id="temporaryPassword" domain="string" mapping="temporaryPassword"/>
     </fields>
 
 </query>

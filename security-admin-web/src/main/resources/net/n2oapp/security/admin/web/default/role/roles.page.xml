@@ -6,8 +6,18 @@
             <datasource query-id="role" object-id="role"/>
             <toolbar>
                 <button label="Создать" color="primary" disable-on-empty-model="false">
-                    <show-modal page-id="roleForm" submit-operation-id="create"
-                                object-id="role"/>
+                    <show-modal page-id="roleForm">
+                        <toolbars>
+                            <toolbar>
+                                <button label="Сохранить" color="primary">
+                                    <invoke operation-id="create" close-on-success="true" object-id="role"/>
+                                </button>
+                                <button label="Закрыть" validate="false">
+                                    <close/>
+                                </button>
+                            </toolbar>
+                        </toolbars>
+                    </show-modal>
                 </button>
             </toolbar>
 
@@ -30,11 +40,20 @@
             </columns>
             <rows>
                 <click>
-                    <show-modal page-id="roleFormUpdate" submit-operation-id="update" object-id="role"
-                                route="/:role_id/update">
+                    <show-modal page-id="roleFormUpdate" route="/:role_id/update">
                         <params>
                             <path-param name="role_id" value="{id}"/>
                         </params>
+                        <toolbars>
+                            <toolbar>
+                                <button label="Сохранить" color="primary">
+                                    <invoke operation-id="update" close-on-success="true" object-id="role"/>
+                                </button>
+                                <button label="Закрыть" validate="false">
+                                    <close/>
+                                </button>
+                            </toolbar>
+                        </toolbars>
                     </show-modal>
                 </click>
             </rows>
