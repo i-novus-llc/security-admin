@@ -47,7 +47,6 @@
         <module>security-admin-db</module>
         <module>security-admin-backend</module>
         <module>security-admin-frontend</module>
-        <module>keycloak-theme</module>
         <module>doc</module>
         <module>coverage</module>
         <module>security-autoconfigure</module>

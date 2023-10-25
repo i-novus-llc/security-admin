@@ -160,15 +160,6 @@ public class KeycloakSsoUserRoleProvider implements SsoUserRoleProvider {
         }
     }
 
-    @Override
-    public void startSynchronization() {
-        try {
-            schedulerFactoryBean.getScheduler().triggerJob(new JobKey(SsoKeycloakConfiguration.USER_SYNCHRONIZE_JOB_DETAIL));
-        } catch (SchedulerException e) {
-            throw new UserException("exception.failedSyncStart", e);
-        }
-    }
-
     private void throwUserException(HttpClientErrorException exception) {
         try {
             Map<String, String> map = objectMapper.readValue(exception.getResponseBodyAsString(), new TypeReference<Map<String, String>>() {
