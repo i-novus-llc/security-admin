@@ -4,7 +4,7 @@
     <parent>
         <groupId>net.n2oapp.framework.security</groupId>
         <artifactId>security-admin</artifactId>
-        <version>7.1.2-SNAPSHOT</version>
+        <version>7.1.2</version>
     </parent>
 
     <artifactId>security-starters</artifactId>
