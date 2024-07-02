@@ -16,6 +16,16 @@
         <jacoco.skip>false</jacoco.skip>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>net.n2oapp.criteria</groupId>
+                <artifactId>criteria-api</artifactId>
+                <version>7.20.13</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>net.n2oapp.framework.security</groupId>
