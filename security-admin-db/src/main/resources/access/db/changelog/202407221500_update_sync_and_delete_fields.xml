@@ -1,0 +1,111 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="SECURITY-464-20240722-add_department_sync_delete_field" author="aarifullin">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists schemaName="sec" tableName="department" columnName="deleted_ts"/>
+            </not>
+        </preConditions>
+        <sql>
+            ALTER TABLE sec.department
+                ADD COLUMN deleted_ts timestamp without time zone;
+            ALTER TABLE sec.department
+                ADD COLUMN rdm_sync_internal_local_row_state character varying NOT NULL DEFAULT 'DIRTY'::character varying;
+        </sql>
+    </changeSet>
+    <changeSet id="SECURITY-464-20240722-department_delete_field_migration_and_drop" author="aarifullin">
+        <preConditions onFail="MARK_RAN">
+            <columnExists schemaName="sec" tableName="department" columnName="is_deleted"/>
+        </preConditions>
+        <sql>
+            UPDATE sec.department
+            SET deleted_ts = NOW()::timestamp without time zone
+            WHERE is_deleted = true;
+            ALTER TABLE sec.department DROP COLUMN is_deleted;
+        </sql>
+    </changeSet>
+
+
+    <changeSet id="SECURITY-464-20240722-add_org_category_sync_delete_field" author="aarifullin">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists schemaName="sec" tableName="org_category" columnName="deleted_ts"/>
+            </not>
+        </preConditions>
+        <sql>
+            ALTER TABLE sec.org_category
+                ADD COLUMN deleted_ts timestamp without time zone;
+            ALTER TABLE sec.org_category
+                ADD COLUMN rdm_sync_internal_local_row_state character varying NOT NULL DEFAULT 'DIRTY'::character varying;
+
+
+        </sql>
+    </changeSet>
+    <changeSet id="SECURITY-464-20240722-org_category_delete_field_migration_and_drop" author="aarifullin">
+        <preConditions onFail="MARK_RAN">
+            <columnExists schemaName="sec" tableName="org_category" columnName="is_deleted"/>
+        </preConditions>
+        <sql>
+            UPDATE sec.org_category
+            SET deleted_ts = NOW()::timestamp without time zone
+            WHERE is_deleted = true;
+            ALTER TABLE sec.org_category DROP COLUMN is_deleted;
+        </sql>
+    </changeSet>
+
+
+    <changeSet id="SECURITY-464-20240722-add_organization_sync_delete_field" author="aarifullin">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists schemaName="sec" tableName="organization" columnName="deleted_ts"/>
+            </not>
+        </preConditions>
+        <sql>
+            ALTER TABLE sec.organization
+                ADD COLUMN deleted_ts timestamp without time zone;
+            ALTER TABLE sec.organization
+                ADD COLUMN rdm_sync_internal_local_row_state character varying NOT NULL DEFAULT 'DIRTY'::character varying;
+        </sql>
+    </changeSet>
+    <changeSet id="SECURITY-464-20240722-organization_delete_field_migration_and_drop" author="aarifullin">
+        <preConditions onFail="MARK_RAN">
+            <columnExists schemaName="sec" tableName="organization" columnName="is_deleted"/>
+        </preConditions>
+        <sql>
+            UPDATE sec.organization
+            SET deleted_ts = NOW()::timestamp without time zone
+            WHERE is_deleted = true;
+            ALTER TABLE sec.organization DROP COLUMN is_deleted;
+        </sql>
+    </changeSet>
+
+
+    <changeSet id="SECURITY-464-20240722-add_region_sync_delete_field" author="aarifullin">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists schemaName="sec" tableName="region" columnName="deleted_ts"/>
+            </not>
+        </preConditions>
+        <sql>
+            ALTER TABLE sec.region
+                ADD COLUMN deleted_ts timestamp without time zone;
+            ALTER TABLE sec.region
+                ADD COLUMN rdm_sync_internal_local_row_state character varying NOT NULL DEFAULT 'DIRTY'::character varying;
+        </sql>
+    </changeSet>
+    <changeSet id="SECURITY-464-20240722-region_delete_field_migration_and_drop" author="aarifullin">
+        <preConditions onFail="MARK_RAN">
+            <columnExists schemaName="sec" tableName="region" columnName="is_deleted"/>
+        </preConditions>
+        <sql>
+            UPDATE sec.region
+            SET deleted_ts = NOW()::timestamp without time zone
+            WHERE is_deleted = true;
+            ALTER TABLE sec.region DROP COLUMN is_deleted;
+        </sql>
+    </changeSet>
+</databaseChangeLog>
