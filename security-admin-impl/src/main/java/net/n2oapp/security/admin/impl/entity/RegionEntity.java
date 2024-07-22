@@ -3,6 +3,7 @@ package net.n2oapp.security.admin.impl.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.n2oapp.security.admin.impl.entity.base.RdmBaseEntity;
 
 import javax.persistence.*;
 
@@ -14,7 +15,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @Table(name = "region", schema = "sec")
-public class RegionEntity {
+public class RegionEntity extends RdmBaseEntity {
     /**
      * Уникальный идентификатор записи
      */
@@ -40,12 +41,6 @@ public class RegionEntity {
      */
     @Column(name = "OKATO")
     private String okato;
-
-    /**
-     * Признак что запись была удалена из справочника
-     */
-    @Column(name = "is_deleted")
-    private Boolean isDeleted;
 
     public RegionEntity(Integer id) {
         this.id = id;

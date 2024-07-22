@@ -130,4 +130,6 @@
         <sqlFile path="access/db/changelog/sql/V10_add_column_user_table.sql"/>
     </changeSet>
 
+    <include file="access/db/changelog/202407221500_update_sync_and_delete_fields.xml"/>
+
 </databaseChangeLog>

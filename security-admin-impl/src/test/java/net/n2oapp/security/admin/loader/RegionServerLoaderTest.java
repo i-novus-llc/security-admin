@@ -66,11 +66,11 @@ public class RegionServerLoaderTest {
         assertEquals("01", regions.get(n).getCode());
         assertEquals("Республика Татарстан", regions.get(n).getName());
         assertEquals("92000000000", regions.get(n).getOkato());
-        assertNull(regions.get(n).getIsDeleted());
+        assertNull(regions.get(n).getDeletionDate());
         assertEquals("002", regions.get(n + 1).getCode());
         assertEquals("Республика Тыва", regions.get(n + 1).getName());
         assertEquals("93000000000", regions.get(n + 1).getOkato());
-        assertNull(regions.get(n + 1).getIsDeleted());
+        assertNull(regions.get(n + 1).getDeletionDate());
     }
 
     @Test

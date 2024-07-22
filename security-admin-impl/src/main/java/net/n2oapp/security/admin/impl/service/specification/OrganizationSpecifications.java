@@ -2,6 +2,7 @@ package net.n2oapp.security.admin.impl.service.specification;
 
 import net.n2oapp.security.admin.api.criteria.OrganizationCriteria;
 import net.n2oapp.security.admin.impl.entity.*;
+import net.n2oapp.security.admin.impl.entity.base.RdmBaseEntity_;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.CollectionUtils;
 
@@ -55,7 +56,7 @@ public class OrganizationSpecifications implements Specification<OrganizationEnt
             predicate = builder.and(predicate, builder.exists(subquery));
         }
 
-        predicate = builder.and(predicate, builder.or(builder.equal(root.get(OrganizationEntity_.isDeleted), Boolean.FALSE), builder.isNull(root.get(OrganizationEntity_.isDeleted))));
+        predicate = builder.and(predicate, builder.isNull(root.get(RdmBaseEntity_.deletionDate)));
         return predicate;
     }
 }

@@ -3,6 +3,7 @@ package net.n2oapp.security.admin.impl.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.n2oapp.security.admin.impl.entity.base.RdmBaseEntity;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -17,7 +18,7 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @Table(name = "organization", schema = "sec")
-public class OrganizationEntity implements Serializable {
+public class OrganizationEntity extends RdmBaseEntity implements Serializable {
     /**
      * Уникальный идентификатор записи
      */
@@ -108,12 +109,6 @@ public class OrganizationEntity implements Serializable {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "organization")
     private List<AccountEntity> accounts;
-
-    /**
-     * Признак что запись была удалена из справочника
-     */
-    @Column(name = "is_deleted")
-    private Boolean isDeleted;
 
     public OrganizationEntity(Integer id) {
         this.id = id;
