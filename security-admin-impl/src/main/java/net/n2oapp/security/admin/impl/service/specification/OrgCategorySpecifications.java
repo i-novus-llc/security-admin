@@ -3,6 +3,7 @@ package net.n2oapp.security.admin.impl.service.specification;
 import net.n2oapp.security.admin.api.criteria.OrgCategoryCriteria;
 import net.n2oapp.security.admin.impl.entity.OrgCategoryEntity;
 import net.n2oapp.security.admin.impl.entity.OrgCategoryEntity_;
+import net.n2oapp.security.admin.impl.entity.base.RdmBaseEntity_;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -27,7 +28,7 @@ public class OrgCategorySpecifications implements Specification<OrgCategoryEntit
         if (criteria.getName() != null)
             predicate = builder.and(predicate, builder.like(builder.lower(root.get(OrgCategoryEntity_.name)), "%" + criteria.getName().toLowerCase() + "%"));
 
-        predicate = builder.and(predicate, builder.or(builder.equal(root.get(OrgCategoryEntity_.isDeleted), Boolean.FALSE), builder.isNull(root.get(OrgCategoryEntity_.isDeleted))));
+        predicate = builder.and(predicate, builder.isNull(root.get(RdmBaseEntity_.deletionDate)));
         return predicate;
     }
 }
