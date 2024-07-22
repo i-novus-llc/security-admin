@@ -16,9 +16,9 @@ VALUES ('user', 'code1', 'description1');
 INSERT INTO sec.role(name, code, description, system_code)
 VALUES ('admin', 'code2', 'description2', 'system2');
 
-INSERT INTO sec.region(id, code, name, okato, is_deleted)
-VALUES (1, 'test_code', 'test_name', 'test_okato', false),
-       (2, 'test_code2', 'test_name2', 'test_okato2', true);
+INSERT INTO sec.region(id, code, name, okato, deleted_ts)
+VALUES (1, 'test_code', 'test_name', 'test_okato', null),
+       (2, 'test_code2', 'test_name2', 'test_okato2', '2021-05-23 12:11:00');
 SELECT setval('sec.region_id_seq', 3, false);
 
 --USER
@@ -52,9 +52,9 @@ VALUES (101, 'test-code1');
 INSERT INTO sec.role_permission(role_id, permission_code)
 VALUES (102, 'test-code2');
 
-INSERT INTO sec.department(id, code, name, is_deleted)
-VALUES (1, 'test_code', 'test_name', false),
-       (2, 'test_code2', 'test_name2', true);
+INSERT INTO sec.department(id, code, name, deleted_ts)
+VALUES (1, 'test_code', 'test_name', null),
+       (2, 'test_code2', 'test_name2', '2021-05-23 12:11:00');
 
 INSERT INTO sec.organization(code, short_name, full_name, ogrn, okpo, legal_address, email, inn)
 VALUES ('test_code', 'test_short_name', 'test_full_name', 'test_ogrn', 'test_okpo', 'test_legal_address', 'test_email',
