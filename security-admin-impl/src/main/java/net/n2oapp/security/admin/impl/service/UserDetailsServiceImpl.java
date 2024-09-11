@@ -154,8 +154,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         model.setCode(entity.getCode());
         model.setName(entity.getName());
         model.setDescription(entity.getDescription());
-        if (nonNull(entity.getSystemCode()))
-            model.setSystem(new AppSystem(entity.getSystemCode().getCode()));
+        if (nonNull(entity.getSystem()))
+            model.setSystem(new AppSystem(entity.getSystem().getCode()));
         if (permissionEnabled && nonNull(entity.getPermissionList())) {
             model.setPermissions(entity.getPermissionList().stream().map(this::model).collect(Collectors.toList()));
         }

@@ -29,6 +29,11 @@ public class RoleRestServiceImpl implements RoleRestService {
     }
 
     @Override
+    public Role getByIdWithSystem(Integer id) {
+        return service.getByIdWithSystem(id);
+    }
+
+    @Override
     public Role create(RoleForm role) {
         return service.create(role);
     }

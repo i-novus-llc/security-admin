@@ -10,6 +10,14 @@
             </arguments>
         </java>
     </list>
+    <unique>
+        <java method="getByIdWithSystem" class="net.n2oapp.security.admin.api.service.RoleService">
+            <spring/>
+            <arguments>
+                <argument type="primitive" name="id"/>
+            </arguments>
+        </java>
+    </unique>
 
     <filters>
         <eq filter-id="id" mapping="[0]" field-id="id"/>

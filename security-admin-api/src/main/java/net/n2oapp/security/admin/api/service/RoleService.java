@@ -57,6 +57,15 @@ public interface RoleService {
     Role getById(Integer id);
 
     /**
+     * Получить роль или систему смапленную в роль по идентификатору
+     * Нужен для восстановления лейбла при обновлении страницы n2o
+     *
+     * @param id Идентификатор роли
+     * @return Модель роли
+     */
+    Role getByIdWithSystem(Integer id);
+
+    /**
      * Найти все роли по критериям поиска
      *
      * @param criteria Критерии поиска

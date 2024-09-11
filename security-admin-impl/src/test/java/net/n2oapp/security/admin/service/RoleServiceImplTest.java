@@ -135,6 +135,11 @@ public class RoleServiceImplTest extends UserRoleServiceTestBase {
         assertThrows(NotFoundException.class, () -> roleService.getById(-1));
     }
 
+    @Test
+    public void getSystemAsRole() {
+        assertEquals("system1",roleService.getByIdWithSystem(-1).getCode());
+    }
+
     /**
      * Проверка, что удаление роли по несуществующему идентификатору приводит к NotFoundException
      */

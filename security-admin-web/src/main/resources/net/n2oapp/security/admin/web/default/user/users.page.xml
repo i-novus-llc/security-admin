@@ -99,6 +99,7 @@
                                        search-field-id="name" size="1000">
                         <filters>
                             <eq field-id="system" value="{system.id}"/>
+                            <eq field-id="groupBySystem" value="true"/>
                         </filters>
                     </input-select-tree>
 

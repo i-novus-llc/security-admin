@@ -47,6 +47,15 @@ public interface RoleRestService {
     })
     Role getById(@ApiParam(value = "Идентификатор") @PathParam("id") Integer id);
 
+    @GET
+    @Path("/labelResolving/{id}")
+    @ApiOperation(value = "Получить роль по идентификатору",notes = "Нужен для восстановления лейбла при обновлении страницы n2o ", hidden = true)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Роль"),
+            @ApiResponse(code = 404, message = "Роль не найдена")
+    })
+    Role getByIdWithSystem(@ApiParam(value = "Идентификатор") @PathParam("id") Integer id);
+
     @POST
     @Path("/")
     @ApiOperation("Создать роль")
