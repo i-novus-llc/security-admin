@@ -40,6 +40,11 @@ public class RoleServiceRestClient implements RoleService {
     }
 
     @Override
+    public Role getByIdWithSystem(Integer id) {
+        return client.getByIdWithSystem(id);
+    }
+
+    @Override
     public Page<Role> findAll(RoleCriteria criteria) {
         return client.findAll(toRestCriteria(criteria));
     }

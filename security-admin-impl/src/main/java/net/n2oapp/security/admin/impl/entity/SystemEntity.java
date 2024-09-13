@@ -28,6 +28,12 @@ public class SystemEntity {
     private String code;
 
     /**
+     * Числовый код системы
+     */
+    @Column(name = "int_code", insertable = false, updatable = false)
+    private Integer intCode;
+
+    /**
      * Наименование системы
      */
     @NotNull

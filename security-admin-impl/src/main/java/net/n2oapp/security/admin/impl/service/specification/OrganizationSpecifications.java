@@ -39,7 +39,7 @@ public class OrganizationSpecifications implements Specification<OrganizationEnt
             Root subRoot = subquery.from(RoleEntity.class);
             //            todo SECURITY-396
 //            ListJoin<RoleEntity, UserEntity> listJoin = subRoot.join(RoleEntity_.userList);
-            subquery.select(subRoot.get(RoleEntity_.systemCode));
+            subquery.select(subRoot.get(RoleEntity_.system));
             //        todo SECURITY-396
 //            subquery.where(builder.and(builder.equal(root.get(OrganizationEntity_.id), listJoin.get(UserEntity_.organization)),
 //                    subRoot.get(RoleEntity_.systemCode).get(SystemEntity_.CODE).in(criteria.getSystemCodes())));

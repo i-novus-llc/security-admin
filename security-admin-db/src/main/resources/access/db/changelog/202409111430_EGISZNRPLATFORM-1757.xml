@@ -1,0 +1,18 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="EGISZNRPLATFORM-1757_add_int_code_to_system" author="rsafin">
+        <sql>
+            CREATE SEQUENCE sec.seq_system_code INCREMENT 1 START 1;
+
+            ALTER TABLE sec.system
+            ADD COLUMN int_code integer NOT NULL DEFAULT nextval('sec.seq_system_code');
+
+            ALTER SEQUENCE sec.seq_system_code OWNED BY sec.system.int_code;
+
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

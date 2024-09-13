@@ -51,6 +51,7 @@
                                        search-field-id="name" size="1000">
                         <filters>
                             <eq field-id="userLevel.id" value="{userLevel.id}"/>
+                            <eq field-id="groupBySystem" value="true"/>
                         </filters>
                         <dependencies>
                             <set-value on="userLevel" apply-on-init="false">return null;</set-value>

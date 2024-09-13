@@ -57,7 +57,7 @@ public class RoleEntity {
      */
     @JoinColumn(name = "system_code")
     @ManyToOne(fetch = FetchType.EAGER)
-    private SystemEntity systemCode;
+    private SystemEntity system;
 
     /**
      * Права доступа роли

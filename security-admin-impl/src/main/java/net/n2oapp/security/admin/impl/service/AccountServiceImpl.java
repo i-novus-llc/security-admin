@@ -124,8 +124,8 @@ public class AccountServiceImpl implements AccountService {
         model.setName(entity.getName());
         model.setDescription(entity.getDescription());
         model.setNameWithSystem(entity.getName());
-        if (nonNull(entity.getSystemCode()))
-            model.setNameWithSystem(model.getNameWithSystem() + "(" + entity.getSystemCode().getName() + ")");
+        if (nonNull(entity.getSystem()))
+            model.setNameWithSystem(model.getNameWithSystem() + "(" + entity.getSystem().getName() + ")");
 
         return model;
     }
