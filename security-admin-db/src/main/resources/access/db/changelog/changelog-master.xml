@@ -135,5 +135,6 @@
     </changeSet>
     
     <include file="access/db/changelog/202407221500_update_sync_and_delete_fields.xml"/>
-    
+    <include file="access/db/changelog/202409111430_EGISZNRPLATFORM-1757.xml"/>
+
 </databaseChangeLog>

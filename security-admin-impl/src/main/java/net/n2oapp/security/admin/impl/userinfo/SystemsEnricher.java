@@ -29,8 +29,8 @@ public class SystemsEnricher implements UserInfoEnricher<AccountEntity> {
                 systems.addAll(source.getRoleList().stream().filter(r -> nonNull(r.getPermissionList())).flatMap(r -> r.getPermissionList().stream())
                         .filter(permission -> nonNull(permission.getSystemCode())).map(p -> p.getSystemCode().getCode()).collect(Collectors.toList()));
             }
-            systems.addAll(source.getRoleList().stream().filter(role -> nonNull(role.getSystemCode())).
-                    map(role -> (role.getSystemCode().getCode())).collect(Collectors.toList()));
+            systems.addAll(source.getRoleList().stream().filter(role -> nonNull(role.getSystem())).
+                    map(role -> (role.getSystem().getCode())).collect(Collectors.toList()));
             systems = systems.stream().distinct().collect(Collectors.toList());
             if (!CollectionUtils.isEmpty(systems))
                 return systems;

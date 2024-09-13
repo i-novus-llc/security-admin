@@ -41,7 +41,7 @@ public class RoleSpecifications implements Specification<RoleEntity> {
         if (criteria.getSystemCodes() != null && !criteria.getSystemCodes().isEmpty()) {
             Predicate systemPredicate = builder.or();
             for (String system : criteria.getSystemCodes()) {
-                systemPredicate = builder.or(systemPredicate, builder.equal(root.get(RoleEntity_.systemCode).get(SystemEntity_.CODE), system));
+                systemPredicate = builder.or(systemPredicate, builder.equal(root.get(RoleEntity_.system).get(SystemEntity_.CODE), system));
             }
             predicate = builder.and(predicate, systemPredicate);
         }

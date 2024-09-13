@@ -39,10 +39,11 @@
                                    query-id="roleGroupedBySystem"
                                    search-field-id="name"
                                    size="1000">
-                    <pre-filters>
+                    <filters>
                         <eq field-id="userLevel.id" value="{rolesFilterValue}"/>
                         <eq field-id="forForm" value="true"/>
-                    </pre-filters>
+                        <eq field-id="groupBySystem" value="true"/>
+                    </filters>
                 </input-select-tree>
             </row>
             <hidden id="rolesFilterValue">

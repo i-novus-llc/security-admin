@@ -74,7 +74,7 @@ public class UserSpecifications implements Specification<UserEntity> {
 
         if (!CollectionUtils.isEmpty(criteria.getSystems())) {
             roleSubQueryPredicate = builder.and(roleSubQueryPredicate,
-                    roleSubqueryRoot.get(RoleEntity_.systemCode).get(SystemEntity_.code).in(criteria.getSystems()));
+                    roleSubqueryRoot.get(RoleEntity_.system).get(SystemEntity_.code).in(criteria.getSystems()));
         }
 
 //        if (criteria.getExtSys() != null) {

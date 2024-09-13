@@ -54,6 +54,7 @@
                     <filters>
                         <eq field-id="userLevel.id" value="{rolesFilterValue}"/>
                         <eq field-id="forForm" value="true"/>
+                        <eq field-id="groupBySystem" value="true"/>
                     </filters>
                     <dependencies>
                         <set-value on="accountType" apply-on-init="false">
