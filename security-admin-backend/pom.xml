@@ -74,17 +74,17 @@
             <version>${liquibase-sessionlock.version}</version>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>ru.i-novus.ms.rdm.sync</groupId>-->
-<!--            <artifactId>rdm-sync-spring-boot-starter</artifactId>-->
-<!--            <version>${rdm.version}</version>-->
-<!--            <exclusions>-->
-<!--                <exclusion>-->
-<!--                    <groupId>junit</groupId>-->
-<!--                    <artifactId>junit</artifactId>-->
-<!--                </exclusion>-->
-<!--            </exclusions>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>ru.i-novus.ms.rdm.sync</groupId>
+            <artifactId>rdm-sync-spring-boot-starter</artifactId>
+            <version>${rdm.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
