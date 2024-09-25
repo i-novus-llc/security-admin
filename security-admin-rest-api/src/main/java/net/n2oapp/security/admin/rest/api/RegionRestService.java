@@ -19,12 +19,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.Authorization;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import net.n2oapp.security.admin.api.model.Region;
 import net.n2oapp.security.admin.rest.api.criteria.RestRegionCriteria;
 import org.springframework.data.domain.Page;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 
 /**
  * REST сервис управления регионами

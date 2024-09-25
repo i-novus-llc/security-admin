@@ -5,11 +5,11 @@ import net.n2oapp.framework.api.metadata.Source;
 import net.n2oapp.framework.api.metadata.aware.SourceClassAware;
 import net.n2oapp.framework.api.metadata.compile.SourceProcessor;
 import net.n2oapp.framework.api.metadata.compile.SourceTransformer;
-import net.n2oapp.framework.api.metadata.global.view.action.LabelType;
 import net.n2oapp.framework.api.metadata.global.view.widget.toolbar.N2oButton;
 import org.jdom2.Namespace;
 
 import static java.util.Objects.nonNull;
+import static org.springframework.util.StringUtils.hasText;
 
 public class OrganizationPersistButtonSourceTransformer implements SourceTransformer<N2oButton>, SourceClassAware {
 
@@ -17,7 +17,7 @@ public class OrganizationPersistButtonSourceTransformer implements SourceTransfo
 
     @Override
     public N2oButton transform(N2oButton source, SourceProcessor p) {
-        if (LabelType.ICON.equals(source.getType()))
+        if (hasText(source.getIcon()))
             source.setVisible("{" + Boolean.FALSE + "}");
         else
             source.setVisible(Boolean.FALSE.toString());

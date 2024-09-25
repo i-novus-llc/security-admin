@@ -1,6 +1,8 @@
 package net.n2oapp.security.admin.impl.provider;
 
-import net.n2oapp.platform.test.autoconfigure.pg.EnableEmbeddedPg;
+import jakarta.mail.Session;
+import jakarta.mail.internet.MimeMessage;
+import net.n2oapp.platform.test.autoconfigure.pg.EnableTestcontainersPg;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
@@ -22,8 +24,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.support.TestPropertySourceUtils;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.mail.Session;
-import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ContextConfiguration(initializers = SimpleSsoUserRoleProviderTest.SecurityAdminContextInitializer.class)
 @TestPropertySource("classpath:test.properties")
-@EnableEmbeddedPg
+@EnableTestcontainersPg
 public class SimpleSsoUserRoleProviderTest extends UserRoleServiceTestBase {
 
     @Captor

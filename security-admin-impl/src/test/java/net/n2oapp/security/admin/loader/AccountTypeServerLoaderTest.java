@@ -1,6 +1,6 @@
 package net.n2oapp.security.admin.loader;
 
-import net.n2oapp.platform.test.autoconfigure.pg.EnableEmbeddedPg;
+import net.n2oapp.platform.test.autoconfigure.pg.EnableTestcontainersPg;
 import net.n2oapp.security.admin.TestApplication;
 import net.n2oapp.security.admin.api.criteria.AccountTypeCriteria;
 import net.n2oapp.security.admin.api.model.AccountType;
@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test.properties")
-@EnableEmbeddedPg
+@EnableTestcontainersPg
 public class AccountTypeServerLoaderTest {
 
     @Autowired

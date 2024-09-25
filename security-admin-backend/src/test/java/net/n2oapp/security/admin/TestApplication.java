@@ -1,11 +1,10 @@
 package net.n2oapp.security.admin;
 
-import net.n2oapp.platform.test.autoconfigure.pg.EnableEmbeddedPg;
-import org.apache.cxf.bus.spring.SpringBus;
+import net.n2oapp.platform.test.autoconfigure.pg.TestcontainersPgAutoConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import ru.i_novus.ms.rdm.api.service.DraftService;
 import ru.i_novus.ms.rdm.api.service.PublishService;
 import ru.i_novus.ms.rdm.api.service.RefBookService;
@@ -17,7 +16,7 @@ import ru.i_novus.ms.rdm.sync.service.change_data.RdmChangeDataClient;
  * Стартовая точка запуска Spring Boot
  */
 @SpringBootApplication(exclude = RdmClientSyncAutoConfiguration.class)
-@EnableEmbeddedPg
+@Import(TestcontainersPgAutoConfiguration.class)
 public class TestApplication {
 
     @MockBean
@@ -33,10 +32,5 @@ public class TestApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(TestApplication.class, args);
-    }
-
-    @Bean
-    public SpringBus cxf() {
-        return new SpringBus();
     }
 }

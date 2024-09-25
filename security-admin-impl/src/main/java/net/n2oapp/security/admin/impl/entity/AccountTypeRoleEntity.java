@@ -1,10 +1,10 @@
 package net.n2oapp.security.admin.impl.entity;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import net.n2oapp.security.admin.api.model.AccountTypeRoleEnum;
 
-import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity

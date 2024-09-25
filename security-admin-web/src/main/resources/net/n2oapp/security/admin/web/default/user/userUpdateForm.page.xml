@@ -94,7 +94,11 @@
                     </column>
                     <column text-field-id="actions" label=" ">
                         <toolbar>
-                            <button id="delete" label="Удалить" type="icon" icon="fa fa-trash" confirm-text="Вы уверены, что хотите удалить аккаунт?" confirm="true">
+                            <button id="delete" label="Удалить" icon="fa fa-trash">
+                                <confirm text="Вы уверены, что хотите удалить аккаунт?">
+                                    <ok label="Да"/>
+                                    <cancel label="Нет"/>
+                                </confirm>
                                 <invoke operation-id="delete" />
                             </button>
                         </toolbar>

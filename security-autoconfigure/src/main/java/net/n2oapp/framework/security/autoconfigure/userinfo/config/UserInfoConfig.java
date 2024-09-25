@@ -3,14 +3,14 @@ package net.n2oapp.framework.security.autoconfigure.userinfo.config;
 import net.n2oapp.framework.security.autoconfigure.userinfo.JsonToPrincipalFilter;
 import net.n2oapp.framework.security.autoconfigure.userinfo.mapper.*;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
+@AutoConfiguration
 public class UserInfoConfig {
 
     @Value("${n2o.platform.userinfo.header-name:n2o-user-info}")

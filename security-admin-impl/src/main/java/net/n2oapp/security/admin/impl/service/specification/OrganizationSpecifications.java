@@ -1,12 +1,11 @@
 package net.n2oapp.security.admin.impl.service.specification;
 
+import jakarta.persistence.criteria.*;
 import net.n2oapp.security.admin.api.criteria.OrganizationCriteria;
 import net.n2oapp.security.admin.impl.entity.*;
 import net.n2oapp.security.admin.impl.entity.base.RdmBaseEntity_;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.CollectionUtils;
-
-import javax.persistence.criteria.*;
 
 /**
  * Реализация фильтров для организаций

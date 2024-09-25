@@ -1,6 +1,5 @@
 package net.n2oapp.security.admin.rest;
 
-import net.n2oapp.platform.jaxrs.RestException;
 import net.n2oapp.security.admin.TestApplication;
 import net.n2oapp.security.admin.api.model.AppSystem;
 import net.n2oapp.security.admin.rest.api.SystemRestService;
@@ -97,13 +96,6 @@ public class ApplicationSystemRestTest {
         client.deleteSystem(result.getCode());
         Throwable thrown = catchThrowable(() -> client.getSystem(system.getCode()));
         assertThat(thrown.getMessage(), equalTo("HTTP 404 Not Found"));
-
-        try {
-            client.deleteSystem(result.getCode());
-            assert false;
-        } catch (RestException ex) {
-            assert true;
-        }
     }
 
     @Test

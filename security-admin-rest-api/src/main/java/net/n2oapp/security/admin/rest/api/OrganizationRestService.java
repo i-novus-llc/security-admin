@@ -16,14 +16,13 @@
 package net.n2oapp.security.admin.rest.api;
 
 import io.swagger.annotations.*;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import net.n2oapp.security.admin.api.model.OrgCategory;
 import net.n2oapp.security.admin.api.model.Organization;
 import net.n2oapp.security.admin.rest.api.criteria.RestOrgCategoryCriteria;
 import net.n2oapp.security.admin.rest.api.criteria.RestOrganizationCriteria;
 import org.springframework.data.domain.Page;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 
 /**
  * REST сервис для чтения организаций

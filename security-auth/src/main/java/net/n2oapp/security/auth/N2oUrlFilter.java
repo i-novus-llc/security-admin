@@ -15,8 +15,11 @@
  */
 package net.n2oapp.security.auth;
 
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletRequest;
 import net.n2oapp.framework.access.data.SecurityProvider;
 import net.n2oapp.framework.access.metadata.Security;
+import net.n2oapp.framework.access.metadata.SecurityObject;
 import net.n2oapp.framework.access.metadata.accesspoint.model.N2oUrlAccessPoint;
 import net.n2oapp.framework.access.metadata.schema.AccessContext;
 import net.n2oapp.framework.access.metadata.schema.CompiledAccessSchema;
@@ -29,8 +32,6 @@ import net.n2oapp.framework.api.MetadataEnvironment;
 import net.n2oapp.framework.api.user.StaticUserContext;
 import net.n2oapp.framework.config.compile.pipeline.N2oPipelineSupport;
 
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -67,8 +68,7 @@ public class N2oUrlFilter implements Filter {
 
     private Security collectUrlAccess(String url, SimpleCompiledAccessSchema schema) {
         Security security = new Security();
-        security.setSecurityMap(new HashMap<>());
-        Security.SecurityObject securityObject = new Security.SecurityObject();
+        SecurityObject securityObject = new SecurityObject();
         if (schema.getPermitAllPoints() != null) {
             schema.getPermitAllPoints().stream()
                     .filter(ap -> ap instanceof N2oUrlAccessPoint
@@ -151,7 +151,9 @@ public class N2oUrlFilter implements Filter {
             securityObject.setPermitAll(!defaultUrlAccessDenied);
             securityObject.setDenied(defaultUrlAccessDenied);
         }
-        security.getSecurityMap().put("url", securityObject);
+        if (security.isEmpty())
+            security.add(new HashMap<>());
+        security.get(0).put("url", securityObject);
         return security;
     }
 }

@@ -38,7 +38,7 @@ public class PermissionServiceRestClient implements PermissionService {
 
     @Override
     public Permission getByCode(String code) {
-        return client.getById(code);
+         return client.getById(code);
     }
 
     @Override

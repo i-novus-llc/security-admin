@@ -37,14 +37,14 @@ public class SsoKeycloakConfiguration {
     private static final String USER_SYNCHRONIZE_TRIGGER = "User_Synchronize_Trigger";
 
     @Bean
-    @ConditionalOnExpression("${access.keycloak.sync-persistence-enabled:true}")
-    SsoUserRoleProvider ssoUserRoleProvider(AdminSsoKeycloakProperties properties) {
+    @ConditionalOnExpression("${access.keycloak.sync-persistence-enabled} == true")
+    SsoUserRoleProvider keycloakSsoUserRoleProvider(AdminSsoKeycloakProperties properties) {
         return new KeycloakSsoUserRoleProvider(properties);
     }
 
     @Bean
-    @ConditionalOnExpression("${access.keycloak.sync-persistence-enabled:false}")
-    SsoUserRoleProvider ssoUserRoleProvider() {
+    @ConditionalOnExpression("${access.keycloak.sync-persistence-enabled} == false")
+    SsoUserRoleProvider simpleSsoUserRoleProvider() {
         return new SimpleSsoUserRoleProvider();
     }
 

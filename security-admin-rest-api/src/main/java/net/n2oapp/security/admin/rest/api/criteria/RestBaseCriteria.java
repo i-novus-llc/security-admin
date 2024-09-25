@@ -15,10 +15,10 @@
  */
 package net.n2oapp.security.admin.rest.api.criteria;
 
+import jakarta.ws.rs.QueryParam;
 import net.n2oapp.security.admin.api.criteria.BaseCriteria;
 import org.springframework.data.domain.Sort;
 
-import javax.ws.rs.QueryParam;
 import java.util.List;
 
 /**

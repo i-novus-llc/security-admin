@@ -1,8 +1,8 @@
 package net.n2oapp.security.auth;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Gives support of login-like behaviour. Makes possible redirect back to application from sso server without any manual back-url configuration.

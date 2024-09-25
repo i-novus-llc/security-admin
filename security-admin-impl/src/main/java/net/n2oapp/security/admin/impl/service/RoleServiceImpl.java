@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.impl.service;
 
+import jakarta.ws.rs.NotFoundException;
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.audit.AuditService;
 import net.n2oapp.security.admin.api.criteria.RoleCriteria;
@@ -16,7 +17,6 @@ import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.RoleSpecifications;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -26,7 +26,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 
-import javax.ws.rs.NotFoundException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -44,21 +43,26 @@ public class RoleServiceImpl implements RoleService {
 
     private static final Logger log = LoggerFactory.getLogger(RoleServiceImpl.class);
 
-    @Value("${access.permission.enabled}")
     private Boolean permissionEnabled;
-
-    @Autowired
     private RoleRepository roleRepository;
-    @Autowired
     private SystemRepository systemRepository;
-    @Autowired
     private UserRepository userRepository;
-    @Autowired
     private SsoUserRoleProvider provider;
-    @Autowired
     private OrganizationRepository organizationRepository;
-    @Autowired
     private AuditService auditService;
+
+    public RoleServiceImpl(@Value("${access.permission.enabled}") Boolean permissionEnabled,
+                           RoleRepository roleRepository, SystemRepository systemRepository,
+                           UserRepository userRepository, SsoUserRoleProvider provider,
+                           OrganizationRepository organizationRepository, AuditService auditService) {
+        this.permissionEnabled = permissionEnabled;
+        this.roleRepository = roleRepository;
+        this.systemRepository = systemRepository;
+        this.userRepository = userRepository;
+        this.provider = provider;
+        this.organizationRepository = organizationRepository;
+        this.auditService = auditService;
+    }
 
     @Override
     public Role create(RoleForm role) {
@@ -99,7 +103,7 @@ public class RoleServiceImpl implements RoleService {
             try {
                 provider.deleteRole(role);
             } catch (UserException ex) {
-                if (ex.getCause() instanceof HttpClientErrorException && ((HttpClientErrorException) ex.getCause()).getRawStatusCode() == 404)
+                if (ex.getCause() instanceof HttpClientErrorException && ((HttpClientErrorException) ex.getCause()).getStatusCode().value() == 404)
                     log.warn(String.format("Role with id %d not found in keycloak", id), ex);
                 else
                     throw ex;

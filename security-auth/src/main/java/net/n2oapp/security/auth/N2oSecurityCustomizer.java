@@ -19,8 +19,8 @@ import net.n2oapp.framework.access.simple.PermissionApi;
 import net.n2oapp.security.auth.context.SpringSecurityUserContext;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
 public abstract class N2oSecurityCustomizer {
@@ -41,12 +41,14 @@ public abstract class N2oSecurityCustomizer {
     }
 
     protected void ignore(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers(defaultIgnoredUrls).permitAll().antMatchers(ignoredUrls).permitAll();
+        http.authorizeHttpRequests(authorizeHttpRequests ->
+                authorizeHttpRequests
+                        .requestMatchers(defaultIgnoredUrls).permitAll().requestMatchers(ignoredUrls).permitAll());
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable();
+        http.csrf(AbstractHttpConfigurer::disable);
         ignore(http);
         configureHttpSecurity(http);
         return http.build();

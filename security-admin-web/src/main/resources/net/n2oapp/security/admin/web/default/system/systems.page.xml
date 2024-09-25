@@ -9,8 +9,11 @@
                 <column text-field-id="name" label="Наименование"/>
                 <column text-field-id="actions" label=" ">
                     <toolbar>
-                        <button id="delete" label="Удалить" icon="fa fa-trash"
-                                confirm="true" confirm-text="Вы уверены, что хотите удалить систему?">
+                        <button id="delete" label="Удалить" icon="fa fa-trash">
+                            <confirm text="Вы уверены, что хотите удалить систему?">
+                                <ok label="Да"/>
+                                <cancel label="Нет"/>
+                            </confirm>
                             <invoke operation-id="delete"/>
                         </button>
                     </toolbar>

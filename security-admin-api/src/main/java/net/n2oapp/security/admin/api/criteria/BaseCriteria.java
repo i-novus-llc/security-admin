@@ -16,10 +16,10 @@
 package net.n2oapp.security.admin.api.criteria;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.ws.rs.DefaultValue;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import javax.ws.rs.DefaultValue;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;

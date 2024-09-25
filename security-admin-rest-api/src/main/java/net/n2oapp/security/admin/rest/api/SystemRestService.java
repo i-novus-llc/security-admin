@@ -16,13 +16,12 @@
 package net.n2oapp.security.admin.rest.api;
 
 import io.swagger.annotations.*;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import net.n2oapp.security.admin.api.model.AppSystem;
 import net.n2oapp.security.admin.api.model.AppSystemForm;
 import net.n2oapp.security.admin.rest.api.criteria.RestSystemCriteria;
 import org.springframework.data.domain.Page;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 
 /**
  * REST сервис управления приложениями и системами

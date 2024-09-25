@@ -8,6 +8,6 @@ public class SecurityConfig extends N2oSecurityCustomizer {
 
     @Override
     protected void configureHttpSecurity(HttpSecurity http) throws Exception {
-        http.authorizeRequests().anyRequest().authenticated();
+        http.authorizeHttpRequests(authManagerRequest -> authManagerRequest.anyRequest().authenticated());
     }
 }

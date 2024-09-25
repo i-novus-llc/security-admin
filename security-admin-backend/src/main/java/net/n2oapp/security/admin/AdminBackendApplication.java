@@ -1,6 +1,5 @@
 package net.n2oapp.security.admin;
 
-import net.n2oapp.security.admin.impl.AdminImplConfiguration;
 import net.n2oapp.security.admin.rest.impl.AdminRestServerConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration;
@@ -10,7 +9,7 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.context.annotation.Import;
 
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class, ManagementWebSecurityAutoConfiguration.class, OAuth2ClientAutoConfiguration.class})
-@Import({AdminRestServerConfiguration.class, AdminImplConfiguration.class})
+@Import({AdminRestServerConfiguration.class})
 public class AdminBackendApplication {
     public static void main(String[] args) {
         SpringApplication.run(AdminBackendApplication.class, args);

@@ -1,15 +1,14 @@
 package net.n2oapp.security.admin.impl.service.specification;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import net.n2oapp.security.admin.api.criteria.OrgCategoryCriteria;
 import net.n2oapp.security.admin.impl.entity.OrgCategoryEntity;
 import net.n2oapp.security.admin.impl.entity.OrgCategoryEntity_;
 import net.n2oapp.security.admin.impl.entity.base.RdmBaseEntity_;
 import org.springframework.data.jpa.domain.Specification;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 
 /**
  * Реализация фильтров для категорий организаций

@@ -16,13 +16,12 @@
 package net.n2oapp.security.admin.rest.api;
 
 import io.swagger.annotations.*;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.RoleForm;
 import net.n2oapp.security.admin.rest.api.criteria.RestRoleCriteria;
 import org.springframework.data.domain.Page;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 
 /**
  * REST сервис управления ролями  пользователей

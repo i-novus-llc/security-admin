@@ -1,7 +1,9 @@
 package net.n2oapp.security.auth;
 
+import jakarta.servlet.ServletException;
 import net.n2oapp.framework.access.data.SecurityProvider;
 import net.n2oapp.framework.access.metadata.Security;
+import net.n2oapp.framework.access.metadata.SecurityObject;
 import net.n2oapp.framework.access.metadata.accesspoint.AccessPoint;
 import net.n2oapp.framework.access.metadata.accesspoint.model.N2oUrlAccessPoint;
 import net.n2oapp.framework.access.metadata.schema.permission.N2oPermission;
@@ -30,7 +32,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import javax.servlet.ServletException;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.*;
@@ -89,7 +90,7 @@ public class N2oUrlFilterTest {
             filter.doFilter(request, response, chain);
             Mockito.verify(securityProvider).checkAccess(securityCaptor.capture(), any());
 
-            Security.SecurityObject securityObject = securityCaptor.getValue().getSecurityMap().get(KEY);
+            SecurityObject securityObject = securityCaptor.getValue().get(0).get(KEY);
             assertTrue(securityObject.getPermitAll());
         } catch (IOException | ServletException e) {
             fail();
@@ -108,7 +109,7 @@ public class N2oUrlFilterTest {
             filter.doFilter(request, response, chain);
             Mockito.verify(securityProvider).checkAccess(securityCaptor.capture(), any());
 
-            Security.SecurityObject securityObject = securityCaptor.getValue().getSecurityMap().get(KEY);
+            SecurityObject securityObject = securityCaptor.getValue().get(0).get(KEY);
             assertTrue(securityObject.getAuthenticated());
         } catch (IOException | ServletException e) {
             fail();
@@ -125,7 +126,7 @@ public class N2oUrlFilterTest {
             filter.doFilter(request, response, chain);
             Mockito.verify(securityProvider).checkAccess(securityCaptor.capture(), any());
 
-            Security.SecurityObject securityObject = securityCaptor.getValue().getSecurityMap().get(KEY);
+            SecurityObject securityObject = securityCaptor.getValue().get(0).get(KEY);
             assertTrue(securityObject.getAnonymous());
         } catch (IOException | ServletException e) {
             fail();
@@ -154,7 +155,7 @@ public class N2oUrlFilterTest {
             filter.doFilter(request, response, chain);
             Mockito.verify(securityProvider).checkAccess(securityCaptor.capture(), any());
 
-            Security.SecurityObject securityObject = securityCaptor.getValue().getSecurityMap().get(KEY);
+            SecurityObject securityObject = securityCaptor.getValue().get(0).get(KEY);
 
             Set<String> roles = securityObject.getRoles();
             assertEquals("testAccessRole", roles.iterator().next());
@@ -185,7 +186,7 @@ public class N2oUrlFilterTest {
             filter.doFilter(request, response, chain);
             Mockito.verify(securityProvider).checkAccess(securityCaptor.capture(), any());
 
-            Security.SecurityObject securityObject = securityCaptor.getValue().getSecurityMap().get(KEY);
+            SecurityObject securityObject = securityCaptor.getValue().get(0).get(KEY);
 
             Set<String> permissions = securityObject.getPermissions();
             assertEquals("testAccessPermission", permissions.iterator().next());
@@ -211,7 +212,7 @@ public class N2oUrlFilterTest {
             filter.doFilter(request, response, chain);
             Mockito.verify(securityProvider).checkAccess(securityCaptor.capture(), any());
 
-            Security.SecurityObject securityObject = securityCaptor.getValue().getSecurityMap().get(KEY);
+            SecurityObject securityObject = securityCaptor.getValue().get(0).get(KEY);
 
             Set<String> usernames = securityObject.getUsernames();
             assertEquals("testUser", usernames.iterator().next());
@@ -227,7 +228,7 @@ public class N2oUrlFilterTest {
             filter.doFilter(request, response, chain);
             Mockito.verify(securityProvider).checkAccess(securityCaptor.capture(), any());
 
-            Security.SecurityObject securityObject = securityCaptor.getValue().getSecurityMap().get(KEY);
+            SecurityObject securityObject = securityCaptor.getValue().get(0).get(KEY);
             assertTrue(securityObject.getPermitAll());
         } catch (IOException | ServletException e) {
             fail();

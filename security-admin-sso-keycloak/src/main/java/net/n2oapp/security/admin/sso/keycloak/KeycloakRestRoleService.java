@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.sso.keycloak;
 
+import jakarta.ws.rs.core.Response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import javax.ws.rs.core.Response;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -54,7 +54,7 @@ public class KeycloakRestRoleService {
             ResponseEntity<RoleRepresentation> response = webClient.get().uri(serverUrl).retrieve().toEntity(RoleRepresentation.class).block();
             return response.getBody();
         } catch (HttpClientErrorException ex) {
-            if (ex.getRawStatusCode() == 404) {
+            if (ex.getStatusCode().value() == 404) {
                 return null;
             }
             throw ex;
@@ -72,7 +72,7 @@ public class KeycloakRestRoleService {
             ResponseEntity<List<RoleRepresentation>> response = webClient.get().uri(serverUrl).retrieve().toEntityList(RoleRepresentation.class).block();
             return response.getBody();
         } catch (HttpClientErrorException ex) {
-            if (ex.getRawStatusCode() == 404) {
+            if (ex.getStatusCode().value() == 404) {
                 return Collections.emptyList();
             }
             throw ex;
@@ -97,7 +97,7 @@ public class KeycloakRestRoleService {
                 return role.getName();
             } else throw e;
         }
-        if (response.getStatusCodeValue() >= 200 && response.getStatusCodeValue() < 300) {
+        if (response.getStatusCode().value() >= 200 && response.getStatusCode().value() < 300) {
             if (role.getComposites() != null) {
                 Set<IdObject> composites = new HashSet<>();
                 if (role.getComposites().getRealm() != null) {
@@ -108,7 +108,7 @@ public class KeycloakRestRoleService {
                             .flatMap(Collection::stream).map(IdObject::new).collect(Collectors.toSet()));
                 }
                 ResponseEntity<Response> compositesResponse = webClient.post().uri(roleCompositesServerUrl).contentType(APPLICATION_JSON).bodyValue(composites).retrieve().toEntity(Response.class).block();
-                if (compositesResponse.getStatusCodeValue() < 200 || compositesResponse.getStatusCodeValue() > 300) {
+                if (compositesResponse.getStatusCode().value() < 200 || compositesResponse.getStatusCode().value() > 300) {
                     throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
                 }
             }
@@ -127,10 +127,10 @@ public class KeycloakRestRoleService {
         final String serverUrl = String.format(ROLE_BY_NAME, properties.getServerUrl(), properties.getRealm(), role.getName());
         final String roleCompositesServerUrl = String.format(ROLE_COMPOSITES, properties.getServerUrl(), properties.getRealm(), role.getName());
         ResponseEntity<Response> response = webClient.put().uri(serverUrl).contentType(APPLICATION_JSON).bodyValue(role).retrieve().toEntity(Response.class).block();
-        if (response.getStatusCodeValue() < 200 || response.getStatusCodeValue() > 300) {
+        if (response.getStatusCode().value() < 200 || response.getStatusCode().value() > 300) {
             throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
         }
-        if (response.getStatusCodeValue() >= 200 && response.getStatusCodeValue() < 300) {
+        if (response.getStatusCode().value() >= 200 && response.getStatusCode().value() < 300) {
             if (role.isComposite()) {
                 List<RoleRepresentation> currentCompositesRes = getRoleComposites(role.getName());
                 Set<String> currentComposites = new HashSet<>();
@@ -154,7 +154,7 @@ public class KeycloakRestRoleService {
                             .map(IdObject::new).collect(Collectors.toSet());
                     if (newComposites != null) {
                         ResponseEntity<Response> compositesResponse = webClient.post().uri(roleCompositesServerUrl).contentType(APPLICATION_JSON).bodyValue(newComposites).retrieve().toEntity(Response.class).block();
-                        if (compositesResponse.getStatusCodeValue() < 200 || compositesResponse.getStatusCodeValue() > 300) {
+                        if (compositesResponse.getStatusCode().value() < 200 || compositesResponse.getStatusCode().value() > 300) {
                             throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
                         }
                     }
@@ -189,7 +189,7 @@ public class KeycloakRestRoleService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(APPLICATION_JSON);
         ResponseEntity<Response> response = webClient.method(HttpMethod.DELETE).uri(serverUrl).contentType(APPLICATION_JSON).retrieve().toEntity(Response.class).block();
-        if (response.getStatusCodeValue() < 200 || response.getStatusCodeValue() > 300) {
+        if (response.getStatusCode().value() < 200 || response.getStatusCode().value() > 300) {
             throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
         }
     }

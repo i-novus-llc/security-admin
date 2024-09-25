@@ -41,7 +41,7 @@ public class UserServerLoader extends ServerLoaderSettings<User> implements Serv
             accountRepository.saveAll(freshAccounts);
         }
         if (isDeleteRequired())
-            accountRepository.deleteInBatch(oldAccounts);
+            accountRepository.deleteAllInBatch(oldAccounts);
     }
 
     private List<UserEntity> map(List<AccountEntity> oldAccounts, List<AccountEntity> freshAccounts, List<User> uploadedUsers) {

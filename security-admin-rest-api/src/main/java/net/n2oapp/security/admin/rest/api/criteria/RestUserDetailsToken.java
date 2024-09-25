@@ -16,9 +16,9 @@
 package net.n2oapp.security.admin.rest.api.criteria;
 
 import io.swagger.annotations.ApiParam;
+import jakarta.ws.rs.QueryParam;
 import net.n2oapp.security.admin.api.model.UserDetailsToken;
 
-import javax.ws.rs.QueryParam;
 import java.util.List;
 
 /**
