@@ -1,3 +1,6 @@
+# Миграция с security-admin 7+ на 8.0.0
+* Переход на n2o-boot-platform 6.1.3 и Spring Boot 3.2.
+
 # Миграция с security-admin 6+ на 7.0.0
 
 Модуль security-admin-auth-server, auth-gateway-adapter и auth-gateway был удален. Функции бэкенда выполняет модуль
