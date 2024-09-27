@@ -4,6 +4,10 @@ import net.n2oapp.security.admin.api.criteria.SystemCriteria;
 import net.n2oapp.security.admin.api.model.AppSystem;
 import net.n2oapp.security.admin.api.service.SystemExportService;
 import net.n2oapp.security.admin.api.service.SystemService;
+import net.n2oapp.security.admin.rdm.feign.RdmDraftRestFeignClient;
+import net.n2oapp.security.admin.rdm.feign.RdmPublishRestFeignClient;
+import net.n2oapp.security.admin.rdm.feign.RdmRefBookRestFeignClient;
+import net.n2oapp.security.admin.rdm.feign.RdmVersionRestFeignClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +19,6 @@ import ru.i_novus.ms.rdm.api.model.draft.PublishRequest;
 import ru.i_novus.ms.rdm.api.model.refbook.RefBook;
 import ru.i_novus.ms.rdm.api.model.refbook.RefBookCriteria;
 import ru.i_novus.ms.rdm.api.model.refdata.*;
-import ru.i_novus.ms.rdm.api.rest.DraftRestService;
-import ru.i_novus.ms.rdm.api.service.PublishService;
-import ru.i_novus.ms.rdm.api.service.RefBookService;
-import ru.i_novus.ms.rdm.api.service.VersionService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,11 +41,11 @@ public class SystemExportServiceImpl implements SystemExportService {
     private static final String NAME = "name";
     private static final String DESCRIPTION = "description";
 
-    private RefBookService refBookService;
+    private RdmRefBookRestFeignClient refBookService;
     private SystemService systemService;
-    private DraftRestService draftRestService;
-    private PublishService publishService;
-    private VersionService versionService;
+    private RdmDraftRestFeignClient draftRestService;
+    private RdmPublishRestFeignClient publishService;
+    private RdmVersionRestFeignClient versionService;
 
     @Override
     public void exportSystems() {
@@ -145,7 +145,7 @@ public class SystemExportServiceImpl implements SystemExportService {
     }
 
     @Autowired(required = false)
-    public void setRefBookService(RefBookService refBookService) {
+    public void setRefBookService(RdmRefBookRestFeignClient refBookService) {
         this.refBookService = refBookService;
     }
 
@@ -155,17 +155,17 @@ public class SystemExportServiceImpl implements SystemExportService {
     }
 
     @Autowired(required = false)
-    public void setDraftRestService(DraftRestService draftRestService) {
+    public void setDraftRestService(RdmDraftRestFeignClient draftRestService) {
         this.draftRestService = draftRestService;
     }
 
     @Autowired(required = false)
-    public void setPublishService(PublishService publishService) {
+    public void setPublishService(RdmPublishRestFeignClient publishService) {
         this.publishService = publishService;
     }
 
     @Autowired(required = false)
-    public void setVersionService(VersionService versionService) {
+    public void setVersionService(RdmVersionRestFeignClient versionService) {
         this.versionService = versionService;
     }
 }

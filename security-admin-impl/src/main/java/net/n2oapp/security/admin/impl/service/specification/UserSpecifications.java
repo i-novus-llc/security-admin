@@ -1,12 +1,12 @@
 package net.n2oapp.security.admin.impl.service.specification;
 
+import jakarta.persistence.criteria.*;
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import net.n2oapp.security.admin.api.model.UserLevel;
 import net.n2oapp.security.admin.impl.entity.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.CollectionUtils;
 
-import javax.persistence.criteria.*;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -74,7 +74,7 @@ public class UserSpecifications implements Specification<UserEntity> {
 
         if (!CollectionUtils.isEmpty(criteria.getSystems())) {
             roleSubQueryPredicate = builder.and(roleSubQueryPredicate,
-                    roleSubqueryRoot.get(RoleEntity_.systemCode).get(SystemEntity_.code).in(criteria.getSystems()));
+                    roleSubqueryRoot.get(RoleEntity_.system).get(SystemEntity_.code).in(criteria.getSystems()));
         }
 
 //        if (criteria.getExtSys() != null) {

@@ -16,6 +16,8 @@
 package net.n2oapp.security.admin.rest.api;
 
 import io.swagger.annotations.*;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import net.n2oapp.security.admin.api.model.Password;
 import net.n2oapp.security.admin.api.model.User;
 import net.n2oapp.security.admin.api.model.UserForm;
@@ -23,8 +25,6 @@ import net.n2oapp.security.admin.api.model.UserRegisterForm;
 import net.n2oapp.security.admin.rest.api.criteria.RestUserCriteria;
 import org.springframework.data.domain.Page;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import java.util.Map;
 
 /**
@@ -48,7 +48,7 @@ public interface UserRestService {
     @Path("/{id}")
     @ApiOperation("Получить пользователя по идентификатору")
     @ApiResponse(code = 200, message = "Пользователь")
-    User getById(@ApiParam(value = "Идентификатор") @PathParam("id") Integer id);
+    User getById(@ApiParam(value = "Идентификатор") @PathParam("id") int id);
 
     @POST
     @Path("/")

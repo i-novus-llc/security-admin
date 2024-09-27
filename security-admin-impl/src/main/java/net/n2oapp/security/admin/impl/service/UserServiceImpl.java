@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.impl.service;
 
+import jakarta.ws.rs.NotFoundException;
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.audit.AuditService;
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
@@ -20,10 +21,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.ws.rs.NotFoundException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -155,7 +154,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(Integer id) {
-        SsoUser user = model(userRepository.findById(id).orElseThrow(() -> new UserException("exception.userNotFound")));
+        SsoUser user =
+                model(userRepository.findById(id).orElseThrow(() -> new UserException("exception.userNotFound")));
         if (nonNull(user) && user.getUsername().equals(getContextUserName())) {
             throw new UserException("exception.selfDelete");
         }
@@ -181,7 +181,8 @@ public class UserServiceImpl implements UserService {
         if (criteria.getOrders() == null)
             criteria.setOrders(new ArrayList<>());
         if (criteria.getOrders().stream().map(Sort.Order::getProperty).anyMatch("fio"::equals)) {
-            Sort.Direction orderFio = criteria.getOrders().stream().filter(o -> o.getProperty().equals("fio")).findAny().get().getDirection();
+            Sort.Direction orderFio =
+                    criteria.getOrders().stream().filter(o -> o.getProperty().equals("fio")).findAny().get().getDirection();
             criteria.getOrders().add(new Sort.Order(orderFio, "surname"));
             criteria.getOrders().add(new Sort.Order(orderFio, "name"));
             criteria.getOrders().add(new Sort.Order(orderFio, "patronymic"));
@@ -347,10 +348,12 @@ public class UserServiceImpl implements UserService {
 
     private void validateUsernameEmailSnils(UserForm user) {
         if (!Boolean.TRUE.equals(emailAsUsername)) {
-            userValidations.checkUsernameUniq(user.getId(), model(userRepository.findOneByUsernameIgnoreCase(user.getUsername())));
+            userValidations.checkUsernameUniq(user.getId(),
+                    model(userRepository.findOneByUsernameIgnoreCase(user.getUsername())));
             userValidations.checkUsername(user.getUsername());
         } else {
-            userValidations.checkEmailUniq(user.getId(), model(userRepository.findOneByEmailIgnoreCase(user.getEmail())));
+            userValidations.checkEmailUniq(user.getId(),
+                    model(userRepository.findOneByEmailIgnoreCase(user.getEmail())));
             user.setUsername(user.getEmail());
         }
         if (nonNull(user.getEmail()))

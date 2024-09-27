@@ -10,6 +10,14 @@
             </arguments>
         </java>
     </list>
+    <unique>
+        <java method="getByIdWithSystem" class="net.n2oapp.security.admin.api.service.RoleService">
+            <spring/>
+            <arguments>
+                <argument type="primitive" name="id"/>
+            </arguments>
+        </java>
+    </unique>
 
     <filters>
         <eq filter-id="id" mapping="[0]" field-id="id"/>
@@ -18,8 +26,8 @@
         <eq filter-id="description" mapping="['criteria'].description" field-id="description"/>
         <eq filter-id="system.id" domain="string" mapping="['criteria'].systemCodes" field-id="system"/>
         <eq filter-id="userLevel.id" domain="string" mapping="['criteria'].userLevel" field-id="userLevel.id"/>
-        <eq domain="boolean" mapping="['criteria'].groupBySystem" default-value="true" field-id="groupBySystem"/>
-        <eq domain="boolean" mapping="['criteria'].forForm" filter-id="forForm" field-id="forForm"/>
+        <eq filter-id="groupBySystem" domain="boolean" mapping="['criteria'].groupBySystem" field-id="groupBySystem" normalize="#data['id'] != null ? null : #this"/>
+        <eq domain="boolean" mapping="['criteria'].forForm" filter-id="forForm" field-id="forForm" normalize="#data['id'] != null ? null : #this"/>
     </filters>
 
     <fields>

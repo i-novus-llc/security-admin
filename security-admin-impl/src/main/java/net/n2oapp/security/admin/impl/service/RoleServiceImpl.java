@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.impl.service;
 
+import jakarta.ws.rs.NotFoundException;
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.audit.AuditService;
 import net.n2oapp.security.admin.api.criteria.RoleCriteria;
@@ -16,7 +17,6 @@ import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.RoleSpecifications;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -26,7 +26,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 
-import javax.ws.rs.NotFoundException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -44,21 +43,26 @@ public class RoleServiceImpl implements RoleService {
 
     private static final Logger log = LoggerFactory.getLogger(RoleServiceImpl.class);
 
-    @Value("${access.permission.enabled}")
     private Boolean permissionEnabled;
-
-    @Autowired
     private RoleRepository roleRepository;
-    @Autowired
     private SystemRepository systemRepository;
-    @Autowired
     private UserRepository userRepository;
-    @Autowired
     private SsoUserRoleProvider provider;
-    @Autowired
     private OrganizationRepository organizationRepository;
-    @Autowired
     private AuditService auditService;
+
+    public RoleServiceImpl(@Value("${access.permission.enabled}") Boolean permissionEnabled,
+                           RoleRepository roleRepository, SystemRepository systemRepository,
+                           UserRepository userRepository, SsoUserRoleProvider provider,
+                           OrganizationRepository organizationRepository, AuditService auditService) {
+        this.permissionEnabled = permissionEnabled;
+        this.roleRepository = roleRepository;
+        this.systemRepository = systemRepository;
+        this.userRepository = userRepository;
+        this.provider = provider;
+        this.organizationRepository = organizationRepository;
+        this.auditService = auditService;
+    }
 
     @Override
     public Role create(RoleForm role) {
@@ -99,7 +103,7 @@ public class RoleServiceImpl implements RoleService {
             try {
                 provider.deleteRole(role);
             } catch (UserException ex) {
-                if (ex.getCause() instanceof HttpClientErrorException && ((HttpClientErrorException) ex.getCause()).getRawStatusCode() == 404)
+                if (ex.getCause() instanceof HttpClientErrorException && ((HttpClientErrorException) ex.getCause()).getStatusCode().value() == 404)
                     log.warn(String.format("Role with id %d not found in keycloak", id), ex);
                 else
                     throw ex;
@@ -111,6 +115,13 @@ public class RoleServiceImpl implements RoleService {
     public Role getById(Integer id) {
         RoleEntity roleEntity = roleRepository.findById(id).orElseThrow(NotFoundException::new);
         return model(roleEntity);
+    }
+
+    @Override
+    public Role getByIdWithSystem(Integer id) {
+        if (id != null && id < 0)
+            return modelSystemToRole(systemRepository.findOneByIntCode(-id).orElseThrow(NotFoundException::new));
+        return getById(id);
     }
 
     @Override
@@ -132,21 +143,16 @@ public class RoleServiceImpl implements RoleService {
         List<RoleEntity> roles = roleRepository.findAll(specification, criteria).stream().collect(Collectors.toList());
         Set<SystemEntity> systems = new HashSet<>();
         List<Role> modelRoles = new ArrayList<>();
-        int dummyRoleId = -1;
         for (int i = 0; i < roles.size(); ) {
             RoleEntity roleEntity = roles.get(i);
-            if (nonNull(roleEntity.getSystemCode())) {
-                if (!systems.contains(roleEntity.getSystemCode())) {
-                    systems.add(roleEntity.getSystemCode());
-                    Role dummyRole = new Role();
-                    dummyRole.setId(dummyRoleId);
-                    dummyRole.setName(roleEntity.getSystemCode().getName());
-                    dummyRole.setCode(roleEntity.getSystemCode().getCode());
-                    modelRoles.add(dummyRole);
-                    dummyRoleId--;
+            SystemEntity system = roleEntity.getSystem();
+            if (nonNull(system)) {
+                if (!systems.contains(system)) {
+                    systems.add(system);
+                    modelRoles.add(modelSystemToRole(system));
                 }
                 Role role = model(roleEntity);
-                role.getSystem().setCode(modelRoles.stream().filter(model -> model.getCode().equals(roleEntity.getSystemCode().getCode())).findFirst().get().getId().toString());
+                role.getSystem().setCode(modelRoles.stream().filter(model -> model.getCode().equals(system.getCode())).findFirst().get().getId().toString());
                 modelRoles.add(role);
                 roles.remove(roleEntity);
             } else i++;
@@ -166,7 +172,7 @@ public class RoleServiceImpl implements RoleService {
         if (nonNull(model.getUserLevel()))
             entity.setUserLevel(UserLevel.valueOf(model.getUserLevel()));
         if (model.getSystemCode() != null)
-            entity.setSystemCode(new SystemEntity(model.getSystemCode()));
+            entity.setSystem(new SystemEntity(model.getSystemCode()));
 
         if (model.getPermissions() != null) {
             entity.setPermissionList(model.getPermissions().stream().filter(s -> !s.startsWith("$")).map(PermissionEntity::new).collect(Collectors.toList()));
@@ -182,11 +188,20 @@ public class RoleServiceImpl implements RoleService {
         entity.setCode(model.getCode());
         entity.setUserLevel(model.getUserLevel());
         entity.setDescription(model.getDescription());
-        if (model.getSystem() != null) entity.setSystemCode(new SystemEntity(model.getSystem().getCode()));
+        if (model.getSystem() != null) entity.setSystem(new SystemEntity(model.getSystem().getCode()));
         if (model.getPermissions() != null) {
             entity.setPermissionList(model.getPermissions().stream().map(this::entity).collect(Collectors.toList()));
         }
         return entity;
+    }
+
+    private Role modelSystemToRole(SystemEntity entity) {
+        if (entity == null) return null;
+        Role role = new Role();
+        role.setId(-entity.getIntCode());
+        role.setName(entity.getName());
+        role.setCode(entity.getCode());
+        return role;
     }
 
     private Role model(RoleEntity entity) {
@@ -196,8 +211,8 @@ public class RoleServiceImpl implements RoleService {
         model.setName(entity.getName());
         model.setCode(entity.getCode());
         model.setUserLevel(entity.getUserLevel());
-        if (entity.getSystemCode() != null)
-            model.setSystem(model(entity.getSystemCode()));
+        if (entity.getSystem() != null)
+            model.setSystem(model(entity.getSystem()));
         model.setDescription(entity.getDescription());
         if (permissionEnabled && entity.getPermissionList() != null) {
             model.setPermissions(entity.getPermissionList().stream().map(this::model).collect(Collectors.toList()));

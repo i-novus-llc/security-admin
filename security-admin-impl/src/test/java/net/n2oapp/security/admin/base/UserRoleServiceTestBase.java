@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.base;
 
+import jakarta.ws.rs.NotFoundException;
 import net.n2oapp.platform.i18n.UserException;
 import net.n2oapp.security.admin.api.model.*;
 import net.n2oapp.security.admin.api.service.RoleService;
@@ -9,9 +10,7 @@ import net.n2oapp.security.admin.impl.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.ws.rs.NotFoundException;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.*;
@@ -35,6 +34,30 @@ public abstract class UserRoleServiceTestBase {
     @MockBean
     protected JavaMailSender emailSender;
 
+    protected static UserForm newUser() {
+        UserForm user = new UserForm();
+        user.setUsername("userName2");
+        user.setName("user1");
+        user.setSurname("userSurname");
+        user.setPatronymic("userPatronymic");
+        user.setEmail("UserEmail@gmail.com");
+        user.setSendOnEmail(true);
+        user.setPassword("userPassword1$");
+        user.setPasswordCheck("userPassword1$");
+        user.setIsActive(true);
+        return user;
+    }
+
+    protected static RoleForm newRole() {
+        RoleForm role = new RoleForm();
+        role.setName("test-name");
+        role.setCode("test-code");
+        role.setDescription("test-desc");
+        List<String> permissions = new ArrayList<>();
+        permissions.add("test");
+        role.setPermissions(permissions);
+        return role;
+    }
 
     protected void checkUpdateUser() {
         UserForm userForm = new UserForm();
@@ -148,7 +171,6 @@ public abstract class UserRoleServiceTestBase {
         result = userService.patch(Map.of("id", 1));
         assertThat(result.getId()).isEqualTo(1);
         assertThat(result.getUsername()).isEqualTo("test");
-
     }
 
     protected void checkValidationEmail(User user) {
@@ -251,20 +273,6 @@ public abstract class UserRoleServiceTestBase {
         user.setUsername("userName4");
     }
 
-    protected static UserForm newUser() {
-        UserForm user = new UserForm();
-        user.setUsername("userName2");
-        user.setName("user1");
-        user.setSurname("userSurname");
-        user.setPatronymic("userPatronymic");
-        user.setEmail("UserEmail@gmail.com");
-        user.setSendOnEmail(true);
-        user.setPassword("userPassword1$");
-        user.setPasswordCheck("userPassword1$");
-        user.setIsActive(true);
-        return user;
-    }
-
     protected UserForm form(User user) {
         UserForm form = new UserForm();
         form.setId(user.getId());
@@ -277,17 +285,6 @@ public abstract class UserRoleServiceTestBase {
         form.setPasswordCheck(user.getPasswordCheck());
         form.setIsActive(true);
         return form;
-    }
-
-    protected static RoleForm newRole() {
-        RoleForm role = new RoleForm();
-        role.setName("test-name");
-        role.setCode("test-code");
-        role.setDescription("test-desc");
-        List<String> permissions = new ArrayList<>();
-        permissions.add("test");
-        role.setPermissions(permissions);
-        return role;
     }
 
     protected RoleForm form(Role role) {

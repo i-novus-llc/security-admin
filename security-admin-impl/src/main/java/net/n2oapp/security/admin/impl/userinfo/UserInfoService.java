@@ -1,12 +1,12 @@
 package net.n2oapp.security.admin.impl.userinfo;
 
+import jakarta.transaction.Transactional;
 import net.n2oapp.security.admin.api.oauth.UserInfoEnricher;
 import net.n2oapp.security.admin.impl.entity.AccountEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
 import net.n2oapp.security.admin.impl.repository.AccountRepository;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 
-import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;

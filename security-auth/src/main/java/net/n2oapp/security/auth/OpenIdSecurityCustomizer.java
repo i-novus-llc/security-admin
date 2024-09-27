@@ -21,10 +21,10 @@ import net.n2oapp.security.auth.context.SpringSecurityUserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
-import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
+import org.springframework.security.web.access.intercept.AuthorizationFilter;
 
 /**
  * Адаптер для настройки SSO аутентификации по протоколу OAuth2 OpenId Connect
@@ -49,9 +49,9 @@ public abstract class OpenIdSecurityCustomizer extends N2oSecurityCustomizer {
 
     @Override
     protected void configureHttpSecurity(HttpSecurity http) throws Exception {
-        configureLogout(http.logout());
-        http.oauth2Login();
-        http.addFilterAfter(new N2oUrlFilter(schemaId, defaultUrlAccessDenied, environment, securityProvider), FilterSecurityInterceptor.class);
+        configureLogout(http);
+        http.oauth2Login(Customizer.withDefaults());
+        http.addFilterAfter(new N2oUrlFilter(schemaId, defaultUrlAccessDenied, environment, securityProvider), AuthorizationFilter.class);
     }
 
     @Override
@@ -59,9 +59,9 @@ public abstract class OpenIdSecurityCustomizer extends N2oSecurityCustomizer {
         return new SpringUserContextWithToken();
     }
 
-    protected LogoutConfigurer<HttpSecurity> configureLogout(LogoutConfigurer<HttpSecurity> logout) {
+    protected void configureLogout(HttpSecurity http) throws Exception {
         AutoRedirectLogoutSuccessHandler logoutSuccessHandler = new AutoRedirectLogoutSuccessHandler();
         logoutSuccessHandler.setDefaultTargetUrl(ssoLogoutUri);
-        return logout.logoutSuccessHandler(logoutSuccessHandler);
+        http.logout(httpSecurityLogoutConfigurer -> httpSecurityLogoutConfigurer.logoutSuccessHandler(logoutSuccessHandler));
     }
 }

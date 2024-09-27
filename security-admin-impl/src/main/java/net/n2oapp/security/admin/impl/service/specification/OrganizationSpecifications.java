@@ -1,12 +1,11 @@
 package net.n2oapp.security.admin.impl.service.specification;
 
+import jakarta.persistence.criteria.*;
 import net.n2oapp.security.admin.api.criteria.OrganizationCriteria;
 import net.n2oapp.security.admin.impl.entity.*;
 import net.n2oapp.security.admin.impl.entity.base.RdmBaseEntity_;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.CollectionUtils;
-
-import javax.persistence.criteria.*;
 
 /**
  * Реализация фильтров для организаций
@@ -39,7 +38,7 @@ public class OrganizationSpecifications implements Specification<OrganizationEnt
             Root subRoot = subquery.from(RoleEntity.class);
             //            todo SECURITY-396
 //            ListJoin<RoleEntity, UserEntity> listJoin = subRoot.join(RoleEntity_.userList);
-            subquery.select(subRoot.get(RoleEntity_.systemCode));
+            subquery.select(subRoot.get(RoleEntity_.system));
             //        todo SECURITY-396
 //            subquery.where(builder.and(builder.equal(root.get(OrganizationEntity_.id), listJoin.get(UserEntity_.organization)),
 //                    subRoot.get(RoleEntity_.systemCode).get(SystemEntity_.CODE).in(criteria.getSystemCodes())));

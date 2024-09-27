@@ -27,11 +27,14 @@
                 </column>
                 <column text-field-id="actions" label=" ">
                     <toolbar>
-                        <button label="Удалить" confirm="true" icon="fa fa-trash" type="icon"
-                                confirm-text="Вы действительно хотите удалить пользователя?">
+                        <button label="Удалить" icon="fa fa-trash">
+                            <confirm text="Вы действительно хотите удалить пользователя?">
+                                <ok label="Да"/>
+                                <cancel label="Нет"/>
+                            </confirm>
                             <invoke operation-id="delete"/>
                         </button>
-                        <button label="Сбросить пароль" icon="fa fa-key" type="icon">
+                        <button label="Сбросить пароль" icon="fa fa-key">
                             <show-modal page-id="passwordResetForm" route="/:user_id/resetPassword">
                                 <params>
                                     <path-param name="user_id" value="{id}"/>
@@ -96,6 +99,7 @@
                                        search-field-id="name" size="1000">
                         <filters>
                             <eq field-id="system" value="{system.id}"/>
+                            <eq field-id="groupBySystem" value="true"/>
                         </filters>
                     </input-select-tree>
 

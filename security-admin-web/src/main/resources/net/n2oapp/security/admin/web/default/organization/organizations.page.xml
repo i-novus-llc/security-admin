@@ -13,11 +13,12 @@
                 <column text-field-id="kpp"/>
                 <column text-field-id="actions">
                     <toolbar>
-                        <button confirm="true"
-                                icon="fa fa-trash"
-                                type="icon"
-                                pointer:organization-persist-function="true"
-                                confirm-text="Вы действительно хотите удалить организацию?">
+                        <button icon="fa fa-trash"
+                                pointer:organization-persist-function="true">
+                            <confirm text="Вы действительно хотите удалить организацию?">
+                                <ok label="Да"/>
+                                <cancel label="Нет"/>
+                            </confirm>
                             <invoke operation-id="delete"/>
                         </button>
                     </toolbar>

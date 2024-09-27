@@ -217,8 +217,8 @@ public class SecurityConfig extends OpenIdSecurityCustomizer {
     @Override
     protected void configureHttpSecurity(HttpSecurity http) throws Exception {
         super.configureHttpSecurity(http);
-        http.authorizeRequests().anyRequest().authenticated().and().oauth2Login().userInfoEndpoint(userInfo -> userInfo.oidcUserService(keycloakUserService));
-        http.addFilterAfter(new ContextFilter(tokenServices, accountServiceRestClient), FilterSecurityInterceptor.class);
+        http.authorizeHttpRequests(authz -> authz.anyRequest().authenticated()).oauth2Login(oauth2 -> oauth2.userInfoEndpoint(userInfo -> userInfo.oidcUserService(keycloakUserService)));
+        http.addFilterAfter(new ContextFilter(tokenServices, accountServiceRestClient), AuthorizationFilter.class);
     }
 }
 ----

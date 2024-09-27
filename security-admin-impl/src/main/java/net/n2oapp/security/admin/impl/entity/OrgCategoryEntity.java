@@ -1,11 +1,11 @@
 package net.n2oapp.security.admin.impl.entity;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.n2oapp.security.admin.impl.entity.base.RdmBaseEntity;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 

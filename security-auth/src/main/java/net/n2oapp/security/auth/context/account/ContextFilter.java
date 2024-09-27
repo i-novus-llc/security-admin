@@ -1,5 +1,9 @@
 package net.n2oapp.security.auth.context.account;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.Setter;
 import net.n2oapp.security.admin.api.criteria.AccountCriteria;
 import net.n2oapp.security.admin.api.model.Account;
@@ -21,11 +25,9 @@ import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.AbstractConfigurableTemplateResolver;
 import org.thymeleaf.templateresolver.UrlTemplateResolver;
+import org.thymeleaf.web.servlet.IServletWebExchange;
+import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -120,7 +122,9 @@ public class ContextFilter extends OncePerRequestFilter {
         response.setContentType(MediaType.TEXT_HTML_VALUE);
         response.setHeader("Content-Type", "text/html;charset=UTF-8");
 
-        WebContext context = new WebContext(request, response, request.getServletContext());
+
+        WebContext context = createContext(request,response);
+
         context.setVariable("css", selectAccountCssPath);
         context.setVariable("emblem", selectAccountEmblemPath);
         context.setVariable("accounts", accounts);
@@ -133,6 +137,12 @@ public class ContextFilter extends OncePerRequestFilter {
         OAuth2AuthenticationToken oAuth2Authentication = userInfoTokenServices.loadAccountAuthentication(accountId, currentAuthentication);
         oAuth2Authentication.setDetails(currentAuthentication.getDetails());
         SecurityContextHolder.getContext().setAuthentication(oAuth2Authentication);
+    }
+
+    private WebContext createContext(HttpServletRequest req, HttpServletResponse res) {
+        JakartaServletWebApplication application = JakartaServletWebApplication.buildApplication(req.getServletContext());
+        IServletWebExchange exchange = application.buildExchange(req, res);
+        return new WebContext(exchange);
     }
 
     @Override

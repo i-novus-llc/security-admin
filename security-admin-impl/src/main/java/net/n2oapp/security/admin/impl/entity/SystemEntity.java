@@ -1,14 +1,13 @@
 package net.n2oapp.security.admin.impl.entity;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 /**
  * Сущность Система
@@ -26,6 +25,12 @@ public class SystemEntity {
     @NotNull
     @Column(name = "code")
     private String code;
+
+    /**
+     * Числовый код системы
+     */
+    @Column(name = "int_code", insertable = false, updatable = false)
+    private Integer intCode;
 
     /**
      * Наименование системы

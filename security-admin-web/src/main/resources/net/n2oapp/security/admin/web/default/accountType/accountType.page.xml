@@ -41,8 +41,11 @@
             <column text-field-id="userLevel.name" label="Уровень пользователя"/>
             <column text-field-id="">
                 <toolbar>
-                    <button icon="fa fa-trash" label="Удалить"
-                            confirm="true" confirm-text="Вы уверены, что хотите удалить тип аккаунта?">
+                    <button icon="fa fa-trash" label="Удалить">
+                        <confirm text="Вы уверены, что хотите удалить тип аккаунта?">
+                            <ok label="Да"/>
+                            <cancel label="Нет"/>
+                        </confirm>
                         <invoke operation-id="delete"/>
                     </button>
                 </toolbar>

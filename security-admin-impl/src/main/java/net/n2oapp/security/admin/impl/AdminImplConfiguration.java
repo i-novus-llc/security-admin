@@ -13,7 +13,7 @@ import net.n2oapp.security.admin.impl.service.UserLevelServiceImpl;
 import net.n2oapp.security.admin.impl.service.UserServiceImpl;
 import net.n2oapp.security.admin.impl.userinfo.UserInfoService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -56,7 +56,7 @@ public class AdminImplConfiguration {
     }
 
     @Bean
-    @ConditionalOnMissingBean
+    @ConditionalOnMissingClass("net.n2oapp.security.admin.sso.keycloak.KeycloakSsoUserRoleProvider")
     public SsoUserRoleProvider ssoUserRoleProvider() {
         return new SimpleSsoUserRoleProvider();
     }

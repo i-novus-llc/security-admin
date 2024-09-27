@@ -7,9 +7,8 @@ import net.n2oapp.framework.security.autoconfigure.userinfo.UserInfoStateHolder;
 import net.n2oapp.framework.security.autoconfigure.userinfo.mapper.PrincipalToJsonAbstractMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.security.core.Authentication;
@@ -24,7 +23,7 @@ import java.util.List;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
-@Configuration
+@AutoConfiguration
 public class InterceptorConfig {
 
     @Value("${n2o.platform.userinfo.send-by-default:true}")

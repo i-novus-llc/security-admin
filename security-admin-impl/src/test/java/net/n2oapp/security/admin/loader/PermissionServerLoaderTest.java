@@ -2,7 +2,7 @@ package net.n2oapp.security.admin.loader;
 
 import net.n2oapp.platform.loader.server.ServerLoader;
 import net.n2oapp.platform.loader.server.repository.RepositoryServerLoader;
-import net.n2oapp.platform.test.autoconfigure.pg.EnableEmbeddedPg;
+import net.n2oapp.platform.test.autoconfigure.pg.EnableTestcontainersPg;
 import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
 import net.n2oapp.security.admin.impl.repository.PermissionRepository;
@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test.properties")
-@EnableEmbeddedPg
+@EnableTestcontainersPg
 public class PermissionServerLoaderTest {
 
     @Autowired
@@ -43,8 +43,8 @@ public class PermissionServerLoaderTest {
     @Test
     public void repositoryLoader() {
         BiConsumer<List<Permission>, String> loader = serverLoader::load;
-        repository.deleteInBatch(repository.findBySystemCodeOrderByCodeDesc(SystemEntityBuilder.buildSystemEntity1()));
-        repository.deleteInBatch(repository.findBySystemCodeOrderByCodeDesc(SystemEntityBuilder.buildSystemEntity2()));
+        repository.deleteAllInBatch(repository.findBySystemCodeOrderByCodeDesc(SystemEntityBuilder.buildSystemEntity1()));
+        repository.deleteAllInBatch(repository.findBySystemCodeOrderByCodeDesc(SystemEntityBuilder.buildSystemEntity2()));
         case1(loader);
         case2(loader);
         case3(loader);

@@ -16,10 +16,10 @@
 package net.n2oapp.security.admin.rest.api.criteria;
 
 import io.swagger.annotations.ApiParam;
+import jakarta.ws.rs.QueryParam;
 import net.n2oapp.security.admin.api.criteria.UserCriteria;
 import org.springframework.data.domain.Sort;
 
-import javax.ws.rs.QueryParam;
 import java.time.LocalDateTime;
 import java.util.List;
 

@@ -1,5 +1,6 @@
 package net.n2oapp.security.admin.rest;
 
+import jakarta.ws.rs.NotFoundException;
 import net.n2oapp.security.admin.TestApplication;
 import net.n2oapp.security.admin.api.model.AccountType;
 import net.n2oapp.security.admin.api.model.UserLevel;
@@ -17,8 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import javax.ws.rs.NotFoundException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;

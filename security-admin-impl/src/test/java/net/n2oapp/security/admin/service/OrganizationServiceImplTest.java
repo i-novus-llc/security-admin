@@ -1,6 +1,6 @@
 package net.n2oapp.security.admin.service;
 
-import net.n2oapp.platform.test.autoconfigure.pg.EnableEmbeddedPg;
+import net.n2oapp.platform.test.autoconfigure.pg.EnableTestcontainersPg;
 import net.n2oapp.security.admin.api.criteria.OrgCategoryCriteria;
 import net.n2oapp.security.admin.api.criteria.OrganizationCriteria;
 import net.n2oapp.security.admin.api.model.Organization;
@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @TestPropertySource("classpath:test.properties")
-@EnableEmbeddedPg
+@EnableTestcontainersPg
 public class OrganizationServiceImplTest {
 
     @Autowired

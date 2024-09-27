@@ -1,7 +1,8 @@
 package net.n2oapp.security.admin.service;
 
+import jakarta.ws.rs.NotFoundException;
 import net.n2oapp.platform.i18n.UserException;
-import net.n2oapp.platform.test.autoconfigure.pg.EnableEmbeddedPg;
+import net.n2oapp.platform.test.autoconfigure.pg.EnableTestcontainersPg;
 import net.n2oapp.security.admin.api.criteria.RoleCriteria;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.RoleForm;
@@ -15,7 +16,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.ws.rs.NotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @TestPropertySource("classpath:test.properties")
-@EnableEmbeddedPg
+@EnableTestcontainersPg
 public class RoleServiceImplTest extends UserRoleServiceTestBase {
 
     @Test
@@ -133,6 +133,11 @@ public class RoleServiceImplTest extends UserRoleServiceTestBase {
     @Test
     public void getRoleByNotExistsId() {
         assertThrows(NotFoundException.class, () -> roleService.getById(-1));
+    }
+
+    @Test
+    public void getSystemAsRole() {
+        assertEquals("system1",roleService.getByIdWithSystem(-1).getCode());
     }
 
     /**

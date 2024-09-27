@@ -30,7 +30,7 @@ public class UserRestServiceImpl implements UserRestService {
     }
 
     @Override
-    public User getById(Integer id) {
+    public User getById(int id) {
         return service.getById(id);
     }
 

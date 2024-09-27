@@ -3,13 +3,10 @@ package net.n2oapp.security.admin.impl;
 import net.n2oapp.security.admin.impl.util.PasswordGenerator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Properties;
 
@@ -42,7 +39,6 @@ public class AdminCommonsConfiguration {
     public PasswordGenerator passwordGenerator() {
         return new PasswordGenerator();
     }
-
 
     @Bean
     public JavaMailSender getJavaMailSender() {

@@ -1,12 +1,12 @@
 package net.n2oapp.security.admin.impl.entity;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.n2oapp.security.admin.api.model.UserLevel;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -57,7 +57,7 @@ public class RoleEntity {
      */
     @JoinColumn(name = "system_code")
     @ManyToOne(fetch = FetchType.EAGER)
-    private SystemEntity systemCode;
+    private SystemEntity system;
 
     /**
      * Права доступа роли

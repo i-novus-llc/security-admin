@@ -55,8 +55,11 @@
                 <column text-field-id="userLevel.name" visible="${access.level.enabled}"/>
                 <column text-field-id="action" label=" ">
                     <toolbar>
-                        <button id="remove" icon="fa fa-trash" label="Удалить"
-                                confirm="true" confirm-text="Вы уверены, что хотите удалить право доступа?">
+                        <button id="remove" icon="fa fa-trash" label="Удалить">
+                            <confirm text="Вы уверены, что хотите удалить право доступа?">
+                                <ok label="Да"/>
+                                <cancel label="Нет"/>
+                            </confirm>
                             <invoke operation-id="delete"/>
                         </button>
                     </toolbar>

@@ -16,13 +16,12 @@
 package net.n2oapp.security.admin.rest.api;
 
 import io.swagger.annotations.*;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.api.model.RoleForm;
 import net.n2oapp.security.admin.rest.api.criteria.RestRoleCriteria;
 import org.springframework.data.domain.Page;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 
 /**
  * REST сервис управления ролями  пользователей
@@ -47,6 +46,15 @@ public interface RoleRestService {
             @ApiResponse(code = 404, message = "Роль не найдена")
     })
     Role getById(@ApiParam(value = "Идентификатор") @PathParam("id") Integer id);
+
+    @GET
+    @Path("/withSystem/{id}")
+    @ApiOperation(value = "Получить роль по идентификатору",notes = "Нужен для восстановления лейбла при обновлении страницы ", hidden = true)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Роль"),
+            @ApiResponse(code = 404, message = "Роль не найдена")
+    })
+    Role getByIdWithSystem(@ApiParam(value = "Идентификатор") @PathParam("id") Integer id);
 
     @POST
     @Path("/")

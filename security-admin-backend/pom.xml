@@ -57,12 +57,6 @@
         </dependency>
 
         <dependency>
-            <groupId>ru.i-novus.ms.audit</groupId>
-            <artifactId>audit-client-spring-boot-starter</artifactId>
-            <version>${audit.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
             <version>${liquibase.version}</version>
@@ -77,13 +71,25 @@
         <dependency>
             <groupId>ru.i-novus.ms.rdm.sync</groupId>
             <artifactId>rdm-sync-spring-boot-starter</artifactId>
-            <version>${rdm.version}</version>
+            <version>${rdm-sync.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>junit</groupId>
                     <artifactId>junit</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.i-novus.ms.rdm</groupId>
+            <artifactId>rdm-api</artifactId>
+            <version>${rdm-api.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-properties-migrator</artifactId>
+            <scope>runtime</scope>
         </dependency>
 
         <dependency>
@@ -113,7 +119,7 @@
         <dependency>
             <groupId>com.icegreen</groupId>
             <artifactId>greenmail</artifactId>
-            <version>1.5.6</version>
+            <version>2.0.1</version>
             <scope>test</scope>
         </dependency>
         <!-- /TEST -->

@@ -1,10 +1,11 @@
 package net.n2oapp.security.admin.impl.loader;
 
+import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.core.Response;
 import net.n2oapp.platform.loader.server.ServerLoader;
 import net.n2oapp.platform.loader.server.ServerLoaderSettings;
 import net.n2oapp.security.admin.api.model.AccountType;
 import net.n2oapp.security.admin.api.model.AccountTypeRoleEnum;
-import net.n2oapp.security.admin.api.model.Permission;
 import net.n2oapp.security.admin.api.model.Role;
 import net.n2oapp.security.admin.impl.entity.AccountTypeEntity;
 import net.n2oapp.security.admin.impl.entity.AccountTypeRoleEntity;
@@ -17,8 +18,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;

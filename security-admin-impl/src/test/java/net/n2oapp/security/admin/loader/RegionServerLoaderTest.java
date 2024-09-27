@@ -1,6 +1,6 @@
 package net.n2oapp.security.admin.loader;
 
-import net.n2oapp.platform.test.autoconfigure.pg.EnableEmbeddedPg;
+import net.n2oapp.platform.test.autoconfigure.pg.EnableTestcontainersPg;
 import net.n2oapp.security.admin.TestApplication;
 import net.n2oapp.security.admin.api.model.Region;
 import net.n2oapp.security.admin.impl.entity.RegionEntity;
@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -28,8 +28,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test.properties")
-@EnableEmbeddedPg
-public class RegionServerLoaderTest {
+@EnableTestcontainersPg
+class RegionServerLoaderTest {
+
     @LocalServerPort
     private String port;
 

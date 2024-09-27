@@ -1,5 +1,6 @@
 package net.n2oapp.security.auth.context.account;
 
+import jakarta.servlet.ServletException;
 import net.n2oapp.security.admin.api.model.Account;
 import net.n2oapp.security.admin.rest.client.AccountServiceRestClient;
 import net.n2oapp.security.auth.common.OauthUser;
@@ -22,7 +23,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.thymeleaf.ITemplateEngine;
 import org.thymeleaf.context.WebContext;
 
-import javax.servlet.ServletException;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.List;

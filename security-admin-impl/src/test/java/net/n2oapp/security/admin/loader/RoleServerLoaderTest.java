@@ -1,7 +1,7 @@
 package net.n2oapp.security.admin.loader;
 
 import net.n2oapp.platform.loader.server.ServerLoader;
-import net.n2oapp.platform.test.autoconfigure.pg.EnableEmbeddedPg;
+import net.n2oapp.platform.test.autoconfigure.pg.EnableTestcontainersPg;
 import net.n2oapp.security.admin.api.model.RoleForm;
 import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.impl.entity.PermissionEntity;
@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test.properties")
-@EnableEmbeddedPg
+@EnableTestcontainersPg
 public class RoleServerLoaderTest {
 
     @Autowired
@@ -67,7 +67,7 @@ public class RoleServerLoaderTest {
 
         loader.accept(data, "system1");
 
-        assertEquals(2, repository.findBySystemCode(SystemEntityBuilder.buildSystemEntity1()).size());
+        assertEquals(2, repository.findBySystem(SystemEntityBuilder.buildSystemEntity1()).size());
         roleAssertEquals(roleForm1, repository.findOneByCode("rcode1"));
         roleAssertEquals(roleForm2, repository.findOneByCode("rcode2"));
     }
@@ -84,7 +84,7 @@ public class RoleServerLoaderTest {
 
         loader.accept(data, "system1");
 
-        assertEquals(3, repository.findBySystemCode(SystemEntityBuilder.buildSystemEntity1()).size());
+        assertEquals(3, repository.findBySystem(SystemEntityBuilder.buildSystemEntity1()).size());
         roleAssertEquals(roleForm1, repository.findOneByCode("rcode1"));
         roleAssertEquals(RoleFormBuilder.buildRoleForm2Updated(), repository.findOneByCode("rcode2"));
         roleAssertEquals(roleForm3, repository.findOneByCode("rcode3"));
@@ -100,7 +100,7 @@ public class RoleServerLoaderTest {
 
         loader.accept(data, "system2");
 
-        assertEquals(3, repository.findBySystemCode(SystemEntityBuilder.buildSystemEntity2()).size());
+        assertEquals(3, repository.findBySystem(SystemEntityBuilder.buildSystemEntity2()).size());
         roleAssertEquals(roleForm4, repository.findOneByCode("rcode4"));
         roleAssertEquals(roleForm5, repository.findOneByCode("rcode5"));
     }
