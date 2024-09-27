@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk14:jre as builder
+FROM inovus/openjdk:17-jdk as builder
 WORKDIR app
 
 ARG JAR_FILE=target/access-web.jar
