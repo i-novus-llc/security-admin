@@ -13,8 +13,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.Instant;
 import java.util.Map;
@@ -31,15 +31,15 @@ public class UserInfoTest {
     private int port;
 
     @Autowired
-    private WebClient webClient;
+    private RestClient restClient;
 
     @Autowired
     private RestTemplate restTemplate;
 
     @Test
-    public void userinfoWebClientTest() {
+    public void userinfoRestClientTest() {
         SecurityContextHolder.setContext(new SecurityContextImpl(oAuth2AuthenticationToken()));
-        ResponseEntity<Boolean> nextServiceContextCorrect = webClient.get().uri("http://localhost:" + port).retrieve().toEntity(Boolean.class).block();
+        ResponseEntity<Boolean> nextServiceContextCorrect = restClient.get().uri("http://localhost:" + port).retrieve().toEntity(Boolean.class);
         assertThat(nextServiceContextCorrect.getBody(), is(true));
     }
 

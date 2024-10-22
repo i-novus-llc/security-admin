@@ -14,9 +14,8 @@ import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 
@@ -33,15 +32,7 @@ public class InterceptorConfig {
     private String userInfoHeaderName;
 
     @Bean
-    public ExchangeFilterFunction userinfoExchangeFilterFunction(PrincipalToJsonAbstractMapper principalToJsonMapper) {
-        return (request, next) -> {
-            addUserInfoHeader(request.headers(), principalToJsonMapper);
-            return next.exchange(request);
-        };
-    }
-
-    @Bean
-    public ClientHttpRequestInterceptor userinfoRestTemplateInterceptor(PrincipalToJsonAbstractMapper principalToJsonMapper) {
+    public ClientHttpRequestInterceptor userinfoClientHttpRequestInterceptor(PrincipalToJsonAbstractMapper principalToJsonMapper) {
         return (request, body, execution) -> {
             addUserInfoHeader(request.getHeaders(), principalToJsonMapper);
             return execution.execute(request, body);
@@ -79,14 +70,14 @@ public class InterceptorConfig {
     }
 
     @Bean
-    public RestTemplate platformRestTemplate(@Qualifier("userinfoRestTemplateInterceptor") ClientHttpRequestInterceptor interceptor) {
+    public RestTemplate platformRestTemplate(@Qualifier("userinfoClientHttpRequestInterceptor") ClientHttpRequestInterceptor interceptor) {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.setInterceptors(List.of(interceptor));
         return restTemplate;
     }
 
     @Bean
-    public WebClient platformWebClient(@Qualifier("userinfoExchangeFilterFunction") ExchangeFilterFunction userinfoExchangeFilterFunction) {
-        return WebClient.builder().filter(userinfoExchangeFilterFunction).build();
+    public RestClient platformRestClient(@Qualifier("userinfoClientHttpRequestInterceptor") ClientHttpRequestInterceptor userinfoClientHttpRequestInterceptor) {
+        return RestClient.builder().requestInterceptor(userinfoClientHttpRequestInterceptor).build();
     }
 }

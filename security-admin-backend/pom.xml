@@ -97,6 +97,12 @@
             <artifactId>spring-boot-starter-activemq</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-client</artifactId>
+            <version>6.4.0-M4</version>
+        </dependency>
+
         <!-- TEST -->
         <dependency>
             <groupId>net.n2oapp.platform</groupId>
