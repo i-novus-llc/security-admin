@@ -68,18 +68,18 @@ n2o.platform.userinfo.username-only=false
 @UserInfo(false)
 public class SomeService {
     @Autowired
-    @Qualifier("platformWebClient")
-    WebClient webClient;
+    @Qualifier("platformRestClient")
+    RestClient restClient;
 
     @UserInfo(value = false)
     public void method1() {
-        webClient.get().retrieve().bodyToMono(String.class).block();
+        restClient.get().retrieve().bodyToMono(String.class).block();
         method2();
     }
 
     @UserInfo(value = true)
     public void method2() {
-        webClient.get().retrieve().bodyToMono(String.class).block();
+        restClient.get().retrieve().bodyToMono(String.class).block();
     }
 }
 ----
@@ -89,13 +89,13 @@ public class SomeService {
 
 Клиенты с интегрированными интерцепторами, отправляющие информацию о пользователе.
 
-* WebClient(spring)
+* RestClient(spring)
 
 [source,java]
 ----
 @Autowired
-@Qualifier("platformWebClient")
-WebClient webClient;
+@Qualifier("platformRestClient")
+RestClient restClient;
 ----
 
 * RestTemplate
@@ -114,22 +114,13 @@ RestTemplate restTemplate;
 
 Модуль предоставляет интерцепторы для:
 
-* WebClient(spring)
+* RestClient(spring)/RestTemplate
 
 [source,java]
 ----
 @Autowired
-@Qualifier("userinfoExchangeFilterFunction")
-ExchangeFilterFunction userinfoExchangeFilterFunction;
-----
-
-* RestTemplate
-
-[source,java]
-----
-@Autowired
-@Qualifier("userinfoRestTemplateInterceptor")
-ClientHttpRequestInterceptor userinfoRestTemplateInterceptor;
+@Qualifier("userinfoClientHttpRequestInterceptor")
+ClientHttpRequestInterceptor userinfoExchangeFilterFunction;
 ----
 
 * Feign

@@ -5,10 +5,11 @@ import net.n2oapp.security.admin.impl.provider.SimpleSsoUserRoleProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.client.ClientHttpRequestFactories;
+import org.springframework.boot.web.client.ClientHttpRequestFactorySettings;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.security.oauth2.client.*;
 import org.springframework.security.oauth2.client.endpoint.DefaultClientCredentialsTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
@@ -18,10 +19,9 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.AuthenticatedPrincipalOAuth2AuthorizedClientRepository;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
-import org.springframework.security.oauth2.client.web.reactive.function.client.ServletOAuth2AuthorizedClientExchangeFilterFunction;
+import org.springframework.security.oauth2.client.web.client.OAuth2ClientHttpRequestInterceptor;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.netty.http.client.HttpClient;
+import org.springframework.web.client.RestClient;
 
 import java.time.Duration;
 
@@ -50,28 +50,30 @@ public class SsoKeycloakConfiguration {
 
     @Bean
     KeycloakRestRoleService keycloakRestRoleService(AdminSsoKeycloakProperties properties,
-                                                    @Qualifier("keycloakWebClient") WebClient webClient) {
-        return new KeycloakRestRoleService(properties, webClient);
+                                                    @Qualifier("keycloakRestClient") RestClient restClient) {
+        return new KeycloakRestRoleService(properties, restClient);
     }
 
     @Bean
     KeycloakRestUserService keycloakRestUserService(AdminSsoKeycloakProperties properties,
-                                                    @Qualifier("keycloakWebClient") WebClient webClient,
+                                                    @Qualifier("keycloakRestClient") RestClient restClient,
                                                     KeycloakRestRoleService roleService) {
-        return new KeycloakRestUserService(properties, webClient, roleService);
+        return new KeycloakRestUserService(properties, restClient, roleService);
     }
 
     @Bean
-    @Qualifier("keycloakWebClient")
-    public WebClient webClient(OAuth2AuthorizedClientManager authorizedClientManager, AdminSsoKeycloakProperties properties) {
-        ServletOAuth2AuthorizedClientExchangeFilterFunction oauth2Client =
-                new ServletOAuth2AuthorizedClientExchangeFilterFunction(authorizedClientManager);
-        oauth2Client.setDefaultClientRegistrationId(properties.getAdminClientId());
-        HttpClient client = HttpClient.create()
-                .responseTimeout(Duration.ofSeconds(20));
-        return WebClient.builder()
-                .clientConnector(new ReactorClientHttpConnector(client))
-                .apply(oauth2Client.oauth2Configuration())
+    @Qualifier("keycloakRestClient")
+    public RestClient restClient(OAuth2AuthorizedClientManager authorizedClientManager, AdminSsoKeycloakProperties properties) {
+        OAuth2ClientHttpRequestInterceptor requestInterceptor =
+                new OAuth2ClientHttpRequestInterceptor(authorizedClientManager, request -> properties.getAdminClientId());
+
+        ClientHttpRequestFactorySettings settings = ClientHttpRequestFactorySettings.DEFAULTS
+                .withConnectTimeout(Duration.ofSeconds(20))
+                .withReadTimeout(Duration.ofSeconds(20));
+
+        return RestClient.builder()
+                .requestFactory(ClientHttpRequestFactories.get(settings))
+                .requestInterceptor(requestInterceptor)
                 .build();
     }
 

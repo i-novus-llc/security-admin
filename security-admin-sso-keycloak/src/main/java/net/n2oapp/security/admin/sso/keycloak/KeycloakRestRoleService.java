@@ -8,13 +8,14 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.keycloak.representations.idm.ErrorRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientResponseException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -31,15 +32,15 @@ public class KeycloakRestRoleService {
     private static String ROLE_COMPOSITES = "%s/admin/realms/%s/roles/%s/composites";
 
     private AdminSsoKeycloakProperties properties;
-    private WebClient webClient;
+    private RestClient restClient;
 
-    public KeycloakRestRoleService(AdminSsoKeycloakProperties properties, WebClient webClient) {
+    public KeycloakRestRoleService(AdminSsoKeycloakProperties properties, RestClient restClient) {
         this.properties = properties;
-        this.webClient = webClient;
+        this.restClient = restClient;
     }
 
-    public void setWebClient(WebClient webClient) {
-        this.webClient = webClient;
+    public void setRestClient(RestClient restClient) {
+        this.restClient = restClient;
     }
 
     /**
@@ -51,7 +52,7 @@ public class KeycloakRestRoleService {
     public RoleRepresentation getByName(String roleName) {
         final String serverUrl = String.format(ROLE_BY_NAME, properties.getServerUrl(), properties.getRealm(), roleName);
         try {
-            ResponseEntity<RoleRepresentation> response = webClient.get().uri(serverUrl).retrieve().toEntity(RoleRepresentation.class).block();
+            ResponseEntity<RoleRepresentation> response = restClient.get().uri(serverUrl).retrieve().toEntity(RoleRepresentation.class);
             return response.getBody();
         } catch (HttpClientErrorException ex) {
             if (ex.getStatusCode().value() == 404) {
@@ -69,7 +70,7 @@ public class KeycloakRestRoleService {
     public List<RoleRepresentation> getAllRoles() {
         final String serverUrl = String.format(ROLES, properties.getServerUrl(), properties.getRealm());
         try {
-            ResponseEntity<List<RoleRepresentation>> response = webClient.get().uri(serverUrl).retrieve().toEntityList(RoleRepresentation.class).block();
+            ResponseEntity<List<RoleRepresentation>> response = restClient.get().uri(serverUrl).retrieve().toEntity(new ParameterizedTypeReference<List<RoleRepresentation>>(){});
             return response.getBody();
         } catch (HttpClientErrorException ex) {
             if (ex.getStatusCode().value() == 404) {
@@ -90,8 +91,8 @@ public class KeycloakRestRoleService {
         final String roleCompositesServerUrl = String.format(ROLE_COMPOSITES, properties.getServerUrl(), properties.getRealm(), role.getName());
         ResponseEntity<Response> response;
         try {
-            response = webClient.post().uri(serverUrl).contentType(APPLICATION_JSON).bodyValue(role).retrieve().toEntity(Response.class).block();
-        } catch (WebClientResponseException e) {
+            response = restClient.post().uri(serverUrl).contentType(APPLICATION_JSON).body(role).retrieve().toEntity(Response.class);
+        } catch (RestClientResponseException e) {
             if (e.getStatusCode().equals(HttpStatus.CONFLICT)) {
                 log.warn(String.format("Role with id:\'%s\' already exists in keycloak:\'%s\'", role.getName(), properties.getServerUrl()));
                 return role.getName();
@@ -107,7 +108,7 @@ public class KeycloakRestRoleService {
                     composites.addAll(role.getComposites().getClient().values().stream().filter(Objects::nonNull)
                             .flatMap(Collection::stream).map(IdObject::new).collect(Collectors.toSet()));
                 }
-                ResponseEntity<Response> compositesResponse = webClient.post().uri(roleCompositesServerUrl).contentType(APPLICATION_JSON).bodyValue(composites).retrieve().toEntity(Response.class).block();
+                ResponseEntity<Response> compositesResponse = restClient.post().uri(roleCompositesServerUrl).contentType(APPLICATION_JSON).body(composites).retrieve().toEntity(Response.class);
                 if (compositesResponse.getStatusCode().value() < 200 || compositesResponse.getStatusCode().value() > 300) {
                     throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
                 }
@@ -126,7 +127,7 @@ public class KeycloakRestRoleService {
     public void updateRole(RoleRepresentation role) {
         final String serverUrl = String.format(ROLE_BY_NAME, properties.getServerUrl(), properties.getRealm(), role.getName());
         final String roleCompositesServerUrl = String.format(ROLE_COMPOSITES, properties.getServerUrl(), properties.getRealm(), role.getName());
-        ResponseEntity<Response> response = webClient.put().uri(serverUrl).contentType(APPLICATION_JSON).bodyValue(role).retrieve().toEntity(Response.class).block();
+        ResponseEntity<Response> response = restClient.put().uri(serverUrl).contentType(APPLICATION_JSON).body(role).retrieve().toEntity(Response.class);
         if (response.getStatusCode().value() < 200 || response.getStatusCode().value() > 300) {
             throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
         }
@@ -153,14 +154,14 @@ public class KeycloakRestRoleService {
                     Set<IdObject> newComposites = composites.stream().filter(r -> !currentComposites.contains(r))
                             .map(IdObject::new).collect(Collectors.toSet());
                     if (newComposites != null) {
-                        ResponseEntity<Response> compositesResponse = webClient.post().uri(roleCompositesServerUrl).contentType(APPLICATION_JSON).bodyValue(newComposites).retrieve().toEntity(Response.class).block();
+                        ResponseEntity<Response> compositesResponse = restClient.post().uri(roleCompositesServerUrl).contentType(APPLICATION_JSON).body(newComposites).retrieve().toEntity(Response.class);
                         if (compositesResponse.getStatusCode().value() < 200 || compositesResponse.getStatusCode().value() > 300) {
                             throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
                         }
                     }
                 }
                 if (!forRemove.isEmpty()) {
-                    webClient.method(HttpMethod.DELETE).uri(roleCompositesServerUrl).contentType(APPLICATION_JSON).bodyValue(forRemove).retrieve().toEntity(Response.class).block();
+                    restClient.method(HttpMethod.DELETE).uri(roleCompositesServerUrl).contentType(APPLICATION_JSON).body(forRemove).retrieve().toEntity(Response.class);
                 }
             }
         } else {
@@ -176,7 +177,7 @@ public class KeycloakRestRoleService {
      */
     public List<RoleRepresentation> getRoleComposites(String roleName) {
         final String roleCompositesServerUrl = String.format(ROLE_COMPOSITES, properties.getServerUrl(), properties.getRealm(), roleName);
-        return webClient.get().uri(roleCompositesServerUrl).retrieve().toEntityList(RoleRepresentation.class).block().getBody();
+        return restClient.get().uri(roleCompositesServerUrl).retrieve().toEntity(new ParameterizedTypeReference<List<RoleRepresentation>>(){}).getBody();
     }
 
     /**
@@ -188,7 +189,7 @@ public class KeycloakRestRoleService {
         final String serverUrl = String.format(ROLE_BY_NAME, properties.getServerUrl(), properties.getRealm(), roleName);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(APPLICATION_JSON);
-        ResponseEntity<Response> response = webClient.method(HttpMethod.DELETE).uri(serverUrl).contentType(APPLICATION_JSON).retrieve().toEntity(Response.class).block();
+        ResponseEntity<Response> response = restClient.method(HttpMethod.DELETE).uri(serverUrl).contentType(APPLICATION_JSON).retrieve().toEntity(Response.class);
         if (response.getStatusCode().value() < 200 || response.getStatusCode().value() > 300) {
             throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
         }
