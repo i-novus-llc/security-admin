@@ -1,0 +1,31 @@
+## Global values for parent chart and subcharts.
+global:
+  spring:
+    ## Use default consul address `consul-agent.local` or use pod host IP.
+    useDefaultConsul: true
+
+security:
+  frontend:
+    enabled: true
+  backend:
+    enabled: true
+
+
+infrastructure:
+  genericServices:
+    security-db:
+      volumes:
+        - name: security-db-data
+          persistentVolumeClaim:
+            claimName: security-db-data
+      volumeMounts:
+        - name: security-db-data
+          mountPath: /pg/14/data
+      initContainers:
+        - name: permission-init
+          image: alpine
+          command: [ "sh","-c","chown -R 70:70 /pg/14/data" ]
+          volumeMounts:
+            - name: security-db-data
+              mountPath: /pg/14/data
+      enabled: true

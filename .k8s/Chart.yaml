@@ -1,0 +1,15 @@
+apiVersion: v2
+name: security-admin
+version: ${project.version}
+appVersion: ${project.version}
+
+dependencies:
+  # template chart for application spring services
+  - name: spring-app-template
+    version: 1.1.0
+    repository: oci://harbor.i-novus.ru/library/helm/n2o
+    alias: security
+
+
+  - name: infrastructure
+    version: ${project.version}

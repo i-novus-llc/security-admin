@@ -1,4 +1,5 @@
-FROM inovus/openjdk:17-jdk
+ARG BASE_IMAGE=harbor.i-novus.ru/library/redos7c/jdk-17:17.0.10-1.30.0
+FROM $BASE_IMAGE AS builder
 
 
 EXPOSE 8080

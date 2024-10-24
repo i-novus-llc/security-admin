@@ -1,0 +1,52 @@
+## Global values for parent chart and subcharts.
+global:
+  observability:
+    ## Enable observability data collection.
+    enabled: false
+  spring:
+    ## url of system's main relational database
+    dbUrl: "jdbc:postgresql://security-db:5432/"
+    # Application default username of system's main relational database, should be overridden for production use.
+    dbUsername: "postgres"
+    # Application default password of system's main relational database, should be overridden for production use.
+    dbPassword: "postgres"
+      #    env:
+      ## settings are provided consul
+      ## profile 'local' is reserved for a single start
+      #      SPRING_CLOUD_CONSUL_HOST: consul-agent.local
+      ## use spring profiles for change Service settings in a cluster
+      ## profile 'local' is reserved for a single start
+    ## SPRING_PROFILES_ACTIVE: local-helm
+  #settings for ingress
+  ingress:
+    ## External host name.
+    host: "kubernetes.docker.internal"
+    ## TLS certificate secret name.
+    # certSecretName: "cert"
+
+# list of spring boot services using the database with specific values for each
+security:
+  frontend:
+    enabled: true
+  backend:
+    enabled: true
+
+
+infrastructure:
+  genericServices:
+    security-db:
+      volumes:
+        - name: security-db-data
+          persistentVolumeClaim:
+            claimName: security-db-data
+      volumeMounts:
+        - name: security-db-data
+          mountPath: /pg/14/data
+      initContainers:
+        - name: permission-init
+          image: alpine
+          command: [ "sh","-c","chown -R 70:70 /pg/14/data" ]
+          volumeMounts:
+            - name: security-db-data
+              mountPath: /pg/14/data
+      enabled: true

@@ -1,0 +1,29 @@
+version: "3.6"
+
+services:
+  frontend:
+    image: "${DOCKER_REGISTRY}/security-admin/frontend:${docker.image.tag}"
+    build:
+      context: ${project.basedir}/security-admin-frontend
+      args:
+        JAR_FILE: target/access-web.jar
+
+  backend:
+    image: "${DOCKER_REGISTRY}/security-admin/backend:${docker.image.tag}"
+    build:
+      context: ${project.basedir}/security-admin-backend
+      args:
+        JAR_FILE: target/access-service.jar
+
+  security-db:
+    image: "${DOCKER_REGISTRY}/security-admin/db:${docker.image.tag}"
+    build:
+      context: ${project.basedir}/db-init
+      args:
+        DOCKER_REGISTRY: ${DOCKER_REGISTRY}
+    volumes:
+      - security-db-data:/pg/14/data
+
+
+volumes:
+  security-db-data:

@@ -1,0 +1,97 @@
+{{- range $service, $val := .Values.genericServices }}
+  {{- if ne .enabled false }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $service }}
+spec:
+  selector:
+    app: {{ $service }}
+  ports:
+    - port: {{ .port }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $service }}
+spec:
+  replicas: {{ .replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ $service }}
+  template:
+    metadata:
+      labels:
+        app: {{ $service }}
+    spec:
+      {{- if .initContainers }}
+      initContainers:  {{- toYaml .initContainers | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ $service }}
+          image: {{ coalesce .registry $.Values.global.dockerRegistry }}{{ .imageName }}:{{ coalesce .imageTag $.Values.global.imageTag }}
+          imagePullPolicy: {{ .imagePullPolicy }}
+          env:
+            {{- range $key, $value := .env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          {{- if .resources }}
+          resources: {{- toYaml .resources | nindent 12 }}
+          {{- end }}
+          {{- if .volumeMounts }}
+          volumeMounts: {{- toYaml .volumeMounts | nindent 12 }}
+          {{- end }}
+          {{- if .startupProbe }}
+          startupProbe: {{- toYaml .startupProbe | nindent 12 }}
+          {{- end }}
+          {{- if .livenessProbe }}
+          livenessProbe: {{- toYaml .livenessProbe | nindent 12 }}
+          {{- end }}
+          {{- if .readinessProbe }}
+          readinessProbe: {{- toYaml .readinessProbe | nindent 12 }}
+          {{- end }}
+      {{- if .volumes }}
+      volumes: {{- toYaml .volumes | nindent 8 }}
+      {{- end }}
+---
+{{- end }}
+{{- if .ingress }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $service }}
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 20m
+    {{- if .ingress.pathRewrite }}
+    nginx.ingress.kubernetes.io/rewrite-target: {{ .ingress.pathRewrite }}
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+    {{- end }}
+    {{- if .ingress.xForwardedPrefix }}
+    nginx.ingress.kubernetes.io/x-forwarded-prefix: {{ .ingress.xForwardedPrefix }}
+    {{- end }}
+spec:
+  ingressClassName: "nginx"
+  {{- if and $.Values.global.ingress $.Values.global.ingress.certSecretName }}
+  tls:
+    - hosts:
+        - {{ $.Values.global.ingress.host }}
+      secretName: {{ $.Values.global.ingress.certSecretName }}
+  {{- end }}
+  rules:
+    - http:
+        paths:
+          - path: {{ required "Service path must be set if ingress used." .ingress.path }}
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ $service }}
+                port:
+                  number: 8080
+      {{- if $.Values.global.ingress }}
+      host: {{ $.Values.global.ingress.host }}
+      {{- end }}
+---
+{{- end }}
+{{- end }}

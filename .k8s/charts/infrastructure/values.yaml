@@ -1,0 +1,13 @@
+# list of all generic services with specific values for each
+genericServices:
+  security-db:
+    port: 5432
+    imageName: /security-admin/db
+    imageTag: ${docker.image.tag}
+    imagePullPolicy: IfNotPresent
+    resources:
+      limits:
+        memory: 1024M
+    replicaCount: 1
+    env:
+      POSTGRES_PASSWORD: postgres

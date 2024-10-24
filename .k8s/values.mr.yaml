@@ -1,0 +1,22 @@
+# global values for parent chart and subcharts
+global:
+  observability:
+    ## Enable observability data collection.
+    enabled: false
+  spring:
+    dbUrl: "jdbc:postgresql://security-db:5432/"
+    dbUsername: "postgres"
+    dbPassword: "postgres"
+    useDefaultConsul: false
+
+# list of spring boot services using the database with specific values for each
+security:
+  backend:
+    enabled: true
+  frontend:
+    enabled: true
+
+infrastructure:
+  genericServices:
+    security-db:
+      enabled: true

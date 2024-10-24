@@ -1,0 +1,73 @@
+## Global values for parent chart and subcharts.
+global:
+  observability:
+    ## Enable observability data collection.
+    enabled: true
+    ## Override zipkin protocol tracing service address and port.
+    zipkinUrl: http://observability-tempo-distributor.observability:9411
+    ## Override loki push url.
+    lokiUrl: http://observability-loki.observability:3100/loki/api/v1/push
+  ## Current build tag for images of this project.
+  imageTag: "${docker.image.tag}"
+  ## Global values for all spring services.
+  spring:
+    ## Global environment variables injected in every spring service.
+    env:
+      SPRING_CLOUD_CONSUL_CONFIG_PREFIX: "common"
+      SPRING_CLOUD_CONSUL_CONFIG_FORMAT: YAML
+      JAVA_OPTS: "-XX:MaxRAMPercentage=75"
+    ## URL of system's main relational database.
+    # dbUrl: "jdbc:postgresql://postgresql:5432/"
+    ## Application default username of system's main relational database, should be overridden for production use.
+    # dbUsername: "postgres"
+    ## Application default password of system's main relational database, should be overridden for production use.
+    # dbPassword: "postgres"
+    ## Use default consul address `consul-agent.local` or use pod host IP.
+    # useDefaultConsul: false
+    ## Ingress global settings.
+    # ingress:
+    ## External host name.
+    # host: "kubernetes.docker.internal"
+    ## TLS certificate secret name.
+    # certSecretName: "cert"
+
+# list of spring boot services using the database with specific values for each
+security:
+  frontend:
+    replicaCount: 1
+    enabled: true
+    imageName: security-admin/frontend
+    actuatorPath: "actuator"
+    env:
+      JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+      JAVA_OPTS: -Xmx300m
+      ACCESS_SERVICE_USERINFO_URL: "http://backend:8080/userinfo"
+      ACCESS_SERVICE_URL: "http://backend:8080"
+      SPRING_CLOUD_CONSUL_CONFIG_PREFIX: "security-admin-master"
+      ACCESS_EMAIL_AS_USERNAME: "true"
+
+  backend:
+    replicaCount: 1
+    enabled: true
+    imageName: security-admin/backend
+    actuatorPath: "actuator"
+    overrideDbName: "security"
+    env:
+      JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+      JAVA_OPTS: -Xmx400m
+      SERVER_PORT: 8080
+      SERVER_USE_FORWARD_HEADERS: true
+      ACCESS_KEYCLOAK_SERVER_URL: "https://keycloak8.i-novus.ru/auth"
+      ACCESS_KEYCLOAK_REALM: security-admin
+      ACCESS_ORGANIZATION_PERSIST_MODE: rest
+      ACCESS_EMAIL_AS_USERNAME: true
+      AUDIT_CLIENT_ENABLED: false
+      SPRING_CLOUD_CONSUL_CONFIG_PREFIX: "security-admin-master"
+      SPRING_CLOUD_CONSUL_CONFIG_FORMAT: YAML
+
+
+infrastructure:
+  genericServices:
+    security-db:
+      enabled: true
+
