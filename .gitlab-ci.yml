@@ -1,0 +1,20 @@
+include:
+  - project: ${PIPELINE_REPOSITORY_PREFIX}devenv/gitlab/pipelines
+    ref: '1.2.0'
+    file:
+      - deploy-dev-stand.gitlab-ci.yml
+      - merge-request.gitlab-ci.yml
+      - jira.gitlab-ci.yml
+
+build:
+  variables:
+    MAVEN_GOAL: 'deploy'
+
+deploy dev stand:
+  variables:
+    K8S_NAMESPACE: 'security-admin'
+    HELM_OPTIONAL_FLAGS: '-f $HELM_CHART_PATH/values.develop.yaml'
+
+deploy mr stand:
+  variables:
+    HELM_OPTIONAL_FLAGS: '-f $HELM_CHART_PATH/values.mr.yaml --set global.ingress.host=$CI_COMMIT_REF_SLUG.i-novus.ru --timeout=10m'
