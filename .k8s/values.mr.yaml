@@ -7,7 +7,7 @@ global:
     dbUrl: "jdbc:postgresql://security-db:5432/"
     dbUsername: "postgres"
     dbPassword: "postgres"
-    useDefaultConsul: false
+    useDefaultConsul: true
 
 # list of spring boot services using the database with specific values for each
 security:
