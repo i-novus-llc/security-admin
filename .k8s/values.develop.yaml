@@ -3,6 +3,9 @@ global:
   spring:
     ## Use default consul address `consul-agent.local` or use pod host IP.
     useDefaultConsul: false
+    dbUrl: "jdbc:postgresql://postgresql:5432/"
+    dbUsername: "postgres"
+    dbPassword: "postgres"
 
 security:
   frontend:
