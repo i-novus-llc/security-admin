@@ -2,7 +2,7 @@
 global:
   spring:
     ## Use default consul address `consul-agent.local` or use pod host IP.
-    useDefaultConsul: true
+    useDefaultConsul: false
 
 security:
   frontend:
