@@ -12,8 +12,14 @@ global:
 # list of spring boot services using the database with specific values for each
 security:
   backend:
+    resources:
+      limits:
+        memory: 1000M
     enabled: true
   frontend:
+    resources:
+      limits:
+        memory: 1000M
     enabled: true
 
 infrastructure:

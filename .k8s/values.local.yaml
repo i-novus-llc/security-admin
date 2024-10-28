@@ -42,11 +42,4 @@ infrastructure:
       volumeMounts:
         - name: security-db-data
           mountPath: /pg/14/data
-      initContainers:
-        - name: permission-init
-          image: alpine
-          command: [ "sh","-c","chown -R 70:70 /pg/14/data" ]
-          volumeMounts:
-            - name: security-db-data
-              mountPath: /pg/14/data
       enabled: true

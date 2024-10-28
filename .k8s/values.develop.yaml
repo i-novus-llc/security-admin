@@ -6,14 +6,21 @@ global:
 
 security:
   frontend:
+    resources:
+      limits:
+        memory: 1000M
     enabled: true
   backend:
+    resources:
+      limits:
+        memory: 1000M
     enabled: true
 
 
 infrastructure:
   genericServices:
     security-db:
+      storageClassName: 'nfs-retain'
       volumes:
         - name: security-db-data
           persistentVolumeClaim:
@@ -21,11 +28,4 @@ infrastructure:
       volumeMounts:
         - name: security-db-data
           mountPath: /pg/14/data
-      initContainers:
-        - name: permission-init
-          image: alpine
-          command: [ "sh","-c","chown -R 70:70 /pg/14/data" ]
-          volumeMounts:
-            - name: security-db-data
-              mountPath: /pg/14/data
       enabled: true
