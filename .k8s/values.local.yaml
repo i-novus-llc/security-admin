@@ -35,11 +35,4 @@ security:
 infrastructure:
   genericServices:
     security-db:
-      volumes:
-        - name: security-db-data
-          persistentVolumeClaim:
-            claimName: security-db-data
-      volumeMounts:
-        - name: security-db-data
-          mountPath: /pg/14/data
       enabled: true

@@ -9,6 +9,13 @@ genericServices:
       limits:
         memory: 1024M
     replicaCount: 1
+    volumes:
+      - name: demo-db-data
+        persistentVolumeClaim:
+          claimName: demo-db-data
+    volumeMounts:
+      - mountPath: /pg/12/data
+        name: demo-db-data
     env:
       POSTGRES_PASSWORD: postgres
     initContainers:
