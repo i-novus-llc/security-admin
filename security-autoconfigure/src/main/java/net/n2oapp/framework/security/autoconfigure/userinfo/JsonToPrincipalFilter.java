@@ -12,6 +12,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 
 import static java.util.List.of;
@@ -30,11 +32,14 @@ public class JsonToPrincipalFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String header = request.getHeader(userInfoHeaderName);
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
+        String header = URLDecoder.decode(request.getHeader(userInfoHeaderName), StandardCharsets.UTF_8);
         UserInfoModel userInfo = jsonToPrincipalMapper.map(header);
-        Collection<? extends GrantedAuthority> authorities = isEmpty(userInfo.authorities) ? of(new SimpleGrantedAuthority("dummyAuthority")) : userInfo.authorities;
-        AnonymousAuthenticationToken authenticationToken = new AnonymousAuthenticationToken(userInfo.username, userInfo, authorities);
+        Collection<? extends GrantedAuthority> authorities = isEmpty(userInfo.authorities) ?
+                of(new SimpleGrantedAuthority("dummyAuthority")) : userInfo.authorities;
+        AnonymousAuthenticationToken authenticationToken = new AnonymousAuthenticationToken(userInfo.username,
+                userInfo, authorities);
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         filterChain.doFilter(request, response);
     }

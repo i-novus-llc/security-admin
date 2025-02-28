@@ -60,7 +60,7 @@ public class UserInfoTest {
         OidcIdToken oidcIdToken = new OidcIdToken("test_token_value", Instant.MIN, Instant.MAX, Map.of("sub", "sub"));
         OauthUser oauthUser = new OauthUser("admin", oidcIdToken);
         oauthUser.setEmail("test@i-novus.ru");
-        oauthUser.setSurname("admin");
+        oauthUser.setSurname("Колокольцев");
         OAuth2AuthenticationToken oAuth2AuthenticationToken = new OAuth2AuthenticationToken(oauthUser, null, "test");
         return oAuth2AuthenticationToken;
     }
