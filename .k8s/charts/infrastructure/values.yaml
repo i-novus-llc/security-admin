@@ -5,6 +5,7 @@ genericServices:
     imageName: /security-admin/db
     imageTag: ${docker.image.tag}
     imagePullPolicy: IfNotPresent
+    storageClassName: 'nfs-retain'
     resources:
       limits:
         memory: 1024M
