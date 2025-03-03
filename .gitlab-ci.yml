@@ -13,7 +13,7 @@ build:
 deploy dev stand:
   variables:
     K8S_NAMESPACE: 'security-admin'
-    HELM_OPTIONAL_FLAGS: '-f $HELM_CHART_PATH/values.develop.yaml'
+    HELM_OPTIONAL_FLAGS: '-f $HELM_CHART_PATH/values.dev.yaml'
 
 deploy mr stand:
   variables:
