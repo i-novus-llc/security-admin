@@ -17,10 +17,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static org.springframework.http.HttpHeaders.writableHttpHeaders;
 
 @AutoConfiguration
 public class InterceptorConfig {
@@ -44,7 +47,7 @@ public class InterceptorConfig {
         return template -> addUserInfoHeader(template, principalToJsonMapper);
     }
 
-    private void addUserInfoHeader(Object httpHeaders, PrincipalToJsonAbstractMapper principalMapper) {
+    private void addUserInfoHeader(Object headers, PrincipalToJsonAbstractMapper principalMapper) {
         Boolean userInfo = UserInfoStateHolder.get();
         if ((isNull(userInfo) && userinfoSendByDefault) || (nonNull(userInfo) && userInfo)) {
             SecurityContext context = SecurityContextHolder.getContext();
@@ -56,10 +59,11 @@ public class InterceptorConfig {
             Object principal = authentication.getPrincipal();
             if (isNull(principal))
                 return;
-            if (httpHeaders instanceof HttpHeaders)
-                HttpHeaders.writableHttpHeaders(((HttpHeaders) httpHeaders)).add(userInfoHeaderName, principalMapper.map(principal));
-            else if (httpHeaders instanceof RequestTemplate) {
-                ((RequestTemplate) httpHeaders).header(userInfoHeaderName, principalMapper.map(principal));
+            String encoded = URLEncoder.encode(principalMapper.map(principal), StandardCharsets.UTF_8);
+            if (headers instanceof HttpHeaders httpHeaders)
+                writableHttpHeaders(httpHeaders).add(userInfoHeaderName, encoded);
+            else if (headers instanceof RequestTemplate requestTemplate) {
+                requestTemplate.header(userInfoHeaderName, encoded);
             }
         }
     }

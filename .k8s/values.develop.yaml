@@ -30,5 +30,5 @@ infrastructure:
             claimName: security-db-data
       volumeMounts:
         - name: security-db-data
-          mountPath: /pg/14/data
+          mountPath: /pg/14
       enabled: true

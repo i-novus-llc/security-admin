@@ -5,16 +5,17 @@ genericServices:
     imageName: /security-admin/db
     imageTag: ${docker.image.tag}
     imagePullPolicy: IfNotPresent
+    storageClassName: 'nfs-retain'
     resources:
       limits:
         memory: 1024M
     replicaCount: 1
+    volumes:
+      - name: security-db-data
+        persistentVolumeClaim:
+          claimName: security-db-data
+    volumeMounts:
+      - mountPath: /pg/14
+        name: security-db-data
     env:
       POSTGRES_PASSWORD: postgres
-    initContainers:
-      - name: permission-init
-        image: alpine
-        command: [ "sh","-c","chown -R 70:70 /pg/14/data" ]
-        volumeMounts:
-          - name: security-db-data
-            mountPath: /pg/14/data

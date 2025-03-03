@@ -26,3 +26,4 @@ infrastructure:
   genericServices:
     security-db:
       enabled: true
+      storageClassName:	nfs-delete
