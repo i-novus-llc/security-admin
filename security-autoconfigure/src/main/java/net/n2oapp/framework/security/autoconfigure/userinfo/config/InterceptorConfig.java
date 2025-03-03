@@ -59,11 +59,11 @@ public class InterceptorConfig {
             Object principal = authentication.getPrincipal();
             if (isNull(principal))
                 return;
+            String encoded = URLEncoder.encode(principalMapper.map(principal), StandardCharsets.UTF_8);
             if (headers instanceof HttpHeaders httpHeaders)
-                writableHttpHeaders(httpHeaders).add(userInfoHeaderName,
-                        URLEncoder.encode(principalMapper.map(principal), StandardCharsets.UTF_8));
+                writableHttpHeaders(httpHeaders).add(userInfoHeaderName, encoded);
             else if (headers instanceof RequestTemplate requestTemplate) {
-                requestTemplate.header(userInfoHeaderName, URLEncoder.encode(principalMapper.map(principal), StandardCharsets.UTF_8));
+                requestTemplate.header(userInfoHeaderName, encoded);
             }
         }
     }
