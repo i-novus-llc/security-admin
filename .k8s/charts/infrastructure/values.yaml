@@ -15,7 +15,7 @@ genericServices:
         persistentVolumeClaim:
           claimName: security-db-data
     volumeMounts:
-      - mountPath: /pg/14/data
+      - mountPath: /pg/14
         name: security-db-data
     env:
       POSTGRES_PASSWORD: postgres
