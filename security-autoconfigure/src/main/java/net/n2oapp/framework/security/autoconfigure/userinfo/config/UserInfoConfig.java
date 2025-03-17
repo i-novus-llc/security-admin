@@ -1,12 +1,16 @@
 package net.n2oapp.framework.security.autoconfigure.userinfo.config;
 
+import net.n2oapp.framework.security.autoconfigure.userinfo.UserInfoHeaderHelper;
 import net.n2oapp.framework.security.autoconfigure.userinfo.JsonToPrincipalFilter;
+import net.n2oapp.framework.security.autoconfigure.userinfo.UserInfoModel;
 import net.n2oapp.framework.security.autoconfigure.userinfo.mapper.*;
+import net.n2oapp.security.auth.common.OauthUser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 
@@ -18,7 +22,7 @@ public class UserInfoConfig {
 
     @Bean
     @ConditionalOnMissingBean(JsonToPrincipalAbstractMapper.class)
-    public JsonToPrincipalAbstractMapper jsonToPrincipalMapper() {
+    public JsonToPrincipalAbstractMapper<UserInfoModel> jsonToPrincipalMapper() {
         return new JsonToPrincipalMapper();
     }
 
@@ -26,25 +30,31 @@ public class UserInfoConfig {
     @ConditionalOnMissingClass("net.n2oapp.framework.boot.N2oEnvironmentConfiguration")
     public FilterRegistrationBean<JsonToPrincipalFilter> userInfoFilter(JsonToPrincipalAbstractMapper jsonToPrincipalMapper) {
         JsonToPrincipalFilter jsonToPrincipalFilter = new JsonToPrincipalFilter(jsonToPrincipalMapper, userInfoHeaderName);
-        FilterRegistrationBean registration = new FilterRegistrationBean();
+        FilterRegistrationBean<JsonToPrincipalFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(jsonToPrincipalFilter);
         registration.addUrlPatterns("/*");
         registration.setName("userInfoFilter");
-        registration.setOrder(1);
+        registration.setOrder(SecurityProperties.DEFAULT_FILTER_ORDER - 1);
         return registration;
     }
 
     @Bean
     @ConditionalOnClass(name = "net.n2oapp.framework.boot.N2oEnvironmentConfiguration")
     @ConditionalOnMissingBean(PrincipalToJsonAbstractMapper.class)
-    public PrincipalToJsonAbstractMapper oauthPrincipalToJsonMapper() {
+    public PrincipalToJsonAbstractMapper<OauthUser> oauthPrincipalToJsonMapper() {
         return new OauthPrincipalToJsonMapper();
     }
 
     @Bean
     @ConditionalOnMissingClass("net.n2oapp.framework.boot.N2oEnvironmentConfiguration")
     @ConditionalOnMissingBean(PrincipalToJsonAbstractMapper.class)
-    public PrincipalToJsonAbstractMapper userInfoToJsonMapper() {
-        return new UserInfoToJsonMapper();
+    public PrincipalToJsonAbstractMapper<UserInfoModel> userInfoToJsonMapper() {
+        return new UserInfoToJsonMapper<>();
     }
+
+    @Bean
+    public UserInfoHeaderHelper headerAdder() {
+        return new UserInfoHeaderHelper();
+    }
+
 }

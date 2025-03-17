@@ -1,76 +1,48 @@
 package net.n2oapp.framework.security.autoconfigure.userinfo.config;
 
 import feign.RequestInterceptor;
-import feign.RequestTemplate;
 import net.n2oapp.framework.security.autoconfigure.userinfo.UserInfoAdvice;
-import net.n2oapp.framework.security.autoconfigure.userinfo.UserInfoStateHolder;
+import net.n2oapp.framework.security.autoconfigure.userinfo.UserInfoHeaderHelper;
 import net.n2oapp.framework.security.autoconfigure.userinfo.mapper.PrincipalToJsonAbstractMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.web.client.RestTemplateBuilderConfigurer;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
-import static org.springframework.http.HttpHeaders.writableHttpHeaders;
-
 @AutoConfiguration
+@AutoConfigureBefore(name = {"net.n2oapp.framework.boot.N2oFrameworkAutoConfiguration", "net.n2oapp.framework.boot" +
+        ".N2oEngineConfiguration"})
 public class InterceptorConfig {
 
-    @Value("${n2o.platform.userinfo.send-by-default:true}")
-    private boolean userinfoSendByDefault;
-
-    @Value("${n2o.platform.userinfo.header-name:n2o-user-info}")
-    private String userInfoHeaderName;
-
     @Bean
-    public ClientHttpRequestInterceptor userinfoClientHttpRequestInterceptor(PrincipalToJsonAbstractMapper principalToJsonMapper) {
+    public ClientHttpRequestInterceptor userinfoClientHttpRequestInterceptor(PrincipalToJsonAbstractMapper principalToJsonMapper, UserInfoHeaderHelper userInfoHeaderHelper) {
         return (request, body, execution) -> {
-            addUserInfoHeader(request.getHeaders(), principalToJsonMapper);
+            userInfoHeaderHelper.addUserInfoHeader(request.getHeaders(), principalToJsonMapper);
             return execution.execute(request, body);
         };
     }
 
     @Bean
-    public RequestInterceptor userinfoFeignInterceptor(PrincipalToJsonAbstractMapper principalToJsonMapper) {
-        return template -> addUserInfoHeader(template, principalToJsonMapper);
-    }
-
-    private void addUserInfoHeader(Object headers, PrincipalToJsonAbstractMapper principalMapper) {
-        Boolean userInfo = UserInfoStateHolder.get();
-        if ((isNull(userInfo) && userinfoSendByDefault) || (nonNull(userInfo) && userInfo)) {
-            SecurityContext context = SecurityContextHolder.getContext();
-            if (isNull(context))
-                return;
-            Authentication authentication = context.getAuthentication();
-            if (isNull(authentication))
-                return;
-            Object principal = authentication.getPrincipal();
-            if (isNull(principal))
-                return;
-            String encoded = URLEncoder.encode(principalMapper.map(principal), StandardCharsets.UTF_8);
-            if (headers instanceof HttpHeaders httpHeaders)
-                writableHttpHeaders(httpHeaders).add(userInfoHeaderName, encoded);
-            else if (headers instanceof RequestTemplate requestTemplate) {
-                requestTemplate.header(userInfoHeaderName, encoded);
-            }
-        }
+    public RequestInterceptor userinfoFeignInterceptor(PrincipalToJsonAbstractMapper principalToJsonMapper,
+                                                       UserInfoHeaderHelper userInfoHeaderHelper) {
+        return template -> userInfoHeaderHelper.addUserInfoHeader(template, principalToJsonMapper);
     }
 
     @Bean
     public UserInfoAdvice userInfoAdvice() {
         return new UserInfoAdvice();
+    }
+
+    @Bean
+    public RestTemplateBuilder builder(@Qualifier("userinfoClientHttpRequestInterceptor") ClientHttpRequestInterceptor interceptor, RestTemplateBuilderConfigurer restTemplateBuilderConfigurer) {
+        return restTemplateBuilderConfigurer.configure(new RestTemplateBuilder().interceptors(interceptor));
     }
 
     @Bean

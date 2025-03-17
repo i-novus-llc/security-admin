@@ -19,17 +19,6 @@
 </dependency>
 ----
 
-Для автоматической работы при использовании <rest> провайдера данных в n2o xml, нужно так же добавить зависимость
-
-[source,xml]
-----
-<dependency>
-  <groupId>net.n2oapp.platform</groupId>
-  <artifactId>n2o-platform-starter-web</artifactId>
-  <version>${n2o.version}</version>
-</dependency>
-----
-
 == Использование
 
 === Ограничения
