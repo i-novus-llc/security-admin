@@ -1,7 +1,9 @@
 package net.n2oapp.framework.security.autoconfigure.userinfo;
 
+import feign.RequestTemplate;
 import net.n2oapp.framework.security.autoconfigure.access.AccountContextAutoConfiguration;
 import net.n2oapp.framework.security.autoconfigure.access.SecurityAutoConfiguration;
+import net.n2oapp.framework.security.autoconfigure.userinfo.mapper.OauthPrincipalToJsonMapper;
 import net.n2oapp.security.auth.common.OauthUser;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(classes = {UserInfoTest.class, TestConfig.class},
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = "spring.security.strategy=GLOBAL")
@@ -35,6 +38,9 @@ public class UserInfoTest {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private UserInfoHeaderHelper userInfoHeaderHelper;
 
     @Test
     public void userinfoRestClientTest() {
@@ -54,6 +60,16 @@ public class UserInfoTest {
     public void noAuthRestTemplate() {
         ResponseEntity<Boolean> nextServiceContextCorrect = restTemplate.getForEntity("http://localhost:" + port, Boolean.class);
         assertThat(nextServiceContextCorrect.getBody(), is(false));
+    }
+
+    @Test
+    public void helperRequestTemplateTest() {
+        SecurityContextHolder.setContext(new SecurityContextImpl(oAuth2AuthenticationToken()));
+        RequestTemplate requestTemplate = new RequestTemplate();
+        OauthPrincipalToJsonMapper mapper = new OauthPrincipalToJsonMapper();
+        mapper.setUserInfoUserNameOnly(false);
+        userInfoHeaderHelper.addUserInfoHeader(requestTemplate,mapper);
+        assertEquals(1,requestTemplate.headers().size());
     }
 
     private OAuth2AuthenticationToken oAuth2AuthenticationToken() {
