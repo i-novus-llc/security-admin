@@ -5,7 +5,6 @@ import net.n2oapp.framework.security.autoconfigure.userinfo.mapper.PrincipalToJs
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.net.URLEncoder;
@@ -26,10 +25,7 @@ public class UserInfoHeaderHelper {
     public void addUserInfoHeader(Object headers, PrincipalToJsonAbstractMapper principalMapper) {
         Boolean userInfo = UserInfoStateHolder.get();
         if ((isNull(userInfo) && userinfoSendByDefault) || (nonNull(userInfo) && userInfo)) {
-            SecurityContext context = SecurityContextHolder.getContext();
-            if (isNull(context))
-                return;
-            Authentication authentication = context.getAuthentication();
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (isNull(authentication))
                 return;
             Object principal = authentication.getPrincipal();
