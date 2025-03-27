@@ -65,7 +65,8 @@ public class SsoKeycloakConfiguration {
     @Qualifier("keycloakRestClient")
     public RestClient restClient(OAuth2AuthorizedClientManager authorizedClientManager, AdminSsoKeycloakProperties properties) {
         OAuth2ClientHttpRequestInterceptor requestInterceptor =
-                new OAuth2ClientHttpRequestInterceptor(authorizedClientManager, request -> properties.getAdminClientId());
+                new OAuth2ClientHttpRequestInterceptor(authorizedClientManager);
+        requestInterceptor.setClientRegistrationIdResolver(request -> properties.getAdminClientId());
 
         ClientHttpRequestFactorySettings settings = ClientHttpRequestFactorySettings.DEFAULTS
                 .withConnectTimeout(Duration.ofSeconds(20))
