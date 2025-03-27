@@ -10,9 +10,12 @@ import static net.n2oapp.framework.api.StringUtils.isEmpty;
 @Slf4j
 public class SecurityPropertyInformer implements ApplicationListener<ApplicationStartedEvent> {
 
-    private static final String SERVER_URL_KEY = "access.keycloak.server-url";
-    private static final String REALM_KEY = "access.keycloak.realm";
-    private static final String IS_ENABLED_KEY = "access.security-autoconfigure.disabled";
+    public static final String SERVER_URL_KEY = "access.keycloak.server-url";
+    public static final String REALM_KEY = "access.keycloak.realm";
+    public static final String IS_ENABLED_KEY = "access.security-autoconfigure.disabled";
+
+    public static final String PROPERTY_WARN_MESSAGE = "Property 'access.keycloak.server-url' and 'access.keycloak.realm' must be set, to enable Security Autoconfiguration";
+    public static final String CONFIG_DISABLING_ADVICE_MESSAGE = "If you don't need Security Autoconfiguration to be active, set 'access.security-autoconfigure.disabled' property to 'true'";
 
     @Override
     public void onApplicationEvent(ApplicationStartedEvent event) {
@@ -21,9 +24,9 @@ public class SecurityPropertyInformer implements ApplicationListener<Application
         String realm = environment.getProperty(REALM_KEY);
         String isEnabled = environment.getProperty(IS_ENABLED_KEY);
         if (isEmpty(serverUrl) || isEmpty(realm)) {
-            log.warn("Property 'access.keycloak.server-url' and 'access.keycloak.realm' must be set, to enable Security Autoconfiguration");
+            log.warn(PROPERTY_WARN_MESSAGE);
             if (isEmpty(isEnabled)) {
-                log.info("If you don't need Security Autoconfiguration to be active, set 'access.security-autoconfigure.disabled' property to 'true'");
+                log.info(CONFIG_DISABLING_ADVICE_MESSAGE);
             }
         }
     }
