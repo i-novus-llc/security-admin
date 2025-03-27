@@ -17,8 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
 @AutoConfiguration
-@AutoConfigureBefore(name = {"net.n2oapp.framework.boot.N2oFrameworkAutoConfiguration", "net.n2oapp.framework.boot" +
-        ".N2oEngineConfiguration"})
+@AutoConfigureBefore(name = {"net.n2oapp.framework.boot.N2oFrameworkAutoConfiguration", "net.n2oapp.framework.boot.N2oEngineConfiguration"})
 public class InterceptorConfig {
 
     @Bean

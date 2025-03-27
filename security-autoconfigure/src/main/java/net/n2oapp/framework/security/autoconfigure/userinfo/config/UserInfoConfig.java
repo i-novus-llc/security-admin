@@ -1,7 +1,7 @@
 package net.n2oapp.framework.security.autoconfigure.userinfo.config;
 
-import net.n2oapp.framework.security.autoconfigure.userinfo.UserInfoHeaderHelper;
 import net.n2oapp.framework.security.autoconfigure.userinfo.JsonToPrincipalFilter;
+import net.n2oapp.framework.security.autoconfigure.userinfo.UserInfoHeaderHelper;
 import net.n2oapp.framework.security.autoconfigure.userinfo.UserInfoModel;
 import net.n2oapp.framework.security.autoconfigure.userinfo.mapper.*;
 import net.n2oapp.security.auth.common.OauthUser;
@@ -10,7 +10,6 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 
@@ -34,7 +33,7 @@ public class UserInfoConfig {
         registration.setFilter(jsonToPrincipalFilter);
         registration.addUrlPatterns("/*");
         registration.setName("userInfoFilter");
-        registration.setOrder(SecurityProperties.DEFAULT_FILTER_ORDER - 1);
+        registration.setOrder(1);
         return registration;
     }
 
@@ -53,8 +52,7 @@ public class UserInfoConfig {
     }
 
     @Bean
-    public UserInfoHeaderHelper headerAdder() {
+    public UserInfoHeaderHelper headerHelper() {
         return new UserInfoHeaderHelper();
     }
-
 }
