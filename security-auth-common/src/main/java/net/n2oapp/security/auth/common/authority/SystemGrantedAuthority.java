@@ -34,7 +34,7 @@ public class SystemGrantedAuthority implements GrantedAuthority {
 
     @Override
     public String getAuthority() {
-        return DEFAULT_SYSTEM_PREFIX + system;
+        return system.startsWith(DEFAULT_SYSTEM_PREFIX) ? system : DEFAULT_SYSTEM_PREFIX + system;
     }
 
     public String getSystem() {
