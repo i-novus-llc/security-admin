@@ -33,7 +33,7 @@ public class RoleGrantedAuthority implements GrantedAuthority {
     }
 
     public String getAuthority() {
-        return DEFAULT_ROLE_PREFIX + role;
+        return role.startsWith(DEFAULT_ROLE_PREFIX) ? role : DEFAULT_ROLE_PREFIX + role;
     }
 
     public String getRole() {
