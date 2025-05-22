@@ -33,7 +33,7 @@ public class PermissionGrantedAuthority implements GrantedAuthority {
     }
 
     public String getAuthority() {
-        return DEFAULT_PERMISSION_PREFIX + permission;
+        return permission.startsWith(DEFAULT_PERMISSION_PREFIX) ? permission : DEFAULT_PERMISSION_PREFIX + permission;
     }
 
     public String getPermission() {
