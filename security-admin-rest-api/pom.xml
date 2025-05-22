@@ -37,6 +37,7 @@
         <dependency>
             <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-starter-jaxrs-server</artifactId>
+            <type>pom</type>
         </dependency>
         <!-- /platform-->
 
