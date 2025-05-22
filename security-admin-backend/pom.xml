@@ -54,6 +54,7 @@
             <groupId>net.n2oapp.framework.security</groupId>
             <artifactId>security-userinfo-starter</artifactId>
             <version>${project.version}</version>
+            <type>pom</type>
         </dependency>
 
         <dependency>
