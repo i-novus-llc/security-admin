@@ -29,21 +29,25 @@
         <dependency>
             <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-i18n-commons</artifactId>
+
         </dependency>
 
         <dependency>
             <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-starter-loader-server</artifactId>
+            <type>pom</type>
         </dependency>
 
         <dependency>
             <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-starter-jaxrs-server</artifactId>
+            <type>pom</type>
         </dependency>
 
         <dependency>
             <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-starter-jaxrs-client</artifactId>
+            <type>pom</type>
         </dependency>
 
         <!-- Web -->
@@ -77,8 +81,8 @@
             <artifactId>commons-io</artifactId>
         </dependency>
         <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
 
         <!-- /for mail -->
@@ -108,6 +112,7 @@
         <dependency>
             <groupId>net.n2oapp.platform</groupId>
             <artifactId>n2o-platform-starter-test</artifactId>
+            <type>pom</type>
             <scope>test</scope>
         </dependency>
 
