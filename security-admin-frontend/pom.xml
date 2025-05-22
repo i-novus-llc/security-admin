@@ -22,6 +22,7 @@
             <groupId>net.n2oapp.framework.security</groupId>
             <artifactId>security-client-starter</artifactId>
             <version>${project.version}</version>
+            <type>pom</type>
         </dependency>
 
         <dependency>
