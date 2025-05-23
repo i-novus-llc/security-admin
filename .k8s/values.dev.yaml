@@ -11,12 +11,14 @@ security:
   frontend:
     resources:
       limits:
-        memory: 1000M
+        memory: 1000Mi
+        cpu: 300m
     enabled: true
   backend:
     resources:
       limits:
-        memory: 1000M
+        memory: 1000Mi
+        cpu: 300m
     enabled: true
 
 

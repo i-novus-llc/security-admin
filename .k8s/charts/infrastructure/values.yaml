@@ -8,7 +8,8 @@ genericServices:
     storageClassName: 'nfs-retain'
     resources:
       limits:
-        memory: 1024M
+        memory: 512Mi
+        cpu: 300m
     replicaCount: 1
     volumes:
       - name: security-db-data
