@@ -1,8 +1,8 @@
 include:
   - project: ${PIPELINE_REPOSITORY_PREFIX}devenv/gitlab/pipelines
-    ref: '3.0.0'
+    ref: 3.5.0
     file:
-      - deploy-dev-stand.gitlab-ci.yml
+      - dev-stand.gitlab-ci.yml
       - merge-request.gitlab-ci.yml
       - jira.gitlab-ci.yml
 
