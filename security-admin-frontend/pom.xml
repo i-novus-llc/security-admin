@@ -89,9 +89,6 @@
                 </executions>
                 <configuration>
                     <executable>false</executable>
-                    <layers>
-                        <enabled>true</enabled>
-                    </layers>
                 </configuration>
             </plugin>
         </plugins>
