@@ -45,11 +45,11 @@
         <module>security-admin-sso-keycloak</module>
         <module>security-admin-db</module>
         <module>security-admin-backend</module>
-        <module>security-starters</module>
         <module>security-admin-frontend</module>
         <module>doc</module>
         <module>coverage</module>
         <module>security-autoconfigure</module>
+        <module>security-starters</module>
     </modules>
 
     <profiles>
