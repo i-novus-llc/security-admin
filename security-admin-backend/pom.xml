@@ -140,6 +140,7 @@
                     <layers>
                         <enabled>false</enabled>
                     </layers>
+                    <executable>false</executable>
                 </configuration>
             </plugin>
         </plugins>
