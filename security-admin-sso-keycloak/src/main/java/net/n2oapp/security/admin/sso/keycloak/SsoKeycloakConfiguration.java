@@ -5,15 +5,15 @@ import net.n2oapp.security.admin.impl.provider.SimpleSsoUserRoleProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.web.client.ClientHttpRequestFactories;
-import org.springframework.boot.web.client.ClientHttpRequestFactorySettings;
+import org.springframework.boot.http.client.ClientHttpRequestFactoryBuilder;
+import org.springframework.boot.http.client.ClientHttpRequestFactorySettings;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.security.oauth2.client.*;
-import org.springframework.security.oauth2.client.endpoint.DefaultClientCredentialsTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2ClientCredentialsGrantRequest;
+import org.springframework.security.oauth2.client.endpoint.RestClientClientCredentialsTokenResponseClient;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
@@ -68,12 +68,11 @@ public class SsoKeycloakConfiguration {
                 new OAuth2ClientHttpRequestInterceptor(authorizedClientManager);
         requestInterceptor.setClientRegistrationIdResolver(request -> properties.getAdminClientId());
 
-        ClientHttpRequestFactorySettings settings = ClientHttpRequestFactorySettings.DEFAULTS
+        ClientHttpRequestFactorySettings settings = ClientHttpRequestFactorySettings.defaults()
                 .withConnectTimeout(Duration.ofSeconds(20))
                 .withReadTimeout(Duration.ofSeconds(20));
-
         return RestClient.builder()
-                .requestFactory(ClientHttpRequestFactories.get(settings))
+                .requestFactory(ClientHttpRequestFactoryBuilder.httpComponents().build(settings))
                 .requestInterceptor(requestInterceptor)
                 .build();
     }
@@ -91,8 +90,8 @@ public class SsoKeycloakConfiguration {
     }
 
     @Bean
-    OAuth2AccessTokenResponseClient<OAuth2ClientCredentialsGrantRequest> tokenResponseClient() {
-        return new DefaultClientCredentialsTokenResponseClient();
+    RestClientClientCredentialsTokenResponseClient tokenResponseClient() {
+        return new RestClientClientCredentialsTokenResponseClient();
     }
 
     @Bean

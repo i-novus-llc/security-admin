@@ -4,6 +4,7 @@ import net.n2oapp.security.admin.sso.keycloak.AdminSsoKeycloakProperties;
 import net.n2oapp.security.admin.sso.keycloak.KeycloakRestRoleService;
 import net.n2oapp.security.admin.sso.keycloak.KeycloakRestUserService;
 import net.n2oapp.security.admin.sso.keycloak.KeycloakSsoUserRoleProvider;
+import org.springframework.boot.http.client.ClientHttpRequestFactoryBuilder;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestClient;
@@ -19,7 +20,9 @@ public class TestConfig {
 
     @Bean
     RestClient restClient() {
-        return RestClient.builder().build();
+        return RestClient.builder()
+                .requestFactory(ClientHttpRequestFactoryBuilder.httpComponents().build())
+                .build();
     }
 
     @Bean

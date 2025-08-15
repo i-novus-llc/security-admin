@@ -57,7 +57,7 @@ security:
       JAVA_OPTS: -Xmx400m
       SERVER_PORT: 8080
       SERVER_USE_FORWARD_HEADERS: true
-      ACCESS_KEYCLOAK_SERVER_URL: "https://keycloak8.i-novus.ru/auth"
+      ACCESS_KEYCLOAK_SERVER_URL: "https://keycloak-dev.i-novus.ru/auth"
       ACCESS_KEYCLOAK_REALM: security-admin
       ACCESS_ORGANIZATION_PERSIST_MODE: rest
       ACCESS_EMAIL_AS_USERNAME: true

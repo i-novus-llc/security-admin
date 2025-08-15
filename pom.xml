@@ -10,18 +10,18 @@
     <parent>
         <groupId>net.n2oapp.platform</groupId>
         <artifactId>n2o-boot-platform-parent</artifactId>
-        <version>6.3.10</version>
+        <version>7.0.0</version>
         <relativePath />
     </parent>
 
     <properties>
-        <java.version>17</java.version>
-        <n2o.version>7.28.2</n2o.version>
-        <rdm-sync.version>1.45.3</rdm-sync.version>
+        <java.version>21</java.version>
+        <n2o.version>7.29.0</n2o.version>
+        <rdm-sync.version>1.54.1</rdm-sync.version>
+        <feign.version>13.6</feign.version>
+        <cxf.version>4.1.3</cxf.version>
         <rdm-api.version>4.24.1</rdm-api.version>
-        <nimbusds.version>7.9</nimbusds.version>
-        <liquibase-sessionlock.version>1.6.6</liquibase-sessionlock.version>
-        <liquibase.version>4.24.0</liquibase.version>
+        <liquibase-sessionlock.version>1.6.9</liquibase-sessionlock.version>
         <config.server.enable>false</config.server.enable>
         <jacoco.skip>true</jacoco.skip>
     </properties>
