@@ -9,6 +9,9 @@ include:
 build:
   variables:
     MAVEN_GOAL: 'deploy'
+    JDK_VERSION: 'jdk21'
+    NODE_VERSION: 'node22'
+    MAVEN_IMAGE_VERSION: 'v6'
 
 deploy dev stand:
   variables:

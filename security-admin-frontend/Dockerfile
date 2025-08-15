@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=harbor.i-novus.ru/library/redos7c/jdk-17:17.0.10-1.30.0
+ARG BASE_IMAGE=harbor.i-novus.ru/library/redos7c/jdk-21:21.0.5-1.30.0
 FROM $BASE_IMAGE AS builder
 
 ARG JAR_FILE=target/access-web.jar
