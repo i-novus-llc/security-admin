@@ -8,6 +8,7 @@
     </parent>
 
     <artifactId>security-autoconfigure</artifactId>
+    <name>security-autoconfigure</name>
 
     <properties>
         <jacoco.skip>false</jacoco.skip>

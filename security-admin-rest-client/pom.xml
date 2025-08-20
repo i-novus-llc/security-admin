@@ -3,6 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>security-admin-rest-client</artifactId>
+    <name>security-admin-rest-client</name>
 
     <parent>
         <artifactId>security-admin</artifactId>

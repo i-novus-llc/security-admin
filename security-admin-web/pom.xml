@@ -3,6 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>security-admin-web</artifactId>
+    <name>security-admin-web</name>
 
     <parent>
         <artifactId>security-admin</artifactId>
