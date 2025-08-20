@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
 
     <artifactId>security-client-starter</artifactId>
+    <name>security-client-starter</name>
 
     <dependencies>
         <dependency>

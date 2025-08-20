@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
 
     <artifactId>security-userinfo-starter</artifactId>
+    <name>security-userinfo-starter</name>
 
     <dependencies>
         <dependency>

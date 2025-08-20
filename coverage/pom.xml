@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
 
     <artifactId>coverage</artifactId>
+    <name>coverage</name>
 
     <properties>
         <jacoco.skip>false</jacoco.skip>

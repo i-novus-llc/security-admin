@@ -3,6 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>security-admin-frontend</artifactId>
+    <name>security-admin-frontend</name>
     <packaging>jar</packaging>
 
     <parent>
