@@ -4,6 +4,7 @@
 
     <groupId>net.n2oapp.framework.security</groupId>
     <artifactId>security-admin</artifactId>
+    <name>security-admin</name>
     <packaging>pom</packaging>
     <version>9.0.0</version>
 
