@@ -1,5 +1,5 @@
 # Миграция с security-admin 7+ на 9.0.0
-* n2o-boot-platform 7.0.0 
+* n2o-boot-platform 7.0.1 
 * Spring Boot 3.5.3.
 * Java 21
 
