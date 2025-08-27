@@ -64,6 +64,8 @@ security:
       AUDIT_CLIENT_ENABLED: false
       SPRING_CLOUD_CONSUL_CONFIG_PREFIX: "security-admin-master"
       SPRING_CLOUD_CONSUL_CONFIG_FORMAT: YAML
+    ingress:
+      path: /
 
 
 infrastructure:
