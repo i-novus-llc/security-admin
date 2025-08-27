@@ -45,6 +45,8 @@ security:
       ACCESS_SERVICE_URL: "http://backend:8080"
       SPRING_CLOUD_CONSUL_CONFIG_PREFIX: "security-admin-master"
       ACCESS_EMAIL_AS_USERNAME: "true"
+    ingress:
+      path: /
 
   backend:
     replicaCount: 1
@@ -65,7 +67,7 @@ security:
       SPRING_CLOUD_CONSUL_CONFIG_PREFIX: "security-admin-master"
       SPRING_CLOUD_CONSUL_CONFIG_FORMAT: YAML
     ingress:
-      path: /
+      path: /service
 
 
 infrastructure:
