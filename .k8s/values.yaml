@@ -46,7 +46,7 @@ security:
       SPRING_CLOUD_CONSUL_CONFIG_PREFIX: "security-admin-master"
       ACCESS_EMAIL_AS_USERNAME: "true"
     ingress:
-      path: /
+      path: /web
 
   backend:
     replicaCount: 1
