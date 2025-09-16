@@ -8,7 +8,6 @@ import net.n2oapp.security.admin.api.provider.SsoUserRoleProvider;
 import net.n2oapp.security.admin.api.service.MailService;
 import net.n2oapp.security.admin.api.service.UserService;
 import net.n2oapp.security.admin.impl.entity.AccountEntity;
-import net.n2oapp.security.admin.impl.entity.RegionEntity;
 import net.n2oapp.security.admin.impl.entity.UserEntity;
 import net.n2oapp.security.admin.impl.repository.UserRepository;
 import net.n2oapp.security.admin.impl.service.specification.UserSpecifications;
@@ -20,7 +19,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.ws.rs.NotFoundException;
@@ -30,7 +28,6 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-import static org.springframework.util.StringUtils.hasText;
 
 /**
  * Реализация сервиса управления пользователями
@@ -50,6 +47,8 @@ public class UserServiceImpl implements UserService {
     private UserValidations userValidations;
     @Autowired
     private AuditService auditService;
+    @Autowired
+    private Mapper mapper;
 
     @Value("${access.user.send-mail-delete-user:false}")
     private Boolean sendMailDelete;
@@ -84,7 +83,7 @@ public class UserServiceImpl implements UserService {
             mailService.sendWelcomeMail(user);
         }
 
-        return audit("audit.userCreate", model(savedUser));
+        return audit("audit.userCreate", mapper.model(savedUser));
     }
 
     @Override
@@ -146,7 +145,7 @@ public class UserServiceImpl implements UserService {
         entityUser = entityForm(entityUser, user);
         // кодируем пароль перед сохранением в бд если он изменился
         UserEntity updatedUser = userRepository.save(entityUser);
-        User result = model(updatedUser);
+        User result = mapper.model(updatedUser);
         if (sendMailActivate && isActiveChanged) {
             mailService.sendChangeActivateMail(result);
         }
@@ -155,7 +154,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(Integer id) {
-        SsoUser user = model(userRepository.findById(id).orElseThrow(() -> new UserException("exception.userNotFound")));
+        SsoUser user = mapper.model(userRepository.findById(id).orElseThrow(() -> new UserException("exception.userNotFound")));
         if (nonNull(user) && user.getUsername().equals(getContextUserName())) {
             throw new UserException("exception.selfDelete");
         }
@@ -170,7 +169,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getById(Integer id) {
         UserEntity entity = userRepository.findById(id).orElse(null);
-        return model(entity);
+        return mapper.model(entity, true);
     }
 
     @Override
@@ -189,7 +188,7 @@ public class UserServiceImpl implements UserService {
         }
         criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "id"));
         final Page<UserEntity> all = userRepository.findAll(specification, criteria);
-        return all.map(this::model);
+        return all.map(u -> mapper.model(u, criteria.getWithAccount()));
     }
 
     @Override
@@ -199,14 +198,14 @@ public class UserServiceImpl implements UserService {
             throw new UserException("exception.selfChangeActivity");
         }
         userEntity.setIsActive(!userEntity.getIsActive());
-        SsoUser result = model(userRepository.save(userEntity));
+        SsoUser result = mapper.model(userRepository.save(userEntity));
 
         List<AccountEntity> accounts = userEntity.getAccounts();
         if (nonNull(accounts) && accounts.stream().anyMatch(a -> provider.isSupports(a.getExternalSystem())))
             provider.changeActivity(result);
 
         if (sendMailActivate) {
-            mailService.sendChangeActivateMail(model(userEntity));
+            mailService.sendChangeActivateMail(mapper.model(userEntity));
         }
 
         return audit("audit.userChangeActive", result);
@@ -308,49 +307,12 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
-    private SsoUser model(UserEntity entity) {
-        if (isNull(entity)) return null;
-        SsoUser model = new SsoUser();
-        model.setId(entity.getId());
-        model.setUsername(entity.getUsername());
-        model.setName(entity.getName());
-        model.setSurname(entity.getSurname());
-        model.setPatronymic(entity.getPatronymic());
-        model.setIsActive(entity.getIsActive());
-        model.setEmail(entity.getEmail());
-        model.setSnils(entity.getSnils());
-        model.setExpirationDate(entity.getExpirationDate());
-        model.setRegion(model(entity.getRegion()));
-
-        StringJoiner joiner = new StringJoiner(" ");
-        if (nonNull(entity.getSurname()))
-            joiner.add(entity.getSurname());
-        if (nonNull(entity.getName()))
-            joiner.add(entity.getName());
-        if (nonNull(entity.getPatronymic()))
-            joiner.add(entity.getPatronymic());
-        String fio = joiner.toString();
-        model.setFio(hasText(fio) ? fio : null);
-
-        return model;
-    }
-
-    private Region model(RegionEntity entity) {
-        if (isNull(entity)) return null;
-        Region region = new Region();
-        region.setId(entity.getId());
-        region.setName(entity.getName());
-        region.setCode(entity.getCode());
-        region.setOkato(entity.getOkato());
-        return region;
-    }
-
     private void validateUsernameEmailSnils(UserForm user) {
         if (!Boolean.TRUE.equals(emailAsUsername)) {
-            userValidations.checkUsernameUniq(user.getId(), model(userRepository.findOneByUsernameIgnoreCase(user.getUsername())));
+            userValidations.checkUsernameUniq(user.getId(), mapper.model(userRepository.findOneByUsernameIgnoreCase(user.getUsername())));
             userValidations.checkUsername(user.getUsername());
         } else {
-            userValidations.checkEmailUniq(user.getId(), model(userRepository.findOneByEmailIgnoreCase(user.getEmail())));
+            userValidations.checkEmailUniq(user.getId(), mapper.model(userRepository.findOneByEmailIgnoreCase(user.getEmail())));
             user.setUsername(user.getEmail());
         }
         if (nonNull(user.getEmail()))
