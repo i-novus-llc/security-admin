@@ -21,8 +21,11 @@ import java.util.ArrayList;
 @Service
 @Transactional
 public class DepartmentServiceImpl implements DepartmentService {
+
     @Autowired
     private DepartmentRepository regionRepository;
+    @Autowired
+    private Mapper mapper;
     
     @Override
     public Page<Department> findAll(DepartmentCriteria criteria) {
@@ -32,17 +35,7 @@ public class DepartmentServiceImpl implements DepartmentService {
             criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "id"));
         }
         Page<DepartmentEntity> all = regionRepository.findAll(specification, criteria);
-        return all.map(this::model);
-    }
-
-    private Department model(DepartmentEntity entity) {
-        if (entity == null) return null;
-        Department model = new Department();
-        model.setId(entity.getId());
-        model.setName(entity.getName());
-        model.setCode(entity.getCode());
-        return model;
-
+        return all.map(mapper::model);
     }
 
     public void setDepartmentRepository(DepartmentRepository regionRepository) {
