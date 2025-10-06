@@ -1,9 +1,7 @@
 package net.n2oapp.security.admin.impl.service.specification;
 
 import net.n2oapp.security.admin.api.criteria.AccountCriteria;
-import net.n2oapp.security.admin.impl.entity.AccountEntity;
-import net.n2oapp.security.admin.impl.entity.AccountEntity_;
-import net.n2oapp.security.admin.impl.entity.UserEntity_;
+import net.n2oapp.security.admin.impl.entity.*;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -28,7 +26,10 @@ public class AccountSpecifications implements Specification<AccountEntity> {
             predicate = builder.equal(root.get(AccountEntity_.user).get(UserEntity_.id), criteria.getUserId());
         if (nonNull(criteria.getUsername()))
             predicate = builder.equal(root.get(AccountEntity_.user).get(UserEntity_.username), criteria.getUsername());
-
+        if (nonNull(criteria.getRoleCode())) {
+            var join = root.join(AccountEntity_.roleList);
+            predicate = builder.and(predicate, builder.equal(join.get(RoleEntity_.code), criteria.getRoleCode()));
+        }
 
         return predicate;
     }

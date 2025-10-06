@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 @Service
@@ -28,6 +27,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Autowired
     private AuditService auditService;
+    @Autowired
+    private Mapper mapper;
 
     public AccountServiceImpl(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
@@ -36,12 +37,12 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Page<Account> findAll(AccountCriteria criteria) {
         final Page<AccountEntity> all = accountRepository.findAll(new AccountSpecifications(criteria), criteria);
-        return all.map(this::model);
+        return all.map(mapper::model);
     }
 
     @Override
     public Account getById(Integer id) {
-        return model(accountRepository.findById(id)
+        return mapper.model(accountRepository.findById(id)
                 .orElseThrow(() -> new UserException("exception.accountNotFound")));
     }
 
@@ -49,7 +50,7 @@ public class AccountServiceImpl implements AccountService {
     public Account create(Account account) {
         AccountEntity accountEntity = entityForm(new AccountEntity(), account);
         accountEntity.setUser(new UserEntity(account.getUserId()));
-        Account createdAccount = model(accountRepository.save(accountEntity));
+        Account createdAccount = mapper.model(accountRepository.save(accountEntity));
 
         return audit("audit.accountCreate", createdAccount);
     }
@@ -59,14 +60,14 @@ public class AccountServiceImpl implements AccountService {
         AccountEntity accountEntity = accountRepository.findById(account.getId())
                 .orElseThrow(() -> new UserException("exception.accountNotFound"));
         entityForm(accountEntity, account);
-        Account updatedAccount = model(accountRepository.save(accountEntity));
+        Account updatedAccount = mapper.model(accountRepository.save(accountEntity));
 
         return audit("audit.accountUpdate", updatedAccount);
     }
 
     @Override
     public void delete(Integer id) {
-        Account account = model(accountRepository.findById(id)
+        Account account = mapper.model(accountRepository.findById(id)
                 .orElseThrow(() -> new UserException("exception.accountNotFound")));
         accountRepository.deleteById(id);
 
@@ -81,7 +82,7 @@ public class AccountServiceImpl implements AccountService {
         // TODO SECURITY-396 change current account activity exception
 
         accountEntity.setIsActive(!accountEntity.getIsActive());
-        Account account = model(accountRepository.save(accountEntity));
+        Account account = mapper.model(accountRepository.save(accountEntity));
 
         return audit("audit.accountChangeActive", account);
     }
@@ -97,69 +98,6 @@ public class AccountServiceImpl implements AccountService {
             entity.setRoleList(model.getRoles().stream().map(r -> new RoleEntity(r.getId())).collect(Collectors.toList()));
         entity.setIsActive(model.getIsActive());
         return entity;
-    }
-
-    private Account model(AccountEntity entity) {
-        if (isNull(entity)) return null;
-        Account account = new Account();
-        account.setId(entity.getId());
-        account.setUserId(entity.getUser().getId());
-        account.setName(entity.getName());
-        account.setIsActive(entity.getIsActive());
-        account.setRoles(entity.getRoleList().stream().map(this::model).collect(Collectors.toList()));
-        account.setUserLevel(entity.getUserLevel());
-        account.setDepartment(model(entity.getDepartment()));
-        account.setRegion(model(entity.getRegion()));
-        account.setOrganization(model(entity.getOrganization()));
-        account.setExtSys(entity.getExternalSystem());
-        account.setExtUid(entity.getExternalUid());
-        return account;
-    }
-
-    private Role model(RoleEntity entity) {
-        if (isNull(entity)) return null;
-        Role model = new Role();
-        model.setId(entity.getId());
-        model.setCode(entity.getCode());
-        model.setName(entity.getName());
-        model.setDescription(entity.getDescription());
-        model.setNameWithSystem(entity.getName());
-        if (nonNull(entity.getSystem()))
-            model.setNameWithSystem(model.getNameWithSystem() + "(" + entity.getSystem().getName() + ")");
-
-        return model;
-    }
-
-    private Department model(DepartmentEntity entity) {
-        if (entity == null) return null;
-        Department model = new Department();
-        model.setId(entity.getId());
-        model.setName(entity.getName());
-        model.setCode(entity.getCode());
-        return model;
-    }
-
-    private Organization model(OrganizationEntity entity) {
-        if (entity == null) return null;
-        Organization model = new Organization();
-        model.setId(entity.getId());
-        model.setFullName(entity.getFullName());
-        model.setShortName(entity.getShortName());
-        model.setCode(entity.getCode());
-        model.setOgrn(entity.getOgrn());
-        model.setInn(entity.getInn());
-        model.setOkpo(entity.getOkpo());
-        return model;
-    }
-
-    private Region model(RegionEntity entity) {
-        if (entity == null) return null;
-        Region model = new Region();
-        model.setId(entity.getId());
-        model.setName(entity.getName());
-        model.setCode(entity.getCode());
-        model.setOkato(entity.getOkato());
-        return model;
     }
 
     private Account audit(String action, Account account) {

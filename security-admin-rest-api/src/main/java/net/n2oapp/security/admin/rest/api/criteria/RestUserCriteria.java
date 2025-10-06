@@ -131,4 +131,11 @@ public class RestUserCriteria extends UserCriteria {
     public void setLastActionDate(LocalDateTime lastActionDate) {
         super.setLastActionDate(lastActionDate);
     }
+
+    @QueryParam("withAccount")
+    @Override
+    @ApiParam(value = "Возвращать аккаунты пользователя")
+    public void setWithAccount(Boolean withAccount) {
+        super.setWithAccount(withAccount);
+    }
 }
