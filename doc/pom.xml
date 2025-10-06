@@ -5,6 +5,7 @@
 
     <artifactId>security-admin-doc</artifactId>
     <packaging>pom</packaging>
+    <name>doc</name>
 
     <parent>
         <artifactId>security-admin</artifactId>
