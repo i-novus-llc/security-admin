@@ -8,19 +8,23 @@ import org.springframework.data.domain.Sort;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BaseCriteriaConstructor implements CriteriaConstructor {
+public class BaseCriteriaConstructor implements CriteriaConstructor<BaseCriteria> {
+
     @Override
-    public Object construct(N2oPreparedCriteria criteria, Object instance) {
-        if (instance instanceof BaseCriteria) {
-            ((BaseCriteria) instance).setPage(criteria.getPage() - 1);
-            ((BaseCriteria) instance).setSize(criteria.getSize());
-            List<Sort.Order> orders = new ArrayList<>();
-            if (criteria.getSorting() != null) {
-                orders.add(new Sort.Order(Sort.Direction.fromString(criteria.getSorting()
-                        .getDirection().name()), criteria.getSorting().getField()));
-            }
-            ((BaseCriteria) instance).setOrders(orders);
+    public Class<BaseCriteria> getCriteriaClass() {
+        return BaseCriteria.class;
+    }
+
+    @Override
+    public BaseCriteria construct(N2oPreparedCriteria criteria, BaseCriteria instance) {
+        instance.setPage(criteria.getPage() - 1);
+        instance.setSize(criteria.getSize());
+        List<Sort.Order> orders = new ArrayList<>();
+        if (criteria.getSorting() != null) {
+            orders.add(new Sort.Order(Sort.Direction.fromString(criteria.getSorting()
+                    .getDirection().name()), criteria.getSorting().getField()));
         }
+        instance.setOrders(orders);
         return instance;
     }
 }
