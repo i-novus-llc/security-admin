@@ -18,6 +18,7 @@ package net.n2oapp.security.auth;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import net.n2oapp.framework.access.data.SecurityProvider;
+import net.n2oapp.framework.access.exception.AccessDeniedException;
 import net.n2oapp.framework.access.metadata.Security;
 import net.n2oapp.framework.access.metadata.SecurityObject;
 import net.n2oapp.framework.access.metadata.accesspoint.model.N2oUrlAccessPoint;
@@ -62,7 +63,11 @@ public class N2oUrlFilter implements Filter {
                 .apply(new N2oPipelineSupport(environment))
                 .get(context, null);
         Security urlSecurity = collectUrlAccess(pathUrl, (SimpleCompiledAccessSchema) schema);
-        securityProvider.checkAccess(urlSecurity, StaticUserContext.getUserContext());
+        try {
+            securityProvider.checkAccess(urlSecurity, StaticUserContext.getUserContext());
+        } catch (AccessDeniedException ex) {
+            throw new org.springframework.security.access.AccessDeniedException(ex.getMessage());
+        }
         chain.doFilter(req, response);
     }
 
