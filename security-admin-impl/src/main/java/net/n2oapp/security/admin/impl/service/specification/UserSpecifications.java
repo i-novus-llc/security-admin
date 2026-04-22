@@ -110,6 +110,11 @@ public class UserSpecifications implements Specification<UserEntity> {
                     builder.equal(accountSubqueryRoot.get(AccountEntity_.organization).get(OrganizationEntity_.id), criteria.getOrganizationId()));
         }
 
+        if (!CollectionUtils.isEmpty(criteria.getOrganizationIds())) {
+            accountSubQueryPredicate = builder.and(accountSubQueryPredicate,
+                    accountSubqueryRoot.get(AccountEntity_.organization).get(OrganizationEntity_.id).in(criteria.getOrganizationIds()));
+        }
+
         if (nonNull(criteria.getLastActionDate())) {
             predicate = builder.and(predicate, builder.greaterThanOrEqualTo(root.get(UserEntity_.lastActionDate), criteria.getLastActionDate()));
         }

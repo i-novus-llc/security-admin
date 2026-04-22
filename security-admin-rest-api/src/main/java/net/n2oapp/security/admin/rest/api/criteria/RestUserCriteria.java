@@ -111,6 +111,13 @@ public class RestUserCriteria extends UserCriteria {
         super.setOrganizationId(organizationId);
     }
 
+    @QueryParam("organizationIds")
+    @Override
+    @ApiParam(value = "Список идентификаторов организаций")
+    public void setOrganizationIds(List<Integer> organizationIds) {
+        super.setOrganizationIds(organizationIds);
+    }
+
     @QueryParam("departmentId")
     @Override
     @ApiParam(value = "Идентификатор департамента")

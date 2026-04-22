@@ -381,6 +381,18 @@ public class UserServiceImplTest extends UserRoleServiceTestBase {
         users = userService.findAll(criteria).getContent();
         assertEquals(1, users.size());
         assertEquals(2, (int) users.get(0).getId());
+
+        // find by organizationIds (multiple organizations)
+        criteria.setOrganizationId(null);
+        criteria.setOrganizationIds(List.of(1, 2));
+        users = userService.findAll(criteria).getContent();
+        assertEquals(2, users.size());
+
+        // find by organizationIds (single element)
+        criteria.setOrganizationIds(List.of(1));
+        users = userService.findAll(criteria).getContent();
+        assertEquals(1, users.size());
+        assertEquals(1, (int) users.get(0).getId());
     }
 
     @Test
