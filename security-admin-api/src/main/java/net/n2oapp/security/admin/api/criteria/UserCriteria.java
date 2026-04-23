@@ -39,6 +39,7 @@ public class UserCriteria extends BaseCriteria {
     private String userLevel;
     private Integer regionId;
     private Integer organizationId;
+    private List<Integer> organizationIds;
     private Integer departmentId;
     private String extSys;
     private LocalDateTime lastActionDate;
