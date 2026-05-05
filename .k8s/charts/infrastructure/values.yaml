@@ -2,7 +2,7 @@
 genericServices:
   security-db:
     port: 5432
-    imageName: /security-admin/db
+    imageName: /n2o-components/security-admin/db
     imageTag: ${docker.image.tag}
     imagePullPolicy: IfNotPresent
     storageClassName: 'nfs-retain'
