@@ -18,4 +18,6 @@ public class AccountCriteria extends BaseCriteria {
     private Integer userId;
 
     private String username;
+
+    private String roleCode;
 }

@@ -7,6 +7,7 @@ import jakarta.persistence.criteria.Root;
 import net.n2oapp.security.admin.api.criteria.AccountCriteria;
 import net.n2oapp.security.admin.impl.entity.AccountEntity;
 import net.n2oapp.security.admin.impl.entity.AccountEntity_;
+import net.n2oapp.security.admin.impl.entity.RoleEntity_;
 import net.n2oapp.security.admin.impl.entity.UserEntity_;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -28,6 +29,10 @@ public class AccountSpecifications implements Specification<AccountEntity> {
         if (nonNull(criteria.getUsername()))
             predicate = builder.equal(root.get(AccountEntity_.user).get(UserEntity_.username), criteria.getUsername());
 
+        if (nonNull(criteria.getRoleCode())) {
+            var join = root.join(AccountEntity_.roleList);
+            predicate = builder.and(predicate, builder.equal(join.get(RoleEntity_.code), criteria.getRoleCode()));
+        }
 
         return predicate;
     }

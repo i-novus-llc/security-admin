@@ -15,7 +15,7 @@ security:
     resources:
       limits:
         memory: 512Mi
-        cpu: 300m
+        cpu: 500m
     enabled: true
   frontend:
     resources:
