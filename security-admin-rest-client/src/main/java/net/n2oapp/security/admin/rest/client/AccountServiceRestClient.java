@@ -23,6 +23,7 @@ public class AccountServiceRestClient implements AccountService {
         RestAccountCriteria restCriteria = new RestAccountCriteria();
         restCriteria.setUserId(criteria.getUserId());
         restCriteria.setUsername(criteria.getUsername());
+        restCriteria.setRoleCode(criteria.getRoleCode());
         restCriteria.setPage(criteria.getPage());
         restCriteria.setOrders(criteria.getOrders());
         restCriteria.setSize(criteria.getSize());
