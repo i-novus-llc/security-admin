@@ -23,6 +23,13 @@ public class RestAccountCriteria extends AccountCriteria {
         super.setUsername(username);
     }
 
+    @QueryParam("roleCode")
+    @Override
+    @ApiParam(value = "Код роли аккаунта")
+    public void setRoleCode(String roleCode) {
+        super.setRoleCode(roleCode);
+    }
+
     @QueryParam("page")
     @Override
     @ApiParam(value = "Номер страницы")
