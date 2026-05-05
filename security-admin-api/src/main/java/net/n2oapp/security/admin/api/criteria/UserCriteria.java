@@ -43,6 +43,7 @@ public class UserCriteria extends BaseCriteria {
     private Integer departmentId;
     private String extSys;
     private LocalDateTime lastActionDate;
+    private Boolean withAccount;
 
     public void setRoleIds(List<Integer> roleIds) {
         this.roleIds = roleIds != null ? roleIds : new ArrayList<>();
