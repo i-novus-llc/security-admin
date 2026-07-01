@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
@@ -128,6 +129,7 @@ public class ContextFilter extends OncePerRequestFilter {
         context.setVariable("css", selectAccountCssPath);
         context.setVariable("emblem", selectAccountEmblemPath);
         context.setVariable("accounts", accounts);
+        context.setVariable("_csrf", request.getAttribute(CsrfToken.class.getName()));
 
         String accountSelectPage = templateEngine.process(selectAccountTemplatePath, context);
         response.getWriter().write(accountSelectPage);
