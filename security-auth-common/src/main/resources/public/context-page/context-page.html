@@ -27,6 +27,8 @@
         </h3>
         <form action="selectAccount" method="post">
 
+            <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
             <ul class="accounts__list" th:if="${!accounts.isEmpty()}">
                 <li class="accounts__item" th:each="account : ${accounts}">
                     <label class="accounts__label">
