@@ -17,7 +17,7 @@
                 <text-area id="description" label="Описание"/>
                 <checkbox id="showOnInterface" src="Switch" visible="${access.system.show-on-interface}"/>
 
-                <set depends-on="showOnInterface">
+                <set>
                     <input-text id="shortName" label="Короткое наименование" visible="false">
                         <dependencies>
                             <visibility on="showOnInterface" reset="false">
