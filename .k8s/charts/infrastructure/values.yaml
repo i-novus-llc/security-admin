@@ -7,9 +7,13 @@ genericServices:
     imagePullPolicy: IfNotPresent
     storageClassName: 'nfs-retain'
     resources:
+      requests:
+        cpu: 100m
+        memory: 200m
       limits:
         memory: 512Mi
         cpu: 300m
+
     replicaCount: 1
     volumes:
       - name: security-db-data
