@@ -22,5 +22,19 @@ genericServices:
     volumeMounts:
       - mountPath: /pg/14
         name: security-db-data
+
+    terminationGracePeriodSeconds: 15
+    lifecycle:
+      preStop:
+        exec:
+          command:
+            - /bin/sh
+            - -c
+            - |
+              PIDFILE=$(find /pg/14 -name postmaster.pid 2>/dev/null | head -n1)
+              if [ -n "$PIDFILE" ]; then
+                kill -INT "$(head -n1 "$PIDFILE")"
+                while [ -f "$PIDFILE" ]; do sleep 1; done
+              fi
     env:
       POSTGRES_PASSWORD: postgres
