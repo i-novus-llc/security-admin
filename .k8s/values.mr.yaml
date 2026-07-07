@@ -28,4 +28,9 @@ infrastructure:
   genericServices:
     security-db:
       enabled: true
-      storageClassName:	nfs-delete
+      volumes:
+        - name: security-db-data
+          emptyDir: {}
+      volumeMounts:
+        - name: security-db-data
+          mountPath: /pg/14

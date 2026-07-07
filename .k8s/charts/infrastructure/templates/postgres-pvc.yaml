@@ -1,4 +1,11 @@
-{{- if index .Values "genericServices" "security-db" "volumes" }}
+{{- $db := index .Values "genericServices" "security-db" }}
+{{- $usesPvc := false }}
+{{- range $db.volumes }}
+  {{- if .persistentVolumeClaim }}
+    {{- $usesPvc = true }}
+  {{- end }}
+{{- end }}
+{{- if $usesPvc }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -11,5 +18,5 @@ spec:
   resources:
     requests:
       storage: 1Gi
-  storageClassName: {{ coalesce (index .Values "genericServices" "security-db" "storageClassName") "retain" }}
+  storageClassName: {{ coalesce $db.storageClassName "retain" }}
 {{- end }}
