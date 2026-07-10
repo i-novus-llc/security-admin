@@ -17,6 +17,9 @@ metadata:
   name: {{ $service }}
 spec:
   replicas: {{ .replicaCount }}
+  {{- if .strategy }}
+  strategy: {{- toYaml .strategy | nindent 4 }}
+  {{- end }}
   selector:
     matchLabels:
       app: {{ $service }}
