@@ -21,6 +21,7 @@ import net.n2oapp.framework.access.data.SecurityProvider;
 import net.n2oapp.framework.access.exception.AccessDeniedException;
 import net.n2oapp.framework.access.metadata.Security;
 import net.n2oapp.framework.access.metadata.SecurityObject;
+import net.n2oapp.framework.access.metadata.accesspoint.AccessPoint;
 import net.n2oapp.framework.access.metadata.accesspoint.model.N2oUrlAccessPoint;
 import net.n2oapp.framework.access.metadata.schema.AccessContext;
 import net.n2oapp.framework.access.metadata.schema.CompiledAccessSchema;
@@ -36,6 +37,8 @@ import net.n2oapp.framework.config.compile.pipeline.N2oPipelineSupport;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static net.n2oapp.framework.access.simple.PermissionAndRoleCollector.URL_ACCESS;
@@ -74,54 +77,15 @@ public class N2oUrlFilter implements Filter {
     private Security collectUrlAccess(String url, SimpleCompiledAccessSchema schema) {
         Security security = new Security();
         SecurityObject securityObject = new SecurityObject();
-        if (schema.getPermitAllPoints() != null) {
-            schema.getPermitAllPoints().stream()
-                    .filter(ap -> ap instanceof N2oUrlAccessPoint
-                            && ((N2oUrlAccessPoint) ap).getMatcher().matches(url))
-                    .collect(Collectors.collectingAndThen(
-                            Collectors.toList(),
-                            list -> {
-                                if (list.size() == 1) {
-                                    securityObject.setPermitAll(true);
-                                }
-                                return list;
-                            }
-                    ));
-        }
 
-        if (schema.getAuthenticatedPoints() != null) {
-            schema.getAuthenticatedPoints().stream()
-                    .filter(ap -> ap instanceof N2oUrlAccessPoint
-                            && ((N2oUrlAccessPoint) ap).getMatcher().matches(url))
-                    .collect(Collectors.collectingAndThen(
-                            Collectors.toList(),
-                            list -> {
-                                if (list.size() == 1) {
-                                    securityObject.setAuthenticated(true);
-                                }
-                                return list;
-                            }
-                    ));
-        }
-
-        if (schema.getAnonymousPoints() != null) {
-            schema.getAnonymousPoints().stream()
-                    .filter(ap -> ap instanceof N2oUrlAccessPoint
-                            && ((N2oUrlAccessPoint) ap).getMatcher().matches(url))
-                    .collect(Collectors.collectingAndThen(
-                            Collectors.toList(),
-                            list -> {
-                                if (list.size() == 1) {
-                                    securityObject.setAnonymous(true);
-                                }
-                                return list;
-                            }
-                    ));
-        }
+        applyAccessFlag(url, schema, SimpleCompiledAccessSchema::getPermitAllPoints, securityObject::setPermitAll);
+        applyAccessFlag(url, schema, SimpleCompiledAccessSchema::getAuthenticatedPoints, securityObject::setAuthenticated);
+        applyAccessFlag(url, schema, SimpleCompiledAccessSchema::getAnonymousPoints, securityObject::setAnonymous);
 
         List<N2oRole> roles = PermissionAndRoleCollector.collectRoles(N2oUrlAccessPoint.class,
                 URL_ACCESS.apply(url), schema);
-        if (roles != null && roles.size() > 0) {
+
+        if (roles != null && !roles.isEmpty()) {
             securityObject.setRoles(
                     roles
                             .stream()
@@ -132,7 +96,7 @@ public class N2oUrlFilter implements Filter {
 
         List<N2oPermission> permissions = PermissionAndRoleCollector.collectPermission(N2oUrlAccessPoint.class,
                 URL_ACCESS.apply(url), schema);
-        if (permissions != null && permissions.size() > 0) {
+        if (permissions != null && !permissions.isEmpty()) {
             securityObject.setPermissions(
                     permissions
                             .stream()
@@ -143,7 +107,7 @@ public class N2oUrlFilter implements Filter {
 
         List<N2oUserAccess> userAccesses = PermissionAndRoleCollector.collectUsers(N2oUrlAccessPoint.class,
                 URL_ACCESS.apply(url), schema);
-        if (userAccesses != null && userAccesses.size() > 0) {
+        if (userAccesses != null && !userAccesses.isEmpty()) {
             securityObject.setUsernames(
                     userAccesses
                             .stream()
@@ -158,7 +122,22 @@ public class N2oUrlFilter implements Filter {
         }
         if (security.isEmpty())
             security.add(new HashMap<>());
-        security.get(0).put("url", securityObject);
+        security.getFirst().put("url", securityObject);
         return security;
+    }
+
+    private static void applyAccessFlag(String url, SimpleCompiledAccessSchema schema,
+                                         Function<SimpleCompiledAccessSchema, List<AccessPoint>> getter,
+                                         Consumer<Boolean> setter) {
+        List<AccessPoint> points = getter.apply(schema);
+        if (points != null && getAccessPoints(url, points).size() == 1)
+            setter.accept(true);
+    }
+
+    private static List<AccessPoint> getAccessPoints(String url, List<AccessPoint> list) {
+        return list.stream()
+                .filter(ap -> ap instanceof N2oUrlAccessPoint
+                        && ((N2oUrlAccessPoint) ap).getMatcher().matches(url))
+                .toList();
     }
 }
