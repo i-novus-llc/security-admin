@@ -69,11 +69,13 @@ public class BaseCriteria implements Pageable {
         }
     }
 
+    @SuppressWarnings("java:S4275")
     @Override
     public int getPageSize() {
         return this.size;
     }
 
+    @SuppressWarnings("java:S4275")
     @Override
     public int getPageNumber() {
         return this.page;
