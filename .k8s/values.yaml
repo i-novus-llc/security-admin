@@ -35,7 +35,6 @@ security:
     env:
       JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
       JAVA_OPTS: -Xmx400m
-      SERVER_PORT: 8080
       SERVER_USE_FORWARD_HEADERS: true
       ACCESS_KEYCLOAK_SERVER_URL: "https://keycloak-dev.i-novus.ru/auth"
       ACCESS_KEYCLOAK_REALM: security-admin
