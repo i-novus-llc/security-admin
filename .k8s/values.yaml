@@ -18,8 +18,7 @@ security:
     imageName: n2o-components/security-admin/frontend
     actuatorPath: "actuator"
     env:
-      JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
-      JAVA_OPTS: -Xmx300m
+      JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8 -Xmx300m
       ACCESS_SERVICE_USERINFO_URL: "http://backend:8080/service/userinfo"
       ACCESS_SERVICE_URL: "http://backend:8080/service"
       ACCESS_EMAIL_AS_USERNAME: "true"
@@ -33,8 +32,7 @@ security:
     actuatorPath: "actuator"
     overrideDbName: "security"
     env:
-      JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
-      JAVA_OPTS: -Xmx400m
+      JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8 -Xmx400m
       SERVER_USE_FORWARD_HEADERS: true
       ACCESS_KEYCLOAK_SERVER_URL: "https://keycloak-dev.i-novus.ru/auth"
       ACCESS_KEYCLOAK_REALM: security-admin
