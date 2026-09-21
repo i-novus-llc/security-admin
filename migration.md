@@ -1,3 +1,6 @@
+# Миграция с security-admin 9.1.0 на 9.2.0
+* n2o-boot-platform 7.2.0
+
 # Миграция с security-admin 9.0.0 на 9.1.0
 * n2o-boot-platform 7.1.2
 
