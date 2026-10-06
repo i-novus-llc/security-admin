@@ -88,7 +88,6 @@ public class KeycloakRestRoleService {
      */
     public String createRole(RoleRepresentation role) {
         final String serverUrl = String.format(ROLES, properties.getServerUrl(), properties.getRealm());
-        final String roleCompositesServerUrl = String.format(ROLE_COMPOSITES, properties.getServerUrl(), properties.getRealm(), role.getName());
         ResponseEntity<Response> response;
         try {
             response = restClient.post().uri(serverUrl).contentType(APPLICATION_JSON).body(role).retrieve().toEntity(Response.class);
@@ -98,24 +97,45 @@ public class KeycloakRestRoleService {
                 return role.getName();
             } else throw e;
         }
-        if (response.getStatusCode().value() >= 200 && response.getStatusCode().value() < 300) {
-            if (role.getComposites() != null) {
-                Set<IdObject> composites = new HashSet<>();
-                if (role.getComposites().getRealm() != null) {
-                    composites.addAll(role.getComposites().getRealm().stream().map(IdObject::new).collect(Collectors.toSet()));
-                }
-                if (role.getComposites().getClient() != null) {
-                    composites.addAll(role.getComposites().getClient().values().stream().filter(Objects::nonNull)
-                            .flatMap(Collection::stream).map(IdObject::new).collect(Collectors.toSet()));
-                }
-                ResponseEntity<Response> compositesResponse = restClient.post().uri(roleCompositesServerUrl).contentType(APPLICATION_JSON).body(composites).retrieve().toEntity(Response.class);
-                if (compositesResponse.getStatusCode().value() < 200 || compositesResponse.getStatusCode().value() > 300) {
-                    throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
-                }
-            }
-            return getByName(role.getName()).getId();
-        } else {
+        if (!response.getStatusCode().is2xxSuccessful())
             throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
+        if (role.getComposites() != null)
+            addComposites(role);
+        return getByName(role.getName()).getId();
+    }
+
+    /**
+     * Добавить созданной роли составные роли
+     *
+     * @param role данные роли
+     */
+    private void addComposites(RoleRepresentation role) {
+        final String roleCompositesServerUrl = String.format(ROLE_COMPOSITES, properties.getServerUrl(), properties.getRealm(), role.getName());
+        postComposites(roleCompositesServerUrl, collectCompositeIds(role).stream().map(IdObject::new).collect(Collectors.toSet()));
+    }
+
+    /**
+     * Идентификаторы составных ролей (realm и client) из данных роли
+     *
+     * @param role данные роли
+     * @return идентификаторы составных ролей
+     */
+    private Set<String> collectCompositeIds(RoleRepresentation role) {
+        Set<String> composites = new HashSet<>();
+        if (role.getComposites().getRealm() != null) {
+            composites.addAll(role.getComposites().getRealm());
+        }
+        if (role.getComposites().getClient() != null) {
+            composites.addAll(role.getComposites().getClient().values().stream().filter(Objects::nonNull)
+                    .flatMap(Collection::stream).collect(Collectors.toSet()));
+        }
+        return composites;
+    }
+
+    private void postComposites(String roleCompositesServerUrl, Set<IdObject> composites) {
+        ResponseEntity<Response> compositesResponse = restClient.post().uri(roleCompositesServerUrl).contentType(APPLICATION_JSON).body(composites).retrieve().toEntity(Response.class);
+        if (!compositesResponse.getStatusCode().is2xxSuccessful()) {
+            throw new IllegalArgumentException(compositesResponse.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
         }
     }
 
@@ -126,46 +146,33 @@ public class KeycloakRestRoleService {
      */
     public void updateRole(RoleRepresentation role) {
         final String serverUrl = String.format(ROLE_BY_NAME, properties.getServerUrl(), properties.getRealm(), role.getName());
-        final String roleCompositesServerUrl = String.format(ROLE_COMPOSITES, properties.getServerUrl(), properties.getRealm(), role.getName());
         ResponseEntity<Response> response = restClient.put().uri(serverUrl).contentType(APPLICATION_JSON).body(role).retrieve().toEntity(Response.class);
-        if (response.getStatusCode().value() < 200 || response.getStatusCode().value() > 300) {
+        if (!response.getStatusCode().is2xxSuccessful()) {
             throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
         }
-        if (response.getStatusCode().value() >= 200 && response.getStatusCode().value() < 300) {
-            if (role.isComposite()) {
-                List<RoleRepresentation> currentCompositesRes = getRoleComposites(role.getName());
-                Set<String> currentComposites = new HashSet<>();
-                for (RoleRepresentation r : currentCompositesRes) {
-                    currentComposites.add(r.getId());
-                }
-                Set<IdObject> forRemove;
-                if (role.getComposites() == null) {
-                    forRemove = currentComposites.stream().map(IdObject::new).collect(Collectors.toSet());
-                } else {
-                    Set<String> composites = new HashSet<>();
-                    if (role.getComposites().getRealm() != null) {
-                        composites.addAll(role.getComposites().getRealm());
-                    }
-                    if (role.getComposites().getClient() != null) {
-                        composites.addAll(role.getComposites().getClient().values().stream().filter(Objects::nonNull)
-                                .flatMap(Collection::stream).collect(Collectors.toSet()));
-                    }
-                    forRemove = currentComposites.stream().filter(r -> !composites.contains(r)).map(IdObject::new).collect(Collectors.toSet());
-                    Set<IdObject> newComposites = composites.stream().filter(r -> !currentComposites.contains(r))
-                            .map(IdObject::new).collect(Collectors.toSet());
-                    if (newComposites != null) {
-                        ResponseEntity<Response> compositesResponse = restClient.post().uri(roleCompositesServerUrl).contentType(APPLICATION_JSON).body(newComposites).retrieve().toEntity(Response.class);
-                        if (compositesResponse.getStatusCode().value() < 200 || compositesResponse.getStatusCode().value() > 300) {
-                            throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
-                        }
-                    }
-                }
-                if (!forRemove.isEmpty()) {
-                    restClient.method(HttpMethod.DELETE).uri(roleCompositesServerUrl).contentType(APPLICATION_JSON).body(forRemove).retrieve().toEntity(Response.class);
-                }
-            }
-        } else {
-            throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
+        if (role.isComposite())
+            updateComposites(role);
+    }
+
+    /**
+     * Синхронизировать составные роли в keycloak с данными роли: добавить новые и удалить лишние
+     *
+     * @param role данные роли
+     */
+    private void updateComposites(RoleRepresentation role) {
+        final String roleCompositesServerUrl = String.format(ROLE_COMPOSITES, properties.getServerUrl(), properties.getRealm(), role.getName());
+        Set<String> currentComposites = getRoleComposites(role.getName()).stream()
+                .map(RoleRepresentation::getId).collect(Collectors.toSet());
+        Set<String> composites = role.getComposites() == null ? Collections.emptySet() : collectCompositeIds(role);
+        if (role.getComposites() != null) {
+            Set<IdObject> newComposites = composites.stream().filter(r -> !currentComposites.contains(r))
+                    .map(IdObject::new).collect(Collectors.toSet());
+            postComposites(roleCompositesServerUrl, newComposites);
+        }
+        Set<IdObject> forRemove = currentComposites.stream().filter(r -> !composites.contains(r))
+                .map(IdObject::new).collect(Collectors.toSet());
+        if (!forRemove.isEmpty()) {
+            restClient.method(HttpMethod.DELETE).uri(roleCompositesServerUrl).contentType(APPLICATION_JSON).body(forRemove).retrieve().toEntity(Response.class);
         }
     }
 

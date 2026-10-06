@@ -19,8 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -42,56 +42,6 @@ public class AccountTypeServerLoader extends ServerLoaderSettings<AccountType> i
     }
 
     @Override
-    @Transactional
-    public void load(List<AccountType> data, String subject) {
-        List<AccountTypeEntity> accountTypes = new ArrayList<>();
-        List<AccountTypeEntity> oldAccountTypes = accountTypeRepository.findAll();
-        for (AccountType model : data) {
-            if (oldAccountTypes.stream().anyMatch(accountTypeEntity -> accountTypeEntity.getCode().equals(model.getCode())))
-                continue;
-            AccountTypeEntity accountTypeEntity = new AccountTypeEntity();
-            accountTypeEntity.setCode(model.getCode());
-            accountTypeEntity.setName(model.getName());
-            accountTypeEntity.setDescription(model.getDescription());
-            accountTypeEntity.setUserLevel(model.getUserLevel());
-            accountTypeEntity.setStatus(model.getStatus());
-            List<String> userAndOrganizationRoleCode = new ArrayList<>();
-
-            if (!CollectionUtils.isEmpty(model.getOrgRoles()) && !CollectionUtils.isEmpty(model.getRoles())) {
-                model.getRoles().stream().forEach(role -> {
-                    if (model.getOrgRoles().stream().anyMatch(orgRole -> orgRole.getCode().equals(role.getCode())))
-                        userAndOrganizationRoleCode.add(role.getCode());
-                });
-                userAndOrganizationRoleCode.stream().forEach(roleCode -> {
-                    model.setRoles(new ArrayList<>(model.getRoles()));
-                    model.setOrgRoles(new ArrayList<>(model.getOrgRoles()));
-                    Iterator<Role> userRoleIterator = model.getRoles().iterator();
-                    Iterator<Role> orgRoleIterator = model.getOrgRoles().iterator();
-                    while (userRoleIterator.hasNext()) {
-                        if (userRoleIterator.next().getCode().equals(roleCode))
-                            userRoleIterator.remove();
-                    }
-                    while (orgRoleIterator.hasNext()) {
-                        if (orgRoleIterator.next().getCode().equals(roleCode))
-                            orgRoleIterator.remove();
-                    }
-                });
-            }
-            if (nonNull(model.getRoles()))
-                model.getRoles().stream().forEach(role -> addRole(accountTypeEntity, AccountTypeRoleEnum.USER_ROLE, role.getCode()));
-
-            if (nonNull(model.getOrgRoles()))
-                model.getOrgRoles().stream().forEach(role -> addRole(accountTypeEntity, AccountTypeRoleEnum.ORG_ROLE, role.getCode()));
-            if (nonNull(userAndOrganizationRoleCode))
-                userAndOrganizationRoleCode.stream().forEach(roleCode -> addRole(accountTypeEntity, AccountTypeRoleEnum.ORG_AND_USER_ROLE, roleCode));
-
-            accountTypes.add(accountTypeEntity);
-        }
-        if (isCreateRequired())
-            accountTypeRepository.saveAll(accountTypes);
-    }
-
-    @Override
     public String getTarget() {
         return "accountType";
     }
@@ -101,14 +51,67 @@ public class AccountTypeServerLoader extends ServerLoaderSettings<AccountType> i
         return AccountType.class;
     }
 
+    @Override
+    @Transactional
+    public void load(List<AccountType> data, String subject) {
+        List<AccountTypeEntity> accountTypes = new ArrayList<>();
+        List<AccountTypeEntity> oldAccountTypes = accountTypeRepository.findAll();
+        for (AccountType model : data) {
+            if (oldAccountTypes.stream().noneMatch(accountTypeEntity -> accountTypeEntity.getCode().equals(model.getCode())))
+                accountTypes.add(toEntity(model));
+        }
+        if (isCreateRequired())
+            accountTypeRepository.saveAll(accountTypes);
+    }
+
+    private AccountTypeEntity toEntity(AccountType model) {
+        AccountTypeEntity accountTypeEntity = new AccountTypeEntity();
+        accountTypeEntity.setCode(model.getCode());
+        accountTypeEntity.setName(model.getName());
+        accountTypeEntity.setDescription(model.getDescription());
+        accountTypeEntity.setUserLevel(model.getUserLevel());
+        accountTypeEntity.setStatus(model.getStatus());
+
+        List<String> userAndOrganizationRoleCodes = extractUserAndOrganizationRoleCodes(model);
+        addRoles(accountTypeEntity, AccountTypeRoleEnum.USER_ROLE, model.getRoles());
+        addRoles(accountTypeEntity, AccountTypeRoleEnum.ORG_ROLE, model.getOrgRoles());
+        userAndOrganizationRoleCodes.forEach(roleCode -> addRole(accountTypeEntity, AccountTypeRoleEnum.ORG_AND_USER_ROLE, roleCode));
+        return accountTypeEntity;
+    }
+
+    private List<String> extractUserAndOrganizationRoleCodes(AccountType model) {
+        if (CollectionUtils.isEmpty(model.getOrgRoles()) || CollectionUtils.isEmpty(model.getRoles()))
+            return new ArrayList<>();
+        List<String> roleCodes = model.getRoles().stream()
+                .map(Role::getCode)
+                .filter(code -> model.getOrgRoles().stream().anyMatch(orgRole -> orgRole.getCode().equals(code)))
+                .toList();
+        if (!roleCodes.isEmpty()) {
+            model.setRoles(excludeRoles(model.getRoles(), roleCodes));
+            model.setOrgRoles(excludeRoles(model.getOrgRoles(), roleCodes));
+        }
+        return roleCodes;
+    }
+
+    private List<Role> excludeRoles(List<Role> roles, List<String> roleCodes) {
+        return roles.stream()
+                .filter(role -> !roleCodes.contains(role.getCode()))
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    private void addRoles(AccountTypeEntity accountType, AccountTypeRoleEnum roleType, List<Role> roles) {
+        if (nonNull(roles))
+            roles.forEach(role -> addRole(accountType, roleType, role.getCode()));
+    }
+
     private void addRole(AccountTypeEntity accountType, AccountTypeRoleEnum roleType, String roleCode) {
         AccountTypeRoleEntity accountTypeRoleEntity = new AccountTypeRoleEntity();
         accountTypeRoleEntity.setRoleType(roleType);
         AccountTypeRoleEntityId accountTypeRoleEntityId = new AccountTypeRoleEntityId();
         accountTypeRoleEntityId.setAccountType(accountType);
         RoleEntity roleEntity = roleRepository.findOneByCode(roleCode);
-        if (isNull(roleCode)) {
-            Response response = Response.status(404).header("x-error-message", "role with code" + roleCode + "doesn't exists").build();
+        if (isNull(roleEntity)) {
+            Response response = Response.status(404).header("x-error-message", "role with code " + roleCode + " doesn't exist").build();
             throw new NotFoundException(response);
         }
         accountTypeRoleEntityId.setRole(roleEntity);

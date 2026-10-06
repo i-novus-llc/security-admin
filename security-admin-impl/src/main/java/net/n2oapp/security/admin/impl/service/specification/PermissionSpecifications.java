@@ -13,8 +13,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Arrays;
 
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
+ import static java.util.Objects.nonNull;
 
 public class PermissionSpecifications implements Specification<PermissionEntity> {
     private PermissionCriteria criteria;
@@ -29,17 +28,14 @@ public class PermissionSpecifications implements Specification<PermissionEntity>
         if (nonNull(criteria.getName()))
             predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(criteriaBuilder.lower(root.get(PermissionEntity_.name)), "%" + criteria.getName().toLowerCase() + "%"));
 
-        if (nonNull(criteria.getCode()) && Boolean.TRUE.equals(criteria.getWithoutParent()))
-            predicate = criteriaBuilder.and(predicate, criteriaBuilder.notLike(criteriaBuilder.lower(root.get(PermissionEntity_.code)), criteria.getCode().toLowerCase()));
-        else if (nonNull(criteria.getCode()))
-            predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(criteriaBuilder.lower(root.get(PermissionEntity_.code)), "%" + criteria.getCode().toLowerCase() + "%"));
-
+        if (nonNull(criteria.getCode()))
+            predicate = criteriaBuilder.and(predicate, codePredicate(root, criteriaBuilder));
 
         if (nonNull(criteria.getSystemCode()))
             predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get(PermissionEntity_.systemCode).get(SystemEntity_.CODE),
                     criteria.getSystemCode()));
 
-        if (nonNull(criteria.getUserLevel()) && (isNull(criteria.getForForm()) || Boolean.FALSE.equals(criteria.getForForm()))) {
+        if (nonNull(criteria.getUserLevel()) && !Boolean.TRUE.equals(criteria.getForForm())) {
             String userLevel = criteria.getUserLevel().toUpperCase();
             // если userLevel не существует, то возвращаем false-предикат
             if (Arrays.stream(UserLevel.values()).map(UserLevel::getName).noneMatch(u -> u.equals(userLevel))) {
@@ -59,7 +55,13 @@ public class PermissionSpecifications implements Specification<PermissionEntity>
             predicate = criteriaBuilder.and(predicate, criteriaBuilder.isNull(root.get(PermissionEntity_.userLevel)));
         }
 
-
         return predicate;
+    }
+
+    private Predicate codePredicate(Root<PermissionEntity> root, CriteriaBuilder criteriaBuilder) {
+        String code = criteria.getCode().toLowerCase();
+        if (Boolean.TRUE.equals(criteria.getWithoutParent()))
+            return criteriaBuilder.notLike(criteriaBuilder.lower(root.get(PermissionEntity_.code)), code);
+        return criteriaBuilder.like(criteriaBuilder.lower(root.get(PermissionEntity_.code)), "%" + code + "%");
     }
 }
