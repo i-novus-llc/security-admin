@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.n2oapp.security.admin.api.model.UserLevel;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Table(name = "role", schema = "sec")
-public class RoleEntity {
+public class RoleEntity implements Serializable {
     /**
      * Идентификатор роли
      */

@@ -7,6 +7,7 @@ import lombok.Setter;
 import net.n2oapp.security.admin.api.model.UserLevel;
 import org.hibernate.annotations.Formula;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Table(name = "permission", schema = "sec")
-public class PermissionEntity {
+public class PermissionEntity implements Serializable {
 
     /**
      * Код права доступа

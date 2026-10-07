@@ -7,6 +7,7 @@ import lombok.Setter;
 import net.n2oapp.security.admin.api.model.UserLevel;
 import net.n2oapp.security.admin.api.model.UserStatus;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -14,7 +15,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Table(name = "account_type", schema = "sec")
-public class AccountTypeEntity {
+public class AccountTypeEntity implements Serializable {
     /**
      * Уникальный идентификатор записи
      */

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Table(name = "user", schema = "sec")
-public class UserEntity {
+public class UserEntity implements Serializable {
 
     /**
      * Идентификатор пользователя
