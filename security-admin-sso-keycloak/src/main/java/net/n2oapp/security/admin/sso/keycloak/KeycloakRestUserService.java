@@ -2,7 +2,6 @@ package net.n2oapp.security.admin.sso.keycloak;
 
 import jakarta.ws.rs.core.Response;
 import org.keycloak.representations.idm.CredentialRepresentation;
-import org.keycloak.representations.idm.ErrorRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.core.ParameterizedTypeReference;
@@ -15,6 +14,7 @@ import org.springframework.web.client.RestClient;
 import java.util.Collections;
 import java.util.List;
 
+import static net.n2oapp.security.admin.sso.keycloak.KeycloakResponseUtil.getErrorMessage;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 /**
@@ -113,10 +113,10 @@ public class KeycloakRestUserService {
     public String createUser(UserRepresentation user) {
         final String serverUrl = String.format(USERS, properties.getServerUrl(), properties.getRealm());
         ResponseEntity<Response> response = restClient.post().uri(serverUrl).contentType(APPLICATION_JSON).body(user).retrieve().toEntity(Response.class);
-        if (response.getStatusCode().value() >= 200 && response.getStatusCode().value() < 300) {
+        if (response.getStatusCode().is2xxSuccessful()) {
             return response.getHeaders().getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
         } else {
-            throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
+            throw new IllegalArgumentException(getErrorMessage(response));
         }
     }
 
@@ -128,8 +128,8 @@ public class KeycloakRestUserService {
     public void updateUser(UserRepresentation user) {
         final String serverUrl = String.format(USER_BY_ID, properties.getServerUrl(), properties.getRealm(), user.getId());
         ResponseEntity<Response> response = restClient.put().uri(serverUrl).contentType(APPLICATION_JSON).body(user).retrieve().toEntity(Response.class);
-        if (response.getStatusCode().value() < 200 || response.getStatusCode().value() > 300) {
-            throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            throw new IllegalArgumentException(getErrorMessage(response));
         }
     }
 
@@ -141,8 +141,8 @@ public class KeycloakRestUserService {
     public void deleteUser(String guid) {
         final String serverUrl = String.format(USER_BY_ID, properties.getServerUrl(), properties.getRealm(), guid);
         ResponseEntity<Response> response = restClient.method(HttpMethod.DELETE).uri(serverUrl).contentType(APPLICATION_JSON).retrieve().toEntity(Response.class);
-        if (response.getStatusCode().value() < 200 || response.getStatusCode().value() > 300) {
-            throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            throw new IllegalArgumentException(getErrorMessage(response));
         }
     }
 
@@ -167,8 +167,8 @@ public class KeycloakRestUserService {
             });
             final String serverUrl = String.format(USER_ROLES, properties.getServerUrl(), properties.getRealm(), userGuid);
             ResponseEntity<Response> response = restClient.post().uri(serverUrl).contentType(APPLICATION_JSON).body(roles).retrieve().toEntity(Response.class);
-            if (response.getStatusCode().value() < 200 || response.getStatusCode().value() > 300) {
-                throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
+            if (!response.getStatusCode().is2xxSuccessful()) {
+                throw new IllegalArgumentException(getErrorMessage(response));
             }
         }
     }
@@ -202,8 +202,8 @@ public class KeycloakRestUserService {
         if (roles != null && !roles.isEmpty()) {
             final String serverUrl = String.format(USER_ROLES, properties.getServerUrl(), properties.getRealm(), userGuid);
             ResponseEntity<Response> response = restClient.method(HttpMethod.DELETE).uri(serverUrl).contentType(APPLICATION_JSON).body(roles).retrieve().toEntity(Response.class);
-            if (response.getStatusCode().value() < 200 || response.getStatusCode().value() > 300) {
-                throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
+            if (!response.getStatusCode().is2xxSuccessful()) {
+                throw new IllegalArgumentException(getErrorMessage(response));
             }
         }
     }
@@ -223,8 +223,8 @@ public class KeycloakRestUserService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(APPLICATION_JSON);
         ResponseEntity<Response> response = restClient.put().uri(serverUrl).contentType(APPLICATION_JSON).body(passwordCred).retrieve().toEntity(Response.class);
-        if (response.getStatusCode().value() < 200 || response.getStatusCode().value() > 300) {
-            throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            throw new IllegalArgumentException(getErrorMessage(response));
         }
     }
 

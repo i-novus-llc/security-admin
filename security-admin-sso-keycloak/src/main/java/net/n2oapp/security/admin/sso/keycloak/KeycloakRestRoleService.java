@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
-import org.keycloak.representations.idm.ErrorRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +19,7 @@ import org.springframework.web.client.RestClientResponseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static net.n2oapp.security.admin.sso.keycloak.KeycloakResponseUtil.getErrorMessage;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 /**
@@ -98,7 +98,7 @@ public class KeycloakRestRoleService {
             } else throw e;
         }
         if (!response.getStatusCode().is2xxSuccessful())
-            throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
+            throw new IllegalArgumentException(getErrorMessage(response));
         if (role.getComposites() != null)
             addComposites(role);
         return getByName(role.getName()).getId();
@@ -135,7 +135,7 @@ public class KeycloakRestRoleService {
     private void postComposites(String roleCompositesServerUrl, Set<IdObject> composites) {
         ResponseEntity<Response> compositesResponse = restClient.post().uri(roleCompositesServerUrl).contentType(APPLICATION_JSON).body(composites).retrieve().toEntity(Response.class);
         if (!compositesResponse.getStatusCode().is2xxSuccessful()) {
-            throw new IllegalArgumentException(compositesResponse.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
+            throw new IllegalArgumentException(getErrorMessage(compositesResponse));
         }
     }
 
@@ -148,7 +148,7 @@ public class KeycloakRestRoleService {
         final String serverUrl = String.format(ROLE_BY_NAME, properties.getServerUrl(), properties.getRealm(), role.getName());
         ResponseEntity<Response> response = restClient.put().uri(serverUrl).contentType(APPLICATION_JSON).body(role).retrieve().toEntity(Response.class);
         if (!response.getStatusCode().is2xxSuccessful()) {
-            throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
+            throw new IllegalArgumentException(getErrorMessage(response));
         }
         if (role.isComposite())
             updateComposites(role);
@@ -197,8 +197,8 @@ public class KeycloakRestRoleService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(APPLICATION_JSON);
         ResponseEntity<Response> response = restClient.method(HttpMethod.DELETE).uri(serverUrl).contentType(APPLICATION_JSON).retrieve().toEntity(Response.class);
-        if (response.getStatusCode().value() < 200 || response.getStatusCode().value() > 300) {
-            throw new IllegalArgumentException(response.getBody().readEntity(ErrorRepresentation.class).getErrorMessage());
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            throw new IllegalArgumentException(getErrorMessage(response));
         }
     }
 
