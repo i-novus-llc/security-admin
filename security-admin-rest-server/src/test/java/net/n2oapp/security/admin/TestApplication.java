@@ -27,7 +27,7 @@ public class TestApplication {
     UserDetailsService userDetailsService;
 
     @Bean
-    public UserDetailsRestService UserDetailsRestService() {
+    public UserDetailsRestService userDetailsRestService() {
         return new UserDetailsRestServiceImpl(userDetailsService);
     }
 
