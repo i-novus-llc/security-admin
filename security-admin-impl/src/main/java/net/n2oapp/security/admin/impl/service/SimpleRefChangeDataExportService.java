@@ -10,11 +10,11 @@ import java.util.List;
 public class SimpleRefChangeDataExportService implements RefChangeDataExportService {
     @Override
     public <T extends Serializable> void changeSystemData(List<? extends T> addUpdate, List<? extends T> delete) {
-
+        // Дефолтная реализация: экспорт изменений в справочники не требуется
     }
 
     @Override
     public <T extends Serializable> void changeApplicationData(List<? extends T> addUpdate, List<? extends T> delete) {
-
+        // Дефолтная реализация: экспорт изменений в справочники не требуется
     }
 }
