@@ -31,8 +31,4 @@ public class PermissionCriteria extends BaseCriteria {
     private Boolean forForm;
     private Boolean withSystem;
     private Boolean withoutParent;
-
-    public PermissionCriteria() {
-
-    }
 }

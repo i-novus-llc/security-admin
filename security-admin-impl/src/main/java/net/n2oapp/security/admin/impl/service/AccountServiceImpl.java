@@ -24,6 +24,7 @@ import static java.util.Objects.nonNull;
 @Transactional
 public class AccountServiceImpl implements AccountService {
 
+    public static final String EXCEPTION_ACCOUNT_NOT_FOUND = "exception.accountNotFound";
     private final AccountRepository accountRepository;
 
     @Autowired
@@ -44,7 +45,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account getById(Integer id) {
         return mapper.model(accountRepository.findById(id)
-                .orElseThrow(() -> new UserException("exception.accountNotFound")));
+                .orElseThrow(() -> new UserException(EXCEPTION_ACCOUNT_NOT_FOUND)));
     }
 
     @Override
@@ -59,7 +60,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account update(Account account) {
         AccountEntity accountEntity = accountRepository.findById(account.getId())
-                .orElseThrow(() -> new UserException("exception.accountNotFound"));
+                .orElseThrow(() -> new UserException(EXCEPTION_ACCOUNT_NOT_FOUND));
         entityForm(accountEntity, account);
         Account updatedAccount = mapper.model(accountRepository.save(accountEntity));
 
@@ -69,7 +70,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void delete(Integer id) {
         Account account = mapper.model(accountRepository.findById(id)
-                .orElseThrow(() -> new UserException("exception.accountNotFound")));
+                .orElseThrow(() -> new UserException(EXCEPTION_ACCOUNT_NOT_FOUND)));
         accountRepository.deleteById(id);
 
         if (nonNull(account))
@@ -79,7 +80,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account changeActive(Integer id) {
         AccountEntity accountEntity = accountRepository.findById(id)
-                .orElseThrow(() -> new UserException("exception.accountNotFound"));
+                .orElseThrow(() -> new UserException(EXCEPTION_ACCOUNT_NOT_FOUND));
         // TODO SECURITY-396 change current account activity exception
 
         accountEntity.setIsActive(!accountEntity.getIsActive());
