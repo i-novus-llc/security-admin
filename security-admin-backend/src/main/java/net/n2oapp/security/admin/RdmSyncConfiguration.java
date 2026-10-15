@@ -8,7 +8,7 @@ import net.n2oapp.security.admin.rdm.scheduled.DepartmentSynchronizeJob;
 import net.n2oapp.security.admin.rdm.scheduled.OrganizationSynchronizeJob;
 import net.n2oapp.security.admin.rdm.scheduled.RegionSynchronizeJob;
 import org.quartz.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
@@ -48,9 +48,6 @@ public class RdmSyncConfiguration {
 
     @Value("${rdm.cron.import.department}")
     private String departmentUpdateCronExpression;
-
-    @Autowired(required = false)
-    private RdmSyncService rdmSyncRest;
 
     @Bean
     public SynchronizationInfo appSysExportJobAndTrigger() {
@@ -111,11 +108,11 @@ public class RdmSyncConfiguration {
     }
 
     @Bean
-    public Scheduler scheduler(SchedulerFactoryBean schedulerFactoryBean, List<SynchronizationInfo> synchronizationInfos) throws SchedulerException {
+    public Scheduler scheduler(SchedulerFactoryBean schedulerFactoryBean, List<SynchronizationInfo> synchronizationInfos, ObjectProvider<RdmSyncService> rdmSyncRest) throws SchedulerException {
         Map<JobDetail, Set<? extends Trigger>> scheduleJobs = synchronizationInfos.stream().collect(Collectors.toMap(SynchronizationInfo::getJob, SynchronizationInfo::getTrigger));
         Scheduler scheduler = schedulerFactoryBean.getScheduler();
         scheduler.scheduleJobs(scheduleJobs, true);
-        scheduler.getContext().put(RdmSyncService.class.getSimpleName(), rdmSyncRest);
+        scheduler.getContext().put(RdmSyncService.class.getSimpleName(), rdmSyncRest.getIfAvailable());
 
         return scheduler;
     }

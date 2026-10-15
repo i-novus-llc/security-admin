@@ -23,10 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
@@ -184,12 +181,17 @@ public class UserServiceImpl implements UserService {
         if (criteria.getOrders() == null)
             criteria.setOrders(new ArrayList<>());
         if (criteria.getOrders().stream().map(Sort.Order::getProperty).anyMatch("fio"::equals)) {
-            Sort.Direction orderFio =
-                    criteria.getOrders().stream().filter(o -> o.getProperty().equals("fio")).findAny().get().getDirection();
-            criteria.getOrders().add(new Sort.Order(orderFio, "surname"));
-            criteria.getOrders().add(new Sort.Order(orderFio, "name"));
-            criteria.getOrders().add(new Sort.Order(orderFio, "patronymic"));
-            criteria.getOrders().removeIf(s -> s.getProperty().equals("fio"));
+            Optional<Sort.Order> orderFio =
+                    criteria.getOrders().stream().filter(o -> o.getProperty().equals("fio")).findAny();
+            orderFio.ifPresent(
+                    order -> {
+                        Sort.Direction direction = order.getDirection();
+                        criteria.getOrders().add(new Sort.Order(direction, "surname"));
+                        criteria.getOrders().add(new Sort.Order(direction, "name"));
+                        criteria.getOrders().add(new Sort.Order(direction, "patronymic"));
+                        criteria.getOrders().removeIf(s -> s.getProperty().equals("fio"));
+                    }
+            );
         }
         criteria.getOrders().add(new Sort.Order(Sort.Direction.ASC, "id"));
         final Page<UserEntity> all = userRepository.findAll(specification, criteria);
