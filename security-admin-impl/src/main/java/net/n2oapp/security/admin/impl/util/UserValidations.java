@@ -82,47 +82,19 @@ public class UserValidations {
     public void checkPassword(String password, String passwordCheck, Integer id) {
         if (password.length() < validationPasswordLength)
             throw new UserException("exception.passwordLength");
-        String regexp;
-        Pattern pattern;
-        Matcher matcher;
-
-        regexp = "[0-9a-zA-Z@%\\+\\/'\\!#\\\\$\\^\\?:,\\(\\)\\{\\}\\[\\]~\\-_\\.]+";
-        pattern = Pattern.compile(regexp);
-        matcher = pattern.matcher(password);
-        if (!matcher.matches())
-            throw new UserException("exception.wrongSymbols");
-
-        if (validationPasswordUpperCaseLetters) {
-            regexp = ".*[A-Z].*";
-            pattern = Pattern.compile(regexp);
-            matcher = pattern.matcher(password);
-            if (!matcher.matches())
-                throw new UserException("exception.uppercaseLetters");
-        }
-        if (validationPasswordLowerCaseLetters) {
-            regexp = ".*[a-z].*";
-            pattern = Pattern.compile(regexp);
-            matcher = pattern.matcher(password);
-            if (!matcher.matches())
-                throw new UserException("exception.lowercaseLetters");
-        }
-        if (validationPasswordNumbers) {
-            regexp = ".*[0-9].*";
-            pattern = Pattern.compile(regexp);
-            matcher = pattern.matcher(password);
-            if (!matcher.matches())
-                throw new UserException("exception.numbers");
-        }
-        if (validationPasswordSpecialSymbols) {
-            regexp = ".*[@%\\+\\/'\\!#\\\\$\\^\\?:,\\(\\)\\{\\}\\[\\]~\\-_\\.].*";
-            pattern = Pattern.compile(regexp);
-            matcher = pattern.matcher(password);
-            if (!matcher.matches())
-                throw new UserException("exception.specialSymbols");
-        }
+        checkPasswordMatches(true, password, "[0-9a-zA-Z@%\\+\\/'\\!#\\\\$\\^\\?:,\\(\\)\\{\\}\\[\\]~\\-_\\.]+", "exception.wrongSymbols");
+        checkPasswordMatches(validationPasswordUpperCaseLetters, password, ".*[A-Z].*", "exception.uppercaseLetters");
+        checkPasswordMatches(validationPasswordLowerCaseLetters, password, ".*[a-z].*", "exception.lowercaseLetters");
+        checkPasswordMatches(validationPasswordNumbers, password, ".*[0-9].*", "exception.numbers");
+        checkPasswordMatches(validationPasswordSpecialSymbols, password, ".*[@%\\+\\/'\\!#\\\\$\\^\\?:,\\(\\)\\{\\}\\[\\]~\\-_\\.].*", "exception.specialSymbols");
         if (((id == null) || (passwordCheck != null)) && (!password.equals(passwordCheck))) {
             throw new UserException("exception.passwordsMatch");
         }
+    }
+
+    private void checkPasswordMatches(boolean enabled, String password, String regexp, String errorCode) {
+        if (enabled && !Pattern.matches(regexp, password))
+            throw new UserException(errorCode);
     }
 
     public void checkSnils(String snils) {
@@ -133,30 +105,26 @@ public class UserValidations {
             throw new UserException("exception.incorrectSnilsFormat");
 
         String snilsNoCheckSum = snils.substring(0, 3) + snils.substring(4, 7) + snils.substring(8, 11);
-        // 001-001-998
+        // контрольное число проверяется только для номеров больше 001-001-998
+        if (snilsNoCheckSum.compareTo("001001998") <= 0)
+            return;
         try {
-            if (snilsNoCheckSum.compareTo("001001998") > 0) {
-                int sum = 0;
-                int multiplier = 9;
-                for (int i = 0; i < 9; i++) {
-                    sum = sum + (multiplier - i) * Integer.parseInt(snilsNoCheckSum.substring(i, i + 1));
-                }
-
-                int checksum = Integer.parseInt(snils.substring(12, 14));
-                if (sum > 101)
-                    sum = sum % 101;
-                if (sum < 100) {
-                    if (!(sum == checksum))
-                        throw new UserException("exception.incorrectSnilsFormat");
-                }
-                if (sum == 100 || sum == 101) {
-                    if (!(0 == checksum))
-                        throw new UserException("exception.incorrectSnilsFormat");
-                }
-            }
+            if (calculateSnilsChecksum(snilsNoCheckSum) != Integer.parseInt(snils.substring(12, 14)))
+                throw new UserException("exception.incorrectSnilsFormat");
         } catch (NumberFormatException e) {
             throw new UserException("exception.incorrectSnilsFormat");
         }
+    }
+
+    private int calculateSnilsChecksum(String snilsNoCheckSum) {
+        int sum = 0;
+        int multiplier = 9;
+        for (int i = 0; i < 9; i++) {
+            sum = sum + (multiplier - i) * Integer.parseInt(snilsNoCheckSum.substring(i, i + 1));
+        }
+        if (sum > 101)
+            sum = sum % 101;
+        return sum < 100 ? sum : 0;
     }
 
     private Boolean anotherUserExist(Integer id, User foundUser) {

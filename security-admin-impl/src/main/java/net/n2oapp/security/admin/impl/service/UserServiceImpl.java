@@ -252,16 +252,7 @@ public class UserServiceImpl implements UserService {
             userValidations.checkPassword(password, user.getPasswordCheck(), user.getId());
         }
 
-        UserEntity userEntity = null;
-        if (user.getId() != null)
-            userEntity = userRepository.getReferenceById(user.getId());
-        if (userEntity == null && user.getEmail() != null)
-            userEntity = userRepository.findOneByEmailIgnoreCase(user.getEmail());
-        if (userEntity == null && user.getUsername() != null)
-            userEntity = userRepository.findOneByUsernameIgnoreCase(user.getUsername());
-        if (userEntity == null && user.getSnils() != null)
-            userEntity = userRepository.findOneBySnilsIgnoreCase(user.getSnils()).orElse(null);
-
+        UserEntity userEntity = findUserForReset(user);
         if (userEntity != null) {
             user.setEmail(userEntity.getEmail());
             user.setUsername(userEntity.getUsername());
@@ -277,6 +268,19 @@ public class UserServiceImpl implements UserService {
                 mailService.sendResetPasswordMail(user);
             }
         }
+    }
+
+    private UserEntity findUserForReset(UserForm user) {
+        UserEntity userEntity = null;
+        if (user.getId() != null)
+            userEntity = userRepository.getReferenceById(user.getId());
+        if (userEntity == null && user.getEmail() != null)
+            userEntity = userRepository.findOneByEmailIgnoreCase(user.getEmail());
+        if (userEntity == null && user.getUsername() != null)
+            userEntity = userRepository.findOneByUsernameIgnoreCase(user.getUsername());
+        if (userEntity == null && user.getSnils() != null)
+            userEntity = userRepository.findOneBySnilsIgnoreCase(user.getSnils()).orElse(null);
+        return userEntity;
     }
 
     @Override
