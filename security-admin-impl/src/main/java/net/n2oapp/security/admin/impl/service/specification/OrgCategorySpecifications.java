@@ -15,7 +15,7 @@ import org.springframework.data.jpa.domain.Specification;
  */
 public class OrgCategorySpecifications implements Specification<OrgCategoryEntity> {
 
-    private final OrgCategoryCriteria criteria;
+    private final transient OrgCategoryCriteria criteria;
 
     public OrgCategorySpecifications(OrgCategoryCriteria criteria) {
         this.criteria = criteria;

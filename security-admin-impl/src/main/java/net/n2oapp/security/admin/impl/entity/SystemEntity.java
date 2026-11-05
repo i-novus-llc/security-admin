@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 /**
  * Сущность Система
  */
@@ -17,7 +19,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Table(name = "system", schema = "sec")
-public class SystemEntity {
+public class SystemEntity implements Serializable {
     /**
      * Код системы (уникальный)
      */

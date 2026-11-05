@@ -16,7 +16,7 @@ import java.util.Arrays;
  import static java.util.Objects.nonNull;
 
 public class PermissionSpecifications implements Specification<PermissionEntity> {
-    private PermissionCriteria criteria;
+    private transient PermissionCriteria criteria;
 
     public PermissionSpecifications(PermissionCriteria criteria) {
         this.criteria = criteria;

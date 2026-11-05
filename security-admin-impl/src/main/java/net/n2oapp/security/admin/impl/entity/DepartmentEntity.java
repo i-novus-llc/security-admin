@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.n2oapp.security.admin.impl.entity.base.RdmBaseEntity;
 
+import java.io.Serializable;
+
 /**
  * Сущность Департамент
  */
@@ -14,7 +16,7 @@ import net.n2oapp.security.admin.impl.entity.base.RdmBaseEntity;
 @Setter
 @NoArgsConstructor
 @Table(name = "department", schema = "sec")
-public class DepartmentEntity extends RdmBaseEntity {
+public class DepartmentEntity extends RdmBaseEntity implements Serializable {
     /**
      * Уникальный идентификатор записи
      */
