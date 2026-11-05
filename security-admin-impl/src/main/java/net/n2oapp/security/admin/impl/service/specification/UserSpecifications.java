@@ -17,7 +17,7 @@ import static java.util.Objects.nonNull;
  */
 public class UserSpecifications implements Specification<UserEntity> {
 
-    private UserCriteria criteria;
+    private transient UserCriteria criteria;
 
     public UserSpecifications(UserCriteria criteria) {
         this.criteria = criteria;

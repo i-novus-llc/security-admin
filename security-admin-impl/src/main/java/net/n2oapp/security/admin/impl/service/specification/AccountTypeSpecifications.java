@@ -16,7 +16,7 @@ import static org.springframework.util.StringUtils.hasText;
 
 public class AccountTypeSpecifications implements Specification<AccountTypeEntity> {
 
-    private final AccountTypeCriteria criteria;
+    private final transient AccountTypeCriteria criteria;
 
     public AccountTypeSpecifications(AccountTypeCriteria criteria) {
         this.criteria = criteria;

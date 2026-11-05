@@ -15,7 +15,7 @@ import static java.util.Objects.nonNull;
  * Реализация фильтров для ролей пользователя
  */
 public class RoleSpecifications implements Specification<RoleEntity> {
-    private RoleCriteria criteria;
+    private transient RoleCriteria criteria;
 
     public RoleSpecifications(RoleCriteria criteria) {
         this.criteria = criteria;

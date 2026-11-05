@@ -11,7 +11,7 @@ import org.springframework.util.CollectionUtils;
  * Реализация фильтров для организаций
  */
 public class OrganizationSpecifications implements Specification<OrganizationEntity> {
-    private OrganizationCriteria criteria;
+    private transient OrganizationCriteria criteria;
 
     public OrganizationSpecifications(OrganizationCriteria criteria) {
         this.criteria = criteria;

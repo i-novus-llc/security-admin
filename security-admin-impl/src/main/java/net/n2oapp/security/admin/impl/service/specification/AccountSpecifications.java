@@ -15,7 +15,7 @@ import static java.util.Objects.nonNull;
 
 public class AccountSpecifications implements Specification<AccountEntity> {
 
-    private final AccountCriteria criteria;
+    private final transient AccountCriteria criteria;
 
     public AccountSpecifications(AccountCriteria criteria) {
         this.criteria = criteria;

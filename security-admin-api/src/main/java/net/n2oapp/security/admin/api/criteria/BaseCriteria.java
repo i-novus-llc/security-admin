@@ -20,7 +20,6 @@ import jakarta.ws.rs.DefaultValue;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -28,7 +27,7 @@ import java.util.stream.StreamSupport;
 /**
  * Базовая модель фильтрации данных в таблице
  */
-public class BaseCriteria implements Pageable, Serializable {
+public class BaseCriteria implements Pageable {
 
     private final int DEFAULT_SIZE_VALUE = 10;
 
