@@ -48,13 +48,7 @@ public class UserServerLoader extends ServerLoaderSettings<User> implements Serv
         List<UserEntity> freshUsers = new ArrayList<>();
         List<UserEntity> oldUsers = userRepository.findByUsernameIn(uploadedUsers.stream().map(User::getUsername).collect(Collectors.toList()));
         for (User model : uploadedUsers) {
-            UserEntity oldUser = oldUsers.stream().filter(userEntity -> userEntity.getUsername().equals(model.getUsername())).findFirst().orElse(null);
-            UserEntity userEntity = new UserEntity();
-            if (oldUser != null) {
-                userEntity = oldUser;
-                if (oldUser.getAccounts() != null)
-                    oldAccounts.addAll(oldUser.getAccounts());
-            }
+            UserEntity userEntity = getOrCreateUser(oldUsers, model.getUsername(), oldAccounts);
             userEntity.setUsername(model.getUsername());
             userEntity.setName(model.getName());
             userEntity.setSurname(model.getSurname());
@@ -62,25 +56,35 @@ public class UserServerLoader extends ServerLoaderSettings<User> implements Serv
             userEntity.setIsActive(model.getIsActive());
             userEntity.setEmail(model.getEmail());
             userEntity.setSnils(model.getSnils());
-            if (model.getAccounts() != null) {
-                for (Account account : model.getAccounts()) {
-                    AccountEntity accountEntity = new AccountEntity();
-                    accountEntity.setUser(userEntity);
-                    accountEntity.setName(account.getName());
-                    accountEntity.setUserLevel(account.getUserLevel());
-                    accountEntity.setDepartment(nonNull(account.getDepartment()) ? new DepartmentEntity(account.getDepartment().getId()) : null);
-                    accountEntity.setOrganization(nonNull(account.getOrganization()) ? new OrganizationEntity(account.getOrganization().getId()) : null);
-                    accountEntity.setRegion(nonNull(account.getRegion()) ? new RegionEntity(account.getRegion().getId()) : null);
-                    if (nonNull(account.getRoles()))
-                        accountEntity.setRoleList(account.getRoles().stream().map(role -> roleRepository.findOneByCode(role.getCode())).collect(Collectors.toList()));
-                    freshAccounts.add(accountEntity);
-                }
-            } else {
+            if (model.getAccounts() != null)
+                model.getAccounts().forEach(account -> freshAccounts.add(toAccountEntity(account, userEntity)));
+            else
                 userEntity.setAccounts(null);
-            }
             freshUsers.add(userEntity);
         }
         return freshUsers;
+    }
+
+    private UserEntity getOrCreateUser(List<UserEntity> oldUsers, String username, List<AccountEntity> oldAccounts) {
+        UserEntity oldUser = oldUsers.stream().filter(userEntity -> userEntity.getUsername().equals(username)).findFirst().orElse(null);
+        if (oldUser == null)
+            return new UserEntity();
+        if (oldUser.getAccounts() != null)
+            oldAccounts.addAll(oldUser.getAccounts());
+        return oldUser;
+    }
+
+    private AccountEntity toAccountEntity(Account account, UserEntity userEntity) {
+        AccountEntity accountEntity = new AccountEntity();
+        accountEntity.setUser(userEntity);
+        accountEntity.setName(account.getName());
+        accountEntity.setUserLevel(account.getUserLevel());
+        accountEntity.setDepartment(nonNull(account.getDepartment()) ? new DepartmentEntity(account.getDepartment().getId()) : null);
+        accountEntity.setOrganization(nonNull(account.getOrganization()) ? new OrganizationEntity(account.getOrganization().getId()) : null);
+        accountEntity.setRegion(nonNull(account.getRegion()) ? new RegionEntity(account.getRegion().getId()) : null);
+        if (nonNull(account.getRoles()))
+            accountEntity.setRoleList(account.getRoles().stream().map(role -> roleRepository.findOneByCode(role.getCode())).collect(Collectors.toList()));
+        return accountEntity;
     }
 
     @Override

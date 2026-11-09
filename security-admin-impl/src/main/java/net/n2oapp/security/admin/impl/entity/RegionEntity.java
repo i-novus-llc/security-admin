@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.n2oapp.security.admin.impl.entity.base.RdmBaseEntity;
 
+import java.io.Serializable;
+
 /**
  * Сущность Регион
  */
@@ -14,7 +16,7 @@ import net.n2oapp.security.admin.impl.entity.base.RdmBaseEntity;
 @Setter
 @NoArgsConstructor
 @Table(name = "region", schema = "sec")
-public class RegionEntity extends RdmBaseEntity {
+public class RegionEntity extends RdmBaseEntity implements Serializable {
     /**
      * Уникальный идентификатор записи
      */
