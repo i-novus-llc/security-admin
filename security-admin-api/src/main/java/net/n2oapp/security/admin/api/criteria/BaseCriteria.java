@@ -37,13 +37,6 @@ public class BaseCriteria implements Pageable {
     @DefaultValue("10")
     private int size;
 
-    //    used to avoid swagger type exception
-    private long offset;
-    private Sort sort;
-    private int pageSize;
-    private int pageNumber;
-    //    used to avoid swagger type exception
-
     private List<Sort.Order> orders;
 
     public BaseCriteria() {
@@ -69,13 +62,11 @@ public class BaseCriteria implements Pageable {
         }
     }
 
-    @SuppressWarnings("java:S4275")
     @Override
     public int getPageSize() {
         return this.size;
     }
 
-    @SuppressWarnings("java:S4275")
     @Override
     public int getPageNumber() {
         return this.page;
