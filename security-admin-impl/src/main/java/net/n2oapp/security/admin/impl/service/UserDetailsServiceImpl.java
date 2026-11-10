@@ -52,58 +52,68 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public User loadUserDetails(UserDetailsToken userDetails) {
-        UserEntity userEntity = userRepository.findOneByUsernameIgnoreCase(Boolean.TRUE.equals(emailAsUsername) ? userDetails.getEmail() : userDetails.getUsername());
+        String username = Boolean.TRUE.equals(emailAsUsername) ? userDetails.getEmail() : userDetails.getUsername();
+        UserEntity userEntity = userRepository.findOneByUsernameIgnoreCase(username);
         if (isNull(userEntity) && !createUser)
             throw new UserNotFoundAuthenticationException("User " + userDetails.getName() + " " + userDetails.getSurname() + " doesn't registered in system");
 
         if (isNull(userEntity))
             userEntity = new UserEntity();
-        userEntity.setUsername(Boolean.TRUE.equals(emailAsUsername) ? userDetails.getEmail() : userDetails.getUsername());
+        userEntity.setUsername(username);
         userEntity.setEmail(userDetails.getEmail());
         userEntity.setSurname(userDetails.getSurname());
         userEntity.setPatronymic(userDetails.getPatronymic());
         userEntity.setName(userDetails.getName());
         userEntity.setIsActive(true);
         userRepository.save(userEntity);
-        if (isNull(userEntity.getAccounts()) || userEntity.getAccounts().size() < 2) {
-            AccountEntity accountEntity = CollectionUtils.firstElement(userEntity.getAccounts());
-            if (isNull(accountEntity)) {
-                accountEntity = new AccountEntity();
-                accountEntity.setUser(userEntity);
-                userEntity.setAccounts(List.of(accountEntity));
-            }
-            accountEntity.setName(DEFAULT_ACCOUNT_PREFIX + userEntity.getUsername());
-            accountEntity.setUser(userEntity);
-            accountEntity.setIsActive(true);
-            accountEntity.setExternalSystem(userDetails.getExternalSystem());
-            accountEntity.setExternalUid(userDetails.getExtUid());
-
-
-            List<String> roleNamesCopy = new ArrayList<>(userDetails.getRoleNames());
-            List<RoleEntity> roleForRemove = new ArrayList<>();
-            if (isNull(accountEntity.getRoleList()))
-                accountEntity.setRoleList(new ArrayList<>());
-            for (RoleEntity r : accountEntity.getRoleList()) {
-                if (!userDetails.getRoleNames().contains(r.getCode())) {
-                    roleForRemove.add(r);
-                } else {
-                    roleNamesCopy.remove(r.getCode());
-                }
-            }
-            for (String s : ignoreRoles) {
-                roleNamesCopy.remove(s);
-            }
-            for (RoleEntity r : roleForRemove) {
-                accountEntity.getRoleList().remove(r);
-            }
-            for (String r : roleNamesCopy) {
-                accountEntity.getRoleList().add(getOrCreateRole(r));
-            }
-
-            accountRepository.save(accountEntity);
-        }
+        if (isNull(userEntity.getAccounts()) || userEntity.getAccounts().size() < 2)
+            updateDefaultAccount(userEntity, userDetails);
 
         return model(userEntity);
+    }
+
+    /**
+     * Обновляет (или создает) единственный аккаунт пользователя по данным из токена
+     */
+    private void updateDefaultAccount(UserEntity userEntity, UserDetailsToken userDetails) {
+        AccountEntity accountEntity = CollectionUtils.firstElement(userEntity.getAccounts());
+        if (isNull(accountEntity)) {
+            accountEntity = new AccountEntity();
+            accountEntity.setUser(userEntity);
+            userEntity.setAccounts(List.of(accountEntity));
+        }
+        accountEntity.setName(DEFAULT_ACCOUNT_PREFIX + userEntity.getUsername());
+        accountEntity.setUser(userEntity);
+        accountEntity.setIsActive(true);
+        accountEntity.setExternalSystem(userDetails.getExternalSystem());
+        accountEntity.setExternalUid(userDetails.getExtUid());
+        if (isNull(accountEntity.getRoleList()))
+            accountEntity.setRoleList(new ArrayList<>());
+        syncRoles(accountEntity.getRoleList(), userDetails.getRoleNames());
+        accountRepository.save(accountEntity);
+    }
+
+    /**
+     * Приводит список ролей аккаунта в соответствие с ролями из токена (без учета игнорируемых ролей)
+     */
+    private void syncRoles(List<RoleEntity> roleList, List<String> roleNames) {
+        List<String> roleNamesCopy = new ArrayList<>(roleNames);
+        List<RoleEntity> roleForRemove = new ArrayList<>();
+        for (RoleEntity r : roleList) {
+            if (!roleNames.contains(r.getCode()))
+                roleForRemove.add(r);
+            else
+                roleNamesCopy.remove(r.getCode());
+        }
+        for (String s : ignoreRoles) {
+            roleNamesCopy.remove(s);
+        }
+        for (RoleEntity r : roleForRemove) {
+            roleList.remove(r);
+        }
+        for (String r : roleNamesCopy) {
+            roleList.add(getOrCreateRole(r));
+        }
     }
 
     private RoleEntity getOrCreateRole(String name) {

@@ -14,7 +14,7 @@ import org.springframework.data.jpa.domain.Specification;
  * Реализация фильтров для организаций
  */
 public class DepartmentSpecifications implements Specification<DepartmentEntity> {
-    private DepartmentCriteria criteria;
+    private transient DepartmentCriteria criteria;
 
     public DepartmentSpecifications(DepartmentCriteria criteria) {
         this.criteria = criteria;

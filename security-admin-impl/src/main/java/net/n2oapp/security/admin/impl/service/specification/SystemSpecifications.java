@@ -14,7 +14,7 @@ import org.springframework.util.CollectionUtils;
  * Реализация фильтров для систем
  */
 public class SystemSpecifications implements Specification<SystemEntity> {
-    private SystemCriteria criteria;
+    private transient SystemCriteria criteria;
 
     public SystemSpecifications(SystemCriteria criteria) {
         this.criteria = criteria;

@@ -14,7 +14,7 @@ import org.springframework.data.jpa.domain.Specification;
  * Реализация фильтров для регионов
  */
 public class RegionSpecifications implements Specification<RegionEntity> {
-    private RegionCriteria criteria;
+    private transient RegionCriteria criteria;
 
     public RegionSpecifications(RegionCriteria criteria) {
         this.criteria = criteria;
