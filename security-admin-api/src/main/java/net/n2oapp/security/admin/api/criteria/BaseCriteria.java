@@ -37,13 +37,6 @@ public class BaseCriteria implements Pageable {
     @DefaultValue("10")
     private int size;
 
-    //    used to avoid swagger type exception
-    private long offset;
-    private Sort sort;
-    private int pageSize;
-    private int pageNumber;
-    //    used to avoid swagger type exception
-
     private List<Sort.Order> orders;
 
     public BaseCriteria() {
