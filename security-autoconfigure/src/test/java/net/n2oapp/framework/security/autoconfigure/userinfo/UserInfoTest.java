@@ -1,13 +1,10 @@
 package net.n2oapp.framework.security.autoconfigure.userinfo;
 
 import feign.RequestTemplate;
-import net.n2oapp.framework.security.autoconfigure.access.AccountContextAutoConfiguration;
-import net.n2oapp.framework.security.autoconfigure.access.SecurityAutoConfiguration;
 import net.n2oapp.framework.security.autoconfigure.userinfo.mapper.OauthPrincipalToJsonMapper;
 import net.n2oapp.security.auth.common.OauthUser;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +22,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest(classes = {UserInfoTest.class, TestConfig.class},
+@SpringBootTest(classes = TestConfig.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = "spring.security.strategy=GLOBAL")
-@EnableAutoConfiguration(exclude = {SecurityAutoConfiguration.class, AccountContextAutoConfiguration.class})
 public class UserInfoTest {
 
     @LocalServerPort
