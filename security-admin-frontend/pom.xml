@@ -46,9 +46,10 @@
         <!-- N2O -->
         <dependency>
             <groupId>net.n2oapp.framework</groupId>
-            <artifactId>n2o-spring-boot-starter</artifactId>
+            <artifactId>n2o-boot-starter</artifactId>
             <version>${n2o.version}</version>
         </dependency>
+
         <dependency>
             <groupId>net.n2oapp.framework</groupId>
             <artifactId>n2o-web</artifactId>
