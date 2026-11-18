@@ -41,7 +41,11 @@ public class JsonToPrincipalFilter extends OncePerRequestFilter {
         AnonymousAuthenticationToken authenticationToken = new AnonymousAuthenticationToken(userInfo.username,
                 userInfo, authorities);
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-        filterChain.doFilter(request, response);
+        try {
+            filterChain.doFilter(request, response);
+        } finally {
+            SecurityContextHolder.clearContext();
+        }
     }
 
     @Override
